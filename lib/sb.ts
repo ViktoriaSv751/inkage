@@ -1,11 +1,13 @@
 'use client';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { PUBLIC } from './public-config';
 
 let c: SupabaseClient | null | undefined;
 export function sb(): SupabaseClient | null {
   if (c !== undefined) return c;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO) return (c = null);
+  const url = PUBLIC.supabaseUrl;
+  const key = PUBLIC.supabaseAnonKey;
   c = url && key ? createClient(url, key, { auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' } }) : null;
   return c;
 }

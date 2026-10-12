@@ -10,6 +10,7 @@ import {
   shareOrDownload,
 } from '@/lib/client';
 import { api, sb } from '@/lib/sb';
+import { PUBLIC } from '@/lib/public-config';
 import { BodyMap, EXAMPLE, HeroAging } from './visuals';
 
 type Cfg = { ai: boolean; auth: boolean; payments: boolean };
@@ -522,8 +523,8 @@ function Paywall({ cfg, me, onClose, needAuth }: { cfg: Cfg | null; me: Me; onCl
     if (r.ok && r.data.url) location.href = r.data.url;
     else setErr(r.data.error || 'Checkout failed.');
   };
-  const weekly = process.env.NEXT_PUBLIC_PRICE_WEEKLY_LABEL || '$5.99 / week';
-  const lifetime = process.env.NEXT_PUBLIC_PRICE_LIFETIME_LABEL || '$49.99 once';
+  const weekly = PUBLIC.priceWeekly;
+  const lifetime = PUBLIC.priceLifetime;
   return (
     <div className="modal" onClick={onClose}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>

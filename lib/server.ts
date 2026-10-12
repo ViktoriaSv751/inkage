@@ -3,13 +3,22 @@ import crypto from 'crypto';
 
 export type Plan = 'free' | 'weekly' | 'lifetime';
 
-const URL_ = () => process.env.NEXT_PUBLIC_SUPABASE_URL;
-const ANON = () => process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+import { PUBLIC } from './public-config';
+const URL_ = () => PUBLIC.supabaseUrl;
+const ANON = () => PUBLIC.supabaseAnonKey;
+
+/** Server-only secret: APP_SECRET if set, otherwise derived from the AI key (never sent to the browser). */
+export function appSecret(purpose: 'token' | 'db') {
+  if (process.env.APP_SECRET) return process.env.APP_SECRET;
+  const base = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  if (!base) return null;
+  return crypto.createHash('sha256').update(`inkage:${purpose}:${base}`).digest('hex');
+}
 
 export function serverConfig() {
   return {
     ai: !!(process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY),
-    auth: !!(URL_() && ANON() && process.env.APP_SECRET),
+    auth: !!(URL_() && ANON() && appSecret('token')),
     payments: !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRICE_WEEKLY && process.env.STRIPE_PRICE_LIFETIME),
   };
 }
@@ -52,7 +61,9 @@ export async function quota(db: SupabaseClient): Promise<Quota> {
 
 // ---- signed tokens so /api/age only ages images we generated for a paying user
 function secret() {
-  return process.env.APP_SECRET || 'dev-secret';
+  const s = appSecret('token');
+  if (!s) throw new Error('No server secret configured');
+  return s;
 }
 export function sha(data: string) {
   return crypto.createHash('sha256').update(data).digest('hex');
@@ -77,7 +88,7 @@ export function verifyToken<T>(token: string): T | null {
 /** Calls the guarded webhook function in the database. */
 export async function stripeApply(args: { user?: string | null; customer?: string | null; plan?: string | null; until?: string | null }) {
   const { error } = await userClient().rpc('stripe_apply', {
-    p_secret: process.env.APP_SECRET,
+    p_secret: appSecret('db'),
     p_user: args.user ?? null,
     p_customer: args.customer ?? null,
     p_plan: args.plan ?? null,
