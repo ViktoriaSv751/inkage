@@ -121,7 +121,7 @@ export function aiConfigured() {
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 function imageModels() {
-  return [process.env.GEMINI_IMAGE_MODEL, 'gemini-3-pro-image', 'gemini-3-pro-image-preview', 'gemini-3.1-flash-image', 'gemini-2.5-flash-image'].filter(
+  return [process.env.GEMINI_IMAGE_MODEL, 'gemini-nano-banana-2.1', 'gemini-3-pro-image', 'gemini-3-pro-image-preview', 'gemini-3.1-flash-image', 'gemini-2.5-flash-image'].filter(
     (m, i, arr): m is string => !!m && arr.indexOf(m) === i
   );
 }
