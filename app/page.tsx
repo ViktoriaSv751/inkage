@@ -107,11 +107,6 @@ export default function Home() {
     }
     setExampleMode(false);
 
-    if (!me.user) {
-      pendingGenerate.current = true;
-      return setModal('auth');
-    }
-
     setBusy(true);
     setActive(0);
     setStages({ ...emptyStages(), fresh: { status: 'loading' } });
@@ -129,7 +124,10 @@ export default function Home() {
     if (!r.ok) {
       setStages(emptyStages());
       if (r.data.code === 'auth') return setModal('auth');
-      if (r.data.code === 'paywall') return setModal('paywall');
+      if (r.data.code === 'paywall') {
+        setError('You used your free preview. Unlock InkAge Pro to try more designs.');
+        return setModal('paywall');
+      }
       return setError(r.data.error || 'Something went wrong.');
     }
     const fresh = r.data.image as string;
@@ -290,6 +288,7 @@ export default function Home() {
         <button className="btn wide" disabled={busy || !photo || !design} onClick={generate}>
           {busy ? 'Tattooing…' : !photo ? 'Add your photo to start' : !design ? 'Add a design to continue' : 'Show me my tattoo'}
         </button>
+        {!demo && !me.user && <p className="fine">Your first preview is free. No sign-up needed.</p>}
         {!demo && me.user && typeof me.remaining === 'number' && (
           <p className="fine">
             {me.plan === 'free' ? (me.remaining > 0 ? 'Your first preview is free.' : 'Free preview used. Unlock aging for more.') : `${me.remaining} previews left this period.`}

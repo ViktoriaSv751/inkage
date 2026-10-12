@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp /root/.claude/projects/-home-claude-inkage/0326a89c-4e50-5ceb-a56d-62b147d7793e/tool-results/mcp-remote-devices-blob-1791812127530-x8dnm2.jpg /home/claude/inkage-live-50-years.jpg && echo ok)"
+    ]
+  }
+}
