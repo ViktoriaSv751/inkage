@@ -44,6 +44,21 @@ export function freshPrompt(placement: string, size: string) {
   ].join(' ');
 }
 
+/** Used when the user positioned the design themselves in the editor (3 images: photo, mockup, design). */
+export function placedPrompt(placement: string, colorMode: 'black' | 'color') {
+  return [
+    'Image 1 is a real photo of a person. Image 2 is the same photo with a flat digital overlay that shows EXACTLY where the tattoo goes, how big it is and how it is rotated. Image 3 is the original tattoo design.',
+    `Turn the overlay into a real tattoo on the person's ${placement}: same position, same size, same rotation as in image 2. Use image 3 for the exact linework and details.`,
+    colorMode === 'black'
+      ? 'Use black ink only (no colours), as a skilled artist would execute this design.'
+      : "Keep the design's original colours.",
+    'The ink sits in the skin, follows the curvature of the muscles and the camera perspective, is lit by the same light and shadows as the surrounding skin, and lets pores, fine hairs and skin texture show through.',
+    'Fresh-tattoo details: slightly raised, glossy lines and a mild pink-red halo around the linework.',
+    'The final image must look like image 1 (no overlay artefacts, no flat sticker look).',
+    KEEP,
+  ].join(' ');
+}
+
 function inkAging(a: Analysis, years: number) {
   const fine = a.tattooStyle === 'fine-line';
   const color = a.hasColor || a.tattooStyle === 'color' || a.tattooStyle === 'realism';
@@ -231,6 +246,75 @@ export async function analyse(image: Img): Promise<Analysis> {
   } catch (e) {
     console.warn('analysis failed', e);
     return DEFAULT_ANALYSIS;
+  }
+}
+
+// ---------------------------------------------------------------- checks
+
+export type PhotoCheck = { ok: boolean; code: 'ok' | 'no_skin' | 'blurry' | 'dark' | 'not_allowed' | 'unknown'; area: string };
+
+/** Fast pre-check of the user's photo before we spend money on image generation. */
+export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCheck> {
+  if (!process.env.GEMINI_API_KEY) return { ok: true, code: 'ok', area: placement };
+  try {
+    const data = await geminiCall(textModels(), {
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            ...parts([photo]),
+            {
+              text: `A user wants to preview a tattoo on their "${placement}". Check this photo and reply with JSON only:
+{"skinVisible": boolean (is bare skin of a body area suitable for a tattoo clearly visible?),
+ "sharp": boolean, "wellLit": boolean,
+ "notAllowed": boolean (true if it shows nudity of intimate areas, or the person looks under 18),
+ "visibleArea": string (the main body area visible, e.g. "inner left forearm")}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+    });
+    const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    if (j.notAllowed) return { ok: false, code: 'not_allowed', area: '' };
+    if (j.skinVisible === false) return { ok: false, code: 'no_skin', area: String(j.visibleArea || '') };
+    if (j.sharp === false) return { ok: false, code: 'blurry', area: String(j.visibleArea || '') };
+    if (j.wellLit === false) return { ok: false, code: 'dark', area: String(j.visibleArea || '') };
+    return { ok: true, code: 'ok', area: String(j.visibleArea || placement).slice(0, 60) };
+  } catch (e) {
+    console.warn('photo check failed', e);
+    return { ok: true, code: 'unknown', area: placement };
+  }
+}
+
+/** Compares the result with the design; returns false when it should be regenerated. */
+export async function qualityCheck(design: Img, result: Img): Promise<{ ok: boolean; match: number; note: string }> {
+  if (!process.env.GEMINI_API_KEY) return { ok: true, match: 10, note: '' };
+  try {
+    const data = await geminiCall(textModels(), {
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            ...parts([design, result]),
+            {
+              text: `Image 1 is a tattoo design. Image 2 should be a realistic photo of a person with exactly that design tattooed on their skin. Reply with JSON only:
+{"designMatch": integer 0-10 (10 = same design, same elements and proportions),
+ "looksReal": boolean (looks like real ink in skin, not a sticker or drawing),
+ "anatomyOk": boolean (no distorted hands, extra fingers or broken body parts),
+ "note": short string}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+    });
+    const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    const match = Number(j.designMatch ?? 10);
+    return { ok: match >= 6 && j.looksReal !== false && j.anatomyOk !== false, match, note: String(j.note || '').slice(0, 200) };
+  } catch (e) {
+    console.warn('qc failed', e);
+    return { ok: true, match: -1, note: 'qc unavailable' };
   }
 }
 

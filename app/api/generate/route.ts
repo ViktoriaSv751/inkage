@@ -1,5 +1,6 @@
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
-import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError } from '@/lib/ai';
+import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, placedPrompt, qualityCheck } from '@/lib/ai';
+import { longevity } from '@/lib/score';
 import { guestFrom, guestRefund, guestStart } from '@/lib/guest';
 
 export const dynamic = 'force-dynamic';
@@ -72,18 +73,49 @@ export async function POST(req: Request) {
   try {
     const w = Number(body.w) || 1024;
     const h = Number(body.h) || 1024;
-    const image = await editImage(
-      [
-        { ...photo, name: 'photo.jpg' },
-        { ...design, name: 'design.png' },
-      ],
-      freshPrompt(placement, size),
-      w,
-      h
-    );
+    let mockup: { buf: Buffer; mime: string } | null = null;
+    try {
+      mockup = body.mockup ? dataUrlToBuffer(body.mockup) : null;
+    } catch {}
+    const colorMode = body.colorMode === 'color' ? 'color' : 'black';
+    const designImg = { ...design, name: 'design.png' };
+    const run = () =>
+      mockup
+        ? editImage([{ ...photo, name: 'photo.jpg' }, { ...mockup, name: 'mockup.jpg' }, designImg], placedPrompt(placement, colorMode), w, h)
+        : editImage([{ ...photo, name: 'photo.jpg' }, designImg], freshPrompt(placement, size), w, h);
+
+    // Generate, check against the design, and retry once if it doesn't match.
+    let image = await run();
+    let qc = await qualityCheck(designImg, dataUrlToImg(image));
+    if (!qc.ok) {
+      console.warn('qc failed, retrying', qc);
+      const second = await run().catch(() => null);
+      if (second) {
+        const qc2 = await qualityCheck(designImg, dataUrlToImg(second));
+        if (qc2.match >= qc.match) {
+          image = second;
+          qc = qc2;
+        }
+      }
+    }
+
     const analysis = await analyse(dataUrlToImg(image));
-    const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: analysis, exp: Date.now() + 3600e3 });
-    return withCookie(json({ image, token, age: analysis.apparentAge, canAge, remaining, plan }), guest?.setCookie ?? null);
+    const lang = body.lang === 'hu' ? 'hu' : 'en';
+    const sun = ['low', 'medium', 'high'].includes(body.sun) ? body.sun : analysis.sunExposure;
+    const report = longevity(
+      {
+        style: analysis.tattooStyle,
+        hasColor: colorMode === 'color' && analysis.hasColor,
+        sun,
+        placement: `${placement} ${analysis.bodyArea}`,
+        sizeCm: Number.isFinite(Number(body.sizeCm)) && Number(body.sizeCm) > 0 ? Number(body.sizeCm) : null,
+        detail: Number.isFinite(Number(body.detail)) ? Math.min(1, Math.max(0, Number(body.detail))) : null,
+        age: analysis.apparentAge,
+      },
+      lang
+    );
+    const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, exp: Date.now() + 3600e3 });
+    return withCookie(json({ image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, canAge, remaining, plan }), guest?.setCookie ?? null);
   } catch (e) {
     console.error('generate failed', e);
     if (a) await a.db.rpc('refund_generation', { p_gid: gid });
