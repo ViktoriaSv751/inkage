@@ -35,7 +35,7 @@ export default function Admin() {
   // Rough AI cost: ~1 fresh + 4 aging images + checks per preview.
   const cost = s ? (s.gen_today * 0.05 + s.aging_today * 0.04).toFixed(2) : '0';
   const funnel = s?.events_today || {};
-  const steps = ['app_open', 'onboarding_done', 'photo_added', 'design_added', 'generate_start', 'generate_done', 'generate_error', 'paywall', 'stage_y50', 'video_made', 'share_link', 'vote'];
+  const steps = ['app_open', 'onboarding_done', 'photo_added', 'design_added', 'ai_design', 'generate_start', 'generate_done', 'generate_error', 'paywall', 'stage_y50', 'improve_start', 'resize', 'removal_start', 'video_made', 'artist_pdf', 'aftercare_ics', 'share_link', 'vote'];
 
   return (
     <main style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
@@ -65,6 +65,13 @@ export default function Admin() {
                 <span style={{ fontSize: 13, color: 'var(--ink-2)', fontWeight: 600 }}>{k}</span>
               </div>
             ))}
+          </div>
+          <div style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+            <b>Daily safety cap: {s.gen_today} / 300 AI jobs in the last 24 h</b>
+            <div className={`gauge ${s.gen_today > 240 ? 'hot' : ''}`} style={{ height: 10, borderRadius: 10, background: 'rgba(21,18,43,.1)', overflow: 'hidden', marginTop: 8 }}>
+              <i style={{ display: 'block', height: '100%', width: `${Math.min(100, (s.gen_today / 300) * 100)}%`, background: s.gen_today > 240 ? '#e0483b' : '#4b2bd6' }} />
+            </div>
+            <small style={{ color: 'var(--ink-2)' }}>When it reaches 300, new previews pause until the oldest ones drop out of the 24-hour window.</small>
           </div>
           <h2 style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', marginTop: 30 }}>Previews, last 14 days</h2>
           <div style={{ display: 'flex', alignItems: 'end', gap: 4, height: 140, background: '#fff6f0', borderRadius: 16, padding: '24px 10px 10px' }}>

@@ -24,10 +24,11 @@ export async function POST(req: Request) {
   }
   const placement = String(body.placement || 'forearm').slice(0, 80).replace(/[^\p{L}\p{N} ,'()-]/gu, '');
   const size = ['small', 'medium', 'large'].includes(body.size) ? body.size : 'medium';
+  const existing = body.mode === 'existing';
   let photo, design;
   try {
     photo = dataUrlToBuffer(body.photo);
-    design = dataUrlToBuffer(body.design);
+    design = existing ? photo : dataUrlToBuffer(body.design);
   } catch {
     return json({ error: 'Add both images again and retry.' }, 400);
   }
@@ -84,28 +85,38 @@ export async function POST(req: Request) {
         ? editImage([{ ...photo, name: 'photo.jpg' }, { ...mockup, name: 'mockup.jpg' }, designImg], placedPrompt(placement, colorMode), w, h)
         : editImage([{ ...photo, name: 'photo.jpg' }, designImg], freshPrompt(placement, size), w, h);
 
-    // Generate, check against the design, and retry once if it doesn't match.
-    let image = await run();
-    let qc = await qualityCheck(designImg, dataUrlToImg(image));
-    if (!qc.ok) {
-      console.warn('qc failed, retrying', qc);
-      const second = await run().catch(() => null);
-      if (second) {
-        const qc2 = await qualityCheck(designImg, dataUrlToImg(second));
-        if (qc2.match >= qc.match) {
-          image = second;
-          qc = qc2;
+    let image: string;
+    let qc = { match: 10 };
+    let analysis;
+    if (existing) {
+      // The user already has this tattoo: today's photo IS the fresh stage.
+      image = body.photo;
+      analysis = await analyse(dataUrlToImg(image));
+    } else {
+      // Generate, then check against the design (and analyse the skin at the same time); retry once if it doesn't match.
+      image = await run();
+      let [q, an] = await Promise.all([qualityCheck(designImg, dataUrlToImg(image)), analyse(dataUrlToImg(image))]);
+      if (!q.ok) {
+        console.warn('qc failed, retrying', q);
+        const second = await run().catch(() => null);
+        if (second) {
+          const q2 = await qualityCheck(designImg, dataUrlToImg(second));
+          if (q2.match >= q.match) {
+            image = second;
+            q = q2;
+          }
         }
       }
+      qc = q;
+      analysis = an;
     }
 
-    const analysis = await analyse(dataUrlToImg(image));
     const lang = body.lang === 'hu' ? 'hu' : 'en';
     const sun = ['low', 'medium', 'high'].includes(body.sun) ? body.sun : analysis.sunExposure;
     const report = longevity(
       {
         style: analysis.tattooStyle,
-        hasColor: colorMode === 'color' && analysis.hasColor,
+        hasColor: existing ? analysis.hasColor : colorMode === 'color' && analysis.hasColor,
         sun,
         placement: `${placement} ${analysis.bodyArea}`,
         sizeCm: Number.isFinite(Number(body.sizeCm)) && Number(body.sizeCm) > 0 ? Number(body.sizeCm) : null,

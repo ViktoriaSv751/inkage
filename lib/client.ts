@@ -12,7 +12,7 @@ export type StageKey = (typeof STAGE_LABELS)[number]['key'];
 export function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((res, rej) => {
     const img = new Image();
-    if (/supabase\.co\//.test(src)) img.crossOrigin = 'anonymous';
+    if (/supabase\.co\/|cloudfront\.net\//.test(src)) img.crossOrigin = 'anonymous';
     img.onload = () => res(img);
     img.onerror = rej;
     img.src = src;

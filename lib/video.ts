@@ -1,7 +1,7 @@
 'use client';
 import { loadImage } from './client';
 
-export type Template = 'timelapse' | 'wipe' | 'poll';
+export type Template = 'timelapse' | 'wipe' | 'poll' | 'slideshow' | 'countdown';
 export const HOOKS = {
   en: [
     'my tattoo in 50 years 👀',
@@ -126,6 +126,51 @@ export async function makeVideo(
       text(ctx, frames[0].label.toUpperCase(), 160, '900 64px "Big Shoulders Display", Impact', '#fff', p < 0.5 ? 1 : 0.35);
       text(ctx, frames[last].label.toUpperCase(), 240, '900 64px "Big Shoulders Display", Impact', '#fff', p >= 0.5 ? 1 : 0.35);
       text(ctx, opts.hook, H - 190, body);
+    };
+  } else if (opts.template === 'slideshow') {
+    // TikTok photo-mode look: one slide per stage, big caption, hard cuts
+    const SLIDE = 1600;
+    total = SLIDE * imgs.length + 400;
+    draw = (t) => {
+      const i = Math.min(last, Math.floor(t / SLIDE));
+      const local = t - i * SLIDE;
+      const zoom = 1 + (local / SLIDE) * 0.04;
+      ctx.save();
+      ctx.translate(W / 2, H / 2);
+      ctx.scale(zoom, zoom);
+      ctx.translate(-W / 2, -H / 2);
+      cover(ctx, imgs[i]);
+      ctx.restore();
+      const cap = i === 0 ? opts.hook : frames[i].label;
+      ctx.save();
+      ctx.font = '800 46px "Instrument Sans", system-ui';
+      const tw = Math.min(W - 80, ctx.measureText(cap).width + 60);
+      ctx.fillStyle = 'rgba(255,255,255,.94)';
+      ctx.beginPath();
+      (ctx as any).roundRect((W - tw) / 2, 150, tw, 84, 18);
+      ctx.fill();
+      ctx.restore();
+      text(ctx, cap, 228, '800 46px "Instrument Sans", system-ui', '#15122b');
+      ctx.fillStyle = 'rgba(255,255,255,.5)';
+      for (let k = 0; k < imgs.length; k++) ctx.fillRect(60 + k * ((W - 120) / imgs.length), 80, (W - 120) / imgs.length - 8, 5);
+      ctx.fillStyle = '#fff';
+      for (let k = 0; k <= i; k++) ctx.fillRect(60 + k * ((W - 120) / imgs.length), 80, ((W - 120) / imgs.length - 8) * (k < i ? 1 : Math.min(1, local / SLIDE)), 5);
+    };
+  } else if (opts.template === 'countdown') {
+    // "how many years until it looks like this?" – counter runs 0 → 50 over the images
+    total = 7600;
+    const years = [0, 1, 10, 30, 50];
+    draw = (t) => {
+      const p = Math.min(1, Math.max(0, (t - 1200) / 5200));
+      const y = p * 50;
+      let i = 0;
+      while (i < last - 1 && y > years[i + 1]) i++;
+      const f = Math.min(1, Math.max(0, (y - years[i]) / (years[i + 1] - years[i])));
+      cover(ctx, imgs[i]);
+      cover(ctx, imgs[Math.min(last, i + 1)], f);
+      text(ctx, String(Math.round(y)), 250, '900 200px "Big Shoulders Display", Impact');
+      text(ctx, opts.yes || 'years later', 320, '600 36px "Instrument Sans", system-ui');
+      if (t < 1600) text(ctx, opts.hook, H - 190, '600 36px "Instrument Sans", system-ui');
     };
   } else {
     // poll: fresh, then 50 years, then question with two answer bubbles

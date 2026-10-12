@@ -327,3 +327,30 @@
 .result-edit { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
 .result-edit .chipbtn svg { width: 18px; height: 18px; }
 .ob-top .link { margin-left: 4px; white-space: nowrap; }
+
+/* ---------- v2.2 */
+.modeseg { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin: 0 0 14px; }
+.modeseg button { padding: 10px 8px; }
+.studio-slots.one { grid-template-columns: 1fr; }
+.studio-slots.one .sslot { aspect-ratio: 4/3.4; }
+.viewseg { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin: 0 0 10px; }
+.res-viewer .layer.nofade { transition: none; }
+.yearslider { padding: 12px 4px 0; }
+.yearslider input[type='range']::-webkit-slider-runnable-track { height: 8px; background: linear-gradient(90deg, var(--ink), var(--faded)); }
+.yearslider input[type='range']::-webkit-slider-thumb { width: 32px; height: 32px; margin-top: -12px; }
+.stagebar.four { grid-template-columns: repeat(4, 1fr); }
+.fixcard { margin-top: 12px; background: linear-gradient(135deg, #efeaff, var(--sheet)); }
+.toolcard h3 { margin-bottom: 0; }
+.toolcard .list-row { cursor: pointer; }
+.toolcard .list-row:disabled { opacity: .45; }
+.care-list { margin: 4px 0; padding-left: 20px; display: grid; gap: 8px; font-size: 15px; color: var(--ink-2); max-height: 36dvh; overflow-y: auto; }
+.care-list b { color: var(--ink); }
+.aimaker { margin-top: 14px; }
+.aimaker h3 { margin: 0 0 8px; }
+.aimaker .notes { min-height: 60px; }
+.aimaker .seg button { padding: 7px 10px; font-size: 13px; }
+.pagefade { animation: pagein .28s ease-out; }
+@keyframes pagein { from { opacity: 0; transform: translateY(8px); } }
+.gauge { height: 10px; border-radius: 10px; background: rgba(21, 18, 43, .1); overflow: hidden; margin-top: 8px; }
+.gauge i { display: block; height: 100%; background: var(--violet); }
+.gauge.hot i { background: var(--fresh); }

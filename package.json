@@ -11,6 +11,7 @@
     "@fontsource/big-shoulders-display": "^5.1.0",
     "@fontsource/instrument-sans": "^5.1.0",
     "@supabase/supabase-js": "2.45.4",
+    "jspdf": "^2.5.2",
     "next": "14.2.28",
     "openai": "4.67.3",
     "react": "18.3.1",

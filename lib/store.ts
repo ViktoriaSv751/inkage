@@ -3,6 +3,8 @@ import { sb } from './sb';
 
 export type StageKey = 'fresh' | 'healed' | 'y10' | 'y30' | 'y50';
 export const STAGES: StageKey[] = ['fresh', 'healed', 'y10', 'y30', 'y50'];
+export type RemovalKey = 'laser3' | 'laser6' | 'laser10';
+export const REMOVAL_STAGES: RemovalKey[] = ['laser3', 'laser6', 'laser10'];
 
 export type Report = {
   score: number;
@@ -24,6 +26,13 @@ export type Preview = {
   favorite: boolean;
   collection: string | null;
   images: Partial<Record<StageKey, string>>;
+  /** Laser removal preview (laser3 / laser6 / laser10), kept on this device. */
+  removal?: Partial<Record<RemovalKey, string>>;
+  /** 'existing' = the user's own tattoo, aged; otherwise a new design. */
+  mode?: 'new' | 'existing';
+  /** The design used (data URL), for the artist sheet. */
+  design?: string;
+  sizeCm?: number;
   source: 'local' | 'cloud';
   share_id?: string | null;
 };

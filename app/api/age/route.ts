@@ -1,5 +1,5 @@
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, verifyToken } from '@/lib/server';
-import { agePrompt, aiConfigured, Analysis, editImage, friendlyAiError, STAGES, Stage } from '@/lib/ai';
+import { agePrompt, aiConfigured, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage } from '@/lib/ai';
 import { guestBumpAge, guestFrom } from '@/lib/guest';
 
 export const dynamic = 'force-dynamic';
@@ -9,8 +9,9 @@ export async function POST(req: Request) {
   if (!aiConfigured() || !serverConfig().auth) return json({ error: 'Not set up yet.' }, 503);
 
   const body = await req.json().catch(() => ({}));
-  const stage = body.stage as Stage;
-  if (!STAGES.includes(stage)) return json({ error: 'Bad stage' }, 400);
+  const stage = body.stage as Stage | RemovalStage;
+  const isRemoval = (REMOVAL as readonly string[]).includes(stage);
+  if (!STAGES.includes(stage as Stage) && !isRemoval) return json({ error: 'Bad stage' }, 400);
   const t = verifyToken<{ uid: string; gid: number; h: string; w: number; hh: number; an: Analysis; exp: number }>(body.token);
   if (!t || t.exp < Date.now()) return json({ error: 'This preview expired. Start a new one.' }, 402);
   if (sha(body.image || '') !== t.h) return json({ error: 'Start a new preview and try again.' }, 400);
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
 
   try {
     const img = dataUrlToBuffer(body.image);
-    const image = await editImage([{ ...img, name: 'fresh.jpg' }], agePrompt(stage, t.an), t.w, t.hh);
+    const image = await editImage([{ ...img, name: 'fresh.jpg' }], isRemoval ? removalPrompt(stage as RemovalStage, t.an) : agePrompt(stage as Stage, t.an), t.w, t.hh);
     return json({ stage, image });
   } catch (e) {
     console.error('age failed', e);

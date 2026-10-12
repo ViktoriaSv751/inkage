@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useApp } from '../AppProvider';
 import { tx } from '@/lib/i18n';
-import { DESIGNS } from '@/lib/designs';
+import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { ARTICLES } from '@/lib/articles';
 import { lsSet, track } from '@/lib/store';
 import { HeroAging } from '../../visuals';
@@ -41,7 +41,7 @@ export default function ExplorePage() {
               router.push('/app');
             }}
           >
-            <img src={d.src} alt="" />
+            <img src={d.thumb || d.src} alt="" loading="lazy" onError={(e) => { const i = e.currentTarget; if (i.src !== d.src) i.src = d.src; }} />
           </button>
         ))}
       </div>

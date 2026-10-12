@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
 import { Icon } from '../ui';
-import { tx } from '@/lib/i18n';
+import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
 import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
-import { DESIGNS } from '@/lib/designs';
+import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { processDesign, Placement } from '@/lib/editor';
 import { frameCm } from '@/lib/score';
 
@@ -72,6 +72,8 @@ export function PlacementPicker({ value, onChange }: { value: string; onChange: 
 type CheckState = { state: 'idle' | 'checking' | 'ok' | 'warn' | 'blocked'; msg?: string };
 
 export function StudioStep({
+  mode = 'new',
+  setMode,
   placement,
   setPlacement,
   photo,
@@ -80,6 +82,8 @@ export function StudioStep({
   setDesign,
   onNext,
 }: {
+  mode?: 'new' | 'existing';
+  setMode?: (m: 'new' | 'existing') => void;
   placement: string;
   setPlacement: (p: string) => void;
   photo: Photo | null;
@@ -96,6 +100,20 @@ export function StudioStep({
   const [check, setCheck] = useState<CheckState>({ state: photo ? 'ok' : 'idle' });
   const [busy, setBusy] = useState(false);
   const [over, setOver] = useState<'' | 'photo' | 'design'>('');
+  const [prompt, setPrompt] = useState('');
+  const [aiStyle, setAiStyle] = useState<'fine-line' | 'blackwork' | 'traditional'>('fine-line');
+  const [drawing, setDrawing] = useState(false);
+  const existing = mode === 'existing';
+
+  const aiDesign = async () => {
+    if (prompt.trim().length < 3) return;
+    setDrawing(true);
+    track('ai_design', { style: aiStyle });
+    const r = await api<{ image: string; error?: string }>('/api/design', { text: prompt, style: aiStyle });
+    setDrawing(false);
+    if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
+    await applyDesign(r.data.image, 'black');
+  };
 
   const runCheck = useCallback(
     async (p: Photo, where: string) => {
@@ -184,21 +202,39 @@ export function StudioStep({
     },
   });
 
-  const ready = !!photo && !!design && !busy && check.state !== 'blocked' && check.state !== 'checking';
-  const cta = !photo ? t('Add your photo', 'Add hozzá a fotódat') : !design ? t('Pick a design', 'Válassz mintát') : check.state === 'checking' ? ui.t('create.photo.checking') : t('Continue — place it', 'Tovább – elhelyezés');
+  const ready = !!photo && (existing || !!design) && !busy && check.state !== 'blocked' && check.state !== 'checking';
+  const cta = !photo
+    ? existing ? t('Add a photo of your tattoo', 'Add hozzá a tetoválásod fotóját') : t('Add your photo', 'Add hozzá a fotódat')
+    : !existing && !design
+      ? t('Pick a design', 'Válassz mintát')
+      : check.state === 'checking'
+        ? ui.t('create.photo.checking')
+        : existing
+          ? t('Show me how it ages', 'Mutasd, hogyan öregszik')
+          : t('Continue — place it', 'Tovább – elhelyezés');
 
   return (
     <div>
+      {setMode && (
+        <div className="seg modeseg" role="radiogroup" aria-label={t('What do you want to see?', 'Mit szeretnél látni?')}>
+          <button role="radio" aria-checked={!existing} className={!existing ? 'on' : ''} onClick={() => setMode('new')}>
+            {t('A new tattoo', 'Új tetoválás')}
+          </button>
+          <button role="radio" aria-checked={existing} className={existing ? 'on' : ''} onClick={() => setMode('existing')}>
+            {t('My existing tattoo', 'Meglévő tetoválásom')}
+          </button>
+        </div>
+      )}
       <PlacementPicker value={placement} onChange={setPlacement} />
 
-      <div className="studio-slots">
+      <div className={`studio-slots ${existing ? 'one' : ''}`}>
         <div className="studio-col">
           <button className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => photoRef.current?.click()} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
             {photo ? <img src={photo.dataUrl} alt={t('Your photo', 'A fotód')} /> : (
               <span className="sslot-empty">
                 {Icon.camera}
-                <b>{t('Your photo', 'A fotód')}</b>
-                <small>{t('the body area, in daylight', 'a testrész, nappali fényben')}</small>
+                <b>{existing ? t('Your tattoo', 'A tetoválásod') : t('Your photo', 'A fotód')}</b>
+                <small>{existing ? t('a clear photo of it, in daylight', 'éles fotó róla, nappali fényben') : t('the body area, in daylight', 'a testrész, nappali fényben')}</small>
               </span>
             )}
             <span className="sslot-tag">1</span>
@@ -213,6 +249,7 @@ export function StudioStep({
           </div>
         </div>
 
+        {!existing && (
         <div className="studio-col">
           <button className={`sslot design ${design ? 'has' : ''} ${over === 'design' ? 'over' : ''}`} onClick={() => designRef.current?.click()} aria-label={t('Choose a design', 'Minta kiválasztása')} {...drop('design')}>
             {design ? <img src={design.ink} alt={t('Your design', 'A mintád')} /> : (
@@ -234,6 +271,7 @@ export function StudioStep({
             </button>
           </div>
         </div>
+        )}
       </div>
 
       {photo && check.state !== 'idle' && (
@@ -246,7 +284,7 @@ export function StudioStep({
       <input ref={photoRef} id="photo-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
       <input ref={designRef} id="design-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
 
-      {design && (
+      {!existing && design && (
         <div className="inkrow">
           <b>{ui.t('create.place.ink')}</b>
           <div className="seg" role="radiogroup">
@@ -259,6 +297,13 @@ export function StudioStep({
         </div>
       )}
 
+      {existing ? (
+        <div className="card" style={{ marginTop: 16 }}>
+          <h3>{t('See your tattoo in 10, 30 and 50 years', 'Nézd meg a tetoválásod 10, 30 és 50 év múlva')}</h3>
+          <p className="muted small">{t('Upload a clear photo of a tattoo you already have. You can also preview laser removal afterwards.', 'Tölts fel éles fotót egy meglévő tetoválásodról. Utána a lézeres eltávolítást is megnézheted.')}</p>
+        </div>
+      ) : (
+        <>
       <div className="section-title" style={{ marginTop: 18 }}>
         <h2 style={{ fontSize: 20 }}>{t('No design? Try one of ours', 'Nincs mintád? Próbáld ki a mieinket')}</h2>
       </div>
@@ -273,10 +318,36 @@ export function StudioStep({
               applyDesign(d.src, 'black', d.id);
             }}
           >
-            <img src={d.src} alt="" />
+            <img src={d.thumb || d.src} alt="" loading="lazy" onError={(e) => { const i = e.currentTarget; if (i.src !== d.src) i.src = d.src; }} />
           </button>
         ))}
       </div>
+          <div className="card aimaker">
+            <h3>{t('Describe it — we’ll draw it', 'Írd le – megrajzoljuk')}</h3>
+            <textarea
+              className="notes"
+              id="ai-design"
+              rows={2}
+              maxLength={200}
+              placeholder={t('e.g. a small swallow carrying an olive branch', 'pl. egy kis fecske olajággal a csőrében')}
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+            />
+            <div className="row" style={{ marginTop: 8, alignItems: 'center', justifyContent: 'space-between' }}>
+              <div className="seg" role="radiogroup">
+                {(['fine-line', 'blackwork', 'traditional'] as const).map((st) => (
+                  <button key={st} role="radio" aria-checked={aiStyle === st} className={aiStyle === st ? 'on' : ''} onClick={() => setAiStyle(st)}>
+                    {st === 'fine-line' ? t('Fine', 'Finom') : st === 'blackwork' ? 'Blackwork' : t('Classic', 'Klasszikus')}
+                  </button>
+                ))}
+              </div>
+              <button className="btn" style={{ padding: '12px 18px' }} disabled={drawing || prompt.trim().length < 3} onClick={aiDesign}>
+                {drawing ? t('Drawing…', 'Rajzolás…') : t('Draw it', 'Rajzold meg')}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       <p className="fine">{t('Only use designs you have the right to use — respect artists’ work.', 'Csak olyan mintát használj, amihez jogod van – tiszteld a tetoválóművészek munkáját.')}</p>
 
       <div className="stickycta">

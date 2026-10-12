@@ -2,6 +2,9 @@ import OpenAI, { toFile } from 'openai';
 
 export const STAGES = ['healed', 'y10', 'y30', 'y50'] as const;
 export type Stage = (typeof STAGES)[number];
+/** Laser removal preview after N sessions. */
+export const REMOVAL = ['laser3', 'laser6', 'laser10'] as const;
+export type RemovalStage = (typeof REMOVAL)[number];
 const STAGE_YEARS: Record<Stage, number> = { healed: 1, y10: 10, y30: 30, y50: 50 };
 
 type Img = { buf: Buffer; mime: string; name: string };
@@ -113,6 +116,56 @@ export function agePrompt(stage: Stage, a: Analysis) {
   ].join(' ');
 }
 
+export function removalPrompt(stage: RemovalStage, a: Analysis) {
+  const n = stage === 'laser3' ? 3 : stage === 'laser6' ? 6 : 10;
+  const look =
+    n === 3
+      ? 'the tattoo is clearly lighter and patchy: black has turned to a faded grey-blue, edges are uneven, some lines are broken, colours (if any) are only slightly lighter'
+      : n === 6
+        ? 'the tattoo is a faint, blotchy grey ghost of the design: most lines are barely visible, stubborn dense areas remain darker, colours like green, blue and yellow may persist as pale stains'
+        : 'only a very faint ghost of the design remains in a few spots; the skin may show slight texture change, faint lighter (hypopigmented) or darker patches where the ink was';
+  return [
+    `This photo shows a person with a tattoo. Show the same photo after ${n} laser tattoo removal sessions, fully healed (no blisters, no redness).`,
+    `After ${n} sessions ${look}.`,
+    `The person's age and skin (${a.skinTone}) stay the same as today; only the tattoo area changes.`,
+    'The result must be medically realistic, like a real before/after from a laser clinic — not a clean erase, not a filter.',
+    KEEP,
+  ].join(' ');
+}
+
+/** Redraw a design so it ages better: thicker key lines, fewer tiny details, more breathing room. */
+export function improvePrompt(sizeCm: number | null) {
+  return [
+    'The image is a tattoo design. Redraw it as a skilled tattoo artist would, so that it still looks clean and readable after 30+ years in the skin.',
+    `It will be tattooed${sizeCm ? ` at about ${Math.round(sizeCm)} cm wide` : ''}, so: make the main outlines bolder (equivalent to a 5–7 round-liner), remove or merge details that sit closer than about 1 mm, open up tight negative spaces, simplify tiny shading into a few solid or clean areas.`,
+    'Keep the same subject, composition, proportions and character — it must be clearly the same design, just built to last.',
+    'Output: black ink line art on a pure white background, centred with white margin, no text, no skin, no shadows, flat like a scanned drawing.',
+  ].join(' ');
+}
+
+/** New design from a text description. */
+export function designPrompt(text: string, style: string) {
+  const st =
+    style === 'fine-line'
+      ? 'delicate fine-line style with single-needle linework'
+      : style === 'blackwork'
+        ? 'bold blackwork style with solid black areas'
+        : style === 'traditional'
+          ? 'bold American traditional style with thick outlines'
+          : 'clean linework style that will age well';
+  return [
+    `Create an original tattoo flash design: ${text}.`,
+    `Style: ${st}.`,
+    'Make it tattoo-ready and long-lasting: confident lines, no microscopic details, readable at 6–10 cm.',
+    'Output: black ink on a pure white background, one isolated motif centred with generous white margin, no text or lettering unless explicitly asked, no skin, no mockup, flat like a scanned drawing.',
+  ].join(' ');
+}
+
+/** Pure text-to-image (no input photo). */
+export async function makeImage(prompt: string, w = 1024, h = 1024) {
+  return editImage([], prompt, w, h);
+}
+
 const ANALYSIS_PROMPT = `You are analysing a photo for a tattoo-aging simulator. Reply with JSON only, no prose:
 {"apparentAge": number (best estimate of the person's current age in years, 16-90),
  "skinTone": string (short description incl. Fitzpatrick type, e.g. "light olive, Fitzpatrick III"),
@@ -147,11 +200,20 @@ function textModels() {
 async function geminiCall(models: string[], body: unknown) {
   let lastErr: any;
   for (const model of models) {
-    const res = await fetch(`${GEMINI}/${model}:generateContent`, {
+    let res = await fetch(`${GEMINI}/${model}:generateContent`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
       body: JSON.stringify(body),
     });
+    if ((res.status === 429 || res.status === 503) && !(await res.clone().text()).includes('limit: 0')) {
+      // short, busy moment: wait and try once more
+      await new Promise((r) => setTimeout(r, 2500));
+      res = await fetch(`${GEMINI}/${model}:generateContent`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
+        body: JSON.stringify(body),
+      });
+    }
     const data: any = await res.json().catch(() => ({}));
     if (res.ok) return data;
     lastErr = new Error(data?.error?.message || `Gemini ${res.status}`);
@@ -197,6 +259,12 @@ async function openaiImage(images: Img[], prompt: string, w: number, h: number) 
   if (!oai) oai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const r = w / h;
   const size = r > 1.2 ? '1536x1024' : r < 0.83 ? '1024x1536' : '1024x1024';
+  if (!images.length) {
+    const g: any = await oai.images.generate({ model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1', prompt, size, quality: 'high', output_format: 'png' } as any);
+    const b = g.data?.[0]?.b64_json;
+    if (!b) throw new Error('No image returned');
+    return `data:image/png;base64,${b}`;
+  }
   const files = await Promise.all(images.map((i) => toFile(i.buf, i.name, { type: i.mime })));
   const res: any = await oai.images.edit({
     model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1',

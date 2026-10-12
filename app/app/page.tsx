@@ -5,14 +5,14 @@ import { useApp } from './AppProvider';
 import { Icon, OutOfPreviews } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
-import { Design, Photo, PlaceStep, StudioStep } from './create/steps';
+import { Design, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
-import { cloud, haptic, local, lsGet, Preview, StageKey, STAGES, track } from '@/lib/store';
+import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
 import { composeMockup, Placement } from '@/lib/editor';
 import { loadImage } from '@/lib/client';
 import { frameCm } from '@/lib/score';
-import { DESIGNS } from '@/lib/designs';
+import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { processDesign } from '@/lib/editor';
 import { lsSet } from '@/lib/store';
 
@@ -65,6 +65,11 @@ export default function CreatePage() {
   const [pending, setPending] = useState<StageKey[]>([]);
   const [failed, setFailed] = useState<StageKey[]>([]);
   const [fact, setFact] = useState(0);
+  const [mode, setMode] = useState<'new' | 'existing'>('new');
+  const [remPending, setRemPending] = useState<RemovalKey[]>([]);
+  const [improving, setImproving] = useState(false);
+  const [busyNote, setBusyNote] = useState(false);
+  const prevRef = useRef<Preview | null>(null);
   const job = useRef<{ token: string; fresh: string } | null>(null);
   const saved = useRef(false);
   const previewRef = useRef<Preview | null>(null);
@@ -145,36 +150,71 @@ export default function CreatePage() {
     }
   };
 
-  const go = async () => {
-    if (!photo || !design) return;
+  const removalOne = async (k: RemovalKey) => {
+    const j = job.current;
+    if (!j) return;
+    setRemPending((p) => (p.includes(k) ? p : [...p, k]));
+    const r = await api<{ image: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token });
+    if (job.current !== j) return;
+    setRemPending((p) => p.filter((x) => x !== k));
+    if (r.ok && r.data.image) {
+      setPreview((p) => {
+        if (!p) return p;
+        const next = { ...p, removal: { ...(p.removal || {}), [k]: r.data.image } };
+        if (saved.current && next.source === 'local') local.put(next).catch(() => {});
+        return next;
+      });
+    } else if (r.data?.error) toast(trErr(ui.lang, r.data.error));
+  };
+  const startRemoval = () => {
+    track('removal_start');
+    REMOVAL_STAGES.forEach((k) => removalOne(k));
+  };
+
+  const go = async (over?: { design?: Design; pl?: Placement }) => {
+    const d = over?.design ?? design;
+    const place = over?.pl ?? pl;
+    const existing = mode === 'existing';
+    if (!photo || (!d && !existing)) return;
+    // keep the finished one around to compare with
+    if (previewRef.current?.images.y50) prevRef.current = previewRef.current;
     job.current = null;
     setPending([]);
+    setRemPending([]);
     setErr('');
     setPhase('gen');
     setGenStep(0);
+    window.scrollTo({ top: 0 });
     haptic();
-    track('generate_start', { placement, lib: design.libId || null });
+    track('generate_start', { placement, lib: d?.libId || null, mode });
     const timers = [setTimeout(() => setGenStep(1), 3500), setTimeout(() => setGenStep(2), 17000)];
-    const cm = pl.w * frameCm(placement);
-    const [flat, mockup] = await Promise.all([flattenOnWhite(design.ink), composeMockup(photo.dataUrl, design.ink, pl)]);
-    const r = await api<any>('/api/generate', {
-      photo: photo.dataUrl,
-      design: flat,
-      mockup,
-      placement,
-      size: cm < 6 ? 'small' : cm > 12 ? 'large' : 'medium',
-      colorMode: design.mode,
-      sizeCm: Math.round(cm * 10) / 10,
-      detail: design.detail,
-      sun: ob?.sun,
-      lang: ui.lang,
-      w: photo.w,
-      h: photo.h,
-    });
+    const cm = place.w * frameCm(placement);
+    const extra = existing
+      ? { mode: 'existing' }
+      : await (async () => {
+          const [flat, mockup] = await Promise.all([flattenOnWhite(d!.ink), composeMockup(photo.dataUrl, d!.ink, place)]);
+          return {
+            design: flat,
+            mockup,
+            size: cm < 6 ? 'small' : cm > 12 ? 'large' : 'medium',
+            colorMode: d!.mode,
+            sizeCm: Math.round(cm * 10) / 10,
+            detail: d!.detail,
+          };
+        })();
+    const body = { photo: photo.dataUrl, placement, sun: ob?.sun, lang: ui.lang, w: photo.w, h: photo.h, ...extra };
+    let r = await api<any>('/api/generate', body);
+    // a busy minute at the AI provider: wait and retry automatically (twice)
+    for (let i = 0; i < 2 && !r.ok && /Lots of people|took too long/.test(r.data?.error || ''); i++) {
+      setBusyNote(true);
+      await new Promise((res) => setTimeout(res, 12000));
+      r = await api<any>('/api/generate', body);
+    }
+    setBusyNote(false);
     timers.forEach(clearTimeout);
 
     if (!r.ok) {
-      setPhase('place');
+      setPhase(existing ? 'studio' : 'place');
       if (r.data?.code === 'paywall') {
         track('paywall', { plan: r.data.plan });
         if (!me.user) openAuth(t('You reached today’s limit on this device. Sign in (free) to keep going and keep your designs.', 'Elérted a mai keretet ezen az eszközön. Jelentkezz be (ingyenes), és folytathatod – a terveid is megmaradnak.'));
@@ -188,13 +228,14 @@ export default function CreatePage() {
 
     setGenStep(3);
     haptic('success');
-    track('generate_done', { qc: r.data.qc, score: r.data.report?.score });
+    track('generate_done', { qc: r.data.qc, score: r.data.report?.score, mode });
     saved.current = false;
     const p: Preview = {
       id: crypto.randomUUID(),
       created_at: new Date().toISOString(),
       placement,
-      size: `${cm.toFixed(1)} cm`,
+      size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
+      sizeCm: existing ? undefined : Math.round(cm * 10) / 10,
       score: r.data.report?.score ?? null,
       report: r.data.report ?? null,
       age: r.data.age ?? null,
@@ -202,6 +243,8 @@ export default function CreatePage() {
       favorite: false,
       collection: null,
       images: { fresh: r.data.image },
+      mode,
+      design: existing ? undefined : d!.ink,
       source: 'local',
     };
     setPreview(p);
@@ -213,6 +256,28 @@ export default function CreatePage() {
       setPending(AGE_STAGES);
       AGE_STAGES.forEach((k) => ageOne(k));
     }
+  };
+
+  // "Make it last": redraw the design with the AI, then run it again on the same spot.
+  const improve = async () => {
+    if (!design) return;
+    setImproving(true);
+    track('improve_start');
+    const flat = await flattenOnWhite(design.ink);
+    const r = await api<{ image: string; error?: string }>('/api/improve', { design: flat, sizeCm: preview?.sizeCm });
+    setImproving(false);
+    if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
+    const nd = await processDesign(r.data.image, design.mode);
+    const next: Design = { raw: r.data.image, ink: nd.dataUrl, ratio: nd.ratio, detail: nd.detail, mode: design.mode };
+    setDesign(next);
+    toast(t('Redrawn to last — now showing how it ages', 'Átrajzolva – most megnézzük, hogyan öregszik'));
+    go({ design: next });
+  };
+  const resize = (cm: number) => {
+    const next = { ...pl, w: Math.min(0.95, cm / frameCm(placement)) };
+    setPl(next);
+    track('resize', { cm });
+    go({ pl: next });
   };
 
   // ---------------------------------------------------------------- auto-save when aging settles
@@ -299,7 +364,27 @@ export default function CreatePage() {
     return (
       <>
         {head(t('Try a tattoo on', 'Próbáld fel'), t('Choose the body area, add a photo of it and the design.', 'Válaszd ki a testrészt, add hozzá a fotóját és a mintát.'))}
-        <StudioStep placement={placement} setPlacement={setPlacement} photo={photo} setPhoto={setPhoto} design={design} setDesign={setDesign} onNext={() => { setPhase('place'); window.scrollTo({ top: 0 }); }} />
+        {err && mode === 'existing' && (
+          <div className="warnbox" role="alert" style={{ marginBottom: 12 }}>
+            <span>⚠️</span>
+            <span>{err}</span>
+          </div>
+        )}
+        <StudioStep
+          mode={mode}
+          setMode={setMode}
+          placement={placement}
+          setPlacement={setPlacement}
+          photo={photo}
+          setPhoto={setPhoto}
+          design={design}
+          setDesign={setDesign}
+          onNext={() => {
+            if (mode === 'existing') return go();
+            setPhase('place');
+            window.scrollTo({ top: 0 });
+          }}
+        />
       </>
     );
 
@@ -320,7 +405,7 @@ export default function CreatePage() {
           setPlacement={setPlacement}
           pl={pl}
           setPl={setPl}
-          onGo={go}
+          onGo={() => go()}
           canGo
           footer={null}
         />
@@ -344,6 +429,7 @@ export default function CreatePage() {
             </li>
           ))}
         </ul>
+        {busyNote && <p className="warnbox" role="status">{t('Lots of people are making previews right now — you’re in the queue, we’ll retry automatically.', 'Most sokan készítenek előnézetet – sorban állsz, automatikusan újrapróbáljuk.')}</p>}
         <p className="gen-fact" dangerouslySetInnerHTML={{ __html: FACTS[ui.lang][fact] }} />
       </div>
     );
@@ -373,6 +459,11 @@ export default function CreatePage() {
           onNotes={(notes) => patch({ notes })}
           onFavorite={() => patch({ favorite: !preview.favorite })}
           onRetryStage={ageOne}
+          onImprove={preview.mode !== 'existing' && design ? improve : undefined}
+          improving={improving}
+          onResize={resize}
+          onRemoval={startRemoval}
+          removalPending={remPending}
           onNew={restart}
         />
       </>

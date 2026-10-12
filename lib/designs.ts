@@ -6,7 +6,7 @@ const svg = (body: string, sw = 7) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 200 200" fill="none" stroke="#111" stroke-width="${sw / 3}" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`
   )}`;
 
-export type LibDesign = { id: string; en: string; hu: string; style: 'fine-line' | 'blackwork'; src: string };
+export type LibDesign = { id: string; en: string; hu: string; style: 'fine-line' | 'blackwork' | 'traditional'; src: string; thumb?: string };
 
 export const DESIGNS: LibDesign[] = [
   {
@@ -92,3 +92,32 @@ export const DESIGNS: LibDesign[] = [
     src: svg(`<circle cx="100" cy="38" r="12"/><path d="M100 50v120M72 76h56"/><path d="M40 120c4 30 30 50 60 50s56-20 60-50"/><path d="M30 130l10-14 14 10M170 130l-10-14-14 10"/>`, 9),
   },
 ];
+
+/** Original flash designs (AI-drawn for InkAge, black ink on white). */
+const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
+export const FLASH: LibDesign[] = [
+  { id: 'rose', en: 'Rose', hu: 'Rózsa', style: 'fine-line', src: CDN + 'hf_20261012_155954_fd830d0f-7102-4ef8-94d3-6f8b588ae649.png', thumb: CDN + 'hf_20261012_155954_fd830d0f-7102-4ef8-94d3-6f8b588ae649_min.webp' },
+  { id: 'peony', en: 'Peony', hu: 'Bazsarózsa', style: 'traditional', src: CDN + 'hf_20261012_155956_d83e6d90-66cb-436c-b967-28a5369f392e.png', thumb: CDN + 'hf_20261012_155956_d83e6d90-66cb-436c-b967-28a5369f392e_min.webp' },
+  { id: 'lotus', en: 'Lotus', hu: 'Lótusz', style: 'fine-line', src: CDN + 'hf_20261012_160152_9db5fdde-624b-4de8-a6b7-57e314491d0a.png', thumb: CDN + 'hf_20261012_160152_9db5fdde-624b-4de8-a6b7-57e314491d0a_min.webp' },
+  { id: 'sunflower', en: 'Sunflower', hu: 'Napraforgó', style: 'blackwork', src: CDN + 'hf_20261012_155953_f335869b-9c9d-46f4-99e3-4f83fc01aef4.png', thumb: CDN + 'hf_20261012_155953_f335869b-9c9d-46f4-99e3-4f83fc01aef4_min.webp' },
+  { id: 'olive', en: 'Olive branch', hu: 'Olajág', style: 'fine-line', src: CDN + 'hf_20261012_155954_5f316dfe-3c06-41c9-b70d-4884782f810b.png', thumb: CDN + 'hf_20261012_155954_5f316dfe-3c06-41c9-b70d-4884782f810b_min.webp' },
+  { id: 'sakura', en: 'Cherry blossom', hu: 'Cseresznyevirág', style: 'fine-line', src: CDN + 'hf_20261012_155954_24fefc55-f996-4860-ada2-678584116ebe.png', thumb: CDN + 'hf_20261012_155954_24fefc55-f996-4860-ada2-678584116ebe_min.webp' },
+  { id: 'fern', en: 'Fern', hu: 'Páfrány', style: 'fine-line', src: CDN + 'hf_20261012_160152_868aea8e-611f-42c1-8f39-f50f45f941f2.png', thumb: CDN + 'hf_20261012_160152_868aea8e-611f-42c1-8f39-f50f45f941f2_min.webp' },
+  { id: 'hummingbird', en: 'Hummingbird', hu: 'Kolibri', style: 'fine-line', src: CDN + 'hf_20261012_160151_675b340e-434f-4654-bb3f-7ed1808542a5.png', thumb: CDN + 'hf_20261012_160151_675b340e-434f-4654-bb3f-7ed1808542a5_min.webp' },
+  { id: 'koi', en: 'Koi', hu: 'Koi ponty', style: 'traditional', src: CDN + 'hf_20261012_155953_5df63f18-0d86-47ec-8ca3-628756e58560.png', thumb: CDN + 'hf_20261012_155953_5df63f18-0d86-47ec-8ca3-628756e58560_min.webp' },
+  { id: 'snake-rose', en: 'Snake & rose', hu: 'Kígyó és rózsa', style: 'traditional', src: CDN + 'hf_20261012_155955_3b3fb696-b00d-426e-a105-d9b672a2cc0f.png', thumb: CDN + 'hf_20261012_155955_3b3fb696-b00d-426e-a105-d9b672a2cc0f_min.webp' },
+  { id: 'dragon', en: 'Dragon', hu: 'Sárkány', style: 'fine-line', src: CDN + 'hf_20261012_160153_bed55035-592d-42ba-99af-4cc599f7bc13.png', thumb: CDN + 'hf_20261012_160153_bed55035-592d-42ba-99af-4cc599f7bc13_min.webp' },
+  { id: 'tiger', en: 'Tiger', hu: 'Tigris', style: 'traditional', src: CDN + 'hf_20261012_155955_e4238215-ade5-4d01-ba52-b4232cd97c5e.png', thumb: CDN + 'hf_20261012_155955_e4238215-ade5-4d01-ba52-b4232cd97c5e_min.webp' },
+  { id: 'wolf', en: 'Geometric wolf', hu: 'Geometrikus farkas', style: 'blackwork', src: CDN + 'hf_20261012_160203_66778a69-2c2c-4918-8276-a6d307e08e3c.png', thumb: CDN + 'hf_20261012_160203_66778a69-2c2c-4918-8276-a6d307e08e3c_min.webp' },
+  { id: 'cat', en: 'One-line cat', hu: 'Egyvonalas macska', style: 'fine-line', src: CDN + 'hf_20261012_160203_b4ec5e17-5cbf-4e99-bd2c-aed918cbef11.png', thumb: CDN + 'hf_20261012_160203_b4ec5e17-5cbf-4e99-bd2c-aed918cbef11_min.webp' },
+  { id: 'phoenix', en: 'Phoenix', hu: 'Főnix', style: 'blackwork', src: CDN + 'hf_20261012_160202_c91bb1df-0285-4516-b2fe-68da21125ccb.png', thumb: CDN + 'hf_20261012_160202_c91bb1df-0285-4516-b2fe-68da21125ccb_min.webp' },
+  { id: 'dagger', en: 'Dagger & rose', hu: 'Tőr és rózsa', style: 'traditional', src: CDN + 'hf_20261012_160203_741c8459-dc7d-4eb0-b996-cb6c229543d0.png', thumb: CDN + 'hf_20261012_160203_741c8459-dc7d-4eb0-b996-cb6c229543d0_min.webp' },
+  { id: 'compass', en: 'Compass', hu: 'Iránytű', style: 'fine-line', src: CDN + 'hf_20261012_160011_071ebf09-abfb-4c1a-ac18-71390946e494.png', thumb: CDN + 'hf_20261012_160011_071ebf09-abfb-4c1a-ac18-71390946e494_min.webp' },
+  { id: 'lighthouse', en: 'Lighthouse', hu: 'Világítótorony', style: 'fine-line', src: CDN + 'hf_20261012_160012_371e0d7b-7de6-43d6-b945-19e34a67858a.png', thumb: CDN + 'hf_20261012_160012_371e0d7b-7de6-43d6-b945-19e34a67858a_min.webp' },
+  { id: 'skull', en: 'Skull & flowers', hu: 'Koponya virágokkal', style: 'traditional', src: CDN + 'hf_20261012_160009_4ac24a28-1f15-4c9c-9b57-7be42abb7661.png', thumb: CDN + 'hf_20261012_160009_4ac24a28-1f15-4c9c-9b57-7be42abb7661_min.webp' },
+  { id: 'eye', en: 'Eye', hu: 'Szem', style: 'fine-line', src: CDN + 'hf_20261012_160010_5f8d8f57-f532-4aa3-9ea2-45d1d0c92649.png', thumb: CDN + 'hf_20261012_160010_5f8d8f57-f532-4aa3-9ea2-45d1d0c92649_min.webp' },
+  { id: 'sun-moon', en: 'Sun & moon', hu: 'Nap és hold', style: 'fine-line', src: CDN + 'hf_20261012_160011_b8e8d615-11f7-405c-820b-b1f0e45496c8.png', thumb: CDN + 'hf_20261012_160011_b8e8d615-11f7-405c-820b-b1f0e45496c8_min.webp' },
+  { id: 'scorpion', en: 'Scorpion', hu: 'Skorpió', style: 'blackwork', src: CDN + 'hf_20261012_160012_354b55ff-b58e-4537-9199-0f337d9dc720.png', thumb: CDN + 'hf_20261012_160012_354b55ff-b58e-4537-9199-0f337d9dc720_min.webp' },
+  { id: 'lavender', en: 'Lavender', hu: 'Levendula', style: 'fine-line', src: CDN + 'hf_20261012_160012_443b1cdb-ffd7-411d-9386-832be4741b00.png', thumb: CDN + 'hf_20261012_160012_443b1cdb-ffd7-411d-9386-832be4741b00_min.webp' },
+];
+export const ALL_DESIGNS: LibDesign[] = [...FLASH, ...DESIGNS];

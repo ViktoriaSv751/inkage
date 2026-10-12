@@ -8,6 +8,7 @@ import { Result } from '../Result';
 import { tx } from '@/lib/i18n';
 import { cloud, local, Preview, StageKey, track } from '@/lib/store';
 import { placeName } from '../create/steps';
+import { EXAMPLE } from '../../visuals';
 
 const thumb = (p: Preview) => p.images.y50 || p.images.y30 || p.images.fresh || '';
 
@@ -132,6 +133,14 @@ export default function GalleryPage() {
         <div className="empty">
           <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><path d="M16.5 13.5v6M13.5 16.5h6" /></svg>
           <p className="sub">{ui.t('gallery.empty')}</p>
+          <div className="cmp" style={{ margin: '0 0 18px' }}>
+            {[EXAMPLE[0], EXAMPLE[4]].map((e) => (
+              <figure key={e.years}>
+                <img src={e.src} alt="" />
+                <figcaption>{e.years ? t('50 years later', '50 év múlva') : t('Fresh', 'Frissen')}</figcaption>
+              </figure>
+            ))}
+          </div>
           <Link className="btn" href="/app">
             {ui.t('nav.create')}
           </Link>
