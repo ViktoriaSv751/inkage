@@ -141,7 +141,10 @@ async function geminiCall(models: string[], body: unknown) {
     if (res.ok) return data;
     lastErr = new Error(data?.error?.message || `Gemini ${res.status}`);
     // try the next model only when this one doesn't exist for this key
-    if (res.status !== 404 && !/not found|not supported|unknown model/i.test(lastErr.message)) throw lastErr;
+    console.warn(`gemini ${model} failed: ${res.status} ${lastErr.message.slice(0, 300)}`);
+    // try the next model when this one doesn't exist for this key or has no quota on this plan
+    const noQuota = res.status === 429 && /limit: 0\b/.test(lastErr.message);
+    if (res.status !== 404 && !noQuota && !/not found|not supported|unknown model/i.test(lastErr.message)) throw lastErr;
   }
   throw lastErr;
 }
@@ -235,6 +238,7 @@ export function friendlyAiError(e: any): string {
   const msg = String(e?.error?.message || e?.message || e);
   if (/safety|moderation|policy|rejected|blocked|SAFETY|PROHIBITED|IMAGE_SAFETY/i.test(msg))
     return 'The AI safety filter blocked this photo. Use a photo that shows only the body area, with no nudity and no minors.';
-  if (/billing|quota|insufficient|exhausted|429/i.test(msg)) return 'The image service is busy right now. Try again in a minute.';
+  if (/limit: 0\b|billing|insufficient/i.test(msg)) return 'Previews are paused for a short while. Please try again later today.';
+  if (/quota|exhausted|429|overloaded|503/i.test(msg)) return 'Lots of people are making previews right now. Try again in a minute.';
   return 'The preview could not be created. Try again, or use a clearer, well-lit photo.';
 }
