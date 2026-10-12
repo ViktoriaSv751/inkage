@@ -466,6 +466,23 @@ export default function CreatePage() {
           removalPending={remPending}
           onNew={restart}
         />
+        {prevRef.current && prevRef.current.id !== preview.id && preview.images.y50 && (
+          <div className="card" style={{ marginTop: 12 }}>
+            <h2>{t('Previous vs. this one', 'Előző vs. mostani')}</h2>
+            <p className="muted">{t('Both at 50 years.', 'Mindkettő 50 év múlva.')}</p>
+            <div className="cmp">
+              {[prevRef.current, preview].map((x, i) => (
+                <figure key={x.id}>
+                  <img src={x.images.y50} alt={i ? t('This one', 'Mostani') : t('Previous', 'Előző')} />
+                  <figcaption>
+                    {i ? t('This one', 'Mostani') : t('Previous', 'Előző')} · {placeName(x.placement, ui.lang)}
+                    {x.sizeCm ? ` · ${x.sizeCm} cm` : ''} · {x.score ?? '–'}/100
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        )}
       </>
     );
 

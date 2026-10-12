@@ -65,7 +65,7 @@ export function Result({
   const [notes, setNotes] = useState(preview.notes || '');
   const touch = useRef<number | null>(null);
   const played = useRef(false);
-  const label = (k: StageKey) => ui.t(`stage.${k}` as any);
+  const label = (k: StageKey) => (k === 'fresh' && preview.mode === 'existing' ? t('Today', 'Ma') : ui.t(`stage.${k}` as any));
   const remLabel = (k: 'fresh' | RemovalKey) => (k === 'fresh' ? t('Today', 'Ma') : t(`${k.slice(5)} sessions`, `${k.slice(5)} kezelés`));
 
   // keep the position inside the available range
@@ -220,8 +220,8 @@ export function Result({
               return <img key={k} className="layer nofade" src={img[k]} alt="" style={{ opacity: op }} />;
             })}
             <div className="stamp">
-              <span>{yearsNow === 0 ? t('NEW', 'ÚJ') : yearsNow}</span>
-              <small>{yearsNow === 0 ? t('fresh ink', 'friss tinta') : t(yearsNow === 1 ? 'year later' : 'years later', 'év múlva')}</small>
+              <span>{yearsNow === 0 ? (preview.mode === 'existing' ? t('NOW', 'MA') : t('NEW', 'ÚJ')) : yearsNow}</span>
+              <small>{yearsNow === 0 ? (preview.mode === 'existing' ? t('today', 'ma') : t('fresh ink', 'friss tinta')) : t(yearsNow === 1 ? 'year later' : 'years later', 'év múlva')}</small>
             </div>
           </>
         ) : (
