@@ -5,6 +5,7 @@ import { useApp } from './AppProvider';
 import { Icon, OutOfPreviews } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
+import { aiPlacement } from '@/lib/placements';
 import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
@@ -75,7 +76,7 @@ export default function CreatePage() {
   const userMoved = useRef(false);
 
   const locate = async (ph: Photo, where: string) => {
-    const r = await api<{ box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: ph.dataUrl, placement: where });
+    const r = await api<{ box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: ph.dataUrl, placement: aiPlacement(where) });
     if (r.ok && r.data.box) setArea({ box: r.data.box, angle: r.data.angle ?? 0, for: where, photo: ph.dataUrl.slice(-64) });
     else setArea(null);
   };
@@ -90,7 +91,7 @@ export default function CreatePage() {
   useEffect(() => {
     if (!photo || mode === 'existing' || phase === 'loading' || phase === 'onboarding') return;
     if (area && area.for === placement && area.photo === photo.dataUrl.slice(-64)) return;
-    const tm = setTimeout(() => locate(photo, placement), 300);
+    const tm = setTimeout(() => locate(photo, placement), 900);
     return () => clearTimeout(tm);
   }, [placement, photo]); // eslint-disable-line react-hooks/exhaustive-deps
   // snap the design into the body part automatically until the user moves it themselves
@@ -229,7 +230,7 @@ export default function CreatePage() {
             detail: d!.detail,
           };
         })();
-    const body = { photo: photo.dataUrl, placement, sun: ob?.sun, lang: ui.lang, w: photo.w, h: photo.h, ...extra };
+    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: ob?.sun, lang: ui.lang, w: photo.w, h: photo.h, ...extra };
     let r = await api<any>('/api/generate', body);
     // a busy minute at the AI provider: wait and retry automatically (twice)
     for (let i = 0; i < 2 && !r.ok && /Lots of people|took too long/.test(r.data?.error || ''); i++) {

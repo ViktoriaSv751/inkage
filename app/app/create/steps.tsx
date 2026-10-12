@@ -14,7 +14,7 @@ import { BodyMap } from './BodyMap';
 import { Sheet } from '../ui';
 
 export type Photo = { dataUrl: string; w: number; h: number };
-export type Design = { raw: string; ink: string; ratio: number; detail: number; mode: 'black' | 'color'; libId?: string };
+export type Design = { raw: string; ink: string; ratio: number; detail: number; mode: 'black' | 'color'; libId?: string; /** the uploaded photo, when the tattoo was cut out of it */ original?: string };
 /** The detected bare-skin area of the chosen body part: [top, left, bottom, right] as fractions of the photo. */
 export type Area = { box: [number, number, number, number]; angle: number };
 
@@ -118,6 +118,7 @@ export function StudioStep({
   const [cam, setCam] = useState(false);
   const [check, setCheck] = useState<CheckState>({ state: photo ? 'ok' : 'idle' });
   const [busy, setBusy] = useState(false);
+  const [busyMsg, setBusyMsg] = useState('');
   const [over, setOver] = useState<'' | 'photo' | 'design'>('');
   const [prompt, setPrompt] = useState('');
   const [aiStyle, setAiStyle] = useState<'fine-line' | 'blackwork' | 'traditional'>('fine-line');
@@ -137,7 +138,7 @@ export function StudioStep({
   const runCheck = useCallback(
     async (p: Photo, where: string) => {
       setCheck({ state: 'checking' });
-      const r = await api<{ ok: boolean; code: string; area: string; box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: p.dataUrl, placement: where });
+      const r = await api<{ ok: boolean; code: string; area: string; box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: p.dataUrl, placement: aiPlacement(where) });
       if (!r.ok) return setCheck({ state: 'ok' }); // never block on a failed check
       onArea?.(r.data.box ? { box: r.data.box, angle: r.data.angle ?? 0 } : null, where, p);
       const c = r.data.code;
@@ -167,18 +168,39 @@ export function StudioStep({
     setBusy(true);
     try {
       const d = await processDesign(raw, mode);
-      setDesign({ raw, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, libId });
+      setDesign({ raw, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, libId, original: design?.raw === raw ? design?.original : undefined });
       haptic();
     } catch {
       toast(t('That design could not be opened. Try another image.', 'Ezt a mintát nem sikerült megnyitni. Próbálj másik képet.'));
     }
     setBusy(false);
   };
+  // Cut just the tattoo out of a photo (someone's arm on Pinterest, a screenshot with background…)
+  const extract = async (raw: string, mode: Design['mode']) => {
+    setBusy(true);
+    setBusyMsg(t('Cutting the tattoo out of the photo…', 'Kivágjuk a tetoválást a fotóból…'));
+    track('extract_design');
+    const r = await api<{ image: string; error?: string }>('/api/extract', { image: raw, color: mode === 'color' });
+    setBusyMsg('');
+    if (!r.ok || !r.data.image) {
+      setBusy(false);
+      toast(trErr(ui.lang, r.data?.error));
+      return applyDesign(raw, mode);
+    }
+    const d = await processDesign(r.data.image, mode);
+    setDesign({ raw: r.data.image, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, original: raw });
+    setBusy(false);
+    haptic('success');
+    toast(t('Tattoo cut out — only the design goes on your skin', 'Kivágva – csak maga a minta kerül a bőrödre'));
+  };
   const designFromFile = async (f: File | Blob, src: string) => {
     try {
-      const p = await prepareImage(f as File, 1024, 'image/png');
+      const p = await prepareImage(f as File, 1024, 'image/jpeg');
       track('design_added', { src });
-      applyDesign(p.dataUrl, design?.mode || 'black');
+      const mode = design?.mode || 'black';
+      const probe = await processDesign(p.dataUrl, mode);
+      if (probe.photoLike) return extract(p.dataUrl, mode);
+      applyDesign(p.dataUrl, mode);
     } catch {
       toast(t('That design could not be opened. Try another image.', 'Ezt a mintát nem sikerült megnyitni. Próbálj másik képet.'));
     }
@@ -234,7 +256,8 @@ export function StudioStep({
           : t('Continue — place it', 'Tovább – elhelyezés');
 
   return (
-    <div>
+    <div className="studio-grid">
+      <div className="col-a">
       {setMode && (
         <div className="seg modeseg" role="radiogroup" aria-label={t('What do you want to see?', 'Mit szeretnél látni?')}>
           <button role="radio" aria-checked={!existing} className={!existing ? 'on' : ''} onClick={() => setMode('new')}>
@@ -249,6 +272,8 @@ export function StudioStep({
         <h2 className="sec-title">{existing ? t('Where is it?', 'Hol van?') : t('Where will it go?', 'Hová kerül?')}</h2>
         <BodyMap value={placement} onChange={setPlacement} />
       </section>
+      </div>
+      <div className="col-b">
 
       <h2 className="sec-title">{existing ? t('Photo of your tattoo', 'Fotó a tetoválásodról') : t('Your photo and the design', 'A fotód és a minta')}</h2>
       <div className={`studio-slots ${existing ? 'one' : ''}`}>
@@ -283,7 +308,12 @@ export function StudioStep({
                 <small>{t('Pinterest, screenshot, sketch', 'Pinterest, képernyőfotó, rajz')}</small>
               </span>
             )}
-            {busy && <span className="sslot-busy"><i className="needle" /></span>}
+            {busy && (
+              <span className="sslot-busy">
+                <i className="needle" />
+                {busyMsg && <small>{busyMsg}</small>}
+              </span>
+            )}
             <span className="sslot-tag">2</span>
           </button>
           <div className="sslot-btns">
@@ -308,6 +338,15 @@ export function StudioStep({
       <input ref={photoRef} id="photo-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
       <input ref={designRef} id="design-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
 
+      {!existing && design && !design.libId && (
+        <button className="cutbtn" onClick={() => extract(design.original || design.raw, design.mode)} disabled={busy}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12" /></svg>
+          <span>
+            {design.original ? t('Cut it out again', 'Kivágás újra') : t('Cut out only the tattoo', 'Csak a tetoválást vágd ki')}
+            <small>{t('If your picture shows a person or background', 'Ha a képen ember vagy háttér is van')}</small>
+          </span>
+        </button>
+      )}
       {!existing && design && (
         <div className="inkrow">
           <b>{ui.t('create.place.ink')}</b>
@@ -380,6 +419,7 @@ export function StudioStep({
         </button>
       </div>
 
+      </div>
       {cam && (
         <CameraSheet
           placement={placement}
@@ -532,17 +572,52 @@ export function PlaceStep({
     const s0 = start.current;
     const next: Placement = {
       ...s0.pl,
-      x: Math.min(1, Math.max(0, s0.pl.x + (cx - s0.cx) / r.width)),
-      y: Math.min(1, Math.max(0, s0.pl.y + (cy - s0.cy) / r.height)),
+      x: Math.min(1.1, Math.max(-0.1, s0.pl.x + (cx - s0.cx) / r.width)),
+      y: Math.min(1.1, Math.max(-0.1, s0.pl.y + (cy - s0.cy) / r.height)),
     };
     if (pts.length > 1 && s0.d) {
       const d = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
       const a = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x);
-      next.w = Math.min(0.95, Math.max(0.06, s0.pl.w * (d / s0.d)));
+      next.w = Math.min(1.4, Math.max(0.04, s0.pl.w * (d / s0.d)));
       next.rot = Math.round(s0.pl.rot + ((a - s0.a) * 180) / Math.PI);
     }
     setPl(next);
   };
+  // corner / rotate handles
+  const hd = useRef<{ mode: 'scale' | 'rotate'; cx: number; cy: number; d0: number; a0: number; pl: Placement } | null>(null);
+  const handleDown = (mode: 'scale' | 'rotate') => (e: React.PointerEvent) => {
+    e.stopPropagation();
+    if (!box.current) return;
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+    const r = box.current.getBoundingClientRect();
+    const cx = r.left + pl.x * r.width, cy = r.top + pl.y * r.height;
+    hd.current = { mode, cx, cy, d0: Math.hypot(e.clientX - cx, e.clientY - cy) || 1, a0: Math.atan2(e.clientY - cy, e.clientX - cx), pl };
+    setDrag(true);
+  };
+  const handleMove = (e: React.PointerEvent) => {
+    const h = hd.current;
+    if (!h) return;
+    e.stopPropagation();
+    if (h.mode === 'scale') {
+      const d = Math.hypot(e.clientX - h.cx, e.clientY - h.cy);
+      setPl({ ...h.pl, w: Math.min(1.4, Math.max(0.04, h.pl.w * (d / h.d0))) });
+    } else {
+      const a = Math.atan2(e.clientY - h.cy, e.clientX - h.cx);
+      let rot = Math.round(h.pl.rot + ((a - h.a0) * 180) / Math.PI);
+      if (rot > 180) rot -= 360;
+      if (rot < -180) rot += 360;
+      // gentle snap to straight angles
+      for (const snap of [0, 90, -90, 180, -180]) if (Math.abs(rot - snap) < 4) rot = snap;
+      setPl({ ...h.pl, rot });
+    }
+  };
+  const handleUp = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    hd.current = null;
+    setDrag(false);
+    haptic();
+  };
+
   const up = (e: React.PointerEvent) => {
     pointers.current.delete(e.pointerId);
     if (pointers.current.size) snapshot();
@@ -554,12 +629,13 @@ export function PlaceStep({
 
   const wPx = `${pl.w * 100}%`;
   return (
-    <div>
+    <div className="place-grid">
+      <div className="col-a">
       <button className="areabtn" onClick={() => setMapOpen(true)}>
-        <span className="areanum">{idx + 1}</span>
+        <span className="areanum">{idx >= 0 ? idx + 1 : '•'}</span>
         <span className="areaname">
           <small>{t('Body area', 'Testrész')}</small>
-          {t(PLACEMENTS[idx]?.en || placement, PLACEMENTS[idx]?.hu || placement)}
+          {placeName(placement, ui.lang)}
         </span>
         <span className="areachg">{t('Change', 'Módosítás')}</span>
       </button>
@@ -583,19 +659,39 @@ export function PlaceStep({
           onPointerMove={move}
           onPointerUp={up}
           onPointerCancel={up}
-          onWheel={(e) => setPl({ ...pl, w: Math.min(0.95, Math.max(0.06, pl.w * (e.deltaY < 0 ? 1.05 : 0.95))) })}
+          onWheel={(e) => setPl({ ...pl, w: Math.min(1.4, Math.max(0.04, pl.w * (e.deltaY < 0 ? 1.05 : 0.95))) })}
           role="img"
           aria-label={t('Tattoo design — drag to move', 'Tetoválásminta – húzd a helyére')}
         >
           <img src={design.ink} alt="" draggable={false} />
         </div>
+        {/* Canva-style frame: corner handles resize, the top handle rotates */}
+        <div
+          className="ink-frame"
+          style={{
+            width: wPx,
+            height: `${((pl.w * design.ratio * photo.w) / photo.h) * 100}%`,
+            left: `${pl.x * 100}%`,
+            top: `${pl.y * 100}%`,
+            transform: `translate(-50%, -50%) rotate(${pl.rot}deg)`,
+          }}
+        >
+          {(['nw', 'ne', 'se', 'sw'] as const).map((c) => (
+            <i key={c} className={`hdl ${c}`} onPointerDown={handleDown('scale')} onPointerMove={handleMove} onPointerUp={handleUp} onPointerCancel={handleUp} aria-hidden="true" />
+          ))}
+          <i className="hdl rot" onPointerDown={handleDown('rotate')} onPointerMove={handleMove} onPointerUp={handleUp} onPointerCancel={handleUp} aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5M19 4v4h-4" /></svg>
+          </i>
+        </div>
         <span className="cm">≈ {cm.toFixed(cm < 10 ? 1 : 0)} cm</span>
       </div>
 
+      </div>
+      <div className="col-b">
       <div className="sliders">
         <label>
           {ui.t('create.place.size')}
-          <input type="range" min={6} max={95} value={Math.round(pl.w * 100)} onChange={(e) => setPl({ ...pl, w: Number(e.target.value) / 100 })} />
+          <input type="range" min={4} max={140} value={Math.round(pl.w * 100)} onChange={(e) => setPl({ ...pl, w: Number(e.target.value) / 100 })} />
         </label>
         <label>
           {ui.t('create.place.rotate')}
@@ -612,11 +708,10 @@ export function PlaceStep({
       </div>
 
       {out && (
-        <div className="warnbox" role="alert">
-          <span>⚠️</span>
+        <div className="notebox" role="note">
           <span>
-            <b>{t('The design goes past the body part.', 'A minta kilóg a testrészről.')}</b>{' '}
-            {t('Tattoos only work on skin — snap it back inside.', 'Tetoválás csak bőrre kerülhet – igazítsd vissza.')}
+            <b>{t('It reaches past the detected body part.', 'Túlnyúlik a felismert testrészen.')}</b>{' '}
+            {t('That’s fine if you want it there — it will continue onto the neighbouring skin, never onto clothes or the background.', 'Ha így szeretnéd, maradhat – a szomszédos bőrre folytatódik, ruhára vagy a háttérre soha.')}
             {onFit && (
               <button className="inline-fix" onClick={onFit}>
                 {t('Fit it to the body part', 'Igazítsd a testrészre')}
@@ -646,18 +741,25 @@ export function PlaceStep({
         {footer}
       </div>
 
+      </div>
       <Sheet open={mapOpen} onClose={() => setMapOpen(false)} label={t('Body area', 'Testrész')}>
         <h2>{t('Where will it go?', 'Hová kerül?')}</h2>
         <BodyMap
           value={placement}
           onChange={(v) => {
             setPlacement(v);
-            setMapOpen(false);
+            if (!isCustom(v)) setMapOpen(false);
           }}
         />
+        {isCustom(placement) && (
+          <button className="btn wide" onClick={() => setMapOpen(false)}>
+            {t('Done', 'Kész')}
+          </button>
+        )}
       </Sheet>
     </div>
   );
 }
 
 export { placeName } from '@/lib/placements';
+import { aiPlacement, isCustom, placeName } from '@/lib/placements';

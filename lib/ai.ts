@@ -34,7 +34,7 @@ const KEEP =
   'This is a photo edit, not a new image. Keep the exact same person, body shape, pose, hands, clothing, background, lighting, colour grading, camera angle, framing, depth of field and image grain. Do not crop, zoom, mirror or re-frame. Do not add text, watermarks or extra tattoos. The result must look like an unretouched smartphone photo.';
 
 const STAY_ON_BODY =
-  'The whole tattoo must sit on the skin of that body part only: it must never extend past the body outline onto the background, clothing, the table or another body part. If the overlay crosses the edge of the limb, shrink and nudge it until every line is on skin, and wrap it around the curvature of the limb (lines near the edges get foreshortened as the skin turns away from the camera).';
+  'Every line of the tattoo must be on skin: never on the background, clothing, jewellery or objects. Follow the user\'s position and size; if the overlay deliberately continues onto neighbouring skin (for example from the shoulder onto the chest), keep it there and let it wrap naturally across both areas. Only where it would leave the body entirely, pull it back onto the skin. Wrap it around the curvature of the body (lines near the edges get foreshortened as the skin turns away from the camera).';
 
 export function freshPrompt(placement: string, size: string) {
   const sizeText =
@@ -56,6 +56,7 @@ export function placedPrompt(placement: string, colorMode: 'black' | 'color') {
   return [
     'Image 1 is a real photo of a person. Image 2 is the same photo with a flat digital overlay that shows EXACTLY where the tattoo goes, how big it is and how it is rotated. Image 3 is the original tattoo design.',
     `Turn the overlay into a real tattoo on the person's ${placement}: same position, same size, same rotation as in image 2. Use image 3 for the exact linework and details.`,
+    'If image 3 shows anything besides the tattoo design itself (another person, their skin, clothes, a background), ignore all of that and transfer only the inked design.',
     colorMode === 'black'
       ? 'Use black ink only (no colours), as a skilled artist would execute this design.'
       : "Keep the design's original colours.",
@@ -145,6 +146,19 @@ export function improvePrompt(sizeCm: number | null) {
     `It will be tattooed${sizeCm ? ` at about ${Math.round(sizeCm)} cm wide` : ''}, so: make the main outlines bolder (equivalent to a 5–7 round-liner), remove or merge details that sit closer than about 1 mm, open up tight negative spaces, simplify tiny shading into a few solid or clean areas.`,
     'Keep the same subject, composition, proportions and character — it must be clearly the same design, just built to last.',
     'Output: black ink line art on a pure white background, centred with white margin, no text, no skin, no shadows, flat like a scanned drawing.',
+  ].join(' ');
+}
+
+/** Pull just the tattoo out of a photo (e.g. a Pinterest picture of a tattoo on someone's arm). */
+export function extractPrompt(color: boolean) {
+  return [
+    'This image shows a tattoo (it may be on a person\'s skin, photographed at an angle, with clothes and background around it).',
+    'Recreate ONLY the tattoo design itself as a clean, flat, front-facing stencil, the way a tattoo artist would trace it for a client:',
+    'remove the person, skin, body, hair, clothing, shadows, light reflections and background completely;',
+    'undo the perspective and the curvature of the body so the design is flat and centred;',
+    'keep every element, proportion and detail of the design exactly — do not add, redesign or simplify anything; complete any line that is cut off only if it is obvious.',
+    color ? 'Keep the original ink colours.' : 'Use black ink only.',
+    'Output: the design on a pure white background with white margin around it, nothing else in the image, no text unless it is part of the tattoo.',
   ].join(' ');
 }
 

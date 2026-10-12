@@ -174,7 +174,8 @@ export function Result({
   const remCount = REMOVAL_STAGES.filter((k) => rem[k]).length;
 
   return (
-    <div>
+    <div className="result-grid">
+      <div className="col-a">
       {(remCount > 0 || removalPending.length > 0) && (
         <div className="seg viewseg" role="tablist">
           <button role="tab" aria-selected={view === 'aging'} className={view === 'aging' ? 'on' : ''} onClick={() => setView('aging')}>
@@ -341,6 +342,8 @@ export function Result({
         </button>
       </div>
 
+      </div>
+      <div className="col-b">
       {(onImprove || suggestCm) && preview.mode !== 'existing' && report && report.score < 85 && (
         <div className="card fixcard">
           <h2>{t('Make it last', 'Tedd tartóssá')}</h2>
@@ -476,6 +479,7 @@ export function Result({
       )}
 
 
+      </div>
       <VideoSheet open={video} onClose={() => setVideo(false)} preview={preview} />
       <CareSheet open={care} onClose={() => setCare(false)} />
     </div>

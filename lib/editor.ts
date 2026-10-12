@@ -26,6 +26,15 @@ export async function processDesign(src: string, mode: 'black' | 'color') {
   for (let x = 0; x < W; x += 4) for (const y of [0, H - 1]) { const i = (y * W + x) * 4; br += p[i]; bg += p[i + 1]; bb += p[i + 2]; n++; }
   for (let y = 0; y < H; y += 4) for (const x of [0, W - 1]) { const i = (y * W + x) * 4; br += p[i]; bg += p[i + 1]; bb += p[i + 2]; n++; }
   br /= n; bg /= n; bb /= n;
+  // Is this a photo (tattoo on someone's skin, busy background) rather than a clean drawing?
+  let varSum = 0, vn = 0;
+  const acc = (i: number) => { varSum += (p[i] - br) ** 2 + (p[i + 1] - bg) ** 2 + (p[i + 2] - bb) ** 2; vn++; };
+  for (let x = 0; x < W; x += 4) for (const y of [0, H - 1]) acc((y * W + x) * 4);
+  for (let y = 0; y < H; y += 4) for (const x of [0, W - 1]) acc((y * W + x) * 4);
+  const borderStd = Math.sqrt(varSum / Math.max(1, vn) / 3);
+  const bgLum = 0.299 * br + 0.587 * bg + 0.114 * bb;
+  // skin-like or busy border, or a mid-tone background → treat as a photo
+  const skinLike = br > bg && bg > bb && br - bb > 25 && bgLum > 60 && bgLum < 235;
   const hasTransparency = (() => { for (let i = 3; i < p.length; i += 4 * 97) if (p[i] < 250) return true; return false; })();
 
   let minX = W, minY = H, maxX = 0, maxY = 0, ink = 0;
@@ -68,7 +77,10 @@ export async function processDesign(src: string, mode: 'black' | 'color') {
   out.width = cw;
   out.height = ch;
   out.getContext('2d')!.drawImage(c, cx, cy, cw, ch, 0, 0, cw, ch);
-  return { dataUrl: out.toDataURL('image/png'), ratio: ch / cw, detail };
+  // lots of 'ink' covering the frame is another sign of a photo
+  const coverage = ink / (W * H);
+  const photoLike = !hasTransparency && (borderStd > 28 || skinLike || bgLum < 200 || coverage > 0.55);
+  return { dataUrl: out.toDataURL('image/png'), ratio: ch / cw, detail, photoLike };
 }
 
 /** Draws the design onto the photo where the user placed it (the "rough overlay" the AI refines). */

@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   } catch {
     return json({ error: 'Bad request' }, 400);
   }
-  const placement = String(body.placement || 'forearm').slice(0, 80).replace(/[^\p{L}\p{N} ,'()-]/gu, '');
+  const placement = String(body.placement || 'forearm').slice(0, 200).replace(/[^\p{L}\p{N} ,'()-]/gu, '');
   const size = ['small', 'medium', 'large'].includes(body.size) ? body.size : 'medium';
   const existing = body.mode === 'existing';
   let photo, design;

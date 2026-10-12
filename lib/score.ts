@@ -81,10 +81,10 @@ export function longevity(input: ScoreInput, lang: Lang = 'en') {
 
 /** Rough physical width of the visible frame for common shots, used to estimate cm from the editor. */
 export function frameCm(placement: string) {
-  if (/finger|ujj/i.test(placement)) return 9;
-  if (/wrist|csukló|hand|kéz|ankle|boka/i.test(placement)) return 16;
-  if (/forearm|alkar|neck|nyak|calf|vádli/i.test(placement)) return 24;
+  if (/finger|ujj|ear|fül/i.test(placement)) return 9;
+  if (/wrist|csukló|hand|kéz|ankle|boka|foot|lábfej/i.test(placement)) return 16;
+  if (/forearm|alkar|neck|nyak|tarkó|calf|vádli|shin|sípcsont|elbow|könyök|knee|térd/i.test(placement)) return 24;
   if (/upper arm|felkar|shoulder|váll|collar|kulcscsont/i.test(placement)) return 30;
-  if (/back|hát|rib|borda|thigh|comb|spine|gerinc|hip|csípő/i.test(placement)) return 40;
+  if (/back|hát|rib|borda|thigh|comb|spine|gerinc|hip|csípő|stomach|has|sternum|szegy|chest|mellkas|derék|lapocka|blade/i.test(placement)) return 40;
   return 26;
 }
