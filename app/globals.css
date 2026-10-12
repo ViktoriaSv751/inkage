@@ -81,9 +81,12 @@ h1 {
 .lede { font-size: 19px; color: var(--ink-2); max-width: 30ch; margin: 0 0 28px; }
 
 .hero-demo { position: relative; background: var(--sheet); border-radius: var(--r-lg); padding: 20px 20px 22px; box-shadow: 0 30px 60px -30px rgba(90, 40, 30, .45); }
-.arm-wrap { border-radius: 20px; overflow: hidden; background: linear-gradient(160deg, #2a2440, #15122b); height: 380px; display: grid; place-items: center; }
-.arm { height: 100%; width: auto; transform: rotate(-8deg) scale(1.12); }
-.year-readout { position: absolute; top: 34px; left: 36px; color: #fff; display: grid; line-height: .85; pointer-events: none; }
+.photo-stack { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 896 / 1200; max-height: 560px; width: 100%; background: #2a2440; }
+.photo-stack img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.photo-stack::after { content: ''; position: absolute; inset: 0 0 auto; height: 45%; background: linear-gradient(rgba(21,18,43,.55), transparent); pointer-events: none; }
+.year-readout { z-index: 2; }
+.real-tag { position: absolute; z-index: 2; right: 12px; bottom: 12px; background: rgba(21,18,43,.7); color: #fff; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; backdrop-filter: blur(6px); }
+.year-readout { position: absolute; top: 18px; left: 20px; color: #fff; display: grid; line-height: .85; pointer-events: none; }
 .year-num { font-family: var(--display); font-weight: 900; font-size: 88px; font-variant-numeric: tabular-nums; }
 .year-num.word { font-size: 56px; text-transform: uppercase; }
 .year-unit { font-weight: 600; font-size: 16px; opacity: .85; margin-top: 6px; }
@@ -226,7 +229,6 @@ footer { display: flex; gap: 18px; justify-content: center; font-size: 14px; col
 /* ---------- responsive ---------- */
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; gap: 28px; padding-bottom: 48px; }
-  .arm-wrap { height: 340px; }
 }
 @media (max-width: 560px) {
   .studio { padding: 22px 16px; }
@@ -235,10 +237,11 @@ footer { display: flex; gap: 18px; justify-content: center; font-size: 14px; col
   .spotlist button { font-size: 14px; padding: 6px 11px; }
   .year-num { font-size: 68px; }
   .year-num.word { font-size: 44px; }
-  .year-readout { top: 30px; left: 30px; }
   .stamp span { font-size: 64px; }
   .result { padding: 12px; border-radius: 22px; }
   .size-row { gap: 8px; }
   .size-row button { padding: 10px 6px; gap: 7px; font-size: 15px; }
   .size-row button i { transform: scale(.75); }
 }
+
+.example-note { margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.08); font-size: 14px; color: rgba(255,255,255,.85); }

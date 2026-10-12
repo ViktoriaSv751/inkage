@@ -5,13 +5,12 @@ import {
   STAGE_LABELS,
   StageKey,
   dataUrlToBlob,
-  demoComposite,
   makeTimelapse,
   prepareImage,
   shareOrDownload,
 } from '@/lib/client';
 import { api, sb } from '@/lib/sb';
-import { BodyMap, HeroAging } from './visuals';
+import { BodyMap, EXAMPLE, HeroAging } from './visuals';
 
 type Cfg = { ai: boolean; auth: boolean; payments: boolean };
 type Me = { user: { id: string; email?: string } | null; plan?: string; remaining?: number; limit?: number; canAge?: boolean };
@@ -38,6 +37,8 @@ export default function Home() {
   const [modal, setModal] = useState<null | 'auth' | 'paywall'>(null);
   const [video, setVideo] = useState<{ progress: number; url?: string; blob?: Blob; ext?: string } | null>(null);
   const [notice, setNotice] = useState('');
+  const [baseAge, setBaseAge] = useState<number | null>(null);
+  const [exampleMode, setExampleMode] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
   const pendingGenerate = useRef(false);
 
@@ -94,16 +95,16 @@ export default function Home() {
     setError('');
     setVideo(null);
 
-    // ---------- demo mode: local simulation ----------
+    // ---------- AI not connected: show a real example from the same pipeline ----------
     if (demo) {
-      setBusy(true);
-      const out = await demoComposite(photo.dataUrl, design.dataUrl, size);
-      setStages(Object.fromEntries(STAGE_LABELS.map((s) => [s.key, { status: 'done', src: out[s.key] }])) as any);
+      setStages(Object.fromEntries(STAGE_LABELS.map((s, i) => [s.key, { status: 'done', src: EXAMPLE[i].src }])) as any);
+      setBaseAge(28);
+      setExampleMode(true);
       setActive(0);
-      setBusy(false);
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
       return;
     }
+    setExampleMode(false);
 
     if (!me.user) {
       pendingGenerate.current = true;
@@ -131,6 +132,7 @@ export default function Home() {
       return setError(r.data.error || 'Something went wrong.');
     }
     const fresh = r.data.image as string;
+    setBaseAge(typeof r.data.age === 'number' ? r.data.age : null);
     refreshMe();
     if (r.data.canAge && r.data.token) {
       setStages({ ...emptyStages(), fresh: { status: 'done', src: fresh } });
@@ -226,7 +228,7 @@ export default function Home() {
         )}
       </header>
 
-      {demo && <div className="banner">Preview mode: results are a quick simulation until the AI is switched on.</div>}
+      {demo && <div className="banner">Preview: the AI isn’t connected here yet. You’ll see a real example result instead of your own photo.</div>}
       {notice && (
         <button className="banner ok" onClick={() => setNotice('')}>
           {notice}
@@ -296,6 +298,11 @@ export default function Home() {
 
       {hasResult && (
         <section className="result" ref={resultRef} aria-live="polite">
+          {exampleMode && (
+            <p className="example-note">
+              The AI isn’t connected on this preview yet, so this is a real example made with the same AI on a test photo. Your own photo will look like this once the app is live.
+            </p>
+          )}
           <div className="viewer">
             {cur.src ? (
               <img src={cur.src} alt={`Your tattoo, ${yearsLabel.toLowerCase()}`} className={cur.status === 'locked' ? 'locked' : ''} />
@@ -304,7 +311,10 @@ export default function Home() {
             )}
             <div className="stamp">
               <span>{['0', '1', '10', '30', '50'][stageIdx]}</span>
-              <small>{stageIdx === 0 ? 'fresh today' : stageIdx === 1 ? 'year later' : 'years later'}</small>
+              <small>
+                {stageIdx === 0 ? 'fresh today' : stageIdx === 1 ? 'year later' : 'years later'}
+                {baseAge !== null && ` · you at ~${baseAge + [0, 1, 10, 30, 50][stageIdx]}`}
+              </small>
             </div>
             {(cur.status === 'loading' || (active === 0 && stages.fresh.status === 'loading')) && (
               <div className="veil">

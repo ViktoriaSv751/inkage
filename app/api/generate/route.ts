@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     );
     const analysis = start.canAge ? await analyse(dataUrlToImg(image)) : null;
     const token = start.canAge ? signToken({ uid: a.user.id, gid: start.gid, h: sha(image), w, hh: h, an: analysis, exp: Date.now() + 3600e3 }) : null;
-    return json({ image, token, canAge: start.canAge, remaining: start.remaining - 1, plan: start.plan });
+    return json({ image, token, age: analysis?.apparentAge ?? null, canAge: start.canAge, remaining: start.remaining - 1, plan: start.plan });
   } catch (e) {
     console.error('generate failed', e);
     await a.db.rpc('refund_generation', { p_gid: start.gid });
