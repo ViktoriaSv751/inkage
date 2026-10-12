@@ -541,7 +541,8 @@ export function PlaceStep({
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const start = useRef<{ pl: Placement; d: number; a: number; cx: number; cy: number } | null>(null);
   const [drag, setDrag] = useState(false);
-  const cm = pl.w * frameCm(placement);
+  // the longer side of the design, in cm
+  const cm = pl.w * Math.max(1, design.ratio) * frameCm(placement);
   const thin = design.detail > 0.55 && cm < 7;
   const [mapOpen, setMapOpen] = useState(false);
   const out = !!area && overflows(area, design, photo, pl);

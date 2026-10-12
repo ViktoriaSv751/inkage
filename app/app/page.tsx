@@ -216,7 +216,7 @@ export default function CreatePage() {
     haptic();
     track('generate_start', { placement, lib: d?.libId || null, mode });
     const timers = [setTimeout(() => setGenStep(1), 3500), setTimeout(() => setGenStep(2), 17000)];
-    const cm = place.w * frameCm(placement);
+    const cm = place.w * Math.max(1, d?.ratio ?? 1) * frameCm(placement);
     const extra = existing
       ? { mode: 'existing' }
       : await (async () => {
@@ -302,7 +302,7 @@ export default function CreatePage() {
     go({ design: next });
   };
   const resize = (cm: number) => {
-    const next = { ...pl, w: Math.min(0.95, cm / frameCm(placement)) };
+    const next = { ...pl, w: Math.min(0.95, cm / (frameCm(placement) * Math.max(1, design?.ratio ?? 1))) };
     setPl(next);
     track('resize', { cm });
     go({ pl: next });
