@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useLang } from '@/lib/i18n';
 
 const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
 /** Real AI results from the same pipeline the app uses (one test photo, five stages). */
@@ -17,6 +18,8 @@ export const EXAMPLE = [
  * Plays once on load, then the visitor can drag it.
  */
 export function HeroAging() {
+  const { lang } = useLang();
+  const L = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const [years, setYears] = useState(0);
   const touched = useRef(false);
 
@@ -54,17 +57,17 @@ export function HeroAging() {
           <img
             key={e.years}
             src={e.src}
-            alt={k === 0 ? 'A fine-line moon tattoo on a forearm, fresh' : ''}
+            alt={k === 0 ? L('A fine-line moon tattoo on a forearm, fresh', 'Finom vonalas hold tetoválás alkaron, frissen') : ''}
             aria-hidden={k !== 0}
             style={{ opacity: k === i ? 1 : k === i + 1 ? f : 0 }}
             loading={k === 0 ? 'eager' : 'lazy'}
           />
         ))}
         <div className="year-readout">
-          <span className={`year-num ${shown === 0 ? 'word' : ''}`}>{shown === 0 ? 'Fresh' : shown}</span>
-          <span className="year-unit">{shown === 0 ? 'done today' : shown === 1 ? 'year later' : 'years later'}</span>
+          <span className={`year-num ${shown === 0 ? 'word' : ''}`}>{shown === 0 ? L('Fresh', 'Friss') : shown}</span>
+          <span className="year-unit">{shown === 0 ? L('done today', 'ma készült') : L(shown === 1 ? 'year later' : 'years later', 'év múlva')}</span>
         </div>
-        <span className="real-tag">Real AI result</span>
+        <span className="real-tag">{L('Real AI result', 'Valódi MI-eredmény')}</span>
       </div>
 
       <label className="hero-scrub">
@@ -80,8 +83,8 @@ export function HeroAging() {
           }}
         />
         <span className="scrub-ends">
-          <span>Today</span>
-          <span>50 years</span>
+          <span>{L('Today', 'Ma')}</span>
+          <span>{L('50 years', '50 év')}</span>
         </span>
       </label>
     </div>
