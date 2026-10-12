@@ -23,11 +23,6 @@ type Q = { key: keyof OnboardingAnswers; en: string; hu: string; options: { v: s
 
 const QUESTIONS: Q[] = [
   { key: 'adult', en: 'Are you 18 or older?', hu: 'Elmúltál 18 éves?', options: [{ v: 'yes', en: 'Yes, I’m 18+', hu: 'Igen, elmúltam 18' }, { v: 'no', en: 'No', hu: 'Nem' }] },
-  { key: 'has', en: 'Do you have any tattoos?', hu: 'Van már tetoválásod?', options: [
-    { v: 'none', en: 'Not yet', hu: 'Még nincs', emoji: '✨' }, { v: 'one', en: 'One', hu: 'Egy', emoji: '☝️' }, { v: 'several', en: 'A few', hu: 'Több is', emoji: '🖋️' } ] },
-  { key: 'goal', en: 'What are you planning?', hu: 'Mit tervezel?', options: [
-    { v: 'first', en: 'My first tattoo', hu: 'Az első tetoválásom', emoji: '🌱' }, { v: 'another', en: 'Another one', hu: 'Egy újabbat', emoji: '➕' },
-    { v: 'cover', en: 'A cover-up', hu: 'Takarást', emoji: '🩹' }, { v: 'curious', en: 'Just curious', hu: 'Csak kíváncsi vagyok', emoji: '👀' } ] },
   { key: 'placement', en: 'Where would it go?', hu: 'Hová kerülne?', options: [
     { v: 'Inner forearm', en: 'Forearm', hu: 'Alkar' }, { v: 'Wrist', en: 'Wrist', hu: 'Csukló' }, { v: 'Hand', en: 'Hand', hu: 'Kézfej' },
     { v: 'Upper arm', en: 'Upper arm', hu: 'Felkar' }, { v: 'Shoulder', en: 'Shoulder', hu: 'Váll' }, { v: 'Upper back', en: 'Back', hu: 'Hát' },
@@ -35,23 +30,13 @@ const QUESTIONS: Q[] = [
   { key: 'style', en: 'Which style are you drawn to?', hu: 'Melyik stílus vonz?', options: [
     { v: 'fine-line', en: 'Fine line', hu: 'Fine line (vékony vonal)' }, { v: 'blackwork', en: 'Bold blackwork', hu: 'Vastag blackwork' },
     { v: 'color', en: 'Color', hu: 'Színes' }, { v: 'realism', en: 'Realism', hu: 'Realista' }, { v: 'other', en: 'Not sure yet', hu: 'Még nem tudom' } ] },
-  { key: 'size', en: 'How big?', hu: 'Mekkora legyen?', options: [
-    { v: '3', en: 'Tiny (under 4 cm)', hu: 'Pici (4 cm alatt)' }, { v: '6', en: 'Small (4–7 cm)', hu: 'Kicsi (4–7 cm)' },
-    { v: '10', en: 'Medium (7–12 cm)', hu: 'Közepes (7–12 cm)' }, { v: '16', en: 'Large (12 cm+)', hu: 'Nagy (12 cm felett)' } ] },
-  { key: 'sun', en: 'How much sun does that spot get?', hu: 'Mennyi nap éri azt a részt?', options: [
-    { v: 'low', en: 'Rarely', hu: 'Ritkán', emoji: '🌥️' }, { v: 'medium', en: 'Sometimes', hu: 'Néha', emoji: '⛅' }, { v: 'high', en: 'Often', hu: 'Gyakran', emoji: '☀️' } ] },
-  { key: 'age', en: 'How old are you?', hu: 'Hány éves vagy?', options: [
-    { v: '21', en: '18–24', hu: '18–24' }, { v: '30', en: '25–34', hu: '25–34' }, { v: '40', en: '35–44', hu: '35–44' }, { v: '50', en: '45–54', hu: '45–54' }, { v: '60', en: '55+', hu: '55+' } ] },
-  { key: 'fear', en: 'What worries you most?', hu: 'Mi aggaszt a legjobban?', options: [
-    { v: 'blur', en: 'Lines blurring', hu: 'Hogy elmosódnak a vonalak', emoji: '🌫️' }, { v: 'fade', en: 'Fading', hu: 'Hogy kifakul', emoji: '🎨' },
-    { v: 'regret', en: 'Regretting it', hu: 'Hogy megbánom', emoji: '😬' }, { v: 'aging', en: 'How it looks when I’m older', hu: 'Hogy néz ki, ha idősebb leszek', emoji: '⏳' } ] },
 ];
 
 export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void }) {
   const { ui, me } = useApp();
   const L = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [i, setI] = useState(0);
-  const [a, setA] = useState<Partial<OnboardingAnswers>>({});
+  const [a, setA] = useState<Partial<OnboardingAnswers>>({ has: '', goal: '', size: '8', sun: 'medium', age: '', fear: '', style: 'other', placement: 'Inner forearm' });
   const [phase, setPhase] = useState<'q' | 'building' | 'plan' | 'blocked'>('q');
 
   useEffect(() => track('onboarding_start'), []);
@@ -65,7 +50,7 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
     if (i < QUESTIONS.length - 1) setTimeout(() => setI(i + 1), 160);
     else {
       setPhase('building');
-      setTimeout(() => setPhase('plan'), 2400);
+      setTimeout(() => setPhase('plan'), 1300);
     }
   };
 
@@ -153,6 +138,11 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
         <div className="ob-progress" aria-label={`${i + 1} / ${QUESTIONS.length}`}>
           <i style={{ width: `${((i + 1) / QUESTIONS.length) * 100}%` }} />
         </div>
+        {i > 0 && (
+          <button className="link" onClick={finish}>
+            {L('Skip', 'Kihagyom')}
+          </button>
+        )}
       </div>
       <h1 className="ob-title" key={q.key}>
         {L(q.en, q.hu)}

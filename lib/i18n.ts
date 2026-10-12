@@ -74,8 +74,8 @@ const EN = {
   'profile.install': 'Add InkAge to your home screen',
   'profile.erase': 'Delete my account and data',
   'profile.eraseConfirm': 'Type DELETE to confirm. This removes your account and every saved preview.',
-  'paywall.used': 'You used your free preview',
-  'paywall.sub': 'More previews are coming with InkAge Pro very soon. Meanwhile, invite a friend: you both get another free preview.',
+  'paywall.used': 'You reached today’s limit',
+  'paywall.sub': 'InkAge is free during the beta, with a daily limit to keep it running. Come back tomorrow — or invite a friend: you both get extra previews.',
 } as const;
 
 type Key = keyof typeof EN;
@@ -151,8 +151,8 @@ const HU: Record<Key, string> = {
   'profile.install': 'InkAge a kezdőképernyőre',
   'profile.erase': 'Fiókom és adataim törlése',
   'profile.eraseConfirm': 'Írd be: DELETE. Ez törli a fiókodat és minden mentett előnézetet.',
-  'paywall.used': 'Elhasználtad az ingyenes előnézetet',
-  'paywall.sub': 'Hamarosan jön az InkAge Pro több előnézettel. Addig hívj meg egy barátot: mindketten kaptok még egy ingyenes előnézetet.',
+  'paywall.used': 'Elérted a mai keretet',
+  'paywall.sub': 'Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
 };
 
 const DICTS: Record<Lang, Record<Key, string>> = { en: EN as any, hu: HU };
@@ -194,3 +194,30 @@ export function useLang() {
 
 /** Pick between an English and Hungarian string inline (for longer copy). */
 export const tx = (lang: Lang, en: string, hu: string) => (lang === 'hu' ? hu : en);
+
+/** Server messages are English; show them in Hungarian when the app is in Hungarian. */
+const ERR_HU: [RegExp, string][] = [
+  [/^You used your free preview/, 'Elhasználtad az ingyenes előnézeteidet mára. Próbáld újra holnap.'],
+  [/^You reached your plan limit/, 'Elérted a mai keretedet. Próbáld újra később.'],
+  [/^So many people are trying InkAge today/, 'Ma nagyon sokan próbálják az InkAge-et, ezért az ingyenes előnézetek szünetelnek. Próbáld újra holnap.'],
+  [/^Previews are paused/, 'Az előnézetek rövid ideig szünetelnek. Próbáld újra később.'],
+  [/^Lots of people are making previews/, 'Most nagyon sokan készítenek előnézetet. Próbáld újra egy perc múlva.'],
+  [/^The AI safety filter blocked/, 'Az MI biztonsági szűrője letiltotta ezt a fotót. Olyan fotót használj, amin csak a testrész látszik, meztelenség és kiskorú nélkül.'],
+  [/^The preview could not be created/, 'Nem sikerült elkészíteni az előnézetet. Próbáld újra, vagy használj élesebb, világosabb fotót.'],
+  [/^The server took too long/, 'A szerver túl sokáig dolgozott. Próbáld újra.'],
+  [/^No connection/, 'Nincs internetkapcsolat. Ellenőrizd, és próbáld újra.'],
+  [/^Add both images again/, 'Add meg újra mindkét képet, és próbáld újra.'],
+  [/^These images are too large/, 'Túl nagyok a képek. Használj kisebb fotót.'],
+  [/^Could not start your preview/, 'Nem sikerült elindítani az előnézetet. Próbáld újra.'],
+  [/^This preview expired/, 'Ez az előnézet lejárt. Kezdj egy újat.'],
+  [/^Start a new preview/, 'Kezdj egy új előnézetet, és próbáld újra.'],
+  [/^Limit reached for this image/, 'Ehhez a képhez elérted a keretet. Kezdj egy új előnézetet.'],
+  [/^Please sign in/, 'Kérlek, jelentkezz be újra.'],
+  [/^The AI is not switched on|^The app is not fully set up|^Not set up yet/, 'Az app most karbantartás alatt van. Próbáld újra pár perc múlva.'],
+  [/^Network error/, 'Hálózati hiba. Próbáld újra.'],
+];
+export function trErr(lang: Lang, msg: string | undefined | null) {
+  const m = msg || (lang === 'hu' ? 'Valami hiba történt. Próbáld újra.' : 'Something went wrong. Try again.');
+  if (lang !== 'hu') return m;
+  return ERR_HU.find(([re]) => re.test(m))?.[1] ?? m;
+}

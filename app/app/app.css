@@ -295,3 +295,35 @@
   .appmain { padding-top: 28px; }
   .galgrid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ---------- v2.1: single-screen studio, body area always editable */
+.placepick { margin: 0 0 12px; }
+.placepick-label { display: block; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 6px; }
+.studio-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.studio-col { display: grid; gap: 8px; align-content: start; }
+.sslot { position: relative; width: 100%; aspect-ratio: 4/5; border-radius: 22px; overflow: hidden; padding: 0; border: 2px dashed rgba(75, 43, 214, .55); background: repeating-linear-gradient(-45deg, rgba(75, 43, 214, .04) 0 10px, transparent 10px 20px), var(--sheet); display: grid; place-items: center; transition: background-color .15s, border-color .15s; }
+.sslot.over { background-color: #efeaff; border-color: var(--violet); }
+.sslot.has { border: 0; background: #1d1933; }
+.sslot.design.has { background: repeating-conic-gradient(#f4f1ee 0 25%, #fff 0 50%) 0 0 / 18px 18px; }
+.sslot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sslot.design img { object-fit: contain; padding: 14px; }
+.sslot-empty { display: grid; justify-items: center; gap: 4px; padding: 10px; text-align: center; color: var(--ink-2); }
+.sslot-empty svg { width: 40px; height: 40px; fill: none; stroke: var(--violet); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 4px; }
+.sslot-empty b { color: var(--ink); font-size: 17px; }
+.sslot-empty small { font-size: 13px; line-height: 1.3; }
+.sslot-tag { position: absolute; left: 8px; top: 8px; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 13px; font-weight: 800; display: grid; place-items: center; }
+.sslot-busy { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(255, 255, 255, .6); }
+.sslot-busy .needle { border-color: rgba(21, 18, 43, .15); border-top-color: var(--violet); }
+.sslot-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sslot-btns .chipbtn { justify-content: center; padding: 9px 4px; font-size: 13px; gap: 4px; }
+.sslot-btns .chipbtn svg { width: 18px; height: 18px; }
+.check-line { display: flex; align-items: center; gap: 8px; margin: 10px 0 0; padding: 9px 12px; border-radius: 14px; font-size: 14px; font-weight: 600; background: rgba(255, 255, 255, .6); }
+.check-line.ok { background: #dff3e8; color: #17603f; }
+.check-line.warn, .check-line.blocked { background: #ffe6df; color: #8a2a20; }
+.check-line .needle { width: 16px; height: 16px; border-width: 2px; border-color: rgba(21, 18, 43, .15); border-top-color: var(--violet); }
+.inkrow { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.ex-design.small { width: 88px; padding: 10px; border-radius: 16px; }
+.ex-design.on { box-shadow: inset 0 0 0 3px var(--violet); }
+.result-edit { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+.result-edit .chipbtn svg { width: 18px; height: 18px; }
+.ob-top .link { margin-left: 4px; white-space: nowrap; }

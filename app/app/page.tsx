@@ -5,8 +5,8 @@ import { useApp } from './AppProvider';
 import { Icon, OutOfPreviews } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
-import { Design, DesignStep, Photo, PhotoStep, PlaceStep } from './create/steps';
-import { tx } from '@/lib/i18n';
+import { Design, Photo, PlaceStep, StudioStep } from './create/steps';
+import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, StageKey, STAGES, track } from '@/lib/store';
 import { composeMockup, Placement } from '@/lib/editor';
@@ -16,7 +16,7 @@ import { DESIGNS } from '@/lib/designs';
 import { processDesign } from '@/lib/editor';
 import { lsSet } from '@/lib/store';
 
-type Phase = 'loading' | 'onboarding' | 'photo' | 'design' | 'place' | 'gen' | 'result';
+type Phase = 'loading' | 'onboarding' | 'studio' | 'place' | 'gen' | 'result';
 const AGE_STAGES: StageKey[] = ['healed', 'y10', 'y30', 'y50'];
 
 async function flattenOnWhite(src: string, max = 1024) {
@@ -73,10 +73,24 @@ export default function CreatePage() {
   // start: onboarding once, then straight into creating
   useEffect(() => {
     const ans = lsGet<OnboardingAnswers | null>('ink_onboarding', null);
+    const draft = (() => {
+      try {
+        return JSON.parse(sessionStorage.getItem('ink_draft') || 'null');
+      } catch {
+        return null;
+      }
+    })();
     if (ans) {
       applyOnboarding(ans);
-      setPhase('photo');
+      setPhase('studio');
     } else setPhase('onboarding');
+    // keep work in progress when switching tabs
+    if (draft) {
+      if (draft.placement) setPlacement(draft.placement);
+      if (draft.photo) setPhoto(draft.photo);
+      if (draft.design) setDesign(draft.design);
+      if (draft.pl) setPl(draft.pl);
+    }
     // a design picked in Explore
     const pick = DESIGNS.find((d) => d.id === lsGet<string | null>('ink_pick', null));
     if (pick) {
@@ -89,7 +103,7 @@ export default function CreatePage() {
   useEffect(() => {
     if (phase === 'onboarding' && me.onboarding?.placement) {
       applyOnboarding(me.onboarding);
-      setPhase('photo');
+      setPhase('studio');
     }
   }, [me.onboarding]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -99,6 +113,13 @@ export default function CreatePage() {
     const cm = Number(a.size) || 8;
     setPl((p) => ({ ...p, w: Math.min(0.8, Math.max(0.1, cm / frameCm(a.placement || 'forearm'))) }));
   }
+
+  useEffect(() => {
+    if (phase === 'loading') return;
+    try {
+      sessionStorage.setItem('ink_draft', JSON.stringify({ placement, photo, design, pl }));
+    } catch {}
+  }, [placement, photo, design, pl, phase]);
 
   useEffect(() => {
     if (phase !== 'gen') return;
@@ -113,18 +134,21 @@ export default function CreatePage() {
     setFailed((f) => f.filter((x) => x !== k));
     setPending((p) => (p.includes(k) ? p : [...p, k]));
     const r = await api<{ image: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token });
+    if (job.current !== j) return; // a newer preview was started meanwhile
     setPending((p) => p.filter((x) => x !== k));
     if (r.ok && r.data.image) {
       setPreview((p) => (p ? { ...p, images: { ...p.images, [k]: r.data.image } } : p));
       if (k === 'y50') track('stage_y50');
     } else {
       setFailed((f) => [...f, k]);
-      if (r.data?.error) toast(r.data.error);
+      if (r.data?.error) toast(trErr(ui.lang, r.data.error));
     }
   };
 
   const go = async () => {
     if (!photo || !design) return;
+    job.current = null;
+    setPending([]);
     setErr('');
     setPhase('gen');
     setGenStep(0);
@@ -153,11 +177,12 @@ export default function CreatePage() {
       setPhase('place');
       if (r.data?.code === 'paywall') {
         track('paywall', { plan: r.data.plan });
-        if (!me.user) openAuth(t('You used your free guest preview. Sign in (free) for one more — and to keep your designs.', 'Elhasználtad a vendég előnézetet. Jelentkezz be (ingyenes), és kapsz még egyet – a terveid is megmaradnak.'));
+        if (!me.user) openAuth(t('You reached today’s limit on this device. Sign in (free) to keep going and keep your designs.', 'Elérted a mai keretet ezen az eszközön. Jelentkezz be (ingyenes), és folytathatod – a terveid is megmaradnak.'));
         else setPaywall(true);
         return;
       }
-      setErr(r.data?.error || t('Something went wrong. Try again.', 'Valami hiba történt. Próbáld újra.'));
+      setErr(trErr(ui.lang, r.data?.error));
+      track('generate_error', { status: r.status, msg: String(r.data?.error || '').slice(0, 80) });
       return;
     }
 
@@ -193,7 +218,7 @@ export default function CreatePage() {
   // ---------------------------------------------------------------- auto-save when aging settles
   useEffect(() => {
     const p = previewRef.current;
-    if (phase !== 'result' || !p || pending.length || saved.current) return;
+    if (!p || !p.images.fresh || pending.length || saved.current) return;
     saved.current = true;
     (async () => {
       try {
@@ -225,11 +250,12 @@ export default function CreatePage() {
 
   const restart = () => {
     setPreview(null);
-    setDesign(null);
-    setPending([]);
     setFailed([]);
-    job.current = null;
-    setPhase('design');
+    setPhase('studio');
+    window.scrollTo({ top: 0 });
+  };
+  const replace = () => {
+    setPhase('place');
     window.scrollTo({ top: 0 });
   };
 
@@ -240,12 +266,12 @@ export default function CreatePage() {
       <Onboarding
         onDone={(a) => {
           applyOnboarding(a);
-          setPhase('photo');
+          setPhase('studio');
         }}
       />
     );
 
-  const stepIdx = phase === 'photo' ? 0 : phase === 'design' ? 1 : 2;
+  const stepIdx = phase === 'studio' ? 0 : 1;
   const head = (title: string, sub: string, back?: () => void) => (
     <>
       <div className="stephead">
@@ -255,11 +281,11 @@ export default function CreatePage() {
           </button>
         ) : (
           <span className="free-pill">
-            {me.user ? t(`${Math.max(0, me.remaining ?? 0)} preview${me.remaining === 1 ? '' : 's'} left`, `${Math.max(0, me.remaining ?? 0)} előnézet maradt`) : t('✦ First preview free', '✦ Az első ingyenes')}
+            {t('✦ Free while in beta', '✦ Ingyenes a tesztidőszakban')}
           </span>
         )}
-        <div className="dots" aria-label={`${stepIdx + 1} / 3`}>
-          {[0, 1, 2].map((i) => (
+        <div className="dots" aria-label={`${stepIdx + 1} / 2`}>
+          {[0, 1].map((i) => (
             <i key={i} className={i === stepIdx ? 'on' : ''} />
           ))}
         </div>
@@ -269,26 +295,18 @@ export default function CreatePage() {
     </>
   );
 
-  if (phase === 'photo')
+  if (phase === 'studio')
     return (
       <>
-        {head(ui.t('create.photo.title'), ui.t('create.photo.sub'))}
-        <PhotoStep placement={placement} setPlacement={setPlacement} photo={photo} setPhoto={setPhoto} onNext={() => setPhase(design ? 'place' : 'design')} />
-      </>
-    );
-
-  if (phase === 'design')
-    return (
-      <>
-        {head(ui.t('create.design.title'), ui.t('create.design.sub'), () => setPhase('photo'))}
-        <DesignStep design={design} setDesign={setDesign} onNext={() => setPhase('place')} />
+        {head(t('Try a tattoo on', 'Próbáld fel'), t('Choose the body area, add a photo of it and the design.', 'Válaszd ki a testrészt, add hozzá a fotóját és a mintát.'))}
+        <StudioStep placement={placement} setPlacement={setPlacement} photo={photo} setPhoto={setPhoto} design={design} setDesign={setDesign} onNext={() => { setPhase('place'); window.scrollTo({ top: 0 }); }} />
       </>
     );
 
   if (phase === 'place' && photo && design)
     return (
       <>
-        {head(ui.t('create.place.title'), ui.t('create.place.sub'), () => setPhase('design'))}
+        {head(ui.t('create.place.title'), ui.t('create.place.sub'), () => setPhase('studio'))}
         {err && (
           <div className="warnbox" role="alert" style={{ marginBottom: 12 }}>
             <span>⚠️</span>
@@ -299,11 +317,12 @@ export default function CreatePage() {
           photo={photo}
           design={design}
           placement={placement}
+          setPlacement={setPlacement}
           pl={pl}
           setPl={setPl}
           onGo={go}
           canGo
-          footer={!me.user ? <p className="fine">{ui.t('create.free')}</p> : null}
+          footer={null}
         />
         <OutOfPreviews open={paywall} onClose={() => setPaywall(false)} />
       </>
@@ -333,10 +352,18 @@ export default function CreatePage() {
     return (
       <>
         <div className="stephead" style={{ marginBottom: 12 }}>
-          <button className="iconbtn" aria-label={t('Edit placement', 'Elhelyezés módosítása')} onClick={() => setPhase('place')} disabled={pending.length > 0}>
+          <button className="iconbtn" aria-label={t('Edit placement', 'Elhelyezés módosítása')} onClick={replace}>
             {Icon.back}
           </button>
           <h1 style={{ margin: 0, fontSize: 34 }}>{t('Your tattoo', 'A tetoválásod')}</h1>
+        </div>
+        <div className="result-edit">
+          <button className="chipbtn" onClick={replace}>
+            {Icon.rotate} {t('Other body area / position', 'Másik testrész / helyzet')}
+          </button>
+          <button className="chipbtn" onClick={restart}>
+            {Icon.image} {t('Other photo or design', 'Másik fotó vagy minta')}
+          </button>
         </div>
         <Result
           preview={preview}
@@ -354,7 +381,7 @@ export default function CreatePage() {
   // fallback (e.g. place without photo after refresh)
   return (
     <div className="empty">
-      <button className="btn" onClick={() => setPhase('photo')}>
+      <button className="btn" onClick={() => setPhase('studio')}>
         {ui.t('common.continue')}
       </button>
     </div>

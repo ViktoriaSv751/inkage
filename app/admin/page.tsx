@@ -35,7 +35,7 @@ export default function Admin() {
   // Rough AI cost: ~1 fresh + 4 aging images + checks per preview.
   const cost = s ? (s.gen_today * 0.05 + s.aging_today * 0.04).toFixed(2) : '0';
   const funnel = s?.events_today || {};
-  const steps = ['app_open', 'onboarding_done', 'photo_added', 'design_added', 'generate_start', 'generate_done', 'stage_y50', 'video_made', 'share_link', 'vote'];
+  const steps = ['app_open', 'onboarding_done', 'photo_added', 'design_added', 'generate_start', 'generate_done', 'generate_error', 'paywall', 'stage_y50', 'video_made', 'share_link', 'vote'];
 
   return (
     <main style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
@@ -58,6 +58,7 @@ export default function Admin() {
               ['Votes', s.votes],
               ['Paid users', s.paid],
               ['Est. AI cost today', `$${cost}`],
+              ['Failed previews today', funnel.generate_error ?? 0],
             ].map(([k, v]) => (
               <div key={k as string} style={{ background: '#fff6f0', borderRadius: 16, padding: 14 }}>
                 <b style={{ display: 'block', fontFamily: 'var(--display)', fontSize: 36, lineHeight: 1 }}>{v}</b>

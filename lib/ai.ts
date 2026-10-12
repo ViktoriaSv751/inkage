@@ -322,7 +322,7 @@ export function friendlyAiError(e: any): string {
   const msg = String(e?.error?.message || e?.message || e);
   if (/safety|moderation|policy|rejected|blocked|SAFETY|PROHIBITED|IMAGE_SAFETY/i.test(msg))
     return 'The AI safety filter blocked this photo. Use a photo that shows only the body area, with no nudity and no minors.';
-  if (/limit: 0\b|billing|insufficient/i.test(msg)) return 'Previews are paused for a short while. Please try again later today.';
+  if (/limit: 0\b|billing|insufficient|prepay|credits|depleted/i.test(msg)) return 'Previews are paused for a short while. Please try again later today.';
   if (/quota|exhausted|429|overloaded|503/i.test(msg)) return 'Lots of people are making previews right now. Try again in a minute.';
   return 'The preview could not be created. Try again, or use a clearer, well-lit photo.';
 }
