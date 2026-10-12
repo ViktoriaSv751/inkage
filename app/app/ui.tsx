@@ -62,6 +62,37 @@ export const Icon = {
   ),
 };
 
+export function TopBar() {
+  const { me, ui } = useApp();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 4);
+    h();
+    window.addEventListener('scroll', h, { passive: true });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  return (
+    <header className={`topbar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="topbar-in">
+        <Link className="logo" href="/app" aria-label="InkAge">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" />
+            <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+          </svg>
+          InkAge
+        </Link>
+        {me.user ? (
+          <Link href="/app/profile" className="avatar" style={{ width: 34, height: 34, fontSize: 15, textDecoration: 'none' }} aria-label={ui.t('nav.profile')}>
+            {(me.user.email || '?').slice(0, 1).toUpperCase()}
+          </Link>
+        ) : (
+          <span className="beta-pill">{tx(ui.lang, 'Free beta', 'Ingyenes béta')}</span>
+        )}
+      </div>
+    </header>
+  );
+}
+
 export function BottomNav() {
   const path = usePathname();
   const { ui } = useApp();

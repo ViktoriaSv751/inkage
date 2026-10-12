@@ -5,7 +5,7 @@ import { useApp } from './AppProvider';
 import { Icon, OutOfPreviews } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
-import { Design, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
+import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
@@ -70,6 +70,33 @@ export default function CreatePage() {
   const [improving, setImproving] = useState(false);
   const [busyNote, setBusyNote] = useState(false);
   const prevRef = useRef<Preview | null>(null);
+  // where the chosen body part is in the photo (found by the AI), and whether the user moved the design since
+  const [area, setArea] = useState<(Area & { for: string; photo: string }) | null>(null);
+  const userMoved = useRef(false);
+
+  const locate = async (ph: Photo, where: string) => {
+    const r = await api<{ box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: ph.dataUrl, placement: where });
+    if (r.ok && r.data.box) setArea({ box: r.data.box, angle: r.data.angle ?? 0, for: where, photo: ph.dataUrl.slice(-64) });
+    else setArea(null);
+  };
+  const areaNow = area && photo && area.for === placement && area.photo === photo.dataUrl.slice(-64) ? area : null;
+  const fit = () => {
+    if (!areaNow || !design || !photo) return;
+    setPl(fitToArea(areaNow, design, photo));
+    userMoved.current = false;
+    haptic();
+  };
+  // body part changed after the photo was added: find the new spot
+  useEffect(() => {
+    if (!photo || mode === 'existing' || phase === 'loading' || phase === 'onboarding') return;
+    if (area && area.for === placement && area.photo === photo.dataUrl.slice(-64)) return;
+    const tm = setTimeout(() => locate(photo, placement), 300);
+    return () => clearTimeout(tm);
+  }, [placement, photo]); // eslint-disable-line react-hooks/exhaustive-deps
+  // snap the design into the body part automatically until the user moves it themselves
+  useEffect(() => {
+    if (phase === 'place' && areaNow && design && photo && !userMoved.current) setPl(fitToArea(areaNow, design, photo));
+  }, [phase, areaNow?.box?.join(','), design?.ink]); // eslint-disable-line react-hooks/exhaustive-deps
   const job = useRef<{ token: string; fresh: string } | null>(null);
   const saved = useRef(false);
   const previewRef = useRef<Preview | null>(null);
@@ -363,7 +390,7 @@ export default function CreatePage() {
   if (phase === 'studio')
     return (
       <>
-        {head(t('Try a tattoo on', 'Próbáld fel'), t('Choose the body area, add a photo of it and the design.', 'Válaszd ki a testrészt, add hozzá a fotóját és a mintát.'))}
+        {head(t('New preview', 'Új előnézet'), t('Pick the spot, add a photo of it and a design.', 'Válaszd ki a helyet, töltsd fel a fotóját és a mintát.'))}
         {err && mode === 'existing' && (
           <div className="warnbox" role="alert" style={{ marginBottom: 12 }}>
             <span>⚠️</span>
@@ -379,6 +406,7 @@ export default function CreatePage() {
           setPhoto={setPhoto}
           design={design}
           setDesign={setDesign}
+          onArea={(a, where, ph) => setArea(a ? { ...a, for: where, photo: ph.dataUrl.slice(-64) } : null)}
           onNext={() => {
             if (mode === 'existing') return go();
             setPhase('place');
@@ -402,9 +430,17 @@ export default function CreatePage() {
           photo={photo}
           design={design}
           placement={placement}
-          setPlacement={setPlacement}
+          setPlacement={(v) => {
+            setPlacement(v);
+            userMoved.current = false;
+          }}
+          area={areaNow}
+          onFit={fit}
           pl={pl}
-          setPl={setPl}
+          setPl={(x) => {
+            userMoved.current = true;
+            setPl(x);
+          }}
           onGo={() => go()}
           canGo
           footer={null}

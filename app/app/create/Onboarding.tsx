@@ -6,6 +6,7 @@ import { tx } from '@/lib/i18n';
 import { haptic, lsSet, track } from '@/lib/store';
 import { longevity } from '@/lib/score';
 import { sb } from '@/lib/sb';
+import { BodyMap } from './BodyMap';
 
 export type OnboardingAnswers = {
   adult: boolean;
@@ -36,7 +37,7 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
   const { ui, me } = useApp();
   const L = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [i, setI] = useState(0);
-  const [a, setA] = useState<Partial<OnboardingAnswers>>({ has: '', goal: '', size: '8', sun: 'medium', age: '', fear: '', style: 'other', placement: 'Inner forearm' });
+  const [a, setA] = useState<Partial<OnboardingAnswers>>({ has: '', goal: '', size: '8', sun: 'medium', age: '', fear: '', style: 'other' });
   const [phase, setPhase] = useState<'q' | 'building' | 'plan' | 'blocked'>('q');
 
   useEffect(() => track('onboarding_start'), []);
@@ -147,6 +148,9 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
       <h1 className="ob-title" key={q.key}>
         {L(q.en, q.hu)}
       </h1>
+      {q.key === 'placement' ? (
+        <BodyMap value={a.placement || ''} onChange={(v) => pick(q, v)} />
+      ) : (
       <div className={`ob-options ${q.options.length > 5 ? 'grid' : ''}`}>
         {q.options.map((o) => (
           <button key={o.v} className={`ob-opt ${cur === o.v ? 'on' : ''}`} onClick={() => pick(q, o.v)}>
@@ -155,6 +159,7 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
           </button>
         ))}
       </div>
+      )}
     </div>
   );
 }

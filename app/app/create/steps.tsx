@@ -10,27 +10,44 @@ import { prepareImage } from '@/lib/client';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { processDesign, Placement } from '@/lib/editor';
 import { frameCm } from '@/lib/score';
+import { BodyMap } from './BodyMap';
+import { Sheet } from '../ui';
 
 export type Photo = { dataUrl: string; w: number; h: number };
 export type Design = { raw: string; ink: string; ratio: number; detail: number; mode: 'black' | 'color'; libId?: string };
+/** The detected bare-skin area of the chosen body part: [top, left, bottom, right] as fractions of the photo. */
+export type Area = { box: [number, number, number, number]; angle: number };
 
-export const PLACEMENTS = [
-  { v: 'Inner forearm', en: 'Forearm', hu: 'Alkar' },
-  { v: 'Wrist', en: 'Wrist', hu: 'Csukló' },
-  { v: 'Hand', en: 'Hand', hu: 'Kézfej' },
-  { v: 'Finger', en: 'Finger', hu: 'Ujj' },
-  { v: 'Upper arm', en: 'Upper arm', hu: 'Felkar' },
-  { v: 'Shoulder', en: 'Shoulder', hu: 'Váll' },
-  { v: 'Collarbone', en: 'Collarbone', hu: 'Kulcscsont' },
-  { v: 'Chest', en: 'Chest', hu: 'Mellkas' },
-  { v: 'Upper back', en: 'Back', hu: 'Hát' },
-  { v: 'Ribs', en: 'Ribs', hu: 'Borda' },
-  { v: 'Hip', en: 'Hip', hu: 'Csípő' },
-  { v: 'Thigh', en: 'Thigh', hu: 'Comb' },
-  { v: 'Calf', en: 'Calf', hu: 'Vádli' },
-  { v: 'Ankle', en: 'Ankle', hu: 'Boka' },
-  { v: 'Back of neck', en: 'Neck', hu: 'Nyak' },
-];
+/** Place and size the design so it sits inside the detected body area, aligned with the limb. */
+export function fitToArea(area: Area, design: Design, photo: Photo): Placement {
+  const [t, l, b, r] = area.box;
+  const bw = r - l, bh = b - t;
+  const aspect = photo.w / photo.h;
+  const tilt = Math.abs(area.angle) > 12 ? area.angle : 0;
+  // a tilted limb looks wider in its bounding box than it really is
+  const k = tilt ? Math.cos((Math.abs(tilt) * Math.PI) / 180) * 0.8 : 1;
+  const w = Math.max(0.06, Math.min(bw * 0.72 * k, (bh * 0.72) / (design.ratio * aspect), 0.7));
+  return { x: (l + r) / 2, y: (t + b) / 2, w, rot: Math.round(tilt), mirror: false };
+}
+
+/** True when any corner of the placed design falls outside the detected area (with a little tolerance). */
+export function overflows(area: Area, design: Design, photo: Photo, pl: Placement) {
+  const [t, l, b, r] = area.box;
+  const aspect = photo.w / photo.h;
+  const hw = pl.w / 2, hh = (pl.w * design.ratio * aspect) / 2;
+  const a = (pl.rot * Math.PI) / 180;
+  const pad = 0.025;
+  return [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]].some(([dx, dy]) => {
+    // rotate in pixel space, then back to fractions
+    const px = dx * photo.w, py = dy * photo.h;
+    const x = pl.x + (px * Math.cos(a) - py * Math.sin(a)) / photo.w;
+    const y = pl.y + (px * Math.sin(a) + py * Math.cos(a)) / photo.h;
+    return x < l - pad || x > r + pad || y < t - pad || y > b + pad;
+  });
+}
+
+export { PLACEMENTS } from '@/lib/placements';
+import { PLACEMENTS } from '@/lib/placements';
 
 const L = (lang: 'en' | 'hu') => (en: string, hu: string) => tx(lang, en, hu);
 
@@ -72,6 +89,7 @@ export function PlacementPicker({ value, onChange }: { value: string; onChange: 
 type CheckState = { state: 'idle' | 'checking' | 'ok' | 'warn' | 'blocked'; msg?: string };
 
 export function StudioStep({
+  onArea,
   mode = 'new',
   setMode,
   placement,
@@ -91,6 +109,7 @@ export function StudioStep({
   design: Design | null;
   setDesign: (d: Design | null) => void;
   onNext: () => void;
+  onArea?: (a: Area | null, where: string, ph: Photo) => void;
 }) {
   const { ui, toast } = useApp();
   const t = L(ui.lang);
@@ -118,8 +137,9 @@ export function StudioStep({
   const runCheck = useCallback(
     async (p: Photo, where: string) => {
       setCheck({ state: 'checking' });
-      const r = await api<{ ok: boolean; code: string; area: string }>('/api/check-photo', { photo: p.dataUrl, placement: where });
+      const r = await api<{ ok: boolean; code: string; area: string; box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: p.dataUrl, placement: where });
       if (!r.ok) return setCheck({ state: 'ok' }); // never block on a failed check
+      onArea?.(r.data.box ? { box: r.data.box, angle: r.data.angle ?? 0 } : null, where, p);
       const c = r.data.code;
       track('photo_check', { code: c });
       if (c === 'not_allowed') return setCheck({ state: 'blocked', msg: t('We can’t use this photo. Use a photo of an adult’s arm, leg, back or similar, with no nudity.', 'Ezt a fotót nem tudjuk használni. Felnőtt karjáról, lábáról, hátáról készült, nem meztelen fotót tölts fel.') });
@@ -225,8 +245,12 @@ export function StudioStep({
           </button>
         </div>
       )}
-      <PlacementPicker value={placement} onChange={setPlacement} />
+      <section className="studio-sec">
+        <h2 className="sec-title">{existing ? t('Where is it?', 'Hol van?') : t('Where will it go?', 'Hová kerül?')}</h2>
+        <BodyMap value={placement} onChange={setPlacement} />
+      </section>
 
+      <h2 className="sec-title">{existing ? t('Photo of your tattoo', 'Fotó a tetoválásodról') : t('Your photo and the design', 'A fotód és a minta')}</h2>
       <div className={`studio-slots ${existing ? 'one' : ''}`}>
         <div className="studio-col">
           <button className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => photoRef.current?.click()} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
@@ -456,11 +480,15 @@ export function PlaceStep({
   canGo,
   footer,
   setPlacement,
+  area,
+  onFit,
 }: {
   photo: Photo;
   design: Design;
   placement: string;
   setPlacement: (p: string) => void;
+  area?: Area | null;
+  onFit?: () => void;
   pl: Placement;
   setPl: (p: Placement) => void;
   onGo: () => void;
@@ -475,6 +503,9 @@ export function PlaceStep({
   const [drag, setDrag] = useState(false);
   const cm = pl.w * frameCm(placement);
   const thin = design.detail > 0.55 && cm < 7;
+  const [mapOpen, setMapOpen] = useState(false);
+  const out = !!area && overflows(area, design, photo, pl);
+  const idx = PLACEMENTS.findIndex((p) => p.v === placement);
 
   const snapshot = () => {
     const pts = Array.from(pointers.current.values());
@@ -524,8 +555,21 @@ export function PlaceStep({
   const wPx = `${pl.w * 100}%`;
   return (
     <div>
-      <PlacementPicker value={placement} onChange={setPlacement} />
+      <button className="areabtn" onClick={() => setMapOpen(true)}>
+        <span className="areanum">{idx + 1}</span>
+        <span className="areaname">
+          <small>{t('Body area', 'Testrész')}</small>
+          {t(PLACEMENTS[idx]?.en || placement, PLACEMENTS[idx]?.hu || placement)}
+        </span>
+        <span className="areachg">{t('Change', 'Módosítás')}</span>
+      </button>
       <div className="editor" ref={box}>
+        {area && (
+          <div
+            className={`areabox ${drag ? 'show' : ''} ${out ? 'bad' : ''}`}
+            style={{ top: `${area.box[0] * 100}%`, left: `${area.box[1] * 100}%`, height: `${(area.box[2] - area.box[0]) * 100}%`, width: `${(area.box[3] - area.box[1]) * 100}%` }}
+          />
+        )}
         <img className="bg" src={photo.dataUrl} alt={t('Your photo', 'A fotód')} />
         <div
           className={`ink ${drag ? 'drag' : ''}`}
@@ -567,6 +611,21 @@ export function PlaceStep({
         </button>
       </div>
 
+      {out && (
+        <div className="warnbox" role="alert">
+          <span>⚠️</span>
+          <span>
+            <b>{t('The design goes past the body part.', 'A minta kilóg a testrészről.')}</b>{' '}
+            {t('Tattoos only work on skin — snap it back inside.', 'Tetoválás csak bőrre kerülhet – igazítsd vissza.')}
+            {onFit && (
+              <button className="inline-fix" onClick={onFit}>
+                {t('Fit it to the body part', 'Igazítsd a testrészre')}
+              </button>
+            )}
+          </span>
+        </div>
+      )}
+
       {thin && (
         <div className="warnbox" role="note">
           <span>⚠️</span>
@@ -586,12 +645,19 @@ export function PlaceStep({
         </button>
         {footer}
       </div>
+
+      <Sheet open={mapOpen} onClose={() => setMapOpen(false)} label={t('Body area', 'Testrész')}>
+        <h2>{t('Where will it go?', 'Hová kerül?')}</h2>
+        <BodyMap
+          value={placement}
+          onChange={(v) => {
+            setPlacement(v);
+            setMapOpen(false);
+          }}
+        />
+      </Sheet>
     </div>
   );
 }
 
-/** Display name of a stored placement value in the current language. */
-export const placeName = (v: string, lang: 'en' | 'hu') => {
-  const p = PLACEMENTS.find((x) => x.v === v);
-  return p ? (lang === 'hu' ? p.hu : p.en) : v;
-};
+export { placeName } from '@/lib/placements';

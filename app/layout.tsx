@@ -1,8 +1,8 @@
-import '@fontsource/big-shoulders-display/900.css';
-import '@fontsource/big-shoulders-display/700.css';
-import '@fontsource/instrument-sans/400.css';
-import '@fontsource/instrument-sans/600.css';
-import '@fontsource/instrument-sans/700.css';
+import '@fontsource/geist-sans/400.css';
+import '@fontsource/geist-sans/500.css';
+import '@fontsource/geist-sans/600.css';
+import '@fontsource/geist-sans/700.css';
+import '@fontsource/geist-sans/800.css';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#f3d6c8' };
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#f4f4f2' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -33,6 +33,9 @@ const DEFAULT_ANALYSIS: Analysis = {
 const KEEP =
   'This is a photo edit, not a new image. Keep the exact same person, body shape, pose, hands, clothing, background, lighting, colour grading, camera angle, framing, depth of field and image grain. Do not crop, zoom, mirror or re-frame. Do not add text, watermarks or extra tattoos. The result must look like an unretouched smartphone photo.';
 
+const STAY_ON_BODY =
+  'The whole tattoo must sit on the skin of that body part only: it must never extend past the body outline onto the background, clothing, the table or another body part. If the overlay crosses the edge of the limb, shrink and nudge it until every line is on skin, and wrap it around the curvature of the limb (lines near the edges get foreshortened as the skin turns away from the camera).';
+
 export function freshPrompt(placement: string, size: string) {
   const sizeText =
     size === 'small' ? 'small (about 4–6 cm across)' : size === 'large' ? 'large (covering most of that body area)' : 'medium (about 8–12 cm across)';
@@ -43,6 +46,7 @@ export function freshPrompt(placement: string, size: string) {
     'Make it a real tattoo done today by a skilled artist: ink sits in the skin, not on top of it; it follows the curvature of the muscles and the perspective of the camera; it is lit by the same light and shadows as the surrounding skin; skin pores, fine hairs and texture remain visible through the ink.',
     'Fresh-tattoo details: slightly raised, glossy lines; mild pink-red irritation in a thin halo around the linework; the skin is otherwise unchanged.',
     'If that body area is not visible, place it on the closest visible area that makes anatomical sense.',
+    STAY_ON_BODY,
     KEEP,
   ].join(' ');
 }
@@ -58,6 +62,7 @@ export function placedPrompt(placement: string, colorMode: 'black' | 'color') {
     'The ink sits in the skin, follows the curvature of the muscles and the camera perspective, is lit by the same light and shadows as the surrounding skin, and lets pores, fine hairs and skin texture show through.',
     'Fresh-tattoo details: slightly raised, glossy lines and a mild pink-red halo around the linework.',
     'The final image must look like image 1 (no overlay artefacts, no flat sticker look).',
+    STAY_ON_BODY,
     KEEP,
   ].join(' ');
 }
@@ -319,7 +324,15 @@ export async function analyse(image: Img): Promise<Analysis> {
 
 // ---------------------------------------------------------------- checks
 
-export type PhotoCheck = { ok: boolean; code: 'ok' | 'no_skin' | 'blurry' | 'dark' | 'not_allowed' | 'unknown'; area: string };
+export type PhotoCheck = {
+  ok: boolean;
+  code: 'ok' | 'no_skin' | 'blurry' | 'dark' | 'not_allowed' | 'unknown';
+  area: string;
+  /** where the chosen body area's bare skin is in the photo, as fractions [top, left, bottom, right] */
+  box?: [number, number, number, number] | null;
+  /** angle of the limb's long axis in degrees (0 = vertical), when it's clear */
+  angle?: number | null;
+}
 
 /** Fast pre-check of the user's photo before we spend money on image generation. */
 export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCheck> {
@@ -336,7 +349,9 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
 {"skinVisible": boolean (is bare skin of a body area suitable for a tattoo clearly visible?),
  "sharp": boolean, "wellLit": boolean,
  "notAllowed": boolean (true if it shows nudity of intimate areas, or the person looks under 18),
- "visibleArea": string (the main body area visible, e.g. "inner left forearm")}`,
+ "visibleArea": string (the main body area visible, e.g. "inner left forearm"),
+ "box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around the bare skin of the ${placement} where a tattoo could go (exclude clothing, background and other body parts), or null if that area is not visible,
+ "angle": number (angle in degrees of the long axis of that body part relative to vertical, positive = leaning right; 0 if unclear)}`,
             },
           ],
         },
@@ -344,11 +359,17 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
       generationConfig: { responseMimeType: 'application/json', temperature: 0 },
     });
     const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    const box =
+      Array.isArray(j.box) && j.box.length === 4 && j.box.every((v: any) => Number.isFinite(Number(v)))
+        ? (j.box.map((v: any) => Math.min(1, Math.max(0, Number(v) / 1000))) as [number, number, number, number])
+        : null;
+    const okBox = box && box[2] - box[0] > 0.04 && box[3] - box[1] > 0.04 ? box : null;
+    const angle = Number.isFinite(Number(j.angle)) ? Math.max(-90, Math.min(90, Number(j.angle))) : null;
     if (j.notAllowed) return { ok: false, code: 'not_allowed', area: '' };
-    if (j.skinVisible === false) return { ok: false, code: 'no_skin', area: String(j.visibleArea || '') };
-    if (j.sharp === false) return { ok: false, code: 'blurry', area: String(j.visibleArea || '') };
-    if (j.wellLit === false) return { ok: false, code: 'dark', area: String(j.visibleArea || '') };
-    return { ok: true, code: 'ok', area: String(j.visibleArea || placement).slice(0, 60) };
+    if (j.skinVisible === false) return { ok: false, code: 'no_skin', area: String(j.visibleArea || ''), box: okBox, angle };
+    if (j.sharp === false) return { ok: false, code: 'blurry', area: String(j.visibleArea || ''), box: okBox, angle };
+    if (j.wellLit === false) return { ok: false, code: 'dark', area: String(j.visibleArea || ''), box: okBox, angle };
+    return { ok: true, code: 'ok', area: String(j.visibleArea || placement).slice(0, 60), box: okBox, angle };
   } catch (e) {
     console.warn('photo check failed', e);
     return { ok: true, code: 'unknown', area: placement };
@@ -370,6 +391,7 @@ export async function qualityCheck(design: Img, result: Img): Promise<{ ok: bool
 {"designMatch": integer 0-10 (10 = same design, same elements and proportions),
  "looksReal": boolean (looks like real ink in skin, not a sticker or drawing),
  "anatomyOk": boolean (no distorted hands, extra fingers or broken body parts),
+ "staysOnBody": boolean (every part of the tattoo is on skin; nothing floats over the background, clothing or objects),
  "note": short string}`,
             },
           ],
@@ -379,7 +401,7 @@ export async function qualityCheck(design: Img, result: Img): Promise<{ ok: bool
     });
     const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
     const match = Number(j.designMatch ?? 10);
-    return { ok: match >= 6 && j.looksReal !== false && j.anatomyOk !== false, match, note: String(j.note || '').slice(0, 200) };
+    return { ok: match >= 6 && j.looksReal !== false && j.anatomyOk !== false && j.staysOnBody !== false, match, note: String(j.note || '').slice(0, 200) };
   } catch (e) {
     console.warn('qc failed', e);
     return { ok: true, match: -1, note: 'qc unavailable' };

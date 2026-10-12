@@ -14,11 +14,11 @@ export async function artistPdf(p: Preview, lang: 'en' | 'hu', placeLabel: strin
   c.width = W;
   c.height = H;
   const ctx = c.getContext('2d')!;
-  await Promise.all([document.fonts?.load('900 64px "Big Shoulders Display"'), document.fonts?.load('600 28px "Instrument Sans"')]).catch(() => {});
+  await Promise.all([document.fonts?.load('800 64px "Geist Sans"'), document.fonts?.load('600 28px "Geist Sans"')]).catch(() => {});
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, W, H);
 
-  const text = (s: string, x: number, y: number, font: string, color = '#15122b', maxW = W - 2 * M, lh = 1.35) => {
+  const text = (s: string, x: number, y: number, font: string, color = '#000000', maxW = W - 2 * M, lh = 1.35) => {
     ctx.font = font;
     ctx.fillStyle = color;
     const size = parseInt(font.match(/(\d+)px/)?.[1] || '28');
@@ -53,9 +53,9 @@ export async function artistPdf(p: Preview, lang: 'en' | 'hu', placeLabel: strin
   };
 
   // header
-  text('INKAGE', M, 110, '900 44px "Big Shoulders Display", Impact', '#4b2bd6');
-  let y = text(L('Tattoo brief for my artist', 'Tetoválás-terv a tetoválómnak'), M, 190, '900 72px "Big Shoulders Display", Impact');
-  y = text(new Date(p.created_at).toLocaleDateString(lang === 'hu' ? 'hu-HU' : 'en-GB'), M, y, '600 26px "Instrument Sans", system-ui', '#4a4560');
+  text('INKAGE', M, 110, '800 44px "Geist Sans", system-ui', '#5b3df5');
+  let y = text(L('Tattoo brief for my artist', 'Tetoválás-terv a tetoválómnak'), M, 190, '800 72px "Geist Sans", system-ui');
+  y = text(new Date(p.created_at).toLocaleDateString(lang === 'hu' ? 'hu-HU' : 'en-GB'), M, y, '600 26px "Geist Sans", system-ui', '#5c5c62');
 
   // facts row
   const facts: [string, string][] = [
@@ -66,12 +66,12 @@ export async function artistPdf(p: Preview, lang: 'en' | 'hu', placeLabel: strin
   const fy = y + 20;
   facts.forEach(([k, v], i) => {
     const x = M + i * 360;
-    ctx.fillStyle = '#fff6f0';
+    ctx.fillStyle = '#f4f4f2';
     ctx.beginPath();
     (ctx as any).roundRect(x, fy, 340, 120, 20);
     ctx.fill();
-    text(k.toUpperCase(), x + 24, fy + 42, '700 20px "Instrument Sans", system-ui', '#4a4560', 300);
-    text(v, x + 24, fy + 92, '900 40px "Big Shoulders Display", Impact', '#15122b', 300);
+    text(k.toUpperCase(), x + 24, fy + 42, '700 20px "Geist Sans", system-ui', '#5c5c62', 300);
+    text(v, x + 24, fy + 92, '800 40px "Geist Sans", system-ui', '#000000', 300);
   });
   y = fy + 160;
 
@@ -81,26 +81,26 @@ export async function artistPdf(p: Preview, lang: 'en' | 'hu', placeLabel: strin
   await img(p.images.fresh, M + iw + 20, y, iw, ih);
   await img(p.images.y50 || p.images.y30, M + 2 * (iw + 20), y, iw, ih);
   [L('Design', 'Minta'), L('Fresh (preview)', 'Frissen (előnézet)'), L('In 50 years (preview)', '50 év múlva (előnézet)')].forEach((s, i) =>
-    text(s, M + i * (iw + 20), y + ih + 40, '700 24px "Instrument Sans", system-ui', '#15122b', iw)
+    text(s, M + i * (iw + 20), y + ih + 40, '700 24px "Geist Sans", system-ui', '#000000', iw)
   );
   y += ih + 90;
 
   // suggestions + notes
   if (p.report?.suggestions?.length) {
-    y = text(L('What would make it last longer', 'Mitől lesz tartósabb'), M, y, '900 40px "Big Shoulders Display", Impact');
-    for (const s of p.report.suggestions.slice(0, 3)) y = text(`•  ${s}`, M, y + 4, '500 26px "Instrument Sans", system-ui', '#15122b');
+    y = text(L('What would make it last longer', 'Mitől lesz tartósabb'), M, y, '800 40px "Geist Sans", system-ui');
+    for (const s of p.report.suggestions.slice(0, 3)) y = text(`•  ${s}`, M, y + 4, '500 26px "Geist Sans", system-ui', '#000000');
     y += 16;
   }
   if (p.notes) {
-    y = text(L('My notes', 'Jegyzeteim'), M, y, '900 40px "Big Shoulders Display", Impact');
-    y = text(p.notes, M, y + 4, '500 26px "Instrument Sans", system-ui', '#15122b');
+    y = text(L('My notes', 'Jegyzeteim'), M, y, '800 40px "Geist Sans", system-ui');
+    y = text(p.notes, M, y + 4, '500 26px "Geist Sans", system-ui', '#000000');
   }
   text(
     L('Previews are AI simulations made with InkAge (inkage.vercel.app). Your artist has the final say on size, needle and technique.', 'Az előnézetek az InkAge MI-szimulációi (inkage.vercel.app). A méretről, tűről és technikáról a tetoválód dönt.'),
     M,
     H - 90,
-    '500 22px "Instrument Sans", system-ui',
-    '#4a4560'
+    '500 22px "Geist Sans", system-ui',
+    '#5c5c62'
   );
 
   const { jsPDF } = await import('jspdf');

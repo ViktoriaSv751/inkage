@@ -77,7 +77,7 @@ export async function makeVideo(
   opts: { template: Template; hook: string; watermark: string; yes?: string; no?: string; onProgress?: (p: number) => void }
 ): Promise<{ blob: Blob; ext: string }> {
   const imgs = await Promise.all(frames.map((f) => loadImage(f.src)));
-  await Promise.all([document.fonts?.load('900 96px "Big Shoulders Display"'), document.fonts?.load('600 34px "Instrument Sans"')]).catch(() => {});
+  await Promise.all([document.fonts?.load('800 96px "Geist Sans"'), document.fonts?.load('600 34px "Geist Sans"')]).catch(() => {});
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
@@ -88,8 +88,8 @@ export async function makeVideo(
   const chunks: Blob[] = [];
   rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
 
-  const display = '900 96px "Big Shoulders Display", Impact, sans-serif';
-  const body = '600 36px "Instrument Sans", system-ui, sans-serif';
+  const display = '800 96px "Geist Sans", system-ui, sans-serif';
+  const body = '600 36px "Geist Sans", system-ui, sans-serif';
   const last = imgs.length - 1;
   let total = 0;
   let draw: (t: number) => void;
@@ -106,10 +106,10 @@ export async function makeVideo(
       cover(ctx, imgs[idx]);
       if (fading) cover(ctx, imgs[idx + 1], f);
       const label = fading && f > 0.5 ? frames[idx + 1].label : frames[idx].label;
-      text(ctx, label.toUpperCase(), 160, display);
+      text(ctx, label, 160, display);
       ctx.fillStyle = 'rgba(255,255,255,.18)';
       ctx.fillRect(80, 200, W - 160, 6);
-      ctx.fillStyle = '#8b73ff';
+      ctx.fillStyle = '#5b3df5';
       ctx.fillRect(80, 200, (W - 160) * Math.min(1, t / (total - 700)), 6);
       if (t < INTRO + 300) text(ctx, opts.hook, H - 190, body, '#fff', Math.max(0, 1 - Math.max(0, t - INTRO) / 300));
     };
@@ -123,8 +123,8 @@ export async function makeVideo(
       cover(ctx, b, 1, [x, W]);
       ctx.fillStyle = '#fff';
       ctx.fillRect(x - 2, 0, 4, H);
-      text(ctx, frames[0].label.toUpperCase(), 160, '900 64px "Big Shoulders Display", Impact', '#fff', p < 0.5 ? 1 : 0.35);
-      text(ctx, frames[last].label.toUpperCase(), 240, '900 64px "Big Shoulders Display", Impact', '#fff', p >= 0.5 ? 1 : 0.35);
+      text(ctx, frames[0].label, 160, '800 64px "Geist Sans", system-ui', '#fff', p < 0.5 ? 1 : 0.35);
+      text(ctx, frames[last].label, 240, '800 64px "Geist Sans", system-ui', '#fff', p >= 0.5 ? 1 : 0.35);
       text(ctx, opts.hook, H - 190, body);
     };
   } else if (opts.template === 'slideshow') {
@@ -143,14 +143,14 @@ export async function makeVideo(
       ctx.restore();
       const cap = i === 0 ? opts.hook : frames[i].label;
       ctx.save();
-      ctx.font = '800 46px "Instrument Sans", system-ui';
+      ctx.font = '800 46px "Geist Sans", system-ui';
       const tw = Math.min(W - 80, ctx.measureText(cap).width + 60);
       ctx.fillStyle = 'rgba(255,255,255,.94)';
       ctx.beginPath();
       (ctx as any).roundRect((W - tw) / 2, 150, tw, 84, 18);
       ctx.fill();
       ctx.restore();
-      text(ctx, cap, 228, '800 46px "Instrument Sans", system-ui', '#15122b');
+      text(ctx, cap, 228, '800 46px "Geist Sans", system-ui', '#000000');
       ctx.fillStyle = 'rgba(255,255,255,.5)';
       for (let k = 0; k < imgs.length; k++) ctx.fillRect(60 + k * ((W - 120) / imgs.length), 80, (W - 120) / imgs.length - 8, 5);
       ctx.fillStyle = '#fff';
@@ -168,9 +168,9 @@ export async function makeVideo(
       const f = Math.min(1, Math.max(0, (y - years[i]) / (years[i + 1] - years[i])));
       cover(ctx, imgs[i]);
       cover(ctx, imgs[Math.min(last, i + 1)], f);
-      text(ctx, String(Math.round(y)), 250, '900 200px "Big Shoulders Display", Impact');
-      text(ctx, opts.yes || 'years later', 320, '600 36px "Instrument Sans", system-ui');
-      if (t < 1600) text(ctx, opts.hook, H - 190, '600 36px "Instrument Sans", system-ui');
+      text(ctx, String(Math.round(y)), 250, '800 200px "Geist Sans", system-ui');
+      text(ctx, opts.yes || 'years later', 320, '600 36px "Geist Sans", system-ui');
+      if (t < 1600) text(ctx, opts.hook, H - 190, '600 36px "Geist Sans", system-ui');
     };
   } else {
     // poll: fresh, then 50 years, then question with two answer bubbles
@@ -179,17 +179,17 @@ export async function makeVideo(
       const f = Math.min(1, Math.max(0, (t - 2200) / 900));
       cover(ctx, imgs[0]);
       if (f > 0) cover(ctx, imgs[last], f);
-      text(ctx, (f < 0.5 ? frames[0].label : frames[last].label).toUpperCase(), 160, display);
+      text(ctx, (f < 0.5 ? frames[0].label : frames[last].label), 160, display);
       if (t > 4300) {
         const k = Math.min(1, (t - 4300) / 400);
         ctx.save();
         ctx.globalAlpha = k;
-        ctx.fillStyle = 'rgba(21,18,43,.78)';
+        ctx.fillStyle = 'rgba(0,0,0,.72)';
         ctx.fillRect(0, H - 420, W, 420);
         ctx.restore();
-        text(ctx, opts.hook, H - 340, '700 42px "Instrument Sans", system-ui', '#fff', k);
+        text(ctx, opts.hook, H - 340, '700 42px "Geist Sans", system-ui', '#fff', k);
         const bw = 260, bh = 86, y = H - 200;
-        [[W / 2 - bw - 20, opts.yes || 'YES', '#4b2bd6'], [W / 2 + 20, opts.no || 'NO', '#e0483b']].forEach(([x, s, col]) => {
+        [[W / 2 - bw - 20, opts.yes || 'YES', '#5b3df5'], [W / 2 + 20, opts.no || 'NO', '#e0483b']].forEach(([x, s, col]) => {
           ctx.save();
           ctx.globalAlpha = k;
           ctx.fillStyle = col as string;
@@ -197,18 +197,18 @@ export async function makeVideo(
           (ctx as any).roundRect(x as number, y, bw, bh, 43);
           ctx.fill();
           ctx.restore();
-          text(ctx, s as string, y + 58, '800 40px "Instrument Sans", system-ui', '#fff', k);
+          text(ctx, s as string, y + 58, '800 40px "Geist Sans", system-ui', '#fff', k);
         });
       }
     };
   }
 
   const drawAll = (t: number) => {
-    ctx.fillStyle = '#15122b';
+    ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, W, H);
     draw(t);
     ctx.save();
-    ctx.font = '600 26px "Instrument Sans", system-ui, sans-serif';
+    ctx.font = '600 26px "Geist Sans", system-ui, sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,.75)';
     ctx.textAlign = 'center';
     ctx.fillText(opts.watermark, W / 2, H - 50);

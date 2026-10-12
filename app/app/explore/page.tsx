@@ -61,10 +61,10 @@ export default function ExplorePage() {
 
       <div className="card dark" style={{ marginTop: 24 }}>
         <h2 style={{ color: '#fff' }}>{t('Quick facts', 'Gyors tények')}</h2>
-        <p>⚫ {t('Black ink lasts longest; pastels fade first.', 'A fekete tinta tart a legtovább, a pasztell fakul először.')}</p>
-        <p>☀️ {t('Sun is the #1 cause of fading — use SPF 50.', 'A fakulás első számú oka a nap – használj 50-es fényvédőt.')}</p>
-        <p>📏 {t('Lines closer than ~1 mm tend to merge within 10–15 years.', 'A kb. 1 mm-nél közelebbi vonalak 10–15 év alatt összefolyhatnak.')}</p>
-        <p>✋ {t('Fingers and hands fade fastest; back and upper arm age best.', 'Az ujjak és a kézfej fakul a leggyorsabban; a hát és a felkar öregszik a legszebben.')}</p>
+        <p>{t('Black ink lasts longest; pastels fade first.', 'A fekete tinta tart a legtovább, a pasztell fakul először.')}</p>
+        <p>{t('Sun is the #1 cause of fading — use SPF 50.', 'A fakulás első számú oka a nap – használj 50-es fényvédőt.')}</p>
+        <p>{t('Lines closer than ~1 mm tend to merge within 10–15 years.', 'A kb. 1 mm-nél közelebbi vonalak 10–15 év alatt összefolyhatnak.')}</p>
+        <p>{t('Fingers and hands fade fastest; back and upper arm age best.', 'Az ujjak és a kézfej fakul a leggyorsabban; a hát és a felkar öregszik a legszebben.')}</p>
       </div>
     </>
   );
