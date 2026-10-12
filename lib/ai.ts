@@ -141,7 +141,7 @@ function imageModels() {
   );
 }
 function textModels() {
-  return [process.env.GEMINI_TEXT_MODEL, 'gemini-2.5-flash', 'gemini-3-flash'].filter((m, i, arr): m is string => !!m && arr.indexOf(m) === i);
+  return [process.env.GEMINI_TEXT_MODEL, 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter((m, i, arr): m is string => !!m && arr.indexOf(m) === i);
 }
 
 async function geminiCall(models: string[], body: unknown) {

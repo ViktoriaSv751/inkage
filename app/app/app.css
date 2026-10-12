@@ -194,6 +194,7 @@
 .res-viewer { position: relative; border-radius: 26px; overflow: hidden; background: #000; touch-action: pan-y; }
 .res-viewer img { display: block; width: 100%; height: auto; }
 .res-viewer .layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .35s; }
+.res-viewer .stamp { color: #fff; }
 .res-viewer .stamp span { font-size: 70px; }
 .res-viewer .ph { aspect-ratio: 4/5; }
 .res-viewer .reveal { animation: reveal 1s ease-out; }
