@@ -203,9 +203,9 @@ export default function ProfilePage() {
             {t('Edit profile', 'Szerkesztés')}
           </button>
         ) : (
-          <button className="pf-edit dark" onClick={() => openAuth()}>
+          <Link className="pf-edit dark" href={ui.lang === 'en' ? '/belepes?lang=en' : '/belepes'}>
             {ui.t('common.signin')}
-          </button>
+          </Link>
         )}
         <div className="pf-stats">
           <div>

@@ -163,3 +163,8 @@ footer a { text-decoration: none; }
 /* the landing opens with the picture */
 .hero-demo { order: -1; }
 @media (max-width: 860px) { .hero { padding-top: 12px; } }
+/* tablet: keep the hero side by side */
+@media (min-width: 700px) and (max-width: 860px) {
+  .hero { grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+  .hero h1 { font-size: 46px; }
+}

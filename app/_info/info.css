@@ -144,3 +144,4 @@ a.ip-card:hover { background: var(--acc-t); }
 .fx-guides b { font-size: 15px; margin-bottom: 6px; }
 .fx-guides a { display: flex; justify-content: space-between; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); color: #0d0b14; text-decoration: none; font-weight: 600; font-size: 15px; }
 .fx-guides a span { color: #a29db1; }
+@media (min-width: 700px) and (max-width: 899px) { .ip-sec.has-img { grid-template-columns: 1.15fr 1fr; align-items: center; } .ip-hero-img { aspect-ratio: 16 / 9; } }

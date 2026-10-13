@@ -1,6 +1,6 @@
 /* ================================================================ site footer (light) */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.sf { background: #fff; color: #0d0b14; border-top: 1px solid #ebe9f0; font-family: 'Geist Sans', system-ui, sans-serif; }
+.sf { display: block; padding: 0; text-align: left; background: #fff; color: #0d0b14; border-top: 1px solid #ebe9f0; font-family: 'Geist Sans', system-ui, sans-serif; }
 .sf-in { max-width: 1240px; margin: 0 auto; padding: 56px 24px 28px; }
 .sf a { color: inherit; text-decoration: none; }
 .sf a:focus-visible { outline: 2px solid #5b3df5; outline-offset: 3px; border-radius: 4px; }

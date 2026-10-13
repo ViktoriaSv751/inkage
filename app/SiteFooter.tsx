@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ARTICLES } from '@/lib/articles';
 import { FooterLang, FooterSignup } from './FooterSignup';
 import './footer.css';
 
@@ -13,7 +12,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
       links: [
         { t: T('How it works', 'Hogyan működik'), href: `/hogyan-mukodik${q}` },
         { t: T('Features', 'Funkciók'), href: `/funkciok${q}` },
-        { t: T('Styles by body area', 'Stílusok testrészenként'), href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}` },
+        { t: T('Styles', 'Stílusok'), href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}` },
         { t: T('Free beta', 'Ingyenes béta'), href: `/ingyenes-beta${q}` },
         { t: T('FAQ', 'GYIK'), href: `/gyik${q}` },
       ],
@@ -21,20 +20,25 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
     {
       h: T('App', 'Alkalmazás'),
       links: [
-        { t: T('Open InkAge', 'InkAge megnyitása'), href: '/app' },
-        { t: T('Explore designs', 'Minták felfedezése'), href: '/app/explore' },
+        { t: T('Open app', 'Megnyitás'), href: '/app' },
+        { t: T('Designs', 'Minták'), href: '/app/explore' },
         { t: T('My previews', 'Előnézeteim'), href: '/app/gallery' },
-        { t: T('Add to home screen', 'Telepítés a kezdőképernyőre'), href: `/telepites${q}` },
+        { t: T('Install', 'Telepítés'), href: `/telepites${q}` },
       ],
     },
     {
       h: T('Knowledge', 'Tudás'),
       links: [
-        { t: T('Knowledge base', 'Tudástár'), href: `/tudastar${q}` },
-        ...['how-tattoos-age', 'fine-line-tattoos-aging', 'best-placement-for-tattoo-longevity', 'tattoo-aftercare-sun-protection', 'first-tattoo-checklist'].map((s) => {
-          const a = ARTICLES.find((x) => x.slug === s)!;
-          return { t: shortTitle(a.title[lang]), href: `/tudastar/${s}${q}` };
-        }),
+        { t: T('All guides', 'Tudástár'), href: `/tudastar${q}` },
+        ...(
+          [
+            ['how-tattoos-age', T('How tattoos age', 'Öregedés')],
+            ['fine-line-tattoos-aging', T('Fine line', 'Fine line')],
+            ['best-placement-for-tattoo-longevity', T('Best spots', 'Legjobb helyek')],
+            ['tattoo-aftercare-sun-protection', T('Aftercare', 'Utókezelés')],
+            ['first-tattoo-checklist', T('First tattoo', 'Első tetoválás')],
+          ] as const
+        ).map(([s, t]) => ({ t, href: `/tudastar/${s}${q}` })),
       ],
     },
     {
@@ -49,11 +53,11 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
     {
       h: T('Legal', 'Jog'),
       links: [
-        { t: T('Legal overview', 'Jogi információk'), href: `/jog${q}` },
-        { t: T('Terms of use', 'ÁSZF'), href: `/terms${q}` },
-        { t: T('Privacy policy', 'Adatvédelem'), href: `/privacy${q}` },
+        { t: T('Overview', 'Áttekintés'), href: `/jog${q}` },
+        { t: T('Terms', 'ÁSZF'), href: `/terms${q}` },
+        { t: T('Privacy', 'Adatvédelem'), href: `/privacy${q}` },
         { t: T('Delete account', 'Fiók törlése'), href: `/fiok-torlese${q}` },
-        { t: T('Cookie notice', 'Süti tájékoztató'), href: `/suti${q}` },
+        { t: T('Cookies', 'Sütik'), href: `/suti${q}` },
       ],
     },
   ];
@@ -101,7 +105,3 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
   );
 }
 
-/** "Long title: subtitle" → "Long title" (keeps footer links short). */
-function shortTitle(t: string) {
-  return t.split(/[:?]/)[0].trim();
-}

@@ -6,8 +6,7 @@ import { ARTICLES } from '@/lib/articles';
 import { IMG, KB } from '@/lib/kb';
 import { SEO_AREAS, SEO_STYLES, seoPage } from '@/lib/seo';
 import { track } from '@/lib/store';
-import { EXAMPLE } from './visuals';
-import { AgingTimeline, BetaInstall, CompareSlider, CompareTable, LandingFaq, Precision, PrivacyBlock, TrustStrip, UseCases } from './LandingMore';
+import { AgingTimeline, BetaInstall, CompareSlider, CompareTable, LandingFaq, Precision, PrivacyBlock, UseCases } from './LandingMore';
 import './landing2.css';
 
 const P = {
@@ -56,8 +55,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
     {
       img: (
         <div className="ls-place">
-          <img src={EXAMPLE[0].src} alt="" loading="lazy" />
-          <i className="ls-frame" />
+          <img src={IMG('hf_20261013_200842_59e2ff0d-43b6-421c-8c81-067a029f3447', 700)} alt="" loading="lazy" />
           <span className="ls-cm">≈ 6 cm</span>
         </div>
       ),
@@ -67,7 +65,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
     {
       img: (
         <div className="ls-aged">
-          <img src={EXAMPLE[4].src} alt="" loading="lazy" />
+          <img src={IMG('hf_20261013_200843_bcf96b56-c709-495d-957a-2c52717a71f3', 700)} alt="" loading="lazy" />
           <b>50</b>
           <small>{t('years later', 'év múlva')}</small>
         </div>
@@ -84,7 +82,6 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
 
   return (
     <>
-      <TrustStrip t={t} />
       <CompareSlider t={t} />
       {/* ---------------------------------------------------------------- how it works */}
       <section className="ls-sec">
@@ -141,7 +138,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
               </div>
             </div>
             <div className="ls-tile pic">
-              <img src={IMG(P.friends, 900)} alt="" loading="lazy" />
+              <img src={IMG('hf_20261013_094417_e49926a7-7645-464b-b21e-225756521eea', 900)} alt="" loading="lazy" />
               <div>
                 <h3>{t('Videos and vote links', 'Videó és szavazós link')}</h3>
                 <p>{t('Five ready templates for TikTok, Reels and Shorts.', 'Öt kész sablon TikTokra, Reelsre és Shortsra.')}</p>
@@ -149,9 +146,9 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
             </div>
             <div className="ls-tile redraw">
               <div className="ls-redraw">
-                <img src={IMG(STYLE_IMG['fine-line'], 500)} alt="" loading="lazy" />
+                <img src={IMG('hf_20261013_090712_871c7ded-ebc4-4b71-9793-726037d5c35e', 500)} alt="" loading="lazy" />
                 <span aria-hidden="true">→</span>
-                <img src={IMG(STYLE_IMG.blackwork, 500)} alt="" loading="lazy" />
+                <img src={IMG('hf_20261013_094404_d807408e-be3b-430e-bf2b-73bd75bd0580', 500)} alt="" loading="lazy" />
               </div>
               <h3>{t('Make it last', 'Tedd tartóssá')}</h3>
               <p>{t('We redraw a fragile design the way an experienced artist would — and show how that version ages.', 'Egy sérülékeny mintát úgy rajzolunk át, ahogy egy tapasztalt tetováló tenné – és megmutatjuk, hogy öregszik az a változat.')}</p>

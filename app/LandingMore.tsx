@@ -4,9 +4,17 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { IMG } from '@/lib/kb';
 import { track } from '@/lib/store';
-import { EXAMPLE } from './visuals';
 
 type T = (en: string, hu: string) => string;
+
+// example photos used only once on the site
+const CMP_NEW = 'hf_20261013_200843_f699cd39-8d0a-43e3-9ba7-71b494279840';
+const CMP_OLD = 'hf_20261013_200913_5ffd13b1-e537-4454-bb4c-495a2921afcc';
+const TL0 = 'hf_20261013_200843_15e0b201-b6cc-486c-a5a4-9073748b837c';
+const TL1 = 'hf_20261013_200913_a2cc2bf1-1955-4593-a519-529d8a7ff22c';
+const TL2 = 'hf_20261013_200914_28a5dcbe-63ae-4431-9e25-28696542dc60';
+const TL3 = 'hf_20261013_200914_80587d64-e00b-48e4-a28f-69bc17f1cb6a';
+const TL4 = 'hf_20261013_200918_3120c2be-e153-4881-a8f8-04c1cf79fcb4';
 
 /* ------------------------------------------------------------------ facts strip under the hero */
 export function TrustStrip({ t }: { t: T }) {
@@ -61,9 +69,9 @@ export function CompareSlider({ t }: { t: T }) {
         onPointerUp={() => (drag.current = false)}
         onPointerCancel={() => (drag.current = false)}
       >
-        <img src={EXAMPLE[4].src} alt={t('The tattoo after 50 years', 'A tetoválás 50 év múlva')} draggable={false} loading="lazy" />
+        <img src={IMG(CMP_OLD, 1600)} alt={t('The tattoo after 50 years', 'A tetoválás 50 év múlva')} draggable={false} loading="lazy" />
         <div className="lm-cmp-top" style={{ clipPath: `inset(0 ${100 - v}% 0 0)` }}>
-          <img src={EXAMPLE[0].src} alt={t('The tattoo on day one', 'A tetoválás az első napon')} draggable={false} loading="lazy" />
+          <img src={IMG(CMP_NEW, 1600)} alt={t('The tattoo on day one', 'A tetoválás az első napon')} draggable={false} loading="lazy" />
         </div>
         <span className="lm-cmp-lab l">{t('Fresh', 'Friss')}</span>
         <span className="lm-cmp-lab r">{t('50 years', '50 év')}</span>
@@ -97,7 +105,7 @@ export function UseCases({ t }: { t: T }) {
     {
       k: 'first',
       tab: t('My first tattoo', 'Az első tetoválásom'),
-      img: 'hf_20261013_090637_ca312303-c618-4a41-946b-8b783b5b3cee',
+      img: 'hf_20261013_094428_03d5223f-83ed-4279-a522-78515046a4c0',
       h: t('Decide calmly, not in the chair.', 'Dönts nyugodtan, ne a széken ülve.'),
       p: t('Try three placements and four sizes on your own photo in an evening. See which one still reads at 30 years, then book with confidence.', 'Egy este alatt kipróbálhatsz három helyet és négy méretet a saját fotódon. Nézd meg, melyik olvasható még 30 év múlva is, és utána foglalj nyugodtan.'),
       pts: [t('Placement and size in real centimetres', 'Hely és méret valós centiméterben'), t('A longevity score that explains itself', 'Tartóssági pontszám, ami meg is indokolja magát'), t('A link so friends can vote', 'Link, amin a barátaid szavazhatnak')],
@@ -113,7 +121,7 @@ export function UseCases({ t }: { t: T }) {
     {
       k: 'remove',
       tab: t('Thinking about removal', 'Az eltávolításon gondolkodom'),
-      img: 'hf_20261013_090723_c91c49fb-f918-4ca5-a1d9-383c4f6a6a31',
+      img: 'hf_20261013_094405_e4565f7f-7e3b-459b-a9b4-b763da2af205',
       h: t('Know what removal looks like.', 'Tudd, hogyan néz ki az eltávolítás.'),
       p: t('A laser removal preview after 3, 6 and 10 sessions helps you set realistic expectations — before you talk to a clinic.', 'A 3, 6 és 10 kezelés utáni lézeres előnézet segít reális elvárásokat kialakítani – még mielőtt klinikával beszélnél.'),
       pts: [t('Preview after 3, 6 and 10 sessions', 'Előnézet 3, 6 és 10 kezelés után'), t('Our guide to what to expect', 'Útmutató arról, mire számíts'), t('Always talk to a dermatologist', 'Mindig beszélj bőrgyógyásszal is')],
@@ -165,11 +173,11 @@ export function UseCases({ t }: { t: T }) {
 /* ------------------------------------------------------------------ what happens at each moment */
 export function AgingTimeline({ t }: { t: T }) {
   const stops = [
-    { y: t('Day 1', '1. nap'), n: '0', img: EXAMPLE[0].src, h: t('Fresh', 'Friss'), p: t('Sharp, dark and slightly raised. This is the version most photos show — and the one that lasts the shortest.', 'Éles, sötét és kicsit kiemelkedő. A legtöbb fotó ezt mutatja – és ez tart a legrövidebb ideig.') },
-    { y: t('1 year', '1 év'), n: '1', img: EXAMPLE[1].src, h: t('Healed', 'Gyógyult'), p: t('The top layer of skin has renewed. Lines look a touch softer and lighter than on day one.', 'A bőr felső rétege megújult. A vonalak kicsit lágyabbnak és világosabbnak tűnnek, mint az első napon.') },
-    { y: t('10 years', '10 év'), n: '10', img: EXAMPLE[2].src, h: t('Settled', 'Beállt'), p: t('Fine details start to soften; light colours fade first, especially where the sun reaches.', 'A finom részletek lágyulni kezdenek; a világos színek fakulnak először, főleg ahol éri a nap.') },
-    { y: t('30 years', '30 év'), n: '30', img: EXAMPLE[3].src, h: t('Mature', 'Érett'), p: t('Lines closer than about 1 mm may have merged. Bold, spaced designs still read clearly.', 'A kb. 1 mm-nél közelebbi vonalak összefolyhattak. A vastag, levegős minták még jól olvashatók.') },
-    { y: t('50 years', '50 év'), n: '50', img: EXAMPLE[4].src, h: t('A lifetime', 'Egy élet'), p: t('Skin itself has aged and carries the ink with it. Strong outlines are what keep the shape.', 'Maga a bőr is öregedett, és viszi magával a tintát. Az erős kontúr az, ami megtartja a formát.') },
+    { y: t('Day 1', '1. nap'), n: '0', img: IMG(TL0, 1000), h: t('Fresh', 'Friss'), p: t('Sharp, dark and slightly raised. This is the version most photos show — and the one that lasts the shortest.', 'Éles, sötét és kicsit kiemelkedő. A legtöbb fotó ezt mutatja – és ez tart a legrövidebb ideig.') },
+    { y: t('1 year', '1 év'), n: '1', img: IMG(TL1, 1000), h: t('Healed', 'Gyógyult'), p: t('The top layer of skin has renewed. Lines look a touch softer and lighter than on day one.', 'A bőr felső rétege megújult. A vonalak kicsit lágyabbnak és világosabbnak tűnnek, mint az első napon.') },
+    { y: t('10 years', '10 év'), n: '10', img: IMG(TL2, 1000), h: t('Settled', 'Beállt'), p: t('Fine details start to soften; light colours fade first, especially where the sun reaches.', 'A finom részletek lágyulni kezdenek; a világos színek fakulnak először, főleg ahol éri a nap.') },
+    { y: t('30 years', '30 év'), n: '30', img: IMG(TL3, 1000), h: t('Mature', 'Érett'), p: t('Lines closer than about 1 mm may have merged. Bold, spaced designs still read clearly.', 'A kb. 1 mm-nél közelebbi vonalak összefolyhattak. A vastag, levegős minták még jól olvashatók.') },
+    { y: t('50 years', '50 év'), n: '50', img: IMG(TL4, 1000), h: t('A lifetime', 'Egy élet'), p: t('Skin itself has aged and carries the ink with it. Strong outlines are what keep the shape.', 'Maga a bőr is öregedett, és viszi magával a tintát. Az erős kontúr az, ami megtartja a formát.') },
   ];
   const [i, setI] = useState(0);
   const s = stops[i];

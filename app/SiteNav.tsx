@@ -87,7 +87,7 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
             ))}
           </nav>
           <div className="sn-r">
-            <Link className="sn-signin" href="/app" onClick={() => track('nav_signin')}>
+            <Link className="sn-signin" href={signedIn ? '/app' : `/belepes${q}`} onClick={() => track('nav_signin')}>
               {signedIn ? T('Open app', 'App') : T('Sign in', 'Belépés')}
             </Link>
             <Link className="sn-cta" href="/app" onClick={() => track('nav_cta')}>
@@ -118,46 +118,75 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
               </svg>
             </button>
           </div>
-          <nav className="sn-dr-main">
-            {[
-              { href: `/${q}`, base: '/', t: T('Home', 'Főoldal') },
-              { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik') },
-              { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók') },
-              { href: `/tudastar${q}`, base: '/tudastar', t: T('Knowledge base', 'Tudástár') },
-              { href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}`, base: '/tattoo', t: T('Styles by body area', 'Stílusok testrészenként') },
-              { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK') },
-            ].map((l) => (
-              <Link key={l.base} href={l.href} className={isOn(l.base) ? 'on' : ''}>
-                {l.t}
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 6l6 6-6 6" />
+
+          <div className="sn-dr-scroll">
+            <Link href="/app" className="sn-dr-feature" onClick={() => track('drawer_feature')}>
+              <div>
+                <span>{T('Free during the beta', 'Ingyenes a béta alatt')}</span>
+                <b>{T('See your tattoo in 50 years', 'Nézd meg a tetoválásod 50 év múlva')}</b>
+              </div>
+              <i aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
-              </Link>
-            ))}
-          </nav>
-          <nav className="sn-dr-sub">
-            {[
-              { href: `/ingyenes-beta${q}`, t: T('Free beta', 'Ingyenes béta') },
-              { href: `/telepites${q}`, t: T('Install the app', 'Telepítés') },
-              { href: `/mi-az-inkage${q}`, t: T('What is InkAge?', 'Mi az InkAge?') },
-              { href: `/rolunk${q}`, t: T('About us', 'Rólunk') },
-              { href: `/kapcsolat${q}`, t: T('Contact', 'Kapcsolat') },
-              { href: `/adatbiztonsag${q}`, t: T('Data security', 'Adatbiztonság') },
-            ].map((l) => (
-              <Link key={l.href} href={l.href}>
-                {l.t}
-              </Link>
-            ))}
-          </nav>
-          <div className="sn-dr-lang">
-            <LangPicker lang={lang} onPick={pick} variant="row" label={T('Language', 'Nyelv')} />
-          </div>
-          <div className="sn-dr-cta">
-            <Link className="sn-dr-try" href="/app" onClick={() => track('drawer_cta')}>
-              {T('Try it free', 'Kipróbálom ingyen')}
+              </i>
             </Link>
-            <Link className="sn-dr-in" href="/app">
+
+            <p className="sn-dr-label">{T('Product', 'Termék')}</p>
+            <nav className="sn-dr-list">
+              {[
+                { href: `/${q}`, base: '/', t: T('Home', 'Főoldal'), d: T('Start here', 'Kezdőlap'), i: 'M4 10.5L12 4l8 6.5V20H4z' },
+                { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), d: T('Five steps, a minute', 'Öt lépés, egy perc'), i: 'M4 8h4l2-3h4l2 3h4v11H4zM12 17a4 4 0 1 0 0-8a4 4 0 0 0 0 8z' },
+                { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók'), d: T('Everything it can do', 'Minden, amit tud'), i: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z' },
+                { href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}`, base: '/tattoo', t: T('Styles', 'Stílusok'), d: T('Scores by body area', 'Pontszámok testrészenként'), i: 'M4 20V10M10 20V4M16 20v-7M22 20H2' },
+                { href: `/tudastar${q}`, base: '/tudastar', t: T('Guides', 'Tudástár'), d: T('12 in-depth articles', '12 részletes cikk'), i: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5' },
+                { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK'), d: T('Quick answers', 'Gyors válaszok'), i: 'M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18zM9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.8M12 17h.01' },
+              ].map((l) => (
+                <Link key={l.base} href={l.href} className={isOn(l.base) ? 'on' : ''} aria-current={isOn(l.base) ? 'page' : undefined}>
+                  <span className="sn-dr-ico">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d={l.i} />
+                    </svg>
+                  </span>
+                  <span className="sn-dr-t">
+                    <b>{l.t}</b>
+                    <small>{l.d}</small>
+                  </span>
+                  <svg className="sn-dr-chev" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              ))}
+            </nav>
+
+            <p className="sn-dr-label">{T('More', 'Továbbiak')}</p>
+            <nav className="sn-dr-chips">
+              {[
+                { href: `/ingyenes-beta${q}`, t: T('Free beta', 'Ingyenes béta') },
+                { href: `/telepites${q}`, t: T('Install', 'Telepítés') },
+                { href: `/mi-az-inkage${q}`, t: T('What is InkAge?', 'Mi az InkAge?') },
+                { href: `/rolunk${q}`, t: T('About', 'Rólunk') },
+                { href: `/kapcsolat${q}`, t: T('Contact', 'Kapcsolat') },
+                { href: `/adatbiztonsag${q}`, t: T('Security', 'Adatbiztonság') },
+                { href: `/jog${q}`, t: T('Legal', 'Jog') },
+              ].map((l) => (
+                <Link key={l.href} href={l.href}>
+                  {l.t}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="sn-dr-lang">
+              <LangPicker lang={lang} onPick={pick} variant="row" label={T('Language', 'Nyelv')} />
+            </div>
+          </div>
+
+          <div className="sn-dr-cta">
+            <Link className="sn-dr-in" href={signedIn ? '/app' : `/belepes${q}`}>
               {signedIn ? T('Open app', 'App megnyitása') : T('Sign in', 'Belépés')}
+            </Link>
+            <Link className="sn-dr-try" href={signedIn ? '/app' : `/regisztracio${q}`} onClick={() => track('drawer_cta')}>
+              {signedIn ? T('New preview', 'Új előnézet') : T('Create account', 'Regisztráció')}
             </Link>
           </div>
         </aside>
