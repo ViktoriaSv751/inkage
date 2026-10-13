@@ -203,7 +203,7 @@ export async function pasteMask(photo: { w: number; h: number }, design: string,
     s.width = W;
     s.height = H;
     const sx = s.getContext('2d')!;
-    drawSkin(sx, skin, W, H, Math.hypot(W, H) * 0.04);
+    drawSkin(sx, skin, W, H, Math.hypot(W, H) * 0.025);
     // only trust the skin outline when it agrees with the placement (covers most of it)
     const area = ctx.getImageData(0, 0, W, H).data;
     const sk = sx.getImageData(0, 0, W, H).data;
