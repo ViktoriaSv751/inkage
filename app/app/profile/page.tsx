@@ -240,6 +240,7 @@ export default function ProfilePage() {
             <svg viewBox="0 0 24 24" aria-hidden="true">
               {icon}
             </svg>
+            <span className="pf-tab-l">{label}</span>
           </button>
         ))}
       </div>

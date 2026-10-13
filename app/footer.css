@@ -29,8 +29,21 @@
 .sf-col a { font-size: 16px; font-weight: 500; color: #0d0b14; padding: 6px 0; line-height: 1.35; transition: color .15s; }
 .sf-col a:hover { color: #5b3df5; }
 @media (min-width: 700px) { .sf-grid { grid-template-columns: repeat(3, 1fr); gap: 36px 24px; } }
-@media (min-width: 1100px) {
+@media (min-width: 900px) {
+  .sf-top { gap: 48px; }
+  .sf-brand { max-width: none; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); column-gap: 56px; align-items: start; padding-bottom: 40px; border-bottom: 1px solid #ebe9f0; }
+  .sf-brand > p { grid-column: 1; max-width: 46ch; }
+  .sf-sub { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+  .sf-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+  .sf-col a { font-size: 14.5px; padding: 5px 0; color: #4a4558; }
+  .sf-col a:hover { color: #0d0b14; }
+  .sf-bottom { padding-right: 64px; }
+}
+@media (min-width: 1240px) {
   .sf-top { grid-template-columns: 340px 1fr; gap: 64px; }
+  .sf-brand { display: grid; grid-template-columns: 1fr; padding-bottom: 0; border-bottom: 0; }
+  .sf-brand > p, .sf-sub { grid-column: auto; grid-row: auto; }
+  .sf-sub { margin-top: 6px; }
   .sf-grid { grid-template-columns: repeat(5, 1fr); gap: 24px; }
   .sf-col a { font-size: 14.5px; padding: 5px 0; color: #4a4558; }
   .sf-col a:hover { color: #0d0b14; }

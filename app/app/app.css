@@ -40,8 +40,8 @@
 .tabbar a svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .tabbar a.on { color: var(--ink); }
 .tabbar a.on svg { stroke-width: 2.2; }
-.tabbar a:first-child svg { width: 36px; height: 36px; padding: 7px; border-radius: 12px; background: var(--ink); color: #fff; stroke: #fff; stroke-width: 2.4; margin: -5px 0 -5px; }
-.tabbar a:first-child.on svg { background: var(--stencil); }
+.tabbar a.cta svg { width: 36px; height: 36px; padding: 7px; border-radius: 12px; background: var(--ink); color: #fff; stroke: #fff; stroke-width: 2.4; margin: -5px 0 -5px; }
+.tabbar a.cta.on svg { background: var(--stencil); }
 
 /* ---------- small controls */
 .iconbtn { width: 40px; height: 40px; display: inline-grid; place-items: center; border-radius: 50%; border: 0; background: var(--surface); color: var(--ink); flex: none; box-shadow: 0 0 0 1px var(--line); }
@@ -467,29 +467,6 @@
   .cmp img { aspect-ratio: 4/5; }
 }
 
-/* desktop: a left navigation rail instead of the bottom tab bar */
-@media (min-width: 1100px) {
-  .appshell { padding-left: 248px; }
-  .topbar { margin-left: -248px; padding-left: 248px; }
-  .topbar-in { padding: 0 40px; }
-  .appmain { padding: 12px 40px 64px; max-width: 1180px; }
-  .tabbar {
-    top: 0; right: auto; bottom: 0; width: 248px; z-index: 45;
-    grid-template-columns: 1fr; align-content: start; gap: 4px;
-    padding: 88px 16px 24px; border-top: 0; border-right: 1px solid var(--line);
-  }
-  .tabbar::before { content: 'InkAge'; position: absolute; top: 22px; left: 28px; font-weight: 800; font-size: 21px; letter-spacing: -.03em; color: var(--ink); }
-  .tabbar a { grid-auto-flow: column; justify-content: start; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; font-size: 15px; font-weight: 600; letter-spacing: 0; color: var(--ink-2); }
-  .tabbar a svg { width: 22px; height: 22px; }
-  .tabbar a:hover { background: var(--surface-2); color: var(--ink); }
-  .tabbar a.on { background: var(--surface-2); color: var(--ink); }
-  .tabbar a:first-child { background: var(--ink); color: #fff; margin-bottom: 14px; justify-content: center; }
-  .tabbar a:first-child svg { width: 22px; height: 22px; padding: 0; background: none; margin: 0; }
-  .tabbar a:first-child.on, .tabbar a:first-child:hover { background: var(--stencil); color: #fff; }
-  .topbar .logo { visibility: hidden; }
-  .stickycta { position: static; }
-}
-
 /* landing and other pages on wide screens */
 @media (min-width: 1100px) {
   .hero h1 { font-size: 84px; }
@@ -716,22 +693,105 @@
 .gal-steps li { display: flex; align-items: center; gap: 12px; font-weight: 600; }
 .gal-steps b { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 13px; }
 
-/* ---------- profile: two columns on desktop */
-@media (min-width: 1100px) {
-  .pagefade:has(.pf) { max-width: 1080px; margin: 0 auto; }
-  .pf { max-width: none; display: grid; grid-template-columns: 320px minmax(0, 1fr); column-gap: 40px; align-items: start; }
-  .pf-tools { grid-column: 1 / -1; }
-  .pf > :not(.pf-tools):not(.pf-id) { grid-column: 2; }
-  .pf-id { grid-column: 1; grid-row: 2 / span 30; position: sticky; top: 80px; padding: 28px; border-radius: 28px; background: var(--surface); margin-top: 0; }
-  .pf-stats { grid-template-columns: 1fr 1fr; background: #fff; }
-  .pf-stats > div:nth-child(3) { border-left: 0; }
-  .pf-stats > div:nth-child(n + 3) { border-top: 1px solid var(--line); }
-  .pf-tabs { margin-top: 0; }
-  .pf-grid { grid-template-columns: repeat(3, 1fr); }
+/* ================================================================ desktop app shell (laptops from 960px) */
+.tabbar .rail-logo, .tabbar .rail-foot { display: none; }
+@media (min-width: 960px) {
+  .appshell { padding-left: 240px; }
+  .topbar { display: none; }
+  .appmain { max-width: 1160px; padding: 40px 48px 72px; }
+  .tabbar {
+    top: 0; right: auto; bottom: 0; width: 240px; z-index: 45;
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 22px 16px 20px; border-top: 0; border-right: 1px solid var(--line); background: #fff;
+  }
+  .rail-logo { display: inline-flex; align-items: center; gap: 9px; margin: 0 10px 26px; font-weight: 800; font-size: 20px; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+  .rail-logo svg { width: 28px; height: 28px; }
+  .rail-logo circle { fill: var(--ink); }
+  .rail-logo path { fill: #fff; }
+  .tabbar a:not(.rail-logo) { display: flex; justify-content: flex-start; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 14px; font-size: 15px; font-weight: 600; letter-spacing: 0; color: var(--ink-2); transition: background .15s, color .15s; }
+  .tabbar a svg { width: 21px; height: 21px; }
+  .tabbar a:not(.rail-logo):hover { background: var(--surface); color: var(--ink); }
+  .tabbar a.on { background: var(--surface-2); color: var(--ink); }
+  .tabbar a.cta { background: var(--ink); color: #fff; justify-content: center; height: 48px; margin-bottom: 16px; border-radius: 999px; }
+  .tabbar a.cta svg { width: 20px; height: 20px; padding: 0; background: none; margin: 0; border-radius: 0; }
+  .tabbar a.cta:hover, .tabbar a.cta.on { background: var(--stencil); color: #fff; }
+  .tabbar .rail-foot { display: grid; gap: 0; margin-top: auto; }
+  .rail-beta { margin: 0 0 12px; padding: 16px; border-radius: 18px; background: var(--stencil-tint); }
+  .rail-beta b { display: block; font-size: 14px; color: var(--stencil-2); }
+  .rail-beta p { margin: 4px 0 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .tabbar .rail-foot a { padding: 8px 14px; font-size: 14px; font-weight: 500; color: var(--ink-3); border-radius: 10px; }
+  .tabbar .rail-foot a:hover { color: var(--ink); background: var(--surface); }
+  .stickycta { position: static; }
+  .appmain h1 { font-size: 40px; letter-spacing: -.035em; }
+}
+@media (min-width: 1280px) {
+  .appshell { padding-left: 264px; }
+  .tabbar { width: 264px; padding-left: 20px; padding-right: 20px; }
+  .appmain { padding-left: 64px; padding-right: 64px; }
 }
 
-/* ---------- desktop rail: logo with mark */
-@media (min-width: 1100px) {
-  .tabbar::before { content: ''; top: 20px; left: 26px; width: 132px; height: 30px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 30'%3E%3Ccircle cx='15' cy='15' r='14' fill='%23000'/%3E%3Cpath d='M18 6.5a9.4 9.4 0 1 0 0 17a7.5 7.5 0 1 1 0-17z' fill='%23fff'/%3E%3Ctext x='38' y='22' font-family='Geist Sans, sans-serif' font-weight='800' font-size='21' letter-spacing='-0.6' fill='%23000'%3EInkAge%3C/text%3E%3C/svg%3E") left center / contain no-repeat; }
-  .topbar-in { max-width: none; }
+/* ---------- profile on desktop: cover card + labelled tabs */
+.pf-tab-l { display: none; }
+@media (min-width: 960px) {
+  .pagefade:has(.pf) { max-width: none; }
+  .pf { max-width: 1040px; margin: 0 auto; }
+  .pf-tools { display: none; }
+  .pf-id {
+    position: relative; margin: 0; padding: 112px 32px 30px; border-radius: 30px; overflow: hidden;
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 24px; row-gap: 4px; align-items: center;
+    grid-template-areas: 'av name stats' 'av sub stats' 'av btn stats';
+    background: #fff; box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .pf-id::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 92px; background: radial-gradient(90% 180% at 0% 0%, #d9d0ff 0%, transparent 60%), radial-gradient(70% 160% at 100% 0%, #ffe3d1 0%, transparent 60%), #f4f1ff; }
+  .pf-avatar { grid-area: av; align-self: start; margin: -60px 0 0; width: 120px; height: 120px; font-size: 48px; box-shadow: 0 0 0 6px #fff, 0 18px 36px -18px rgba(45, 28, 140, .6); }
+  .pf-badge { width: 36px; height: 36px; box-shadow: 0 0 0 4px #fff; }
+  .pf-id h1 { grid-area: name; font-size: 36px; align-self: end; }
+  .pf-sub { grid-area: sub; font-size: 15px; word-break: normal; }
+  .pf-id > .pf-edit { grid-area: btn; justify-self: start; margin-top: 10px; height: 44px; }
+  .pf-stats { grid-area: stats; width: auto; margin: 0; grid-template-columns: repeat(4, 104px); background: var(--surface); }
+  .pf-stats b { font-size: 26px; }
+  .pf-tabs { display: flex; gap: 6px; margin: 28px 0 20px; padding: 0; border-bottom: 1px solid var(--line); }
+  .pf-tabs button { height: 48px; padding: 0 16px; display: flex; gap: 9px; align-items: center; color: var(--ink-3); font: inherit; font-weight: 650; font-size: 15px; }
+  .pf-tabs button:hover { color: var(--ink); }
+  .pf-tabs svg { width: 20px; height: 20px; }
+  .pf-tab-l { display: inline; }
+  .pf-tabs button.on::after { left: 10px; right: 10px; }
+  .pf-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .pf-empty { padding: 56px 24px; border-radius: 28px; box-shadow: none; }
+  .pf-empty b { font-size: 22px; letter-spacing: -.02em; }
+  .pf .card { max-width: 720px; }
+  .pf .disclaimer { text-align: left; }
 }
+@media (min-width: 960px) and (max-width: 1179px) {
+  .pf-id { grid-template-areas: 'av name' 'av sub' 'av btn' 'stats stats'; grid-template-columns: auto minmax(0, 1fr); }
+  .pf-stats { margin-top: 22px; grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---------- gallery empty state on desktop: text left, steps right */
+@media (min-width: 960px) {
+  .gal-empty {
+    max-width: none; margin: 28px 0 0; padding: 44px 48px; text-align: left; justify-items: start; column-gap: 56px; align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    grid-template-areas: 'ico steps' 'h2 steps' 'sub steps' 'btn steps';
+  }
+  .gal-empty-ico { grid-area: ico; }
+  .gal-empty h2 { grid-area: h2; font-size: 32px; letter-spacing: -.03em; }
+  .gal-empty .sub { grid-area: sub; max-width: 42ch; }
+  .gal-empty .btn { grid-area: btn; margin-top: 14px; }
+  .gal-steps { grid-area: steps; margin: 0; gap: 12px; width: 100%; }
+  .gal-steps li { padding: 16px 18px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 1px var(--line); }
+}
+
+/* ---------- explore on desktop */
+@media (min-width: 960px) {
+  .explore { max-width: none; }
+  .ex-hero { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 56px; padding: 32px; }
+  .ex-designs.hscroll { grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 12px; }
+}
+@media (min-width: 960px) {
+  .tabbar a.rail-logo { display: inline-flex; justify-items: initial; padding: 0 10px; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); margin: 0 0 26px; }
+  .tabbar .rail-logo svg { width: 28px; height: 28px; stroke: none; }
+  .pf-stats { justify-self: stretch; }
+}
+@media (min-width: 960px) { .qf-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } .qf-vis { height: 168px; } }
+@media (min-width: 1440px) { .qf-grid { grid-template-columns: repeat(4, 1fr); } }

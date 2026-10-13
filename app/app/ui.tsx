@@ -103,17 +103,35 @@ export function BottomNav() {
     { href: '/app/explore', label: ui.t('nav.explore'), icon: Icon.compass },
     { href: '/app/profile', label: ui.t('nav.profile'), icon: Icon.user },
   ];
+  const hu = ui.lang === 'hu';
+  const q = hu ? '' : '?lang=en';
   return (
     <nav className="tabbar" aria-label="Main">
-      {items.map((it) => {
+      <Link href="/" className="rail-logo" aria-label="InkAge">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" />
+          <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+        </svg>
+        InkAge
+      </Link>
+      {items.map((it, i) => {
         const on = it.href === '/app' ? path === '/app' : path?.startsWith(it.href);
         return (
-          <Link key={it.href} href={it.href} className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} onClick={() => haptic()}>
+          <Link key={it.href} href={it.href} className={`${i === 0 ? 'cta' : ''} ${on ? 'on' : ''}`} aria-current={on ? 'page' : undefined} onClick={() => haptic()}>
             {it.icon}
             <span>{it.label}</span>
           </Link>
         );
       })}
+      <div className="rail-foot">
+        <div className="rail-beta">
+          <b>{tx(ui.lang, 'Free beta', 'Ingyenes béta')}</b>
+          <p>{tx(ui.lang, 'Every feature is free while we test. No card needed.', 'Teszt alatt minden funkció ingyenes. Kártya nem kell.')}</p>
+        </div>
+        <Link href={`/tudastar${q}`}>{tx(ui.lang, 'Guides', 'Tudástár')}</Link>
+        <Link href={`/gyik${q}`}>{tx(ui.lang, 'FAQ', 'GYIK')}</Link>
+        <Link href={`/${q}`}>{tx(ui.lang, 'Back to website', 'Vissza a weboldalra')}</Link>
+      </div>
     </nav>
   );
 }

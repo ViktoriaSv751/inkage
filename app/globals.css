@@ -170,3 +170,5 @@ footer a { text-decoration: none; }
 }
 .hero h1 { text-wrap: balance; }
 @media (min-width: 861px) { .hero h1 { font-size: clamp(56px, 5.6vw, 84px) !important; } }
+/* laptops: more breathing room at the page edges */
+@media (min-width: 1000px) { main { padding-left: 40px; padding-right: 40px; max-width: 1200px; } }
