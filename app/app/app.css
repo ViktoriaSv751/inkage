@@ -555,3 +555,5 @@
 .checklist input { width: 20px; height: 20px; accent-color: var(--stencil); }
 .res-tools { justify-items: end; }
 .oauth { display: grid; gap: 8px; margin-bottom: 6px; }
+.checklist label input[type='checkbox'] { width: 20px !important; height: 20px; min-height: 0; flex: none; margin: 0; padding: 0; box-shadow: none; }
+.checklist label span { flex: 1; text-align: left; }

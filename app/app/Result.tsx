@@ -144,8 +144,13 @@ export function Result({
   // zoom into the tattoo itself
   const f = preview.focus;
   const zk = f ? Math.min(3.2, Math.max(1.6, 0.5 / Math.max(0.08, f.w))) : 2;
-  const zs: React.CSSProperties | undefined =
-    closeup && f ? { transform: `scale(${zk})`, transformOrigin: `${Math.min(100, Math.max(0, f.x * 100))}% ${Math.min(100, Math.max(0, f.y * 100))}%` } : undefined;
+  // move the tattoo to the middle and scale up, without showing empty edges
+  const zs: React.CSSProperties | undefined = (() => {
+    if (!closeup || !f) return undefined;
+    const tx = Math.min(0, Math.max(1 - zk, 0.5 - f.x * zk)) * 100;
+    const ty = Math.min(0, Math.max(1 - zk, 0.5 - f.y * zk)) * 100;
+    return { transformOrigin: '0 0', transform: `translate(${tx}%, ${ty}%) scale(${zk})` };
+  })();
   const touch = useRef<number | null>(null);
   const played = useRef(false);
   const label = (k: StageKey) => (k === 'fresh' && preview.mode === 'existing' ? t('Today', 'Ma') : ui.t(`stage.${k}` as any));
