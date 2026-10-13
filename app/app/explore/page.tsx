@@ -9,6 +9,7 @@ import { useApp } from '../AppProvider';
 import { tx } from '@/lib/i18n';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { ARTICLES } from '@/lib/articles';
+import { IMG, KB } from '@/lib/kb';
 import { lsSet, track } from '@/lib/store';
 import { HeroAging } from '../../visuals';
 
@@ -105,11 +106,15 @@ export default function ExplorePage() {
       </div>
 
       <div className="section-title">
-        <h2>{t('Learn', 'Tudnivalók')}</h2>
+        <h2>{t('Knowledge base', 'Tudástár')}</h2>
+        <Link className="small" href={ui.lang === 'hu' ? '/tudastar' : '/tudastar?lang=en'}>
+          {t('All articles', 'Az összes cikk')} →
+        </Link>
       </div>
       <div className="hscroll">
         {ARTICLES.map((a) => (
-          <Link key={a.slug} className="article-card" href={`/learn/${a.slug}${ui.lang === 'hu' ? '?lang=hu' : ''}`}>
+          <Link key={a.slug} className="article-card" href={`/tudastar/${a.slug}${ui.lang === 'hu' ? '' : '?lang=en'}`}>
+            {KB[a.slug] && <img src={IMG(KB[a.slug].img, 600)} alt="" loading="lazy" />}
             <span className="tag">{a.tag[ui.lang]}</span>
             <b>{a.title[ui.lang]}</b>
             <span>{a.desc[ui.lang]}</span>

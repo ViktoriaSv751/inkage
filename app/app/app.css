@@ -601,3 +601,7 @@
 .faq details[open] summary::after { content: '–'; }
 .faq p { color: var(--ink-2); font-size: 14px; margin: 8px 0 2px; line-height: 1.5; }
 .card input.text { width: 100%; border: 0; background: var(--surface-2); border-radius: 14px; padding: 12px 14px; font: inherit; font-size: 15px; }
+.article-card { flex: none; padding: 0 0 16px; overflow: hidden; }
+.article-card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; margin-bottom: 6px; }
+.article-card > span, .article-card > b { padding: 0 16px; }
+.section-title a.small { color: var(--stencil); font-weight: 600; text-decoration: none; }

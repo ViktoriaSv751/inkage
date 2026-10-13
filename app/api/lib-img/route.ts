@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const u = new URL(req.url);
   const f = u.searchParams.get('f') || '';
   if (!/^hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36}\.png$/.test(f)) return new Response('Not found', { status: 404 });
-  const w = Math.min(1200, Math.max(0, Number(u.searchParams.get('w')) || 0));
+  const w = Math.min(1800, Math.max(0, Number(u.searchParams.get("w")) || 0));
   const res = await fetch(CDN + f).catch(() => null);
   if (!res?.ok) return new Response('Not found', { status: 404 });
   const buf = Buffer.from(await res.arrayBuffer());

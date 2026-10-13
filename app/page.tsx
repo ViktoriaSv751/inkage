@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { prepareImage } from '@/lib/client';
-import { SEO_AREAS, SEO_STYLES } from '@/lib/seo';
+import { LandingSections } from './LandingSections';
+import './landing.css';
 import { HeroAging } from './visuals';
 import { useLang, tx } from '@/lib/i18n';
 import { lsSet, track } from '@/lib/store';
 import { sb } from '@/lib/sb';
-import { ARTICLES } from '@/lib/articles';
 
 export default function Landing() {
   const { lang, setLang } = useLang();
@@ -108,68 +108,7 @@ export default function Landing() {
         <HeroAging />
       </section>
 
-      <section className="facts">
-        <h2>{t('How it works', 'Hogyan működik?')}</h2>
-        <ol className="timeline">
-          <li>
-            <b>{t('1. Your photo', '1. A fotód')}</b>
-            <span>{t('Snap the spot where the tattoo will go. We check the light and focus for you.', 'Fotózd le a helyet, ahová a tetoválás kerül. Mi ellenőrizzük a fényt és az élességet.')}</span>
-          </li>
-          <li>
-            <b>{t('2. Any design', '2. Bármilyen minta')}</b>
-            <span>{t('A Pinterest pin, a screenshot, your artist’s sketch — we remove the background automatically.', 'Pinterest-kép, képernyőfotó, a tetoválód vázlata – a hátteret automatikusan eltávolítjuk.')}</span>
-          </li>
-          <li>
-            <b>{t('3. Place it', '3. Helyezd el')}</b>
-            <span>{t('Drag, pinch and rotate it into place and see the real size in centimetres.', 'Húzd, méretezd, forgasd a helyére, és lásd a valós méretet centiméterben.')}</span>
-          </li>
-          <li>
-            <b>{t('4. Watch it age', '4. Nézd, hogyan öregszik')}</b>
-            <span>{t('Realistic previews on your own skin at 1, 10, 30 and 50 years, plus an Ink Longevity Score with tips.', 'Valósághű képek a saját bőrödön 1, 10, 30 és 50 év múlva, plusz tartóssági pontszám tippekkel.')}</span>
-          </li>
-          <li>
-            <b>{t('5. Ask your friends', '5. Kérdezd meg a barátaidat')}</b>
-            <span>{t('Make a TikTok-ready video or send a link your friends can vote on.', 'Készíts TikTokra kész videót, vagy küldj egy linket, amin a barátaid szavazhatnak.')}</span>
-          </li>
-        </ol>
-        <p style={{ marginTop: 24 }}>
-          <Link className="btn" href="/app">
-            {t('Start now', 'Kezdjük')}
-          </Link>
-        </p>
-      </section>
-
-      <section className="facts">
-        <h2>{t('Know before you ink', 'Tudd, mielőtt varratsz')}</h2>
-        {ARTICLES.slice(0, 4).map((a) => (
-          <p key={a.slug}>
-            <Link href={`/learn/${a.slug}${lang === 'hu' ? '?lang=hu' : ''}`} style={{ fontWeight: 700 }}>
-              {a.title[lang]}
-            </Link>
-            <br />
-            <span style={{ color: 'var(--ink-2)' }}>{a.desc[lang]}</span>
-          </p>
-        ))}
-      </section>
-
-      <section className="facts">
-        <h2>{t('How styles age, by body area', 'Hogyan öregszenek a stílusok testrészenként?')}</h2>
-        <p style={{ lineHeight: 2 }}>
-          {SEO_STYLES.slice(0, 3).flatMap((st) =>
-            SEO_AREAS.slice(0, 4).map((ar) => (
-              <Link key={st.k + ar.k} href={`/tattoo/${st.k}-${ar.k}${lang === 'hu' ? '?lang=hu' : ''}`} style={{ marginRight: 16, display: 'inline-block' }}>
-                {lang === 'hu' ? `${st.hu} – ${ar.hu}` : `${st.en} on the ${ar.en}`}
-              </Link>
-            ))
-          )}
-        </p>
-      </section>
-
-      <footer>
-        <Link href="/learn">{t('Guides', 'Útmutatók')}</Link>
-        <Link href="/terms">{t('Terms', 'Feltételek')}</Link>
-        <Link href="/privacy">{t('Privacy', 'Adatvédelem')}</Link>
-      </footer>
+      <LandingSections lang={lang} made={made} onUpload={() => (track('landing_cta_bottom'), fileRef.current?.click())} />
     </main>
   );
 }

@@ -346,7 +346,7 @@ export default function ProfilePage() {
             <span aria-hidden="true">›</span>
           </button>
         )}
-        <Link className="list-row" href="/learn">
+        <Link className="list-row" href={ui.lang === 'hu' ? '/tudastar' : '/tudastar?lang=en'}>
           <span>{t('Tattoo aging guides', 'Útmutatók a tetoválás öregedéséről')}</span>
           <span aria-hidden="true">›</span>
         </Link>
