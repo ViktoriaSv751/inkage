@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { sb } from '@/lib/sb';
+import { PUBLIC } from '@/lib/public-config';
 import { haptic } from '@/lib/store';
 import { useApp } from './AppProvider';
 import { tx } from '@/lib/i18n';
@@ -146,6 +147,22 @@ export function AuthSheet() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const L = (en: string, hu: string) => tx(ui.lang, en, hu);
+  // one-tap sign-in buttons appear as soon as the provider is switched on in Supabase
+  const [providers, setProviders] = useState<{ google?: boolean; apple?: boolean }>({});
+  useEffect(() => {
+    if (!authOpen) return;
+    const url = PUBLIC.supabaseUrl, key = PUBLIC.supabaseAnonKey;
+    if (!url || !key) return;
+    fetch(`${url}/auth/v1/settings`, { headers: { apikey: key } })
+      .then((r) => r.json())
+      .then((d) => setProviders({ google: !!d?.external?.google, apple: !!d?.external?.apple }))
+      .catch(() => {});
+  }, [authOpen]);
+  const oauth = async (provider: 'google' | 'apple') => {
+    setErr('');
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/profile` } })) || {};
+    if (error) setErr(error.message);
+  };
 
   const send = async () => {
     const s = sb();
@@ -176,6 +193,21 @@ export function AuthSheet() {
       {!sent ? (
         <>
           <p className="sub">{authReason || L('Sign in to save your previews on every device. We’ll email you a 6-digit code.', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid. Küldünk egy 6 jegyű kódot.')}</p>
+          {(providers.google || providers.apple) && (
+            <div className="oauth">
+              {providers.apple && (
+                <button className="btn wide dark" onClick={() => oauth('apple')}>
+                   {L('Continue with Apple', 'Folytatás Apple-fiókkal')}
+                </button>
+              )}
+              {providers.google && (
+                <button className="btn wide ghost" onClick={() => oauth('google')}>
+                  <b style={{ color: '#4285f4' }}>G</b> {L('Continue with Google', 'Folytatás Google-fiókkal')}
+                </button>
+              )}
+              <p className="fine" style={{ margin: '4px 0 2px' }}>{L('or with your email', 'vagy e-maillel')}</p>
+            </div>
+          )}
           <input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} />
           <button className="btn wide" disabled={busy || !/\S+@\S+\.\S+/.test(email)} onClick={send}>
             {busy ? '…' : L('Email me a code', 'Kérem a kódot')}

@@ -94,9 +94,10 @@ export function BodyMap({ value, onChange }: { value: string; onChange: (v: stri
                   onClick={() => pick(p.v)}
                   onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && pick(p.v)}
                 >
-                  {on && <circle className="bm-halo" cx={p.x} cy={p.y} r="14" />}
-                  <circle cx={p.x} cy={p.y} r="9.5" />
-                  <text x={p.x} y={p.y + 3.4}>{p.n}</text>
+                  <circle className="bm-hit" cx={p.x} cy={p.y} r="15" />
+                  {on && <circle className="bm-halo" cx={p.x} cy={p.y} r="15.5" />}
+                  <circle cx={p.x} cy={p.y} r="10.5" />
+                  <text x={p.x} y={p.y + 3.6}>{p.n}</text>
                 </g>
               );
             })}

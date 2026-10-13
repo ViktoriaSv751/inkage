@@ -1,5 +1,6 @@
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
-import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, placedPrompt, qualityCheck } from '@/lib/ai';
+import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
+import { pasteBack } from '@/lib/composite';
 import { longevity } from '@/lib/score';
 import { guestFrom, guestRefund, guestStart } from '@/lib/guest';
 
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
   } catch {
     return json({ error: 'Add both images again and retry.' }, 400);
   }
-  if (photo.buf.length > 3_000_000 || design.buf.length > 3_000_000) return json({ error: 'These images are too large. Use smaller photos.' }, 413);
+  if (photo.buf.length > 3_000_000 || design.buf.length > 3_000_000 || String(body.mask || '').length > 1_500_000) return json({ error: 'These images are too large. Use smaller photos.' }, 413);
 
   // Signed-in user, or a guest (first preview without an account).
   const a = await getAuthed(req);
@@ -80,32 +81,54 @@ export async function POST(req: Request) {
     } catch {}
     const colorMode = body.colorMode === 'color' ? 'color' : 'black';
     const designImg = { ...design, name: 'design.png' };
-    const run = () =>
-      mockup
-        ? editImage([{ ...photo, name: 'photo.jpg' }, { ...mockup, name: 'mockup.jpg' }, designImg], placedPrompt(placement, colorMode), w, h)
-        : editImage([{ ...photo, name: 'photo.jpg' }, designImg], freshPrompt(placement, size), w, h);
+    let mask: Buffer | null = null;
+    try {
+      mask = body.mask ? dataUrlToBuffer(body.mask).buf : null;
+    } catch {}
+    // what the user said was wrong last time ("Not right?")
+    const redo = (Array.isArray(body.redo) ? body.redo : []).map((k: any) => REDO[String(k)]).filter(Boolean).join(' ');
+    const run = (fix = '') => {
+      const extra = [redo, fix ? `A previous attempt had these problems, avoid them: ${fix}.` : ''].filter(Boolean).join(' ');
+      return mockup
+        ? editImage([{ ...photo, name: 'photo.jpg' }, { ...mockup, name: 'mockup.jpg' }, designImg], placedPrompt(placement, colorMode, extra), w, h)
+        : editImage([{ ...photo, name: 'photo.jpg' }, designImg], freshPrompt(placement, size, extra), w, h);
+    };
+    // Paste-back: outside the tattoo area the original photo's pixels are kept, so clothes, face and background can't change.
+    const protect = async (img: string) => {
+      if (!mask) return img;
+      try {
+        const r = await pasteBack(photo.buf, dataUrlToImg(img).buf, mask);
+        console.log('paste-back', { applied: r.applied, diff: Math.round(r.diff * 10) / 10 });
+        return r.image ? `data:image/jpeg;base64,${r.image.toString('base64')}` : img;
+      } catch (e) {
+        console.warn('paste-back failed', e);
+        return img;
+      }
+    };
 
     let image: string;
-    let qc = { match: 10 };
+    let qc: QC = { ok: true, match: 10, note: '', fix: '' };
     let analysis;
     if (existing) {
       // The user already has this tattoo: today's photo IS the fresh stage.
       image = body.photo;
       analysis = await analyse(dataUrlToImg(image));
     } else {
-      // Generate, then check against the design (and analyse the skin at the same time); retry once if it doesn't match.
-      image = await run();
+      // Generate, then check against the design (and analyse the skin at the same time).
+      image = await protect(await run());
       let [q, an] = await Promise.all([qualityCheck(designImg, dataUrlToImg(image)), analyse(dataUrlToImg(image))]);
       if (!q.ok) {
-        console.warn('qc failed, retrying', q);
-        const second = await run().catch(() => null);
-        if (second) {
-          const q2 = await qualityCheck(designImg, dataUrlToImg(second));
-          if (q2.match >= q.match) {
-            image = second;
-            q = q2;
-          }
-        }
+        // Two new candidates in parallel, told exactly what went wrong; keep the best of all three.
+        console.warn('qc failed, retrying with feedback', q);
+        const more = await Promise.all(
+          [0, 1].map(async () => {
+            const img = await run(q.fix).catch(() => null);
+            if (!img) return null;
+            const safe = await protect(img);
+            return { img: safe, q: await qualityCheck(designImg, dataUrlToImg(safe)) };
+          })
+        );
+        for (const c of more) if (c && c.q.match > q.match) ((image = c.img), (q = c.q));
       }
       qc = q;
       analysis = an;
@@ -125,8 +148,8 @@ export async function POST(req: Request) {
       },
       lang
     );
-    const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, exp: Date.now() + 3600e3 });
-    return withCookie(json({ image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, canAge, remaining, plan }), guest?.setCookie ?? null);
+    const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, y: 0, exp: Date.now() + 3 * 3600e3 });
+    return withCookie(json({ image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining, plan }), guest?.setCookie ?? null);
   } catch (e) {
     console.error('generate failed', e);
     if (a) await a.db.rpc('refund_generation', { p_gid: gid });

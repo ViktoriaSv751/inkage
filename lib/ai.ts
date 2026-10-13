@@ -36,7 +36,7 @@ const KEEP =
 const STAY_ON_BODY =
   'Every line of the tattoo must be on skin: never on the background, clothing, jewellery or objects. Follow the user\'s position and size; if the overlay deliberately continues onto neighbouring skin (for example from the shoulder onto the chest), keep it there and let it wrap naturally across both areas. Only where it would leave the body entirely, pull it back onto the skin. Wrap it around the curvature of the body (lines near the edges get foreshortened as the skin turns away from the camera).';
 
-export function freshPrompt(placement: string, size: string) {
+export function freshPrompt(placement: string, size: string, extra = '') {
   const sizeText =
     size === 'small' ? 'small (about 4–6 cm across)' : size === 'large' ? 'large (covering most of that body area)' : 'medium (about 8–12 cm across)';
   return [
@@ -48,11 +48,12 @@ export function freshPrompt(placement: string, size: string) {
     'If that body area is not visible, place it on the closest visible area that makes anatomical sense.',
     STAY_ON_BODY,
     KEEP,
-  ].join(' ');
+    extra,
+  ].filter(Boolean).join(' ');
 }
 
 /** Used when the user positioned the design themselves in the editor (3 images: photo, mockup, design). */
-export function placedPrompt(placement: string, colorMode: 'black' | 'color') {
+export function placedPrompt(placement: string, colorMode: 'black' | 'color', extra = '') {
   return [
     'Image 1 is a real photo of a person. Image 2 is the same photo with a flat digital overlay that shows EXACTLY where the tattoo goes, how big it is and how it is rotated. Image 3 is the original tattoo design.',
     `Turn the overlay into a real tattoo on the person's ${placement}: same position, same size, same rotation as in image 2. Use image 3 for the exact linework and details.`,
@@ -65,7 +66,8 @@ export function placedPrompt(placement: string, colorMode: 'black' | 'color') {
     'The final image must look like image 1 (no overlay artefacts, no flat sticker look).',
     STAY_ON_BODY,
     KEEP,
-  ].join(' ');
+    extra,
+  ].filter(Boolean).join(' ');
 }
 
 function inkAging(a: Analysis, years: number) {
@@ -111,12 +113,24 @@ function skinAging(a: Analysis, years: number) {
   return lines.join(' ');
 }
 
-export function agePrompt(stage: Stage, a: Analysis) {
+export const stageYears = (s: Stage) => STAGE_YEARS[s];
+
+/**
+ * Age the photo to `stage`. With `fromYears` > 0 the input is already an aged image
+ * (e.g. the 10-year one), so the result stays consistent across stages.
+ */
+export function agePrompt(stage: Stage, a: Analysis, fromYears = 0) {
   const years = STAGE_YEARS[stage];
+  const delta = years - fromYears;
+  const head =
+    fromYears > 0
+      ? `This photo shows a person with a tattoo, ${fromYears} years after it was done (the person is about ${Math.round(a.apparentAge + fromYears)} now). Show this exact same photo ${delta} years later, ${years} years after the tattoo was done. Continue from what you see: keep every change that already happened and age it further.`
+      : `This photo shows a person with a tattoo. Show this exact same photo ${years === 1 ? 'one year later' : `${years} years later`}.`;
   return [
-    `This photo shows a person with a tattoo. Show this exact same photo ${years === 1 ? 'one year later' : `${years} years later`}.`,
+    head,
     inkAging(a, years),
     skinAging(a, years),
+    'The tattoo stays exactly where it is, at the same size and angle, with the same design; only aging changes it.',
     'The change must be medically and physically realistic — not exaggerated, not cartoonish, not a filter.',
     KEEP,
   ].join(' ');
@@ -150,16 +164,21 @@ export function improvePrompt(sizeCm: number | null) {
 }
 
 /** Pull just the tattoo out of a photo (e.g. a Pinterest picture of a tattoo on someone's arm). */
-export function extractPrompt(color: boolean) {
+export function extractPrompt(color: boolean, feedback = '') {
   return [
     'This image shows a tattoo (it may be on a person\'s skin, photographed at an angle, with clothes and background around it).',
     'Recreate ONLY the tattoo design itself as a clean, flat, front-facing stencil, the way a tattoo artist would trace it for a client:',
-    'remove the person, skin, body, hair, clothing, shadows, light reflections and background completely;',
+    'remove the person, skin, body, hair, clothing, jewellery, shadows, light reflections and background completely;',
+    'if parts of other tattoos are visible at the edges, leave them out: only the one tattoo in the centre of the image;',
     'undo the perspective and the curvature of the body so the design is flat and centred;',
-    'keep every element, proportion and detail of the design exactly — do not add, redesign or simplify anything; complete any line that is cut off only if it is obvious.',
+    'keep every element, proportion, line weight and detail of the design exactly as it is: do not add, redesign, beautify or simplify anything; complete a line that is cut off only if it is obvious;',
+    'keep any lettering exactly as written (same letters, same spelling).',
     color ? 'Keep the original ink colours.' : 'Use black ink only.',
-    'Output: the design on a pure white background with white margin around it, nothing else in the image, no text unless it is part of the tattoo.',
-  ].join(' ');
+    'Output: the design on a pure white background with white margin around it, nothing else in the image.',
+    feedback ? `The previous attempt had this problem, fix it: ${feedback}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 }
 
 /** New design from a text description. */
@@ -207,12 +226,12 @@ export function aiConfigured() {
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-function imageModels() {
+export function imageModels() {
   return [process.env.GEMINI_IMAGE_MODEL, 'gemini-nano-banana-2.1', 'gemini-3-pro-image', 'gemini-3-pro-image-preview', 'gemini-3.1-flash-image', 'gemini-2.5-flash-image'].filter(
     (m, i, arr): m is string => !!m && arr.indexOf(m) === i
   );
 }
-function textModels() {
+export function textModels() {
   return [process.env.GEMINI_TEXT_MODEL, 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter((m, i, arr): m is string => !!m && arr.indexOf(m) === i);
 }
 
@@ -346,6 +365,24 @@ export type PhotoCheck = {
   box?: [number, number, number, number] | null;
   /** angle of the limb's long axis in degrees (0 = vertical), when it's clear */
   angle?: number | null;
+  /** rough outlines of the bare skin in the photo, as [x, y] fractions */
+  skin?: [number, number][][] | null;
+}
+
+/** Turn [[y, x], ...] in 0-1000 into [[x, y], ...] fractions; drop junk. */
+function polys(v: any): [number, number][][] | null {
+  if (!Array.isArray(v)) return null;
+  const out = v
+    .filter((p: any) => Array.isArray(p) && p.length >= 3)
+    .slice(0, 6)
+    .map((p: any[]) =>
+      p
+        .filter((q) => Array.isArray(q) && q.length >= 2 && q.every((n: any) => Number.isFinite(Number(n))))
+        .slice(0, 80)
+        .map((q) => [Math.min(1, Math.max(0, Number(q[1]) / 1000)), Math.min(1, Math.max(0, Number(q[0]) / 1000))] as [number, number])
+    )
+    .filter((p: [number, number][]) => p.length >= 3);
+  return out.length ? out : null;
 }
 
 /** Fast pre-check of the user's photo before we spend money on image generation. */
@@ -365,7 +402,8 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
  "notAllowed": boolean (true if it shows nudity of intimate areas, or the person looks under 18),
  "visibleArea": string (the main body area visible, e.g. "inner left forearm"),
  "box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around the bare skin of the ${placement} where a tattoo could go (exclude clothing, background and other body parts), or null if that area is not visible,
- "angle": number (angle in degrees of the long axis of that body part relative to vertical, positive = leaning right; 0 if unclear)}`,
+ "angle": number (angle in degrees of the long axis of that body part relative to vertical, positive = leaning right; 0 if unclear),
+ "skin": array of up to 4 polygons, each an array of 8-40 [y, x] points (integers 0-1000) tracing the outline of a visible bare-skin region of the body (arms, legs, torso, back, neck, hands); exclude clothing, hair, jewellery, watches and the background; [] if none}`,
             },
           ],
         },
@@ -379,20 +417,23 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
         : null;
     const okBox = box && box[2] - box[0] > 0.04 && box[3] - box[1] > 0.04 ? box : null;
     const angle = Number.isFinite(Number(j.angle)) ? Math.max(-90, Math.min(90, Number(j.angle))) : null;
+    const skin = polys(j.skin);
     if (j.notAllowed) return { ok: false, code: 'not_allowed', area: '' };
-    if (j.skinVisible === false) return { ok: false, code: 'no_skin', area: String(j.visibleArea || ''), box: okBox, angle };
-    if (j.sharp === false) return { ok: false, code: 'blurry', area: String(j.visibleArea || ''), box: okBox, angle };
-    if (j.wellLit === false) return { ok: false, code: 'dark', area: String(j.visibleArea || ''), box: okBox, angle };
-    return { ok: true, code: 'ok', area: String(j.visibleArea || placement).slice(0, 60), box: okBox, angle };
+    if (j.skinVisible === false) return { ok: false, code: 'no_skin', area: String(j.visibleArea || ''), box: okBox, angle, skin };
+    if (j.sharp === false) return { ok: false, code: 'blurry', area: String(j.visibleArea || ''), box: okBox, angle, skin };
+    if (j.wellLit === false) return { ok: false, code: 'dark', area: String(j.visibleArea || ''), box: okBox, angle, skin };
+    return { ok: true, code: 'ok', area: String(j.visibleArea || placement).slice(0, 60), box: okBox, angle, skin };
   } catch (e) {
     console.warn('photo check failed', e);
     return { ok: true, code: 'unknown', area: placement };
   }
 }
 
-/** Compares the result with the design; returns false when it should be regenerated. */
-export async function qualityCheck(design: Img, result: Img): Promise<{ ok: boolean; match: number; note: string }> {
-  if (!process.env.GEMINI_API_KEY) return { ok: true, match: 10, note: '' };
+export type QC = { ok: boolean; match: number; note: string; fix: string };
+
+/** Compares the result with the design; returns false when it should be regenerated, with what to fix. */
+export async function qualityCheck(design: Img, result: Img): Promise<QC> {
+  if (!process.env.GEMINI_API_KEY) return { ok: true, match: 10, note: '', fix: '' };
   try {
     const data = await geminiCall(textModels(), {
       contents: [
@@ -405,8 +446,8 @@ export async function qualityCheck(design: Img, result: Img): Promise<{ ok: bool
 {"designMatch": integer 0-10 (10 = same design, same elements and proportions),
  "looksReal": boolean (looks like real ink in skin, not a sticker or drawing),
  "anatomyOk": boolean (no distorted hands, extra fingers or broken body parts),
- "staysOnBody": boolean (every part of the tattoo is on skin; nothing floats over the background, clothing or objects),
- "note": short string}`,
+ "staysOnBody": boolean (every part of the tattoo is on skin; nothing is printed on clothing, jewellery, the background or objects),
+ "note": short string describing the biggest problem, or ""}`,
             },
           ],
         },
@@ -415,12 +456,100 @@ export async function qualityCheck(design: Img, result: Img): Promise<{ ok: bool
     });
     const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
     const match = Number(j.designMatch ?? 10);
-    return { ok: match >= 6 && j.looksReal !== false && j.anatomyOk !== false && j.staysOnBody !== false, match, note: String(j.note || '').slice(0, 200) };
+    const fix = [
+      match < 6 ? 'the design was changed: copy the design image line by line, same elements, proportions and lettering' : '',
+      j.looksReal === false ? 'it looked like a sticker or drawing: the ink must sit inside the skin with pores and texture showing through' : '',
+      j.anatomyOk === false ? 'the body was distorted: keep hands, fingers and the body shape exactly as in the photo' : '',
+      j.staysOnBody === false ? 'part of the tattoo was on clothing or the background: keep every line on bare skin only' : '',
+    ]
+      .filter(Boolean)
+      .join('; ');
+    // a combined score so the better of two candidates can be picked
+    const score = match + (j.looksReal === false ? -3 : 0) + (j.anatomyOk === false ? -4 : 0) + (j.staysOnBody === false ? -4 : 0);
+    return { ok: !fix, match: score, note: String(j.note || '').slice(0, 200), fix };
   } catch (e) {
     console.warn('qc failed', e);
-    return { ok: true, match: -1, note: 'qc unavailable' };
+    return { ok: true, match: -1, note: 'qc unavailable', fix: '' };
   }
 }
+
+/** What kind of picture was uploaded as the design, and where the tattoos are in it. */
+export type Found = { kind: 'design' | 'photo'; tattoos: { box: [number, number, number, number]; label: string }[] };
+export async function findTattoos(image: Img, lang: 'en' | 'hu'): Promise<Found | null> {
+  if (!process.env.GEMINI_API_KEY) return null;
+  try {
+    const data = await geminiCall(textModels(), {
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            ...parts([image]),
+            {
+              text: `Someone uploaded this image as the tattoo design they want. Reply with JSON only:
+{"kind": "design" if it is a clean drawing, flash sheet, stencil or digital design on a plain background with nothing else; "photo" if it is a photograph or screenshot that also shows a person, skin, body parts, clothing, a room, scenery or app interface,
+ "tattoos": array (max 8) of every separate tattoo design visible, largest first, each {"box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around that one design, "label": 2-4 word description in ${lang === 'hu' ? 'Hungarian' : 'English'} such as "${lang === 'hu' ? 'rózsa az alkaron' : 'rose on the forearm'}"}}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+    });
+    const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    const tattoos = (Array.isArray(j.tattoos) ? j.tattoos : [])
+      .map((t: any) => ({
+        box: Array.isArray(t?.box) && t.box.length === 4 ? (t.box.map((v: any) => Math.min(1, Math.max(0, Number(v) / 1000))) as [number, number, number, number]) : null,
+        label: String(t?.label || '').slice(0, 40),
+      }))
+      .filter((t: any) => t.box && t.box.every(Number.isFinite) && t.box[2] - t.box[0] > 0.02 && t.box[3] - t.box[1] > 0.02)
+      .slice(0, 8);
+    return { kind: j.kind === 'design' ? 'design' : 'photo', tattoos };
+  } catch (e) {
+    console.warn('find tattoos failed', e);
+    return null;
+  }
+}
+
+/** Is the cut-out the same design as in the photo, with nothing extra left in? */
+export async function extractCheck(original: Img, cut: Img): Promise<{ match: number; ok: boolean; fix: string }> {
+  if (!process.env.GEMINI_API_KEY) return { match: 10, ok: true, fix: '' };
+  try {
+    const data = await geminiCall(textModels(), {
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            ...parts([original, cut]),
+            {
+              text: `Image 1 shows a tattoo (maybe on skin, with surroundings). Image 2 should be exactly that tattoo design redrawn flat on white, with nothing else. Reply with JSON only:
+{"designMatch": integer 0-10 (10 = every element, proportion, line weight and letter is the same),
+ "extra": boolean (image 2 still contains skin, a body part, clothing, background, another tattoo or anything that is not the design),
+ "problem": short string naming what is missing, added or changed, or ""}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+    });
+    const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    const match = Math.max(0, Math.min(10, Number(j.designMatch ?? 10)));
+    const fix = [j.extra ? 'the result still contained things that are not the tattoo (skin, body, clothing, background or another tattoo); remove them' : '', match < 7 ? `the design was not copied faithfully (${String(j.problem || 'details changed').slice(0, 120)})` : '']
+      .filter(Boolean)
+      .join('; ');
+    return { match: j.extra ? Math.min(match, 5) : match, ok: !fix, fix };
+  } catch (e) {
+    console.warn('extract check failed', e);
+    return { match: -1, ok: true, fix: '' };
+  }
+}
+
+/** Instructions for a redo the user asked for ("Not right?"). */
+export const REDO: Record<string, string> = {
+  clothes: 'In the previous attempt part of the tattoo ended up on clothing or the background. Every line must be on bare skin.',
+  design: "In the previous attempt the design was changed. Copy the design image exactly, element by element, with the same proportions and lettering.",
+  anatomy: 'In the previous attempt the body was distorted. Keep hands, fingers and the body shape exactly as in the original photo.',
+  fake: 'In the previous attempt the tattoo looked like a sticker or a drawing. It must look like real ink inside real skin, with skin texture showing through.',
+  place: 'In the previous attempt the position or size was wrong. Match the overlay exactly: same position, size and rotation.',
+};
 
 export function friendlyAiError(e: any): string {
   const msg = String(e?.error?.message || e?.message || e);

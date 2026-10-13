@@ -10,7 +10,7 @@ import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from
 import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
-import { composeMockup, Placement } from '@/lib/editor';
+import { composeMockup, pasteMask, Placement, Skin } from '@/lib/editor';
 import { loadImage } from '@/lib/client';
 import { frameCm } from '@/lib/score';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
@@ -67,6 +67,7 @@ export default function CreatePage() {
   const [failed, setFailed] = useState<StageKey[]>([]);
   const [fact, setFact] = useState(0);
   const [mode, setMode] = useState<'new' | 'existing'>('new');
+  const [existingCm, setExistingCm] = useState<number | null>(null);
   const [remPending, setRemPending] = useState<RemovalKey[]>([]);
   const [improving, setImproving] = useState(false);
   const [busyNote, setBusyNote] = useState(false);
@@ -74,9 +75,16 @@ export default function CreatePage() {
   // where the chosen body part is in the photo (found by the AI), and whether the user moved the design since
   const [area, setArea] = useState<(Area & { for: string; photo: string }) | null>(null);
   const userMoved = useRef(false);
+  // the bare skin in the photo (outlines found by the AI), so the design never goes on clothes
+  const [skin, setSkin] = useState<{ polys: Skin; photo: string } | null>(null);
+  const skinNow = skin && photo && skin.photo === photo.dataUrl.slice(-64) ? skin.polys : null;
+  const keepSkin = (ph: Photo, polys?: Skin | null) => {
+    if (polys?.length) setSkin({ polys, photo: ph.dataUrl.slice(-64) });
+  };
 
   const locate = async (ph: Photo, where: string) => {
-    const r = await api<{ box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: ph.dataUrl, placement: aiPlacement(where) });
+    const r = await api<{ box?: Area['box'] | null; angle?: number | null; skin?: Skin | null }>('/api/check-photo', { photo: ph.dataUrl, placement: aiPlacement(where) });
+    if (r.ok) keepSkin(ph, r.data.skin);
     if (r.ok && r.data.box) setArea({ box: r.data.box, angle: r.data.angle ?? 0, for: where, photo: ph.dataUrl.slice(-64) });
     else setArea(null);
   };
@@ -149,9 +157,19 @@ export default function CreatePage() {
 
   useEffect(() => {
     if (phase === 'loading') return;
-    try {
-      sessionStorage.setItem('ink_draft', JSON.stringify({ placement, photo, design, pl }));
-    } catch {}
+    // big images can overflow the browser's storage (iPhone): fall back to lighter drafts
+    const tries = [
+      { placement, photo, design, pl },
+      { placement, photo, design: design ? { ...design, raw: design.ink, original: undefined } : null, pl },
+      { placement, photo, design: null, pl },
+      { placement, photo: null, design: null, pl },
+    ];
+    for (const d of tries) {
+      try {
+        sessionStorage.setItem('ink_draft', JSON.stringify(d));
+        break;
+      } catch {}
+    }
   }, [placement, photo, design, pl, phase]);
 
   useEffect(() => {
@@ -161,19 +179,34 @@ export default function CreatePage() {
   }, [phase]);
 
   // ---------------------------------------------------------------- generation
-  const ageOne = async (k: StageKey) => {
+  // Aging runs as a chain so every stage continues from the previous one (same pose, same changes):
+  // fresh → 1 year and fresh → 10 years in parallel, then 10 → 30 → 50.
+  const PARENT: Partial<Record<StageKey, StageKey>> = { healed: 'fresh', y10: 'fresh', y30: 'y10', y50: 'y30' };
+  const tokens = useRef<Partial<Record<StageKey, { token: string; image: string }>>>({});
+  const started = useRef(new Set<StageKey>());
+  const chain = (k: StageKey, fromFresh = false) =>
+    (Object.keys(PARENT) as StageKey[]).filter((c) => PARENT[c] === k && !started.current.has(c)).forEach((c) => ageOne(c, fromFresh));
+  const ageOne = async (k: StageKey, fromFresh = false) => {
     const j = job.current;
     if (!j) return;
+    started.current.add(k);
     setFailed((f) => f.filter((x) => x !== k));
     setPending((p) => (p.includes(k) ? p : [...p, k]));
-    const r = await api<{ image: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token });
+    const parent = !fromFresh && PARENT[k] && PARENT[k] !== 'fresh' ? tokens.current[PARENT[k]!] : null;
+    const base = parent || { token: j.token, image: j.fresh };
+    let r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: base.image, token: base.token });
+    // if continuing from the previous stage fails, start from the fresh photo instead
+    if (!r.ok && parent && job.current === j) r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token });
     if (job.current !== j) return; // a newer preview was started meanwhile
     setPending((p) => p.filter((x) => x !== k));
     if (r.ok && r.data.image) {
+      if (r.data.token) tokens.current[k] = { token: r.data.token, image: r.data.image };
       setPreview((p) => (p ? { ...p, images: { ...p.images, [k]: r.data.image } } : p));
       if (k === 'y50') track('stage_y50');
+      chain(k); // next link of the chain
     } else {
       setFailed((f) => [...f, k]);
+      chain(k, true); // the rest of the chain can still start from the fresh photo
       if (r.data?.error) toast(trErr(ui.lang, r.data.error));
     }
   };
@@ -190,6 +223,7 @@ export default function CreatePage() {
         if (!p) return p;
         const next = { ...p, removal: { ...(p.removal || {}), [k]: r.data.image } };
         if (saved.current && next.source === 'local') local.put(next).catch(() => {});
+        if (saved.current && next.source === 'cloud' && me.user) cloud.addImages(me.user.id, next.id, { [k]: r.data.image }).catch(() => {});
         return next;
       });
     } else if (r.data?.error) toast(trErr(ui.lang, r.data.error));
@@ -199,7 +233,7 @@ export default function CreatePage() {
     REMOVAL_STAGES.forEach((k) => removalOne(k));
   };
 
-  const go = async (over?: { design?: Design; pl?: Placement }) => {
+  const go = async (over?: { design?: Design; pl?: Placement; redo?: string[] }) => {
     const d = over?.design ?? design;
     const place = over?.pl ?? pl;
     const existing = mode === 'existing';
@@ -218,12 +252,18 @@ export default function CreatePage() {
     const timers = [setTimeout(() => setGenStep(1), 3500), setTimeout(() => setGenStep(2), 17000)];
     const cm = place.w * Math.max(1, d?.ratio ?? 1) * frameCm(placement);
     const extra = existing
-      ? { mode: 'existing' }
+      ? { mode: 'existing', sizeCm: existingCm ?? undefined }
       : await (async () => {
-          const [flat, mockup] = await Promise.all([flattenOnWhite(d!.ink), composeMockup(photo.dataUrl, d!.ink, place)]);
+          const [flat, mockup, mask] = await Promise.all([
+            flattenOnWhite(d!.ink),
+            composeMockup(photo.dataUrl, d!.ink, place),
+            pasteMask(photo, d!.ink, place, skinNow).catch(() => null),
+          ]);
           return {
             design: flat,
             mockup,
+            mask,
+            redo: over?.redo,
             size: cm < 6 ? 'small' : cm > 12 ? 'large' : 'medium',
             colorMode: d!.mode,
             sizeCm: Math.round(cm * 10) / 10,
@@ -263,7 +303,7 @@ export default function CreatePage() {
       created_at: new Date().toISOString(),
       placement,
       size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
-      sizeCm: existing ? undefined : Math.round(cm * 10) / 10,
+      sizeCm: existing ? existingCm ?? undefined : Math.round(cm * 10) / 10,
       score: r.data.report?.score ?? null,
       report: r.data.report ?? null,
       age: r.data.age ?? null,
@@ -273,6 +313,7 @@ export default function CreatePage() {
       images: { fresh: r.data.image },
       mode,
       design: existing ? undefined : d!.ink,
+      focus: existing ? undefined : { x: place.x, y: place.y, w: place.w * Math.max(1, d!.ratio * (photo.w / photo.h)) },
       source: 'local',
     };
     setPreview(p);
@@ -281,8 +322,10 @@ export default function CreatePage() {
     refreshMe();
     if (r.data.canAge && r.data.token) {
       job.current = { token: r.data.token, fresh: r.data.image };
+      tokens.current = {};
+      started.current = new Set();
       setPending(AGE_STAGES);
-      AGE_STAGES.forEach((k) => ageOne(k));
+      (['healed', 'y10'] as StageKey[]).forEach((k) => ageOne(k));
     }
   };
 
@@ -407,7 +450,12 @@ export default function CreatePage() {
           setPhoto={setPhoto}
           design={design}
           setDesign={setDesign}
-          onArea={(a, where, ph) => setArea(a ? { ...a, for: where, photo: ph.dataUrl.slice(-64) } : null)}
+          existingCm={existingCm}
+          setExistingCm={setExistingCm}
+          onArea={(a, where, ph, sk) => {
+            setArea(a ? { ...a, for: where, photo: ph.dataUrl.slice(-64) } : null);
+            keepSkin(ph, sk);
+          }}
           onNext={() => {
             if (mode === 'existing') return go();
             setPhase('place');
@@ -436,6 +484,7 @@ export default function CreatePage() {
             userMoved.current = false;
           }}
           area={areaNow}
+          skin={skinNow}
           onFit={fit}
           pl={pl}
           setPl={(x) => {
@@ -495,7 +544,8 @@ export default function CreatePage() {
           reveal
           onNotes={(notes) => patch({ notes })}
           onFavorite={() => patch({ favorite: !preview.favorite })}
-          onRetryStage={ageOne}
+          onRetryStage={(k) => ageOne(k)}
+          onRedo={preview.mode !== 'existing' && design ? (why) => go({ redo: why }) : undefined}
           onImprove={preview.mode !== 'existing' && design ? improve : undefined}
           improving={improving}
           onResize={resize}

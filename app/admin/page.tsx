@@ -21,6 +21,18 @@ type Stats = {
 export default function Admin() {
   const [s, setS] = useState<Stats | null>(null);
   const [err, setErr] = useState('');
+  const [health, setHealth] = useState<{ ok: boolean; detail: any; created_at: string }[]>([]);
+  const [checking, setChecking] = useState(false);
+  const loadHealth = async () => {
+    const { data } = (await sb()?.rpc('admin_health')) || {};
+    if (Array.isArray(data)) setHealth(data);
+  };
+  const checkNow = async () => {
+    setChecking(true);
+    await fetch('/api/health').catch(() => {});
+    await loadHealth();
+    setChecking(false);
+  };
   const load = async () => {
     const c = sb();
     if (!c) return setErr('Not configured');
@@ -30,12 +42,13 @@ export default function Admin() {
   };
   useEffect(() => {
     load();
+    loadHealth();
   }, []);
   const max = Math.max(1, ...(s?.daily || []).map((d) => d.previews));
   // Rough AI cost: ~1 fresh + 4 aging images + checks per preview.
   const cost = s ? (s.gen_today * 0.05 + s.aging_today * 0.04).toFixed(2) : '0';
   const funnel = s?.events_today || {};
-  const steps = ['app_open', 'onboarding_done', 'photo_added', 'design_added', 'ai_design', 'generate_start', 'generate_done', 'generate_error', 'paywall', 'stage_y50', 'improve_start', 'resize', 'removal_start', 'video_made', 'artist_pdf', 'aftercare_ics', 'share_link', 'vote'];
+  const steps = ['app_open', 'design_kind', 'tattoo_pick', 'extract_design', 'extract_done', 'redo', 'card_made', 'onboarding_done', 'photo_added', 'design_added', 'ai_design', 'generate_start', 'generate_done', 'generate_error', 'paywall', 'stage_y50', 'improve_start', 'resize', 'removal_start', 'video_made', 'artist_pdf', 'aftercare_ics', 'share_link', 'vote'];
 
   return (
     <main style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
@@ -65,6 +78,19 @@ export default function Admin() {
                 <span style={{ fontSize: 13, color: 'var(--ink-2)', fontWeight: 600 }}>{k}</span>
               </div>
             ))}
+          </div>
+          <div style={{ background: health[0] && !health[0].ok ? '#fdebeb' : '#eaf7f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+            <b>AI models: {health[0] ? (health[0].ok ? 'working' : 'PROBLEM') : 'not checked yet'}</b>
+            {health[0] && (
+              <div style={{ fontSize: 13, color: 'var(--ink-2)', marginTop: 4 }}>
+                Checked {new Date(health[0].created_at).toLocaleString()} · text: {health[0].detail?.activeText || '—'} · image: {health[0].detail?.activeImage || '—'}
+                {health[0].detail?.preferredMissing?.length ? ` · missing: ${health[0].detail.preferredMissing.join(', ')}` : ''}
+                {health[0].detail?.answer?.startsWith('error') ? ` · ${health[0].detail.answer}` : ''}
+              </div>
+            )}
+            <button className="btn ghost" style={{ minHeight: 40, marginTop: 8, padding: '0 16px', fontSize: 14 }} onClick={checkNow} disabled={checking}>
+              {checking ? 'Checking…' : 'Check now'}
+            </button>
           </div>
           <div style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
             <b>Daily safety cap: {s.gen_today} / 300 AI jobs in the last 24 h</b>

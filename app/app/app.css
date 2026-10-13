@@ -499,3 +499,58 @@
   .pagefade:has(.prof-head), .pagefade:has(.article-card) { max-width: 760px; margin: 0 auto; }
   .pagefade:has(.gal-head) .detail-top ~ * { max-width: none; }
 }
+
+/* ================================================================ v4: guardrails */
+/* body map: bigger targets */
+.bm-spot .bm-hit { fill: transparent !important; }
+.bm-spot text { font-size: 12px; }
+
+/* skin veil: everything that is not skin is shaded while placing */
+.editor .veil { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .2s; }
+.editor .veil.show { opacity: 1; }
+
+/* cm presets + undo */
+.cmrow { display: flex; gap: 6px; flex-wrap: wrap; margin: -2px 0 8px; }
+.cmrow .chip { padding: 7px 12px; font-size: 13px; }
+.chipbtn:disabled { opacity: .4; }
+
+/* which tattoo? */
+.picker { position: relative; border-radius: 18px; overflow: hidden; background: #000; touch-action: none; user-select: none; -webkit-user-select: none; margin: 8px 0 12px; }
+.picker > img { display: block; width: 100%; max-height: 56dvh; object-fit: contain; pointer-events: none; }
+.picker.draw { cursor: crosshair; }
+.pick-box { position: absolute; z-index: 2; border: 2px solid rgba(255, 255, 255, .9); border-radius: 10px; background: transparent; padding: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, .3); }
+.pick-box span { position: absolute; left: -2px; top: -2px; min-width: 26px; height: 26px; border-radius: 10px 0 10px 0; background: #fff; color: var(--ink); font-weight: 750; font-size: 13px; display: grid; place-items: center; }
+.pick-box.on { border-color: var(--stencil); border-width: 3px; box-shadow: 0 0 0 3px rgba(91, 61, 245, .35); }
+.pick-box.on span { background: var(--stencil); color: #fff; }
+.pick-box.manual { pointer-events: none; display: block; }
+.pick-dim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: rgba(0, 0, 0, .45);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, calc(var(--l) * 100%) calc(var(--t) * 100%), calc(var(--l) * 100%) calc(var(--b) * 100%), calc(var(--r) * 100%) calc(var(--b) * 100%), calc(var(--r) * 100%) calc(var(--t) * 100%), calc(var(--l) * 100%) calc(var(--t) * 100%)); }
+.pick-list { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.pick-actions { display: grid; gap: 4px; }
+
+/* cut-out vs. original */
+.cmpcut { display: grid; grid-template-columns: 76px auto 76px 1fr; align-items: center; gap: 10px; margin-top: 12px; background: var(--surface); border-radius: 16px; padding: 10px 12px; }
+.cmpcut figure { margin: 0; }
+.cmpcut img { width: 76px; height: 76px; object-fit: contain; border-radius: 10px; background: var(--surface-2); display: block; }
+.cmpcut figure.cut img { background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+.cmpcut figcaption { font-size: 11px; color: var(--ink-2); text-align: center; margin-top: 3px; }
+.cmpcut .cmp-arrow { color: var(--ink-3); font-weight: 700; }
+.cmpcut-txt b { display: block; font-size: 14px; }
+.cmpcut-txt .link { padding: 4px 6px 0 0; font-size: 13px; color: var(--stencil); }
+.cmpcut.warn { box-shadow: inset 0 0 0 1.5px var(--amber); }
+.cmpcut.warn .cmpcut-txt b { color: #8a5207; }
+@media (max-width: 420px) { .cmpcut { grid-template-columns: 60px auto 60px 1fr; gap: 8px; } .cmpcut img { width: 60px; height: 60px; } }
+
+/* result: close-up, redo */
+.res-viewer .zoomable { transition: transform .45s var(--ease), opacity .35s; }
+.res-viewer .layer.nofade.zoomable { transition: transform .45s var(--ease); }
+.pillbtn { border: 0; border-radius: var(--r-pill); padding: 9px 14px; font-weight: 650; font-size: 14px; }
+.pillbtn.dark { background: rgba(0, 0, 0, .55); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.pillbtn.dark.on { background: #fff; color: var(--ink); }
+.redo-link { display: block; margin: 2px auto 10px; border: 0; background: none; color: var(--ink-2); font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; padding: 6px 10px; }
+.checklist { display: grid; gap: 8px; margin: 6px 0 16px; }
+.checklist label { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 13px 14px; font-weight: 550; cursor: pointer; }
+.checklist label.on { background: var(--stencil-tint); box-shadow: inset 0 0 0 1.5px var(--stencil); }
+.checklist input { width: 20px; height: 20px; accent-color: var(--stencil); }
+.res-tools { justify-items: end; }
+.oauth { display: grid; gap: 8px; margin-bottom: 6px; }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
 import { Icon } from '../ui';
 import { trErr, tx } from '@/lib/i18n';
@@ -8,15 +8,29 @@ import { api } from '@/lib/sb';
 import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
-import { processDesign, Placement } from '@/lib/editor';
+import { cropImage, offSkin, processDesign, Placement, skinVeil } from '@/lib/editor';
+import { Box, Found, TattooPicker } from './Picker';
 import { frameCm } from '@/lib/score';
 import { BodyMap } from './BodyMap';
 import { Sheet } from '../ui';
 
 export type Photo = { dataUrl: string; w: number; h: number };
-export type Design = { raw: string; ink: string; ratio: number; detail: number; mode: 'black' | 'color'; libId?: string; /** the uploaded photo, when the tattoo was cut out of it */ original?: string };
+export type Design = {
+  raw: string;
+  ink: string;
+  ratio: number;
+  detail: number;
+  mode: 'black' | 'color';
+  libId?: string;
+  /** the (cropped) photo, when the tattoo was cut out of it */
+  original?: string;
+  /** how faithful the cut-out is to the photo, 0-10 (-1 unknown) */
+  match?: number;
+};
 /** The detected bare-skin area of the chosen body part: [top, left, bottom, right] as fractions of the photo. */
 export type Area = { box: [number, number, number, number]; angle: number };
+export type { Skin } from '@/lib/editor';
+import type { Skin } from '@/lib/editor';
 
 /** Place and size the design so it sits inside the detected body area, aligned with the limb. */
 export function fitToArea(area: Area, design: Design, photo: Photo): Placement {
@@ -89,6 +103,8 @@ export function PlacementPicker({ value, onChange }: { value: string; onChange: 
 type CheckState = { state: 'idle' | 'checking' | 'ok' | 'warn' | 'blocked'; msg?: string };
 
 export function StudioStep({
+  existingCm,
+  setExistingCm,
   onArea,
   mode = 'new',
   setMode,
@@ -109,7 +125,9 @@ export function StudioStep({
   design: Design | null;
   setDesign: (d: Design | null) => void;
   onNext: () => void;
-  onArea?: (a: Area | null, where: string, ph: Photo) => void;
+  onArea?: (a: Area | null, where: string, ph: Photo, skin?: Skin | null) => void;
+  existingCm?: number | null;
+  setExistingCm?: (n: number | null) => void;
 }) {
   const { ui, toast } = useApp();
   const t = L(ui.lang);
@@ -138,9 +156,9 @@ export function StudioStep({
   const runCheck = useCallback(
     async (p: Photo, where: string) => {
       setCheck({ state: 'checking' });
-      const r = await api<{ ok: boolean; code: string; area: string; box?: Area['box'] | null; angle?: number | null }>('/api/check-photo', { photo: p.dataUrl, placement: aiPlacement(where) });
+      const r = await api<{ ok: boolean; code: string; area: string; box?: Area['box'] | null; angle?: number | null; skin?: Skin | null }>('/api/check-photo', { photo: p.dataUrl, placement: aiPlacement(where) });
       if (!r.ok) return setCheck({ state: 'ok' }); // never block on a failed check
-      onArea?.(r.data.box ? { box: r.data.box, angle: r.data.angle ?? 0 } : null, where, p);
+      onArea?.(r.data.box ? { box: r.data.box, angle: r.data.angle ?? 0 } : null, where, p, r.data.skin);
       const c = r.data.code;
       track('photo_check', { code: c });
       if (c === 'not_allowed') return setCheck({ state: 'blocked', msg: t('We can’t use this photo. Use a photo of an adult’s arm, leg, back or similar, with no nudity.', 'Ezt a fotót nem tudjuk használni. Felnőtt karjáról, lábáról, hátáról készült, nem meztelen fotót tölts fel.') });
@@ -175,12 +193,15 @@ export function StudioStep({
     }
     setBusy(false);
   };
+  // the last uploaded picture and what the AI found in it, so "another tattoo from it" works
+  const [pick, setPick] = useState<{ image: string; found: Found; open: boolean } | null>(null);
+
   // Cut just the tattoo out of a photo (someone's arm on Pinterest, a screenshot with background…)
   const extract = async (raw: string, mode: Design['mode']) => {
     setBusy(true);
     setBusyMsg(t('Cutting the tattoo out of the photo…', 'Kivágjuk a tetoválást a fotóból…'));
     track('extract_design');
-    const r = await api<{ image: string; error?: string }>('/api/extract', { image: raw, color: mode === 'color' });
+    const r = await api<{ image: string; match?: number; error?: string }>('/api/extract', { image: raw, color: mode === 'color' });
     setBusyMsg('');
     if (!r.ok || !r.data.image) {
       setBusy(false);
@@ -188,22 +209,57 @@ export function StudioStep({
       return applyDesign(raw, mode);
     }
     const d = await processDesign(r.data.image, mode);
-    setDesign({ raw: r.data.image, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, original: raw });
+    const match = typeof r.data.match === 'number' ? r.data.match : -1;
+    setDesign({ raw: r.data.image, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, original: raw, match });
     setBusy(false);
     haptic('success');
-    toast(t('Tattoo cut out — only the design goes on your skin', 'Kivágva – csak maga a minta kerül a bőrödre'));
+    track('extract_done', { match });
+    toast(
+      match >= 0 && match < 7
+        ? t('Cut out — check it against the original below', 'Kivágva – nézd meg lent, egyezik-e az eredetivel')
+        : t('Tattoo cut out — only the design goes on your skin', 'Kivágva – csak maga a minta kerül a bőrödre')
+    );
+  };
+  const usePick = async (box: Box | null) => {
+    if (!pick) return;
+    const { image, found } = pick;
+    setPick({ ...pick, open: false });
+    const mode = design?.mode || 'black';
+    const src = box ? await cropImage(image, box) : image;
+    track('tattoo_pick', { kind: found.kind, n: found.tattoos.length, manual: !!box && !found.tattoos.some((x) => x.box === box) });
+    if (found.kind === 'design') return applyDesign(src, mode);
+    return extract(src, mode);
   };
   const designFromFile = async (f: File | Blob, src: string) => {
+    let p: Photo;
     try {
-      const p = await prepareImage(f as File, 1024, 'image/jpeg');
-      track('design_added', { src });
-      const mode = design?.mode || 'black';
-      const probe = await processDesign(p.dataUrl, mode);
-      if (probe.photoLike) return extract(p.dataUrl, mode);
-      applyDesign(p.dataUrl, mode);
+      p = await prepareImage(f as File, 1024, 'image/jpeg');
     } catch {
-      toast(t('That design could not be opened. Try another image.', 'Ezt a mintát nem sikerült megnyitni. Próbálj másik képet.'));
+      return toast(t('That design could not be opened. Try another image.', 'Ezt a mintát nem sikerült megnyitni. Próbálj másik képet.'));
     }
+    track('design_added', { src });
+    const mode = design?.mode || 'black';
+    setBusy(true);
+    setBusyMsg(t('Looking at your picture…', 'Megnézzük a képet…'));
+    // What is it — a clean design or a photo? Where are the tattoos in it?
+    const [r, probe] = await Promise.all([
+      api<{ kind: Found['kind'] | null; tattoos: Found['tattoos'] }>('/api/find-tattoos', { image: p.dataUrl, lang: ui.lang }),
+      processDesign(p.dataUrl, mode).catch(() => null),
+    ]);
+    setBusy(false);
+    setBusyMsg('');
+    const found: Found =
+      r.ok && r.data.kind ? { kind: r.data.kind, tattoos: r.data.tattoos || [] } : { kind: probe?.photoLike ? 'photo' : 'design', tattoos: [] };
+    track('design_kind', { kind: found.kind, n: found.tattoos.length });
+    // a clean drawing with one motif: use it as it is
+    if (found.kind === 'design' && found.tattoos.length <= 1) return applyDesign(p.dataUrl, mode);
+    // a photo with exactly one tattoo: cut that one out straight away
+    if (found.kind === 'photo' && found.tattoos.length === 1) {
+      setPick({ image: p.dataUrl, found, open: false });
+      return extract(await cropImage(p.dataUrl, found.tattoos[0].box), mode);
+    }
+    // several designs, or none found in a photo: let the user choose / frame it
+    setPick({ image: p.dataUrl, found, open: true });
   };
   const paste = async () => {
     try {
@@ -338,14 +394,58 @@ export function StudioStep({
       <input ref={photoRef} id="photo-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
       <input ref={designRef} id="design-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
 
-      {!existing && design && !design.libId && (
-        <button className="cutbtn" onClick={() => extract(design.original || design.raw, design.mode)} disabled={busy}>
+      {!existing && design?.original && (
+        <div className={`cmpcut ${design.match !== undefined && design.match >= 0 && design.match < 7 ? 'warn' : ''}`}>
+          <figure>
+            <img src={design.original} alt="" />
+            <figcaption>{t('Your picture', 'A képed')}</figcaption>
+          </figure>
+          <span className="cmp-arrow" aria-hidden="true">→</span>
+          <figure className="cut">
+            <img src={design.ink} alt="" />
+            <figcaption>{t('Cut out', 'Kivágva')}</figcaption>
+          </figure>
+          <div className="cmpcut-txt">
+            <b>
+              {design.match !== undefined && design.match >= 0 && design.match < 7
+                ? t('Check it — it may differ', 'Nézd meg – eltérhet')
+                : t('Only the tattoo, nothing else', 'Csak a tetoválás, semmi más')}
+            </b>
+            <div className="row" style={{ gap: 4 }}>
+              <button className="link" disabled={busy} onClick={() => extract(design.original!, design.mode)}>
+                {t('Cut again', 'Újra')}
+              </button>
+              {pick && (
+                <button className="link" disabled={busy} onClick={() => setPick({ ...pick, open: true })}>
+                  {t('Other tattoo', 'Másik tetoválás')}
+                </button>
+              )}
+              <button className="link" disabled={busy} onClick={() => applyDesign(design.original!, design.mode)}>
+                {t('Use as is', 'Eredeti kép')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {!existing && design && !design.libId && !design.original && (
+        <button className="cutbtn" onClick={() => (pick ? setPick({ ...pick, open: true }) : extract(design.raw, design.mode))} disabled={busy}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12" /></svg>
           <span>
-            {design.original ? t('Cut it out again', 'Kivágás újra') : t('Cut out only the tattoo', 'Csak a tetoválást vágd ki')}
+            {t('Cut out only the tattoo', 'Csak a tetoválást vágd ki')}
             <small>{t('If your picture shows a person or background', 'Ha a képen ember vagy háttér is van')}</small>
           </span>
         </button>
+      )}
+      {pick && (
+        <TattooPicker
+          key={pick.image.slice(-48)}
+          open={pick.open}
+          image={pick.image}
+          found={pick.found}
+          onPick={(b) => usePick(b)}
+          onWhole={() => usePick(null)}
+          onClose={() => setPick({ ...pick, open: false })}
+        />
       )}
       {!existing && design && (
         <div className="inkrow">
@@ -364,6 +464,18 @@ export function StudioStep({
         <div className="card" style={{ marginTop: 16 }}>
           <h3>{t('See your tattoo in 10, 30 and 50 years', 'Nézd meg a tetoválásod 10, 30 és 50 év múlva')}</h3>
           <p className="muted small">{t('Upload a clear photo of a tattoo you already have. You can also preview laser removal afterwards.', 'Tölts fel éles fotót egy meglévő tetoválásodról. Utána a lézeres eltávolítást is megnézheted.')}</p>
+          {setExistingCm && (
+            <>
+              <b style={{ display: 'block', fontSize: 14, margin: '10px 0 6px' }}>{t('Roughly how big is it? (makes the score more accurate)', 'Kb. mekkora? (pontosabb lesz a pontszám)')}</b>
+              <div className="cmrow">
+                {[3, 5, 8, 12, 20].map((c) => (
+                  <button key={c} className={`chip ${existingCm === c ? 'on' : ''}`} onClick={() => setExistingCm(existingCm === c ? null : c)}>
+                    {c === 20 ? '20+ cm' : `${c} cm`}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <>
@@ -522,12 +634,14 @@ export function PlaceStep({
   setPlacement,
   area,
   onFit,
+  skin,
 }: {
   photo: Photo;
   design: Design;
   placement: string;
   setPlacement: (p: string) => void;
   area?: Area | null;
+  skin?: Skin | null;
   onFit?: () => void;
   pl: Placement;
   setPl: (p: Placement) => void;
@@ -547,6 +661,37 @@ export function PlaceStep({
   const [mapOpen, setMapOpen] = useState(false);
   const out = !!area && overflows(area, design, photo, pl);
   const idx = PLACEMENTS.findIndex((p) => p.v === placement);
+  // how much of the ink would land on clothes or background (from the skin outline the AI found)
+  const [off, setOff] = useState(0);
+  useEffect(() => {
+    if (!skin?.length) return setOff(0);
+    let dead = false;
+    const tm = setTimeout(() => offSkin(photo, design.ink, pl, skin).then((v) => !dead && setOff(v)), drag ? 250 : 60);
+    return () => {
+      dead = true;
+      clearTimeout(tm);
+    };
+  }, [skin, pl.x, pl.y, pl.w, pl.rot, pl.mirror, design.ink, drag]); // eslint-disable-line react-hooks/exhaustive-deps
+  const veil = useMemo(() => (skin?.length ? skinVeil(skin, photo.w, photo.h) : null), [skin, photo.w, photo.h]);
+  // undo: remember where it was before each gesture
+  const hist = useRef<Placement[]>([]);
+  const [canUndo, setCanUndo] = useState(false);
+  const remember = () => {
+    const last = hist.current[hist.current.length - 1];
+    if (!last || last.x !== pl.x || last.y !== pl.y || last.w !== pl.w || last.rot !== pl.rot || last.mirror !== pl.mirror) hist.current = [...hist.current.slice(-19), pl];
+    setCanUndo(true);
+  };
+  const undo = () => {
+    const prev = hist.current.pop();
+    if (prev) setPl(prev);
+    setCanUndo(hist.current.length > 0);
+    haptic();
+  };
+  const setCm = (target: number) => {
+    remember();
+    setPl({ ...pl, w: Math.min(1.4, Math.max(0.04, target / (Math.max(1, design.ratio) * frameCm(placement)))) });
+    haptic();
+  };
 
   const snapshot = () => {
     const pts = Array.from(pointers.current.values());
@@ -558,6 +703,7 @@ export function PlaceStep({
   };
 
   const down = (e: React.PointerEvent) => {
+    if (!pointers.current.size) remember();
     (e.target as Element).setPointerCapture?.(e.pointerId);
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     snapshot();
@@ -589,6 +735,7 @@ export function PlaceStep({
   const handleDown = (mode: 'scale' | 'rotate') => (e: React.PointerEvent) => {
     e.stopPropagation();
     if (!box.current) return;
+    remember();
     (e.target as Element).setPointerCapture?.(e.pointerId);
     const r = box.current.getBoundingClientRect();
     const cx = r.left + pl.x * r.width, cy = r.top + pl.y * r.height;
@@ -648,6 +795,7 @@ export function PlaceStep({
           />
         )}
         <img className="bg" src={photo.dataUrl} alt={t('Your photo', 'A fotód')} />
+        {veil && <img className={`veil ${drag || off > 0.08 ? 'show' : ''}`} src={veil} alt="" aria-hidden="true" />}
         <div
           className={`ink ${drag ? 'drag' : ''}`}
           style={{
@@ -692,23 +840,51 @@ export function PlaceStep({
       <div className="sliders">
         <label>
           {ui.t('create.place.size')}
-          <input type="range" min={4} max={140} value={Math.round(pl.w * 100)} onChange={(e) => setPl({ ...pl, w: Number(e.target.value) / 100 })} />
+          <input type="range" min={4} max={140} value={Math.round(pl.w * 100)} onPointerDown={remember} onChange={(e) => setPl({ ...pl, w: Number(e.target.value) / 100 })} />
         </label>
+        <div className="cmrow" role="group" aria-label={t('Size in cm', 'Méret cm-ben')}>
+          {[3, 5, 8, 12, 20].map((c) => (
+            <button key={c} className={`chip ${Math.abs(cm - c) < 0.6 ? 'on' : ''}`} onClick={() => setCm(c)}>
+              {c} cm
+            </button>
+          ))}
+        </div>
         <label>
           {ui.t('create.place.rotate')}
-          <input type="range" min={-180} max={180} value={pl.rot} onChange={(e) => setPl({ ...pl, rot: Number(e.target.value) })} />
+          <input type="range" min={-180} max={180} value={pl.rot} onPointerDown={remember} onChange={(e) => setPl({ ...pl, rot: Number(e.target.value) })} />
         </label>
       </div>
       <div className="row" style={{ marginTop: 6 }}>
         <button className={`chipbtn ${pl.mirror ? 'on' : ''}`} onClick={() => setPl({ ...pl, mirror: !pl.mirror })}>
           {Icon.mirror} {ui.t('create.place.mirror')}
         </button>
-        <button className="chipbtn" onClick={() => setPl({ ...pl, rot: 0 })}>
+        <button className="chipbtn" onClick={() => (remember(), setPl({ ...pl, rot: 0 }))}>
           {Icon.rotate} 0°
+        </button>
+        <button className="chipbtn" disabled={!canUndo} onClick={undo}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 16, height: 16, fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }}>
+            <path d="M9 14L4 9l5-5" />
+            <path d="M4 9h11a5 5 0 0 1 0 10h-3" />
+          </svg>
+          {t('Undo', 'Vissza')}
         </button>
       </div>
 
-      {out && (
+      {off > 0.08 && (
+        <div className="warnbox" role="alert">
+          <span>⚠️</span>
+          <span>
+            <b>{t(`About ${Math.round(off * 100)}% of it is off the skin`, `Kb. ${Math.round(off * 100)}%-a nem bőrre esik`)}</b>{' '}
+            {t('(on clothes or the background, shaded in the photo). A tattoo can only go on skin — that part will be left out.', '(ruhára vagy a háttérre – a fotón sötétítve látod). Tetoválás csak bőrre kerülhet, ez a rész kimarad.')}
+            {onFit && (
+              <button className="inline-fix" onClick={() => (remember(), onFit())}>
+                {t('Fit it to the body part', 'Igazítsd a testrészre')}
+              </button>
+            )}
+          </span>
+        </div>
+      )}
+      {out && off <= 0.08 && (
         <div className="notebox" role="note">
           <span>
             <b>{t('It reaches past the detected body part.', 'Túlnyúlik a felismert testrészen.')}</b>{' '}

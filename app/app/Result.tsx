@@ -5,13 +5,84 @@ import { useApp } from './AppProvider';
 import { Icon, Sheet } from './ui';
 import { tx } from '@/lib/i18n';
 import { cloud, haptic, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
-import { shareOrDownload } from '@/lib/client';
+import { loadImage, shareOrDownload } from '@/lib/client';
+import { api } from '@/lib/sb';
 import { HOOKS, makeVideo, Template } from '@/lib/video';
 import { artistPdf } from '@/lib/brief';
 import { aftercareIcs, CARE } from '@/lib/aftercare';
 import { placeName } from './create/steps';
 
 const toBlob = async (src: string) => (await fetch(src)).blob();
+
+/** Small JPEG for links (kept under ~450 KB). */
+async function smallJpeg(src: string, max = 900) {
+  const img = await loadImage(src);
+  const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.naturalWidth * s);
+  c.height = Math.round(img.naturalHeight * s);
+  c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
+  let q = 0.82, out = c.toDataURL('image/jpeg', q);
+  while (out.length > 450_000 && q > 0.4) out = c.toDataURL('image/jpeg', (q -= 0.12));
+  return out;
+}
+
+/** "Fresh vs. 50 years" picture for Instagram / TikTok photo posts (1080×1350). */
+async function makeCard(fresh: string, old: string, o: { left: string; right: string; title: string; score: string | null }) {
+  const [a, b] = await Promise.all([loadImage(fresh), loadImage(old)]);
+  const W = 1080, H = 1350;
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const x = c.getContext('2d')!;
+  x.fillStyle = '#0d0b14';
+  x.fillRect(0, 0, W, H);
+  const pad = 36, gap = 16, top = 190, ih = H - top - 150;
+  const iw = (W - pad * 2 - gap) / 2;
+  const draw = (img: HTMLImageElement, dx: number) => {
+    const r = Math.max(iw / img.naturalWidth, ih / img.naturalHeight);
+    const sw = iw / r, sh = ih / r;
+    x.save();
+    x.beginPath();
+    (x as any).roundRect ? (x as any).roundRect(dx, top, iw, ih, 28) : x.rect(dx, top, iw, ih);
+    x.clip();
+    x.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, dx, top, iw, ih);
+    x.restore();
+  };
+  draw(a, pad);
+  draw(b, pad + iw + gap);
+  x.fillStyle = '#fff';
+  x.textBaseline = 'alphabetic';
+  x.font = `800 64px 'Geist Sans', system-ui, sans-serif`;
+  x.fillText(o.title, pad, 120);
+  const tag = (txt: string, dx: number) => {
+    x.font = `700 34px 'Geist Sans', system-ui, sans-serif`;
+    const w = x.measureText(txt).width + 36;
+    x.fillStyle = 'rgba(0,0,0,.6)';
+    x.beginPath();
+    (x as any).roundRect ? (x as any).roundRect(dx + 18, top + 18, w, 56, 28) : x.rect(dx + 18, top + 18, w, 56);
+    x.fill();
+    x.fillStyle = '#fff';
+    x.fillText(txt, dx + 36, top + 58);
+  };
+  tag(o.left, pad);
+  tag(o.right, pad + iw + gap);
+  x.font = `600 32px 'Geist Sans', system-ui, sans-serif`;
+  x.fillStyle = 'rgba(255,255,255,.75)';
+  if (o.score) x.fillText(o.score, pad, H - 64);
+  x.textAlign = 'right';
+  x.fillStyle = '#fff';
+  x.fillText('inkage.vercel.app', W - pad, H - 64);
+  return new Promise<Blob>((res) => c.toBlob((bl) => res(bl!), 'image/jpeg', 0.9));
+}
+
+export const REDO_REASONS = [
+  ['clothes', 'It went onto clothes or the background', 'Ruhára vagy a háttérre került'],
+  ['design', 'It’s not my design / details changed', 'Nem az én mintám / változtak a részletek'],
+  ['place', 'Wrong place or size', 'Rossz helyen vagy rossz méretben van'],
+  ['anatomy', 'Hand or body looks distorted', 'Torz a kéz vagy a test'],
+  ['fake', 'Looks fake, like a sticker', 'Nem élethű, matricának tűnik'],
+] as const;
 const YEARS: Record<StageKey, number> = { fresh: 0, healed: 1, y10: 10, y30: 30, y50: 50 };
 
 export function Result({
@@ -28,6 +99,7 @@ export function Result({
   onResize,
   onRemoval,
   removalPending = [],
+  onRedo,
 }: {
   preview: Preview;
   pending?: StageKey[];
@@ -45,6 +117,8 @@ export function Result({
   /** start the laser-removal preview */
   onRemoval?: () => void;
   removalPending?: RemovalKey[];
+  /** "Not right?": make it again, avoiding what the user ticked */
+  onRedo?: (reasons: string[]) => void;
 }) {
   const { ui, me, openAuth, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
@@ -63,6 +137,15 @@ export function Result({
   const [sharing, setSharing] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
   const [notes, setNotes] = useState(preview.notes || '');
+  const [closeup, setCloseup] = useState(false);
+  const [redoOpen, setRedoOpen] = useState(false);
+  const [why, setWhy] = useState<string[]>([]);
+  const [cardBusy, setCardBusy] = useState(false);
+  // zoom into the tattoo itself
+  const f = preview.focus;
+  const zk = f ? Math.min(3.2, Math.max(1.6, 0.5 / Math.max(0.08, f.w))) : 2;
+  const zs: React.CSSProperties | undefined =
+    closeup && f ? { transform: `scale(${zk})`, transformOrigin: `${Math.min(100, Math.max(0, f.x * 100))}% ${Math.min(100, Math.max(0, f.y * 100))}%` } : undefined;
   const touch = useRef<number | null>(null);
   const played = useRef(false);
   const label = (k: StageKey) => (k === 'fresh' && preview.mode === 'existing' ? t('Today', 'Ma') : ui.t(`stage.${k}` as any));
@@ -138,9 +221,31 @@ export function Result({
     setPdfBusy(false);
   };
 
+  const shareLink = async (id: string) => {
+    const url = `${location.origin}/v/${id}`;
+    track('share_link', { id });
+    const nav: any = navigator;
+    const text = t('Should I get this tattoo? Here’s how it looks in 50 years 👀', 'Csináltassam meg ezt a tetoválást? Így néz ki 50 év múlva 👀');
+    if (nav.share) await nav.share({ url, title: 'InkAge', text }).catch(() => {});
+    else {
+      await navigator.clipboard.writeText(url);
+      toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak'));
+    }
+  };
   const share = async () => {
-    if (!me.user) {
-      openAuth(t('Sign in to get a link your friends can vote on. Your preview moves to your account.', 'Jelentkezz be, és kapsz egy linket, amin a barátaid szavazhatnak. Az előnézeted átkerül a fiókodba.'));
+    if (!me.user || preview.source !== 'cloud') {
+      // no account needed: the link keeps two small images
+      if (!img.y50 || !img.fresh) return toast(t('Wait for the 50-year image first.', 'Várd meg az 50 éves képet.'));
+      setSharing(true);
+      try {
+        const [fresh, y50] = await Promise.all([smallJpeg(img.fresh), smallJpeg(img.y50)]);
+        const r = await api<{ id?: string; error?: string }>('/api/guest-share', { fresh, y50, placement: preview.placement, score: preview.score });
+        if (!r.ok || !r.data.id) throw new Error(r.data?.error);
+        await shareLink(r.data.id);
+      } catch {
+        toast(t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
+      }
+      setSharing(false);
       return;
     }
     if (preview.source !== 'cloud') {
@@ -154,19 +259,29 @@ export function Result({
     setSharing(true);
     try {
       const id = preview.share_id || (await cloud.share(me.user.id, preview));
-      const url = `${location.origin}/v/${id}`;
-      track('share_link', { id });
-      const nav: any = navigator;
-      const text = t('Should I get this tattoo? Here’s how it looks in 50 years 👀', 'Csináltassam meg ezt a tetoválást? Így néz ki 50 év múlva 👀');
-      if (nav.share) await nav.share({ url, title: 'InkAge', text }).catch(() => {});
-      else {
-        await navigator.clipboard.writeText(url);
-        toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak'));
-      }
+      await shareLink(id);
     } catch {
       toast(t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
     }
     setSharing(false);
+  };
+
+  const card = async () => {
+    if (!img.fresh || !img.y50) return;
+    setCardBusy(true);
+    try {
+      const blob = await makeCard(img.fresh, img.y50, {
+        title: t('Fresh vs. 50 years', 'Friss vs. 50 év múlva'),
+        left: preview.mode === 'existing' ? t('Today', 'Ma') : t('Fresh', 'Friss'),
+        right: t('50 years', '50 év'),
+        score: preview.score != null ? t(`Aging score ${preview.score}/100`, `Öregedési pontszám ${preview.score}/100`) : null,
+      });
+      track('card_made');
+      await shareOrDownload(blob, 'inkage-friss-vs-50-ev.jpg');
+    } catch {
+      toast(t('Could not make the picture. Try again.', 'Nem sikerült a kép. Próbáld újra.'));
+    }
+    setCardBusy(false);
   };
 
   const scoreColor = report ? (report.score >= 75 ? '#1f8a5b' : report.score >= 55 ? '#d68a1f' : 'var(--fresh)') : 'var(--violet)';
@@ -199,8 +314,8 @@ export function Result({
       >
         {view === 'removal' ? (
           <>
-            {img.fresh && <img src={img.fresh} alt={remLabel('fresh')} />}
-            {REMOVAL_STAGES.map((k) => (rem[k] ? <img key={k} className="layer" src={rem[k]} alt={k === remKey ? remLabel(k) : ''} style={{ opacity: remKey === k ? 1 : 0 }} /> : null))}
+            {img.fresh && <img src={img.fresh} alt={remLabel('fresh')} className="zoomable" style={zs} />}
+            {REMOVAL_STAGES.map((k) => (rem[k] ? <img key={k} className="layer zoomable" src={rem[k]} alt={k === remKey ? remLabel(k) : ''} style={{ opacity: remKey === k ? 1 : 0, ...zs }} /> : null))}
             <div className="stamp">
               <span>{remKey === 'fresh' ? t('NOW', 'MA') : remKey.slice(5)}</span>
               <small>{remKey === 'fresh' ? t('before laser', 'lézer előtt') : t('laser sessions', 'lézeres kezelés')}</small>
@@ -214,11 +329,11 @@ export function Result({
           </>
         ) : mode === 'view' || !img.fresh ? (
           <>
-            {img.fresh ? <img src={img.fresh} alt={t(`Your tattoo, ${activeName}`, `A tetoválásod, ${activeName}`)} className={reveal ? 'reveal' : ''} /> : <div className="ph" />}
+            {img.fresh ? <img src={img.fresh} alt={t(`Your tattoo, ${activeName}`, `A tetoválásod, ${activeName}`)} className={`${reveal ? 'reveal' : ''} zoomable`} style={zs} /> : <div className="ph" />}
             {ready.slice(1).map((k, j) => {
               const idx = j + 1;
               const op = idx <= lo ? 1 : idx === lo + 1 ? frac : 0;
-              return <img key={k} className="layer nofade" src={img[k]} alt="" style={{ opacity: op }} />;
+              return <img key={k} className="layer nofade zoomable" src={img[k]} alt="" style={{ opacity: op, ...zs }} />;
             })}
             <div className="stamp">
               <span>{yearsNow === 0 ? (preview.mode === 'existing' ? t('NOW', 'MA') : t('NEW', 'ÚJ')) : yearsNow}</span>
@@ -246,6 +361,11 @@ export function Result({
           </div>
         )}
         <div className="res-tools">
+          {f && mode === 'view' && (
+            <button className={`pillbtn dark ${closeup ? 'on' : ''}`} aria-pressed={closeup} onClick={() => (setCloseup(!closeup), haptic())}>
+              {closeup ? t('Whole photo', 'Teljes kép') : t('Close-up', 'Közelkép')}
+            </button>
+          )}
           <button className="iconbtn dark" aria-label={t('Zoom in', 'Nagyítás')} onClick={() => setZoom(true)} disabled={!activeSrc}>
             {Icon.zoom}
           </button>
@@ -323,6 +443,11 @@ export function Result({
         </div>
       )}
 
+      {onRedo && view === 'aging' && img.fresh && preview.mode !== 'existing' && (
+        <button className="redo-link" onClick={() => setRedoOpen(true)}>
+          {t('Not right? Make it again', 'Nem lett jó? Újracsináljuk')}
+        </button>
+      )}
       <div className="actgrid">
         <button className="act primary" onClick={() => setVideo(true)} disabled={ready.length < 2}>
           {Icon.video}
@@ -431,6 +556,13 @@ export function Result({
           </span>
           <span aria-hidden="true">›</span>
         </button>
+        <button className="list-row" onClick={card} disabled={cardBusy || !img.y50}>
+          <span>
+            {cardBusy ? t('Making the picture…', 'Kép készül…') : t('“Fresh vs. 50 years” picture', '„Friss vs. 50 év” kép')}
+            <small>{t('Side by side, ready for Instagram and TikTok', 'Egymás mellett, kész Instagramra és TikTokra')}</small>
+          </span>
+          <span aria-hidden="true">›</span>
+        </button>
         {onRemoval && (
           <button
             className="list-row"
@@ -482,6 +614,33 @@ export function Result({
       </div>
       <VideoSheet open={video} onClose={() => setVideo(false)} preview={preview} />
       <CareSheet open={care} onClose={() => setCare(false)} />
+      {onRedo && (
+        <Sheet open={redoOpen} onClose={() => setRedoOpen(false)} label={t('Not right?', 'Nem lett jó?')}>
+          <h2>{t('What went wrong?', 'Mi nem jó?')}</h2>
+          <p className="sub">{t('Tick what you see — the next try avoids exactly that.', 'Jelöld be, amit látsz – az új próbálkozás pont ezt kerüli el.')}</p>
+          <div className="checklist">
+            {REDO_REASONS.map(([k, en, hu]) => (
+              <label key={k} className={why.includes(k) ? 'on' : ''}>
+                <input type="checkbox" checked={why.includes(k)} onChange={() => setWhy(why.includes(k) ? why.filter((x) => x !== k) : [...why, k])} />
+                <span>{t(en, hu)}</span>
+              </label>
+            ))}
+          </div>
+          <button
+            className="btn wide"
+            disabled={!why.length}
+            onClick={() => {
+              setRedoOpen(false);
+              track('redo', { why: why.join(',') });
+              onRedo(why);
+              setWhy([]);
+            }}
+          >
+            {t('Make it again', 'Készítsd el újra')}
+          </button>
+          <p className="fine">{t('Your feedback also helps us improve InkAge.', 'A visszajelzésed az InkAge fejlesztését is segíti.')}</p>
+        </Sheet>
+      )}
     </div>
   );
 }

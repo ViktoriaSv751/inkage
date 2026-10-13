@@ -1,5 +1,5 @@
 import { dataUrlToBuffer, json } from '@/lib/server';
-import { aiConfigured, editImage, extractPrompt, friendlyAiError } from '@/lib/ai';
+import { aiConfigured, dataUrlToImg, editImage, extractCheck, extractPrompt, friendlyAiError } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
@@ -19,8 +19,20 @@ export async function POST(req: Request) {
   const u = await startUnit(req, 'extract design');
   if (!u.ok) return u.res;
   try {
-    const image = await editImage([{ ...img, name: 'design.jpg' }], extractPrompt(body.color === true), 1024, 1024);
-    return u.withCookie(json({ image }));
+    const src = { ...img, name: 'design.jpg' };
+    const color = body.color === true;
+    // cut out, then check it against the photo: same design, nothing extra left in. One targeted retry if not.
+    let image = await editImage([src], extractPrompt(color), 1024, 1024);
+    let check = await extractCheck(src, dataUrlToImg(image));
+    if (!check.ok) {
+      console.warn('extract check failed, retrying', check);
+      const again = await editImage([src], extractPrompt(color, check.fix), 1024, 1024).catch(() => null);
+      if (again) {
+        const c2 = await extractCheck(src, dataUrlToImg(again));
+        if (c2.match >= check.match) ((image = again), (check = c2));
+      }
+    }
+    return u.withCookie(json({ image, match: check.match }));
   } catch (e) {
     console.error('extract failed', e);
     await u.refund();

@@ -1,5 +1,5 @@
-import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, verifyToken } from '@/lib/server';
-import { agePrompt, aiConfigured, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage } from '@/lib/ai';
+import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken, verifyToken } from '@/lib/server';
+import { agePrompt, aiConfigured, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage, stageYears } from '@/lib/ai';
 import { guestBumpAge, guestFrom } from '@/lib/guest';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const stage = body.stage as Stage | RemovalStage;
   const isRemoval = (REMOVAL as readonly string[]).includes(stage);
   if (!STAGES.includes(stage as Stage) && !isRemoval) return json({ error: 'Bad stage' }, 400);
-  const t = verifyToken<{ uid: string; gid: number; h: string; w: number; hh: number; an: Analysis; exp: number }>(body.token);
+  const t = verifyToken<{ uid: string; gid: number; h: string; w: number; hh: number; an: Analysis; y?: number; exp: number }>(body.token);
   if (!t || t.exp < Date.now()) return json({ error: 'This preview expired. Start a new one.' }, 402);
   if (sha(body.image || '') !== t.h) return json({ error: 'Start a new preview and try again.' }, 400);
 
@@ -31,8 +31,14 @@ export async function POST(req: Request) {
 
   try {
     const img = dataUrlToBuffer(body.image);
-    const image = await editImage([{ ...img, name: 'fresh.jpg' }], isRemoval ? removalPrompt(stage as RemovalStage, t.an) : agePrompt(stage as Stage, t.an), t.w, t.hh);
-    return json({ stage, image });
+    // The input may be an already aged image (chained stages stay consistent with each other).
+    const from = Number(t.y) || 0;
+    if (!isRemoval && from >= stageYears(stage as Stage)) return json({ error: 'Start a new preview and try again.' }, 400);
+    if (isRemoval && from > 0) return json({ error: 'Start a new preview and try again.' }, 400);
+    const image = await editImage([{ ...img, name: 'fresh.jpg' }], isRemoval ? removalPrompt(stage as RemovalStage, t.an) : agePrompt(stage as Stage, t.an, from), t.w, t.hh);
+    // a token for this image, so the next stage can continue from it
+    const token = isRemoval ? null : signToken({ ...t, h: sha(image), y: stageYears(stage as Stage) });
+    return json({ stage, image, token });
   } catch (e) {
     console.error('age failed', e);
     return json({ error: friendlyAiError(e) }, 502);

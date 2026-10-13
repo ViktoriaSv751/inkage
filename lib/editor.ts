@@ -103,3 +103,137 @@ export async function composeMockup(photoSrc: string, designSrc: string, pl: Pla
   ctx.restore();
   return c.toDataURL('image/jpeg', 0.88);
 }
+
+/** Crop a box ([top, left, bottom, right] fractions) out of an image, with a little margin. */
+export async function cropImage(src: string, box: [number, number, number, number], pad = 0.05, max = 1024) {
+  const img = await loadImage(src);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const [t, l, b, r] = box;
+  const ph = (b - t) * pad + 0.01, pw = (r - l) * pad + 0.01;
+  const x0 = Math.max(0, (l - pw) * W), y0 = Math.max(0, (t - ph) * H);
+  const x1 = Math.min(W, (r + pw) * W), y1 = Math.min(H, (b + ph) * H);
+  const cw = Math.max(8, x1 - x0), ch = Math.max(8, y1 - y0);
+  const s = Math.min(1, max / Math.max(cw, ch));
+  const c = document.createElement('canvas');
+  c.width = Math.round(cw * s);
+  c.height = Math.round(ch * s);
+  const ctx = c.getContext('2d')!;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.drawImage(img, x0, y0, cw, ch, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', 0.92);
+}
+
+export type Skin = [number, number][][];
+
+/** Draw the bare-skin outlines (optionally grown a bit) as white on black. */
+function drawSkin(ctx: CanvasRenderingContext2D, skin: Skin, W: number, H: number, grow: number) {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#fff';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = grow * 2;
+  for (const poly of skin) {
+    ctx.beginPath();
+    poly.forEach(([x, y], i) => (i ? ctx.lineTo(x * W, y * H) : ctx.moveTo(x * W, y * H)));
+    ctx.closePath();
+    ctx.fill();
+    if (grow > 0) ctx.stroke();
+  }
+}
+
+/** The design drawn where the user placed it, on a canvas the size of (a scaled) photo. */
+async function drawPlaced(ctx: CanvasRenderingContext2D, design: string, pl: Placement, W: number, H: number, margin = 0) {
+  const ds = await loadImage(design);
+  const w = pl.w * W;
+  const h = (w * ds.naturalHeight) / ds.naturalWidth;
+  ctx.save();
+  ctx.translate(pl.x * W, pl.y * H);
+  ctx.rotate((pl.rot * Math.PI) / 180);
+  if (pl.mirror) ctx.scale(-1, 1);
+  if (margin) {
+    const m = Math.max(w, h) * margin;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(-w / 2 - m, -h / 2 - m, w + m * 2, h + m * 2);
+  } else ctx.drawImage(ds, -w / 2, -h / 2, w, h);
+  ctx.restore();
+}
+
+/** Share of the design's ink that lands off the skin (on clothes or the background), 0..1. */
+export async function offSkin(photo: { w: number; h: number }, design: string, pl: Placement, skin: Skin) {
+  const W = 240, H = Math.max(8, Math.round((240 * photo.h) / photo.w));
+  const a = document.createElement('canvas');
+  a.width = W;
+  a.height = H;
+  const ax = a.getContext('2d')!;
+  await drawPlaced(ax, design, pl, W, H);
+  const b = document.createElement('canvas');
+  b.width = W;
+  b.height = H;
+  const bx = b.getContext('2d')!;
+  drawSkin(bx, skin, W, H, W * 0.012);
+  const ink = ax.getImageData(0, 0, W, H).data;
+  const sk = bx.getImageData(0, 0, W, H).data;
+  let total = 0, off = 0;
+  // ink that falls outside the photo counts as off the body too
+  for (let i = 0; i < ink.length; i += 4) {
+    if (ink[i + 3] < 90) continue;
+    total++;
+    if (sk[i] < 128) off++;
+  }
+  return total ? off / total : 0;
+}
+
+/**
+ * Where the AI may change the photo: the placed design plus a margin, limited to the skin
+ * when we know where the skin is. Everything else gets the original pixels back on the server.
+ */
+export async function pasteMask(photo: { w: number; h: number }, design: string, pl: Placement, skin?: Skin | null) {
+  const W = Math.min(640, photo.w), H = Math.round((W * photo.h) / photo.w);
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext('2d')!;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  await drawPlaced(ctx, design, pl, W, H, 0.22);
+  if (skin?.length) {
+    const s = document.createElement('canvas');
+    s.width = W;
+    s.height = H;
+    const sx = s.getContext('2d')!;
+    drawSkin(sx, skin, W, H, Math.hypot(W, H) * 0.04);
+    // only trust the skin outline when it agrees with the placement (covers most of it)
+    const area = ctx.getImageData(0, 0, W, H).data;
+    const sk = sx.getImageData(0, 0, W, H).data;
+    let inA = 0, both = 0;
+    for (let i = 0; i < area.length; i += 16) if (area[i] > 128) ((inA++), sk[i] > 128 && both++);
+    if (inA && both / inA >= 0.6) {
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.drawImage(s, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+  }
+  return c.toDataURL('image/png');
+}
+
+/** A dark veil over everything that isn't skin, shown while dragging the design. */
+export function skinVeil(skin: Skin, w: number, h: number) {
+  const W = 320, H = Math.max(8, Math.round((320 * h) / w));
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext('2d')!;
+  ctx.fillStyle = 'rgba(20, 12, 60, 0.55)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.fillStyle = '#000';
+  for (const poly of skin) {
+    ctx.beginPath();
+    poly.forEach(([x, y], i) => (i ? ctx.lineTo(x * W, y * H) : ctx.moveTo(x * W, y * H)));
+    ctx.closePath();
+    ctx.fill();
+  }
+  return c.toDataURL('image/png');
+}

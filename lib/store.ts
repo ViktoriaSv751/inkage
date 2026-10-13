@@ -33,6 +33,8 @@ export type Preview = {
   /** The design used (data URL), for the artist sheet. */
   design?: string;
   sizeCm?: number;
+  /** where the tattoo is in the photo (centre and width as fractions), for the close-up */
+  focus?: { x: number; y: number; w: number };
   source: 'local' | 'cloud';
   share_id?: string | null;
 };
@@ -144,19 +146,19 @@ type Row = {
   notes: string | null;
   favorite: boolean;
   collection: string | null;
-  paths: Partial<Record<StageKey, string>>;
+  paths: Partial<Record<string, string>>;
   share_id: string | null;
 };
 
-async function signed(paths: Partial<Record<StageKey, string>>) {
+async function signed(paths: Partial<Record<string, string>>) {
   const s = sb()!;
-  const list = Object.entries(paths).filter(([, p]) => !!p) as [StageKey, string][];
+  const list = Object.entries(paths).filter(([, p]) => !!p) as [string, string][];
   if (!list.length) return {};
   const { data } = await s.storage.from('previews').createSignedUrls(
     list.map(([, p]) => p),
     60 * 60
   );
-  const out: Partial<Record<StageKey, string>> = {};
+  const out: Partial<Record<string, string>> = {};
   list.forEach(([k], i) => {
     const u = data?.[i]?.signedUrl;
     if (u) out[k] = u;
@@ -164,7 +166,23 @@ async function signed(paths: Partial<Record<StageKey, string>>) {
   return out;
 }
 
-const fromRow = async (r: Row): Promise<Preview> => ({
+async function upload(uid: string, id: string, k: string, src: string) {
+  const s = sb()!;
+  const png = k === 'design';
+  const blob = src.startsWith('data:') ? (png ? await (await fetch(src)).blob() : await shrink(src, 1080)) : await (await fetch(src)).blob();
+  const path = `${uid}/${id}/${k}.${png ? 'png' : 'jpg'}`;
+  const { error } = await s.storage.from('previews').upload(path, blob, { contentType: png ? 'image/png' : 'image/jpeg', upsert: true });
+  return error ? null : path;
+}
+
+const fromRow = async (r: Row): Promise<Preview> => {
+  const all = await signed(r.paths || {});
+  const images: Partial<Record<StageKey, string>> = {};
+  for (const k of STAGES) if (all[k]) images[k] = all[k];
+  const removal: Partial<Record<RemovalKey, string>> = {};
+  for (const k of REMOVAL_STAGES) if (all[k]) removal[k] = all[k];
+  const meta = r.analysis?.meta || {};
+  return {
   id: r.id,
   created_at: r.created_at,
   placement: r.placement,
@@ -175,10 +193,16 @@ const fromRow = async (r: Row): Promise<Preview> => ({
   notes: r.notes || '',
   favorite: r.favorite,
   collection: r.collection,
-  images: await signed(r.paths || {}),
+  images,
+  removal: Object.keys(removal).length ? removal : undefined,
+  design: all.design,
+  mode: meta.mode,
+  sizeCm: meta.sizeCm,
+  focus: meta.focus,
   source: 'cloud',
   share_id: r.share_id,
-});
+  };
+};
 
 export const cloud = {
   async all(): Promise<Preview[]> {
@@ -192,14 +216,16 @@ export const cloud = {
   /** Upload the images (shrunk) and create the row. */
   async save(uid: string, p: Omit<Preview, 'id' | 'source'> & { analysis?: any }, id = crypto.randomUUID()) {
     const s = sb()!;
-    const paths: Partial<Record<StageKey, string>> = {};
-    for (const k of STAGES) {
-      const src = p.images[k];
+    const paths: Partial<Record<string, string>> = {};
+    const all: [string, string | undefined][] = [
+      ...STAGES.map((k) => [k, p.images[k]] as [string, string | undefined]),
+      ...REMOVAL_STAGES.map((k) => [k, p.removal?.[k]] as [string, string | undefined]),
+      ['design', p.design],
+    ];
+    for (const [k, src] of all) {
       if (!src) continue;
-      const blob = src.startsWith('data:') ? await shrink(src, 1080) : await (await fetch(src)).blob();
-      const path = `${uid}/${id}/${k}.jpg`;
-      const { error } = await s.storage.from('previews').upload(path, blob, { contentType: 'image/jpeg', upsert: true });
-      if (!error) paths[k] = path;
+      const path = await upload(uid, id, k, src);
+      if (path) paths[k] = path;
     }
     const { error } = await s.from('previews').insert({
       id,
@@ -209,7 +235,7 @@ export const cloud = {
       size: p.size,
       score: p.score,
       report: p.report,
-      analysis: p.analysis ?? (p.age ? { apparentAge: p.age } : null),
+      analysis: { ...(p.analysis ?? (p.age ? { apparentAge: p.age } : {})), meta: { mode: p.mode, sizeCm: p.sizeCm, focus: p.focus } },
       notes: p.notes || null,
       favorite: p.favorite,
       collection: p.collection,
@@ -217,6 +243,18 @@ export const cloud = {
     });
     if (error) throw error;
     return id;
+  },
+  /** Add images made later (laser removal) to a saved preview. */
+  async addImages(uid: string, id: string, imgs: Partial<Record<string, string>>) {
+    const s = sb()!;
+    const { data } = await s.from('previews').select('paths').eq('id', id).maybeSingle();
+    const paths = { ...((data as any)?.paths || {}) };
+    for (const [k, src] of Object.entries(imgs)) {
+      if (!src) continue;
+      const path = await upload(uid, id, k, src);
+      if (path) paths[k] = path;
+    }
+    await s.from('previews').update({ paths }).eq('id', id);
   },
   update: (id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection'>>) => sb()!.from('previews').update(patch).eq('id', id),
   hide: (id: string) => sb()!.from('previews').update({ hidden: true }).eq('id', id),

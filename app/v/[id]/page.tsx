@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { PUBLIC } from '@/lib/public-config';
 import { Vote } from './Vote';
@@ -30,6 +31,9 @@ async function getShare(id: string): Promise<Share | null> {
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const s = await getShare(params.id);
+  const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.vercel.app';
+  const abs = (u?: string) => (u && u.startsWith('/') ? `https://${host}${u}` : u);
+  if (s) s.paths = { fresh: abs(s.paths.fresh), y50: abs(s.paths.y50) };
   const title = 'Should I get this tattoo? 👀';
   const description = 'See how it looks fresh and after 50 years, then vote. Made with InkAge.';
   return {
