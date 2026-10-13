@@ -11,6 +11,7 @@ export type Report = {
   factors: { label: string; impact: number }[];
   suggestions: string[];
   tips: string[];
+  input?: import('./score').ScoreInput;
 };
 
 /** One saved preview. images are data URLs locally, storage paths in the cloud. */
@@ -35,6 +36,8 @@ export type Preview = {
   sizeCm?: number;
   /** where the tattoo is in the photo (centre and width as fractions), for the close-up */
   focus?: { x: number; y: number; w: number };
+  /** when the user actually got this tattoo ("I got it done") */
+  doneAt?: string | null;
   source: 'local' | 'cloud';
   share_id?: string | null;
 };
@@ -148,6 +151,7 @@ type Row = {
   collection: string | null;
   paths: Partial<Record<string, string>>;
   share_id: string | null;
+  done_at?: string | null;
 };
 
 async function signed(paths: Partial<Record<string, string>>) {
@@ -199,6 +203,7 @@ const fromRow = async (r: Row): Promise<Preview> => {
   mode: meta.mode,
   sizeCm: meta.sizeCm,
   focus: meta.focus,
+  doneAt: r.done_at ?? null,
   source: 'cloud',
   share_id: r.share_id,
   };
@@ -239,6 +244,7 @@ export const cloud = {
       notes: p.notes || null,
       favorite: p.favorite,
       collection: p.collection,
+      done_at: p.doneAt ?? null,
       paths,
     });
     if (error) throw error;
@@ -256,7 +262,7 @@ export const cloud = {
     }
     await s.from('previews').update({ paths }).eq('id', id);
   },
-  update: (id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection'>>) => sb()!.from('previews').update(patch).eq('id', id),
+  update: (id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection' | 'done_at'>>) => sb()!.from('previews').update(patch).eq('id', id),
   hide: (id: string) => sb()!.from('previews').update({ hidden: true }).eq('id', id),
   /** Copy fresh + 50y to the public bucket and return a share id. */
   async share(uid: string, p: Preview) {

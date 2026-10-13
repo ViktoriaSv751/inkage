@@ -24,6 +24,13 @@ export default function Admin() {
   const [health, setHealth] = useState<{ ok: boolean; detail: any; created_at: string }[]>([]);
   const [checking, setChecking] = useState(false);
   const [extra, setExtra] = useState<any>(null);
+  const [posts, setPosts] = useState<any[]>([]);
+  const loadPosts = () => sb()?.rpc('admin_posts').then(({ data }) => Array.isArray(data) && setPosts(data));
+  const moderate = async (id: number, ok: boolean) => {
+    await sb()?.rpc('moderate_post', { p_id: id, p_ok: ok });
+    setPosts((p) => p.filter((x) => x.id !== id));
+  };
+  const [feedback, setFeedback] = useState<any[]>([]);
   const loadHealth = async () => {
     const { data } = (await sb()?.rpc('admin_health')) || {};
     if (Array.isArray(data)) setHealth(data);
@@ -44,6 +51,10 @@ export default function Admin() {
   useEffect(() => {
     load();
     loadHealth();
+    loadPosts();
+    sb()
+      ?.rpc('admin_feedback')
+      .then(({ data }) => Array.isArray(data) && setFeedback(data));
     sb()
       ?.rpc('admin_extra')
       .then(({ data }) => data && setExtra(data));
@@ -130,6 +141,40 @@ export default function Admin() {
                 ))}
               </div>
             </div>
+          )}
+          {posts.length > 0 && (
+            <div style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <b>Explore: waiting for review ({posts.length})</b>
+              <p style={{ fontSize: 13, color: 'var(--ink-2)', margin: '4px 0 10px' }}>Approve only if there is no face, nudity, minors, private details or someone else’s artwork shown as theirs.</p>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {posts.map((p) => (
+                  <div key={p.id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    <img src={p.share?.paths?.fresh} alt="" style={{ width: 80, height: 100, objectFit: 'cover', borderRadius: 10 }} />
+                    <img src={p.share?.paths?.y50} alt="" style={{ width: 80, height: 100, objectFit: 'cover', borderRadius: 10 }} />
+                    <div style={{ flex: 1, fontSize: 13 }}>
+                      <b>{p.caption || '—'}</b>
+                      <div>{p.share?.placement} · {new Date(p.created_at).toLocaleString()}</div>
+                      <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                        <button className="btn" style={{ minHeight: 36, padding: '0 14px', fontSize: 14 }} onClick={() => moderate(p.id, true)}>Approve</button>
+                        <button className="btn ghost" style={{ minHeight: 36, padding: '0 14px', fontSize: 14 }} onClick={() => moderate(p.id, false)}>Reject</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {feedback.length > 0 && (
+            <details style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Feedback from users ({feedback.length})</summary>
+              <ul style={{ fontSize: 13, paddingLeft: 18, marginBottom: 0 }}>
+                {feedback.map((f: any, i: number) => (
+                  <li key={i} style={{ marginTop: 6 }}>
+                    <b>{f.kind}</b> · {new Date(f.created_at).toLocaleString()} {f.email ? `· ${f.email}` : ''} — {f.message}
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
           {extra?.errors?.length > 0 && (
             <details style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>

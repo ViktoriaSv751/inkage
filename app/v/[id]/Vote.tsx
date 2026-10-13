@@ -37,6 +37,53 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
     ['no', t('Don’t do it 😬', 'Ne csináld 😬'), '#e0483b'],
   ];
 
+  // A/B: two versions, "which one?" ('yes' = A, 'no' = B)
+  if (s.paths.y50B) {
+    const ab: ['yes' | 'no', string, string | undefined, string | undefined][] = [
+      ['yes', s.labels?.a || 'A', s.paths.fresh, s.paths.y50],
+      ['no', s.labels?.b || 'B', s.paths.freshB, s.paths.y50B],
+    ];
+    const tot = s.votes.yes + s.votes.no || 1;
+    return (
+      <main style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
+        <Link href="/" className="logo" style={{ fontSize: 26 }}>
+          InkAge
+        </Link>
+        <h1 style={{ fontSize: 'clamp(40px, 10vw, 60px)', margin: '14px 0 6px' }}>{t('Which one should I get?', 'Melyiket csináltassam?')}</h1>
+        <p className="sub" style={{ margin: '0 0 14px' }}>{show50 ? t('Both after 50 years.', 'Mindkettő 50 év múlva.') : t('Both fresh.', 'Mindkettő frissen.')}</p>
+        <div className="flip" style={{ marginBottom: 12 }}>
+          <button className={!show50 ? 'on' : ''} onClick={() => setShow50(false)}>
+            {t('Fresh', 'Friss')}
+          </button>
+          <button className={show50 ? 'on' : ''} onClick={() => setShow50(true)}>
+            {t('50 years', '50 év')}
+          </button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {ab.map(([k, label, fresh, old]) => (
+            <button key={k} onClick={() => vote(k)} style={{ border: mine === k ? '3px solid var(--stencil)' : '3px solid transparent', borderRadius: 22, padding: 0, overflow: 'hidden', background: '#000', position: 'relative', textAlign: 'left' }}>
+              <img src={show50 ? old : fresh} alt={label} style={{ display: 'block', width: '100%', aspectRatio: '4/5', objectFit: 'cover' }} />
+              <span style={{ position: 'absolute', left: 10, top: 10, background: '#fff', color: '#000', borderRadius: 99, padding: '4px 12px', fontWeight: 800 }}>{label}</span>
+              {mine && (
+                <span style={{ position: 'absolute', right: 10, bottom: 10, background: 'rgba(0,0,0,.7)', color: '#fff', borderRadius: 99, padding: '4px 12px', fontWeight: 800 }}>
+                  {Math.round((s.votes[k] / tot) * 100)}%
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+        <p className="fine">{mine ? t(`${tot} vote${tot === 1 ? '' : 's'} so far`, `Eddig ${tot} szavazat`) : t('Tap the one you like more.', 'Koppints arra, amelyik jobban tetszik.')}</p>
+        <div style={{ background: 'var(--ink)', color: '#fff', borderRadius: 24, padding: 22, marginTop: 24 }}>
+          <h2 style={{ fontSize: 30, lineHeight: 1, margin: '0 0 8px' }}>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
+          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free, takes about a minute, no sign-up.', 'Ingyenes, kb. egy perc, regisztráció nélkül.')}</p>
+          <Link className="btn wide light" href="/app" onClick={() => track('share_cta')}>
+            {t('Try it on my photo', 'Kipróbálom a fotómon')}
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main style={{ maxWidth: 520, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
       <Link href="/" className="logo" style={{ fontSize: 26 }}>

@@ -6,7 +6,8 @@ import { useApp } from '../AppProvider';
 import { Sheet } from '../ui';
 import { tx } from '@/lib/i18n';
 import { sb } from '@/lib/sb';
-import { cloud, local, lsGet, lsSet, Preview, track } from '@/lib/store';
+import { anonId, cloud, local, lsGet, lsSet, Preview, track } from '@/lib/store';
+import { shareOrDownload } from '@/lib/client';
 import { placeName } from '../create/steps';
 import type { OnboardingAnswers } from '../create/Onboarding';
 
@@ -23,6 +24,35 @@ export default function ProfilePage() {
   const [confirm, setConfirm] = useState('');
   const [busy, setBusy] = useState(false);
   const [mine, setMine] = useState<Preview[] | null>(null);
+  const [joined, setJoined] = useState<number | null>(null);
+  const [fbKind, setFbKind] = useState<'bug' | 'idea' | 'question'>('idea');
+  const [fbMsg, setFbMsg] = useState('');
+  const [fbEmail, setFbEmail] = useState('');
+  const [fbBusy, setFbBusy] = useState(false);
+  useEffect(() => {
+    if (me.user) sb()?.rpc('my_invites').then(({ data }) => setJoined((data as any)?.joined ?? null));
+  }, [me.user]);
+  const sendFeedback = async () => {
+    setFbBusy(true);
+    const { data } = (await sb()?.rpc('send_feedback', { p_kind: fbKind, p_message: fbMsg.trim(), p_email: fbEmail || me.user?.email || '', p_anon: anonId(), p_page: `${navigator.userAgent.slice(0, 120)}` })) || {};
+    setFbBusy(false);
+    if (data) {
+      setFbMsg('');
+      track('feedback_sent', { kind: fbKind });
+      toast(t('Thank you! We read every message.', 'Köszönjük! Minden üzenetet elolvasunk.'));
+    } else toast(t('Could not send. Try again in a bit.', 'Nem sikerült elküldeni. Próbáld újra kicsit később.'));
+  };
+  // your data, as a file (previews' details; images stay in the app)
+  const exportData = async () => {
+    const data = {
+      exported_at: new Date().toISOString(),
+      account: me.user ? { email: me.user.email, plan: me.plan } : null,
+      answers: ob,
+      previews: (mine || []).map((p) => ({ created_at: p.created_at, placement: p.placement, size: p.size, score: p.score, notes: p.notes, favorite: p.favorite, folder: p.collection, done_at: p.doneAt ?? null, source: p.source })),
+    };
+    track('data_export');
+    await shareOrDownload(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), 'inkage-adataim.json');
+  };
   const [ob, setOb] = useState<OnboardingAnswers | null>(null);
 
   useEffect(() => {
@@ -203,6 +233,14 @@ export default function ProfilePage() {
             </button>
           ))}
         </div>
+        <b style={{ display: 'block', fontSize: 14, margin: '14px 0 6px' }}>{t('Your age (makes the 30 and 50-year images more accurate)', 'Életkorod (pontosabb lesz a 30 és 50 éves kép)')}</b>
+        <div className="row" style={{ gap: 6 }}>
+          {['18-24', '25-34', '35-44', '45-54', '55+'].map((v) => (
+            <button key={v} className={`chip ${ob?.age === v ? 'on' : ''}`} onClick={() => saveOb({ age: ob?.age === v ? '' : v })}>
+              {v}
+            </button>
+          ))}
+        </div>
         <button
           className="list-row"
           style={{ marginTop: 8 }}
@@ -227,12 +265,56 @@ export default function ProfilePage() {
             <button className="btn wide" onClick={invite}>
               {t('Share invite link', 'Meghívó link megosztása')}
             </button>
+            {joined !== null && (
+              <p className="small muted" style={{ margin: '10px 0 0', textAlign: 'center' }}>
+                {joined > 0
+                  ? t(`${joined} friend${joined === 1 ? '' : 's'} joined · ${me.bonus ?? 0} bonus previews`, `${joined} barátod csatlakozott · ${me.bonus ?? 0} bónusz előnézet`)
+                  : t('No one has joined with your link yet.', 'Még senki nem csatlakozott a linkeddel.')}
+              </p>
+            )}
           </>
         ) : (
           <button className="btn ghost wide" onClick={() => openAuth(t('Sign in to get your invite link.', 'Jelentkezz be a meghívó linkedért.'))}>
             {t('Sign in to get your link', 'Bejelentkezés a linkért')}
           </button>
         )}
+      </div>
+
+      <div className="card" style={{ marginTop: 12 }}>
+        <h2>{t('Help & feedback', 'Súgó és visszajelzés')}</h2>
+        <div className="faq">
+          {(
+            [
+              ['How accurate is the preview?', 'Mennyire pontos az előnézet?', 'It is an AI simulation based on how ink and skin usually age (spreading, fading, sun, skin changes). Real results depend on your artist, your skin and aftercare — use it to compare options, not as a guarantee.', 'MI-szimuláció, ami azon alapul, hogyan öregszik általában a tinta és a bőr (szétterülés, fakulás, nap, bőrváltozás). A valós eredmény a tetoválótól, a bőrödtől és az utókezeléstől függ – lehetőségek összevetésére használd, ne garanciaként.'],
+              ['What happens to my photos?', 'Mi történik a fotóimmal?', 'They are used to make your preview. As a guest they stay on this device; signed in, they are stored privately in your account. Shared links only contain the two small images you chose to share. You can delete everything here in Profile.', 'Az előnézet elkészítéséhez használjuk őket. Vendégként ezen az eszközön maradnak, bejelentkezve privát módon a fiókodban. A megosztott link csak a két kis képet tartalmazza, amit megosztottál. Itt a Profilban mindent törölhetsz.'],
+              ['The tattoo landed on my clothes / looks wrong', 'Ruhára került / rossz lett a tetoválás', 'Tap “Not right? Make it again” under the result and tick what went wrong — the next try avoids exactly that. A close, sharp daylight photo of bare skin gives the best results.', 'Koppints az eredmény alatt a „Nem lett jó? Újracsináljuk” gombra, és jelöld be, mi a baj – az új próbálkozás pont ezt kerüli el. A közeli, éles, nappali fényes fotó csupasz bőrről adja a legjobb eredményt.'],
+              ['Is it free?', 'Ingyenes?', 'Yes, while we are in beta. There is a daily limit so it stays free for everyone.', 'Igen, a tesztidőszak alatt. Van egy napi keret, hogy mindenkinek ingyenes maradhasson.'],
+            ] as const
+          ).map(([qe, qh, ae, ah]) => (
+            <details key={qe}>
+              <summary>{t(qe, qh)}</summary>
+              <p>{t(ae, ah)}</p>
+            </details>
+          ))}
+        </div>
+        <div className="seg" role="radiogroup" style={{ marginTop: 14 }}>
+          {(
+            [
+              ['idea', t('Idea', 'Ötlet')],
+              ['bug', t('Something’s broken', 'Hiba')],
+              ['question', t('Question', 'Kérdés')],
+            ] as const
+          ).map(([k, l]) => (
+            <button key={k} role="radio" aria-checked={fbKind === k} className={fbKind === k ? 'on' : ''} onClick={() => setFbKind(k)}>
+              {l}
+            </button>
+          ))}
+        </div>
+        <textarea className="notes" id="feedback" rows={3} maxLength={2000} style={{ marginTop: 10 }} placeholder={t('Tell us what you think or what went wrong…', 'Írd meg, mit gondolsz, vagy mi nem működött…')} value={fbMsg} onChange={(e) => setFbMsg(e.target.value)} />
+        {!me.user && <input className="text" id="feedback-email" type="email" placeholder={t('Your e-mail, if you want a reply (optional)', 'E-mail-címed, ha választ kérsz (nem kötelező)')} value={fbEmail} onChange={(e) => setFbEmail(e.target.value)} style={{ marginTop: 8 }} />}
+        <button className="btn wide" style={{ marginTop: 10 }} disabled={fbBusy || fbMsg.trim().length < 3} onClick={sendFeedback}>
+          {fbBusy ? '…' : t('Send', 'Küldés')}
+        </button>
       </div>
 
       <div className="card" style={{ marginTop: 12 }}>
@@ -282,6 +364,13 @@ export default function ProfilePage() {
             <span aria-hidden="true">›</span>
           </Link>
         )}
+        <button className="list-row" onClick={exportData}>
+          <span>
+            {t('Download my data', 'Adataim letöltése')}
+            <small>{t('Your previews’ details and answers, as a file', 'Az előnézeteid adatai és a válaszaid, fájlban')}</small>
+          </span>
+          <span aria-hidden="true">›</span>
+        </button>
         {me.user && (
           <>
             <button className="list-row" onClick={signOut}>

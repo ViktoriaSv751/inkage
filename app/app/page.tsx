@@ -6,6 +6,7 @@ import { Icon, OutOfPreviews, Waitlist } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
 import { aiPlacement } from '@/lib/placements';
+import { abShare, shareVoteLink } from '@/lib/share';
 import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
@@ -294,7 +295,7 @@ export default function CreatePage() {
         localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta: { ...meta, design: undefined } }));
       } catch {}
     }
-    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: ob?.sun, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, ...extra };
+    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: lsGet<any>('ink_onboarding', null)?.sun || ob?.sun, ageHint: lsGet<any>('ink_onboarding', null)?.age || ob?.age, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, ...extra };
     let r = await api<any>('/api/generate', body);
     // a busy minute at the AI provider: wait and retry automatically (twice)
     for (let i = 0; i < 2 && !r.ok && /Lots of people|took too long/.test(r.data?.error || ''); i++) {
@@ -625,6 +626,21 @@ export default function CreatePage() {
         {prevRef.current && prevRef.current.id !== preview.id && preview.images.y50 && (
           <div className="card" style={{ marginTop: 12 }}>
             <h2>{t('Previous vs. this one', 'Előző vs. mostani')}</h2>
+            <button
+              className="chipbtn"
+              style={{ marginBottom: 8 }}
+              onClick={async () => {
+                try {
+                  const lab = (p: Preview) => `${placeName(p.placement, ui.lang)}${p.sizeCm ? ` ${p.sizeCm} cm` : ''}`;
+                  const id = await abShare(prevRef.current!, preview, lab(prevRef.current!), lab(preview));
+                  await shareVoteLink(id, t('Which tattoo should I get? 👀', 'Melyik tetoválást csináltassam? 👀'), () => toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak')));
+                } catch (e: any) {
+                  toast(trErr(ui.lang, e?.message));
+                }
+              }}
+            >
+              {t('Ask friends: which one?', 'Kérdezd meg a barátaidat: melyik legyen?')}
+            </button>
             <p className="muted">{t('Both at 50 years.', 'Mindkettő 50 év múlva.')}</p>
             <div className="cmp">
               {[prevRef.current, preview].map((x, i) => (

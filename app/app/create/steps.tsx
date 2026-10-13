@@ -100,6 +100,26 @@ export function PlacementPicker({ value, onChange }: { value: string; onChange: 
 
 // ================================================================ studio: photo + design on one screen
 
+/** The last few photos the user added, to pick again with one tap. */
+type Recent = { d: string; w: number; h: number };
+function recentGet(): Recent[] {
+  try {
+    return JSON.parse(localStorage.getItem('ink_recent_photos') || '[]');
+  } catch {
+    return [];
+  }
+}
+function recentAdd(p: Photo) {
+  const list = [{ d: p.dataUrl, w: p.w, h: p.h }, ...recentGet().filter((r) => r.d.slice(-80) !== p.dataUrl.slice(-80))];
+  for (let n = 5; n > 0; n--) {
+    try {
+      localStorage.setItem('ink_recent_photos', JSON.stringify(list.slice(0, n)));
+      return;
+    } catch {}
+  }
+}
+const SKIN_TONES = ['#f6d7c3', '#e8b896', '#c98e62', '#8d5a3b', '#4f3020'];
+
 type CheckState = { state: 'idle' | 'checking' | 'ok' | 'warn' | 'blocked'; msg?: string };
 
 export function StudioStep({
@@ -142,15 +162,71 @@ export function StudioStep({
   const [aiStyle, setAiStyle] = useState<'fine-line' | 'blackwork' | 'traditional'>('fine-line');
   const [drawing, setDrawing] = useState(false);
   const existing = mode === 'existing';
+  const [recent, setRecent] = useState<Recent[]>([]);
+  useEffect(() => setRecent(recentGet()), [photo?.dataUrl]);
+  const [modelOpen, setModelOpen] = useState(false);
+  const [tone, setTone] = useState(3);
+  const [modelBusy, setModelBusy] = useState(false);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [link, setLink] = useState('');
+  const [linkBusy, setLinkBusy] = useState(false);
+  const [libQ, setLibQ] = useState('');
+  const [libStyle, setLibStyle] = useState<'' | 'fine-line' | 'blackwork' | 'traditional'>('');
 
+  const usePhoto = (p: Photo) => {
+    setPhoto(p);
+    haptic();
+    runCheck(p, placement);
+  };
+  // "I don't have a good photo": a stand-in photo of that body area in the chosen skin tone
+  const modelPhoto = async () => {
+    setModelBusy(true);
+    track('model_photo', { tone });
+    const r = await api<{ image?: string; error?: string }>('/api/model-photo', { area: aiPlacement(placement), tone });
+    setModelBusy(false);
+    if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
+    const blob = await (await fetch(r.data.image)).blob();
+    const p = await prepareImage(new File([blob], 'model.jpg', { type: blob.type }), 1024);
+    setModelOpen(false);
+    usePhoto(p);
+  };
+  // a design from a link (Pinterest, Instagram, any image address)
+  const fromLink = async (url: string) => {
+    if (!/^https:\/\//i.test(url.trim())) return toast(t('Paste a link that starts with https://', 'Olyan linket illessz be, ami https://-sel kezdődik'));
+    setLinkBusy(true);
+    track('design_link');
+    const r = await api<{ image?: string; error?: string }>('/api/fetch-image', { url: url.trim() });
+    setLinkBusy(false);
+    if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
+    setLinkOpen(false);
+    setLink('');
+    const blob = await (await fetch(r.data.image)).blob();
+    designFromFile(blob, 'link');
+  };
+
+  // AI drawings: two variants to choose from, then "like this, but…" changes
+  const [variants, setVariants] = useState<string[]>([]);
+  const [change, setChange] = useState('');
   const aiDesign = async () => {
     if (prompt.trim().length < 3) return;
     setDrawing(true);
     track('ai_design', { style: aiStyle });
-    const r = await api<{ image: string; error?: string }>('/api/design', { text: prompt, style: aiStyle });
+    const r = await api<{ image: string; images?: string[]; error?: string }>('/api/design', { text: prompt, style: aiStyle });
     setDrawing(false);
     if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
+    setVariants(r.data.images?.length ? r.data.images : [r.data.image]);
     await applyDesign(r.data.image, 'black');
+  };
+  const refine = async () => {
+    if (!design || change.trim().length < 3) return;
+    setDrawing(true);
+    track('ai_design_change');
+    const r = await api<{ image: string; error?: string }>('/api/design', { text: change, style: aiStyle, base: design.raw });
+    setDrawing(false);
+    if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
+    setVariants((v) => [r.data.image, ...v].slice(0, 4));
+    setChange('');
+    await applyDesign(r.data.image, design.mode);
   };
 
   const runCheck = useCallback(
@@ -174,6 +250,7 @@ export function StudioStep({
     try {
       const p = await prepareImage(file as File, 1024);
       setPhoto(p);
+      recentAdd(p);
       haptic();
       track('photo_added');
       runCheck(p, placement);
@@ -268,7 +345,9 @@ export function StudioStep({
         const type = it.types.find((x: string) => x.startsWith('image/'));
         if (type) return designFromFile(await it.getType(type), 'paste');
       }
-      toast(t('No image on your clipboard. Copy an image first.', 'Nincs kép a vágólapon. Előbb másolj ki egy képet.'));
+      const text = (await navigator.clipboard.readText().catch(() => '')).trim();
+      if (/^https:\/\/\S+$/i.test(text)) return fromLink(text);
+      toast(t('No image on your clipboard. Copy an image or a link first.', 'Nincs kép a vágólapon. Előbb másolj ki egy képet vagy egy linket.'));
     } catch {
       toast(t('Your browser blocked the clipboard. Use Upload instead.', 'A böngésző nem engedte a vágólapot. Használd a Feltöltést.'));
     }
@@ -277,8 +356,11 @@ export function StudioStep({
   // ctrl/cmd+V anywhere: an image becomes the design
   useEffect(() => {
     const h = (e: ClipboardEvent) => {
+      if ((e.target as HTMLElement)?.closest?.('input, textarea')) return;
       const f = Array.from(e.clipboardData?.files || []).find((x) => x.type.startsWith('image/'));
-      if (f) designFromFile(f, 'paste');
+      if (f) return designFromFile(f, 'paste');
+      const text = (e.clipboardData?.getData('text') || '').trim();
+      if (/^https:\/\/\S+$/i.test(text)) fromLink(text);
     };
     window.addEventListener('paste', h);
     return () => window.removeEventListener('paste', h);
@@ -352,6 +434,11 @@ export function StudioStep({
               {Icon.image} {t('Photos', 'Galéria')}
             </button>
           </div>
+          {!existing && (
+            <button className="linkbtn" onClick={() => setModelOpen(true)}>
+              {t('No good photo? Use a model', 'Nincs jó fotód? Használj modellt')}
+            </button>
+          )}
         </div>
 
         {!existing && (
@@ -380,9 +467,23 @@ export function StudioStep({
               {Icon.clip} {t('Paste', 'Beilleszt')}
             </button>
           </div>
+          <button className="linkbtn" onClick={() => setLinkOpen(true)}>
+            {t('From a link (Pinterest, Instagram…)', 'Linkről (Pinterest, Instagram…)')}
+          </button>
         </div>
         )}
       </div>
+
+      {recent.length > 0 && (
+        <div className="recents" aria-label={t('Recent photos', 'Legutóbbi fotóid')}>
+          <span>{t('Recent', 'Legutóbbi')}</span>
+          {recent.map((r, i) => (
+            <button key={i} className={photo?.dataUrl.slice(-80) === r.d.slice(-80) ? 'on' : ''} onClick={() => usePhoto({ dataUrl: r.d, w: r.w, h: r.h })} aria-label={t(`Recent photo ${i + 1}`, `${i + 1}. legutóbbi fotó`)}>
+              <img src={r.d} alt="" />
+            </button>
+          ))}
+        </div>
+      )}
 
       {photo && check.state !== 'idle' && (
         <p className={`check-line ${check.state}`} role="status">
@@ -482,8 +583,18 @@ export function StudioStep({
       <div className="section-title" style={{ marginTop: 18 }}>
         <h2 style={{ fontSize: 20 }}>{t('No design? Try one of ours', 'Nincs mintád? Próbáld ki a mieinket')}</h2>
       </div>
+      <div className="libtools">
+        <input type="search" id="lib-search" placeholder={t('Search: rose, moon, wave…', 'Keresés: rózsa, hold, hullám…')} value={libQ} onChange={(e) => setLibQ(e.target.value)} />
+        <div className="row" style={{ gap: 6 }}>
+          {(['', 'fine-line', 'blackwork', 'traditional'] as const).map((st) => (
+            <button key={st || 'all'} className={`chip ${libStyle === st ? 'on' : ''}`} onClick={() => setLibStyle(st)}>
+              {st === '' ? t('All', 'Mind') : st === 'fine-line' ? t('Fine line', 'Finom vonalas') : st === 'blackwork' ? 'Blackwork' : t('Classic', 'Klasszikus')}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="hscroll">
-        {DESIGNS.map((d) => (
+        {DESIGNS.filter((d) => (!libStyle || d.style === libStyle) && (!libQ.trim() || `${d.en} ${d.hu}`.toLowerCase().includes(libQ.trim().toLowerCase()))).map((d) => (
           <button
             key={d.id}
             className={`ex-design small ${design?.libId === d.id ? 'on' : ''}`}
@@ -520,6 +631,34 @@ export function StudioStep({
                 {drawing ? t('Drawing…', 'Rajzolás…') : t('Draw it', 'Rajzold meg')}
               </button>
             </div>
+            {variants.length > 0 && (
+              <>
+                <div className="variants" role="radiogroup" aria-label={t('Versions', 'Változatok')}>
+                  {variants.map((v, i) => (
+                    <button key={i} role="radio" aria-checked={design?.raw === v} className={design?.raw === v ? 'on' : ''} onClick={() => applyDesign(v, design?.mode || 'black')}>
+                      <img src={v} alt={t(`Version ${i + 1}`, `${i + 1}. változat`)} />
+                    </button>
+                  ))}
+                </div>
+                {design && variants.includes(design.raw) && (
+                  <div className="row" style={{ marginTop: 8, gap: 8, flexWrap: 'nowrap' }}>
+                    <input
+                      className="text"
+                      id="ai-change"
+                      style={{ flex: 1, minWidth: 0 }}
+                      maxLength={160}
+                      placeholder={t('Like this, but… e.g. thinner lines, add a small star', 'Ilyet, de… pl. vékonyabb vonalak, egy kis csillaggal')}
+                      value={change}
+                      onChange={(e) => setChange(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && refine()}
+                    />
+                    <button className="btn ghost" style={{ padding: '0 16px', minHeight: 46 }} disabled={drawing || change.trim().length < 3} onClick={refine}>
+                      {t('Change', 'Módosít')}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </>
       )}
@@ -532,6 +671,26 @@ export function StudioStep({
       </div>
 
       </div>
+      <Sheet open={modelOpen} onClose={() => setModelOpen(false)} label={t('Model photo', 'Modellfotó')}>
+        <h2>{t('Try it on a model', 'Próbáld ki egy modellen')}</h2>
+        <p className="sub">{t(`We make a realistic photo of a ${placeName(placement, 'en').toLowerCase()} in the skin tone you pick. Best is still your own photo — this is for a quick try.`, `Készítünk egy élethű fotót (${placeName(placement, 'hu').toLowerCase()}) a választott bőrtónussal. A saját fotód a legpontosabb – ez gyors kipróbáláshoz jó.`)}</p>
+        <div className="tones" role="radiogroup" aria-label={t('Skin tone', 'Bőrtónus')}>
+          {SKIN_TONES.map((c, i) => (
+            <button key={c} role="radio" aria-checked={tone === i + 1} className={tone === i + 1 ? 'on' : ''} style={{ background: c }} onClick={() => setTone(i + 1)} aria-label={t(`Skin tone ${i + 1}`, `${i + 1}. bőrtónus`)} />
+          ))}
+        </div>
+        <button className="btn wide" onClick={modelPhoto} disabled={modelBusy}>
+          {modelBusy ? t('Making the photo…', 'Fotó készül…') : t('Make the photo', 'Fotó készítése')}
+        </button>
+      </Sheet>
+      <Sheet open={linkOpen} onClose={() => setLinkOpen(false)} label={t('Design from a link', 'Minta linkről')}>
+        <h2>{t('Design from a link', 'Minta linkről')}</h2>
+        <p className="sub">{t('Paste a Pinterest, Instagram or image link. Only the tattoo will be used.', 'Illessz be Pinterest-, Instagram- vagy képlinket. Csak a tetoválást használjuk fel belőle.')}</p>
+        <input id="design-link" type="url" inputMode="url" placeholder="https://…" value={link} onChange={(e) => setLink(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && fromLink(link)} />
+        <button className="btn wide" onClick={() => fromLink(link)} disabled={linkBusy || !link.trim()}>
+          {linkBusy ? t('Loading…', 'Betöltés…') : t('Load the picture', 'Kép betöltése')}
+        </button>
+      </Sheet>
       {cam && (
         <CameraSheet
           placement={placement}
@@ -580,6 +739,35 @@ function CameraSheet({ placement, onClose, onShot, onFallback }: { placement: st
 
   useEffect(() => () => stream.current?.getTracks().forEach((x) => x.stop()), []);
 
+  // live advice while framing: too dark, too bright, hold still
+  const [advice, setAdvice] = useState('');
+  useEffect(() => {
+    const c = document.createElement('canvas');
+    c.width = 32;
+    c.height = 32;
+    const ctx = c.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D;
+    let prev: Uint8ClampedArray | null = null;
+    const i = setInterval(() => {
+      const v = vid.current;
+      if (!v || !v.videoWidth) return;
+      ctx.drawImage(v, 0, 0, 32, 32);
+      const d = ctx.getImageData(0, 0, 32, 32).data;
+      let lum = 0, move = 0;
+      for (let k = 0; k < d.length; k += 4) {
+        const l = 0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2];
+        lum += l;
+        if (prev) move += Math.abs(l - (0.299 * prev[k] + 0.587 * prev[k + 1] + 0.114 * prev[k + 2]));
+      }
+      lum /= 1024;
+      move /= 1024;
+      prev = d.slice();
+      setAdvice(
+        lum < 55 ? t('Too dark — move closer to a window', 'Túl sötét – menj közelebb az ablakhoz') : lum > 225 ? t('Too bright — avoid direct light', 'Túl világos – kerüld a közvetlen fényt') : move > 18 ? t('Hold still', 'Tartsd stabilan') : ''
+      );
+    }, 600);
+    return () => clearInterval(i);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const shoot = () => {
     const v = vid.current;
     if (!v || !v.videoWidth) return;
@@ -605,7 +793,7 @@ function CameraSheet({ placement, onClose, onShot, onFallback }: { placement: st
           <path d={limb} vectorEffect="non-scaling-stroke" />
         </svg>
       </div>
-      <p className="cam-hint">{t('Fit the area inside the outline, in daylight', 'Igazítsd a testrészt a körvonalba, nappali fényben')}</p>
+      <p className={`cam-hint ${advice ? 'warn' : ''}`} role="status">{advice || t('Fit the area inside the outline, in daylight', 'Igazítsd a testrészt a körvonalba, nappali fényben')}</p>
       <button className="iconbtn dark cam-x" aria-label={ui.t('common.close')} onClick={onClose}>
         {Icon.close}
       </button>

@@ -1,7 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { prepareImage } from '@/lib/client';
+import { SEO_AREAS, SEO_STYLES } from '@/lib/seo';
 import { HeroAging } from './visuals';
 import { useLang, tx } from '@/lib/i18n';
 import { lsSet, track } from '@/lib/store';
@@ -12,6 +15,19 @@ export default function Landing() {
   const { lang, setLang } = useLang();
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const [signedIn, setSignedIn] = useState(false);
+  const [made, setMade] = useState(0);
+  const router = useRouter();
+  const fileRef = useRef<HTMLInputElement>(null);
+  // "Try it now": pick the photo right here; the app opens with it already in place
+  const startWithPhoto = async (f: File) => {
+    try {
+      const p = await prepareImage(f, 1024);
+      const prev = JSON.parse(sessionStorage.getItem('ink_draft') || '{}');
+      sessionStorage.setItem('ink_draft', JSON.stringify({ ...prev, photo: p }));
+      track('landing_photo');
+    } catch {}
+    router.push('/app');
+  };
 
   useEffect(() => {
     // referral links: /?ref=<user id>
@@ -22,6 +38,9 @@ export default function Landing() {
     }
     track('landing_view', { ref: !!ref });
     sb()?.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    sb()
+      ?.rpc('trends')
+      .then(({ data }) => setMade(Number((data as any)?.previews_total) || 0));
   }, []);
 
   return (
@@ -71,11 +90,19 @@ export default function Landing() {
               'Tegyél bármilyen mintát a saját testedről készült fotóra. Nézd meg frissen, gyógyultan, 10, 30 és 50 év múlva – a saját bőrödön –, mielőtt végleges lesz.'
             )}
           </p>
-          <Link className="btn" href="/app" onClick={() => track('landing_cta')}>
-            {t('Try it on my photo — free', 'Kipróbálom a fotómon – ingyen')}
-          </Link>
+          <div className="row" style={{ alignItems: 'center' }}>
+            <button className="btn" onClick={() => (track('landing_cta'), fileRef.current?.click())}>
+              {t('Upload my photo — free', 'Feltöltöm a fotómat – ingyen')}
+            </button>
+            <Link className="btn ghost" href="/app" onClick={() => track('landing_cta_app')}>
+              {t('Open the app', 'App megnyitása')}
+            </Link>
+          </div>
+          <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) startWithPhoto(f); e.target.value = ''; }} />
           <p className="fine" style={{ textAlign: 'left' }}>
-            {t('No sign-up for your first preview. Takes about a minute.', 'Az első előnézethez nem kell regisztrálni. Kb. egy perc.')}
+            {made >= 100
+              ? t(`${made.toLocaleString('en')} previews made so far. No sign-up, about a minute.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Regisztráció nélkül, kb. egy perc.`)
+              : t('No sign-up for your first preview. Takes about a minute.', 'Az első előnézethez nem kell regisztrálni. Kb. egy perc.')}
           </p>
         </div>
         <HeroAging />
@@ -123,6 +150,19 @@ export default function Landing() {
             <span style={{ color: 'var(--ink-2)' }}>{a.desc[lang]}</span>
           </p>
         ))}
+      </section>
+
+      <section className="facts">
+        <h2>{t('How styles age, by body area', 'Hogyan öregszenek a stílusok testrészenként?')}</h2>
+        <p style={{ lineHeight: 2 }}>
+          {SEO_STYLES.slice(0, 3).flatMap((st) =>
+            SEO_AREAS.slice(0, 4).map((ar) => (
+              <Link key={st.k + ar.k} href={`/tattoo/${st.k}-${ar.k}${lang === 'hu' ? '?lang=hu' : ''}`} style={{ marginRight: 16, display: 'inline-block' }}>
+                {lang === 'hu' ? `${st.hu} – ${ar.hu}` : `${st.en} on the ${ar.en}`}
+              </Link>
+            ))
+          )}
+        </p>
       </section>
 
       <footer>

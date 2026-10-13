@@ -197,6 +197,12 @@ export const tx = (lang: Lang, en: string, hu: string) => (lang === 'hu' ? hu : 
 
 /** Server messages are English; show them in Hungarian when the app is in Hungarian. */
 const ERR_HU: [RegExp, string][] = [
+  [/^Wait for the 50-year images first/, 'Várd meg, amíg mindkét 50 éves kép elkészül.'],
+  [/^That link can’t be opened/, 'Ezt a linket nem tudjuk megnyitni. Másold ki magát a képet, vagy mentsd el és töltsd fel.'],
+  [/^We couldn’t find a picture on that page/, 'Ezen az oldalon nem találtunk képet. Másold ki magát a képet, vagy mentsd el és töltsd fel.'],
+  [/^That link isn’t a picture/, 'Ez a link nem képre mutat.'],
+  [/^That picture is too large/, 'Ez a kép túl nagy.'],
+  [/^That picture could not be opened/, 'Ezt a képet nem sikerült megnyitni.'],
   [/^You used today’s cut-outs/, 'Mára elfogytak a kivágások és MI-rajzok. Holnap újra használhatod – az előnézeteidet ez nem érinti.'],
   [/^You shared a lot today/, 'Ma már sokat osztottál meg. Próbáld újra holnap.'],
   [/^Sharing failed/, 'A megosztás nem sikerült. Próbáld újra.'],

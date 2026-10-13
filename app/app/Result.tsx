@@ -4,13 +4,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from './AppProvider';
 import { Icon, Sheet } from './ui';
 import { tx } from '@/lib/i18n';
-import { cloud, haptic, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
+import { anonId, cloud, haptic, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
 import { loadImage, shareOrDownload } from '@/lib/client';
-import { api } from '@/lib/sb';
+import { api, sb } from '@/lib/sb';
 import { canRecordVideo, HOOKS, makeVideo, photoSlides, Template } from '@/lib/video';
 import { artistPdf } from '@/lib/brief';
 import { aftercareIcs, CARE } from '@/lib/aftercare';
 import { placeName } from './create/steps';
+import { longevity } from '@/lib/score';
 
 const toBlob = async (src: string) => (await fetch(src)).blob();
 
@@ -75,6 +76,26 @@ async function makeCard(fresh: string, old: string, o: { left: string; right: st
   x.fillText('inkage.vercel.app', W - pad, H - 64);
   return new Promise<Blob>((res) => c.toBlob((bl) => res(bl!), 'image/jpeg', 0.9));
 }
+
+/** One sentence per stage: what changes and why. */
+const WHY: Record<StageKey, [string, string]> = {
+  fresh: ['Fresh: lines are slightly raised and shiny; the redness settles within days.', 'Friss: a vonalak kicsit kiemelkednek és fényesek, a pirosság pár nap alatt elmúlik.'],
+  healed: ['1 year: fully healed — the ink has settled a touch deeper, lines look a little softer.', '1 év: teljesen begyógyult – a tinta kicsit mélyebbre ült, a vonalak picit lágyabbak.'],
+  y10: ['10 years: ink spreads about 0.1 mm; the finest details lose their edge, sun fades colours first.', '10 év: a tinta kb. 0,1 mm-t terül; a legfinomabb részletek élessége csökken, a nap először a színeket fakítja.'],
+  y30: ['30 years: black shifts towards blue-grey and lines closer than ~1 mm start to merge.', '30 év: a fekete kékesszürke felé tolódik, és a kb. 1 mm-nél közelebbi vonalak összeérnek.'],
+  y50: ['50 years: thinner, looser skin carries a softer, wider design — bold lines still read clearly.', '50 év: a vékonyabb, lazább bőrön a minta lágyabb és szélesebb – a vastag vonalak még jól olvashatók.'],
+};
+
+/** The same design scored on a few other body areas. */
+const OTHER_SPOTS: [string, string, string][] = [
+  ['Inner forearm', 'on the forearm', 'alkaron'],
+  ['Upper arm', 'on the upper arm', 'felkaron'],
+  ['Upper back', 'on the back', 'háton'],
+  ['Ribs', 'on the ribs', 'bordán'],
+  ['Ankle', 'on the ankle', 'bokán'],
+  ['Hand', 'on the hand', 'kézfejen'],
+  ['Finger', 'on a finger', 'ujjon'],
+];
 
 export const REDO_REASONS = [
   ['clothes', 'It went onto clothes or the background', 'Ruhára vagy a háttérre került'],
@@ -141,6 +162,28 @@ export function Result({
   const [redoOpen, setRedoOpen] = useState(false);
   const [why, setWhy] = useState<string[]>([]);
   const [cardBusy, setCardBusy] = useState(false);
+  const [pubOpen, setPubOpen] = useState(false);
+  const [pubOk, setPubOk] = useState(false);
+  const [caption, setCaption] = useState('');
+  const [pubBusy, setPubBusy] = useState(false);
+  // share to Explore: only with consent, and only after a person has reviewed it
+  const publish = async () => {
+    if (!img.fresh || !img.y50) return;
+    setPubBusy(true);
+    try {
+      const [fresh, y50] = await Promise.all([smallJpeg(img.fresh), smallJpeg(img.y50)]);
+      const r = await api<{ id?: string; error?: string }>('/api/guest-share', { fresh, y50, placement: preview.placement, score: preview.score });
+      if (!r.ok || !r.data.id) throw new Error(r.data?.error);
+      const { data } = (await sb()?.rpc('submit_post', { p_share: r.data.id, p_caption: caption, p_anon: anonId() })) || {};
+      if (!data) throw new Error('limit');
+      track('community_submit');
+      setPubOpen(false);
+      toast(t('Sent! It appears in Explore after a quick review.', 'Elküldve! Rövid ellenőrzés után megjelenik a Felfedezésben.'));
+    } catch {
+      toast(t('Could not send it. Try again later.', 'Nem sikerült elküldeni. Próbáld újra később.'));
+    }
+    setPubBusy(false);
+  };
   // zoom into the tattoo itself
   const f = preview.focus;
   const zk = f ? Math.min(3.2, Math.max(1.6, 0.5 / Math.max(0.08, f.w))) : 2;
@@ -453,6 +496,9 @@ export function Result({
           {t('Not right? Make it again', 'Nem lett jó? Újracsináljuk')}
         </button>
       )}
+      {view === 'aging' && mode === 'view' && (
+        <p className="why" aria-live="polite">{t(...WHY[active])}</p>
+      )}
       <div className="actgrid">
         <button className="act primary" onClick={() => setVideo(true)} disabled={ready.length < 2}>
           {Icon.video}
@@ -523,6 +569,25 @@ export function Result({
               </li>
             ))}
           </ul>
+          {report.input && preview.mode !== 'existing' && (() => {
+            const here = preview.placement.toLowerCase();
+            const alts = OTHER_SPOTS.filter(([v]) => !here.includes(v.toLowerCase().split(' ').pop()!))
+              .map(([v, en, hu]) => ({ en, hu, score: longevity({ ...report.input!, placement: v }, ui.lang).score }))
+              .sort((a, b) => b.score - a.score)
+              .slice(0, 5);
+            return (
+              <div className="elsewhere">
+                <b>{t('The same design elsewhere', 'Ugyanez a minta máshol')}</b>
+                <div>
+                  {alts.map((a) => (
+                    <span key={a.en} className={a.score > report.score ? 'up' : a.score < report.score ? 'down' : ''}>
+                      {t(a.en, a.hu)} <b>{a.score}</b>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
           {report.suggestions.map((s) => (
             <div className="tipcard" key={s} style={{ marginBottom: 8 }}>
               <b>{t('Suggestion', 'Javaslat')}</b>
@@ -584,6 +649,13 @@ export function Result({
             <span aria-hidden="true">›</span>
           </button>
         )}
+        <button className="list-row" onClick={() => setPubOpen(true)} disabled={!img.y50}>
+          <span>
+            {t('Share it in Explore', 'Megosztás a Felfedezésben')}
+            <small>{t('Let others vote on it — reviewed by a person first', 'Mások is szavazhatnak rá – előtte egy ember átnézi')}</small>
+          </span>
+          <span aria-hidden="true">›</span>
+        </button>
         <button className="list-row" onClick={() => setCare(true)}>
           <span>
             {t('I got it done – healing plan', 'Megcsináltattam – gyógyulási terv')}
@@ -619,6 +691,18 @@ export function Result({
       </div>
       <VideoSheet open={video} onClose={() => setVideo(false)} preview={preview} />
       <CareSheet open={care} onClose={() => setCare(false)} />
+      <Sheet open={pubOpen} onClose={() => setPubOpen(false)} label={t('Share in Explore', 'Megosztás a Felfedezésben')}>
+        <h2>{t('Share in Explore', 'Megosztás a Felfedezésben')}</h2>
+        <p className="sub">{t('Your fresh and 50-year images appear in the community feed, where anyone can vote. No name or account is shown.', 'A friss és az 50 éves képed megjelenik a közösségi falon, ahol bárki szavazhat rá. Nevet vagy fiókot nem mutatunk.')}</p>
+        <input className="text" id="post-caption" maxLength={120} placeholder={t('Caption (optional), e.g. my first tattoo idea', 'Felirat (nem kötelező), pl. az első tetoválás-ötletem')} value={caption} onChange={(e) => setCaption(e.target.value)} />
+        <label className="consent">
+          <input type="checkbox" checked={pubOk} onChange={(e) => setPubOk(e.target.checked)} />
+          <span>{t('The photo is of me, I’m over 18, no face or private details are visible, and I have the right to the design.', 'A fotón én vagyok, elmúltam 18, nem látszik arc vagy személyes adat, és jogom van a mintához.')}</span>
+        </label>
+        <button className="btn wide" disabled={!pubOk || pubBusy} onClick={publish}>
+          {pubBusy ? '…' : t('Send for review', 'Küldés ellenőrzésre')}
+        </button>
+      </Sheet>
       {onRedo && (
         <Sheet open={redoOpen} onClose={() => setRedoOpen(false)} label={t('Not right?', 'Nem lett jó?')}>
           <h2>{t('What went wrong?', 'Mi nem jó?')}</h2>

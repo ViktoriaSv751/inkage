@@ -143,4 +143,7 @@ export const ARTICLES: Article[] = [
   },
 ];
 
+import { MORE_ARTICLES } from './articles2';
+ARTICLES.push(...MORE_ARTICLES);
+
 export const article = (slug: string) => ARTICLES.find((a) => a.slug === slug) || null;

@@ -136,20 +136,22 @@ export async function POST(req: Request) {
       analysis = an;
     }
 
+    // the age the user told us beats a guess from a photo of an arm
+    const AGE: Record<string, number> = { '18-24': 21, '25-34': 30, '35-44': 40, '45-54': 50, '55+': 60 };
+    if (AGE[body.ageHint]) analysis = { ...analysis, apparentAge: AGE[body.ageHint] };
     const lang = body.lang === 'hu' ? 'hu' : 'en';
     const sun = ['low', 'medium', 'high'].includes(body.sun) ? body.sun : analysis.sunExposure;
-    const report = longevity(
-      {
-        style: analysis.tattooStyle,
-        hasColor: existing ? analysis.hasColor : colorMode === 'color' && analysis.hasColor,
-        sun,
-        placement: `${placement} ${analysis.bodyArea}`,
-        sizeCm: Number.isFinite(Number(body.sizeCm)) && Number(body.sizeCm) > 0 ? Number(body.sizeCm) : null,
-        detail: Number.isFinite(Number(body.detail)) ? Math.min(1, Math.max(0, Number(body.detail))) : null,
-        age: analysis.apparentAge,
-      },
-      lang
-    );
+    const input = {
+      style: analysis.tattooStyle,
+      hasColor: existing ? analysis.hasColor : colorMode === 'color' && analysis.hasColor,
+      sun,
+      placement: `${placement} ${analysis.bodyArea}`,
+      sizeCm: Number.isFinite(Number(body.sizeCm)) && Number(body.sizeCm) > 0 ? Number(body.sizeCm) : null,
+      detail: Number.isFinite(Number(body.detail)) ? Math.min(1, Math.max(0, Number(body.detail))) : null,
+      age: analysis.apparentAge,
+    };
+    // the inputs travel with the report, so the app can show the same design's score on other body areas
+    const report = { ...longevity(input, lang), input };
     const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, y: 0, exp: Date.now() + 3 * 3600e3 });
     const out = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining, plan };
     // keep it for a while, in case the app was closed while we were working
