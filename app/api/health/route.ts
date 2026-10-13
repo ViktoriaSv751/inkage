@@ -2,6 +2,7 @@ import { appSecret, json, userClient } from '@/lib/server';
 import { imageModels, textModels } from '@/lib/ai';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 export const maxDuration = 60;
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta/models';

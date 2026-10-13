@@ -1,6 +1,7 @@
 import { userClient } from '@/lib/server';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 /** Images of a guest's vote link. */
 export async function GET(_req: Request, { params }: { params: { id: string; k: string } }) {

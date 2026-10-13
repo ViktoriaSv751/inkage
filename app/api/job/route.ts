@@ -3,6 +3,7 @@ import { guestFrom } from '@/lib/guest';
 import { jobGet } from '@/lib/jobs';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 /** Pick up the results of a preview that was running when the app was closed. */
 export async function GET(req: Request) {

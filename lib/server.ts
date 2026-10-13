@@ -23,11 +23,14 @@ export function serverConfig() {
   };
 }
 
+// Next.js keeps fetch() results in its data cache unless told not to; database calls must always be live.
+const liveFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: 'no-store' });
+
 /** A Supabase client acting as the signed-in user (RLS + SECURITY DEFINER functions do the rest). */
 export function userClient(token?: string): SupabaseClient {
   return createClient(URL_()!, ANON()!, {
     auth: { persistSession: false, autoRefreshToken: false },
-    global: token ? { headers: { Authorization: `Bearer ${token}` } } : undefined,
+    global: { fetch: liveFetch, ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}) },
   });
 }
 
