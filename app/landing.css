@@ -42,7 +42,6 @@
 @media (min-width: 900px) {
   .ls-bento { grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(250px, auto); }
   .ls-tile.score { grid-row: span 2; }
-  .ls-tile.redraw { grid-column: span 2; }
 }
 .ls-tile { position: relative; border-radius: 28px; overflow: hidden; background: #16141f; padding: 26px; display: grid; align-content: end; min-height: 250px; }
 .ls-tile h3 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.02em; }
@@ -59,7 +58,7 @@
 .ls-tile.score li.up { box-shadow: inset 3px 0 0 #3ccf8e; }
 .ls-tile.score li.down { box-shadow: inset 3px 0 0 #ff6b6b; }
 .ls-redraw { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
-.ls-redraw img { width: 120px; height: 150px; object-fit: cover; border-radius: 18px; }
+.ls-redraw img { width: 42%; height: 150px; object-fit: cover; border-radius: 18px; }
 .ls-redraw span { font-size: 28px; color: #b9a8ff; }
 .ls-tile.redraw { align-content: center; background: linear-gradient(135deg, #1b1830, #16141f); }
 
