@@ -12,7 +12,7 @@
   background: var(--kb-bg);
   color: var(--kb-text);
   min-height: 100vh;
-  padding-bottom: 120px;
+  padding-bottom: 0;
 }
 
 /* top bar (shared) */

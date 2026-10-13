@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { prepareImage } from '@/lib/client';
 import { LandingSections } from './LandingSections';
+import { SiteFooter } from './SiteFooter';
 import './landing.css';
 import { HeroAging } from './visuals';
 import { useLang, tx } from '@/lib/i18n';
@@ -44,6 +45,7 @@ export default function Landing() {
   }, []);
 
   return (
+    <>
     <main>
       <header className="top">
         <Link className="logo" href="/" aria-label="InkAge home">
@@ -110,5 +112,7 @@ export default function Landing() {
 
       <LandingSections lang={lang} made={made} onUpload={() => (track('landing_cta_bottom'), fileRef.current?.click())} />
     </main>
+    <SiteFooter lang={lang} hideLang />
+    </>
   );
 }

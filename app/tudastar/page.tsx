@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { IMG, KB_HERO, kbList } from '@/lib/kb';
+import { IMG, KB_HERO } from '@/lib/kb';
+import { kbList } from '@/lib/kb-server';
 import { KbList } from './KbList';
 import { KbChrome } from './KbChrome';
+import { SiteFooter } from '../SiteFooter';
 import './kb.css';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Tudástár – InkAge',
   description: 'Őszinte, gyakorlati cikkek arról, hogyan öregszik a tetoválás: méret, stílus, hely, nap, utókezelés és eltávolítás.',
@@ -38,6 +41,8 @@ export default function Tudastar({ searchParams }: { searchParams: { lang?: stri
           {T('Open the guides', 'Megnyitom')} <span aria-hidden="true">→</span>
         </Link>
       </section>
+      <div style={{ height: 80 }} />
+      <SiteFooter lang={lang} />
     </div>
   );
 }

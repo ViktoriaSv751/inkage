@@ -1,5 +1,5 @@
 // Knowledge base extras: pictures, categories, dates and short FAQs for every guide.
-import { Article, ARTICLES } from './articles';
+
 
 export const IMG = (f: string, w = 1200) => `/api/lib-img?f=${f}.png&w=${w}`;
 
@@ -10,6 +10,8 @@ type L2 = { en: string; hu: string };
 export type KbMeta = {
   img: string;
   img2: string;
+  img3: string;
+  img4: string;
   cap2: L2;
   date: string; // ISO
   faq: { q: L2; a: L2 }[];
@@ -19,6 +21,8 @@ export const KB: Record<string, KbMeta> = {
   'how-tattoos-age': {
     img: 'hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b',
     img2: 'hf_20261013_090713_9a5ab662-392f-41d6-9e0b-52da1e87bfe3',
+    img3: 'hf_20261013_094459_2d3efbdc-5e36-4b8d-9785-c55d3898371c',
+    img4: 'hf_20261013_094404_d807408e-be3b-430e-bf2b-73bd75bd0580',
     cap2: { en: 'Ink in skin behaves a little like ink in water: very slowly, it spreads outwards.', hu: 'A tinta a bőrben kicsit úgy viselkedik, mint a vízben: nagyon lassan, de kifelé terül.' },
     date: '2026-10-12',
     faq: [
@@ -29,6 +33,8 @@ export const KB: Record<string, KbMeta> = {
   'fine-line-tattoos-aging': {
     img: 'hf_20261013_090635_ce1ed5c5-ee91-427e-8b5d-df3745b24bcd',
     img2: 'hf_20261013_090712_871c7ded-ebc4-4b71-9793-726037d5c35e',
+    img3: 'hf_20261013_094347_cbf133c7-fa89-427a-8175-4598726b0beb',
+    img4: 'hf_20261013_094347_b4d10f82-b3dc-4539-829a-2008bcd0e319',
     cap2: { en: 'Up close, the thinnest lines are the first to spread and lose their edge.', hu: 'Közelről nézve a legvékonyabb vonalak terülnek szét és veszítik el először az élüket.' },
     date: '2026-10-12',
     faq: [
@@ -39,6 +45,8 @@ export const KB: Record<string, KbMeta> = {
   'best-placement-for-tattoo-longevity': {
     img: 'hf_20261013_090636_a47c7837-fee2-4f58-a10b-ebfde043d99f',
     img2: 'hf_20261013_090712_b883017e-63c7-4890-9ffa-f39fc8b2eb96',
+    img3: 'hf_20261013_094338_f9fb305b-0949-4414-ac0a-856b33f1899d',
+    img4: 'hf_20261013_094337_45af2df1-c3bb-44ef-b714-79b69b796e48',
     cap2: { en: 'Ankles, feet and hands rub against shoes and everything we touch, so they fade faster.', hu: 'A boka, a lábfej és a kéz folyamatosan súrlódik, ezért gyorsabban fakul.' },
     date: '2026-10-12',
     faq: [
@@ -48,7 +56,9 @@ export const KB: Record<string, KbMeta> = {
   },
   'tattoo-aftercare-sun-protection': {
     img: 'hf_20261013_090704_eeabc335-2a0b-4d50-9b73-5f2f90bc233d',
-    img2: 'hf_20261013_090723_d4ecb887-821e-4591-9a40-84e016274e42',
+    img2: 'hf_20261013_094417_293532cd-cf72-41b9-87bb-12b4b7739211',
+    img3: 'hf_20261013_094416_60604336-078c-4a71-9ff9-d2a09d610517',
+    img4: 'hf_20261013_094429_81d130d0-2b13-4f9e-8d15-d533be516cf7',
     cap2: { en: 'In the first weeks: clean hands, a thin layer of unscented balm, and patience.', hu: 'Az első hetekben: tiszta kéz, vékony réteg illatmentes krém és türelem.' },
     date: '2026-10-12',
     faq: [
@@ -59,6 +69,8 @@ export const KB: Record<string, KbMeta> = {
   'tattoo-size-guide': {
     img: 'hf_20261013_090636_566332b2-a899-482d-ae43-584585735377',
     img2: 'hf_20261013_090724_86d5fdc4-909f-468d-af52-bf30295690da',
+    img3: 'hf_20261013_094428_03d5223f-83ed-4279-a522-78515046a4c0',
+    img4: 'hf_20261013_094430_b9ac0b46-6b1d-4d32-ae38-94a42cf28259',
     cap2: { en: 'The simplest test: print the design at the planned size and hold it against your skin.', hu: 'A legegyszerűbb próba: nyomtasd ki a mintát a tervezett méretben, és tartsd a bőrödhöz.' },
     date: '2026-10-12',
     faq: [
@@ -69,6 +81,8 @@ export const KB: Record<string, KbMeta> = {
   'color-vs-black-ink-aging': {
     img: 'hf_20261013_090703_f05fc30c-6d56-4d3f-a376-74e5404ad251',
     img2: 'hf_20261013_090723_d1299f18-7d91-4885-ac28-155944281cc1',
+    img3: 'hf_20261013_094338_aab2d4a5-69f1-4315-a61f-527f7e91297f',
+    img4: 'hf_20261013_094338_b817e2c6-5f01-4b84-b64f-1645f4839ba4',
     cap2: { en: 'Not all pigments are equal: black carbon is the most stable, light colours fade first.', hu: 'Nem minden pigment egyforma: a fekete szén a legstabilabb, a világos színek fakulnak először.' },
     date: '2026-10-13',
     faq: [
@@ -78,7 +92,9 @@ export const KB: Record<string, KbMeta> = {
   },
   'laser-tattoo-removal-what-to-expect': {
     img: 'hf_20261013_090703_c11b8646-bc41-40e2-8425-0d2022f8f107',
-    img2: 'hf_20261013_090723_c91c49fb-f918-4ca5-a1d9-383c4f6a6a31',
+    img2: 'hf_20261013_094405_e4565f7f-7e3b-459b-a9b4-b763da2af205',
+    img3: 'hf_20261013_094416_db31d0f2-88ed-4311-aef7-3745cabd5626',
+    img4: 'hf_20261013_094417_e49926a7-7645-464b-b21e-225756521eea',
     cap2: { en: 'After many sessions, a faint ghost can remain — even when the treatment went well.', hu: 'Sok kezelés után is maradhat halvány „szellemkép” – akkor is, ha jól sikerült a kezelés.' },
     date: '2026-10-13',
     faq: [
@@ -88,7 +104,9 @@ export const KB: Record<string, KbMeta> = {
   },
   'tattoo-touch-ups': {
     img: 'hf_20261013_090638_8438c93a-f72e-4822-851a-8c936d538134',
-    img2: 'hf_20261013_090733_67f4dda5-8559-4a36-b585-b7a7eae7e1d3',
+    img2: 'hf_20261013_094429_0b13446a-4b51-47ed-a11e-331f8a9aa543',
+    img3: 'hf_20261013_094451_9d67214a-4627-469e-bca0-56a58bbf88ff',
+    img4: 'hf_20261013_090733_67f4dda5-8559-4a36-b585-b7a7eae7e1d3',
     cap2: { en: 'Decades later, a bold design is still readable — and easy to refresh.', hu: 'Évtizedek múlva is olvasható egy erős vonalú minta – és könnyű felfrissíteni.' },
     date: '2026-10-13',
     faq: [
@@ -98,7 +116,9 @@ export const KB: Record<string, KbMeta> = {
   },
   'tattoos-on-darker-skin': {
     img: 'hf_20261013_090637_f4bdcc6e-6eb7-44b9-8c5f-657cc575a14d',
-    img2: 'hf_20261013_090732_a9e63521-c50b-4835-84ed-07bbeac9055f',
+    img2: 'hf_20261013_094450_7e3c8a2e-459b-4086-8dac-23d3cbe2de71',
+    img3: 'hf_20261013_094449_696ccba4-eafa-4d2c-9362-c39c63e5be19',
+    img4: 'hf_20261013_090732_a9e63521-c50b-4835-84ed-07bbeac9055f',
     cap2: { en: 'Saturated, deep colours and a strong outline read beautifully on deeper skin tones.', hu: 'A telített, mély színek és az erős kontúr gyönyörűen mutatnak mélyebb bőrtónuson.' },
     date: '2026-10-13',
     faq: [
@@ -109,6 +129,8 @@ export const KB: Record<string, KbMeta> = {
   'hand-and-finger-tattoos': {
     img: 'hf_20261013_090703_0cf2fd7f-1aab-4284-96c9-b28845a40b76',
     img2: 'hf_20261013_090733_39de14d3-21a6-4060-9349-a76241ac84dc',
+    img3: 'hf_20261013_094406_f23485d1-fdae-4625-8640-3304800a1abc',
+    img4: 'hf_20261013_094405_aaa47d0b-2f50-4c92-80e3-8c69ee63a852',
     cap2: { en: 'Washing, soap and constant use: hands live a hard life, and so does their ink.', hu: 'Mosás, szappan, állandó használat: a kéz nehéz életet él, és vele a tinta is.' },
     date: '2026-10-13',
     faq: [
@@ -119,6 +141,8 @@ export const KB: Record<string, KbMeta> = {
   'first-tattoo-checklist': {
     img: 'hf_20261013_090637_ca312303-c618-4a41-946b-8b783b5b3cee',
     img2: 'hf_20261013_090733_3fb1cd75-99db-4354-acec-84b322421f1c',
+    img3: 'hf_20261013_094347_56983c62-140d-4c10-b37e-2bf0682c4a1b',
+    img4: 'hf_20261013_094348_fa04678b-2125-4f55-9708-311bbe98a9e9',
     cap2: { en: 'A good studio is spotless: sealed single-use needles, gloves and covered surfaces.', hu: 'Egy jó szalon makulátlan: lezárt, egyszer használatos tűk, kesztyű és letakart felületek.' },
     date: '2026-10-13',
     faq: [
@@ -129,6 +153,8 @@ export const KB: Record<string, KbMeta> = {
   'tattoos-weight-change-pregnancy': {
     img: 'hf_20261013_090712_192db2fe-a457-4c2b-bd78-b1f219184113',
     img2: 'hf_20261013_090743_9f4aea4e-9b36-4bb4-b549-81411b3becc3',
+    img3: 'hf_20261013_094450_57f78b06-1651-4d3f-b148-8d893df25853',
+    img4: 'hf_20261013_094458_a5efb8d8-885a-4de3-8648-858e3eba2e01',
     cap2: { en: 'Calves, forearms and the upper back change least when the body changes.', hu: 'A vádli, az alkar és a hát felső része változik a legkevésbé, amikor a test változik.' },
     date: '2026-10-13',
     faq: [
@@ -139,33 +165,6 @@ export const KB: Record<string, KbMeta> = {
 };
 
 export const kbMeta = (slug: string) => KB[slug];
-
-/** Reading time in minutes (≈200 words per minute, at least 2). */
-export function readMin(a: Article, lang: 'en' | 'hu') {
-  const words = a.body[lang].join(' ').split(/\s+/).length + (KB[a.slug]?.faq.length || 0) * 40;
-  return Math.max(2, Math.round(words / 200));
-}
-
-export type KbItem = {
-  slug: string;
-  cat: string;
-  title: string;
-  desc: string;
-  img: string;
-  date: string;
-  min: number;
-};
-export function kbList(lang: 'en' | 'hu'): KbItem[] {
-  return ARTICLES.map((a) => ({
-    slug: a.slug,
-    cat: a.tag[lang],
-    title: a.title[lang],
-    desc: a.desc[lang],
-    img: IMG(KB[a.slug]?.img || KB_STILL, 1200),
-    date: KB[a.slug]?.date || '2026-10-12',
-    min: readMin(a, lang),
-  }));
-}
 
 export const fmtDate = (iso: string, lang: 'en' | 'hu') =>
   new Date(iso + 'T12:00:00Z').toLocaleDateString(lang === 'hu' ? 'hu-HU' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' });

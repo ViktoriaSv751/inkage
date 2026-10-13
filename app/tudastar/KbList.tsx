@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import type { KbItem } from '@/lib/kb';
+import type { KbItem } from '@/lib/kb-server';
 import { track } from '@/lib/store';
 
 export function KbList({ items, lang }: { items: KbItem[]; lang: 'en' | 'hu' }) {

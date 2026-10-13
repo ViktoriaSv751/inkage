@@ -7,6 +7,8 @@ import { IMG, KB } from '@/lib/kb';
 import { SEO_AREAS, SEO_STYLES, seoPage } from '@/lib/seo';
 import { track } from '@/lib/store';
 import { EXAMPLE } from './visuals';
+import { AgingTimeline, BetaInstall, CompareSlider, CompareTable, LandingFaq, Precision, PrivacyBlock, TrustStrip, UseCases } from './LandingMore';
+import './landing2.css';
 
 const P = {
   phone: 'hf_20261013_090754_b336f404-4c34-4ef7-b5ba-a080d341d5db',
@@ -82,6 +84,8 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
 
   return (
     <>
+      <TrustStrip t={t} />
+      <CompareSlider t={t} />
       {/* ---------------------------------------------------------------- how it works */}
       <section className="ls-sec">
         <div className="ls-head">
@@ -99,6 +103,8 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
           ))}
         </ol>
       </section>
+
+      <UseCases t={t} />
 
       {/* ---------------------------------------------------------------- everything for the decision */}
       <section className="ls-dark">
@@ -153,6 +159,9 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
           </div>
         </div>
       </section>
+
+      <AgingTimeline t={t} />
+      <Precision t={t} />
 
       {/* ---------------------------------------------------------------- know before you ink */}
       <section className="ls-sec">
@@ -217,6 +226,11 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
         </div>
       </section>
 
+      <CompareTable t={t} />
+      <PrivacyBlock t={t} />
+      <BetaInstall t={t} />
+      <LandingFaq t={t} kbSfx={kbSfx} />
+
       {/* ---------------------------------------------------------------- final call */}
       <section className="ls-final">
         <img src={IMG(P.studio, 1800)} alt="" loading="lazy" />
@@ -238,27 +252,6 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
         </div>
       </section>
 
-      <footer className="ls-foot">
-        <div>
-          <b>InkAge</b>
-          <span>{t('AI simulations for inspiration, not a guarantee.', 'MI-szimulációk inspirációnak, nem garancia.')}</span>
-        </div>
-        <div>
-          <b>{t('Product', 'Termék')}</b>
-          <Link href="/app">{t('Open the app', 'App megnyitása')}</Link>
-          <Link href="/app/explore">{t('Explore', 'Felfedezés')}</Link>
-        </div>
-        <div>
-          <b>{t('Knowledge', 'Tudás')}</b>
-          <Link href={`/tudastar${kbSfx}`}>{t('Knowledge base', 'Tudástár')}</Link>
-          <Link href={`/tattoo/fine-line-forearm${seoSfx}`}>{t('Styles by body area', 'Stílusok testrészenként')}</Link>
-        </div>
-        <div>
-          <b>{t('Legal', 'Jog')}</b>
-          <Link href="/terms">{t('Terms', 'Feltételek')}</Link>
-          <Link href="/privacy">{t('Privacy', 'Adatvédelem')}</Link>
-        </div>
-      </footer>
     </>
   );
 }

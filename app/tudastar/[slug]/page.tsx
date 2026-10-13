@@ -1,22 +1,32 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { article, ARTICLES } from '@/lib/articles';
-import { fmtDate, IMG, KB, KB_STILL, readMin } from '@/lib/kb';
+import '@fontsource/newsreader/400.css';
+import '@fontsource/newsreader/400-italic.css';
+import '@fontsource/newsreader/600.css';
+import { LONG, longArticle, words } from '@/lib/longform';
+import { fmtDate, IMG, KB, KB_STILL } from '@/lib/kb';
+import { readMin } from '@/lib/kb-server';
 import { KbChrome } from '../KbChrome';
 import { Helpful, ShareBtn } from '../ArticleBits';
+import { SiteFooter } from '../../SiteFooter';
+import { Blocks, rich, type Fig } from './Blocks';
+import { ReadProgress, TocNav } from './Reader';
 import '../kb.css';
+import './article.css';
+
+export const dynamic = 'force-dynamic';
 
 export function generateMetadata({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }): Metadata {
-  const a = article(params.slug);
+  const a = longArticle(params.slug);
   if (!a) return {};
   const L = searchParams.lang === 'en' ? 'en' : 'hu';
   const img = KB[a.slug]?.img;
   return {
-    title: `${a.title[L]} – InkAge`,
+    title: `${a.title[L]} – InkAge Tudástár`,
     description: a.desc[L],
-    alternates: { canonical: `/tudastar/${a.slug}` },
-    openGraph: { title: a.title[L], description: a.desc[L], images: img ? [{ url: IMG(img, 1200) }] : undefined },
+    alternates: { canonical: `/tudastar/${a.slug}`, languages: { hu: `/tudastar/${a.slug}`, en: `/tudastar/${a.slug}?lang=en` } },
+    openGraph: { type: 'article', title: a.title[L], description: a.desc[L], images: img ? [{ url: IMG(img, 1200) }] : undefined },
   };
 }
 
@@ -28,20 +38,16 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
-/** **bold** inside a paragraph */
-function rich(p: string) {
-  return p.split(/(\*\*[^*]+\*\*)/g).map((x, i) => (x.startsWith('**') ? <b key={i}>{x.slice(2, -2)}</b> : x));
-}
-
 export default function ArticlePage({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }) {
-  const a = article(params.slug);
+  const a = longArticle(params.slug);
   if (!a) notFound();
   const L = searchParams.lang === 'en' ? 'en' : 'hu';
   const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
   const sfx = L === 'en' ? '?lang=en' : '';
   const meta = KB[a.slug];
+  const mins = readMin(a, L);
+  const n = words(a, L);
 
-  // intro = paragraphs before the first heading; then sections
   const body = a.body[L];
   const first = body.findIndex((p) => p.startsWith('## '));
   const intro = first === -1 ? body : body.slice(0, first);
@@ -50,39 +56,84 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
     if (p.startsWith('## ')) sections.push({ h: p.slice(3), id: slugify(p.slice(3)), ps: [] });
     else sections[sections.length - 1]?.ps.push(p);
   }
-  // if there is no intro paragraph, the first section's opening becomes the intro
-  const lead = intro.length ? intro : sections[0]?.ps.slice(0, 1) || [];
-  if (!intro.length && sections[0]) sections[0].ps = sections[0].ps.slice(1);
-  const toc = [...sections.map((s) => ({ h: s.h, id: s.id })), ...(meta?.faq.length ? [{ h: T('Frequently asked questions', 'Gyakori kérdések'), id: 'gyik' }] : [])];
-  const imageAfter = Math.min(1, sections.length - 1);
-  const related = ARTICLES.filter((x) => x.slug !== a.slug && x.tag.en === a.tag.en)
-    .concat(ARTICLES.filter((x) => x.slug !== a.slug && x.tag.en !== a.tag.en))
+  const faqId = T('faq', 'gyik');
+  const toc = [...sections.map((s) => ({ h: s.h, id: s.id })), { h: T('Frequently asked questions', 'Gyakori kérdések'), id: faqId }];
+  const figs: Record<string, Fig> = meta
+    ? {
+        img2: { src: IMG(meta.img2, 1400), cap: a.captions.img2[L] },
+        img3: { src: IMG(meta.img3, 1400), cap: a.captions.img3[L] },
+        img4: { src: IMG(meta.img4, 1400), cap: a.captions.img4[L] },
+      }
+    : {};
+  const idx = LONG.findIndex((x) => x.slug === a.slug);
+  const next = LONG[(idx + 1) % LONG.length];
+  const related = LONG.filter((x) => x.slug !== a.slug && x.slug !== next.slug && x.tag.en === a.tag.en)
+    .concat(LONG.filter((x) => x.slug !== a.slug && x.slug !== next.slug && x.tag.en !== a.tag.en))
     .slice(0, 3);
+  const tip = T('Tip', 'Tipp');
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Article', headline: a.title[L], description: a.desc[L], inLanguage: L, wordCount: n, datePublished: meta?.date, dateModified: meta?.date, image: meta ? [`https://inkage.vercel.app${IMG(meta.img, 1200)}`] : undefined, author: { '@type': 'Organization', name: 'InkAge' }, publisher: { '@type': 'Organization', name: 'InkAge' } },
+      { '@type': 'FAQPage', mainEntity: a.faq.map((f) => ({ '@type': 'Question', name: f.q[L], acceptedAnswer: { '@type': 'Answer', text: f.a[L] } })) },
+    ],
+  };
 
   return (
-    <div className="ka-page">
-      <KbChrome lang={L} back={`/tudastar${sfx}`} crumb={a.tag[L]} light path={`/tudastar/${a.slug}`} />
-      <main className="ka-main" lang={L}>
-        <figure className="ka-hero">
-          <img src={IMG(meta?.img || KB_STILL, 1600)} alt="" />
-        </figure>
-        <header className="ka-card ka-head">
-          <p className="ka-bc">
-            <Link href={`/tudastar${sfx}`}>{T('Knowledge base', 'Tudástár')}</Link> › {a.tag[L]}
-          </p>
-          <p className="ka-eyebrow">{a.tag[L]}</p>
-          <h1>{a.title[L]}</h1>
-          <div className="ka-metarow">
-            <span>
-              {readMin(a, L)} {T('min read', 'perc olvasás')} • {T('Updated', 'Frissítve')}: {fmtDate(meta?.date || '2026-10-12', L)}
-            </span>
-            <ShareBtn title={a.title[L]} lang={L} />
-          </div>
-        </header>
+    <div className="ka-page ka2">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <KbChrome lang={L} back={null} light path={`/tudastar/${a.slug}`} />
+      <ReadProgress />
 
-        {toc.length > 1 && (
-          <nav className="ka-card ka-toc" aria-label={T('In this article', 'Ebben a cikkben')}>
-            <p className="ka-toc-h">{T('In this article', 'Ebben a cikkben')}</p>
+      <header className="ka-cover">
+        <img src={IMG(meta?.img || KB_STILL, 1800)} alt="" fetchPriority="high" />
+        <div className="ka-cover-in">
+          <nav className="ka-bc2" aria-label={T('Breadcrumb', 'Morzsamenü')}>
+            <Link href={`/tudastar${sfx}`}>{T('Knowledge base', 'Tudástár')}</Link>
+            <span aria-hidden="true">/</span>
+            <span>{a.tag[L]}</span>
+          </nav>
+          <h1>{a.title[L]}</h1>
+          <p className="ka-dek">{a.desc[L]}</p>
+          <div className="ka-meta2">
+            <span className="ka-by">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="30" />
+                <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+              </svg>
+              {T('InkAge editorial team', 'InkAge szerkesztőség')}
+            </span>
+            <span>{fmtDate(meta?.date || '2026-10-12', L)}</span>
+            <span>
+              {mins} {T('min read', 'perc olvasás')}
+            </span>
+            <span>
+              {n.toLocaleString(L === 'hu' ? 'hu-HU' : 'en-GB')} {T('words', 'szó')}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <div className="ka-layout">
+        <aside className="ka-left">
+          <TocNav items={toc} title={T('In this article', 'Ebben a cikkben')} minutes={mins} minLabel={T('min left', 'perc van hátra')} />
+        </aside>
+
+        <article className="ka-article" lang={L}>
+          <section className="ka-sum" aria-label={T('In short', 'Röviden')}>
+            <p className="ka-sum-h">{T('In short', 'Röviden')}</p>
+            <ul>
+              {a.summary[L].map((s, i) => (
+                <li key={i}>{rich(s)}</li>
+              ))}
+            </ul>
+          </section>
+
+          <details className="ka-toc-m">
+            <summary>
+              {T('In this article', 'Ebben a cikkben')} <small>{toc.length}</small>
+            </summary>
             <ol>
               {toc.map((x) => (
                 <li key={x.id}>
@@ -90,92 +141,111 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
                 </li>
               ))}
             </ol>
-          </nav>
-        )}
+          </details>
 
-        {lead.length > 0 && (
-          <div className="ka-card ka-intro">
-            {lead.map((p, i) => (
+          <div className="ka-lead">
+            {intro.map((p, i) => (
               <p key={i} className={i === 0 ? 'drop' : ''}>
                 {rich(p)}
               </p>
             ))}
           </div>
-        )}
 
-        {sections.map((s, i) => (
-          <section key={s.id} id={s.id} className="ka-sec">
-            <h2>{s.h}</h2>
-            {s.ps.map((p, j) => (
-              <p key={j}>{rich(p)}</p>
-            ))}
-            {i === imageAfter && meta && (
-              <figure className="ka-fig">
-                <img src={IMG(meta.img2, 1400)} alt="" loading="lazy" />
-                <figcaption>{meta.cap2[L]}</figcaption>
-              </figure>
-            )}
-          </section>
-        ))}
+          {sections.map((s, i) => (
+            <section key={s.id} id={s.id} className="ka-s">
+              <h2>
+                <span className="ka-s-n" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                {s.h}
+              </h2>
+              <Blocks ps={s.ps} figs={figs} tip={tip} />
+              {i === Math.floor(sections.length / 2) && (
+                <aside className="ka-inline-cta">
+                  <div>
+                    <b>{T('Wondering how yours would age?', 'Kíváncsi vagy, a tiéd hogyan öregedne?')}</b>
+                    <p>{T('Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.')}</p>
+                  </div>
+                  <Link href="/app">{T('Try it free', 'Kipróbálom ingyen')}</Link>
+                </aside>
+              )}
+            </section>
+          ))}
 
-        <aside className="ka-cta">
-          <div>
-            <h2>{T('See it on your own skin', 'Nézd meg a saját bőrödön')}</h2>
-            <p>{T('Put any design on a photo of your body and see it fresh, then at 10, 30 and 50 years. Free, about a minute.', 'Tegyél bármilyen mintát a saját fotódra, és nézd meg frissen, majd 10, 30 és 50 év múlva. Ingyenes, kb. egy perc.')}</p>
-            <Link className="ka-cta-btn" href="/app">
-              {T('Try it on my photo', 'Kipróbálom a fotómon')}
-            </Link>
-          </div>
-          <img src={IMG('hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b', 800)} alt="" loading="lazy" />
-        </aside>
-
-        {meta?.faq.length ? (
-          <section id="gyik" className="ka-sec">
+          <section id={faqId} className="ka-s ka-faq2">
             <h2>{T('Frequently asked questions', 'Gyakori kérdések')}</h2>
-            <div className="ka-faq">
-              {meta.faq.map((f) => (
-                <details key={f.q.en}>
-                  <summary>{f.q[L]}</summary>
-                  <p>{f.a[L]}</p>
-                </details>
-              ))}
+            {a.faq.map((f, i) => (
+              <details key={i} open={i === 0}>
+                <summary>{f.q[L]}</summary>
+                <p>{f.a[L]}</p>
+              </details>
+            ))}
+          </section>
+
+          <section className="ka-editorial">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="30" />
+              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+            </svg>
+            <div>
+              <b>{T('About this article', 'A cikkről')}</b>
+              <p>
+                {T(
+                  'Written by the InkAge editorial team from widely accepted tattoo-care practice. Figures are rules of thumb, not measurements. This is general information, not medical advice — ask your artist or a dermatologist about your own skin.',
+                  'Az InkAge szerkesztősége írta, széles körben elfogadott tetoválási gyakorlat alapján. A számok ökölszabályok, nem mérések. Általános tájékoztatás, nem orvosi tanács – a saját bőrödről kérdezd a tetoválódat vagy egy bőrgyógyászt.'
+                )}
+              </p>
+              <p className="ka-upd">
+                {T('Last updated', 'Utoljára frissítve')}: {fmtDate(meta?.date || '2026-10-12', L)}
+              </p>
             </div>
           </section>
-        ) : null}
 
-        <section className="ka-related">
-          <h2>{T('Read next', 'Olvasd el ezeket is')}</h2>
-          <div className="ka-rel-grid">
-            {related.map((r) => (
-              <Link key={r.slug} href={`/tudastar/${r.slug}${sfx}`} className="ka-rel">
-                <img src={IMG(KB[r.slug]?.img || KB_STILL, 600)} alt="" loading="lazy" />
-                <span className="ka-rel-cat">{r.tag[L]}</span>
-                <b>{r.title[L]}</b>
-              </Link>
-            ))}
+          <div className="ka-actions">
+            <Helpful slug={a.slug} lang={L} />
+            <ShareBtn title={a.title[L]} lang={L} />
           </div>
-        </section>
+        </article>
 
-        <Helpful slug={a.slug} lang={L} />
-        <p className="ka-disc">{T('General information, not medical advice. Ask your artist or a dermatologist about your own skin.', 'Általános tájékoztatás, nem orvosi tanács. A saját bőrödről kérdezd a tetoválódat vagy egy bőrgyógyászt.')}</p>
-      </main>
-      <footer className="ka-foot">
-        <div>
-          <b>{T('Product', 'Termék')}</b>
-          <Link href="/app">{T('Open the app', 'App megnyitása')}</Link>
-          <Link href="/app/explore">{T('Explore', 'Felfedezés')}</Link>
+        <aside className="ka-right">
+          <div className="ka-rail">
+            <img src={IMG('hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b', 600)} alt="" loading="lazy" />
+            <div>
+              <b>{T('See it on your skin', 'Nézd meg a bőrödön')}</b>
+              <p>{T('Fresh, then at 10, 30 and 50 years. Free, about a minute.', 'Frissen, majd 10, 30 és 50 év múlva. Ingyenes, kb. egy perc.')}</p>
+              <Link href="/app">{T('Upload my photo', 'Feltöltöm a fotómat')}</Link>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section className="ka-next">
+        <Link href={`/tudastar/${next.slug}${sfx}`} className="ka-next-card">
+          <img src={IMG(KB[next.slug]?.img || KB_STILL, 1600)} alt="" loading="lazy" />
+          <div>
+            <span>{T('Next article', 'Következő cikk')}</span>
+            <b>{next.title[L]}</b>
+            <p>{next.desc[L]}</p>
+            <em>
+              {readMin(next, L)} {T('min read', 'perc olvasás')}
+            </em>
+          </div>
+        </Link>
+        <h2>{T('More from the knowledge base', 'További cikkek a Tudástárból')}</h2>
+        <div className="ka-rel3">
+          {related.map((r) => (
+            <Link key={r.slug} href={`/tudastar/${r.slug}${sfx}`} className="ka-rel">
+              <img src={IMG(KB[r.slug]?.img || KB_STILL, 700)} alt="" loading="lazy" />
+              <span className="ka-rel-cat">
+                {r.tag[L]} · {readMin(r, L)} {T('min', 'perc')}
+              </span>
+              <b>{r.title[L]}</b>
+            </Link>
+          ))}
         </div>
-        <div>
-          <b>{T('Knowledge', 'Tudás')}</b>
-          <Link href={`/tudastar${sfx}`}>{T('Knowledge base', 'Tudástár')}</Link>
-          <Link href={`/tattoo/fine-line-forearm${L === 'hu' ? '?lang=hu' : ''}`}>{T('Styles by body area', 'Stílusok testrészenként')}</Link>
-        </div>
-        <div>
-          <b>{T('Legal', 'Jog')}</b>
-          <Link href="/terms">{T('Terms', 'Feltételek')}</Link>
-          <Link href="/privacy">{T('Privacy', 'Adatvédelem')}</Link>
-        </div>
-      </footer>
+      </section>
+
+      <SiteFooter lang={L} />
     </div>
   );
 }
