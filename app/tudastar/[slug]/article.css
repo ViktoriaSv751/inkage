@@ -3,7 +3,7 @@
 .ka2 .kb-top { border-bottom: 0; }
 
 /* progress */
-.ka-progress { position: sticky; top: 70px; z-index: 39; height: 3px; background: transparent; margin-top: -3px; }
+.ka-progress { position: sticky; top: 64px; z-index: 39; height: 3px; background: transparent; margin-top: -3px; }
 .ka-progress i { display: block; height: 100%; background: linear-gradient(90deg, #8f78ff, #5b3df5); transform-origin: 0 50%; transform: scaleX(0); }
 
 /* cover */

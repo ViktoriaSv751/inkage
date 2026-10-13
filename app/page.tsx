@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { prepareImage } from '@/lib/client';
 import { LandingSections } from './LandingSections';
 import { SiteFooter } from './SiteFooter';
+import { SiteNav } from './SiteNav';
 import './landing.css';
 import { HeroAging } from './visuals';
 import { useLang, tx } from '@/lib/i18n';
@@ -46,24 +47,8 @@ export default function Landing() {
 
   return (
     <>
+    <SiteNav lang={lang} onLang={setLang} signedIn={signedIn} />
     <main>
-      <header className="top">
-        <Link className="logo" href="/" aria-label="InkAge home">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <circle cx="32" cy="32" r="30" />
-            <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-          </svg>
-          InkAge
-        </Link>
-        <nav className="row" style={{ alignItems: 'center' }}>
-          <button className="link" onClick={() => setLang(lang === 'hu' ? 'en' : 'hu')} aria-label={t('Switch to Hungarian', 'Váltás angolra')}>
-            {lang === 'hu' ? 'EN' : 'HU'}
-          </button>
-          <Link className="link" href="/app">
-            {signedIn ? t('Open app', 'App megnyitása') : t('Sign in', 'Belépés')}
-          </Link>
-        </nav>
-      </header>
 
       <section className="hero">
         <div className="hero-copy">
@@ -112,7 +97,7 @@ export default function Landing() {
 
       <LandingSections lang={lang} made={made} onUpload={() => (track('landing_cta_bottom'), fileRef.current?.click())} />
     </main>
-    <SiteFooter lang={lang} hideLang />
+    <SiteFooter lang={lang} />
     </>
   );
 }

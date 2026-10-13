@@ -1,0 +1,38 @@
+/* language button + picker sheet (light) */
+.lp-btn { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 13px; border-radius: 999px; border: 0; background: #fff; color: #0d0b14; box-shadow: inset 0 0 0 1px #dedbe6; font: 700 13px/1 'Geist Sans', system-ui, sans-serif; cursor: pointer; }
+.lp-btn.icon { width: 40px; padding: 0; justify-content: center; }
+.lp-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.lp-btn:hover { box-shadow: inset 0 0 0 1px #0d0b14; }
+.lp-row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 0; background: none; padding: 14px 0; font: inherit; color: inherit; cursor: pointer; text-align: left; }
+.lp-row-v { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-2, #5c5c62); font-weight: 600; }
+.lp-row-v svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.lp-wrap { position: fixed; inset: 0; z-index: 1000; background: rgba(13, 11, 20, .38); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; animation: lpFade .18s ease-out; font-family: 'Geist Sans', system-ui, sans-serif; }
+.lp-sheet { width: 100%; max-width: 480px; background: #fff; color: #0d0b14; border-radius: 30px 30px 0 0; padding: 10px 22px calc(22px + env(safe-area-inset-bottom)); box-shadow: 0 -20px 60px rgba(13, 11, 20, .18); animation: lpUp .26s cubic-bezier(.2, .8, .2, 1); }
+@media (min-width: 640px) { .lp-wrap { align-items: center; } .lp-sheet { border-radius: 28px; padding-bottom: 22px; } .lp-grab { display: none; } }
+.lp-grab { width: 40px; height: 5px; border-radius: 3px; background: #dedbe6; margin: 0 auto 8px; }
+.lp-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 14px; }
+.lp-head h2 { margin: 0; font-size: 22px; letter-spacing: -.02em; font-weight: 800; }
+.lp-x { width: 36px; height: 36px; border-radius: 50%; border: 0; background: #f2f1f6; display: grid; place-items: center; cursor: pointer; color: #0d0b14; }
+.lp-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.lp-list { list-style: none; margin: 0; padding: 0; }
+.lp-list li + li { border-top: 1px solid #eeecf3; }
+.lp-list button { width: 100%; display: grid; grid-template-columns: 40px 1fr 28px; align-items: center; gap: 12px; padding: 16px 2px; border: 0; background: none; text-align: left; cursor: pointer; color: #0d0b14; font: inherit; }
+.lp-flag { width: 40px; height: 40px; border-radius: 50%; background: #f2f1f6; display: grid; place-items: center; font-size: 20px; }
+.lp-name { display: grid; gap: 2px; }
+.lp-name b { font-size: 17px; font-weight: 600; }
+.lp-name small { font-size: 13px; color: #7d7890; }
+.lp-list button.on .lp-name b { font-weight: 800; }
+.lp-radio { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #c9c5d4; display: grid; place-items: center; transition: background .15s, box-shadow .15s; }
+.lp-radio svg { width: 15px; height: 15px; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.lp-list button.on .lp-radio { background: #0d0b14; box-shadow: none; }
+.lp-list button.on .lp-radio svg { opacity: 1; }
+.lp-note { margin: 6px 0 18px; font-size: 13px; color: #7d7890; }
+.lp-actions { display: grid; gap: 10px; }
+.lp-ok, .lp-cancel { height: 54px; border-radius: 999px; font: 700 16px/1 'Geist Sans', system-ui, sans-serif; cursor: pointer; }
+.lp-ok { border: 0; background: #0d0b14; color: #fff; }
+.lp-cancel { border: 0; background: #fff; color: #0d0b14; box-shadow: inset 0 0 0 1.5px #dedbe6; }
+.lp-ok:focus-visible, .lp-cancel:focus-visible, .lp-list button:focus-visible, .lp-btn:focus-visible { outline: 2.5px solid #5b3df5; outline-offset: 2px; }
+@keyframes lpFade { from { opacity: 0; } }
+@keyframes lpUp { from { transform: translateY(40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .lp-wrap, .lp-sheet { animation: none; } }

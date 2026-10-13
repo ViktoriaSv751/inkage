@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useApp } from '../AppProvider';
 import { Sheet } from '../ui';
+import { LangPicker } from '../../LangPicker';
 import { tx } from '@/lib/i18n';
 import { sb } from '@/lib/sb';
 import { anonId, cloud, local, lsGet, lsSet, Preview, track } from '@/lib/store';
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const [howto, setHowto] = useState(false);
   const [erase, setErase] = useState(false);
   const [confirm, setConfirm] = useState('');
+  const [tab, setTab] = useState<'previews' | 'skin' | 'invite' | 'settings'>('previews');
   const [busy, setBusy] = useState(false);
   const [mine, setMine] = useState<Preview[] | null>(null);
   const [joined, setJoined] = useState<number | null>(null);
@@ -151,71 +153,141 @@ export default function ProfilePage() {
   };
 
   const initial = (me.user?.email || '?').slice(0, 1).toUpperCase();
+  const displayName = (() => {
+    const n = (me.user?.email || '').split('@')[0].replace(/[._-]+/g, ' ').replace(/\d+/g, '').trim();
+    return n ? n.replace(/\b\w/g, (c) => c.toUpperCase()) : t('My profile', 'Profilom');
+  })();
   const planName = me.plan === 'lifetime' ? 'Lifetime' : me.plan === 'weekly' ? 'Pro' : t('Free', 'Ingyenes');
 
   return (
-    <>
-      <h1>{ui.t('profile.title')}</h1>
+    <div className="pf">
+      <div className="pf-tools">
+        {me.user && (
+          <button className="iconbtn" aria-label={t('Share invite link', 'Meghívó link megosztása')} onClick={invite}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 15V3M7 8l5-5 5 5M5 13v7h14v-7" />
+            </svg>
+          </button>
+        )}
+        <button className="iconbtn" aria-label={t('Settings', 'Beállítások')} onClick={() => setTab('settings')}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+            <circle cx="16" cy="7" r="2" />
+            <circle cx="10" cy="17" r="2" />
+          </svg>
+        </button>
+      </div>
 
-      <div className="card">
-        <div className="prof-head">
-          <div className="avatar">{me.user ? initial : '✦'}</div>
-          <div style={{ minWidth: 0 }}>
-            <b>{me.user ? me.user.email : t('Guest', 'Vendég')}</b>
-            <span className="small muted">{me.user ? `${planName} ${t('plan', 'csomag')}` : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</span>
-          </div>
+      <div className="pf-id">
+        <div className="pf-avatar">
+          <span>{me.user ? initial : '✦'}</span>
+          <i className={`pf-badge ${me.user ? 'on' : ''}`} aria-hidden="true">
+            {me.user ? (
+              <svg viewBox="0 0 24 24">
+                <path d="M6 12.5l4 4L18 8" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24">
+                <path d="M12 6v12M6 12h12" />
+              </svg>
+            )}
+          </i>
         </div>
+        <h1>{me.user ? displayName : t('Guest', 'Vendég')}</h1>
+        <p className="pf-sub">{me.user ? me.user.email : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</p>
         {me.user ? (
-          <div className="statrow">
-            <div className="stat">
-              <b>{Math.max(0, me.remaining ?? 0)}</b>
-              <span>{t('previews left', 'előnézet maradt')}</span>
-            </div>
-            <div className="stat">
-              <b>{me.bonus ?? 0}</b>
-              <span>{t('bonus from invites', 'meghívási bónusz')}</span>
-            </div>
-            <div className="stat">
-              <b>{planName.slice(0, 4)}</b>
-              <span>{t('plan', 'csomag')}</span>
-            </div>
-          </div>
+          <button className="pf-edit" onClick={() => setTab('skin')}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" />
+            </svg>
+            {t('Edit profile', 'Szerkesztés')}
+          </button>
         ) : (
-          <button className="btn wide" style={{ marginTop: 14 }} onClick={() => openAuth()}>
+          <button className="pf-edit dark" onClick={() => openAuth()}>
             {ui.t('common.signin')}
           </button>
         )}
+        <div className="pf-stats">
+          <div>
+            <b>{mine ? mine.length : '–'}</b>
+            <span>{t('saved', 'mentve')}</span>
+          </div>
+          <div>
+            <b>{avg ?? '–'}</b>
+            <span>{t('avg. score', 'átlag pont')}</span>
+          </div>
+          <div>
+            <b>{me.user ? Math.max(0, me.remaining ?? 0) : '–'}</b>
+            <span>{t('left today', 'maradt ma')}</span>
+          </div>
+          <div>
+            <b>{me.bonus ?? 0}</b>
+            <span>{t('bonus', 'bónusz')}</span>
+          </div>
+        </div>
       </div>
 
-      {mine && mine.length > 0 && (
-        <div className="card" style={{ marginTop: 12 }}>
-          <h2>{t('Your previews', 'Az előnézeteid')}</h2>
-          <div className="statrow">
-            <div className="stat">
-              <b>{mine.length}</b>
-              <span>{t('saved', 'mentve')}</span>
+      <div className="pf-tabs" role="tablist">
+        {(
+          [
+            ['previews', t('Previews', 'Előnézetek'), <path key="a" d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" />],
+            ['skin', t('Skin & lifestyle', 'Bőr és életmód'), <path key="b" d="M12 8a4 4 0 1 0 0 8a4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />],
+            ['invite', t('Invite', 'Meghívás'), <path key="c" d="M4 10h16v10H4zM2 7h20v3H2zM12 7v13M12 7c-2-4-6-3-5 0M12 7c2-4 6-3 5 0" />],
+            ['settings', t('Settings', 'Beállítások'), <path key="d" d="M12 9a3 3 0 1 0 0 6a3 3 0 0 0 0-6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.6 15H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9.7 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z" />],
+          ] as const
+        ).map(([k, label, icon]) => (
+          <button key={k} role="tab" aria-selected={tab === k} aria-label={label} title={label} className={tab === k ? 'on' : ''} onClick={() => setTab(k as any)}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              {icon}
+            </svg>
+          </button>
+        ))}
+      </div>
+
+      {tab === 'previews' && (
+        <div className="pf-panel">
+          {mine === null ? (
+            <div className="pf-grid">
+              {[0, 1, 2, 3].map((k) => (
+                <div key={k} className="pf-tile skel" />
+              ))}
             </div>
-            <div className="stat">
-              <b>{avg ?? '–'}</b>
-              <span>{t('average score', 'átlagos pontszám')}</span>
+          ) : mine.length ? (
+            <>
+              <div className="pf-grid">
+                {mine.slice(0, 8).map((p) => (
+                  <Link key={p.id} href="/app/gallery" className="pf-tile">
+                    {(p.images.y50 || p.images.y30 || p.images.fresh) && <img src={p.images.y50 || p.images.y30 || p.images.fresh} alt="" loading="lazy" />}
+                    <span className="pf-tile-l">
+                      <b>{placeName(p.placement, ui.lang)}</b>
+                      {typeof p.score === 'number' && <small>{p.score}/100</small>}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              {(best || topPlace) && (
+                <p className="muted small" style={{ margin: '14px 2px 0' }}>
+                  {best && t(`Your best-aging design: ${placeName(best.placement, 'en').toLowerCase()}, ${best.size}. `, `A legjobban öregedő terved: ${placeName(best.placement, 'hu').toLowerCase()}, ${best.size}. `)}
+                  {topPlace && t(`Most tried spot: ${placeName(topPlace, 'en').toLowerCase()}.`, `Leggyakrabban kipróbált hely: ${placeName(topPlace, 'hu').toLowerCase()}.`)}
+                </p>
+              )}
+              <Link className="btn ghost wide" href="/app/gallery" style={{ marginTop: 14 }}>
+                {t('Open gallery', 'Galéria megnyitása')}
+              </Link>
+            </>
+          ) : (
+            <div className="pf-empty">
+              <b>{t('No previews yet', 'Még nincs előnézeted')}</b>
+              <p>{t('Your designs will appear here, ready to compare.', 'Itt jelennek meg a terveid, összehasonlításra készen.')}</p>
+              <Link className="btn" href="/app">
+                {t('Make my first preview', 'Elkészítem az elsőt')}
+              </Link>
             </div>
-            <div className="stat">
-              <b>{best?.score ?? '–'}</b>
-              <span>{t('best score', 'legjobb pontszám')}</span>
-            </div>
-          </div>
-          {(best || topPlace) && (
-            <p className="muted small" style={{ margin: '12px 0 0' }}>
-              {best && t(`Your best-aging design: ${placeName(best.placement, 'en').toLowerCase()}, ${best.size}. `, `A legjobban öregedő terved: ${placeName(best.placement, 'hu').toLowerCase()}, ${best.size}. `)}
-              {topPlace && t(`Most tried spot: ${placeName(topPlace, 'en').toLowerCase()}.`, `Leggyakrabban kipróbált hely: ${placeName(topPlace, 'hu').toLowerCase()}.`)}
-            </p>
           )}
-          <Link className="btn ghost wide" href="/app/gallery" style={{ marginTop: 12 }}>
-            {t('Open gallery', 'Galéria megnyitása')}
-          </Link>
         </div>
       )}
 
+      {tab === 'skin' && (
       <div className="card" style={{ marginTop: 12 }}>
         <h2>{t('Skin & lifestyle', 'Bőr és életmód')}</h2>
         <p className="muted small">{t('Sun is the #1 reason ink fades. This makes every aging preview match your life.', 'A nap a fakulás első számú oka. Ez alapján igazítjuk az öregedést a te életedhez.')}</p>
@@ -256,6 +328,8 @@ export default function ProfilePage() {
         </button>
       </div>
 
+      )}
+      {tab === 'invite' && (
       <div className="card" style={{ marginTop: 12 }}>
         <h2>{ui.t('profile.invite')}</h2>
         <p className="muted">{ui.t('profile.inviteSub')}</p>
@@ -280,6 +354,9 @@ export default function ProfilePage() {
         )}
       </div>
 
+      )}
+      {tab === 'settings' && (
+        <>
       <div className="card" style={{ marginTop: 12 }}>
         <h2>{t('Help & feedback', 'Súgó és visszajelzés')}</h2>
         <div className="faq">
@@ -318,25 +395,14 @@ export default function ProfilePage() {
       </div>
 
       <div className="card" style={{ marginTop: 12 }}>
-        <div className="list-row">
-          <span>{ui.t('profile.lang')}</span>
-          <div className="seg" role="radiogroup">
-            {(['en', 'hu'] as const).map((l) => (
-              <button
-                key={l}
-                role="radio"
-                aria-checked={ui.lang === l}
-                className={ui.lang === l ? 'on' : ''}
-                onClick={() => {
-                  ui.setLang(l);
-                  if (me.user) sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l });
-                }}
-              >
-                {l === 'en' ? 'English' : 'Magyar'}
-              </button>
-            ))}
-          </div>
-        </div>
+        <LangPicker
+          lang={ui.lang}
+          variant="row"
+          onPick={(l) => {
+            ui.setLang(l);
+            if (me.user) sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l });
+          }}
+        />
         {!installed && (
           <button className="list-row" onClick={install}>
             <span>
@@ -383,6 +449,9 @@ export default function ProfilePage() {
         )}
       </div>
 
+        </>
+      )}
+
       <p className="disclaimer">InkAge · {t('AI simulations for inspiration, not a guarantee.', 'MI-szimulációk inspirációnak, nem garancia.')}</p>
 
       <Sheet open={howto} onClose={() => setHowto(false)} label={ui.t('profile.install')}>
@@ -412,6 +481,6 @@ export default function ProfilePage() {
           {busy ? '…' : t('Delete everything', 'Mindent törlök')}
         </button>
       </Sheet>
-    </>
+    </div>
   );
 }

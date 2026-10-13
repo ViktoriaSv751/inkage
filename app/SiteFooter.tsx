@@ -1,12 +1,9 @@
 import Link from 'next/link';
 import { ARTICLES } from '@/lib/articles';
-import { FooterSignup } from './FooterSignup';
+import { FooterLang, FooterSignup } from './FooterSignup';
 import './footer.css';
 
-/**
- * The site-wide footer: sign-up band, five link columns and the "ageing" wordmark
- * (the letters go from fresh to 50 years old, left to right).
- */
+/** The site-wide footer: brand + sign-up, five link columns, copyright and language. */
 export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hideLang?: boolean }) {
   const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const q = lang === 'en' ? '?lang=en' : '';
@@ -62,15 +59,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
   return (
     <footer className="sf" lang={lang}>
       <div className="sf-in">
-        <div className="sf-band">
-          <div>
-            <h2>{T('New guides and features, once a month.', 'Új útmutatók és funkciók, havonta egyszer.')}</h2>
-            <p>{T('One short e-mail. No spam, unsubscribe in one click.', 'Egy rövid e-mail. Semmi spam, egy kattintással leiratkozhatsz.')}</p>
-          </div>
-          <FooterSignup lang={lang} />
-        </div>
-
-        <div className="sf-grid">
+        <div className="sf-top">
           <div className="sf-brand">
             <Link href="/" className="sf-logo" aria-label="InkAge">
               <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -80,49 +69,31 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
               InkAge
             </Link>
             <p>{T('See any tattoo on your own skin — fresh, and 10, 30 and 50 years later — before it’s permanent.', 'Nézd meg bármelyik tetoválást a saját bőrödön – frissen, majd 10, 30 és 50 év múlva –, mielőtt végleges lesz.')}</p>
-            <Link className="sf-cta" href="/app">
-              {T('Try it free', 'Kipróbálom ingyen')}
-            </Link>
+            <div className="sf-sub">
+              <b>{T('New guides, once a month', 'Új útmutatók, havonta egyszer')}</b>
+              <FooterSignup lang={lang} />
+            </div>
           </div>
-          {cols.map((c) => (
-            <nav key={c.h} className="sf-col" aria-label={c.h}>
-              <b>{c.h}</b>
-              {c.links.map((l) => (
-                <Link key={l.href + l.t} href={l.href}>
-                  {l.t}
-                </Link>
-              ))}
-            </nav>
-          ))}
-        </div>
-
-        <div className="sf-word" aria-hidden="true">
-          {'InkAge'.split('').map((ch, i) => (
-            <span key={i} style={{ ['--i' as any]: i }}>
-              {ch}
-            </span>
-          ))}
-          <div className="sf-years">
-            <span>{T('fresh', 'friss')}</span>
-            <span>10</span>
-            <span>20</span>
-            <span>30</span>
-            <span>40</span>
-            <span>50 {T('yrs', 'év')}</span>
+          <div className="sf-grid">
+            {cols.map((c) => (
+              <nav key={c.h} className="sf-col" aria-label={c.h}>
+                <b>{c.h}</b>
+                {c.links.map((l) => (
+                  <Link key={l.href + l.t} href={l.href}>
+                    {l.t}
+                  </Link>
+                ))}
+              </nav>
+            ))}
           </div>
         </div>
 
         <div className="sf-bottom">
-          <span>© 2026 InkAge</span>
-          <span>{T('Previews are AI estimates, not a guarantee or medical advice.', 'Az előnézetek MI-alapú becslések, nem garanciák és nem orvosi tanácsok.')}</span>
-          {!hideLang && (<span className="sf-lang">
-            <Link href="?lang=hu" aria-current={lang === 'hu' ? 'true' : undefined}>
-              Magyar
-            </Link>
-            <Link href="?lang=en" aria-current={lang === 'en' ? 'true' : undefined}>
-              English
-            </Link>
-          </span>)}
+          <div className="sf-copy">
+            <span>© 2026 InkAge</span>
+            <span>{T('Previews are AI estimates, not a guarantee or medical advice.', 'Az előnézetek MI-alapú becslések, nem garanciák és nem orvosi tanácsok.')}</span>
+          </div>
+          {!hideLang && <FooterLang lang={lang} />}
         </div>
       </div>
     </footer>

@@ -1,0 +1,38 @@
+/* ================================================================ public site header + app-style tab bar */
+.sn-top { position: sticky; top: 0; z-index: 60; background: rgba(255, 255, 255, .88); backdrop-filter: saturate(1.6) blur(18px); -webkit-backdrop-filter: saturate(1.6) blur(18px); border-bottom: 1px solid transparent; transition: border-color .2s; font-family: 'Geist Sans', system-ui, sans-serif; }
+.sn-top.scrolled { border-bottom-color: #e9e7ee; }
+.sn-in { max-width: 1240px; margin: 0 auto; height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.sn-logo { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 20px; letter-spacing: -.03em; color: #0d0b14; text-decoration: none; }
+.sn-logo svg { width: 28px; height: 28px; }
+.sn-logo circle { fill: #0d0b14; }
+.sn-logo path { fill: #fff; }
+.sn-links { display: none; gap: 4px; }
+.sn-links a { padding: 9px 14px; border-radius: 999px; color: #4a4558; text-decoration: none; font-weight: 600; font-size: 15px; transition: background .15s, color .15s; }
+.sn-links a:hover { background: #f2f1f6; color: #0d0b14; }
+.sn-links a.on { color: #0d0b14; background: #f2f1f6; }
+.sn-r { display: flex; align-items: center; gap: 8px; }
+.sn-signin { height: 40px; display: inline-flex; align-items: center; padding: 0 16px; border-radius: 999px; background: #0d0b14; color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; }
+.sn-cta { display: none; height: 40px; align-items: center; padding: 0 18px; border-radius: 999px; background: #5b3df5; color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 10px 24px -12px rgba(91, 61, 245, .9); }
+@media (min-width: 1000px) {
+  .sn-links { display: flex; }
+  .sn-signin { background: transparent; color: #0d0b14; box-shadow: inset 0 0 0 1px #dedbe6; }
+  .sn-cta { display: inline-flex; }
+}
+
+/* bottom tab bar: same look as the app's */
+.sn-tabbar { position: fixed; z-index: 55; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px max(8px, calc((100vw - 560px) / 2)) calc(6px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid #e9e7ee; font-family: 'Geist Sans', system-ui, sans-serif; }
+.sn-tabbar a { display: grid; justify-items: center; gap: 3px; padding: 6px 0 4px; color: #8a8597; text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: .01em; }
+.sn-tabbar svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sn-tabbar a.on { color: #0d0b14; }
+.sn-tabbar a.on svg { stroke-width: 2.2; }
+.sn-tabbar a.cta { color: #0d0b14; }
+.sn-tabbar a.cta svg { width: 36px; height: 36px; padding: 7px; border-radius: 12px; background: #0d0b14; stroke: #fff; stroke-width: 2.4; margin: -5px 0 -5px; }
+@media (min-width: 1000px) { .sn-tabbar { display: none; } }
+/* room so the bar never covers content */
+body:has(.sn-tabbar) { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+@media (min-width: 1000px) { body:has(.sn-tabbar) { padding-bottom: 0; } }
+
+.sn-up { position: fixed; z-index: 54; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 48px; height: 48px; border-radius: 50%; border: 0; background: #fff; color: #0d0b14; box-shadow: 0 0 0 1px #e9e7ee, 0 10px 24px -10px rgba(13, 11, 20, .3); display: grid; place-items: center; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s; cursor: pointer; }
+.sn-up svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sn-up.show { opacity: 1; pointer-events: auto; transform: none; }
+@media (min-width: 1000px) { .sn-up { bottom: 28px; right: 28px; } }

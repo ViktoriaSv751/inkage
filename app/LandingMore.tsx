@@ -165,30 +165,59 @@ export function UseCases({ t }: { t: T }) {
 /* ------------------------------------------------------------------ what happens at each moment */
 export function AgingTimeline({ t }: { t: T }) {
   const stops = [
-    { y: t('Day 1', '1. nap'), img: EXAMPLE[0].src, h: t('Fresh', 'Friss'), p: t('Sharp, dark and slightly raised. This is the version most photos show — and the one that lasts the shortest.', 'Éles, sötét és kicsit kiemelkedő. A legtöbb fotó ezt mutatja – és ez tart a legrövidebb ideig.') },
-    { y: t('1 year', '1 év'), img: EXAMPLE[1].src, h: t('Healed', 'Gyógyult'), p: t('The top layer of skin has renewed. Lines look a touch softer and lighter than on day one.', 'A bőr felső rétege megújult. A vonalak kicsit lágyabbnak és világosabbnak tűnnek, mint az első napon.') },
-    { y: t('10 years', '10 év'), img: EXAMPLE[2].src, h: t('Settled', 'Beállt'), p: t('Fine details start to soften; light colours fade first, especially where the sun reaches.', 'A finom részletek lágyulni kezdenek; a világos színek fakulnak először, főleg ahol éri a nap.') },
-    { y: t('30 years', '30 év'), img: EXAMPLE[3].src, h: t('Mature', 'Érett'), p: t('Lines closer than about 1 mm may have merged. Bold, spaced designs still read clearly.', 'A kb. 1 mm-nél közelebbi vonalak összefolyhattak. A vastag, levegős minták még jól olvashatók.') },
-    { y: t('50 years', '50 év'), img: EXAMPLE[4].src, h: t('A lifetime', 'Egy élet'), p: t('Skin itself has aged and carries the ink with it. Strong outlines are what keep the shape.', 'Maga a bőr is öregedett, és viszi magával a tintát. Az erős kontúr az, ami megtartja a formát.') },
+    { y: t('Day 1', '1. nap'), n: '0', img: EXAMPLE[0].src, h: t('Fresh', 'Friss'), p: t('Sharp, dark and slightly raised. This is the version most photos show — and the one that lasts the shortest.', 'Éles, sötét és kicsit kiemelkedő. A legtöbb fotó ezt mutatja – és ez tart a legrövidebb ideig.') },
+    { y: t('1 year', '1 év'), n: '1', img: EXAMPLE[1].src, h: t('Healed', 'Gyógyult'), p: t('The top layer of skin has renewed. Lines look a touch softer and lighter than on day one.', 'A bőr felső rétege megújult. A vonalak kicsit lágyabbnak és világosabbnak tűnnek, mint az első napon.') },
+    { y: t('10 years', '10 év'), n: '10', img: EXAMPLE[2].src, h: t('Settled', 'Beállt'), p: t('Fine details start to soften; light colours fade first, especially where the sun reaches.', 'A finom részletek lágyulni kezdenek; a világos színek fakulnak először, főleg ahol éri a nap.') },
+    { y: t('30 years', '30 év'), n: '30', img: EXAMPLE[3].src, h: t('Mature', 'Érett'), p: t('Lines closer than about 1 mm may have merged. Bold, spaced designs still read clearly.', 'A kb. 1 mm-nél közelebbi vonalak összefolyhattak. A vastag, levegős minták még jól olvashatók.') },
+    { y: t('50 years', '50 év'), n: '50', img: EXAMPLE[4].src, h: t('A lifetime', 'Egy élet'), p: t('Skin itself has aged and carries the ink with it. Strong outlines are what keep the shape.', 'Maga a bőr is öregedett, és viszi magával a tintát. Az erős kontúr az, ami megtartja a formát.') },
   ];
+  const [i, setI] = useState(0);
+  const s = stops[i];
   return (
     <section className="ls-sec lm-time">
       <div className="ls-head">
         <h2>{t('What changes, and when.', 'Mi változik, és mikor.')}</h2>
         <p className="lm-sub">{t('InkAge renders five moments, each based on how ink, skin and sun usually behave over time.', 'Az InkAge öt időpontot jelenít meg, mindegyiket aszerint, ahogy a tinta, a bőr és a nap általában viselkedik az idő során.')}</p>
       </div>
+
+      {/* phone: swipeable cards */}
       <ol className="lm-tl">
-        {stops.map((s) => (
-          <li key={s.y}>
+        {stops.map((x) => (
+          <li key={x.y}>
             <div className="lm-tl-img">
-              <img src={s.img} alt="" loading="lazy" />
-              <span>{s.y}</span>
+              <img src={x.img} alt="" loading="lazy" />
+              <span>{x.y}</span>
             </div>
-            <h3>{s.h}</h3>
-            <p>{s.p}</p>
+            <h3>{x.h}</h3>
+            <p>{x.p}</p>
           </li>
         ))}
       </ol>
+
+      {/* desktop: one large picture driven by a vertical timeline */}
+      <div className="lm-tlx">
+        <div className="lm-tlx-pic">
+          {stops.map((x, k) => (
+            <img key={x.y} src={x.img} alt={k === i ? x.h : ''} aria-hidden={k !== i} loading="lazy" style={{ opacity: k === i ? 1 : 0 }} />
+          ))}
+          <div className="lm-tlx-badge">
+            <b>{s.n === '0' ? t('Fresh', 'Friss') : s.n}</b>
+            <span>{s.n === '0' ? t('done today', 'ma készült') : t('years later', 'év múlva')}</span>
+          </div>
+        </div>
+        <ol className="lm-tlx-list" role="tablist" aria-orientation="vertical" style={{ ['--p' as any]: i / (stops.length - 1) }}>
+          {stops.map((x, k) => (
+            <li key={x.y}>
+              <button role="tab" aria-selected={k === i} className={k === i ? 'on' : k < i ? 'past' : ''} onMouseEnter={() => setI(k)} onFocus={() => setI(k)} onClick={() => setI(k)}>
+                <span className="lm-dot" aria-hidden="true" />
+                <span className="lm-tlx-y">{x.y}</span>
+                <b>{x.h}</b>
+                <p>{x.p}</p>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }
@@ -235,49 +264,81 @@ export function Precision({ t }: { t: T }) {
 
 /* ------------------------------------------------------------------ compared with the usual ways */
 export function CompareTable({ t }: { t: T }) {
-  const cols = [t('Imagining it', 'Elképzelés'), t('Temporary sticker', 'Matrica'), t('Artist’s sketch', 'Tetováló vázlata'), 'InkAge'];
-  const rows: [string, number[]][] = [
+  const cols = [
+    { k: 'imagine', t: t('Imagining it', 'Elképzelés'), s: t('Imagine', 'Fejben') },
+    { k: 'sticker', t: t('Temporary sticker', 'Matrica'), s: t('Sticker', 'Matrica') },
+    { k: 'sketch', t: t('Artist’s sketch', 'Tetováló vázlata'), s: t('Sketch', 'Vázlat') },
+  ];
+  const rows: [string, [number, number, number, number]][] = [
     [t('On your own body', 'A saját testeden'), [0, 1, 0, 1]],
     [t('Exact size in cm', 'Pontos méret cm-ben'), [0, 1, 1, 1]],
-    [t('Shows ageing over 50 years', 'Megmutatja az 50 éves öregedést'), [0, 0, 0, 1]],
+    [t('Shows 50 years of ageing', 'Megmutatja az 50 év öregedést'), [0, 0, 0, 1]],
     [t('Longevity score with reasons', 'Tartóssági pontszám indoklással'), [0, 0, 0, 1]],
-    [t('Compare placements in minutes', 'Helyek összehasonlítása percek alatt'), [0, 0, 0, 1]],
-    [t('Friends can vote from a link', 'Barátok szavazhatnak egy linken'), [0, 0, 0, 1]],
+    [t('Compare spots in minutes', 'Helyek összevetése percek alatt'), [0, 0, 0, 1]],
+    [t('Friends vote from a link', 'A barátok linken szavaznak'), [0, 0, 0, 1]],
     [t('A human expert’s judgement', 'Szakember személyes véleménye'), [0, 0, 1, 0]],
   ];
+  const Mark = ({ on, us }: { on: number; us?: boolean }) =>
+    on ? (
+      <span className={`cx-yes ${us ? 'us' : ''}`} role="img" aria-label={t('Yes', 'Igen')}>
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12.5l4.5 4.5L19 7.5" />
+        </svg>
+      </span>
+    ) : (
+      <span className="cx-no" role="img" aria-label={t('No', 'Nem')} />
+    );
   return (
-    <section className="ls-sec lm-table">
+    <section className="ls-sec lm-cx">
       <div className="ls-head">
         <h2>{t('How it compares.', 'Összehasonlítva.')}</h2>
         <p className="lm-sub">{t('InkAge doesn’t replace your artist — it gets you to the consultation with a clearer idea.', 'Az InkAge nem helyettesíti a tetoválót – azt segíti, hogy tisztább elképzeléssel menj a konzultációra.')}</p>
       </div>
-      <div className="lm-tbl-wrap">
-        <table className="lm-tbl">
-          <thead>
-            <tr>
-              <th scope="col">
-                <span className="sr-only">{t('Feature', 'Funkció')}</span>
-              </th>
-              {cols.map((c, i) => (
-                <th key={c} scope="col" className={i === 3 ? 'us' : ''}>
-                  {c}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(([r, v]) => (
-              <tr key={r}>
-                <th scope="row">{r}</th>
-                {v.map((x, i) => (
-                  <td key={i} className={i === 3 ? 'us' : ''}>
-                    {x ? <span className="yes" aria-label={t('Yes', 'Igen')} /> : <span className="no" aria-label={t('No', 'Nem')} />}
-                  </td>
-                ))}
-              </tr>
+      <div className="cx" role="table" aria-label={t('Comparison', 'Összehasonlítás')}>
+        <div className="cx-row cx-head" role="row">
+          <span role="columnheader" className="cx-f">
+            <span className="sr-only">{t('Feature', 'Funkció')}</span>
+          </span>
+          {cols.map((c) => (
+            <span key={c.k} role="columnheader" className="cx-c">
+              <span className="cx-long">{c.t}</span>
+              <span className="cx-short">{c.s}</span>
+            </span>
+          ))}
+          <span role="columnheader" className="cx-c cx-us">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="30" />
+              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+            </svg>
+            <span>InkAge</span>
+          </span>
+        </div>
+        {rows.map(([r, v]) => (
+          <div key={r} className="cx-row" role="row">
+            <span role="rowheader" className="cx-f">
+              {r}
+            </span>
+            {v.slice(0, 3).map((x, k) => (
+              <span key={k} role="cell" className="cx-c">
+                <Mark on={x} />
+              </span>
             ))}
-          </tbody>
-        </table>
+            <span role="cell" className="cx-c cx-us">
+              <Mark on={v[3]} us />
+            </span>
+          </div>
+        ))}
+        <div className="cx-row cx-foot" role="row">
+          <span role="cell" className="cx-f" />
+          <span role="cell" className="cx-c" />
+          <span role="cell" className="cx-c" />
+          <span role="cell" className="cx-c" />
+          <span role="cell" className="cx-c cx-us">
+            <Link href="/app" className="cx-try" onClick={() => track('landing_compare_cta')}>
+              {t('Try free', 'Kipróbálom')}
+            </Link>
+          </span>
+        </div>
       </div>
     </section>
   );
@@ -285,33 +346,67 @@ export function CompareTable({ t }: { t: T }) {
 
 /* ------------------------------------------------------------------ privacy */
 export function PrivacyBlock({ t }: { t: T }) {
+  const rows = [
+    { i: 'M4 7h16v10H4zM8 21h8M12 17v4', h: t('Stored on this device', 'Ezen az eszközön tárolva'), s: t('Without an account', 'Fiók nélkül'), on: true },
+    { i: 'M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4', h: t('Private cloud storage', 'Privát felhőtárhely'), s: t('Only you can open it', 'Csak te nyithatod meg'), on: true },
+    { i: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1', h: t('Public vote link', 'Nyilvános szavazós link'), s: t('Off until you share', 'Kikapcsolva, amíg nem osztod meg'), on: false },
+    { i: 'M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7zM12 9a3 3 0 1 0 0 6a3 3 0 0 0 0-6zM4 4l16 16', h: t('Ad trackers', 'Hirdetési követők'), s: t('None, ever', 'Egy sincs'), on: false },
+  ];
   const pts = [
-    { h: t('No account needed', 'Nem kell fiók'), p: t('Without signing in, your previews stay in your browser on this device.', 'Bejelentkezés nélkül az előnézeteid a böngésződben maradnak, ezen az eszközön.') },
-    { h: t('Private by default', 'Alapból privát'), p: t('Signed in, previews live in your private storage. Only you can see them.', 'Bejelentkezve az előnézetek a privát tárhelyeden vannak. Csak te látod őket.') },
-    { h: t('You choose what’s shared', 'Te döntöd el, mit osztasz meg'), p: t('A vote link shares only the fresh and the 50-year image. Delete the preview and the link is gone.', 'A szavazós link csak a friss és az 50 éves képet osztja meg. Ha törlöd az előnézetet, a link is eltűnik.') },
+    { h: t('You choose what’s shared', 'Te döntöd el, mit osztasz meg'), p: t('A vote link holds only the fresh and the 50-year image. Delete the preview and the link disappears.', 'A szavazós link csak a friss és az 50 éves képet tartalmazza. Ha törlöd az előnézetet, a link is eltűnik.') },
     { h: t('Delete everything, anytime', 'Bármikor törölhetsz mindent'), p: t('One button in your profile removes your account and every saved preview.', 'A profilodban egyetlen gombbal törölheted a fiókodat és minden mentett előnézetet.') },
   ];
   return (
-    <section className="lm-priv">
-      <div className="lm-priv-in">
-        <div className="lm-priv-h">
-          <span className="lm-lock" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4" />
+    <section className="ls-sec lm-pv">
+      <div className="lm-pv-card">
+        <div className="lm-pv-txt">
+          <span className="lm-pv-badge">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z" />
+              <path d="M9 12l2 2 4-4" />
             </svg>
+            {t('Privacy by default', 'Alapból privát')}
           </span>
           <h2>{t('Your photos are yours.', 'A fotóid a tieid.')}</h2>
           <p>{t('No advertising trackers, no third-party analytics, and nothing public unless you share it.', 'Nincsenek hirdetési követők, nincs külső analitika, és semmi sem nyilvános, amíg meg nem osztod.')}</p>
-          <Link href="/privacy">{t('Read the privacy policy', 'Az adatvédelmi tájékoztató')}</Link>
+          <ul>
+            {pts.map((x) => (
+              <li key={x.h}>
+                <b>{x.h}</b>
+                <span>{x.p}</span>
+              </li>
+            ))}
+          </ul>
+          <Link className="lm-pv-link" href="/adatbiztonsag">
+            {t('How we protect your data', 'Így védjük az adataidat')}
+          </Link>
         </div>
-        <ul>
-          {pts.map((x) => (
-            <li key={x.h}>
-              <b>{x.h}</b>
-              <p>{x.p}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="lm-pv-ui" aria-label={t('Example privacy settings', 'Példa adatvédelmi beállítások')}>
+          <div className="lm-pv-phone">
+            <div className="lm-pv-bar">
+              <span>9:41</span>
+              <i />
+            </div>
+            <p className="lm-pv-title">{t('Your data', 'Adataid')}</p>
+            <div className="lm-pv-group">
+              {rows.map((r) => (
+                <div key={r.h} className="lm-pv-row">
+                  <span className="lm-pv-ico">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d={r.i} />
+                    </svg>
+                  </span>
+                  <span className="lm-pv-l">
+                    <b>{r.h}</b>
+                    <small>{r.s}</small>
+                  </span>
+                  <span className={`lm-pv-sw ${r.on ? 'on' : ''}`} aria-label={r.on ? t('On', 'Be') : t('Off', 'Ki')} />
+                </div>
+              ))}
+            </div>
+            <div className="lm-pv-del">{t('Delete my account and data', 'Fiókom és adataim törlése')}</div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -329,6 +424,9 @@ export function BetaInstall({ t }: { t: T }) {
     window.addEventListener('beforeinstallprompt', h);
     return () => window.removeEventListener('beforeinstallprompt', h);
   }, []);
+  const steps = ios
+    ? [t('Open inkage.vercel.app in Safari', 'Nyisd meg az oldalt Safariban'), t('Tap the Share button', 'Koppints a Megosztás gombra'), t('Choose “Add to Home Screen”', 'Válaszd: „Főképernyőhöz adás”')]
+    : [t('Open the browser menu (⋮)', 'Nyisd meg a böngésző menüjét (⋮)'), t('Choose “Install app”', 'Válaszd: „Alkalmazás telepítése”'), t('Open InkAge from your home screen', 'Nyisd meg az InkAge-et a kezdőképernyőről')];
   return (
     <section className="ls-sec lm-beta" id="beta">
       <div className="lm-beta-card">
@@ -345,14 +443,29 @@ export function BetaInstall({ t }: { t: T }) {
         </Link>
       </div>
       <div className="lm-install" id="telepites">
-        <img src={IMG('hf_20261013_090754_b336f404-4c34-4ef7-b5ba-a080d341d5db', 800)} alt="" loading="lazy" />
-        <div>
+        <div className="lm-hs" aria-hidden="true">
+          <div className="lm-hs-screen">
+            <div className="lm-hs-grid">
+              {Array.from({ length: 7 }).map((_, k) => (
+                <i key={k} />
+              ))}
+              <span className="lm-hs-app">
+                <span>
+                  <svg viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="30" />
+                    <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+                  </svg>
+                </span>
+                <small>InkAge</small>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="lm-install-txt">
           <h3>{t('Keep it on your home screen', 'Tedd ki a kezdőképernyőre')}</h3>
-          {installed ? (
-            <p>{t('InkAge is already installed on this device.', 'Az InkAge már telepítve van ezen az eszközön.')}</p>
-          ) : evt ? (
-            <>
-              <p>{t('Opens full screen like an app, no app store needed.', 'Teljes képernyőn nyílik, mint egy app – alkalmazásbolt nélkül.')}</p>
+          <p>{installed ? t('InkAge is already installed on this device.', 'Az InkAge már telepítve van ezen az eszközön.') : t('Opens full screen like an app — no app store needed.', 'Teljes képernyőn nyílik, mint egy app – alkalmazásbolt nélkül.')}</p>
+          {!installed &&
+            (evt ? (
               <button
                 className="btn"
                 onClick={async () => {
@@ -364,19 +477,16 @@ export function BetaInstall({ t }: { t: T }) {
               >
                 {t('Install InkAge', 'InkAge telepítése')}
               </button>
-            </>
-          ) : ios ? (
-            <ol>
-              <li>{t('Open inkage.vercel.app in Safari', 'Nyisd meg az inkage.vercel.app oldalt Safariban')}</li>
-              <li>{t('Tap the Share button', 'Koppints a Megosztás gombra')}</li>
-              <li>{t('Choose “Add to Home Screen”', 'Válaszd a „Főképernyőhöz adás” lehetőséget')}</li>
-            </ol>
-          ) : (
-            <ol>
-              <li>{t('Open the browser menu (⋮)', 'Nyisd meg a böngésző menüjét (⋮)')}</li>
-              <li>{t('Choose “Install app” or “Add to Home screen”', 'Válaszd az „Alkalmazás telepítése” vagy „Hozzáadás a kezdőképernyőhöz” lehetőséget')}</li>
-            </ol>
-          )}
+            ) : (
+              <ol className="lm-steps3">
+                {steps.map((x, k) => (
+                  <li key={k}>
+                    <span>{k + 1}</span>
+                    {x}
+                  </li>
+                ))}
+              </ol>
+            ))}
         </div>
       </div>
     </section>
