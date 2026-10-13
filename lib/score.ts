@@ -88,3 +88,36 @@ export function frameCm(placement: string) {
   if (/back|hát|rib|borda|thigh|comb|spine|gerinc|hip|csípő|stomach|has|sternum|szegy|chest|mellkas|derék|lapocka|blade/i.test(placement)) return 40;
   return 26;
 }
+
+
+/** Typical width (cm) across the limb / body part, as seen from the front. */
+export function limbCm(placement: string): number | null {
+  if (/finger|ujj/i.test(placement)) return 2;
+  if (/wrist|csukló/i.test(placement)) return 6;
+  if (/ankle|boka/i.test(placement)) return 7;
+  if (/hand|kéz|foot|lábfej/i.test(placement)) return 8.5;
+  if (/forearm|alkar/i.test(placement)) return 7.5;
+  if (/elbow|könyök|shin|sípcsont/i.test(placement)) return 9;
+  if (/upper arm|felkar/i.test(placement)) return 10;
+  if (/neck|nyak|tarkó|calf|vádli|knee|térd/i.test(placement)) return 11;
+  if (/thigh|comb/i.test(placement)) return 16;
+  return null; // torso: the detected box says little about real size
+}
+
+/**
+ * How many cm the full photo width covers. With the detected body part we measure it
+ * (limb width in the photo vs. typical real width); otherwise a per-area average.
+ */
+export function photoCm(placement: string, area: { box: [number, number, number, number]; angle?: number } | null | undefined, photo: { w: number; h: number }) {
+  const avg = frameCm(placement);
+  const limb = limbCm(placement);
+  if (!area || !limb) return avg;
+  const [t, l, b, r] = area.box;
+  // the limb's width is the narrower side of its box (in photo-width units)
+  // a tilted limb's box is wider than the limb itself
+  const tilt = Math.min(60, Math.abs(area.angle || 0));
+  const across = Math.min(r - l, ((b - t) * photo.h) / photo.w) * (tilt > 12 ? Math.cos((tilt * Math.PI) / 180) * 0.85 : 1);
+  if (across < 0.05) return avg;
+  const est = limb / across;
+  return Math.min(avg * 2.2, Math.max(avg * 0.35, est));
+}

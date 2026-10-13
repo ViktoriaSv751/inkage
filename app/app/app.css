@@ -515,8 +515,9 @@
 .chipbtn:disabled { opacity: .4; }
 
 /* which tattoo? */
-.picker { position: relative; border-radius: 18px; overflow: hidden; background: #000; touch-action: none; user-select: none; -webkit-user-select: none; margin: 8px 0 12px; }
-.picker > img { display: block; width: 100%; max-height: 56dvh; object-fit: contain; pointer-events: none; }
+.picker { display: flex; justify-content: center; border-radius: 18px; overflow: hidden; background: #000; touch-action: none; user-select: none; -webkit-user-select: none; margin: 8px 0 12px; }
+.picker-in { position: relative; line-height: 0; }
+.picker-in > img { display: block; max-width: 100%; max-height: 56dvh; width: auto; height: auto; pointer-events: none; }
 .picker.draw { cursor: crosshair; }
 .pick-box { position: absolute; z-index: 2; border: 2px solid rgba(255, 255, 255, .9); border-radius: 10px; background: transparent; padding: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, .3); }
 .pick-box span { position: absolute; left: -2px; top: -2px; min-width: 26px; height: 26px; border-radius: 10px 0 10px 0; background: #fff; color: var(--ink); font-weight: 750; font-size: 13px; display: grid; place-items: center; }

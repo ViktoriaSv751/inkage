@@ -70,7 +70,8 @@ export function TattooPicker({
             ? t(`We found ${found.tattoos.length} designs. Tap the one you want.`, `${found.tattoos.length} mintát találtunk. Koppints arra, amelyiket szeretnéd.`)
             : t('Is this the one? Only the framed part is used, without the person or background.', 'Ez az? Csak a bekeretezett rész kerül felhasználásra, ember és háttér nélkül.')}
       </p>
-      <div className={`picker ${drawMode ? 'draw' : ''}`} ref={wrap} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+      <div className={`picker ${drawMode ? 'draw' : ''}`}>
+      <div className="picker-in" ref={wrap} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
         <img src={image} alt="" draggable={false} />
         {!drawMode &&
           found.tattoos.map((x, i) => (
@@ -90,6 +91,7 @@ export function TattooPicker({
           ))}
         {drawMode && manual && <i className="pick-box on manual" style={frame(manual)} />}
         {chosen && <i className="pick-dim" style={{ ['--t' as any]: chosen[0], ['--l' as any]: chosen[1], ['--b' as any]: chosen[2], ['--r' as any]: chosen[3] }} />}
+      </div>
       </div>
       {!drawMode && found.tattoos.length > 1 && (
         <div className="pick-list" role="radiogroup">

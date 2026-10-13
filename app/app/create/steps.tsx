@@ -10,7 +10,7 @@ import { prepareImage } from '@/lib/client';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { cropImage, offSkin, processDesign, Placement, skinVeil } from '@/lib/editor';
 import { Box, Found, TattooPicker } from './Picker';
-import { frameCm } from '@/lib/score';
+import { frameCm, photoCm } from '@/lib/score';
 import { BodyMap } from './BodyMap';
 import { Sheet } from '../ui';
 
@@ -656,7 +656,8 @@ export function PlaceStep({
   const start = useRef<{ pl: Placement; d: number; a: number; cx: number; cy: number } | null>(null);
   const [drag, setDrag] = useState(false);
   // the longer side of the design, in cm
-  const cm = pl.w * Math.max(1, design.ratio) * frameCm(placement);
+  const fcm = photoCm(placement, area, photo);
+  const cm = pl.w * Math.max(1, design.ratio) * fcm;
   const thin = design.detail > 0.55 && cm < 7;
   const [mapOpen, setMapOpen] = useState(false);
   const out = !!area && overflows(area, design, photo, pl);
@@ -689,7 +690,7 @@ export function PlaceStep({
   };
   const setCm = (target: number) => {
     remember();
-    setPl({ ...pl, w: Math.min(1.4, Math.max(0.04, target / (Math.max(1, design.ratio) * frameCm(placement)))) });
+    setPl({ ...pl, w: Math.min(1.4, Math.max(0.04, target / (Math.max(1, design.ratio) * fcm))) });
     haptic();
   };
 
