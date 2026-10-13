@@ -19,5 +19,9 @@ export default function Terms({ searchParams }: { searchParams: { lang?: string 
     { h: T('Liability', 'Felelősség'), ps: [T('The service is provided “as is”. To the extent permitted by law, we are not liable for decisions made based on the simulations.', 'A szolgáltatást „ahogy van” alapon nyújtjuk. A jogszabályok által megengedett mértékben nem vállalunk felelősséget a szimulációk alapján hozott döntésekért.')] },
     { h: T('Contact', 'Kapcsolat'), ps: [T('Questions about these terms: use the contact page.', 'A feltételekkel kapcsolatos kérdésekkel a kapcsolat oldalon keress minket.')] },
   ];
-  return <InfoPage lang={L} path="/terms" kicker={T('Legal', 'Jog')} title={T('Terms of use', 'Felhasználási feltételek')} sections={sections} updated={T('October 2026', '2026. október')} toc cta={false} />;
+  return <InfoPage lang={L} path="/terms" kicker={T('Legal', 'Jog')} title={T('Terms of use', 'Felhasználási feltételek')} sections={sections} updated={T('October 2026', '2026. október')} toc cta={false} kickerIcon="scale" related={[
+    { href: '/privacy', t: T('Privacy policy', 'Adatvédelem'), p: T('How we handle your data.', 'Hogyan kezeljük az adataidat.'), i: 'lock' },
+    { href: '/suti', t: T('Cookie notice', 'Süti tájékoztató'), p: T('One cookie, explained.', 'Egyetlen süti, elmagyarázva.'), i: 'cookie' },
+    { href: '/jog', t: T('All legal pages', 'Minden jogi oldal'), p: T('Everything in one place.', 'Minden egy helyen.'), i: 'scale' },
+  ]} />;
 }

@@ -44,7 +44,7 @@ export function freshPrompt(placement: string, size: string, extra = '') {
     `Tattoo the design from image 2 onto the person's ${placement} in image 1. Size: ${sizeText}, proportionate to that body part.`,
     "Reproduce the design's exact linework, proportions, spacing and colours faithfully — do not redesign, simplify or add elements. If image 2 shows a design on someone else's skin, transfer only the design itself.",
     'Make it a real tattoo done today by a skilled artist: ink sits in the skin, not on top of it; it follows the curvature of the muscles and the perspective of the camera; it is lit by the same light and shadows as the surrounding skin; skin pores, fine hairs and texture remain visible through the ink.',
-    'Fresh-tattoo details: slightly raised, glossy lines; mild pink-red irritation in a thin halo around the linework; the skin is otherwise unchanged.',
+    'Fresh-tattoo details: crisp, dark, very slightly glossy lines. Do NOT add any redness, red or pink outline, halo, glow, shadow line or border around the tattoo, and do not add any line, outline, colour or shape that is not in the design; the skin around the ink stays exactly as in the photo.',
     'If that body area is not visible, place it on the closest visible area that makes anatomical sense.',
     STAY_ON_BODY,
     KEEP,
@@ -62,7 +62,7 @@ export function placedPrompt(placement: string, colorMode: 'black' | 'color', ex
       ? 'Use black ink only (no colours), as a skilled artist would execute this design.'
       : "Keep the design's original colours.",
     'The ink sits in the skin, follows the curvature of the muscles and the camera perspective, is lit by the same light and shadows as the surrounding skin, and lets pores, fine hairs and skin texture show through.',
-    'Fresh-tattoo details: slightly raised, glossy lines and a mild pink-red halo around the linework.',
+    'Fresh-tattoo details: crisp, dark, very slightly glossy lines. Do NOT add any redness, red or pink outline, halo, glow or border around the tattoo, and never add lines, outlines or colours that are not in image 3; the skin around the ink stays exactly as in image 1.',
     'The final image must look like image 1 (no overlay artefacts, no flat sticker look).',
     STAY_ON_BODY,
     KEEP,

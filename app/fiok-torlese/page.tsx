@@ -12,6 +12,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
   const sections: InfoSec[] = [
     {
       h: T('If you have an account', 'Ha van fiókod'),
+      icon: 'user',
       ps: [
         T('1. Open InkAge and sign in.', '1. Nyisd meg az InkAge-et, és jelentkezz be.'),
         T('2. Go to Profile.', '2. Lépj a Profil oldalra.'),
@@ -23,12 +24,22 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
     },
     {
       h: T('If you never signed in', 'Ha soha nem jelentkeztél be'),
+      icon: 'phone',
       ps: [T('Your previews live only in this browser. Delete them one by one in the gallery, or clear this site’s data in your browser settings.', 'Az előnézeteid csak ebben a böngészőben vannak. Törölheted őket egyenként a galériában, vagy a böngésző beállításaiban törölheted az oldal adatait.')],
     },
     {
       h: T('Can’t get into your account?', 'Nem tudsz belépni?'),
+      icon: 'mail',
       ps: [T('Send us a message on the contact page from the e-mail address you signed up with and we’ll delete your data for you.', 'Írj nekünk a kapcsolat oldalon arról az e-mail-címről, amellyel regisztráltál, és töröljük helyetted az adataidat.')],
     },
   ];
-  return <InfoPage lang={L} path="/fiok-torlese" kicker={T('Delete account', 'Fiók törlése')} title={T('Delete your account and data.', 'Fiók és adatok törlése.')} lede={T('You can do it yourself, in the app, in under a minute.', 'Magad is megteheted az appban, kevesebb mint egy perc alatt.')} sections={sections} cta={false} />;
+  return <InfoPage lang={L} path="/fiok-torlese" kicker={T('Delete account', 'Fiók törlése')} title={T('Delete your account and data.', 'Fiók és adatok törlése.')} lede={T('You can do it yourself, in the app, in under a minute.', 'Magad is megteheted az appban, kevesebb mint egy perc alatt.')} sections={sections} cta={false} kickerIcon="trash" highlights={[
+    { i: 'clock', h: T('Under a minute', 'Egy percen belül'), p: T('Done in the app, by you.', 'Az appban, magad intézed.') },
+    { i: 'trash', h: T('Everything goes', 'Minden törlődik'), p: T('Account, previews and vote links.', 'Fiók, előnézetek és szavazós linkek.') },
+    { i: 'download', h: T('Keep a copy first', 'Előtte ments'), p: T('Download your data before deleting.', 'Töltsd le az adataidat törlés előtt.') },
+  ]} related={[
+    { href: '/adatbiztonsag', t: T('Data security', 'Adatbiztonság'), p: T('How your photos are protected.', 'Így védjük a fotóidat.'), i: 'shield' },
+    { href: '/privacy', t: T('Privacy policy', 'Adatvédelem'), p: T('Your rights under the GDPR.', 'A jogaid a GDPR szerint.'), i: 'doc' },
+    { href: '/kapcsolat', t: T('Contact', 'Kapcsolat'), p: T('We’ll help if you’re stuck.', 'Segítünk, ha elakadtál.'), i: 'mail' },
+  ]} />;
 }

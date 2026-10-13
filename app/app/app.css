@@ -17,7 +17,7 @@
 .topbar {
   position: sticky; top: 0; z-index: 40;
   padding: env(safe-area-inset-top) 0 0;
-  background: rgba(244, 244, 242, .92);
+  background: rgba(255, 255, 255, .92);
   backdrop-filter: saturate(1.6) blur(18px); -webkit-backdrop-filter: saturate(1.6) blur(18px);
   border-bottom: 1px solid transparent;
   transition: border-color .2s;
@@ -33,7 +33,7 @@
   position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
   display: grid; grid-template-columns: repeat(4, 1fr);
   padding: 6px max(12px, calc((100vw - 560px) / 2)) calc(6px + env(safe-area-inset-bottom));
-  background: var(--surface);
+  background: #fff;
   border-top: 1px solid var(--line);
 }
 .tabbar a { display: grid; justify-items: center; gap: 3px; padding: 6px 0 4px; color: var(--ink-3); text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: .01em; }
@@ -227,7 +227,7 @@
 .text { width: 100%; border: 0; background: var(--surface-2); border-radius: 14px; padding: 14px 16px; font: inherit; color: var(--ink); }
 
 /* sticky call to action: a solid band above the tab bar */
-.stickycta { position: sticky; bottom: calc(66px + env(safe-area-inset-bottom)); z-index: 5; margin: 20px -20px 0; padding: 12px 20px; background: linear-gradient(rgba(244, 244, 242, 0), var(--bg) 22%); }
+.stickycta { position: sticky; bottom: calc(66px + env(safe-area-inset-bottom)); z-index: 5; margin: 20px -20px 0; padding: 12px 20px; background: linear-gradient(rgba(255, 255, 255, 0), var(--bg) 22%); }
 .stickycta .fine { margin-top: 6px; }
 
 /* camera */

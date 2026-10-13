@@ -29,7 +29,7 @@ const STYLE_IMG: Record<string, string> = {
 export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; made: number; onUpload: () => void }) {
   const t = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const kbSfx = lang === 'hu' ? '' : '?lang=en';
-  const seoSfx = lang === 'hu' ? '?lang=hu' : '';
+  const seoSfx = lang === 'en' ? '?lang=en' : '';
   const [style, setStyle] = useState<(typeof SEO_STYLES)[number]['k']>('fine-line');
   const st = SEO_STYLES.find((s) => s.k === style)!;
   const ranked = SEO_AREAS.map((a) => ({ a, score: seoPage(`${style}-${a.k}`, lang)?.medium ?? 0 })).sort((x, y) => y.score - x.score);

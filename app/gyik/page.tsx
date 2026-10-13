@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { InfoPage, langOf } from '../_info/InfoPage';
+import { FaqExplorer } from './FaqExplorer';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
@@ -13,10 +13,9 @@ type QA = [string, string];
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
-  const q = L === 'en' ? '?lang=en' : '';
-  const groups: { h: string; items: QA[] }[] = [
+  const groups: { h: string; i: string; items: QA[] }[] = [
     {
-      h: T('Getting started', 'Kezdés'),
+      h: T('Getting started', 'Kezdés'), i: 'start',
       items: [
         [T('Is InkAge free?', 'Ingyenes az InkAge?'), T('Yes, every feature is free during the beta. A fair daily limit keeps it free for everyone; if it is reached you can leave your e-mail and we’ll let you know when previews are back.', 'Igen, a béta alatt minden funkció ingyenes. Egy méltányos napi keret gondoskodik róla, hogy mindenkinek ingyenes maradhasson; ha betelik, megadhatod az e-mail-címed, és szólunk, amint újra lehet előnézetet készíteni.')],
         [T('Do I need an account?', 'Kell fiók?'), T('Not for your first preview. Sign in if you want your previews on every device or want to invite friends.', 'Az első előnézethez nem. Akkor jelentkezz be, ha minden eszközödön látni szeretnéd az előnézeteidet, vagy meghívnál barátokat.')],
@@ -25,7 +24,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('Photos and designs', 'Fotók és minták'),
+      h: T('Photos and designs', 'Fotók és minták'), i: 'photo',
       items: [
         [T('What photo works best?', 'Milyen fotó működik a legjobban?'), T('Daylight, the spot in focus and filling most of the frame, no heavy filters. The app checks light and focus for you.', 'Nappali fény, éles, a képet nagyrészt kitöltő terület, erős szűrők nélkül. Az app ellenőrzi helyetted a fényt és az élességet.')],
         [T('Can I use a photo of someone else’s tattoo?', 'Használhatok más tetoválásáról készült fotót?'), T('Yes. InkAge frames each design it finds and cuts out only the one you pick. Designs belong to their artists, so use them as inspiration and let your artist draw your version.', 'Igen. Az InkAge bekeretez minden mintát, amit talál, és csak azt vágja ki, amelyiket választod. A minták az alkotóikéi, ezért inspirációnak használd őket, és a tetoválód rajzolja meg a saját változatodat.')],
@@ -33,7 +32,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('Results', 'Eredmények'),
+      h: T('Results', 'Eredmények'), i: 'result',
       items: [
         [T('How accurate are the previews?', 'Mennyire pontosak az előnézetek?'), T('They are AI estimates based on how ink, skin and sun usually behave, not measurements of your skin. Use them to compare options and discuss the details with your artist.', 'MI-alapú becslések arról, ahogy a tinta, a bőr és a nap általában viselkedik, nem a bőröd mérései. Lehetőségek összehasonlítására használd őket, és a részleteket beszéld át a tetoválóddal.')],
         [T('What does the longevity score mean?', 'Mit jelent a tartóssági pontszám?'), T('A 0–100 estimate of how well the design keeps its look, with every plus and minus listed. Higher means it is likely to stay readable for longer.', 'Egy 0–100-as becslés arról, mennyire tartja meg a minta a kinézetét, minden plusszal és mínusszal. A magasabb érték azt jelenti, hogy valószínűleg tovább marad olvasható.')],
@@ -41,7 +40,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('Privacy and your data', 'Adatvédelem és az adataid'),
+      h: T('Privacy and your data', 'Adatvédelem és az adataid'), i: 'privacy',
       items: [
         [T('Who can see my photos?', 'Ki látja a fotóimat?'), T('Only you. Without an account, previews stay in your browser; with one, in your private storage. A vote link shares only the fresh and 50-year images.', 'Csak te. Fiók nélkül az előnézetek a böngésződben maradnak, fiókkal a privát tárhelyeden. A szavazós link csak a friss és az 50 éves képet osztja meg.')],
         [T('How do I delete my data?', 'Hogyan törölhetem az adataimat?'), T('In the app: Profile → Delete my account and data. It removes your account and every saved preview.', 'Az appban: Profil → Fiókom és adataim törlése. Ez törli a fiókodat és minden mentett előnézetet.')],
@@ -50,31 +49,9 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
   ];
   const jsonLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: groups.flatMap((g) => g.items.map(([qq, a]) => ({ '@type': 'Question', name: qq, acceptedAnswer: { '@type': 'Answer', text: a } }))) };
   return (
-    <InfoPage lang={L} path="/gyik" kicker={T('FAQ', 'GYIK')} title={T('Questions, answered.', 'Kérdések és válaszok.')} lede={T('Can’t find yours? Write to us — we read every message.', 'Nem találod a sajátodat? Írj nekünk – minden üzenetet elolvasunk.')}>
+    <InfoPage lang={L} path="/gyik" kickerIcon="doc" kicker={T('FAQ', 'GYIK')} title={T('Questions, answered.', 'Kérdések és válaszok.')} lede={T('Can’t find yours? Write to us — we read every message.', 'Nem találod a sajátodat? Írj nekünk – minden üzenetet elolvasunk.')}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      {groups.map((g) => (
-        <section key={g.h} className="ip-sec">
-          <h2>{g.h}</h2>
-          <div className="lm-faq-list ip-faq">
-            {g.items.map(([qq, a]) => (
-              <details key={qq}>
-                <summary>{qq}</summary>
-                <p>{a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-      ))}
-      <div className="ip-cards">
-        <Link className="ip-card" href={`/kapcsolat${q}`}>
-          <b>{T('Ask us', 'Kérdezz tőlünk')}</b>
-          <p>{T('Send a question, an idea or a bug report.', 'Küldj kérdést, ötletet vagy hibajelentést.')}</p>
-        </Link>
-        <Link className="ip-card" href={`/tudastar${q}`}>
-          <b>{T('Knowledge base', 'Tudástár')}</b>
-          <p>{T('12 in-depth guides on how tattoos age.', '12 részletes útmutató arról, hogyan öregszik a tetoválás.')}</p>
-        </Link>
-      </div>
+      <FaqExplorer groups={groups} lang={L} />
     </InfoPage>
   );
 }

@@ -13,8 +13,8 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
       links: [
         { t: T('How it works', 'Hogyan működik'), href: `/hogyan-mukodik${q}` },
         { t: T('Features', 'Funkciók'), href: `/funkciok${q}` },
-        { t: T('Styles by body area', 'Stílusok testrészenként'), href: `/tattoo/fine-line-forearm${lang === 'hu' ? '?lang=hu' : ''}` },
-        { t: T('Free beta', 'Ingyenes béta'), href: `/funkciok${q}#beta` },
+        { t: T('Styles by body area', 'Stílusok testrészenként'), href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}` },
+        { t: T('Free beta', 'Ingyenes béta'), href: `/ingyenes-beta${q}` },
         { t: T('FAQ', 'GYIK'), href: `/gyik${q}` },
       ],
     },
@@ -24,7 +24,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
         { t: T('Open InkAge', 'InkAge megnyitása'), href: '/app' },
         { t: T('Explore designs', 'Minták felfedezése'), href: '/app/explore' },
         { t: T('My previews', 'Előnézeteim'), href: '/app/gallery' },
-        { t: T('Add to home screen', 'Telepítés a kezdőképernyőre'), href: `/hogyan-mukodik${q}#telepites` },
+        { t: T('Add to home screen', 'Telepítés a kezdőképernyőre'), href: `/telepites${q}` },
       ],
     },
     {
@@ -40,7 +40,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
     {
       h: T('Company', 'Cég'),
       links: [
-        { t: T('What is InkAge?', 'Mi az InkAge?'), href: `/rolunk${q}#mi-az` },
+        { t: T('What is InkAge?', 'Mi az InkAge?'), href: `/mi-az-inkage${q}` },
         { t: T('About us', 'Rólunk'), href: `/rolunk${q}` },
         { t: T('Contact', 'Kapcsolat'), href: `/kapcsolat${q}` },
         { t: T('Data security', 'Adatbiztonság'), href: `/adatbiztonsag${q}` },
@@ -49,6 +49,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hide
     {
       h: T('Legal', 'Jog'),
       links: [
+        { t: T('Legal overview', 'Jogi információk'), href: `/jog${q}` },
         { t: T('Terms of use', 'ÁSZF'), href: `/terms${q}` },
         { t: T('Privacy policy', 'Adatvédelem'), href: `/privacy${q}` },
         { t: T('Delete account', 'Fiók törlése'), href: `/fiok-torlese${q}` },

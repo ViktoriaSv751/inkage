@@ -12,7 +12,8 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
   const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
   const sections: InfoSec[] = [
     {
-      h: T('1. Take a photo of the spot', '1. Fotózd le a helyet'),
+      h: T('Take a photo of the spot', 'Fotózd le a helyet'),
+      img: 'hf_20261013_090754_b336f404-4c34-4ef7-b5ba-a080d341d5db',
       ps: [
         T('Open InkAge and take a photo of the place where the tattoo would go — forearm, calf, shoulder blade, anywhere. You can also pick one from your gallery.', 'Nyisd meg az InkAge-et, és fotózd le azt a helyet, ahová a tetoválás kerülne – alkar, vádli, lapocka, bármi. A galériádból is választhatsz.'),
         T('The app checks the light and focus straight away and finds the bare skin in the picture, so the design is only ever placed on skin.', 'Az app azonnal ellenőrzi a fényt és az élességet, és megkeresi a csupasz bőrt a képen, hogy a minta mindig csak bőrre kerüljön.'),
@@ -20,21 +21,24 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('2. Add any design', '2. Adj hozzá bármilyen mintát'),
+      h: T('Add any design', 'Adj hozzá bármilyen mintát'),
+      img: 'hf_20261013_090744_fa240786-23c2-4080-9014-5773a46c24d8',
       ps: [
         T('Upload a sketch, a screenshot from Pinterest or Instagram, a photo of a design on paper — or a photo of a tattoo on someone else’s body. You can also paste a link or pick from the design library.', 'Tölts fel egy vázlatot, egy Pinterest- vagy Instagram-képernyőfotót, egy papíron lévő mintáról készült fotót – vagy akár valaki más testén lévő tetoválás fotóját. Linket is beilleszthetsz, vagy választhatsz a mintatárból.'),
         T('If the picture contains more than one design, InkAge frames each one and asks which you want. Only the framed part is used — no person, no clothes, no background.', 'Ha a képen több minta is van, az InkAge mindegyiket bekeretezi, és megkérdezi, melyiket szeretnéd. Csak a bekeretezett rész kerül felhasználásra – ember, ruha és háttér nélkül.'),
       ],
     },
     {
-      h: T('3. Place and size it', '3. Helyezd el és méretezd'),
+      h: T('Place and size it', 'Helyezd el és méretezd'),
+      img: 'hf_20261013_094428_03d5223f-83ed-4279-a522-78515046a4c0',
       ps: [
         T('Drag, pinch and rotate the design into place. The editor shows the size in centimetres, with quick buttons for 3, 5, 8, 12 and 20 cm.', 'Húzd, csippentsd és forgasd a mintát a helyére. A szerkesztő centiméterben mutatja a méretet, és vannak gyorsgombok 3, 5, 8, 12 és 20 cm-re.'),
         T('Choose the body area on the body map. Friction and sun differ a lot between, say, a finger and an upper back, and that changes how the design ages.', 'Válaszd ki a testrészt a testtérképen. A súrlódás és a napfény nagyon eltér mondjuk egy ujj és a hát felső része között, és ez megváltoztatja, hogyan öregszik a minta.'),
       ],
     },
     {
-      h: T('4. Watch it age', '4. Nézd, hogyan öregszik'),
+      h: T('Watch it age', 'Nézd, hogyan öregszik'),
+      img: 'hf_20261013_090713_9a5ab662-392f-41d6-9e0b-52da1e87bfe3',
       ps: [
         T('In about a minute you get realistic images on your own photo: fresh, healed after a year, and at 10, 30 and 50 years.', 'Nagyjából egy perc alatt valósághű képeket kapsz a saját fotódon: frissen, gyógyultan egy év után, valamint 10, 30 és 50 év múlva.'),
         T('Alongside them comes a **longevity score from 0 to 100**, with the reasons that raised or lowered it — line weight, detail at this size, colours, placement and sun.', 'Mellettük egy **0–100-as tartóssági pontszám** is megjelenik, azokkal az okokkal, amelyek emelték vagy csökkentették – vonalvastagság, részletesség ennél a méretnél, színek, hely és napfény.'),
@@ -42,7 +46,8 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('5. Decide together', '5. Döntsetek közösen'),
+      h: T('Decide together', 'Döntsetek közösen'),
+      img: 'hf_20261013_090754_fed474a4-feac-40fa-928d-47ed6d6cef1a',
       ps: [
         T('Share a link where friends vote “get it”, “change it” or “which one?”, make a short video for TikTok, Reels or Shorts, or download a one-page PDF with the design, size, placement and previews to take to your artist.', 'Ossz meg egy linket, amin a barátaid szavaznak („csináltasd”, „változtass”, „melyiket?”), készíts rövid videót TikTokra, Reelsre vagy Shortsra, vagy töltsd le az egyoldalas PDF-et a mintával, mérettel, hellyel és előnézetekkel, és vidd el a tetoválódnak.'),
       ],
@@ -76,9 +81,18 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       kicker={T('How it works', 'Hogyan működik?')}
       title={T('From one photo to 50 years, in about a minute.', 'Egy fotótól az 50 évig, nagyjából egy perc alatt.')}
       lede={T('Five steps, no sign-up for your first preview, and nothing leaves your device unless you ask for a preview.', 'Öt lépés, az első előnézethez nem kell regisztráció, és semmi sem hagyja el az eszközödet, amíg nem kérsz előnézetet.')}
-      img="hf_20261013_090754_b336f404-4c34-4ef7-b5ba-a080d341d5db"
       sections={sections}
       toc
+      highlights={[
+        { i: 'clock', h: T('About a minute', 'Kb. egy perc'), p: T('From photo to five ageing stages.', 'A fotótól az öt öregedési stádiumig.') },
+        { i: 'user', h: T('No sign-up', 'Regisztráció nélkül'), p: T('Your first preview needs no account.', 'Az első előnézethez nem kell fiók.') },
+        { i: 'spark', h: T('Free in beta', 'Ingyenes a béta alatt'), p: T('Every feature, no card needed.', 'Minden funkció, kártya nélkül.') },
+      ]}
+      related={[
+        { href: '/funkciok', t: T('Features', 'Funkciók'), p: T('Everything InkAge can do.', 'Minden, amit az InkAge tud.'), i: 'spark' },
+        { href: '/telepites', t: T('Install the app', 'Telepítés'), p: T('Put InkAge on your home screen.', 'Tedd ki a kezdőképernyőre.'), i: 'phone' },
+        { href: '/gyik', t: T('FAQ', 'GYIK'), p: T('Quick answers to common questions.', 'Gyors válaszok a gyakori kérdésekre.'), i: 'doc' },
+      ]}
     />
   );
 }

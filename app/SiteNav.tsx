@@ -26,6 +26,18 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [up, setUp] = useState(false);
+  const [menu, setMenu] = useState(false);
+  useEffect(() => {
+    if (!menu) return;
+    document.body.style.overflow = 'hidden';
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(false);
+    window.addEventListener('keydown', k);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', k);
+    };
+  }, [menu]);
+  useEffect(() => setMenu(false), [pathname]);
   useEffect(() => {
     const h = () => {
       setScrolled(window.scrollY > 6);
@@ -75,16 +87,81 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
             ))}
           </nav>
           <div className="sn-r">
-            <LangPicker lang={lang} onPick={pick} />
             <Link className="sn-signin" href="/app" onClick={() => track('nav_signin')}>
               {signedIn ? T('Open app', 'App') : T('Sign in', 'Belépés')}
             </Link>
             <Link className="sn-cta" href="/app" onClick={() => track('nav_cta')}>
               {T('Try it free', 'Kipróbálom')}
             </Link>
+            <button className="sn-burger" aria-label={T('Menu', 'Menü')} aria-expanded={menu} onClick={() => setMenu(true)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M10 17h10" />
+              </svg>
+            </button>
           </div>
         </div>
       </header>
+
+      <div className={`sn-drawer-wrap ${menu ? 'open' : ''}`} aria-hidden={!menu} onClick={() => setMenu(false)}>
+        <aside className="sn-drawer" role="dialog" aria-modal="true" aria-label={T('Menu', 'Menü')} onClick={(e) => e.stopPropagation()}>
+          <div className="sn-dr-head">
+            <Link href={`/${q}`} className="sn-logo" aria-label="InkAge">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="30" />
+                <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+              </svg>
+              InkAge
+            </Link>
+            <button className="sn-dr-x" aria-label={T('Close menu', 'Menü bezárása')} onClick={() => setMenu(false)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+          <nav className="sn-dr-main">
+            {[
+              { href: `/${q}`, base: '/', t: T('Home', 'Főoldal') },
+              { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik') },
+              { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók') },
+              { href: `/tudastar${q}`, base: '/tudastar', t: T('Knowledge base', 'Tudástár') },
+              { href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}`, base: '/tattoo', t: T('Styles by body area', 'Stílusok testrészenként') },
+              { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK') },
+            ].map((l) => (
+              <Link key={l.base} href={l.href} className={isOn(l.base) ? 'on' : ''}>
+                {l.t}
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </Link>
+            ))}
+          </nav>
+          <nav className="sn-dr-sub">
+            {[
+              { href: `/ingyenes-beta${q}`, t: T('Free beta', 'Ingyenes béta') },
+              { href: `/telepites${q}`, t: T('Install the app', 'Telepítés') },
+              { href: `/mi-az-inkage${q}`, t: T('What is InkAge?', 'Mi az InkAge?') },
+              { href: `/rolunk${q}`, t: T('About us', 'Rólunk') },
+              { href: `/kapcsolat${q}`, t: T('Contact', 'Kapcsolat') },
+              { href: `/adatbiztonsag${q}`, t: T('Data security', 'Adatbiztonság') },
+            ].map((l) => (
+              <Link key={l.href} href={l.href}>
+                {l.t}
+              </Link>
+            ))}
+          </nav>
+          <div className="sn-dr-lang">
+            <LangPicker lang={lang} onPick={pick} variant="row" label={T('Language', 'Nyelv')} />
+          </div>
+          <div className="sn-dr-cta">
+            <Link className="sn-dr-try" href="/app" onClick={() => track('drawer_cta')}>
+              {T('Try it free', 'Kipróbálom ingyen')}
+            </Link>
+            <Link className="sn-dr-in" href="/app">
+              {signedIn ? T('Open app', 'App megnyitása') : T('Sign in', 'Belépés')}
+            </Link>
+          </div>
+        </aside>
+      </div>
 
       <nav className="sn-tabbar" aria-label={T('Site', 'Oldal')}>
         {tabs.map((t) => {
@@ -94,7 +171,7 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 {t.i}
               </svg>
-              <span>{t.t}</span>
+              {t.cta ? <span className="sr-only">{t.t}</span> : <span>{t.t}</span>}
             </Link>
           );
         })}

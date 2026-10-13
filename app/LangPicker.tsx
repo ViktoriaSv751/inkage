@@ -14,13 +14,17 @@ const LANGS: { k: Lang; name: string; sub: string; flag: string }[] = [
  * Language button + picker sheet: a list with radio circles and a confirm step,
  * instead of switching the moment you tap.
  */
-export function LangPicker({ lang, onPick, variant = 'pill' }: { lang: Lang; onPick: (l: Lang) => void; variant?: 'pill' | 'row' | 'icon' }) {
+export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: Lang; onPick: (l: Lang) => void; variant?: 'pill' | 'row' | 'icon'; label?: string }) {
   const [open, setOpen] = useState(false);
   const [sel, setSel] = useState<Lang>(lang);
+  const [q, setQ] = useState('');
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   useEffect(() => {
-    if (open) setSel(lang);
+    if (open) {
+      setSel(lang);
+      setQ('');
+    }
   }, [open, lang]);
   useEffect(() => {
     if (!open) return;
@@ -39,7 +43,7 @@ export function LangPicker({ lang, onPick, variant = 'pill' }: { lang: Lang; onP
     <>
       {variant === 'row' ? (
         <button type="button" className="lp-row" onClick={() => setOpen(true)}>
-          <span>{T('Language', 'Nyelv')}</span>
+          <span>{label || T('Language', 'Nyelv')}</span>
           <span className="lp-row-v">
             {cur.name}
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -59,39 +63,50 @@ export function LangPicker({ lang, onPick, variant = 'pill' }: { lang: Lang; onP
       {open &&
         mounted &&
         createPortal(
-          <div className="lp-wrap" onClick={() => setOpen(false)}>
-            <div className="lp-sheet" role="dialog" aria-modal="true" aria-label={T('Language', 'Nyelv')} onClick={(e) => e.stopPropagation()}>
-              <div className="lp-grab" aria-hidden="true" />
-              <div className="lp-head">
-                <h2>{T('Language', 'Nyelv')}</h2>
-                <button type="button" className="lp-x" aria-label={T('Close', 'Bezárás')} onClick={() => setOpen(false)}>
+          <div className="lp-wrap" role="dialog" aria-modal="true" aria-label={T('Language', 'Nyelv')}>
+            <div className="lp-page">
+              <header className="lp-bar">
+                <button type="button" className="lp-x" aria-label={T('Back', 'Vissza')} onClick={() => setOpen(false)}>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6 6l12 12M18 6L6 18" />
+                    <path d="M15 5l-7 7 7 7" />
                   </svg>
                 </button>
+                <h2>{T('Language', 'Nyelv')}</h2>
+                <span />
+              </header>
+              <div className="lp-body">
+                <p className="lp-lead">{T('Choose the language for InkAge. You can change it any time.', 'Válaszd ki az InkAge nyelvét. Bármikor módosíthatod.')}</p>
+                <label className="lp-search">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="M20 20l-4-4" />
+                  </svg>
+                  <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={T('Search languages', 'Nyelv keresése')} aria-label={T('Search languages', 'Nyelv keresése')} />
+                </label>
+                <ul className="lp-list" role="radiogroup">
+                  {LANGS.filter((l) => !q || (l.name + ' ' + l.sub).toLowerCase().includes(q.toLowerCase())).map((l) => (
+                    <li key={l.k}>
+                      <button type="button" role="radio" aria-checked={sel === l.k} className={sel === l.k ? 'on' : ''} onClick={() => setSel(l.k)}>
+                        <span className="lp-flag" aria-hidden="true">
+                          {l.flag}
+                        </span>
+                        <span className="lp-name">
+                          <b>{l.name}</b>
+                          <small>{l.sub}</small>
+                        </span>
+                        <span className="lp-radio" aria-hidden="true">
+                          <svg viewBox="0 0 24 24">
+                            <path d="M6 12.5l4 4L18 8" />
+                          </svg>
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <p className="lp-note">{T('More languages are coming soon.', 'Hamarosan további nyelvek is érkeznek.')}</p>
               </div>
-              <ul className="lp-list" role="radiogroup">
-                {LANGS.map((l) => (
-                  <li key={l.k}>
-                    <button type="button" role="radio" aria-checked={sel === l.k} className={sel === l.k ? 'on' : ''} onClick={() => setSel(l.k)}>
-                      <span className="lp-flag" aria-hidden="true">
-                        {l.flag}
-                      </span>
-                      <span className="lp-name">
-                        <b>{l.name}</b>
-                        <small>{l.sub}</small>
-                      </span>
-                      <span className="lp-radio" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
-                          <path d="M6 12.5l4 4L18 8" />
-                        </svg>
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <p className="lp-note">{T('More languages are coming soon.', 'Hamarosan további nyelvek is érkeznek.')}</p>
-              <div className="lp-actions">
+              <footer className="lp-actions">
+                <p className="lp-terms">{T('Your choice is saved on this device.', 'A választásodat ezen az eszközön megjegyezzük.')}</p>
                 <button
                   type="button"
                   className="lp-ok"
@@ -105,7 +120,7 @@ export function LangPicker({ lang, onPick, variant = 'pill' }: { lang: Lang; onP
                 <button type="button" className="lp-cancel" onClick={() => setOpen(false)}>
                   {T('Cancel', 'Mégse')}
                 </button>
-              </div>
+              </footer>
             </div>
           </div>,
           document.body

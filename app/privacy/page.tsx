@@ -19,5 +19,9 @@ export default function Privacy({ searchParams }: { searchParams: { lang?: strin
     { h: T('Your rights', 'A jogaid'), ps: [T('You can download your data and delete your account and every saved preview yourself at any time in the app (Profile). You can also ask us to access or delete your data through the contact page. Under the GDPR you may complain to your local data protection authority (in Hungary: NAIH).', 'Az adataidat bármikor letöltheted, a fiókodat és minden mentett előnézetedet pedig magad törölheted az appban (Profil). A kapcsolat oldalon keresztül is kérheted az adataidhoz való hozzáférést vagy azok törlését. A GDPR alapján panaszt tehetsz a helyi adatvédelmi hatóságnál (Magyarországon: NAIH).')] },
     { h: T('Storage on your device', 'Tárolás az eszközödön'), ps: [T('We use one cookie and local storage only to keep you signed in, remember your language and answers, apply the guest limit and keep guest previews on your device. See the cookie notice for details.', 'Egyetlen sütit és a helyi tárolót csak arra használjuk, hogy bejelentkezve tartsunk, megjegyezzük a nyelvet és a válaszaidat, alkalmazzuk a vendégkeretet, és az eszközödön tartsuk a vendég-előnézeteket. A részleteket a süti tájékoztató tartalmazza.')] },
   ];
-  return <InfoPage lang={L} path="/privacy" kicker={T('Legal', 'Jog')} title={T('Privacy policy', 'Adatvédelmi tájékoztató')} sections={sections} updated={T('October 2026', '2026. október')} toc cta={false} />;
+  return <InfoPage lang={L} path="/privacy" kicker={T('Legal', 'Jog')} title={T('Privacy policy', 'Adatvédelmi tájékoztató')} sections={sections} updated={T('October 2026', '2026. október')} toc cta={false} kickerIcon="lock" related={[
+    { href: '/adatbiztonsag', t: T('Data security', 'Adatbiztonság'), p: T('The short, friendly version.', 'A rövid, barátságos változat.'), i: 'shield' },
+    { href: '/fiok-torlese', t: T('Delete account', 'Fiók törlése'), p: T('Step by step.', 'Lépésről lépésre.'), i: 'trash' },
+    { href: '/jog', t: T('All legal pages', 'Minden jogi oldal'), p: T('Everything in one place.', 'Minden egy helyen.'), i: 'scale' },
+  ]} />;
 }
