@@ -26,3 +26,8 @@ export async function guestBumpAge(gid: number, guest: string) {
 export async function guestRefund(gid: number, guest: string) {
   await userClient().rpc('guest_refund', { p_secret: appSecret('db'), p_gid: gid, p_guest: guest });
 }
+export async function guestHelperStart(guest: string, ipHash: string, label: string) {
+  const { data, error } = await userClient().rpc('guest_helper_start', { p_secret: appSecret('db'), p_guest: guest, p_ip: ipHash, p_label: label });
+  if (error) throw error;
+  return data as { ok: boolean; gid?: number; reason?: 'used' | 'busy' };
+}

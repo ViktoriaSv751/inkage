@@ -1,3 +1,4 @@
+import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, json } from '@/lib/server';
 import { aiConfigured, dataUrlToImg, editImage, extractCheck, extractPrompt, friendlyAiError } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
     return u.withCookie(json({ image, match: check.match }));
   } catch (e) {
     console.error('extract failed', e);
+    await logServerError('extract', e);
     await u.refund();
     return u.withCookie(json({ error: friendlyAiError(e) }, 502));
   }

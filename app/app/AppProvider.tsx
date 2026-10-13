@@ -81,7 +81,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // service worker for the installable app
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
     track('app_open', { path: location.pathname });
-    return () => sub?.data.subscription.unsubscribe();
+    // error reporting: what broke and where (max 5 per visit, no personal data)
+    let sent = 0;
+    const report = (msg: string, src?: string) => {
+      if (sent >= 5 || !msg || /ResizeObserver|Script error|extension:\/\//.test(msg + (src || ''))) return;
+      sent++;
+      track('client_error', { msg: msg.slice(0, 200), src: (src || '').slice(0, 120), path: location.pathname, ua: navigator.userAgent.slice(0, 120) });
+    };
+    const onErr = (e: ErrorEvent) => report(String(e.message), `${e.filename || ''}:${e.lineno || ''}`);
+    const onRej = (e: PromiseRejectionEvent) => report(String((e.reason && (e.reason.message || e.reason)) || 'rejection'));
+    window.addEventListener('error', onErr);
+    window.addEventListener('unhandledrejection', onRej);
+    return () => {
+      sub?.data.subscription.unsubscribe();
+      window.removeEventListener('error', onErr);
+      window.removeEventListener('unhandledrejection', onRej);
+    };
   }, [refreshMe]);
 
   return (

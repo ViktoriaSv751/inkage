@@ -557,3 +557,7 @@
 .oauth { display: grid; gap: 8px; margin-bottom: 6px; }
 .checklist label input[type='checkbox'] { width: 20px !important; height: 20px; min-height: 0; flex: none; margin: 0; padding: 0; box-shadow: none; }
 .checklist label span { flex: 1; text-align: left; }
+.galtools { display: grid; gap: 8px; margin-top: 12px; }
+.galtools input[type='search'] { width: 100%; border: 0; background: var(--surface); border-radius: 14px; padding: 12px 14px; font: inherit; font-size: 16px; box-shadow: inset 0 0 0 1px var(--line); }
+.galtools .chip { padding: 7px 12px; font-size: 13px; }
+.tile .tile-design { position: absolute; left: 8px; top: 8px; width: 38px !important; height: 38px !important; object-fit: contain; background: #fff; border-radius: 10px; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,.2); }

@@ -1,3 +1,4 @@
+import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, json } from '@/lib/server';
 import { aiConfigured, editImage, friendlyAiError, improvePrompt } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
     return u.withCookie(json({ image }));
   } catch (e) {
     console.error('improve failed', e);
+    await logServerError('improve', e);
     await u.refund();
     return u.withCookie(json({ error: friendlyAiError(e) }, 502));
   }

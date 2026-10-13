@@ -1,6 +1,8 @@
+import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken, verifyToken } from '@/lib/server';
 import { agePrompt, aiConfigured, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage, stageYears } from '@/lib/ai';
 import { guestBumpAge, guestFrom } from '@/lib/guest';
+import { jobPut } from '@/lib/jobs';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -38,9 +40,11 @@ export async function POST(req: Request) {
     const image = await editImage([{ ...img, name: 'fresh.jpg' }], isRemoval ? removalPrompt(stage as RemovalStage, t.an) : agePrompt(stage as Stage, t.an, from), t.w, t.hh);
     // a token for this image, so the next stage can continue from it
     const token = isRemoval ? null : signToken({ ...t, h: sha(image), y: stageYears(stage as Stage) });
+    await jobPut(body.job, t.uid, stage, { image, token });
     return json({ stage, image, token });
   } catch (e) {
     console.error('age failed', e);
+    await logServerError('age', e);
     return json({ error: friendlyAiError(e) }, 502);
   }
 }

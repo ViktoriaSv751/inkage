@@ -6,7 +6,9 @@ import { useApp } from '../AppProvider';
 import { Sheet } from '../ui';
 import { tx } from '@/lib/i18n';
 import { sb } from '@/lib/sb';
-import { local, lsSet, track } from '@/lib/store';
+import { cloud, local, lsGet, lsSet, Preview, track } from '@/lib/store';
+import { placeName } from '../create/steps';
+import type { OnboardingAnswers } from '../create/Onboarding';
 
 const ADMIN = ['vviktoriasoti@gmail.com'];
 
@@ -20,6 +22,32 @@ export default function ProfilePage() {
   const [erase, setErase] = useState(false);
   const [confirm, setConfirm] = useState('');
   const [busy, setBusy] = useState(false);
+  const [mine, setMine] = useState<Preview[] | null>(null);
+  const [ob, setOb] = useState<OnboardingAnswers | null>(null);
+
+  useEffect(() => {
+    Promise.all([me.user ? cloud.all().catch(() => []) : Promise.resolve([]), local.all().catch(() => [])]).then(([c, l]) => setMine([...c, ...l]));
+    setOb((me.onboarding as OnboardingAnswers) || lsGet<OnboardingAnswers | null>('ink_onboarding', null));
+  }, [me.user, me.onboarding]);
+
+  // your numbers
+  const scored = (mine || []).filter((p) => typeof p.score === 'number');
+  const avg = scored.length ? Math.round(scored.reduce((a, p) => a + (p.score || 0), 0) / scored.length) : null;
+  const best = scored.reduce<Preview | null>((b, p) => (!b || (p.score || 0) > (b.score || 0) ? p : b), null);
+  const topPlace = (() => {
+    const n: Record<string, number> = {};
+    (mine || []).forEach((p) => (n[p.placement] = (n[p.placement] || 0) + 1));
+    return Object.entries(n).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  })();
+
+  // skin & lifestyle: used for every new preview (sun exposure changes how fast ink fades)
+  const saveOb = (patch: Partial<OnboardingAnswers>) => {
+    const next = { ...(ob || ({} as OnboardingAnswers)), ...patch } as OnboardingAnswers;
+    setOb(next);
+    lsSet('ink_onboarding', next);
+    if (me.user) sb()?.rpc('save_profile', { p_onboarding: next, p_lang: ui.lang });
+    toast(t('Saved — new previews use this', 'Mentve – az új előnézetek ezt használják'));
+  };
 
   useEffect(() => {
     setIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
@@ -127,6 +155,67 @@ export default function ProfilePage() {
             {ui.t('common.signin')}
           </button>
         )}
+      </div>
+
+      {mine && mine.length > 0 && (
+        <div className="card" style={{ marginTop: 12 }}>
+          <h2>{t('Your previews', 'Az előnézeteid')}</h2>
+          <div className="statrow">
+            <div className="stat">
+              <b>{mine.length}</b>
+              <span>{t('saved', 'mentve')}</span>
+            </div>
+            <div className="stat">
+              <b>{avg ?? '–'}</b>
+              <span>{t('average score', 'átlagos pontszám')}</span>
+            </div>
+            <div className="stat">
+              <b>{best?.score ?? '–'}</b>
+              <span>{t('best score', 'legjobb pontszám')}</span>
+            </div>
+          </div>
+          {(best || topPlace) && (
+            <p className="muted small" style={{ margin: '12px 0 0' }}>
+              {best && t(`Your best-aging design: ${placeName(best.placement, 'en').toLowerCase()}, ${best.size}. `, `A legjobban öregedő terved: ${placeName(best.placement, 'hu').toLowerCase()}, ${best.size}. `)}
+              {topPlace && t(`Most tried spot: ${placeName(topPlace, 'en').toLowerCase()}.`, `Leggyakrabban kipróbált hely: ${placeName(topPlace, 'hu').toLowerCase()}.`)}
+            </p>
+          )}
+          <Link className="btn ghost wide" href="/app/gallery" style={{ marginTop: 12 }}>
+            {t('Open gallery', 'Galéria megnyitása')}
+          </Link>
+        </div>
+      )}
+
+      <div className="card" style={{ marginTop: 12 }}>
+        <h2>{t('Skin & lifestyle', 'Bőr és életmód')}</h2>
+        <p className="muted small">{t('Sun is the #1 reason ink fades. This makes every aging preview match your life.', 'A nap a fakulás első számú oka. Ez alapján igazítjuk az öregedést a te életedhez.')}</p>
+        <b style={{ display: 'block', fontSize: 14, margin: '10px 0 6px' }}>{t('How much sun does your skin get?', 'Mennyi nap éri a bőröd?')}</b>
+        <div className="seg" role="radiogroup">
+          {(
+            [
+              ['low', t('Little', 'Kevés')],
+              ['medium', t('Some', 'Közepes')],
+              ['high', t('A lot', 'Sok')],
+            ] as const
+          ).map(([v, l]) => (
+            <button key={v} role="radio" aria-checked={(ob?.sun || 'medium') === v} className={(ob?.sun || 'medium') === v ? 'on' : ''} onClick={() => saveOb({ sun: v })}>
+              {l}
+            </button>
+          ))}
+        </div>
+        <button
+          className="list-row"
+          style={{ marginTop: 8 }}
+          onClick={() => {
+            location.href = '/app?again=1';
+          }}
+        >
+          <span>
+            {t('Answer the starting questions again', 'A kezdő kérdések újra')}
+            <small>{t('Body area, size, style and goals', 'Testrész, méret, stílus és célok')}</small>
+          </span>
+          <span aria-hidden="true">›</span>
+        </button>
       </div>
 
       <div className="card" style={{ marginTop: 12 }}>

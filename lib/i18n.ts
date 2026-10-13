@@ -197,6 +197,9 @@ export const tx = (lang: Lang, en: string, hu: string) => (lang === 'hu' ? hu : 
 
 /** Server messages are English; show them in Hungarian when the app is in Hungarian. */
 const ERR_HU: [RegExp, string][] = [
+  [/^You used today’s cut-outs/, 'Mára elfogytak a kivágások és MI-rajzok. Holnap újra használhatod – az előnézeteidet ez nem érinti.'],
+  [/^You shared a lot today/, 'Ma már sokat osztottál meg. Próbáld újra holnap.'],
+  [/^Sharing failed/, 'A megosztás nem sikerült. Próbáld újra.'],
   [/^You used your free preview/, 'Elhasználtad az ingyenes előnézeteidet mára. Próbáld újra holnap.'],
   [/^You reached your plan limit/, 'Elérted a mai keretedet. Próbáld újra később.'],
   [/^So many people are trying InkAge today/, 'Ma nagyon sokan próbálják az InkAge-et, ezért az ingyenes előnézetek szünetelnek. Próbáld újra holnap.'],

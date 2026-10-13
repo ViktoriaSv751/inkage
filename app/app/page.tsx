@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useApp } from './AppProvider';
-import { Icon, OutOfPreviews } from './ui';
+import { Icon, OutOfPreviews, Waitlist } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
 import { aiPlacement } from '@/lib/placements';
 import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx } from '@/lib/i18n';
-import { api } from '@/lib/sb';
+import { api, sb } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
 import { composeMockup, pasteMask, Placement, Skin } from '@/lib/editor';
 import { loadImage } from '@/lib/client';
@@ -18,6 +18,7 @@ import { processDesign } from '@/lib/editor';
 import { lsSet } from '@/lib/store';
 
 type Phase = 'loading' | 'onboarding' | 'studio' | 'place' | 'gen' | 'result';
+type JobMeta = Pick<Preview, 'placement' | 'mode' | 'size' | 'sizeCm' | 'design' | 'focus'>;
 const AGE_STAGES: StageKey[] = ['healed', 'y10', 'y30', 'y50'];
 
 async function flattenOnWhite(src: string, max = 1024) {
@@ -71,6 +72,7 @@ export default function CreatePage() {
   const [remPending, setRemPending] = useState<RemovalKey[]>([]);
   const [improving, setImproving] = useState(false);
   const [busyNote, setBusyNote] = useState(false);
+  const [waitlist, setWaitlist] = useState(false);
   const prevRef = useRef<Preview | null>(null);
   // where the chosen body part is in the photo (found by the AI), and whether the user moved the design since
   const [area, setArea] = useState<(Area & { for: string; photo: string }) | null>(null);
@@ -106,7 +108,9 @@ export default function CreatePage() {
   useEffect(() => {
     if (phase === 'place' && areaNow && design && photo && !userMoved.current) setPl(fitToArea(areaNow, design, photo));
   }, [phase, areaNow?.box?.join(','), design?.ink]); // eslint-disable-line react-hooks/exhaustive-deps
-  const job = useRef<{ token: string; fresh: string } | null>(null);
+  const job = useRef<{ token: string; fresh: string; id?: string } | null>(null);
+  const recovering = useRef(false);
+  const againRef = useRef(false);
   const saved = useRef(false);
   const previewRef = useRef<Preview | null>(null);
   previewRef.current = preview;
@@ -121,7 +125,9 @@ export default function CreatePage() {
         return null;
       }
     })();
-    if (ans) {
+    const again = new URLSearchParams(location.search).has('again');
+    if (again) againRef.current = true;
+    if (ans && !again) {
       applyOnboarding(ans);
       setPhase('studio');
     } else setPhase('onboarding');
@@ -142,7 +148,7 @@ export default function CreatePage() {
 
   // signed-in users who onboarded on another device skip it too
   useEffect(() => {
-    if (phase === 'onboarding' && me.onboarding?.placement) {
+    if (phase === 'onboarding' && me.onboarding?.placement && !againRef.current) {
       applyOnboarding(me.onboarding);
       setPhase('studio');
     }
@@ -194,9 +200,9 @@ export default function CreatePage() {
     setPending((p) => (p.includes(k) ? p : [...p, k]));
     const parent = !fromFresh && PARENT[k] && PARENT[k] !== 'fresh' ? tokens.current[PARENT[k]!] : null;
     const base = parent || { token: j.token, image: j.fresh };
-    let r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: base.image, token: base.token });
+    let r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: base.image, token: base.token, job: j.id });
     // if continuing from the previous stage fails, start from the fresh photo instead
-    if (!r.ok && parent && job.current === j) r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token });
+    if (!r.ok && parent && job.current === j) r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token, job: j.id });
     if (job.current !== j) return; // a newer preview was started meanwhile
     setPending((p) => p.filter((x) => x !== k));
     if (r.ok && r.data.image) {
@@ -238,6 +244,7 @@ export default function CreatePage() {
     const place = over?.pl ?? pl;
     const existing = mode === 'existing';
     if (!photo || (!d && !existing)) return;
+    recovering.current = true; // a new job: nothing to recover any more
     // keep the finished one around to compare with
     if (previewRef.current?.images.y50) prevRef.current = previewRef.current;
     job.current = null;
@@ -270,7 +277,24 @@ export default function CreatePage() {
             detail: d!.detail,
           };
         })();
-    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: ob?.sun, lang: ui.lang, w: photo.w, h: photo.h, ...extra };
+    const jobId = crypto.randomUUID();
+    const meta: JobMeta = {
+      placement,
+      mode,
+      size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
+      sizeCm: existing ? existingCm ?? undefined : Math.round(cm * 10) / 10,
+      design: existing ? undefined : d!.ink,
+      focus: existing ? undefined : { x: place.x, y: place.y, w: place.w * Math.max(1, d!.ratio * (photo.w / photo.h)) },
+    };
+    // remember the running job, so its result can be picked up if the app gets closed
+    try {
+      localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta }));
+    } catch {
+      try {
+        localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta: { ...meta, design: undefined } }));
+      } catch {}
+    }
+    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: ob?.sun, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, ...extra };
     let r = await api<any>('/api/generate', body);
     // a busy minute at the AI provider: wait and retry automatically (twice)
     for (let i = 0; i < 2 && !r.ok && /Lots of people|took too long/.test(r.data?.error || ''); i++) {
@@ -282,7 +306,9 @@ export default function CreatePage() {
     timers.forEach(clearTimeout);
 
     if (!r.ok) {
+      lsSet('ink_job', null);
       setPhase(existing ? 'studio' : 'place');
+      if (r.data?.code === 'busy') setWaitlist(true);
       if (r.data?.code === 'paywall') {
         track('paywall', { plan: r.data.plan });
         if (!me.user) openAuth(t('You reached today’s limit on this device. Sign in (free) to keep going and keep your designs.', 'Elérted a mai keretet ezen az eszközön. Jelentkezz be (ingyenes), és folytathatod – a terveid is megmaradnak.'));
@@ -297,37 +323,72 @@ export default function CreatePage() {
     setGenStep(3);
     haptic('success');
     track('generate_done', { qc: r.data.qc, score: r.data.report?.score, mode });
+    showResult(r.data, meta, jobId);
+  };
+
+  /** Show a finished fresh image and run (or continue) the aging stages. */
+  const showResult = (data: any, meta: JobMeta, jobId: string, have: Record<string, any> = {}) => {
     saved.current = false;
+    const images: Preview['images'] = { fresh: data.image };
+    for (const k of AGE_STAGES) if (have[k]?.image) images[k] = have[k].image;
     const p: Preview = {
       id: crypto.randomUUID(),
       created_at: new Date().toISOString(),
-      placement,
-      size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
-      sizeCm: existing ? existingCm ?? undefined : Math.round(cm * 10) / 10,
-      score: r.data.report?.score ?? null,
-      report: r.data.report ?? null,
-      age: r.data.age ?? null,
+      placement: meta.placement,
+      size: meta.size,
+      sizeCm: meta.sizeCm,
+      score: data.report?.score ?? null,
+      report: data.report ?? null,
+      age: data.age ?? null,
       notes: '',
       favorite: false,
       collection: null,
-      images: { fresh: r.data.image },
-      mode,
-      design: existing ? undefined : d!.ink,
-      focus: existing ? undefined : { x: place.x, y: place.y, w: place.w * Math.max(1, d!.ratio * (photo.w / photo.h)) },
+      images,
+      mode: meta.mode,
+      design: meta.design,
+      focus: meta.focus,
       source: 'local',
     };
     setPreview(p);
     setFailed([]);
     setPhase('result');
     refreshMe();
-    if (r.data.canAge && r.data.token) {
-      job.current = { token: r.data.token, fresh: r.data.image };
+    if (data.canAge && data.token) {
+      job.current = { token: data.token, fresh: data.image, id: jobId };
       tokens.current = {};
       started.current = new Set();
-      setPending(AGE_STAGES);
-      (['healed', 'y10'] as StageKey[]).forEach((k) => ageOne(k));
-    }
+      for (const k of AGE_STAGES) if (have[k]?.token) ((tokens.current[k] = have[k]), started.current.add(k));
+      const missing = AGE_STAGES.filter((k) => !images[k]);
+      setPending(missing);
+      // start every missing stage whose parent is ready
+      missing.filter((k) => PARENT[k] === 'fresh' || images[PARENT[k]!]).forEach((k) => ageOne(k));
+    } else lsSet('ink_job', null);
   };
+
+  // A preview was running when the app was closed or reloaded: pick up its result from the server.
+  useEffect(() => {
+    if (phase !== 'studio' || recovering.current || preview) return;
+    const pj = lsGet<{ id: string; at: number; meta: JobMeta } | null>('ink_job', null);
+    if (!pj?.id || Date.now() - pj.at > 2 * 3600e3) return;
+    recovering.current = true;
+    (async () => {
+      setPhase('gen');
+      setGenStep(2);
+      for (let i = 0; i < 40; i++) {
+        const r = await api<{ data: Record<string, any> | null }>(`/api/job?id=${pj.id}`);
+        const d = r.ok ? r.data.data : null;
+        if (d?.fresh) {
+          track('job_recovered');
+          toast(t('We kept your last preview for you', 'Megtartottuk a legutóbbi előnézetedet'));
+          return showResult(d.fresh, pj.meta, pj.id, d);
+        }
+        if (d?.error || (!d && Date.now() - pj.at > 6 * 60e3)) break;
+        await new Promise((res) => setTimeout(res, 4000));
+      }
+      lsSet('ink_job', null);
+      setPhase('studio');
+    })();
+  }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // "Make it last": redraw the design with the AI, then run it again on the same spot.
   const improve = async () => {
@@ -367,6 +428,7 @@ export default function CreatePage() {
           toast(ui.t('result.savedLocal'));
         }
         track('preview_saved', { cloud: !!me.user });
+        lsSet('ink_job', null);
       } catch (e) {
         console.warn('save failed', e);
         saved.current = false;
@@ -402,6 +464,11 @@ export default function CreatePage() {
       <Onboarding
         onDone={(a) => {
           applyOnboarding(a);
+          if (againRef.current) {
+            againRef.current = false;
+            history.replaceState(null, '', '/app');
+            if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang });
+          }
           setPhase('studio');
         }}
       />
@@ -462,6 +529,7 @@ export default function CreatePage() {
             window.scrollTo({ top: 0 });
           }}
         />
+        <Waitlist open={waitlist} onClose={() => setWaitlist(false)} />
       </>
     );
 
@@ -496,6 +564,7 @@ export default function CreatePage() {
           footer={null}
         />
         <OutOfPreviews open={paywall} onClose={() => setPaywall(false)} />
+        <Waitlist open={waitlist} onClose={() => setWaitlist(false)} />
       </>
     );
 

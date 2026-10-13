@@ -1,3 +1,4 @@
+import { logServerError } from '@/lib/errlog';
 import { json } from '@/lib/server';
 import { aiConfigured, designPrompt, friendlyAiError, makeImage } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
     return u.withCookie(json({ image }));
   } catch (e) {
     console.error('design failed', e);
+    await logServerError('design', e);
     await u.refund();
     return u.withCookie(json({ error: friendlyAiError(e) }, 502));
   }

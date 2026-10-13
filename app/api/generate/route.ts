@@ -1,6 +1,8 @@
+import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
 import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
 import { pasteBack } from '@/lib/composite';
+import { jobPut } from '@/lib/jobs';
 import { longevity } from '@/lib/score';
 import { guestFrom, guestRefund, guestStart } from '@/lib/guest';
 
@@ -149,9 +151,14 @@ export async function POST(req: Request) {
       lang
     );
     const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, y: 0, exp: Date.now() + 3 * 3600e3 });
-    return withCookie(json({ image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining, plan }), guest?.setCookie ?? null);
+    const out = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining, plan };
+    // keep it for a while, in case the app was closed while we were working
+    await jobPut(body.job, owner, 'fresh', out);
+    return withCookie(json(out), guest?.setCookie ?? null);
   } catch (e) {
     console.error('generate failed', e);
+    await logServerError('generate', e);
+    await jobPut(body.job, owner, 'error', friendlyAiError(e));
     if (a) await a.db.rpc('refund_generation', { p_gid: gid });
     else await guestRefund(gid, guest!.id).catch(() => {});
     return withCookie(json({ error: friendlyAiError(e) }, 502), guest?.setCookie ?? null);

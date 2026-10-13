@@ -7,7 +7,7 @@ import { tx } from '@/lib/i18n';
 import { cloud, haptic, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
 import { loadImage, shareOrDownload } from '@/lib/client';
 import { api } from '@/lib/sb';
-import { HOOKS, makeVideo, Template } from '@/lib/video';
+import { canRecordVideo, HOOKS, makeVideo, photoSlides, Template } from '@/lib/video';
 import { artistPdf } from '@/lib/brief';
 import { aftercareIcs, CARE } from '@/lib/aftercare';
 import { placeName } from './create/steps';
@@ -690,6 +690,24 @@ export function VideoSheet({ open, onClose, preview }: { open: boolean; onClose:
   const [out, setOut] = useState<{ url: string; blob: Blob; ext: string } | null>(null);
   const [err, setErr] = useState('');
   const hooks = HOOKS[ui.lang];
+  const [canVideo, setCanVideo] = useState(true);
+  const [slidesBusy, setSlidesBusy] = useState(false);
+  useEffect(() => setCanVideo(canRecordVideo()), []);
+  // still images instead of a video (TikTok / Instagram photo mode, or browsers that can't record)
+  const slides = async () => {
+    setSlidesBusy(true);
+    try {
+      const blobs = await photoSlides(frames, { hook: hooks[hook], watermark: 'made with InkAge' });
+      const files = blobs.map((b, i) => new File([b], `inkage-${i + 1}.jpg`, { type: 'image/jpeg' }));
+      const nav: any = navigator;
+      if (nav.canShare?.({ files })) await nav.share({ files, title: 'InkAge' }).catch(() => {});
+      else for (const f of files) await shareOrDownload(f, f.name);
+      track('slides_made', { n: files.length });
+    } catch {
+      setErr(t('Could not make the images. Try again.', 'Nem sikerültek a képek. Próbáld újra.'));
+    }
+    setSlidesBusy(false);
+  };
 
   const frames = useMemo(
     () => STAGES.filter((k) => preview.images[k]).map((k) => ({ label: ui.t(`stage.${k}` as any), src: preview.images[k]! })),
@@ -769,11 +787,16 @@ export function VideoSheet({ open, onClose, preview }: { open: boolean; onClose:
             {t('Render again', 'Újra')}
           </button>
         </div>
-      ) : (
+      ) : canVideo ? (
         <button className="btn wide" onClick={render} disabled={frames.length < 2}>
           {t('Create video', 'Videó készítése')}
         </button>
+      ) : (
+        <p className="sub">{t('This browser can’t record video — save the images instead and post them in photo mode.', 'Ez a böngésző nem tud videót rögzíteni – mentsd el helyette a képeket, és fotó módban posztold őket.')}</p>
       )}
+      <button className={`btn wide ${canVideo ? 'ghost' : ''}`} style={{ marginTop: 8 }} onClick={slides} disabled={slidesBusy || frames.length < 2}>
+        {slidesBusy ? t('Making images…', 'Képek készülnek…') : t('Save as photo slides', 'Mentés képsorként (fotó mód)')}
+      </button>
       {err && <p className="err">{err}</p>}
     </Sheet>
   );

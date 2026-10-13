@@ -21,6 +21,9 @@ export default function GalleryPage() {
   const [comparing, setComparing] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
   const [cmpStage, setCmpStage] = useState<StageKey>('y50');
+  const [q, setQ] = useState('');
+  const [sort, setSort] = useState<'new' | 'score'>('new');
+  const [kind, setKind] = useState<'any' | 'new' | 'existing'>('any');
 
   const load = useCallback(async () => {
     const [c, l] = await Promise.all([me.user ? cloud.all().catch(() => []) : Promise.resolve([]), local.all().catch(() => [])]);
@@ -81,7 +84,12 @@ export default function GalleryPage() {
       </>
     );
 
-  const shown = (items || []).filter((p) => filter === 'all' || p.favorite);
+  const norm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const shown = (items || [])
+    .filter((p) => filter === 'all' || p.favorite)
+    .filter((p) => kind === 'any' || (kind === 'existing' ? p.mode === 'existing' : p.mode !== 'existing'))
+    .filter((p) => !q.trim() || norm(`${placeName(p.placement, ui.lang)} ${p.placement} ${p.notes || ''} ${p.size || ''}`).includes(norm(q.trim())))
+    .sort((a, b) => (sort === 'score' ? (b.score ?? -1) - (a.score ?? -1) : b.created_at.localeCompare(a.created_at)));
   const pair = picked.map((id) => items?.find((p) => p.id === id)).filter(Boolean) as Preview[];
 
   return (
@@ -120,6 +128,23 @@ export default function GalleryPage() {
           </button>
         </div>
       )}
+
+      {items && items.length > 2 && (
+        <div className="galtools">
+          <input className="text" type="search" id="gal-search" placeholder={t('Search: body area, notes…', 'Keresés: testrész, jegyzet…')} value={q} onChange={(e) => setQ(e.target.value)} />
+          <div className="row" style={{ gap: 6 }}>
+            <button className={`chip ${sort === 'score' ? 'on' : ''}`} onClick={() => setSort(sort === 'score' ? 'new' : 'score')}>
+              {sort === 'score' ? t('Best score first', 'Legjobb pontszám elöl') : t('Newest first', 'Legújabb elöl')}
+            </button>
+            {(['any', 'new', 'existing'] as const).map((k) => (
+              <button key={k} className={`chip ${kind === k ? 'on' : ''}`} onClick={() => setKind(k)}>
+                {k === 'any' ? t('All types', 'Mind') : k === 'new' ? t('New designs', 'Új minták') : t('My tattoos', 'Meglévő tetoválásaim')}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {items && items.length > 0 && shown.length === 0 && <p className="sub" style={{ marginTop: 16 }}>{t('Nothing matches. Try another search.', 'Nincs találat. Próbálj mást keresni.')}</p>}
 
       {comparing && <p className="sub small" style={{ marginTop: 10 }}>{t('Pick two designs to compare side by side.', 'Válassz ki két tervet az összehasonlításhoz.')}</p>}
 
@@ -162,6 +187,7 @@ export default function GalleryPage() {
                 aria-label={`${placeName(p.placement, ui.lang)}, ${t('score', 'pontszám')} ${p.score ?? '–'}`}
               >
                 {thumb(p) && <img src={thumb(p)} alt="" loading="lazy" />}
+                {p.design && <img className="tile-design" src={p.design} alt="" loading="lazy" />}
                 {p.source === 'local' && <span className="local">{t('Device', 'Eszköz')}</span>}
                 {p.favorite && (
                   <span className="fav">

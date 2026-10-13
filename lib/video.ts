@@ -231,3 +231,35 @@ export async function makeVideo(
     requestAnimationFrame(tick);
   });
 }
+
+/**
+ * Still slides (one per stage) for TikTok / Instagram photo posts.
+ * Also the fallback where the browser can't record video (older iPhones).
+ */
+export async function photoSlides(frames: Frame[], opts: { hook: string; watermark: string }) {
+  const imgs = await Promise.all(frames.map((f) => loadImage(f.src)));
+  const out: Blob[] = [];
+  for (let i = 0; i < imgs.length; i++) {
+    const c = document.createElement('canvas');
+    c.width = W;
+    c.height = H;
+    const ctx = c.getContext('2d')!;
+    ctx.fillStyle = '#0d0b14';
+    ctx.fillRect(0, 0, W, H);
+    cover(ctx, imgs[i]);
+    if (i === 0) text(ctx, opts.hook, 150, `800 54px 'Geist Sans', system-ui, sans-serif`);
+    text(ctx, frames[i].label, H - 150, `800 64px 'Geist Sans', system-ui, sans-serif`);
+    text(ctx, opts.watermark, H - 60, `600 26px 'Geist Sans', system-ui, sans-serif`, '#fff', 0.8);
+    out.push(await new Promise<Blob>((res) => c.toBlob((b) => res(b!), 'image/jpeg', 0.9)));
+  }
+  return out;
+}
+
+export const canRecordVideo = () => {
+  try {
+    pickMime();
+    return true;
+  } catch {
+    return false;
+  }
+};

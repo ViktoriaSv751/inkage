@@ -23,6 +23,7 @@ export default function Admin() {
   const [err, setErr] = useState('');
   const [health, setHealth] = useState<{ ok: boolean; detail: any; created_at: string }[]>([]);
   const [checking, setChecking] = useState(false);
+  const [extra, setExtra] = useState<any>(null);
   const loadHealth = async () => {
     const { data } = (await sb()?.rpc('admin_health')) || {};
     if (Array.isArray(data)) setHealth(data);
@@ -43,6 +44,9 @@ export default function Admin() {
   useEffect(() => {
     load();
     loadHealth();
+    sb()
+      ?.rpc('admin_extra')
+      .then(({ data }) => data && setExtra(data));
   }, []);
   const max = Math.max(1, ...(s?.daily || []).map((d) => d.previews));
   // Rough AI cost: ~1 fresh + 4 aging images + checks per preview.
@@ -79,6 +83,22 @@ export default function Admin() {
               </div>
             ))}
           </div>
+          {extra && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10, marginTop: 10 }}>
+              {[
+                ['Previews today (only)', extra.previews_today],
+                ['Cut-outs / AI drawings today', extra.helpers_today],
+                ['Errors today', extra.errors_today],
+                ['Recovered after closing', extra.recovered_today],
+                ['Waitlist e-mails', extra.waitlist],
+              ].map(([k, v]) => (
+                <div key={k as string} style={{ background: '#fff6f0', borderRadius: 16, padding: 14 }}>
+                  <b style={{ display: 'block', fontSize: 30, lineHeight: 1 }}>{v as any}</b>
+                  <span style={{ fontSize: 13, color: 'var(--ink-2)', fontWeight: 600 }}>{k}</span>
+                </div>
+              ))}
+            </div>
+          )}
           <div style={{ background: health[0] && !health[0].ok ? '#fdebeb' : '#eaf7f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
             <b>AI models: {health[0] ? (health[0].ok ? 'working' : 'PROBLEM') : 'not checked yet'}</b>
             {health[0] && (
@@ -99,6 +119,30 @@ export default function Admin() {
             </div>
             <small style={{ color: 'var(--ink-2)' }}>When it reaches 300, new previews pause until the oldest ones drop out of the 24-hour window.</small>
           </div>
+          {extra && Object.keys(extra.redo || {}).length > 0 && (
+            <div style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <b>“Not right?” reasons, last 30 days</b>
+              <div style={{ fontSize: 14, marginTop: 6 }}>
+                {Object.entries(extra.redo).map(([k, n]) => (
+                  <span key={k} style={{ marginRight: 14 }}>
+                    {k}: <b>{n as any}</b>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {extra?.errors?.length > 0 && (
+            <details style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Latest errors ({extra.errors.length})</summary>
+              <ul style={{ fontSize: 13, paddingLeft: 18, marginBottom: 0 }}>
+                {extra.errors.map((e: any, i: number) => (
+                  <li key={i} style={{ marginTop: 6 }}>
+                    <b>{e.name}</b> · {new Date(e.created_at).toLocaleString()} · {e.props?.route || e.props?.path || ''} — {e.props?.msg || JSON.stringify(e.props)}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
           <h2 style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', marginTop: 30 }}>Previews, last 14 days</h2>
           <div style={{ display: 'flex', alignItems: 'end', gap: 4, height: 140, background: '#fff6f0', borderRadius: 16, padding: '24px 10px 10px' }}>
             {s.daily.map((d) => (
