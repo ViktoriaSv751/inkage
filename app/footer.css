@@ -39,3 +39,5 @@
 .sf-bottom { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; margin-top: 48px; padding-top: 22px; border-top: 1px solid #ebe9f0; }
 .sf-copy { display: grid; gap: 4px; color: #8a8597; font-size: 13px; }
 @media (min-width: 900px) { .sf-copy { display: flex; gap: 20px; } }
+/* align footer to the 1120px content column used by pages */
+@media (min-width: 1000px) { .sf-in { max-width: 1200px; padding-left: 40px; padding-right: 40px; } }

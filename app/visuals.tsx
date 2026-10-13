@@ -17,7 +17,8 @@ export const EXAMPLE = [
  * Hero: real photos of one tattoo at 0, 1, 10, 30 and 50 years, cross-faded by a year slider.
  * Plays once on load, then the visitor can drag it.
  */
-export function HeroAging() {
+export function HeroAging({ frames = EXAMPLE, alt }: { frames?: { years: number; src: string }[]; alt?: string } = {}) {
+  const EX = frames;
   const { lang } = useLang();
   const L = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const [years, setYears] = useState(0);
@@ -44,20 +45,20 @@ export function HeroAging() {
 
   // which two photos to blend
   let i = 0;
-  while (i < EXAMPLE.length - 2 && years > EXAMPLE[i + 1].years) i++;
-  const a = EXAMPLE[i];
-  const b = EXAMPLE[i + 1];
+  while (i < EX.length - 2 && years > EX[i + 1].years) i++;
+  const a = EX[i];
+  const b = EX[i + 1];
   const f = Math.min(1, Math.max(0, (years - a.years) / (b.years - a.years)));
   const shown = Math.round(years);
 
   return (
     <div className="hero-demo">
       <div className="photo-stack">
-        {EXAMPLE.map((e, k) => (
+        {EX.map((e, k) => (
           <img
             key={e.years}
             src={e.src}
-            alt={k === 0 ? L('A fine-line moon tattoo on a forearm, fresh', 'Finom vonalas hold tetoválás alkaron, frissen') : ''}
+            alt={k === 0 ? alt || L('A fine-line moon tattoo on a forearm, fresh', 'Finom vonalas hold tetoválás alkaron, frissen') : ''}
             aria-hidden={k !== 0}
             style={{ opacity: k === i ? 1 : k === i + 1 ? f : 0 }}
             loading={k === 0 ? 'eager' : 'lazy'}

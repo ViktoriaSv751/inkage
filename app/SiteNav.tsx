@@ -29,12 +29,31 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
   const [menu, setMenu] = useState(false);
   useEffect(() => {
     if (!menu) return;
+    const sw = window.innerWidth - document.documentElement.clientWidth;
+    const html = document.documentElement;
+    html.style.overflow = 'hidden';
+    html.style.overscrollBehavior = 'none';
     document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = sw ? `${sw}px` : '';
+    const top = document.querySelector('.sn-top') as HTMLElement | null;
+    if (top) top.style.paddingRight = sw ? `${sw}px` : '';
+    const stop = (e: Event) => {
+      const t = e.target as HTMLElement | null;
+      if (!t?.closest('.sn-dr-scroll')) e.preventDefault();
+    };
+    window.addEventListener('wheel', stop, { passive: false });
+    window.addEventListener('touchmove', stop, { passive: false });
     const k = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(false);
     window.addEventListener('keydown', k);
     return () => {
+      html.style.overflow = '';
+      html.style.overscrollBehavior = '';
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      if (top) top.style.paddingRight = '';
       window.removeEventListener('keydown', k);
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchmove', stop);
     };
   }, [menu]);
   useEffect(() => setMenu(false), [pathname]);

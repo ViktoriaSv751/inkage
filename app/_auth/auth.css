@@ -73,3 +73,24 @@
 .au-switch a { color: #0d0b14; font-weight: 700; }
 .au-guest { margin: 8px 0 0; text-align: center; font-size: 14px; }
 .au-guest a { color: #8a8597; }
+.au-field-row { display: flex; justify-content: space-between; align-items: baseline; }
+.au-forgot { font-size: 13.5px; font-weight: 700; color: #4528d8; text-decoration: none; }
+.au-pw { position: relative; display: block; }
+.au-pw input { width: 100%; height: 56px; padding: 0 52px 0 18px; border-radius: 16px; border: 0; background: #f4f3f7; font: inherit; font-size: 17px; color: #0d0b14; outline: none; transition: background .15s, box-shadow .15s; }
+.au-pw input:focus { background: #fff; box-shadow: inset 0 0 0 2px #0d0b14; }
+.au-field input { width: 100%; }
+.au-eye { position: absolute; right: 8px; top: 8px; width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; color: #6b6678; }
+.au-eye svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.au-meter { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 6px; align-items: center; margin-top: 2px; }
+.au-meter i { height: 4px; border-radius: 4px; background: #e8e6ee; }
+.au-meter em { font-style: normal; font-size: 12.5px; font-weight: 700; color: #6b6678; margin-left: 6px; }
+.au-meter.s0 i:nth-child(1), .au-meter.s1 i:nth-child(1) { background: #e5484d; }
+.au-meter.s2 i:nth-child(-n + 2) { background: #d98b16; }
+.au-meter.s3 i { background: #1f9d63; }
+.au-alt { border: 0; background: none; padding: 6px; font: inherit; font-size: 14px; font-weight: 600; color: #4a4558; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #cfcbd9; }
+.au-done { display: grid; justify-items: start; }
+.au-btn.as-link { width: 100%; text-decoration: none; margin-top: 4px; }
+.au.au-single { grid-template-columns: 1fr; }
+.au.au-single .au-top .au-logo { visibility: visible; }
+.au-pw input { font-weight: 500; }
+.au-pw input::placeholder, .au input::placeholder { font-weight: 400; color: #9a96a6; }

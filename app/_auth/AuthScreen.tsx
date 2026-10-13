@@ -11,18 +11,23 @@ import './auth.css';
 const IMG = (f: string, w = 1200) => `/api/lib-img?f=${f}.png&w=${w}`;
 
 /** Full-page sign-in / sign-up with e-mail code (and Google / Apple when switched on). */
-export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang: 'en' | 'hu'; img: string }) {
+export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'forgot'; lang: 'en' | 'hu'; img: string }) {
   const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const q = lang === 'en' ? '?lang=en' : '';
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [agree, setAgree] = useState(false);
-  const [step, setStep] = useState<'email' | 'code'>('email');
+  const [step, setStep] = useState<'email' | 'code' | 'sent'>('email');
+  const [withCode, setWithCode] = useState(false);
+  const [name, setName] = useState('');
+  const [pw, setPw] = useState('');
+  const [show, setShow] = useState(false);
+  const [sentKind, setSentKind] = useState<'confirm' | 'reset'>('confirm');
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [wait, setWait] = useState(0);
-  const [providers, setProviders] = useState<{ google?: boolean; apple?: boolean }>({});
+  const [providers, setProviders] = useState<{ google?: boolean; apple?: boolean; loaded?: boolean }>({});
   const boxes = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -34,7 +39,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang
     if (url && key)
       fetch(`${url}/auth/v1/settings`, { headers: { apikey: key } })
         .then((r) => r.json())
-        .then((d) => setProviders({ google: !!d?.external?.google, apple: !!d?.external?.apple }))
+        .then((d) => setProviders({ google: !!d?.external?.google, apple: !!d?.external?.apple, loaded: true }))
         .catch(() => {});
   }, [router]);
   useEffect(() => {
@@ -44,7 +49,57 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang
   }, [wait]);
 
   const okEmail = /\S+@\S+\.\S+/.test(email);
-  const canSend = okEmail && (mode === 'login' || agree) && !busy;
+  const canSend = okEmail && (mode !== 'signup' || agree) && !busy;
+  const pwScore = (pw.length >= 8 ? 1 : 0) + (/[a-záéíóöőúüű]/i.test(pw) && /\d/.test(pw) ? 1 : 0) + (pw.length >= 12 || /[^\w]/.test(pw) ? 1 : 0);
+  const friendly = (m: string) =>
+    /invalid login/i.test(m)
+      ? T('Wrong e-mail or password.', 'Hibás e-mail-cím vagy jelszó.')
+      : /not confirmed/i.test(m)
+        ? T('Confirm your e-mail first — check your inbox.', 'Előbb erősítsd meg az e-mail-címedet – nézd meg a leveleidet.')
+        : /already registered|already exists/i.test(m)
+          ? T('There’s already an account with this e-mail. Sign in instead.', 'Ezzel az e-mail-címmel már van fiók. Lépj be inkább.')
+          : /rate/i.test(m)
+            ? T('Too many attempts. Wait a minute and try again.', 'Túl sok próbálkozás. Várj egy percet, és próbáld újra.')
+            : /password/i.test(m) && /6|8|short|weak/i.test(m)
+              ? T('Choose a longer password (at least 8 characters).', 'Válassz hosszabb jelszót (legalább 8 karakter).')
+              : m;
+
+  const loginPw = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!okEmail || pw.length < 6 || busy) return;
+    setBusy(true);
+    setErr('');
+    const { error } = (await sb()?.auth.signInWithPassword({ email: email.trim(), password: pw })) || { error: { message: 'unavailable' } as any };
+    setBusy(false);
+    if (error) return setErr(friendly(error.message));
+    track('auth_ok', { mode: 'password' });
+    router.replace('/app/profile');
+  };
+  const signupPw = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!okEmail || pw.length < 8 || !agree || busy) return;
+    setBusy(true);
+    setErr('');
+    const { data, error } = (await sb()?.auth.signUp({ email: email.trim(), password: pw, options: { data: { full_name: name.trim() }, emailRedirectTo: `${location.origin}/app/profile` } })) || ({ error: { message: 'unavailable' } } as any);
+    setBusy(false);
+    if (error) return setErr(friendly(error.message));
+    track('auth_signup');
+    if (data?.session) return router.replace('/app/profile');
+    setSentKind('confirm');
+    setStep('sent');
+  };
+  const forgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!okEmail || busy) return;
+    setBusy(true);
+    setErr('');
+    const { error } = (await sb()?.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${location.origin}/uj-jelszo${q}` })) || { error: { message: 'unavailable' } as any };
+    setBusy(false);
+    if (error) return setErr(friendly(error.message));
+    track('auth_reset_request');
+    setSentKind('reset');
+    setStep('sent');
+  };
 
   const send = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -92,7 +147,9 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang
   };
 
   const oauth = async (provider: 'google' | 'apple') => {
-    if (mode === 'signup' && !agree) return setErr(T('Please confirm the box below first.', 'Előbb pipáld be a lenti mezőt.'));
+    if (mode === 'signup' && !agree) return setErr(T('Please tick the box below first.', 'Előbb pipáld be a lenti mezőt.'));
+    if (providers.loaded && !providers[provider])
+      return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
     setErr('');
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/profile` } })) || {};
     if (error) setErr(error.message);
@@ -138,55 +195,117 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang
         </header>
 
         <div className="au-card">
-          {step === 'email' ? (
+          {step === 'sent' ? (
+            <div className="au-done">
+              <span className="au-mail" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 6h18v12H3zM3 7l9 6 9-6" />
+                </svg>
+              </span>
+              <h1>{T('Check your inbox', 'Nézd meg a leveleidet')}</h1>
+              <p className="au-sub">
+                {sentKind === 'reset'
+                  ? T('If there’s an account for ', 'Ha van fiók ehhez a címhez: ')
+                  : T('We sent a confirmation link to ', 'Megerősítő linket küldtünk ide: ')}
+                <b>{email}</b>
+                {sentKind === 'reset' ? T(', you’ll get a link to set a new password.', ', kapsz egy linket az új jelszó beállításához.') : T('. Open it to activate your account.', '. Nyisd meg, és aktiváld a fiókodat.')}
+              </p>
+              <Link className="au-btn as-link" href={`/belepes${q}`}>
+                {T('Back to sign in', 'Vissza a belépéshez')}
+              </Link>
+              <p className="au-hint">{T('Didn’t get it? Check spam, or try again in a minute.', 'Nem jött meg? Nézd meg a spam mappát, vagy próbáld újra egy perc múlva.')}</p>
+            </div>
+          ) : step === 'email' ? (
             <>
-              <div className="au-tabs" role="tablist">
-                <Link href={`/belepes${q}`} role="tab" aria-selected={mode === 'login'} className={mode === 'login' ? 'on' : ''}>
-                  {T('Sign in', 'Belépés')}
+              {mode !== 'forgot' && (
+                <div className="au-tabs" role="tablist">
+                  <Link href={`/belepes${q}`} role="tab" aria-selected={mode === 'login'} className={mode === 'login' ? 'on' : ''}>
+                    {T('Sign in', 'Belépés')}
+                  </Link>
+                  <Link href={`/regisztracio${q}`} role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'on' : ''}>
+                    {T('Create account', 'Regisztráció')}
+                  </Link>
+                </div>
+              )}
+              {mode === 'forgot' && (
+                <Link className="au-back" href={`/belepes${q}`}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 5l-7 7 7 7" />
+                  </svg>
+                  {T('Back to sign in', 'Vissza a belépéshez')}
                 </Link>
-                <Link href={`/regisztracio${q}`} role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'on' : ''}>
-                  {T('Create account', 'Regisztráció')}
-                </Link>
-              </div>
-              <h1>{mode === 'login' ? T('Welcome back', 'Üdv újra itt') : T('Create your account', 'Hozd létre a fiókodat')}</h1>
+              )}
+              <h1>{mode === 'login' ? T('Welcome back', 'Üdv újra itt') : mode === 'signup' ? T('Create your account', 'Hozd létre a fiókodat') : T('Forgot your password?', 'Elfelejtetted a jelszavad?')}</h1>
               <p className="au-sub">
                 {mode === 'login'
                   ? T('Sign in to see your previews on every device.', 'Lépj be, és minden eszközödön látod az előnézeteidet.')
-                  : T('Save your designs, sync them everywhere and get bonus previews. No password needed.', 'Mentsd el a terveidet, érd el őket bárhol, és kapj bónusz előnézeteket. Jelszó nélkül.')}
+                  : mode === 'signup'
+                    ? T('Save your designs, sync them everywhere and get bonus previews.', 'Mentsd el a terveidet, érd el őket bárhol, és kapj bónusz előnézeteket.')
+                    : T('Enter your e-mail and we’ll send you a link to set a new one.', 'Add meg az e-mail-címed, és küldünk egy linket az új jelszó beállításához.')}
               </p>
 
-              {(providers.google || providers.apple) && (
+              {mode !== 'forgot' && (
                 <div className="au-social">
-                  {providers.apple && (
-                    <button type="button" className="au-soc dark" onClick={() => oauth('apple')}>
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M16.4 12.6c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.5 1.3 0 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.2 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1-2.8-4.2zM14 5.2c.7-.8 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.3z" />
-                      </svg>
-                      {T('Continue with Apple', 'Folytatás Apple-lel')}
-                    </button>
-                  )}
-                  {providers.google && (
-                    <button type="button" className="au-soc" onClick={() => oauth('google')}>
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path fill="#4285F4" d="M22.6 12.2c0-.7-.1-1.4-.2-2H12v3.9h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-7.9z" />
-                        <path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z" />
-                        <path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.2V7.2H2.1a11 11 0 0 0 0 9.8z" />
-                        <path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.2L5.8 10c.9-2.6 3.3-4.6 6.2-4.6z" />
-                      </svg>
-                      {T('Continue with Google', 'Folytatás Google-lel')}
-                    </button>
-                  )}
+                  <button type="button" className="au-soc dark" onClick={() => oauth('apple')}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M16.4 12.6c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.5 1.3 0 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.2 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1-2.8-4.2zM14 5.2c.7-.8 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.3z" />
+                    </svg>
+                    {T('Continue with Apple', 'Folytatás Apple-lel')}
+                  </button>
+                  <button type="button" className="au-soc" onClick={() => oauth('google')}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path fill="#4285F4" d="M22.6 12.2c0-.7-.1-1.4-.2-2H12v3.9h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-7.9z" />
+                      <path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z" />
+                      <path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.2V7.2H2.1a11 11 0 0 0 0 9.8z" />
+                      <path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.2L5.8 10c.9-2.6 3.3-4.6 6.2-4.6z" />
+                    </svg>
+                    {T('Continue with Google', 'Folytatás Google-lel')}
+                  </button>
                   <div className="au-or">
                     <span>{T('or with e-mail', 'vagy e-maillel')}</span>
                   </div>
                 </div>
               )}
 
-              <form onSubmit={send} className="au-form">
+              <form onSubmit={mode === 'forgot' ? forgot : withCode ? send : mode === 'login' ? loginPw : signupPw} className="au-form">
+                {mode === 'signup' && !withCode && (
+                  <label className="au-field">
+                    <span>{T('Name', 'Név')}</span>
+                    <input autoComplete="name" placeholder={T('Your name', 'A neved')} value={name} onChange={(e) => setName(e.target.value)} />
+                  </label>
+                )}
                 <label className="au-field">
                   <span>{T('E-mail address', 'E-mail-cím')}</span>
                   <input type="email" autoComplete="email" inputMode="email" placeholder={T('you@email.com', 'te@email.hu')} value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </label>
+                {mode !== 'forgot' && !withCode && (
+                  <label className="au-field">
+                    <span className="au-field-row">
+                      {T('Password', 'Jelszó')}
+                      {mode === 'login' && (
+                        <Link href={`/elfelejtett-jelszo${q}`} className="au-forgot">
+                          {T('Forgot it?', 'Elfelejtetted?')}
+                        </Link>
+                      )}
+                    </span>
+                    <span className="au-pw">
+                      <input type={show ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder={mode === 'signup' ? T('At least 8 characters', 'Legalább 8 karakter') : '••••••••'} value={pw} onChange={(e) => setPw(e.target.value)} required minLength={mode === 'signup' ? 8 : 6} />
+                      <button type="button" className="au-eye" aria-label={show ? T('Hide password', 'Jelszó elrejtése') : T('Show password', 'Jelszó mutatása')} onClick={() => setShow(!show)}>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          {show ? <path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.5 9.5 0 0 1 12 5c5.5 0 9 7 9 7a16 16 0 0 1-3.2 4M6.6 6.6C4.3 8.1 3 12 3 12s3.5 7 9 7a9 9 0 0 0 4.3-1.1" /> : <path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7zM12 9a3 3 0 1 0 0 6a3 3 0 0 0 0-6z" />}
+                        </svg>
+                      </button>
+                    </span>
+                    {mode === 'signup' && pw && (
+                      <span className={`au-meter s${pwScore}`} aria-live="polite">
+                        <i />
+                        <i />
+                        <i />
+                        <em>{pwScore <= 1 ? T('Weak', 'Gyenge') : pwScore === 2 ? T('Good', 'Jó') : T('Strong', 'Erős')}</em>
+                      </span>
+                    )}
+                  </label>
+                )}
                 {mode === 'signup' && (
                   <label className="au-check">
                     <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
@@ -203,15 +322,24 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang
                     </span>
                   </label>
                 )}
-                <button className="au-btn" disabled={!canSend}>
-                  {busy ? <i className="au-spin" aria-hidden="true" /> : T('Send me a code', 'Kérem a belépőkódot')}
+                <button className="au-btn" disabled={busy || !okEmail || (mode === 'signup' && !agree) || (mode !== 'forgot' && !withCode && pw.length < (mode === 'signup' ? 8 : 6))}>
+                  {busy ? (
+                    <i className="au-spin" aria-hidden="true" />
+                  ) : mode === 'forgot' ? (
+                    T('Send reset link', 'Visszaállító link küldése')
+                  ) : withCode ? (
+                    T('Send me a code', 'Kérem a belépőkódot')
+                  ) : mode === 'login' ? (
+                    T('Sign in', 'Belépés')
+                  ) : (
+                    T('Create account', 'Fiók létrehozása')
+                  )}
                 </button>
-                <p className="au-hint">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4" />
-                  </svg>
-                  {T('No password. We e-mail you a 6-digit code.', 'Nincs jelszó. Egy 6 jegyű kódot küldünk e-mailben.')}
-                </p>
+                {mode !== 'forgot' && (
+                  <button type="button" className="au-alt" onClick={() => (setWithCode(!withCode), setErr(''))}>
+                    {withCode ? T('Use a password instead', 'Inkább jelszóval') : T('No password? Get a one-time code by e-mail', 'Jelszó nélkül: egyszer használatos kód e-mailben')}
+                  </button>
+                )}
               </form>
             </>
           ) : (
@@ -272,7 +400,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup'; lang
         </div>
 
         <p className="au-switch">
-          {mode === 'login' ? (
+          {mode !== 'signup' ? (
             <>
               {T('New to InkAge? ', 'Még nincs fiókod? ')}
               <Link href={`/regisztracio${q}`}>{T('Create an account', 'Regisztrálj')}</Link>

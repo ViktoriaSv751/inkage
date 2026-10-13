@@ -94,7 +94,7 @@ export function InfoPage({
   return (
     <div className="ip-page">
       <KbChrome lang={lang} path={path} />
-      <header className="ip-hero">
+      <header className={`ip-hero ${img ? "with-img" : ""} ${highlights ? "with-hl" : ""}`}>
         <div className="ip-hero-in">
           <p className="ip-kick">
             <span>

@@ -15,7 +15,7 @@ export function FooterSignup({ lang }: { lang: 'en' | 'hu' }) {
   const ok = /\S+@\S+\.\S+/.test(email);
   const join = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ok) return;
+    if (!ok) return setState('err');
     setState('busy');
     const { data } = (await sb()?.rpc('join_waitlist', { p_email: email.trim(), p_lang: lang })) || {};
     setState(data ? 'done' : 'err');
@@ -33,7 +33,7 @@ export function FooterSignup({ lang }: { lang: 'en' | 'hu' }) {
         {T('E-mail address', 'E-mail-cím')}
       </label>
       <input id="sf-email" type="email" autoComplete="email" placeholder={T('your@email.com', 'te@email.hu')} value={email} onChange={(e) => (setEmail(e.target.value), setState(''))} />
-      <button disabled={!ok || state === 'busy'}>{state === 'busy' ? '…' : T('Subscribe', 'Feliratkozom')}</button>
+      <button disabled={state === 'busy'}>{state === 'busy' ? '…' : T('Subscribe', 'Feliratkozom')}</button>
       {state === 'err' && <small role="alert">{T('Check the e-mail address and try again.', 'Ellenőrizd az e-mail-címet, és próbáld újra.')}</small>}
     </form>
   );

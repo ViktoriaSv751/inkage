@@ -32,16 +32,31 @@ export default function ExplorePage() {
   };
 
   return (
-    <>
-      <p className="kicker">InkAge</p>
+    <div className="explore">
       <h1>{ui.t('explore.title')}</h1>
       <p className="sub">{t('Real results, designs to try and how tattoos really age.', 'Valódi eredmények, kipróbálható minták, és hogyan öregszik valójában a tetoválás.')}</p>
 
-      <div className="section-title">
-        <h2>{t('Real example', 'Valódi példa')}</h2>
-        <span className="small muted">{t('drag the slider', 'húzd a csúszkát')}</span>
-      </div>
-      <HeroAging />
+      <section className="ex-hero">
+        <div className="ex-hero-demo">
+          <HeroAging
+            frames={[
+              { years: 0, src: IMG('hf_20261013_204219_480510e4-c412-4eae-9c90-eab4348178ba', 1000) },
+              { years: 10, src: IMG('hf_20261013_204308_32cb3de1-b0a1-4c01-81e7-d3124fe2d65c', 1000) },
+              { years: 30, src: IMG('hf_20261013_204311_202be418-e14d-4185-a851-f755279348bb', 1000) },
+              { years: 50, src: IMG('hf_20261013_204308_b1d4b7fe-a9f2-4f93-8e19-d070d503ba2e', 1000) },
+            ]}
+            alt={t('A dotwork mandala tattoo on a calf, fresh', 'Pontozott mandala tetoválás vádlin, frissen')}
+          />
+        </div>
+        <div className="ex-hero-txt">
+          <span className="ex-pill">{t('Real example', 'Valódi példa')}</span>
+          <h2>{t('One tattoo, fifty years.', 'Egy tetoválás, ötven év.')}</h2>
+          <p>{t('Drag the slider and watch the same dotwork mandala change: softer at 10 years, blue-grey at 30 and on ageing skin at 50.', 'Húzd a csúszkát, és nézd meg, hogyan változik ugyanaz a pontozott mandala: 10 évnél lágyabban, 30-nál kékesszürkén, 50-nél öregedő bőrön.')}</p>
+          <Link className="btn" href="/app">
+            {t('Make my own', 'Elkészítem a sajátomat')}
+          </Link>
+        </div>
+      </section>
 
       {feed && feed.length > 0 && (
         <>
@@ -93,7 +108,7 @@ export default function ExplorePage() {
       <div className="section-title">
         <h2>{t('Try a design', 'Próbálj ki egy mintát')}</h2>
       </div>
-      <div className="hscroll">
+      <div className="hscroll ex-designs">
         {DESIGNS.map((d) => (
           <button
             key={d.id}
@@ -112,7 +127,7 @@ export default function ExplorePage() {
           {t('All articles', 'Az összes cikk')} →
         </Link>
       </div>
-      <div className="hscroll">
+      <div className="hscroll ex-articles">
         {ARTICLES.map((a) => (
           <Link key={a.slug} className="article-card" href={`/tudastar/${a.slug}${ui.lang === 'hu' ? '' : '?lang=en'}`}>
             {KB[a.slug] && <img src={IMG(KB[a.slug].img, 600)} alt="" loading="lazy" />}
@@ -124,6 +139,6 @@ export default function ExplorePage() {
       </div>
 
       <QuickFacts lang={ui.lang} />
-    </>
+    </div>
   );
 }

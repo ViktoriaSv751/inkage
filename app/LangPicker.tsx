@@ -29,9 +29,11 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
     const k = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
     window.addEventListener('keydown', k);
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', k);
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [open]);
   const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);

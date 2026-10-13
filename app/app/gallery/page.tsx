@@ -10,7 +10,6 @@ import { cloud, local, Preview, StageKey, track } from '@/lib/store';
 import { placeName } from '../create/steps';
 import { abShare, shareVoteLink } from '@/lib/share';
 import { trErr } from '@/lib/i18n';
-import { EXAMPLE } from '../../visuals';
 
 const thumb = (p: Preview) => p.images.y50 || p.images.y30 || p.images.fresh || '';
 
@@ -218,17 +217,17 @@ export default function GalleryPage() {
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="empty">
-          <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><path d="M16.5 13.5v6M13.5 16.5h6" /></svg>
+        <div className="gal-empty">
+          <span className="gal-empty-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><path d="M16.5 13.5v6M13.5 16.5h6" /></svg>
+          </span>
+          <h2>{t('No previews yet', 'Még nincs előnézeted')}</h2>
           <p className="sub">{ui.t('gallery.empty')}</p>
-          <div className="cmp" style={{ margin: '0 0 18px' }}>
-            {[EXAMPLE[0], EXAMPLE[4]].map((e) => (
-              <figure key={e.years}>
-                <img src={e.src} alt="" />
-                <figcaption>{e.years ? t('50 years later', '50 év múlva') : t('Fresh', 'Frissen')}</figcaption>
-              </figure>
-            ))}
-          </div>
+          <ol className="gal-steps">
+            <li><b>1</b>{t('Take a photo of the spot', 'Fotózd le a helyet')}</li>
+            <li><b>2</b>{t('Add any design', 'Adj hozzá egy mintát')}</li>
+            <li><b>3</b>{t('See it at 10, 30 and 50 years', 'Nézd meg 10, 30 és 50 év múlva')}</li>
+          </ol>
           <Link className="btn" href="/app">
             {ui.t('nav.create')}
           </Link>

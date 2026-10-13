@@ -496,7 +496,7 @@
 }
 @media (min-width: 900px) {
   .editor { width: fit-content; max-width: 100%; margin: 0 auto; }
-  .pagefade:has(.prof-head), .pagefade:has(.article-card) { max-width: 760px; margin: 0 auto; }
+  .pagefade:has(.prof-head) { max-width: 760px; margin: 0 auto; }
   .pagefade:has(.gal-head) .detail-top ~ * { max-width: none; }
 }
 
@@ -687,3 +687,51 @@
 .pf-empty p { margin: 0 0 8px; color: var(--ink-2); }
 .pf-panel { min-height: 120px; }
 .pf .lp-row { font-weight: 600; }
+
+/* ---------- explore (all sizes) */
+.explore h1 { margin-bottom: 4px; }
+.ex-hero { display: grid; gap: 18px; margin: 22px 0 6px; }
+.ex-hero-txt { display: grid; gap: 10px; align-content: center; justify-items: start; }
+.ex-pill { font-size: 13px; font-weight: 700; color: var(--stencil-2); background: var(--stencil-tint); padding: 6px 12px; border-radius: 999px; }
+.ex-hero-txt h2 { margin: 0; font-size: clamp(26px, 3.2vw, 40px); line-height: 1.05; letter-spacing: -.035em; }
+.ex-hero-txt p { margin: 0 0 6px; color: var(--ink-2); line-height: 1.55; max-width: 44ch; }
+@media (max-width: 899px) { .ex-hero-txt { order: -1; } .ex-hero-txt p, .ex-hero-txt .btn { display: none; } .ex-hero-txt h2 { font-size: 22px; } }
+@media (min-width: 900px) {
+  .explore { max-width: 1120px; margin: 0 auto; }
+  .ex-hero { grid-template-columns: minmax(0, 440px) 1fr; gap: 48px; align-items: center; padding: 28px; border-radius: 32px; background: var(--surface); }
+  .ex-designs.hscroll { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); overflow: visible; margin: 0; padding: 0; }
+  .ex-designs .ex-design { width: auto; }
+  .ex-articles.hscroll { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; overflow: visible; margin: 0; padding: 0; }
+  .ex-articles .article-card { width: auto; }
+  .qf-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---------- gallery empty state */
+.gal-empty { max-width: 520px; margin: 24px auto 0; display: grid; justify-items: center; text-align: center; gap: 8px; padding: 40px 24px; border-radius: 28px; background: var(--surface); }
+.gal-empty-ico { width: 64px; height: 64px; border-radius: 20px; background: #fff; display: grid; place-items: center; box-shadow: 0 0 0 1px var(--line); margin-bottom: 8px; }
+.gal-empty-ico svg { width: 30px; height: 30px; fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.gal-empty h2 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
+.gal-empty .sub { margin: 0; }
+.gal-steps { list-style: none; margin: 14px 0 18px; padding: 0; display: grid; gap: 10px; text-align: left; }
+.gal-steps li { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+.gal-steps b { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 13px; }
+
+/* ---------- profile: two columns on desktop */
+@media (min-width: 1100px) {
+  .pagefade:has(.pf) { max-width: 1080px; margin: 0 auto; }
+  .pf { max-width: none; display: grid; grid-template-columns: 320px minmax(0, 1fr); column-gap: 40px; align-items: start; }
+  .pf-tools { grid-column: 1 / -1; }
+  .pf > :not(.pf-tools):not(.pf-id) { grid-column: 2; }
+  .pf-id { grid-column: 1; grid-row: 2 / span 30; position: sticky; top: 80px; padding: 28px; border-radius: 28px; background: var(--surface); margin-top: 0; }
+  .pf-stats { grid-template-columns: 1fr 1fr; background: #fff; }
+  .pf-stats > div:nth-child(3) { border-left: 0; }
+  .pf-stats > div:nth-child(n + 3) { border-top: 1px solid var(--line); }
+  .pf-tabs { margin-top: 0; }
+  .pf-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- desktop rail: logo with mark */
+@media (min-width: 1100px) {
+  .tabbar::before { content: ''; top: 20px; left: 26px; width: 132px; height: 30px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 30'%3E%3Ccircle cx='15' cy='15' r='14' fill='%23000'/%3E%3Cpath d='M18 6.5a9.4 9.4 0 1 0 0 17a7.5 7.5 0 1 1 0-17z' fill='%23fff'/%3E%3Ctext x='38' y='22' font-family='Geist Sans, sans-serif' font-weight='800' font-size='21' letter-spacing='-0.6' fill='%23000'%3EInkAge%3C/text%3E%3C/svg%3E") left center / contain no-repeat; }
+  .topbar-in { max-width: none; }
+}
