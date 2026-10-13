@@ -12,6 +12,5 @@ export async function GET(req: Request) {
   const a = await getAuthed(req);
   const owner = a ? a.user.id : `guest:${guestFrom(req).id}`;
   const data = await jobGet(id, owner).catch((e) => (console.warn('job get threw', e), null));
-  if (!data) console.log('job not found', { id, who: owner.slice(0, 12) });
   return json({ data });
 }
