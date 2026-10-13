@@ -15,6 +15,7 @@ export async function jobPut(id: unknown, owner: string, key: string, value: unk
 }
 
 export async function jobGet(id: string, owner: string) {
-  const { data } = await userClient().rpc('job_get', { p_secret: appSecret('db'), p_id: id, p_owner: owner });
+  const { data, error } = await userClient().rpc('job_get', { p_secret: appSecret('db'), p_id: id, p_owner: owner });
+  if (error) console.warn('job_get failed', error.message);
   return (data || null) as Record<string, any> | null;
 }
