@@ -19,7 +19,7 @@
 .ls-num { font-weight: 800; font-size: 14px; color: var(--stencil); font-variant-numeric: tabular-nums; }
 .ls-step h3 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
 .ls-step p { margin: 0; color: var(--ink-2); line-height: 1.5; font-size: 15px; }
-.ls-design { position: absolute; inset: 0; background: #fff; display: grid; place-items: center; }
+.ls-design { position: absolute; inset: 0; background: var(--bg); display: grid; place-items: center; }
 .ls-design img { width: 70%; height: auto; object-fit: contain; }
 .ls-design span { position: absolute; background: var(--stencil-tint); color: var(--stencil-2); font-weight: 700; font-size: 12px; padding: 5px 10px; border-radius: 999px; }
 .ls-design span:nth-of-type(1) { left: 12px; top: 14px; }
@@ -27,7 +27,7 @@
 .ls-design span:nth-of-type(3) { left: 16px; bottom: 16px; }
 .ls-place, .ls-aged { position: absolute; inset: 0; }
 .ls-frame { position: absolute; left: 30%; top: 40%; width: 40%; height: 24%; border: 2px solid #fff; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .25); }
-.ls-frame::before, .ls-frame::after { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .4); }
+.ls-frame::before, .ls-frame::after { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); box-shadow: 0 1px 4px rgba(0, 0, 0, .4); }
 .ls-frame::before { left: -7px; top: -7px; }
 .ls-frame::after { right: -7px; bottom: -7px; }
 .ls-cm { position: absolute; right: 12px; top: 12px; background: rgba(0, 0, 0, .6); color: #fff; font-weight: 700; font-size: 13px; padding: 5px 10px; border-radius: 999px; }
@@ -69,7 +69,7 @@
 .ls-art img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; display: block; }
 .ls-art b { font-size: 17px; line-height: 1.3; letter-spacing: -.01em; display: block; }
 .ls-tag { color: var(--stencil); font-weight: 700; font-size: 13px; display: block; margin-bottom: 4px; }
-.ls-art.big { grid-template-columns: 1fr; padding: 0; min-height: 420px; align-items: end; background: #000; color: #fff; }
+.ls-art.big { grid-template-columns: 1fr; padding: 0; min-height: 420px; align-items: end; background: #0d0b14; color: #fff; }
 .ls-art.big img { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; border-radius: 0; transition: transform .6s var(--ease); }
 .ls-art.big:hover img { transform: scale(1.03); }
 .ls-art.big > div { position: relative; padding: 90px 26px 26px; background: linear-gradient(transparent, rgba(0, 0, 0, .85)); }
@@ -84,7 +84,7 @@
 .ls-style-tabs button.on { background: var(--ink); color: #fff; box-shadow: none; }
 .ls-style-body { display: grid; gap: 18px; grid-template-columns: 1fr; }
 @media (min-width: 900px) { .ls-style-body { grid-template-columns: 0.8fr 1.2fr; align-items: stretch; } }
-.ls-style-pic { position: relative; margin: 0; border-radius: 28px; overflow: hidden; min-height: 360px; background: #111; }
+.ls-style-pic { position: relative; margin: 0; border-radius: 28px; overflow: hidden; min-height: 360px; background: #000; }
 .ls-style-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ls-style-pic figcaption { position: absolute; inset: auto 0 0 0; padding: 60px 22px 20px; background: linear-gradient(transparent, rgba(0, 0, 0, .8)); color: #fff; display: grid; gap: 2px; }
 .ls-style-pic b { font-size: 26px; letter-spacing: -.02em; }
@@ -98,14 +98,14 @@
 .ls-bars b { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* final call */
-.ls-final { position: relative; width: 100vw; margin: 90px calc(50% - 50vw) 0; min-height: 520px; display: grid; align-items: end; overflow: hidden; background: #000; color: #fff; }
+.ls-final { position: relative; width: 100vw; margin: 90px calc(50% - 50vw) 0; min-height: 520px; display: grid; align-items: end; overflow: hidden; background: #0d0b14; color: #fff; }
 .ls-final > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .75; }
 .ls-final::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .85)); }
 .ls-final-in { position: relative; z-index: 1; max-width: 1120px; width: 100%; margin: 0 auto; padding: 60px 20px; }
 .ls-final h2 { font-size: clamp(42px, 7vw, 88px); line-height: .98; letter-spacing: -.04em; font-weight: 800; margin: 0 0 14px; max-width: 12ch; }
 .ls-final p { color: rgba(255, 255, 255, .8); font-size: 18px; margin: 0 0 22px; }
 .ls-final-btns { display: flex; flex-wrap: wrap; gap: 10px; }
-.ls-final .btn { background: #fff; color: #000; }
+.ls-final .btn { background: #fff; color: #0d0b14; }
 .ls-final .btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .7); }
 
 /* footer */

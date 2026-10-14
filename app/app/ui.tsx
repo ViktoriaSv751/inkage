@@ -8,6 +8,7 @@ import { PUBLIC } from '@/lib/public-config';
 import { haptic } from '@/lib/store';
 import { useApp } from './AppProvider';
 import { tx } from '@/lib/i18n';
+import { ThemeToggle } from '../ThemeToggle';
 
 export const Icon = {
   plus: (
@@ -82,6 +83,8 @@ export function TopBar() {
           </svg>
           InkAge
         </Link>
+        <div className="topbar-r">
+        <ThemeToggle className="sm" lang={ui.lang} />
         {me.user ? (
           <Link href="/app/profile" className="avatar" style={{ width: 34, height: 34, fontSize: 15, textDecoration: 'none' }} aria-label={ui.t('nav.profile')}>
             {(me.user.email || '?').slice(0, 1).toUpperCase()}
@@ -89,9 +92,16 @@ export function TopBar() {
         ) : (
           <span className="beta-pill">{tx(ui.lang, 'Free beta', 'Ingyenes béta')}</span>
         )}
+        </div>
       </div>
     </header>
   );
+}
+
+/** Desktop: the light/dark switch in the top right corner. */
+export function DeskTheme() {
+  const { ui } = useApp();
+  return <ThemeToggle className="desk-tg" lang={ui.lang} />;
 }
 
 export function BottomNav() {

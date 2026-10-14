@@ -38,6 +38,26 @@
   --r-pill: 999px;
   --shadow-float: 0 16px 40px -16px rgba(20, 16, 50, .28);
   --ease: cubic-bezier(.2, .8, .2, 1);
+  --bg-glass: rgba(255, 255, 255, .92);
+  color-scheme: light;
+}
+/* ---------------------------------------------------------------- dark theme (toggle top right) */
+:root[data-theme='dark'] {
+  --bg: #0b0b0f;
+  --surface: #16161c;
+  --surface-2: #202028;
+  --line: #2b2b35;
+  --ink: #f5f5f7;
+  --ink-2: #b4b4be;
+  --ink-3: #8c8c97;
+  --stencil: #7c66ff;
+  --stencil-2: #a796ff;
+  --stencil-tint: #221d45;
+  --soft: #16161c;
+  --line-d: #2b2b35;
+  --bg-glass: rgba(11, 11, 15, .86);
+  --shadow-float: 0 16px 40px -16px rgba(0, 0, 0, .7);
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
@@ -172,3 +192,46 @@ footer a { text-decoration: none; }
 @media (min-width: 861px) { .hero h1 { font-size: clamp(56px, 5.6vw, 84px) !important; } }
 /* laptops: more breathing room at the page edges */
 @media (min-width: 1000px) { main { padding-left: 40px; padding-right: 40px; max-width: 1200px; } }
+
+/* theme switch */
+.theme-tg { width: 42px; height: 42px; flex: none; border-radius: 14px; border: 0; background: var(--surface); color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background .15s; }
+.theme-tg:hover { background: var(--surface-2); }
+.theme-tg svg { grid-area: 1 / 1; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .35s var(--ease), opacity .25s; }
+.theme-tg .tg-sun { opacity: 0; transform: rotate(-60deg) scale(.6); }
+:root[data-theme='dark'] .theme-tg .tg-moon { opacity: 0; transform: rotate(60deg) scale(.6); }
+:root[data-theme='dark'] .theme-tg .tg-sun { opacity: 1; transform: none; }
+.theme-tg.sm { width: 36px; height: 36px; border-radius: 12px; }
+.theme-tg.sm svg { width: 18px; height: 18px; }
+
+/* dark theme: text on inverted (ink) fills */
+:root[data-theme='dark'] .au-check input:checked + .au-box,
+:root[data-theme='dark'] .ip-sec .ka-pull,
+:root[data-theme='dark'] .ip-faq details[open] summary::after,
+:root[data-theme='dark'] .tabbar a.cta svg,
+:root[data-theme='dark'] .chip.on,
+:root[data-theme='dark'] .chipbtn.on,
+:root[data-theme='dark'] .ob-progress i,
+:root[data-theme='dark'] .ob-opt.on,
+:root[data-theme='dark'] .stephead .dots i.on,
+:root[data-theme='dark'] .bm-picked span, .bm-legend span,
+:root[data-theme='dark'] .gen-steps li.done i,
+:root[data-theme='dark'] .act.primary,
+:root[data-theme='dark'] .tpl button.on,
+:root[data-theme='dark'] .avatar,
+:root[data-theme='dark'] .pf-badge,
+:root[data-theme='dark'] .pf-edit.dark,
+:root[data-theme='dark'] .pf-tabs button.on::after,
+:root[data-theme='dark'] .gal-steps b,
+:root[data-theme='dark'] .tabbar a.cta,
+:root[data-theme='dark'] .btn,
+:root[data-theme='dark'] .btn.dark,
+:root[data-theme='dark'] .ls-style-tabs button.on,
+:root[data-theme='dark'] .lm-tabs button.on,
+:root[data-theme='dark'] .lm-tlx-list button.past .lm-dot,
+:root[data-theme='dark'] .cx-row > .cx-us,
+:root[data-theme='dark'] .lm-pv-bar i,
+:root[data-theme='dark'] .lm-steps3 li span,
+:root[data-theme='dark'] .lp-cards button.on .lp-radio,
+:root[data-theme='dark'] .ab-btn.dark,
+:root[data-theme='dark'] .sn-tabbar a.cta svg,
+:root[data-theme='dark'] .ka-ol li::before { color: var(--bg); }

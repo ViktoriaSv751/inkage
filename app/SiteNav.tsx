@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { setLang as saveLang } from '@/lib/i18n';
 import { track } from '@/lib/store';
 import { LangPicker, type Lang } from './LangPicker';
+import { ThemeToggle } from './ThemeToggle';
+import { CookieConsent, CtaBar } from './SiteExtras';
 import './sitenav.css';
 
 const I = {
@@ -27,6 +29,7 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
   const [scrolled, setScrolled] = useState(false);
   const [up, setUp] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [ccOpen, setCcOpen] = useState(false);
   useEffect(() => {
     if (!menu) return;
     const sw = window.innerWidth - document.documentElement.clientWidth;
@@ -106,6 +109,7 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
             ))}
           </nav>
           <div className="sn-r">
+            <ThemeToggle lang={lang} />
             <Link className="sn-signin" href={signedIn ? '/app' : `/belepes${q}`} onClick={() => track('nav_signin')}>
               {signedIn ? T('Open app', 'App') : T('Sign in', 'Belépés')}
             </Link>
@@ -225,6 +229,8 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
         })}
       </nav>
 
+      <CtaBar lang={lang} hidden={ccOpen || menu} />
+      <CookieConsent lang={lang} onChange={setCcOpen} />
       <button className={`sn-up ${up ? 'show' : ''}`} aria-label={T('Back to top', 'Vissza a tetejére')} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 19V5M5 12l7-7 7 7" />

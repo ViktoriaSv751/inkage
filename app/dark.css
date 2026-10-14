@@ -1,0 +1,50 @@
+/* ================================================================ dark theme: component overrides
+   (tokens live in globals.css; this covers hand-tuned light pastels) */
+:root[data-theme='dark'] .kb-page { --kb-bg: var(--bg); --kb-surface: var(--surface); --kb-line: var(--line); --kb-text: var(--ink); --kb-muted: var(--ink-3); }
+:root[data-theme='dark'] .lm-pv-card { background: linear-gradient(160deg, #1b1638 0%, #121218 55%, #0f1a15 100%); }
+:root[data-theme='dark'] .lm-hs { background: linear-gradient(160deg, #1d1840, #121218); }
+:root[data-theme='dark'] .lm-tlx-badge { background: rgba(16, 16, 22, .86); }
+:root[data-theme='dark'] .lm-tlx-badge b { color: #fff; }
+:root[data-theme='dark'] .lm-tlx-list button:hover { background: rgba(255, 255, 255, .05); }
+:root[data-theme='dark'] .cx-row > .cx-us { background: #241d52; color: #fff; }
+:root[data-theme='dark'] .cx-head .cx-us path { fill: #241d52; }
+:root[data-theme='dark'] .lp-actions { background: rgba(11, 11, 15, .94); }
+:root[data-theme='dark'] .sslot-busy { background: rgba(11, 11, 15, .7); }
+:root[data-theme='dark'] .stickycta { background: linear-gradient(rgba(11, 11, 15, 0), var(--bg) 22%); }
+/* tips / warnings / good-bad chips */
+:root[data-theme='dark'] .ka-tip, :root[data-theme='dark'] .ip-tip { background: #1f1b10; border-color: #3a3218; }
+:root[data-theme='dark'] .ka-tip-ico, :root[data-theme='dark'] .ip-tip-ico { background: #3a3014; }
+:root[data-theme='dark'] .ka-tip-h, :root[data-theme='dark'] .ip-tip-h { color: #f3d27a !important; }
+:root[data-theme='dark'] .ka-tip-ico svg, :root[data-theme='dark'] .ip-tip-ico svg { stroke: #f3d27a; }
+:root[data-theme='dark'] .rm-note { background: #241710; box-shadow: inset 0 0 0 1px #4a2c18; }
+:root[data-theme='dark'] .rm-note b { color: #ffb88a; }
+:root[data-theme='dark'] .rm-note p { color: #d8c4b6; }
+:root[data-theme='dark'] .ip-faq summary::after { background-color: var(--surface-2); filter: invert(1); }
+:root[data-theme='dark'] .sp-ring { background: radial-gradient(closest-side, var(--bg) 79%, transparent 80%), conic-gradient(var(--c) calc(var(--v) * 1%), var(--surface-2) 0); }
+:root[data-theme='dark'] .tile .tile-fav { background: rgba(20, 20, 26, .85); }
+:root[data-theme='dark'] .tile .tile-fav svg { stroke: #e8e8ee; }
+:root[data-theme='dark'] .pf-id::before { background: radial-gradient(90% 180% at 0% 0%, #2c2266 0%, transparent 60%), radial-gradient(70% 160% at 100% 0%, #3a2418 0%, transparent 60%), #17142c; }
+:root[data-theme='dark'] .pf-avatar { background: linear-gradient(150deg, #3a2f80, #241d52); color: #d9d0ff; }
+:root[data-theme='dark'] .ab-mission { background: radial-gradient(90% 140% at 0% 0%, #2a2163 0%, transparent 60%), radial-gradient(80% 140% at 100% 100%, #3a2418 0%, transparent 60%), #15131f; }
+:root[data-theme='dark'] .ab-is .yes { background: #10241a; }
+:root[data-theme='dark'] .tile.ph { background: linear-gradient(110deg, #1d1d22 30%, #26262d 50%, #1d1d22 70%); background-size: 200% 100%; }
+:root[data-theme='dark'] img[src$='.svg'].design-ink, :root[data-theme='dark'] .ex-design img { filter: invert(1) hue-rotate(180deg); }
+:root[data-theme='dark'] .ip-page, :root[data-theme='dark'] .sp-page { --line: var(--line-d); --soft: var(--surface); --muted: var(--ink-3); --acc-t: var(--stencil-tint); --acc: var(--stencil); }
+:root[data-theme='dark'] .ka-page { --ka-ink: var(--ink); --ka-muted: var(--ink-3); --ka-line: var(--line); --ka-accent: var(--stencil-2); }
+:root[data-theme='dark'] .ka-sum { background: var(--stencil-tint); }
+:root[data-theme='dark'] .real-tag { background: rgba(16, 16, 22, .86); color: #fff; }
+:root[data-theme='dark'] .lm-cmp, :root[data-theme='dark'] .lm-pv-sw { background: var(--surface-2); }
+:root[data-theme='dark'] .qf-vis { filter: brightness(.82) saturate(.9); }
+:root[data-theme='dark'] .sp-time li.down, :root[data-theme='dark'] .down { background: #2a1416; }
+:root[data-theme='dark'] .sp-tips li, :root[data-theme='dark'] .sp-time li[style] { background: #1f1b10; }
+:root[data-theme='dark'] .ip-sec p, :root[data-theme='dark'] .ip-sec li { color: var(--ink-2); }
+:root[data-theme='dark'] .kb-pill, :root[data-theme='dark'] .au-forgot { color: var(--stencil-2); }
+:root[data-theme='dark'] .toast { background: #26262e; color: #fff; }
+:root[data-theme='dark'] .ka2 { --body: #c9c9d2; --muted: var(--ink-3); --line: var(--line-d); --acc-tint: var(--stencil-tint); --acc: var(--stencil-2); }
+:root[data-theme='dark'] .sp-time li { background: var(--surface); }
+:root[data-theme='dark'] .qf-vis { background: var(--surface-2) !important; filter: none; }
+:root[data-theme='dark'] .btn.ghost { color: var(--ink); }
+:root[data-theme='dark'] .ls-final .btn:not(.ghost), :root[data-theme='dark'] .fixcard .btn:not(.ghost) { color: #0d0b14; }
+:root[data-theme='dark'] .pf-badge svg { stroke: var(--bg); }
+:root[data-theme='dark'] .pf-badge.on svg { stroke: #fff; }
+:root[data-theme='dark'] .tabbar a.cta svg { stroke: currentColor; }

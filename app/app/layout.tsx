@@ -1,5 +1,5 @@
 import { AppProvider } from './AppProvider';
-import { AuthSheet, BottomNav, TopBar } from './ui';
+import { AuthSheet, BottomNav, DeskTheme, TopBar } from './ui';
 import './app.css';
 
 export const metadata = { title: 'InkAge' };
@@ -11,6 +11,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <TopBar />
         <main className="appmain">{children}</main>
         <BottomNav />
+        <DeskTheme />
       </div>
       <AuthSheet />
     </AppProvider>

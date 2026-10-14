@@ -1,5 +1,6 @@
 'use client';
 import { IMG } from '@/lib/kb';
+import { ThemeToggle } from '../ThemeToggle';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -187,11 +188,14 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
             </svg>
             InkAge
           </Link>
-          <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </Link>
+          <span className="au-top-r">
+            <ThemeToggle lang={lang} />
+            <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </Link>
+          </span>
         </header>
 
         <div className="au-card">

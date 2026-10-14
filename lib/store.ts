@@ -67,6 +67,10 @@ export function haptic(kind: 'tap' | 'success' | 'warn' = 'tap') {
 export function track(name: string, props: Record<string, unknown> = {}) {
   const s = sb();
   if (!s) return;
+  // "necessary only": no usage stats
+  try {
+    if (localStorage.getItem('ink_consent') === 'essential') return;
+  } catch {}
   s.rpc('log_event', { p_name: name, p_anon: anonId(), p_props: props }).then(
     () => {},
     () => {}
