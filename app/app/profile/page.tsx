@@ -139,7 +139,7 @@ export default function ProfilePage() {
       const files: Record<string, Uint8Array> = { 'adataim.json': strToU8(JSON.stringify(data, null, 2)) };
       for (const p of mine || []) {
         const day = p.created_at.slice(0, 10);
-        const all: [string, string | undefined][] = [...Object.entries(p.images), ...Object.entries(p.removal || {}), ['design', p.design]];
+        const all: [string, string | undefined][] = [...Object.entries(p.images), ...Object.entries(p.removal || {}), ['design', p.design], ...(p.real || []).map((r, i) => [`valodi-${i + 1}`, r.src] as [string, string])];
         for (const [k, src] of all) {
           if (!src) continue;
           try {
@@ -158,7 +158,16 @@ export default function ProfilePage() {
   const [ob, setOb] = useState<OnboardingAnswers | null>(null);
 
   useEffect(() => {
-    Promise.all([me.user ? cloud.all().catch(() => []) : Promise.resolve([]), local.all().catch(() => [])]).then(([c, l]) => setMine([...c, ...l]));
+    (async () => {
+      const c: Preview[] = [];
+      if (me.user) for (let from = 0; ; from += 120) {
+        const page = await cloud.all(from, 120).catch(() => [] as Preview[]);
+        c.push(...page);
+        if (page.length < 120) break;
+      }
+      const l = await local.all().catch(() => []);
+      setMine([...c, ...l]);
+    })();
     setOb((me.onboarding as OnboardingAnswers) || lsGet<OnboardingAnswers | null>('ink_onboarding', null));
   }, [me.user, me.onboarding]);
 
@@ -229,6 +238,10 @@ export default function ProfilePage() {
     setBusy(true);
     try {
       const uid = me.user.id;
+      // vote links made on this device without an account
+      for (const x of shares.all()) if (x.kind !== 'preview') await revokeGuestShare(x.id).catch(() => false);
+      const { error } = await s.rpc('erase_my_account');
+      if (error) throw error;
       for (const bucket of ['previews', 'shares']) {
         const { data: dirs } = await s.storage.from(bucket).list(uid, { limit: 1000 });
         for (const d of dirs || []) {
@@ -237,10 +250,7 @@ export default function ProfilePage() {
           if (paths.length) await s.storage.from(bucket).remove(paths);
         }
       }
-      // vote links made on this device without an account
-      for (const x of shares.all()) if (x.kind !== 'preview') await revokeGuestShare(x.id).catch(() => false);
-      const { error } = await s.rpc('erase_my_account');
-      if (error) throw error;
+
       lsSet('ink_shares', []);
       lsSet('ink_posts', []);
       const mine = await local.all().catch(() => []);

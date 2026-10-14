@@ -10,7 +10,7 @@ import { abShare, shareVoteLink } from '@/lib/share';
 import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
-import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
+import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, shares, StageKey, STAGES, track } from '@/lib/store';
 import { composeMockup, pasteMask, Placement, Skin } from '@/lib/editor';
 import { loadImage } from '@/lib/client';
 import { frameCm, photoCm } from '@/lib/score';
@@ -19,7 +19,7 @@ import { processDesign } from '@/lib/editor';
 import { lsSet } from '@/lib/store';
 
 type Phase = 'loading' | 'onboarding' | 'studio' | 'place' | 'gen' | 'result';
-type JobMeta = Pick<Preview, 'placement' | 'mode' | 'size' | 'sizeCm' | 'design' | 'focus'>;
+type JobMeta = Pick<Preview, 'placement' | 'mode' | 'size' | 'sizeCm' | 'design' | 'focus' | 'colorMode'>;
 const AGE_STAGES: StageKey[] = ['healed', 'y10', 'y30', 'y50'];
 
 async function flattenOnWhite(src: string, max = 1024) {
@@ -70,6 +70,7 @@ export default function CreatePage() {
   const [fact, setFact] = useState(0);
   const [mode, setMode] = useState<'new' | 'existing' | 'removal'>('new');
   const removalIntent = useRef(false);
+  const explicitMode = useRef(false);
   const [existingCm, setExistingCm] = useState<number | null>(null);
   const [remPending, setRemPending] = useState<RemovalKey[]>([]);
   const [improving, setImproving] = useState(false);
@@ -131,6 +132,10 @@ export default function CreatePage() {
     const sp = new URLSearchParams(location.search);
     const again = sp.has('again');
     const m = sp.get('mode');
+    const redo0 = lsGet<any>('ink_redo', null);
+    const pick0 = lsGet<string | null>('ink_pick', null);
+    // a mode asked for explicitly wins over the onboarding goal
+    explicitMode.current = m === 'removal' || m === 'existing' || !!redo0 || !!pick0;
     if (m === 'removal' || m === 'existing') setMode(m);
     if (again) againRef.current = true;
     if (ans && !again) {
@@ -151,13 +156,15 @@ export default function CreatePage() {
       setPlacement(redo.placement);
       setMode(redo.mode);
       setPhoto(null);
-      if (redo.design && redo.mode === 'new') processDesign(redo.design, 'black').then((d) => setDesign({ raw: redo.design!, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: 'black' })).catch(() => {});
+      const cm: 'black' | 'color' = (redo as any).colorMode === 'color' ? 'color' : 'black';
+      if (redo.design && redo.mode === 'new') processDesign(redo.design, cm).then((d) => setDesign({ raw: redo.design!, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: cm })).catch(() => {});
       if (ans) setPhase('studio');
     }
     // a design picked in Explore
     const pick = DESIGNS.find((d) => d.id === lsGet<string | null>('ink_pick', null));
     if (pick) {
       lsSet('ink_pick', null);
+      setMode('new');
       processDesign(pick.src, 'black').then((d) => setDesign({ raw: pick.src, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: 'black', libId: pick.id }));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -172,7 +179,7 @@ export default function CreatePage() {
 
   function applyOnboarding(a: OnboardingAnswers) {
     setOb(a);
-    if (a.goal === 'existing' || a.goal === 'removal') setMode(a.goal);
+    if (!explicitMode.current && (a.goal === 'existing' || a.goal === 'removal')) setMode(a.goal);
     if (a.placement) setPlacement(a.placement);
     const cm = Number(a.size) || 8;
     setPl((p) => ({ ...p, w: Math.min(0.8, Math.max(0.1, cm / frameCm(a.placement || 'forearm'))) }));
@@ -326,6 +333,7 @@ export default function CreatePage() {
       size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
       sizeCm: existing ? existingCm ?? undefined : Math.round(cm * 10) / 10,
       design: existing ? undefined : d!.ink,
+      colorMode: existing ? undefined : d!.mode,
       focus: existing ? undefined : { x: place.x, y: place.y, w: place.w * Math.max(1, d!.ratio * (photo.w / photo.h)) },
     };
     // remember the running job, so its result can be picked up if the app gets closed
@@ -387,6 +395,7 @@ export default function CreatePage() {
       collection: null,
       images,
       mode: meta.mode,
+      colorMode: meta.colorMode,
       design: meta.design,
       focus: meta.focus,
       source: 'local',
@@ -403,7 +412,8 @@ export default function CreatePage() {
       const missing = AGE_STAGES.filter((k) => !images[k]);
       setPending(missing);
       // start every missing stage whose parent is ready
-      if (removalIntent.current) {
+      if (removalIntent.current || meta.mode === 'removal') {
+        removalIntent.current = true;
         // removal preview: skip aging, simulate the laser sessions straight away
         setPending([]);
         lsSet('ink_job', null);
@@ -481,6 +491,9 @@ export default function CreatePage() {
             for (const k of REMOVAL_STAGES) if (cur.removal?.[k] && !p.removal?.[k]) extra[k] = cur.removal[k]!;
           }
           if (Object.keys(extra).length) await cloud.addImages(me.user.id, p.id, extra).catch(() => {});
+          // edits made while uploading (favorite, notes, done)
+          if (cur && (cur.notes !== p.notes || cur.favorite !== p.favorite || (cur.doneAt ?? null) !== (p.doneAt ?? null)))
+            await cloud.update(p.id, { notes: cur.notes, favorite: cur.favorite, done_at: cur.doneAt ?? null }).catch(() => {});
           toast(ui.t('result.saved'));
         } else {
           await local.put(previewRef.current && previewRef.current.id === p.id ? previewRef.current : p);
@@ -503,6 +516,7 @@ export default function CreatePage() {
     const next = { ...p, ...x };
     setPreview(next);
     if (!saved.current) return;
+    if (me.user && savingRef.current) return; // the cloud save picks the change up when it finishes
     const done = p.source === 'cloud' ? cloud.update(p.id, { notes: next.notes, favorite: next.favorite, done_at: next.doneAt ?? null }) : local.put(next);
     Promise.resolve(done).catch(() => {
       setPreview(p);
@@ -687,7 +701,7 @@ export default function CreatePage() {
           onResize={resize}
           onRemoval={startRemoval}
           removalPending={remPending}
-          startView={removalIntent.current ? 'removal' : 'aging'}
+          startView={removalIntent.current || preview.mode === 'removal' ? 'removal' : 'aging'}
           onAging={startAging}
           onTryPlace={
             preview.mode !== 'existing' && preview.mode !== 'removal' && design
@@ -716,6 +730,7 @@ export default function CreatePage() {
                 try {
                   const lab = (p: Preview) => `${placeName(p.placement, ui.lang)}${p.sizeCm ? ` ${p.sizeCm} cm` : ''}`;
                   const id = await abShare(prevRef.current!, preview, lab(prevRef.current!), lab(preview));
+                  shares.add({ id, at: new Date().toISOString(), label: `${lab(prevRef.current!)} / ${lab(preview)}`, kind: 'ab' });
                   await shareVoteLink(id, t('Which tattoo should I get? 👀', 'Melyik tetoválást csináltassam? 👀'), () => toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak')));
                 } catch (e: any) {
                   toast(trErr(ui.lang, e?.message));

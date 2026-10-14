@@ -307,8 +307,13 @@ export function Result({
   const linkFor = async (): Promise<string> => {
     if (!img.y50 || !img.fresh) throw new Error(t('Wait for the 50-year image first.', 'Várd meg az 50 éves képet.'));
     if (preview.share_id) return preview.share_id;
-    const mine = shares.forPreview(preview.id).find((x) => x.kind !== 'ab');
-    if (mine) return mine.id;
+    // a link made earlier on this device (guest kind only; it may have been closed meanwhile)
+    const mine = preview.source === 'cloud' && me.user ? null : shares.forPreview(preview.id).find((x) => x.kind === 'guest');
+    if (mine) {
+      const { data } = (await sb()?.rpc('get_share', { p_share: mine.id })) || {};
+      if (data) return mine.id;
+      shares.drop(mine.id);
+    }
     if (me.user && preview.source === 'cloud') {
       const id = await cloud.share(me.user.id, preview);
       onShared?.(id);

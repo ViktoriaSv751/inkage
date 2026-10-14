@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { track } from '@/lib/store';
+import './consent.css';
 
 type Lang = 'en' | 'hu';
 

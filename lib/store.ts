@@ -33,6 +33,8 @@ export type Preview = {
   mode?: 'new' | 'existing' | 'removal';
   /** The design used (data URL), for the artist sheet. */
   design?: string;
+  /** black or colour ink, to redo it the same way */
+  colorMode?: 'black' | 'color';
   sizeCm?: number;
   /** where the tattoo is in the photo (centre and width as fractions), for the close-up */
   focus?: { x: number; y: number; w: number };
@@ -69,10 +71,12 @@ export function haptic(kind: 'tap' | 'success' | 'warn' = 'tap') {
 export function track(name: string, props: Record<string, unknown> = {}) {
   const s = sb();
   if (!s) return;
-  // "necessary only": no usage stats
+  // usage stats only after "Accept" in the cookie banner
   try {
-    if (localStorage.getItem('ink_consent') === 'essential') return;
-  } catch {}
+    if (localStorage.getItem('ink_consent') !== 'all') return;
+  } catch {
+    return;
+  }
   s.rpc('log_event', { p_name: name, p_anon: anonId(), p_props: props }).then(
     () => {},
     () => {}
@@ -211,6 +215,7 @@ const fromRow = async (r: Row): Promise<Preview> => {
   removal: Object.keys(removal).length ? removal : undefined,
   design: all.design,
   mode: meta.mode,
+  colorMode: meta.colorMode,
   sizeCm: meta.sizeCm,
   focus: meta.focus,
   doneAt: r.done_at ?? null,
@@ -253,7 +258,7 @@ export const cloud = {
       size: p.size,
       score: p.score,
       report: p.report,
-      analysis: { ...(p.analysis ?? (p.age ? { apparentAge: p.age } : {})), meta: { mode: p.mode, sizeCm: p.sizeCm, focus: p.focus } },
+      analysis: { ...(p.analysis ?? (p.age ? { apparentAge: p.age } : {})), meta: { mode: p.mode, sizeCm: p.sizeCm, focus: p.focus, colorMode: p.colorMode } },
       notes: p.notes || null,
       favorite: p.favorite,
       collection: p.collection,
@@ -266,14 +271,15 @@ export const cloud = {
   /** Add images made later (laser removal) to a saved preview. */
   async addImages(uid: string, id: string, imgs: Partial<Record<string, string>>) {
     const s = sb()!;
-    const { data } = await s.from('previews').select('paths').eq('id', id).maybeSingle();
-    const paths = { ...((data as any)?.paths || {}) };
+    const paths: Record<string, string> = {};
     for (const [k, src] of Object.entries(imgs)) {
       if (!src) continue;
       const path = await upload(uid, id, k, src);
       if (path) paths[k] = path;
     }
-    const { error } = await s.from('previews').update({ paths }).eq('id', id);
+    if (!Object.keys(paths).length) return;
+    // merged in the database, so parallel uploads never overwrite each other
+    const { error } = await s.rpc('add_preview_paths', { p_id: id, p_paths: paths });
     if (error) throw error;
   },
   /** Save edits (favorite, notes, folder, done). Throws if the database refused it. */

@@ -72,7 +72,9 @@ export default function GalleryPage() {
   const onImgError = () => {
     if (reloading.current || !me.user) return;
     reloading.current = true;
-    load().finally(() => setTimeout(() => (reloading.current = false), 30000));
+    load()
+      .then((all) => setOpen((o) => (o && all.find((x) => x.id === o.id)) || o))
+      .finally(() => setTimeout(() => (reloading.current = false), 30000));
   };
 
   /** Save a change; for account previews undo it on screen if the server refuses. */
@@ -146,7 +148,7 @@ export default function GalleryPage() {
 
   /** Start a new preview with the same design and body area. */
   const again = (p: Preview) => {
-    lsSet('ink_redo', { design: p.design || null, placement: p.placement, mode: p.mode === 'removal' ? 'removal' : p.mode === 'existing' ? 'existing' : 'new' });
+    lsSet('ink_redo', { design: p.design || null, colorMode: p.colorMode || 'black', placement: p.placement, mode: p.mode === 'removal' ? 'removal' : p.mode === 'existing' ? 'existing' : 'new' });
     track('gallery_again');
     router.push('/app');
   };

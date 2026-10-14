@@ -18,7 +18,9 @@ export function applyTheme(t: Theme) {
 export function ThemeToggle({ className = '', lang = 'hu' }: { className?: string; lang?: 'en' | 'hu' }) {
   const [t, setT] = useState<Theme>('light');
   useEffect(() => {
-    setT(read());
+    const cur = read();
+    setT(cur);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', cur === 'dark' ? '#0b0b0f' : '#ffffff');
     const h = (e: Event) => setT((e as CustomEvent).detail);
     window.addEventListener('ink-theme', h);
     return () => window.removeEventListener('ink-theme', h);

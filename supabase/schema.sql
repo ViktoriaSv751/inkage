@@ -198,8 +198,8 @@ CREATE INDEX guest_shares_guest_idx ON public.guest_shares USING btree (guest_id
 CREATE UNIQUE INDEX community_posts_share_id_key ON public.community_posts USING btree (share_id);
 
 -- storage buckets
-insert into storage.buckets(id, name, public) values ('previews', 'previews', f) on conflict do nothing;
-insert into storage.buckets(id, name, public) values ('shares', 'shares', t) on conflict do nothing;
+insert into storage.buckets(id, name, public) values ('previews', 'previews', false) on conflict do nothing;
+insert into storage.buckets(id, name, public) values ('shares', 'shares', true) on conflict do nothing;
 
 -- row level security policies
 create policy shares_own_remove on storage.objects for DELETE to authenticated using (((bucket_id = 'shares'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text)));
