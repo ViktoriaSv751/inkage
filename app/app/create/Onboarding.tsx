@@ -74,7 +74,7 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
   const finish = () => {
     const ans = a as OnboardingAnswers;
     lsSet('ink_onboarding', ans);
-    if (me.user) sb()?.rpc('save_profile', { p_onboarding: ans, p_lang: ui.lang });
+    if (me.user) sb()?.rpc('save_profile', { p_onboarding: ans, p_lang: ui.lang })?.then(() => {}, () => {});
     track('onboarding_done', { goal: ans.goal, style: ans.style, placement: ans.placement });
     haptic('success');
     onDone(ans);

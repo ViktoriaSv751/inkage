@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from './AppProvider';
 import { Icon, Sheet } from './ui';
 import { tx } from '@/lib/i18n';
-import { anonId, cloud, haptic, Preview, REMOVAL_STAGES, RemovalKey, StageKey, STAGES, track } from '@/lib/store';
+import { anonId, cloud, haptic, lsGet, lsSet, Preview, REMOVAL_STAGES, RemovalKey, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
 import { loadImage, shareOrDownload } from '@/lib/client';
 import { api, sb } from '@/lib/sb';
 import { canRecordVideo, HOOKS, makeVideo, photoSlides, Template } from '@/lib/video';
@@ -122,6 +122,9 @@ export function Result({
   removalPending = [],
   onRedo,
   startView = 'aging',
+  onShared,
+  onDone,
+  onAging,
 }: {
   preview: Preview;
   pending?: StageKey[];
@@ -143,6 +146,12 @@ export function Result({
   startView?: 'aging' | 'removal';
   /** "Not right?": make it again, avoiding what the user ticked */
   onRedo?: (reasons: string[]) => void;
+  /** a cloud preview got (or lost) its vote link */
+  onShared?: (shareId: string | null) => void;
+  /** "I got it done": the date the tattoo was made */
+  onDone?: (date: string) => void;
+  /** removal-only preview: also run the aging stages */
+  onAging?: () => void;
 }) {
   const { ui, me, openAuth, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
@@ -150,6 +159,8 @@ export function Result({
   const rem = preview.removal || {};
   const report = preview.report;
   const ready = STAGES.filter((k) => img[k]);
+  /** the person's own tattoo (aging or removal), not a new design */
+  const own = preview.mode === 'existing' || preview.mode === 'removal';
   const [pos, setPos] = useState(0); // continuous position along the ready stages
   const [view, setView] = useState<'aging' | 'removal'>(startView);
   const [remKey, setRemKey] = useState<'fresh' | RemovalKey>('fresh');
@@ -169,16 +180,17 @@ export function Result({
   const [pubOk, setPubOk] = useState(false);
   const [caption, setCaption] = useState('');
   const [pubBusy, setPubBusy] = useState(false);
+  const [linksTick, setLinksTick] = useState(0);
   // share to Explore: only with consent, and only after a person has reviewed it
   const publish = async () => {
     if (!img.fresh || !img.y50) return;
     setPubBusy(true);
     try {
-      const [fresh, y50] = await Promise.all([smallJpeg(img.fresh), smallJpeg(img.y50)]);
-      const r = await api<{ id?: string; error?: string }>('/api/guest-share', { fresh, y50, placement: preview.placement, score: preview.score });
-      if (!r.ok || !r.data.id) throw new Error(r.data?.error);
-      const { data } = (await sb()?.rpc('submit_post', { p_share: r.data.id, p_caption: caption, p_anon: anonId() })) || {};
+      const sid = await linkFor();
+      const { data } = (await sb()?.rpc('submit_post', { p_share: sid, p_caption: caption, p_anon: anonId() })) || {};
       if (!data) throw new Error('limit');
+      lsSet('ink_posts', [sid, ...lsGet<string[]>('ink_posts', []).filter((x) => x !== sid)].slice(0, 50));
+      setLinksTick((n) => n + 1);
       track('community_submit');
       setPubOpen(false);
       toast(t('Sent! It appears in Explore after a quick review.', 'Elküldve! Rövid ellenőrzés után megjelenik a Felfedezésben.'));
@@ -199,7 +211,7 @@ export function Result({
   })();
   const touch = useRef<number | null>(null);
   const played = useRef(false);
-  const label = (k: StageKey) => (k === 'fresh' && preview.mode === 'existing' ? t('Today', 'Ma') : ui.t(`stage.${k}` as any));
+  const label = (k: StageKey) => (k === 'fresh' && own ? t('Today', 'Ma') : ui.t(`stage.${k}` as any));
   const remLabel = (k: 'fresh' | RemovalKey) => (k === 'fresh' ? t('Today', 'Ma') : t(`${k.slice(5)} sessions`, `${k.slice(5)} kezelés`));
 
   // keep the position inside the available range
@@ -235,6 +247,11 @@ export function Result({
   }, [reveal, ready.length]);
 
   useEffect(() => setNotes(preview.notes || ''), [preview.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  // a removal-only preview opens on the laser sessions
+  const removalOnly = ready.length <= 1 && pending.length === 0 && (REMOVAL_STAGES.some((k) => rem[k]) || removalPending.length > 0 || preview.mode === 'removal');
+  useEffect(() => {
+    if (removalOnly && view !== 'removal') setView('removal');
+  }, [removalOnly]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (view === 'removal') {
       const last = [...REMOVAL_STAGES].reverse().find((k) => rem[k]);
@@ -283,36 +300,32 @@ export function Result({
       toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak'));
     }
   };
+  /** The vote link for this preview: reuse it if there is one, otherwise make it. */
+  const linkFor = async (): Promise<string> => {
+    if (!img.y50 || !img.fresh) throw new Error(t('Wait for the 50-year image first.', 'Várd meg az 50 éves képet.'));
+    if (preview.share_id) return preview.share_id;
+    const mine = shares.forPreview(preview.id).find((x) => x.kind !== 'ab');
+    if (mine) return mine.id;
+    if (me.user && preview.source === 'cloud') {
+      const id = await cloud.share(me.user.id, preview);
+      onShared?.(id);
+      shares.add({ id, at: new Date().toISOString(), label: placeName(preview.placement, ui.lang), previewId: preview.id, kind: 'preview' });
+      return id;
+    }
+    // no account needed: the link keeps two small images
+    const [fresh, y50] = await Promise.all([smallJpeg(img.fresh), smallJpeg(img.y50)]);
+    const r = await api<{ id?: string; error?: string }>('/api/guest-share', { fresh, y50, placement: preview.placement, score: preview.score });
+    if (!r.ok || !r.data.id) throw new Error(r.data?.error || t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
+    shares.add({ id: r.data.id, at: new Date().toISOString(), label: placeName(preview.placement, ui.lang), previewId: preview.id, kind: 'guest' });
+    return r.data.id;
+  };
   const share = async () => {
-    if (!me.user || preview.source !== 'cloud') {
-      // no account needed: the link keeps two small images
-      if (!img.y50 || !img.fresh) return toast(t('Wait for the 50-year image first.', 'Várd meg az 50 éves képet.'));
-      setSharing(true);
-      try {
-        const [fresh, y50] = await Promise.all([smallJpeg(img.fresh), smallJpeg(img.y50)]);
-        const r = await api<{ id?: string; error?: string }>('/api/guest-share', { fresh, y50, placement: preview.placement, score: preview.score });
-        if (!r.ok || !r.data.id) throw new Error(r.data?.error);
-        await shareLink(r.data.id);
-      } catch {
-        toast(t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
-      }
-      setSharing(false);
-      return;
-    }
-    if (preview.source !== 'cloud') {
-      toast(t('Saving to your account… try again in a moment.', 'Mentés a fiókodba… próbáld újra egy pillanat múlva.'));
-      return;
-    }
-    if (!img.y50) {
-      toast(t('Wait for the 50-year image first.', 'Várd meg az 50 éves képet.'));
-      return;
-    }
     setSharing(true);
     try {
-      const id = preview.share_id || (await cloud.share(me.user.id, preview));
-      await shareLink(id);
-    } catch {
-      toast(t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
+      await shareLink(await linkFor());
+      setLinksTick((n) => n + 1);
+    } catch (e: any) {
+      toast(e?.message || t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
     }
     setSharing(false);
   };
@@ -323,7 +336,7 @@ export function Result({
     try {
       const blob = await makeCard(img.fresh, img.y50, {
         title: t('Fresh vs. 50 years', 'Friss vs. 50 év múlva'),
-        left: preview.mode === 'existing' ? t('Today', 'Ma') : t('Fresh', 'Friss'),
+        left: own ? t('Today', 'Ma') : t('Fresh', 'Friss'),
         right: t('50 years', '50 év'),
         score: preview.score != null ? t(`Aging score ${preview.score}/100`, `Öregedési pontszám ${preview.score}/100`) : null,
       });
@@ -336,7 +349,7 @@ export function Result({
   };
 
   const scoreColor = report ? (report.score >= 75 ? '#1f8a5b' : report.score >= 55 ? '#d68a1f' : 'var(--fresh)') : 'var(--violet)';
-  const suggestCm = preview.sizeCm && preview.sizeCm < 7 && preview.mode !== 'existing' ? Math.ceil(Math.max(7, preview.sizeCm * 1.4)) : null;
+  const suggestCm = preview.sizeCm && preview.sizeCm < 7 && !own ? Math.ceil(Math.max(7, preview.sizeCm * 1.4)) : null;
   const remCount = REMOVAL_STAGES.filter((k) => rem[k]).length;
 
   return (
@@ -387,8 +400,8 @@ export function Result({
               return <img key={k} className="layer nofade zoomable" src={img[k]} alt="" style={{ opacity: op, ...zs }} />;
             })}
             <div className="stamp">
-              <span>{yearsNow === 0 ? (preview.mode === 'existing' ? t('NOW', 'MA') : t('NEW', 'ÚJ')) : yearsNow}</span>
-              <small>{yearsNow === 0 ? (preview.mode === 'existing' ? t('today', 'ma') : t('fresh ink', 'friss tinta')) : t(yearsNow === 1 ? 'year later' : 'years later', 'év múlva')}</small>
+              <span>{yearsNow === 0 ? (own ? t('NOW', 'MA') : t('NEW', 'ÚJ')) : yearsNow}</span>
+              <small>{yearsNow === 0 ? (own ? t('today', 'ma') : t('fresh ink', 'friss tinta')) : t(yearsNow === 1 ? 'year later' : 'years later', 'év múlva')}</small>
             </div>
           </>
         ) : (
@@ -494,13 +507,18 @@ export function Result({
         </div>
       )}
 
-      {onRedo && view === 'aging' && img.fresh && preview.mode !== 'existing' && (
+      {onRedo && view === 'aging' && img.fresh && !own && (
         <button className="redo-link" onClick={() => setRedoOpen(true)}>
           {t('Not right? Make it again', 'Nem lett jó? Újracsináljuk')}
         </button>
       )}
       {view === 'aging' && mode === 'view' && (
         <p className="why" aria-live="polite">{t(...WHY[active])}</p>
+      )}
+      {removalOnly && onAging && (
+        <button className="btn ghost wide" style={{ margin: '4px 0 12px' }} onClick={onAging} disabled={removalPending.length > 0}>
+          {t('Also show how it ages over 50 years', 'Az öregedését is megnézem 50 évre')}
+        </button>
       )}
       <div className="actgrid">
         <button className="act primary" onClick={() => setVideo(true)} disabled={ready.length < 2}>
@@ -523,7 +541,7 @@ export function Result({
 
       </div>
       <div className="col-b">
-      {(onImprove || suggestCm) && preview.mode !== 'existing' && report && report.score < 85 && (
+      {(onImprove || (suggestCm && onResize)) && !own && report && report.score < 85 && (
         <div className="card fixcard">
           <h2>{t('Make it last', 'Tedd tartóssá')}</h2>
           <p className="muted">
@@ -572,7 +590,7 @@ export function Result({
               </li>
             ))}
           </ul>
-          {report.input && preview.mode !== 'existing' && (() => {
+          {report.input && !own && (() => {
             const here = preview.placement.toLowerCase();
             const alts = OTHER_SPOTS.filter(([v]) => !here.includes(v.toLowerCase().split(' ').pop()!))
               .map(([v, en, hu]) => ({ en, hu, score: longevity({ ...report.input!, placement: v }, ui.lang).score }))
@@ -619,6 +637,8 @@ export function Result({
           />
         </div>
       )}
+
+      <LinksPanel preview={preview} tick={linksTick} onShared={onShared} />
 
       <div className="card toolcard" style={{ marginTop: 12 }}>
         <h3>{t('Next steps', 'Következő lépések')}</h3>
@@ -693,7 +713,7 @@ export function Result({
 
       </div>
       <VideoSheet open={video} onClose={() => setVideo(false)} preview={preview} />
-      <CareSheet open={care} onClose={() => setCare(false)} />
+      <CareSheet open={care} onClose={() => setCare(false)} onDone={onDone} />
       <Sheet open={pubOpen} onClose={() => setPubOpen(false)} label={t('Share in Explore', 'Megosztás a Felfedezésben')}>
         <h2>{t('Share in Explore', 'Megosztás a Felfedezésben')}</h2>
         <p className="sub">{t('Your fresh and 50-year images appear in the community feed, where anyone can vote. No name or account is shown.', 'A friss és az 50 éves képed megjelenik a közösségi falon, ahol bárki szavazhat rá. Nevet vagy fiókot nem mutatunk.')}</p>
@@ -737,7 +757,7 @@ export function Result({
   );
 }
 
-function CareSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => void; onDone?: (date: string) => void }) {
   const { ui, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -757,6 +777,7 @@ function CareSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
         className="btn wide"
         onClick={async () => {
           track('aftercare_ics');
+          onDone?.(new Date(date + 'T12:00:00').toISOString());
           await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-gyogyulas.ics');
           toast(t('Open the file to add the reminders to your calendar', 'Nyisd meg a fájlt, és bekerülnek az emlékeztetők a naptáradba'));
         }}
@@ -886,5 +907,105 @@ export function VideoSheet({ open, onClose, preview }: { open: boolean; onClose:
       </button>
       {err && <p className="err">{err}</p>}
     </Sheet>
+  );
+}
+
+type ShareInfo = { votes?: { yes: number; no: number; change: number } } | null;
+
+/** The preview's vote links: results, Explore status, copy and close. */
+function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: number; onShared?: (id: string | null) => void }) {
+  const { ui, me, toast } = useApp();
+  const t = (en: string, hu: string) => tx(ui.lang, en, hu);
+  const ids = useMemo(
+    () => Array.from(new Set([preview.share_id, ...shares.forPreview(preview.id).map((x) => x.id)].filter(Boolean) as string[])),
+    [preview.id, preview.share_id, tick] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const [info, setInfo] = useState<Record<string, ShareInfo>>({});
+  const [posts, setPosts] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState('');
+  useEffect(() => {
+    if (!ids.length) return;
+    const s = sb();
+    if (!s) return;
+    let live = true;
+    Promise.all(ids.map((id) => s.rpc('get_share', { p_share: id }).then((r) => [id, r.data as ShareInfo] as const))).then((rows) => live && setInfo(Object.fromEntries(rows)));
+    s.rpc('post_status', { p_shares: ids }).then((r) => live && setPosts((r.data as any) || {}));
+    return () => {
+      live = false;
+    };
+  }, [ids.join(',')]); // eslint-disable-line react-hooks/exhaustive-deps
+  const shown = ids.filter((id) => info[id] !== null);
+  if (!shown.length) return null;
+  const close = async (id: string) => {
+    setBusy(id);
+    try {
+      if (id === preview.share_id && me.user && preview.source === 'cloud') {
+        await cloud.unshare(me.user.id, preview.id);
+        shares.drop(id);
+        onShared?.(null);
+      } else if (!(await revokeGuestShare(id))) throw new Error();
+      setInfo((m) => ({ ...m, [id]: null }));
+      toast(t('Link closed — it no longer opens', 'Link lezárva – már nem nyitható meg'));
+    } catch {
+      toast(t('Could not close the link. Try again.', 'Nem sikerült lezárni a linket. Próbáld újra.'));
+    }
+    setBusy('');
+  };
+  const withdraw = async (id: string) => {
+    setBusy(id);
+    const { data } = (await sb()?.rpc('withdraw_post', { p_share: id, p_anon: anonId() })) || {};
+    if (data) setPosts((m) => ({ ...m, [id]: 'withdrawn' }));
+    toast(data ? t('Removed from Explore', 'Eltávolítva a Felfedezésből') : t('Could not remove it. Try again.', 'Nem sikerült eltávolítani. Próbáld újra.'));
+    setBusy('');
+  };
+  const postLabel = (st?: string) =>
+    st === 'pending' ? t('Explore: waiting for review', 'Felfedezés: ellenőrzésre vár') : st === 'approved' ? t('Explore: live', 'Felfedezés: kint van') : st === 'rejected' ? t('Explore: not approved', 'Felfedezés: nem került ki') : null;
+  return (
+    <div className="card links-card" style={{ marginTop: 12 }}>
+      <h3>{t('Your vote links', 'Szavazós linkjeid')}</h3>
+      {shown.map((id) => {
+        const v = info[id]?.votes;
+        const total = v ? v.yes + v.no + v.change : 0;
+        const pl = postLabel(posts[id]);
+        return (
+          <div key={id} className="link-row">
+            <div className="link-votes">
+              {v ? (
+                <>
+                  <span className="yes">👍 {v.yes}</span>
+                  <span className="no">👎 {v.no}</span>
+                  <span className="chg">✏️ {v.change}</span>
+                </>
+              ) : (
+                <span className="muted small">…</span>
+              )}
+            </div>
+            <p className="muted small" style={{ margin: '4px 0 8px' }}>
+              {total ? t(`${total} vote${total === 1 ? '' : 's'} so far`, `Eddig ${total} szavazat`) : t('No votes yet', 'Még nincs szavazat')}
+              {pl ? ` · ${pl}` : ''}
+            </p>
+            <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+              <button
+                className="chipbtn"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(`${location.origin}/v/${id}`).catch(() => {});
+                  toast(t('Link copied', 'Link másolva'));
+                }}
+              >
+                {t('Copy link', 'Link másolása')}
+              </button>
+              {(posts[id] === 'pending' || posts[id] === 'approved') && (
+                <button className="chipbtn" disabled={busy === id} onClick={() => withdraw(id)}>
+                  {t('Remove from Explore', 'Levétel a Felfedezésből')}
+                </button>
+              )}
+              <button className="chipbtn" disabled={busy === id} onClick={() => close(id)}>
+                {t('Close link', 'Link lezárása')}
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }

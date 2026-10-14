@@ -246,6 +246,9 @@ main:has(.ls-final) { padding-bottom: 0; }
   .lm-tlx-list button.on p { display: block; }
 }
 @media (min-width: 640px) and (max-width: 899px) { .ls-bento > .ls-tile.pic:nth-of-type(4) { grid-column: span 2; } }
-.ls-link { text-decoration: none; color: inherit; transition: transform .2s; }
+.ls-link { text-decoration: none; color: #fff; transition: transform .2s; }
 .ls-link:hover { transform: translateY(-2px); }
 .ls-go { display: inline-block; margin-top: 10px; font-weight: 700; font-size: 14px; color: #fff; }
+.ls-link { display: grid; white-space: normal; min-width: 0; }
+.ls-link h3, .ls-link p { color: #fff; }
+.ls-link p { overflow-wrap: anywhere; }

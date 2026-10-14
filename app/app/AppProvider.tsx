@@ -65,9 +65,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       // guest previews → account
       migrateLocal(data.user.id).then((n) => n && toast(ui.lang === 'hu' ? `${n} terv átkerült a fiókodba` : `${n} saved design${n > 1 ? 's' : ''} moved to your account`));
+      // vote links made on this device → account (so they can be listed and closed anywhere)
+      api('/api/guest-share?claim=1', {}).catch(() => {});
       // onboarding answers → profile
       const ob = lsGet<any>('ink_onboarding', null);
-      if (ob && !data.onboarding) sb()?.rpc('save_profile', { p_onboarding: ob, p_lang: ui.lang });
+      if (ob && !data.onboarding) sb()?.rpc('save_profile', { p_onboarding: ob, p_lang: ui.lang })?.then(() => {}, () => {});
     }
     return data;
   }, [toast, ui.lang]);

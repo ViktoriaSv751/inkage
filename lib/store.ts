@@ -1,5 +1,5 @@
 'use client';
-import { sb } from './sb';
+import { api, sb } from './sb';
 
 export type StageKey = 'fresh' | 'healed' | 'y10' | 'y30' | 'y50';
 export const STAGES: StageKey[] = ['fresh', 'healed', 'y10', 'y30', 'y50'];
@@ -29,8 +29,8 @@ export type Preview = {
   images: Partial<Record<StageKey, string>>;
   /** Laser removal preview (laser3 / laser6 / laser10), kept on this device. */
   removal?: Partial<Record<RemovalKey, string>>;
-  /** 'existing' = the user's own tattoo, aged; otherwise a new design. */
-  mode?: 'new' | 'existing';
+  /** 'existing' = the user's own tattoo, aged; 'removal' = laser removal preview only; otherwise a new design. */
+  mode?: 'new' | 'existing' | 'removal';
   /** The design used (data URL), for the artist sheet. */
   design?: string;
   sizeCm?: number;
@@ -160,7 +160,7 @@ async function signed(paths: Partial<Record<string, string>>) {
   if (!list.length) return {};
   const { data } = await s.storage.from('previews').createSignedUrls(
     list.map(([, p]) => p),
-    60 * 60
+    60 * 60 * 24
   );
   const out: Partial<Record<string, string>> = {};
   list.forEach(([k], i) => {
@@ -210,8 +210,9 @@ const fromRow = async (r: Row): Promise<Preview> => {
 };
 
 export const cloud = {
-  async all(): Promise<Preview[]> {
-    const { data } = await sb()!.from('previews').select('*').eq('hidden', false).order('created_at', { ascending: false }).limit(200);
+  async all(from = 0, count = 120): Promise<Preview[]> {
+    const { data, error } = await sb()!.from('previews').select('*').eq('hidden', false).order('created_at', { ascending: false }).range(from, from + count - 1);
+    if (error) throw error;
     return Promise.all(((data as Row[]) || []).map(fromRow));
   },
   async one(id: string): Promise<Preview | null> {
@@ -260,10 +261,34 @@ export const cloud = {
       const path = await upload(uid, id, k, src);
       if (path) paths[k] = path;
     }
-    await s.from('previews').update({ paths }).eq('id', id);
+    const { error } = await s.from('previews').update({ paths }).eq('id', id);
+    if (error) throw error;
   },
-  update: (id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection' | 'done_at'>>) => sb()!.from('previews').update(patch).eq('id', id),
-  hide: (id: string) => sb()!.from('previews').update({ hidden: true }).eq('id', id),
+  /** Save edits (favorite, notes, folder, done). Throws if the database refused it. */
+  async update(id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection' | 'done_at'>>) {
+    const { error } = await sb()!.from('previews').update(patch).eq('id', id);
+    if (error) throw error;
+  },
+  /** Delete for real: the images in storage, the share link, its votes and any Explore post. */
+  async remove(uid: string, id: string) {
+    const s = sb()!;
+    const { error } = await s.rpc('delete_preview', { p_id: id });
+    if (error) throw error;
+    for (const bucket of ['previews', 'shares']) {
+      const { data } = await s.storage.from(bucket).list(`${uid}/${id}`);
+      const files = (data || []).map((f) => `${uid}/${id}/${f.name}`);
+      if (files.length) await s.storage.from(bucket).remove(files);
+    }
+  },
+  /** Close a preview's vote link (the preview stays). */
+  async unshare(uid: string, id: string) {
+    const s = sb()!;
+    const { error } = await s.rpc('unshare_preview', { p_preview: id });
+    if (error) throw error;
+    const { data } = await s.storage.from('shares').list(`${uid}/${id}`);
+    const files = (data || []).map((f) => `${uid}/${id}/${f.name}`);
+    if (files.length) await s.storage.from('shares').remove(files);
+  },
   /** Copy fresh + 50y to the public bucket and return a share id. */
   async share(uid: string, p: Preview) {
     const s = sb()!;
@@ -276,6 +301,7 @@ export const cloud = {
       await s.storage.from('shares').upload(path, blob, { contentType: 'image/jpeg', upsert: true });
       out[k] = s.storage.from('shares').getPublicUrl(path).data.publicUrl;
     }
+    if (!out.fresh || !out.y50) throw new Error('Wait for the 50-year image first.');
     const { data, error } = await s.rpc('share_preview', { p_preview: p.id, p_paths: out });
     if (error) throw error;
     return data as string;
@@ -294,6 +320,23 @@ export async function migrateLocal(uid: string) {
     }
   }
   return items.length;
+}
+
+// ---------------------------------------------------------------- vote links made on this device
+
+export type MyShare = { id: string; at: string; label: string; previewId?: string; kind: 'preview' | 'guest' | 'ab' };
+export const shares = {
+  all: () => lsGet<MyShare[]>('ink_shares', []),
+  add: (s: MyShare) => lsSet('ink_shares', [s, ...shares.all().filter((x) => x.id !== s.id)].slice(0, 100)),
+  drop: (id: string) => lsSet('ink_shares', shares.all().filter((x) => x.id !== id)),
+  forPreview: (pid: string) => shares.all().filter((x) => x.previewId === pid),
+};
+
+/** Revoke a vote link made without an account (or as an A/B link). */
+export async function revokeGuestShare(id: string) {
+  const r = await api<{ ok?: boolean; error?: string }>(`/api/guest-share?id=${encodeURIComponent(id)}&revoke=1`, {});
+  if (r.ok) shares.drop(id);
+  return r.ok;
 }
 
 export { blobToDataUrl };

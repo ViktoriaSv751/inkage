@@ -114,6 +114,7 @@ export default function CreatePage() {
   const recovering = useRef(false);
   const againRef = useRef(false);
   const saved = useRef(false);
+  const savingRef = useRef(false);
   const previewRef = useRef<Preview | null>(null);
   previewRef.current = preview;
 
@@ -142,6 +143,16 @@ export default function CreatePage() {
       if (draft.photo) setPhoto(draft.photo);
       if (draft.design) setDesign(draft.design);
       if (draft.pl) setPl(draft.pl);
+    }
+    // "New preview with this design" from the gallery
+    const redo = lsGet<{ design: string | null; placement: string; mode: 'new' | 'existing' | 'removal' } | null>('ink_redo', null);
+    if (redo) {
+      lsSet('ink_redo', null);
+      setPlacement(redo.placement);
+      setMode(redo.mode);
+      setPhoto(null);
+      if (redo.design && redo.mode === 'new') processDesign(redo.design, 'black').then((d) => setDesign({ raw: redo.design!, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: 'black' })).catch(() => {});
+      if (ans) setPhase('studio');
     }
     // a design picked in Explore
     const pick = DESIGNS.find((d) => d.id === lsGet<string | null>('ink_pick', null));
@@ -213,6 +224,7 @@ export default function CreatePage() {
     if (r.ok && r.data.image) {
       if (r.data.token) tokens.current[k] = { token: r.data.token, image: r.data.image };
       setPreview((p) => (p ? { ...p, images: { ...p.images, [k]: r.data.image } } : p));
+      persistLate({ [k]: r.data.image });
       if (k === 'y50') track('stage_y50');
       chain(k); // next link of the chain
     } else {
@@ -222,21 +234,44 @@ export default function CreatePage() {
     }
   };
 
+  /** An image that arrives after the auto-save (a retried stage, a laser session): add it to the saved preview. */
+  const lateQueue = useRef<Record<string, string>>({});
+  const persistLate = (imgs: Record<string, string>, removal = false) => {
+    Object.assign(lateQueue.current, imgs);
+    setTimeout(async () => {
+      const p = previewRef.current;
+      const batch = lateQueue.current;
+      if (!p || !saved.current || savingRef.current || !Object.keys(batch).length) return; // the auto-save picks them up
+      lateQueue.current = {};
+      try {
+        if (p.source === 'cloud' && me.user) await cloud.addImages(me.user.id, p.id, batch);
+        else if (p.source === 'local') await local.put(p);
+      } catch {
+        Object.assign(lateQueue.current, batch);
+        toast(t('Could not save the new image. It stays here until you leave.', 'Nem sikerült menteni az új képet. Amíg itt vagy, megmarad.'));
+      }
+    }, removal ? 400 : 200);
+  };
+  const startAging = () => {
+    const j = job.current;
+    if (!j) return toast(t('Start a new preview to see the aging.', 'Az öregedéshez indíts új előnézetet.'));
+    removalIntent.current = false;
+    started.current = new Set();
+    setPending(AGE_STAGES);
+    AGE_STAGES.filter((k) => PARENT[k] === 'fresh').forEach((k) => ageOne(k));
+    track('removal_then_aging');
+  };
+
   const removalOne = async (k: RemovalKey) => {
     const j = job.current;
     if (!j) return;
     setRemPending((p) => (p.includes(k) ? p : [...p, k]));
-    const r = await api<{ image: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token });
+    const r = await api<{ image: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token, job: j.id });
     if (job.current !== j) return;
     setRemPending((p) => p.filter((x) => x !== k));
     if (r.ok && r.data.image) {
-      setPreview((p) => {
-        if (!p) return p;
-        const next = { ...p, removal: { ...(p.removal || {}), [k]: r.data.image } };
-        if (saved.current && next.source === 'local') local.put(next).catch(() => {});
-        if (saved.current && next.source === 'cloud' && me.user) cloud.addImages(me.user.id, next.id, { [k]: r.data.image }).catch(() => {});
-        return next;
-      });
+      setPreview((p) => (p ? { ...p, removal: { ...(p.removal || {}), [k]: r.data.image } } : p));
+      persistLate({ [k]: r.data.image }, true);
     } else if (r.data?.error) toast(trErr(ui.lang, r.data.error));
   };
   const startRemoval = () => {
@@ -286,7 +321,7 @@ export default function CreatePage() {
     const jobId = crypto.randomUUID();
     const meta: JobMeta = {
       placement,
-      mode: existing ? 'existing' : 'new',
+      mode: mode === 'removal' ? 'removal' : existing ? 'existing' : 'new',
       size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
       sizeCm: existing ? existingCm ?? undefined : Math.round(cm * 10) / 10,
       design: existing ? undefined : d!.ink,
@@ -430,14 +465,24 @@ export default function CreatePage() {
     const p = previewRef.current;
     if (!p || !p.images.fresh || pending.length || saved.current) return;
     saved.current = true;
+    savingRef.current = true;
     (async () => {
       try {
         if (me.user) {
           await cloud.save(me.user.id, { ...p, analysis: p.age ? { apparentAge: p.age } : undefined }, p.id);
           setPreview((x) => (x && x.id === p.id ? { ...x, source: 'cloud' } : x));
+          if (previewRef.current) previewRef.current = { ...previewRef.current, source: 'cloud' };
+          // images that arrived while uploading
+          const cur = previewRef.current;
+          const extra: Record<string, string> = {};
+          if (cur) {
+            for (const k of STAGES) if (cur.images[k] && !p.images[k]) extra[k] = cur.images[k]!;
+            for (const k of REMOVAL_STAGES) if (cur.removal?.[k] && !p.removal?.[k]) extra[k] = cur.removal[k]!;
+          }
+          if (Object.keys(extra).length) await cloud.addImages(me.user.id, p.id, extra).catch(() => {});
           toast(ui.t('result.saved'));
         } else {
-          await local.put(p);
+          await local.put(previewRef.current && previewRef.current.id === p.id ? previewRef.current : p);
           toast(ui.t('result.savedLocal'));
         }
         track('preview_saved', { cloud: !!me.user });
@@ -446,6 +491,8 @@ export default function CreatePage() {
         console.warn('save failed', e);
         saved.current = false;
       }
+      savingRef.current = false;
+      if (Object.keys(lateQueue.current).length) persistLate({});
     })();
   }, [pending, phase, me.user]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -455,8 +502,11 @@ export default function CreatePage() {
     const next = { ...p, ...x };
     setPreview(next);
     if (!saved.current) return;
-    if (p.source === 'cloud') cloud.update(p.id, { notes: next.notes, favorite: next.favorite });
-    else local.put(next);
+    const done = p.source === 'cloud' ? cloud.update(p.id, { notes: next.notes, favorite: next.favorite, done_at: next.doneAt ?? null }) : local.put(next);
+    Promise.resolve(done).catch(() => {
+      setPreview(p);
+      toast(t('Could not save the change. Try again.', 'Nem sikerült menteni a változást. Próbáld újra.'));
+    });
   };
 
   const restart = () => {
@@ -480,7 +530,7 @@ export default function CreatePage() {
           if (againRef.current) {
             againRef.current = false;
             history.replaceState(null, '', '/app');
-            if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang });
+            if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang }).then(() => {}, () => {});
           }
           setPhase('studio');
         }}
@@ -545,6 +595,7 @@ export default function CreatePage() {
           }}
         />
         <Waitlist open={waitlist} onClose={() => setWaitlist(false)} />
+        <OutOfPreviews open={paywall} onClose={() => setPaywall(false)} />
       </>
     );
 
@@ -636,6 +687,9 @@ export default function CreatePage() {
           onRemoval={startRemoval}
           removalPending={remPending}
           startView={removalIntent.current ? 'removal' : 'aging'}
+          onAging={startAging}
+          onShared={(sid) => setPreview((p) => (p ? { ...p, share_id: sid } : p))}
+          onDone={(d) => patch({ doneAt: d })}
           onNew={restart}
         />
         {prevRef.current && prevRef.current.id !== preview.id && preview.images.y50 && (

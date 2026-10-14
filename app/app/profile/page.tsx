@@ -7,7 +7,7 @@ import { Sheet } from '../ui';
 import { LangPicker } from '../../LangPicker';
 import { tx } from '@/lib/i18n';
 import { sb } from '@/lib/sb';
-import { anonId, cloud, local, lsGet, lsSet, Preview, track } from '@/lib/store';
+import { anonId, cloud, local, lsGet, lsSet, Preview, track, shares, revokeGuestShare } from '@/lib/store';
 import { shareOrDownload } from '@/lib/client';
 import { placeName } from '../create/steps';
 import type { OnboardingAnswers } from '../create/Onboarding';
@@ -77,7 +77,7 @@ export default function ProfilePage() {
     const next = { ...(ob || ({} as OnboardingAnswers)), ...patch } as OnboardingAnswers;
     setOb(next);
     lsSet('ink_onboarding', next);
-    if (me.user) sb()?.rpc('save_profile', { p_onboarding: next, p_lang: ui.lang });
+    if (me.user) sb()?.rpc('save_profile', { p_onboarding: next, p_lang: ui.lang })?.then(() => {}, () => {});
     toast(t('Saved — new previews use this', 'Mentve – az új előnézetek ezt használják'));
   };
 
@@ -137,11 +137,15 @@ export default function ProfilePage() {
           if (paths.length) await s.storage.from(bucket).remove(paths);
         }
       }
+      // vote links made on this device without an account
+      for (const x of shares.all()) if (x.kind !== 'preview') await revokeGuestShare(x.id).catch(() => false);
       const { error } = await s.rpc('erase_my_account');
       if (error) throw error;
+      lsSet('ink_shares', []);
+      lsSet('ink_posts', []);
       const mine = await local.all().catch(() => []);
       for (const p of mine) await local.remove(p.id);
-      ['ink_onboarding', 'ink_ref'].forEach((k) => lsSet(k, null));
+      ['ink_onboarding', 'ink_ref', 'ink_folders'].forEach((k) => lsSet(k, null));
       await s.auth.signOut();
       await refreshMe();
       setErase(false);
@@ -257,7 +261,7 @@ export default function ProfilePage() {
             <>
               <div className="pf-grid">
                 {mine.slice(0, 8).map((p) => (
-                  <Link key={p.id} href="/app/gallery" className="pf-tile">
+                  <Link key={p.id} href={`/app/gallery?id=${p.id}`} className="pf-tile">
                     {(p.images.y50 || p.images.y30 || p.images.fresh) && <img src={p.images.y50 || p.images.y30 || p.images.fresh} alt="" loading="lazy" />}
                     <span className="pf-tile-l">
                       <b>{placeName(p.placement, ui.lang)}</b>
@@ -401,7 +405,7 @@ export default function ProfilePage() {
           variant="row"
           onPick={(l) => {
             ui.setLang(l);
-            if (me.user) sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l });
+            if (me.user) sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l })?.then(() => {}, () => {});
           }}
         />
         {!installed && (

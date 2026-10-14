@@ -54,7 +54,6 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       kickerIcon="phone"
       title={T('InkAge on your home screen.', 'InkAge a kezdőképernyődön.')}
       lede={T('Works like an app, opens full screen — and needs no app store.', 'Úgy működik, mint egy app, teljes képernyőn nyílik – és nem kell hozzá alkalmazásbolt.')}
-      img="hf_20261013_090754_b336f404-4c34-4ef7-b5ba-a080d341d5db"
       sections={sections}
       related={[
         { href: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), p: T('Five steps, about a minute.', 'Öt lépés, kb. egy perc.'), i: 'camera' },
