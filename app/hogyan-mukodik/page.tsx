@@ -80,7 +80,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       path="/hogyan-mukodik"
       kicker={T('How it works', 'Hogyan működik?')}
       title={T('From one photo to 50 years, in about a minute.', 'Egy fotótól az 50 évig, nagyjából egy perc alatt.')}
-      lede={T('Five steps, no sign-up for your first preview, and nothing leaves your device unless you ask for a preview.', 'Öt lépés, az első előnézethez nem kell regisztráció, és semmi sem hagyja el az eszközödet, amíg nem kérsz előnézetet.')}
+      lede={T('Five steps, no sign-up for your first preview. Your photo is only used to check the light and find the bare skin, then to make your preview.', 'Öt lépés, az első előnézethez nem kell regisztráció. A fotódat csak a fény és a csupasz bőr ellenőrzésére, majd az előnézet elkészítésére használjuk.')}
       sections={sections}
       toc
       highlights={[

@@ -42,7 +42,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
         { i: 'phone', h: T('Full screen', 'Teljes képernyő'), p: T('No browser bars, like a native app.', 'Böngészősávok nélkül, mint egy rendes app.') },
         { i: 'clock', h: T('One tap away', 'Egy koppintásra'), p: T('Open it straight from your home screen.', 'Közvetlenül a kezdőképernyőről nyílik.') },
         { i: 'download', h: T('No app store', 'Nincs alkalmazásbolt'), p: T('Nothing to download or update.', 'Semmit nem kell letölteni vagy frissíteni.') },
-        { i: 'lock', h: T('Same privacy', 'Ugyanaz az adatvédelem'), p: T('Your previews stay where they were.', 'Az előnézeteid ott maradnak, ahol voltak.') },
+        { i: 'lock', h: T('Same privacy', 'Ugyanaz az adatvédelem'), p: T('Signed in, your previews are there too. As a guest on iPhone, the home-screen app has its own storage — sign in first to bring them along.', 'Bejelentkezve ott is megvannak az előnézeteid. iPhone-on vendégként a kezdőképernyős app külön tárhelyet kap – előbb lépj be, hogy átkerüljenek.') },
       ],
     },
   ];

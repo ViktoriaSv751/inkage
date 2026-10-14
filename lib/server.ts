@@ -19,7 +19,8 @@ export function serverConfig() {
   return {
     ai: !!(process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY),
     auth: !!(URL_() && ANON() && appSecret('token')),
-    payments: !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRICE_WEEKLY && process.env.STRIPE_PRICE_LIFETIME),
+    payments: false,
+    email: !!process.env.RESEND_API_KEY,
   };
 }
 
@@ -86,18 +87,6 @@ export function verifyToken<T>(token: string): T | null {
   } catch {
     return null;
   }
-}
-
-/** Calls the guarded webhook function in the database. */
-export async function stripeApply(args: { user?: string | null; customer?: string | null; plan?: string | null; until?: string | null }) {
-  const { error } = await userClient().rpc('stripe_apply', {
-    p_secret: appSecret('db'),
-    p_user: args.user ?? null,
-    p_customer: args.customer ?? null,
-    p_plan: args.plan ?? null,
-    p_until: args.until ?? null,
-  });
-  if (error) throw error;
 }
 
 export function json(data: unknown, status = 200) {

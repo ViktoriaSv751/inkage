@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { sb } from '@/lib/sb';
+import { api } from '@/lib/sb';
 import { anonId, track } from '@/lib/store';
 
 export function ContactForm({ lang }: { lang: 'en' | 'hu' }) {
@@ -15,7 +15,8 @@ export function ContactForm({ lang }: { lang: 'en' | 'hu' }) {
     e.preventDefault();
     if (!ok) return;
     setState('busy');
-    const { data } = (await sb()?.rpc('send_feedback', { p_kind: kind, p_message: msg.trim(), p_email: email.trim(), p_anon: anonId(), p_page: `contact · ${navigator.userAgent.slice(0, 110)}` })) || {};
+    const r = await api('/api/feedback', { kind, message: msg.trim(), email: email.trim(), anon: anonId(), page: `contact · ${navigator.userAgent.slice(0, 110)}` });
+    const data = r.ok;
     setState(data ? 'done' : 'err');
     if (data) track('contact_sent', { kind });
   };

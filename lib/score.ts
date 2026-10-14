@@ -23,6 +23,13 @@ const AREAS: { re: RegExp; friction: number; sun: number; en: string; hu: string
   { re: /outer forearm|külső alkar/i, friction: 4, sun: 8, en: 'The outer forearm sees a lot of sun', hu: 'A külső alkar sok napot kap' },
   { re: /forearm|alkar/i, friction: 3, sun: 4, en: 'Forearms are a solid, stable spot', hu: 'Az alkar stabil, jó hely' },
   { re: /neck|nyak/i, friction: 5, sun: 7, en: 'The neck is often sun-exposed', hu: 'A nyakat gyakran éri nap' },
+  { re: /ear|fül/i, friction: 4, sun: 6, en: 'Behind the ear: thin skin, hair and glasses rub it', hu: 'Fül mögött: vékony bőr, haj és szemüveg dörzsöli' },
+  { re: /collar|kulcscsont/i, friction: 4, sun: 6, en: 'Collarbones catch sun and straps', hu: 'A kulcscsontot éri a nap és a pántok' },
+  { re: /sternum|szegycsont/i, friction: 3, sun: 3, en: 'The sternum is thin, bony skin', hu: 'A szegycsont fölött vékony a bőr' },
+  { re: /chest|mellkas/i, friction: 2, sun: 3, en: 'The chest is fairly protected, but stretches with the body', hu: 'A mellkas elég védett, de a testtel együtt nyúlik' },
+  { re: /stomach|belly|has/i, friction: 3, sun: 1, en: 'The stomach changes most with weight and age', hu: 'A has változik a legtöbbet a súllyal és a korral' },
+  { re: /shin|sípcsont/i, friction: 5, sun: 6, en: 'Shins get knocks, sun and trousers rubbing', hu: 'A sípcsontot ütés, nap és nadrág dörzsölése éri' },
+  { re: /calf|vádli/i, friction: 3, sun: 5, en: 'Calves catch summer sun', hu: 'A vádlit nyáron sok nap éri' },
   { re: /rib|borda|back|hát|spine|gerinc|thigh|comb|upper arm|felkar|shoulder|váll|hip|csípő/i, friction: 1, sun: 1, en: 'A protected area with little friction or sun', hu: 'Védett terület, kevés súrlódás és nap' },
 ];
 

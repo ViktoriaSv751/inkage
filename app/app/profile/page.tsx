@@ -6,7 +6,7 @@ import { useApp } from '../AppProvider';
 import { Sheet } from '../ui';
 import { LangPicker } from '../../LangPicker';
 import { tx } from '@/lib/i18n';
-import { sb } from '@/lib/sb';
+import { api, sb } from '@/lib/sb';
 import { anonId, cloud, local, lsGet, lsSet, Preview, track, shares, revokeGuestShare } from '@/lib/store';
 import { shareOrDownload } from '@/lib/client';
 import { placeName } from '../create/steps';
@@ -39,6 +39,8 @@ export default function ProfilePage() {
   const [emailIn, setEmailIn] = useState('');
   const [pwIn, setPwIn] = useState('');
   const [accBusy, setAccBusy] = useState('');
+  const [notifyOn, setNotifyOn] = useState(true);
+  useEffect(() => setNotifyOn(me.notifyVotes !== false), [me.notifyVotes]);
   useEffect(() => {
     if (!me.user) return setMeta({ name: '', avatar: null });
     sb()?.auth.getUser().then(async ({ data }) => {
@@ -111,7 +113,8 @@ export default function ProfilePage() {
   }, [me.user]);
   const sendFeedback = async () => {
     setFbBusy(true);
-    const { data } = (await sb()?.rpc('send_feedback', { p_kind: fbKind, p_message: fbMsg.trim(), p_email: fbEmail || me.user?.email || '', p_anon: anonId(), p_page: `${navigator.userAgent.slice(0, 120)}` })) || {};
+    const r = await api('/api/feedback', { kind: fbKind, message: fbMsg.trim(), email: fbEmail || me.user?.email || '', anon: anonId(), page: `app · ${navigator.userAgent.slice(0, 110)}` });
+    const data = r.ok;
     setFbBusy(false);
     if (data) {
       setFbMsg('');
@@ -505,6 +508,28 @@ export default function ProfilePage() {
             if (me.user) sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l })?.then(() => {}, () => {});
           }}
         />
+        {me.user && (
+          <label className="list-row" style={{ cursor: 'pointer' }}>
+            <span>
+              {t('E-mail me when friends vote', 'E-mail, ha szavaznak a linkemre')}
+              <small>{t('At most once an hour per link', 'Linkenként legfeljebb óránként egyszer')}</small>
+            </span>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={notifyOn}
+              onChange={async (e) => {
+                const on = e.target.checked;
+                setNotifyOn(on);
+                const { error } = (await sb()?.rpc('set_notify_votes', { p_on: on })) || {};
+                if (error) {
+                  setNotifyOn(!on);
+                  toast(t('Could not save. Try again.', 'Nem sikerült menteni. Próbáld újra.'));
+                }
+              }}
+            />
+          </label>
+        )}
         {!installed && (
           <button className="list-row" onClick={install}>
             <span>

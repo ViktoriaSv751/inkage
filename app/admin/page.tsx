@@ -13,7 +13,6 @@ type Stats = {
   saved: number;
   shares: number;
   votes: number;
-  paid: number;
   events_today: Record<string, number>;
   daily: { day: string; previews: number; aging: number }[];
 };
@@ -21,6 +20,7 @@ type Stats = {
 export default function Admin() {
   const [s, setS] = useState<Stats | null>(null);
   const [err, setErr] = useState('');
+  const [note, setNote] = useState('');
   const [health, setHealth] = useState<{ ok: boolean; detail: any; created_at: string }[]>([]);
   const [checking, setChecking] = useState(false);
   const [extra, setExtra] = useState<any>(null);
@@ -84,7 +84,6 @@ export default function Admin() {
               ['Saved previews', s.saved],
               ['Share links', s.shares],
               ['Votes', s.votes],
-              ['Paid users', s.paid],
               ['Est. AI cost today', `$${cost}`],
               ['Failed previews today', funnel.generate_error ?? 0],
             ].map(([k, v]) => (
@@ -94,6 +93,20 @@ export default function Admin() {
               </div>
             ))}
           </div>
+          {extra && extra.waitlist > 0 && (
+            <button
+              className="btn"
+              style={{ marginTop: 10 }}
+              onClick={async () => {
+                const { api } = await import('@/lib/sb');
+                const r = await api<{ sent?: number; more?: boolean; error?: string }>('/api/admin-waitlist', {});
+                setNote(r.ok ? `Elküldve: ${r.data.sent}${r.data.more ? ' (van még, kattints újra)' : ''}` : r.data.error || 'Hiba');
+              }}
+            >
+              Várólista értesítése: újra lehet előnézetet készíteni
+            </button>
+          )}
+          {note && <p role="status" style={{ margin: '8px 0 0', fontWeight: 600 }}>{note}</p>}
           {extra && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10, marginTop: 10 }}>
               {[

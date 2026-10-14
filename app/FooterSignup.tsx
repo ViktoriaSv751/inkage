@@ -1,30 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import { sb } from '@/lib/sb';
+import { api } from '@/lib/sb';
 import { track } from '@/lib/store';
 import { usePathname, useRouter } from 'next/navigation';
 import { setLang as saveLang } from '@/lib/i18n';
 import { LangPicker } from './LangPicker';
 
-/** E-mail sign-up in the footer (uses the same list as the waitlist). */
+/** Monthly guides newsletter, double opt-in. */
 export function FooterSignup({ lang }: { lang: 'en' | 'hu' }) {
   const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const [email, setEmail] = useState('');
-  const [state, setState] = useState<'' | 'busy' | 'done' | 'err'>('');
+  const [state, setState] = useState<'' | 'busy' | 'confirm' | 'saved' | 'already' | 'err'>('');
   const ok = /\S+@\S+\.\S+/.test(email);
   const join = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ok) return setState('err');
     setState('busy');
-    const { data } = (await sb()?.rpc('join_waitlist', { p_email: email.trim(), p_lang: lang })) || {};
-    setState(data ? 'done' : 'err');
-    if (data) track('footer_signup');
+    const r = await api<{ ok?: boolean; state?: 'confirm' | 'saved' | 'already' }>('/api/newsletter', { email: email.trim(), lang });
+    setState(r.ok && r.data.state ? r.data.state : 'err');
+    if (r.ok) track('footer_signup');
   };
-  if (state === 'done')
+  if (state === 'confirm' || state === 'saved' || state === 'already')
     return (
       <p className="sf-done" role="status">
-        {T('You’re on the list. See you in your inbox.', 'Felírtunk. Hamarosan jelentkezünk.')}
+        {state === 'confirm'
+          ? T('Almost there — check your inbox and confirm.', 'Már csak egy lépés: nézd meg a postafiókodat, és erősítsd meg.')
+          : state === 'already'
+            ? T('You’re already subscribed.', 'Már fel vagy iratkozva.')
+            : T('Saved. We’ll send a confirmation e-mail with the first issue.', 'Rögzítettük. Az első levéllel együtt küldünk megerősítést.')}
       </p>
     );
   return (

@@ -12,6 +12,7 @@ export type Me = {
   limit?: number;
   bonus?: number;
   onboarding?: any;
+  notifyVotes?: boolean;
 };
 type Cfg = { ai: boolean; auth: boolean; payments: boolean };
 
@@ -65,6 +66,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       // guest previews → account
       migrateLocal(data.user.id).then((n) => n && toast(ui.lang === 'hu' ? `${n} terv átkerült a fiókodba` : `${n} saved design${n > 1 ? 's' : ''} moved to your account`));
+      // once per account: a welcome e-mail
+      api('/api/welcome', { lang: ui.lang }).catch(() => {});
       // vote links made on this device → account (so they can be listed and closed anywhere)
       api('/api/guest-share?claim=1', {}).catch(() => {});
       // onboarding answers → profile

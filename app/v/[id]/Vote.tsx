@@ -25,7 +25,10 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
     setMine(choice);
     lsSet(`ink_vote_${id}`, choice);
     const { data } = (await sb()?.rpc('cast_vote', { p_share: id, p_choice: choice, p_voter: anonId() })) || {};
-    if (data) setS(data as Share);
+    if (data) {
+      setS(data as Share);
+      fetch('/api/vote-notify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ share: id }) }).catch(() => {});
+    }
     track('vote', { choice });
   };
 

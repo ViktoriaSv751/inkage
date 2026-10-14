@@ -20,7 +20,7 @@ const TL4 = 'hf_20261013_200918_3120c2be-e153-4881-a8f8-04c1cf79fcb4';
 export function TrustStrip({ t }: { t: T }) {
   const items = [
     { b: '5', s: t('moments: fresh, 1, 10, 30, 50 years', 'időpont: friss, 1, 10, 30, 50 év') },
-    { b: '19', s: t('body areas on the body map', 'testrész a testtérképen') },
+    { b: '29', s: t('body areas on the body map', 'testrész a testtérképen') },
     { b: '0–100', s: t('longevity score with reasons', 'tartóssági pontszám, indoklással') },
     { b: '~1', s: t('minute from photo to preview', 'perc a fotótól az előnézetig') },
     { b: '0 Ft', s: t('free for everyone during the beta', 'mindenkinek ingyenes a béta alatt') },
@@ -245,7 +245,7 @@ export function Precision({ t }: { t: T }) {
     { i: 'skin', h: t('Only on skin', 'Csak bőrre'), p: t('A skin mask keeps the design off clothes, hair and background — like real ink would.', 'Egy bőrmaszk távol tartja a mintát a ruhától, a hajtól és a háttértől – ahogy a valódi tinta is.') },
     { i: 'ruler', h: t('Real centimetres', 'Valós centiméter'), p: t('Size shows in cm, with one-tap 3, 5, 8, 12 and 20 cm. Tiny detailed pieces get an honest warning.', 'A méret centiméterben látszik, egy koppintással 3, 5, 8, 12 és 20 cm. Apró, részletes mintánál őszinte figyelmeztetést kapsz.') },
     { i: 'tone', h: t('Your skin tone', 'A te bőrtónusod'), p: t('Every stage keeps your own skin tone and lighting, so the result looks like you, not a stock model.', 'Minden stádium megtartja a saját bőrtónusodat és fényeidet, így az eredmény rád hasonlít, nem egy modellre.') },
-    { i: 'body', h: t('19 body areas', '19 testrész'), p: t('Pick the spot on a front and back body map; friction and sun for that area shape the result.', 'Válaszd ki a helyet az elöl- és hátulnézeti testtérképen; az adott terület súrlódása és napfénye alakítja az eredményt.') },
+    { i: 'body', h: t('29 body areas', '29 testrész'), p: t('Pick the spot on a front and back body map; friction and sun for that area shape the result.', 'Válaszd ki a helyet az elöl- és hátulnézeti testtérképen; az adott terület súrlódása és napfénye alakítja az eredményt.') },
     { i: 'sun', h: t('Sun and habits', 'Nap és szokások'), p: t('Tell us how much sun the spot gets. More sun, faster fading — and you will see it.', 'Mondd meg, mennyi nap éri a helyet. Több nap, gyorsabb fakulás – és ezt látni is fogod.') },
   ];
   return (

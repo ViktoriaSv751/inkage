@@ -352,7 +352,7 @@ export function Result({
   };
 
   const scoreColor = report ? (report.score >= 75 ? '#1f8a5b' : report.score >= 55 ? '#d68a1f' : 'var(--fresh)') : 'var(--violet)';
-  const suggestCm = preview.sizeCm && preview.sizeCm < 7 && !own ? Math.ceil(Math.max(7, preview.sizeCm * 1.4)) : null;
+  const suggestCm = preview.sizeCm && preview.sizeCm < 8 && !own ? Math.ceil(Math.max(8, preview.sizeCm * 1.4)) : null;
   const remCount = REMOVAL_STAGES.filter((k) => rem[k]).length;
 
   return (

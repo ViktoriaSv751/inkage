@@ -1,6 +1,6 @@
 // InkAge service worker: makes the app installable and keeps the shell available offline.
-const CACHE = 'inkage-v2';
-const SHELL = ['/app', '/manifest.webmanifest', '/icons/icon-192.png'];
+const CACHE = 'inkage-v3';
+const SHELL = ['/app', '/offline', '/manifest.webmanifest', '/icons/icon-192.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
@@ -18,6 +18,6 @@ self.addEventListener('fetch', (e) => {
     return;
   }
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res; }).catch(() => caches.match(req).then((hit) => hit || caches.match('/app'))));
+    e.respondWith(fetch(req).then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res; }).catch(() => caches.match(req).then((hit) => hit || caches.match('/offline'))));
   }
 });
