@@ -12,6 +12,7 @@ import { shareOrDownload } from '@/lib/client';
 import { placeName } from '../create/steps';
 import type { OnboardingAnswers } from '../create/Onboarding';
 import { MyShares } from './MyShares';
+import { UvCard } from './UvCard';
 
 const ADMIN = ['vviktoriasoti@gmail.com'];
 
@@ -434,6 +435,7 @@ export default function ProfilePage() {
       </div>
 
       )}
+      {tab === 'skin' && <UvCard />}
       {tab === 'invite' && (
       <div className="card" style={{ marginTop: 12 }}>
         <h2>{ui.t('profile.invite')}</h2>

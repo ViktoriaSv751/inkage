@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
 import { Icon, Sheet } from '../ui';
 import { Result } from '../Result';
+import { HealDiary, RealVsPreview } from './AfterCare';
 import { tx } from '@/lib/i18n';
 import { cloud, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
 import { placeName } from '../create/steps';
@@ -217,6 +218,14 @@ export default function GalleryPage() {
             {Icon.rotate} {t('New preview with this design', 'Új előnézet ezzel a mintával')}
           </button>
         </div>
+        <HealDiary preview={open} />
+        <RealVsPreview
+          preview={open}
+          onChange={(v) => {
+            setOpen(v);
+            setItems((all) => all?.map((i) => (i.id === v.id ? v : i)) ?? null);
+          }}
+        />
         <Result
           preview={open}
           onNotes={(notes) => update(open, { notes })}

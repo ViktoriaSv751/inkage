@@ -40,6 +40,8 @@ export type Preview = {
   doneAt?: string | null;
   source: 'local' | 'cloud';
   share_id?: string | null;
+  /** photos of the real tattoo over the years, to compare with the preview */
+  real?: { at: string; src: string; key?: string }[];
 };
 
 // ---------------------------------------------------------------- tiny helpers
@@ -190,6 +192,10 @@ const fromRow = async (r: Row): Promise<Preview> => {
   const removal: Partial<Record<RemovalKey, string>> = {};
   for (const k of REMOVAL_STAGES) if (all[k]) removal[k] = all[k];
   const meta = r.analysis?.meta || {};
+  const real = Object.keys(all)
+    .filter((k) => k.startsWith('real_'))
+    .sort()
+    .map((k) => ({ key: k, at: new Date(Number(k.slice(5))).toISOString(), src: all[k]! }));
   return {
   id: r.id,
   created_at: r.created_at,
@@ -208,6 +214,7 @@ const fromRow = async (r: Row): Promise<Preview> => {
   sizeCm: meta.sizeCm,
   focus: meta.focus,
   doneAt: r.done_at ?? null,
+  real: real.length ? real : undefined,
   source: 'cloud',
   share_id: r.share_id,
   };
@@ -231,6 +238,7 @@ export const cloud = {
       ...STAGES.map((k) => [k, p.images[k]] as [string, string | undefined]),
       ...REMOVAL_STAGES.map((k) => [k, p.removal?.[k]] as [string, string | undefined]),
       ['design', p.design],
+      ...(p.real || []).map((r) => [r.key || `real_${new Date(r.at).getTime()}`, r.src] as [string, string | undefined]),
     ];
     for (const [k, src] of all) {
       if (!src) continue;
