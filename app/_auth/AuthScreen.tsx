@@ -1,4 +1,5 @@
 'use client';
+import { IMG } from '@/lib/kb';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,7 +9,6 @@ import { PUBLIC } from '@/lib/public-config';
 import { track } from '@/lib/store';
 import './auth.css';
 
-const IMG = (f: string, w = 1200) => `/api/lib-img?f=${f}.png&w=${w}`;
 
 /** Full-page sign-in / sign-up with e-mail code (and Google / Apple when switched on). */
 export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'forgot'; lang: 'en' | 'hu'; img: string }) {

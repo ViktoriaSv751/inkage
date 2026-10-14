@@ -8,5 +8,5 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
 }
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
-  return <AuthScreen mode="signup" lang={searchParams.lang === 'en' ? 'en' : 'hu'} img="hf_20261013_201235_9c9d9ee5-d036-400c-888a-564bf15102ce" />;
+  return <AuthScreen mode="signup" lang={searchParams.lang === 'en' ? 'en' : 'hu'} img="hf_20261014_072014_0bc43c3a-08b9-46d1-85a0-73f61f1b5028" />;
 }

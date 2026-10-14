@@ -47,7 +47,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       icon: 'eye',
       ps: [
         T('It’s an AI estimate, not a measurement of your skin and not medical advice. Real results depend on your artist, ink, skin, sun and aftercare.', 'MI-becslés, nem a bőröd mérése és nem orvosi tanács. A valós eredmény a tetoválótól, a tintától, a bőrödtől, a naptól és az utókezeléstől függ.'),
-        T('!! Your artist decides the details. InkAge helps you arrive with a clearer idea.', '!! A részletekről a tetoválód dönt. Az InkAge abban segít, hogy tisztább elképzeléssel érkezz.'),
+        T('Your artist decides the details. InkAge helps you arrive with a clearer idea.', 'A részletekről a tetoválód dönt. Az InkAge abban segít, hogy tisztább elképzeléssel érkezz.'),
       ],
     },
   ];

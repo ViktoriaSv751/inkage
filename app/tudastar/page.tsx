@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { IMG, KB_HERO } from '@/lib/kb';
+import { IMG, IMGSET, KB_HERO } from '@/lib/kb';
 import { kbList } from '@/lib/kb-server';
 import { KbList } from './KbList';
 import { KbChrome } from './KbChrome';
@@ -21,7 +21,7 @@ export default function Tudastar({ searchParams }: { searchParams: { lang?: stri
     <div className="kb-page">
       <KbChrome lang={lang} back={null} />
       <header className="kb-hero">
-        <img src={IMG(KB_HERO, 1800)} alt="" />
+        <img src={IMG(KB_HERO, 1400)} srcSet={IMGSET(KB_HERO)} sizes="100vw" alt="" fetchPriority="high" />
         <div className="kb-hero-in">
           <p className="kb-eyebrow">{T('Practical guides before you get inked', 'Gyakorlati útmutatók a tetoválás előtt')}</p>
           <h1 className="kb-title">{T('Knowledge base', 'Tudástár')}</h1>

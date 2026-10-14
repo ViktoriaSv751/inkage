@@ -123,13 +123,14 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
                 <li className="up">+3 {t('Upper arm ages gently', 'A felkar szépen öregszik')}</li>
               </ul>
             </div>
-            <div className="ls-tile pic">
+            <Link href="/app?mode=removal" className="ls-tile pic ls-link">
               <img src={IMG(P.laser, 900)} alt="" loading="lazy" />
               <div>
                 <h3>{t('What if you regret it?', 'Mi van, ha megbánod?')}</h3>
                 <p>{t('A laser removal preview after 3, 6 and 10 sessions.', 'Lézeres eltávolítás előnézete 3, 6 és 10 kezelés után.')}</p>
+                <span className="ls-go">{t('Try the removal preview', 'Kipróbálom az eltávolítást')} →</span>
               </div>
-            </div>
+            </Link>
             <div className="ls-tile pic">
               <img src={IMG(P.flatlay, 900)} alt="" loading="lazy" />
               <div>

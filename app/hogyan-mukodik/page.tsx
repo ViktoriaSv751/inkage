@@ -70,7 +70,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       h: T('What it is — and what it isn’t', 'Mi ez – és mi nem'),
       ps: [
         T('Every preview is an AI estimate based on how ink, skin and sun usually behave over time. It is a planning tool for comparing designs, sizes and placements, not a measurement of your skin or a promise of a result.', 'Minden előnézet MI-alapú becslés arról, ahogy a tinta, a bőr és a nap általában viselkedik az idő során. Tervezési eszköz minták, méretek és helyek összehasonlítására – nem a bőröd mérése, és nem ígéret egy eredményre.'),
-        T('!! Your artist’s experience still matters most. InkAge helps you arrive with a clearer idea.', '!! A tetoválód tapasztalata továbbra is a legfontosabb. Az InkAge abban segít, hogy tisztább elképzeléssel érkezz.'),
+        T('Your artist’s experience still matters most. InkAge helps you arrive with a clearer idea.', 'A tetoválód tapasztalata továbbra is a legfontosabb. Az InkAge abban segít, hogy tisztább elképzeléssel érkezz.'),
       ],
     },
   ];

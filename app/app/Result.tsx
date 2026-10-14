@@ -121,6 +121,7 @@ export function Result({
   onRemoval,
   removalPending = [],
   onRedo,
+  startView = 'aging',
 }: {
   preview: Preview;
   pending?: StageKey[];
@@ -138,6 +139,8 @@ export function Result({
   /** start the laser-removal preview */
   onRemoval?: () => void;
   removalPending?: RemovalKey[];
+  /** which tab opens first */
+  startView?: 'aging' | 'removal';
   /** "Not right?": make it again, avoiding what the user ticked */
   onRedo?: (reasons: string[]) => void;
 }) {
@@ -148,7 +151,7 @@ export function Result({
   const report = preview.report;
   const ready = STAGES.filter((k) => img[k]);
   const [pos, setPos] = useState(0); // continuous position along the ready stages
-  const [view, setView] = useState<'aging' | 'removal'>('aging');
+  const [view, setView] = useState<'aging' | 'removal'>(startView);
   const [remKey, setRemKey] = useState<'fresh' | RemovalKey>('fresh');
   const [mode, setMode] = useState<'view' | 'split'>('view');
   const [split, setSplit] = useState(50);
@@ -339,7 +342,7 @@ export function Result({
   return (
     <div className="result-grid">
       <div className="col-a">
-      {(remCount > 0 || removalPending.length > 0) && (
+      {(remCount > 0 || removalPending.length > 0) && (ready.length > 1 || pending.length > 0) && (
         <div className="seg viewseg" role="tablist">
           <button role="tab" aria-selected={view === 'aging'} className={view === 'aging' ? 'on' : ''} onClick={() => setView('aging')}>
             {t('Aging', 'Öregedés')}

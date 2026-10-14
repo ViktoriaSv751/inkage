@@ -1,0 +1,76 @@
+/* ================================================================ Rólunk / About */
+.ab { display: grid; gap: 28px; }
+.ab svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ab h2 { margin: 0; font-size: clamp(28px, 4vw, 46px); line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; }
+.ab p { line-height: 1.65; color: var(--ink-2); }
+.ab-eyebrow { margin: 0 0 12px; font-size: 14px; font-weight: 700; color: var(--stencil); }
+.ab-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--stencil-tint); color: var(--stencil-2); }
+
+/* problem: 1 day vs 18 262 days */
+.ab-problem { display: grid; gap: 28px; padding: 28px 24px; border-radius: 32px; background: var(--surface); }
+.ab-problem-txt p { margin: 16px 0 0; font-size: 17px; max-width: 56ch; }
+.ab-days { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ab-day { display: grid; align-content: end; gap: 4px; padding: 22px 20px; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px var(--line); min-height: 150px; }
+.ab-day b { font-size: clamp(40px, 6vw, 68px); line-height: .95; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.ab-day span { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.ab-day.life { background: var(--ink); color: #fff; box-shadow: none; }
+.ab-day.life span { color: rgba(255, 255, 255, .7); }
+.ab-days-img { grid-column: 1 / -1; margin: 0; border-radius: 24px; overflow: hidden; aspect-ratio: 16 / 9; background: var(--surface-2); }
+.ab-days-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* mission: big type, light */
+.ab-mission { padding: 44px 24px; border-radius: 32px; text-align: center; background: radial-gradient(90% 140% at 0% 0%, #e4dcff 0%, transparent 60%), radial-gradient(80% 140% at 100% 100%, #ffe6d6 0%, transparent 60%), #f6f3ff; }
+.ab-mission blockquote { margin: 0 auto; max-width: 22ch; font-size: clamp(28px, 4.4vw, 54px); line-height: 1.08; letter-spacing: -.04em; font-weight: 800; color: var(--ink); text-wrap: balance; }
+
+/* sections */
+.ab-sec { padding: 20px 0 0; }
+.ab-head { max-width: 720px; margin-bottom: 24px; }
+.ab-head p:not(.ab-eyebrow) { margin: 14px 0 0; font-size: 17px; }
+
+.ab-beliefs { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.ab-beliefs li { position: relative; display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 26px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+.ab-beliefs b { font-size: 19px; letter-spacing: -.02em; margin-top: 6px; }
+.ab-beliefs p { margin: 0; font-size: 15px; }
+.ab-n { position: absolute; top: 24px; right: 24px; font-size: 13px; font-weight: 700; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+.ab-factors { display: grid; gap: 12px; }
+.ab-factor { display: grid; gap: 8px; align-content: start; padding: 22px; border-radius: 24px; background: var(--surface); }
+.ab-factor b { font-size: 17px; margin-top: 8px; }
+.ab-factor p { margin: 0; font-size: 14.5px; }
+
+.ab-is { display: grid; gap: 12px; }
+.ab-is > div { padding: 26px; border-radius: 26px; }
+.ab-is > div > b { display: block; font-size: 18px; margin-bottom: 14px; }
+.ab-is ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.ab-is li { position: relative; padding-left: 34px; line-height: 1.5; font-size: 15.5px; }
+.ab-is li::before { content: ''; position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 50%; background-position: center; background-repeat: no-repeat; background-size: 12px; }
+.ab-is .yes { background: #ecf8f1; }
+.ab-is .yes li::before { background-color: #1f9d63; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
+.ab-is .no { background: var(--surface); }
+.ab-is .no li::before { background-color: #c9c6d2; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E"); }
+
+.ab-now { display: grid; gap: 24px; padding: 28px 24px; border-radius: 32px; box-shadow: inset 0 0 0 1px var(--line); }
+.ab-now p:not(.ab-eyebrow) { margin: 14px 0 0; font-size: 16px; max-width: 52ch; }
+.ab-now-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.ab-btn { height: 50px; padding: 0 22px; display: inline-flex; align-items: center; border-radius: 999px; font-weight: 700; text-decoration: none; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.ab-btn.dark { background: var(--ink); color: #fff; box-shadow: none; }
+.ab-now-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; }
+.ab-now-list li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 20px; background: var(--surface); }
+.ab-now-list li > svg { width: 44px; height: 44px; padding: 11px; border-radius: 14px; background: #fff; color: var(--stencil-2); }
+.ab-now-list span { display: grid; gap: 2px; font-size: 14px; color: var(--ink-2); }
+.ab-now-list b { font-size: 15.5px; color: var(--ink); }
+
+@media (min-width: 700px) {
+  .ab-beliefs, .ab-is { grid-template-columns: 1fr 1fr; }
+  .ab-factors { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1000px) {
+  .ab { gap: 40px; }
+  .ab-problem { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: center; padding: 48px; }
+  .ab-mission { padding: 80px 48px; }
+  .ab-factors { grid-template-columns: repeat(3, 1fr); }
+  .ab-now { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: center; padding: 48px; }
+  .ab-sec { padding-top: 32px; }
+}
+.ab-day b { white-space: nowrap; font-size: clamp(36px, 4.6vw, 60px); }
+.ab-day.life { background: linear-gradient(135deg, #2a1c8f, #5b3df5); }

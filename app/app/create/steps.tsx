@@ -136,8 +136,8 @@ export function StudioStep({
   setDesign,
   onNext,
 }: {
-  mode?: 'new' | 'existing';
-  setMode?: (m: 'new' | 'existing') => void;
+  mode?: 'new' | 'existing' | 'removal';
+  setMode?: (m: 'new' | 'existing' | 'removal') => void;
   placement: string;
   setPlacement: (p: string) => void;
   photo: Photo | null;
@@ -161,7 +161,8 @@ export function StudioStep({
   const [prompt, setPrompt] = useState('');
   const [aiStyle, setAiStyle] = useState<'fine-line' | 'blackwork' | 'traditional'>('fine-line');
   const [drawing, setDrawing] = useState(false);
-  const existing = mode === 'existing';
+  const existing = mode === 'existing' || mode === 'removal';
+  const removal = mode === 'removal';
   const [recent, setRecent] = useState<Recent[]>([]);
   useEffect(() => setRecent(recentGet()), [photo?.dataUrl]);
   const [modelOpen, setModelOpen] = useState(false);
@@ -389,7 +390,9 @@ export function StudioStep({
       ? t('Pick a design', 'Válassz mintát')
       : check.state === 'checking'
         ? ui.t('create.photo.checking')
-        : existing
+        : removal
+          ? t('Show the laser sessions', 'Mutasd a lézeres kezeléseket')
+          : existing
           ? t('Show me how it ages', 'Mutasd, hogyan öregszik')
           : t('Continue — place it', 'Tovább – elhelyezés');
 
@@ -399,11 +402,20 @@ export function StudioStep({
       {setMode && (
         <div className="seg modeseg" role="radiogroup" aria-label={t('What do you want to see?', 'Mit szeretnél látni?')}>
           <button role="radio" aria-checked={!existing} className={!existing ? 'on' : ''} onClick={() => setMode('new')}>
-            {t('A new tattoo', 'Új tetoválás')}
+            {t('New tattoo', 'Új tetoválás')}
           </button>
-          <button role="radio" aria-checked={existing} className={existing ? 'on' : ''} onClick={() => setMode('existing')}>
-            {t('My existing tattoo', 'Meglévő tetoválásom')}
+          <button role="radio" aria-checked={existing && !removal} className={existing && !removal ? 'on' : ''} onClick={() => setMode('existing')}>
+            {t('Existing', 'Meglévő')}
           </button>
+          <button role="radio" aria-checked={removal} className={removal ? 'on' : ''} onClick={() => setMode('removal')}>
+            {t('Removal', 'Eltávolítás')}
+          </button>
+        </div>
+      )}
+      {removal && (
+        <div className="rm-note">
+          <b>{t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</b>
+          <p>{t('Add a photo of the tattoo you are thinking of removing. We show it after 3, 6 and 10 laser sessions — an estimate to talk through with a dermatologist or clinic, not a medical opinion.', 'Töltsd fel annak a tetoválásnak a fotóját, amit eltávolítanál. Megmutatjuk 3, 6 és 10 lézeres kezelés után – becslés, amit bőrgyógyásszal vagy klinikával érdemes átbeszélni, nem orvosi vélemény.')}</p>
         </div>
       )}
       <section className="studio-sec">
@@ -563,8 +575,8 @@ export function StudioStep({
 
       {existing ? (
         <div className="card" style={{ marginTop: 16 }}>
-          <h3>{t('See your tattoo in 10, 30 and 50 years', 'Nézd meg a tetoválásod 10, 30 és 50 év múlva')}</h3>
-          <p className="muted small">{t('Upload a clear photo of a tattoo you already have. You can also preview laser removal afterwards.', 'Tölts fel éles fotót egy meglévő tetoválásodról. Utána a lézeres eltávolítást is megnézheted.')}</p>
+          <h3>{removal ? t('How big is the tattoo?', 'Mekkora a tetoválás?') : t('See your tattoo in 10, 30 and 50 years', 'Nézd meg a tetoválásod 10, 30 és 50 év múlva')}</h3>
+          <p className="muted small">{removal ? t('Optional — it helps us estimate how the ink responds. Black usually fades fastest under the laser.', 'Nem kötelező – segít megbecsülni, hogyan reagál a tinta. A fekete általában a leggyorsabban halványul a lézer alatt.') : t('Upload a clear photo of a tattoo you already have. You can also preview laser removal afterwards.', 'Tölts fel éles fotót egy meglévő tetoválásodról. Utána a lézeres eltávolítást is megnézheted.')}</p>
           {setExistingCm && (
             <>
               <b style={{ display: 'block', fontSize: 14, margin: '10px 0 6px' }}>{t('Roughly how big is it? (makes the score more accurate)', 'Kb. mekkora? (pontosabb lesz a pontszám)')}</b>

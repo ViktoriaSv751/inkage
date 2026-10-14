@@ -5,7 +5,7 @@ export function rich(p: string) {
   return p.split(/(\*\*[^*]+\*\*)/g).map((x, i) => (x.startsWith('**') && x.endsWith('**') ? <b key={i}>{x.slice(2, -2)}</b> : <Fragment key={i}>{x}</Fragment>));
 }
 
-export type Fig = { src: string; cap: string };
+export type Fig = { src: string; set?: string; cap: string };
 
 /** Renders one section's blocks: paragraphs, ### subheadings, lists, tip boxes, pull quotes and photos. */
 export function Blocks({ ps, figs, tip }: { ps: string[]; figs: Record<string, Fig>; tip: string }) {
@@ -56,7 +56,7 @@ export function Blocks({ ps, figs, tip }: { ps: string[]; figs: Record<string, F
       if (f)
         out.push(
           <figure key={i} className="ka-fig">
-            <img src={f.src} alt={f.cap} loading="lazy" decoding="async" />
+            <img src={f.src} srcSet={f.set} sizes="(min-width: 1000px) 760px, 100vw" alt={f.cap} loading="lazy" decoding="async" />
             <figcaption>{f.cap}</figcaption>
           </figure>
         );

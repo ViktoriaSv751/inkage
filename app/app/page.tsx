@@ -68,7 +68,8 @@ export default function CreatePage() {
   const [pending, setPending] = useState<StageKey[]>([]);
   const [failed, setFailed] = useState<StageKey[]>([]);
   const [fact, setFact] = useState(0);
-  const [mode, setMode] = useState<'new' | 'existing'>('new');
+  const [mode, setMode] = useState<'new' | 'existing' | 'removal'>('new');
+  const removalIntent = useRef(false);
   const [existingCm, setExistingCm] = useState<number | null>(null);
   const [remPending, setRemPending] = useState<RemovalKey[]>([]);
   const [improving, setImproving] = useState(false);
@@ -100,7 +101,7 @@ export default function CreatePage() {
   };
   // body part changed after the photo was added: find the new spot
   useEffect(() => {
-    if (!photo || mode === 'existing' || phase === 'loading' || phase === 'onboarding') return;
+    if (!photo || mode !== 'new' || phase === 'loading' || phase === 'onboarding') return;
     if (area && area.for === placement && area.photo === photo.dataUrl.slice(-64)) return;
     const tm = setTimeout(() => locate(photo, placement), 900);
     return () => clearTimeout(tm);
@@ -126,7 +127,10 @@ export default function CreatePage() {
         return null;
       }
     })();
-    const again = new URLSearchParams(location.search).has('again');
+    const sp = new URLSearchParams(location.search);
+    const again = sp.has('again');
+    const m = sp.get('mode');
+    if (m === 'removal' || m === 'existing') setMode(m);
     if (again) againRef.current = true;
     if (ans && !again) {
       applyOnboarding(ans);
@@ -243,7 +247,8 @@ export default function CreatePage() {
   const go = async (over?: { design?: Design; pl?: Placement; redo?: string[] }) => {
     const d = over?.design ?? design;
     const place = over?.pl ?? pl;
-    const existing = mode === 'existing';
+    const existing = mode !== 'new';
+    removalIntent.current = mode === 'removal';
     if (!photo || (!d && !existing)) return;
     recovering.current = true; // a new job: nothing to recover any more
     // keep the finished one around to compare with
@@ -281,7 +286,7 @@ export default function CreatePage() {
     const jobId = crypto.randomUUID();
     const meta: JobMeta = {
       placement,
-      mode,
+      mode: existing ? 'existing' : 'new',
       size: existing ? t('existing tattoo', 'meglévő tetoválás') : `${cm.toFixed(1)} cm`,
       sizeCm: existing ? existingCm ?? undefined : Math.round(cm * 10) / 10,
       design: existing ? undefined : d!.ink,
@@ -362,6 +367,13 @@ export default function CreatePage() {
       const missing = AGE_STAGES.filter((k) => !images[k]);
       setPending(missing);
       // start every missing stage whose parent is ready
+      if (removalIntent.current) {
+        // removal preview: skip aging, simulate the laser sessions straight away
+        setPending([]);
+        lsSet('ink_job', null);
+        startRemoval();
+        return;
+      }
       missing.filter((k) => PARENT[k] === 'fresh' || images[PARENT[k]!]).forEach((k) => ageOne(k));
     } else lsSet('ink_job', null);
   };
@@ -502,8 +514,10 @@ export default function CreatePage() {
   if (phase === 'studio')
     return (
       <>
-        {head(t('New preview', 'Új előnézet'), t('Pick the spot, add a photo of it and a design.', 'Válaszd ki a helyet, töltsd fel a fotóját és a mintát.'))}
-        {err && mode === 'existing' && (
+        {mode === 'removal'
+          ? head(t('Removal preview', 'Eltávolítás előnézete'), t('Pick the spot and add a photo of the tattoo.', 'Válaszd ki a helyet, és töltsd fel a tetoválás fotóját.'))
+          : head(t('New preview', 'Új előnézet'), t('Pick the spot, add a photo of it and a design.', 'Válaszd ki a helyet, töltsd fel a fotóját és a mintát.'))}
+        {err && mode !== 'new' && (
           <div className="warnbox" role="alert" style={{ marginBottom: 12 }}>
             <span>⚠️</span>
             <span>{err}</span>
@@ -525,7 +539,7 @@ export default function CreatePage() {
             keepSkin(ph, sk);
           }}
           onNext={() => {
-            if (mode === 'existing') return go();
+            if (mode !== 'new') return go();
             setPhase('place');
             window.scrollTo({ top: 0 });
           }}
@@ -621,6 +635,7 @@ export default function CreatePage() {
           onResize={resize}
           onRemoval={startRemoval}
           removalPending={remPending}
+          startView={removalIntent.current ? 'removal' : 'aging'}
           onNew={restart}
         />
         {prevRef.current && prevRef.current.id !== preview.id && preview.images.y50 && (

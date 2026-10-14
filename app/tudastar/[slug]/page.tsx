@@ -5,7 +5,7 @@ import '@fontsource/newsreader/400.css';
 import '@fontsource/newsreader/400-italic.css';
 import '@fontsource/newsreader/600.css';
 import { LONG, longArticle, words } from '@/lib/longform';
-import { fmtDate, IMG, KB, KB_STILL } from '@/lib/kb';
+import { fmtDate, IMG, IMGSET, KB, KB_STILL } from '@/lib/kb';
 import { readMin } from '@/lib/kb-server';
 import { KbChrome } from '../KbChrome';
 import { Helpful, ShareBtn } from '../ArticleBits';
@@ -60,9 +60,9 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
   const toc = [...sections.map((s) => ({ h: s.h, id: s.id })), { h: T('Frequently asked questions', 'Gyakori kérdések'), id: faqId }];
   const figs: Record<string, Fig> = meta
     ? {
-        img2: { src: IMG(meta.img2, 1400), cap: a.captions.img2[L] },
-        img3: { src: IMG(meta.img3, 1400), cap: a.captions.img3[L] },
-        img4: { src: IMG(meta.img4, 1400), cap: a.captions.img4[L] },
+        img2: { src: IMG(meta.img2, 1400), set: IMGSET(meta.img2, 1400), cap: a.captions.img2[L] },
+        img3: { src: IMG(meta.img3, 1400), set: IMGSET(meta.img3, 1400), cap: a.captions.img3[L] },
+        img4: { src: IMG(meta.img4, 1400), set: IMGSET(meta.img4, 1400), cap: a.captions.img4[L] },
       }
     : {};
   const idx = LONG.findIndex((x) => x.slug === a.slug);
@@ -87,7 +87,7 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
       <ReadProgress />
 
       <header className="ka-cover">
-        <img src={IMG(meta?.img || KB_STILL, 1800)} alt="" fetchPriority="high" />
+        <img src={IMG(meta?.img || KB_STILL, 1400)} srcSet={IMGSET(meta?.img || KB_STILL)} sizes="100vw" alt="" fetchPriority="high" decoding="async" />
         <div className="ka-cover-in">
           <nav className="ka-bc2" aria-label={T('Breadcrumb', 'Morzsamenü')}>
             <Link href={`/tudastar${sfx}`}>{T('Knowledge base', 'Tudástár')}</Link>

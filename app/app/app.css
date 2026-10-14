@@ -795,3 +795,9 @@
 }
 @media (min-width: 960px) { .qf-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } .qf-vis { height: 168px; } }
 @media (min-width: 1440px) { .qf-grid { grid-template-columns: repeat(4, 1fr); } }
+/* removal mode note */
+.rm-note { margin: 12px 0 4px; padding: 14px 16px; border-radius: 18px; background: #fff4ec; box-shadow: inset 0 0 0 1px #ffd9bf; }
+.rm-note b { display: block; font-size: 15px; color: #8a3b0a; }
+.rm-note p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.5; color: #5c4a3f; }
+.modeseg { grid-template-columns: repeat(3, 1fr); }
+.modeseg button { white-space: nowrap; }
