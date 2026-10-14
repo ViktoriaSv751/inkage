@@ -8,9 +8,9 @@
 :root[data-theme='dark'] .lm-tlx-list button:hover { background: rgba(255, 255, 255, .05); }
 :root[data-theme='dark'] .cx-row > .cx-us { background: #241d52; color: #fff; }
 :root[data-theme='dark'] .cx-head .cx-us path { fill: #241d52; }
-:root[data-theme='dark'] .lp-actions { background: rgba(11, 11, 15, .94); }
-:root[data-theme='dark'] .sslot-busy { background: rgba(11, 11, 15, .7); }
-:root[data-theme='dark'] .stickycta { background: linear-gradient(rgba(11, 11, 15, 0), var(--bg) 22%); }
+:root[data-theme='dark'] .lp-actions { background: rgba(0, 0, 0, .94); }
+:root[data-theme='dark'] .sslot-busy { background: rgba(0, 0, 0, .7); }
+:root[data-theme='dark'] .stickycta { background: linear-gradient(rgba(0, 0, 0, 0), var(--bg) 22%); }
 /* tips / warnings / good-bad chips */
 :root[data-theme='dark'] .ka-tip, :root[data-theme='dark'] .ip-tip { background: #1f1b10; border-color: #3a3218; }
 :root[data-theme='dark'] .ka-tip-ico, :root[data-theme='dark'] .ip-tip-ico { background: #3a3014; }
@@ -19,7 +19,6 @@
 :root[data-theme='dark'] .rm-note { background: #241710; box-shadow: inset 0 0 0 1px #4a2c18; }
 :root[data-theme='dark'] .rm-note b { color: #ffb88a; }
 :root[data-theme='dark'] .rm-note p { color: #d8c4b6; }
-:root[data-theme='dark'] .ip-faq summary::after { background-color: var(--surface-2); filter: invert(1); }
 :root[data-theme='dark'] .sp-ring { background: radial-gradient(closest-side, var(--bg) 79%, transparent 80%), conic-gradient(var(--c) calc(var(--v) * 1%), var(--surface-2) 0); }
 :root[data-theme='dark'] .tile .tile-fav { background: rgba(20, 20, 26, .85); }
 :root[data-theme='dark'] .tile .tile-fav svg { stroke: #e8e8ee; }
@@ -32,7 +31,7 @@
 :root[data-theme='dark'] .ka-page { --ka-ink: var(--ink); --ka-muted: var(--ink-3); --ka-line: var(--line); --ka-accent: var(--stencil-2); }
 :root[data-theme='dark'] .ka-sum { background: var(--stencil-tint); }
 :root[data-theme='dark'] .real-tag { background: rgba(16, 16, 22, .86); color: #fff; }
-:root[data-theme='dark'] .lm-cmp, :root[data-theme='dark'] .lm-pv-sw { background: var(--surface-2); }
+:root[data-theme='dark'] .lm-cmp { background: var(--surface-2); }
 :root[data-theme='dark'] .qf-vis { filter: brightness(.82) saturate(.9); }
 :root[data-theme='dark'] .sp-time li.down, :root[data-theme='dark'] .down { background: #2a1416; }
 :root[data-theme='dark'] .sp-tips li, :root[data-theme='dark'] .sp-time li[style] { background: #1f1b10; }
@@ -48,3 +47,79 @@
 :root[data-theme='dark'] .pf-badge.on svg { stroke: #fff; }
 :root[data-theme='dark'] .tabbar a.cta svg { stroke: currentColor; }
 :root[data-theme='dark'] .ex-design { background: #f4f3ef; }
+
+/* privacy phone mockup: always light, so the on/off switches read clearly */
+:root[data-theme='dark'] .lm-pv-phone { --bg: #ffffff; --surface: #f2f2f6; --ink: #0d0b14; --ink-2: #4a4a52; --ink-3: #6e6e78; --stencil: #5b3df5; --stencil-tint: #eeeaff; color: #0d0b14; background: #f2f2f6; box-shadow: 0 0 0 8px #2a2a33, 0 50px 80px -30px rgba(0, 0, 0, .8); }
+:root[data-theme='dark'] .lm-pv-phone .lm-pv-sw { background: #d9d8df; }
+:root[data-theme='dark'] .lm-pv-phone .lm-pv-sw.on { background: #34c759; }
+:root[data-theme='dark'] .lm-pv-phone .lm-pv-sw::after { background: #fff; }
+
+/* dark theme: purple text becomes neon lime for legibility */
+:root[data-theme='dark'] { --neon: #d4ff3d; }
+:root[data-theme='dark'] .kicker,
+:root[data-theme='dark'] .banner,
+:root[data-theme='dark'] .legal a,
+:root[data-theme='dark'] .lp-cur,
+:root[data-theme='dark'] .ls-kick,
+:root[data-theme='dark'] .ls-kick.light,
+:root[data-theme='dark'] .ls-num,
+:root[data-theme='dark'] .ls-design span,
+:root[data-theme='dark'] .ls-redraw span,
+:root[data-theme='dark'] .ls-tag,
+:root[data-theme='dark'] .ls-art.big .ls-tag,
+:root[data-theme='dark'] .sf-col a:hover,
+:root[data-theme='dark'] .lm-tlx-list button.on .lm-tlx-y,
+:root[data-theme='dark'] .cx-row:not(.cx-head):not(.cx-foot):hover .cx-f,
+:root[data-theme='dark'] .cc-ico,
+:root[data-theme='dark'] .ab-eyebrow,
+:root[data-theme='dark'] .ab-ico,
+:root[data-theme='dark'] .ab-now-list li > svg,
+:root[data-theme='dark'] .beta-pill,
+:root[data-theme='dark'] .tipcard b,
+:root[data-theme='dark'] .bm-legend button.on,
+:root[data-theme='dark'] .areachg,
+:root[data-theme='dark'] .hooks button.on,
+:root[data-theme='dark'] .article-card .tag,
+:root[data-theme='dark'] .bm-custom .link,
+:root[data-theme='dark'] .cmpcut-txt .link,
+:root[data-theme='dark'] .linkbtn,
+:root[data-theme='dark'] .section-title a.small,
+:root[data-theme='dark'] .qf-all,
+:root[data-theme='dark'] .qf-lines figcaption,
+:root[data-theme='dark'] .qf-arrow,
+:root[data-theme='dark'] .pf-avatar,
+:root[data-theme='dark'] .ex-pill,
+:root[data-theme='dark'] .rail-beta b,
+:root[data-theme='dark'] .ip-sec a,
+:root[data-theme='dark'] .au-resend button,
+:root[data-theme='dark'] .au-forgot,
+:root[data-theme='dark'] .kb-eyebrow,
+:root[data-theme='dark'] .kb-label,
+:root[data-theme='dark'] .kb-pill,
+:root[data-theme='dark'] .kb-item h2 a:hover,
+:root[data-theme='dark'] .kb-more,
+:root[data-theme='dark'] .kb-up,
+:root[data-theme='dark'] .ka-eyebrow,
+:root[data-theme='dark'] .ka-toc a:hover,
+:root[data-theme='dark'] .ka-faq summary::after,
+:root[data-theme='dark'] .ka-rel-cat,
+:root[data-theme='dark'] .ka-toc-side li.on a span,
+:root[data-theme='dark'] .ka-sum-h,
+:root[data-theme='dark'] .ka-lead .drop::first-letter,
+:root[data-theme='dark'] .ka-s-n,
+:root[data-theme='dark'] .ka-next-card span { color: var(--neon); }
+
+/* dark theme: FAQ plus circles stay light */
+:root[data-theme='dark'] .ip-faq summary::after,
+:root[data-theme='dark'] .lm-faq-list summary::after,
+:root[data-theme='dark'] .ka-faq2 summary::after { filter: none; box-shadow: none; background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 6v12M6 12h12'/%3E%3C/svg%3E") center / 14px no-repeat; }
+:root[data-theme='dark'] .ip-faq details[open] summary::after,
+:root[data-theme='dark'] .lm-faq-list details[open] summary::after,
+:root[data-theme='dark'] .ka-faq2 details[open] summary::after { background-color: var(--neon); }
+:root[data-theme='dark'] .lm-ico svg,
+:root[data-theme='dark'] .cutbtn svg,
+:root[data-theme='dark'] .ip-kick svg,
+:root[data-theme='dark'] .ip-ico svg,
+:root[data-theme='dark'] .ip-sec-ico svg,
+:root[data-theme='dark'] .ip-upd svg,
+:root[data-theme='dark'] .fx-group h2 svg { stroke: var(--neon); }

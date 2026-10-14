@@ -10,7 +10,7 @@ export function applyTheme(t: Theme) {
   try {
     localStorage.setItem('ink_theme', t);
   } catch {}
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#0b0b0f' : '#ffffff');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#000000' : '#ffffff');
   window.dispatchEvent(new CustomEvent('ink-theme', { detail: t }));
 }
 
@@ -20,7 +20,7 @@ export function ThemeToggle({ className = '', lang = 'hu' }: { className?: strin
   useEffect(() => {
     const cur = read();
     setT(cur);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', cur === 'dark' ? '#0b0b0f' : '#ffffff');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', cur === 'dark' ? '#000000' : '#ffffff');
     const h = (e: Event) => setT((e as CustomEvent).detail);
     window.addEventListener('ink-theme', h);
     return () => window.removeEventListener('ink-theme', h);

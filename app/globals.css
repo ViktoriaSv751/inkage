@@ -43,7 +43,7 @@
 }
 /* ---------------------------------------------------------------- dark theme (toggle top right) */
 :root[data-theme='dark'] {
-  --bg: #0b0b0f;
+  --bg: #000000;
   --surface: #16161c;
   --surface-2: #202028;
   --line: #2b2b35;
@@ -55,7 +55,7 @@
   --stencil-tint: #221d45;
   --soft: #16161c;
   --line-d: #2b2b35;
-  --bg-glass: rgba(11, 11, 15, .86);
+  --bg-glass: #000000;
   --shadow-float: 0 16px 40px -16px rgba(0, 0, 0, .7);
   color-scheme: dark;
 }
