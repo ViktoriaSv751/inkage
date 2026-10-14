@@ -240,6 +240,9 @@ export function AuthSheet() {
           <button className="btn wide" disabled={busy || !/\S+@\S+\.\S+/.test(email)} onClick={send}>
             {busy ? '…' : L('Email me a code', 'Kérem a kódot')}
           </button>
+          <Link className="linkbtn" href={ui.lang === 'en' ? '/belepes?lang=en' : '/belepes'} onClick={closeAuth}>
+            {L('Use a password or create an account', 'Belépés jelszóval vagy regisztráció')}
+          </Link>
         </>
       ) : (
         <>

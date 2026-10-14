@@ -51,10 +51,11 @@ export default async function SharePage({ params }: { params: { id: string } }) 
   if (!s)
     return (
       <main className="legal" style={{ textAlign: 'center' }}>
-        <h1>Not found</h1>
-        <p>This preview was removed or the link is wrong.</p>
+        <h1>Ez a link már nem él</h1>
+        <p>A készítője lezárta vagy törölte, vagy elírás van a címben.</p>
+        <p className="muted small" lang="en">This vote link was closed or removed, or the address is wrong.</p>
         <Link className="btn" href="/app">
-          Try InkAge
+          Kipróbálom a saját fotómon
         </Link>
       </main>
     );

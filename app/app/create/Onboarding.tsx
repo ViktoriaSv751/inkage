@@ -24,13 +24,21 @@ type Q = { key: keyof OnboardingAnswers; en: string; hu: string; options: { v: s
 
 const QUESTIONS: Q[] = [
   { key: 'adult', en: 'Are you 18 or older?', hu: 'Elmúltál 18 éves?', options: [{ v: 'yes', en: 'Yes, I’m 18+', hu: 'Igen, elmúltam 18' }, { v: 'no', en: 'No', hu: 'Nem' }] },
+  { key: 'goal', en: 'What would you like to see?', hu: 'Mit szeretnél megnézni?', options: [
+    { v: 'new', en: 'A new tattoo idea', hu: 'Egy új tetoválás-ötletet' }, { v: 'existing', en: 'How my tattoo will age', hu: 'Hogyan öregszik a meglévő tetoválásom' },
+    { v: 'removal', en: 'How laser removal would look', hu: 'Milyen lenne a lézeres eltávolítás' }, { v: 'explore', en: 'Just looking around', hu: 'Csak körülnézek' } ] },
   { key: 'placement', en: 'Where would it go?', hu: 'Hová kerülne?', options: [
     { v: 'Inner forearm', en: 'Forearm', hu: 'Alkar' }, { v: 'Wrist', en: 'Wrist', hu: 'Csukló' }, { v: 'Hand', en: 'Hand', hu: 'Kézfej' },
     { v: 'Upper arm', en: 'Upper arm', hu: 'Felkar' }, { v: 'Shoulder', en: 'Shoulder', hu: 'Váll' }, { v: 'Upper back', en: 'Back', hu: 'Hát' },
     { v: 'Ribs', en: 'Ribs', hu: 'Borda' }, { v: 'Thigh', en: 'Thigh', hu: 'Comb' }, { v: 'Ankle', en: 'Ankle', hu: 'Boka' }, { v: 'Back of neck', en: 'Neck', hu: 'Nyak' } ] },
+  { key: 'size', en: 'Roughly how big?', hu: 'Nagyjából mekkora?', options: [
+    { v: '3', en: 'Tiny · about 3 cm', hu: 'Pici · kb. 3 cm' }, { v: '5', en: 'Small · about 5 cm', hu: 'Kicsi · kb. 5 cm' }, { v: '8', en: 'Medium · about 8 cm', hu: 'Közepes · kb. 8 cm' },
+    { v: '12', en: 'Large · about 12 cm', hu: 'Nagy · kb. 12 cm' }, { v: '20', en: 'Big piece · 20 cm+', hu: 'Nagy darab · 20 cm+' } ] },
   { key: 'style', en: 'Which style are you drawn to?', hu: 'Melyik stílus vonz?', options: [
     { v: 'fine-line', en: 'Fine line', hu: 'Fine line (vékony vonal)' }, { v: 'blackwork', en: 'Bold blackwork', hu: 'Vastag blackwork' },
     { v: 'color', en: 'Color', hu: 'Színes' }, { v: 'realism', en: 'Realism', hu: 'Realista' }, { v: 'other', en: 'Not sure yet', hu: 'Még nem tudom' } ] },
+  { key: 'sun', en: 'How much sun does that spot get?', hu: 'Mennyi nap éri azt a helyet?', options: [
+    { v: 'low', en: 'Little — mostly covered', hu: 'Kevés – többnyire takarva van' }, { v: 'medium', en: 'Average — summers outside', hu: 'Átlagos – nyáron kint' }, { v: 'high', en: 'A lot — outdoors often', hu: 'Sok – gyakran vagyok kint' } ] },
 ];
 
 export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void }) {
@@ -65,7 +73,7 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
         placement: a.placement || '',
         sizeCm: Number(a.size) || null,
         detail: a.style === 'fine-line' ? 0.7 : 0.45,
-        age: Number(a.age) || null,
+        age: parseInt(String(a.age || ''), 10) || null,
       },
       ui.lang
     );

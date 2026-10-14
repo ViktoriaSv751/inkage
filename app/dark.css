@@ -28,7 +28,6 @@
 :root[data-theme='dark'] .ab-mission { background: radial-gradient(90% 140% at 0% 0%, #2a2163 0%, transparent 60%), radial-gradient(80% 140% at 100% 100%, #3a2418 0%, transparent 60%), #15131f; }
 :root[data-theme='dark'] .ab-is .yes { background: #10241a; }
 :root[data-theme='dark'] .tile.ph { background: linear-gradient(110deg, #1d1d22 30%, #26262d 50%, #1d1d22 70%); background-size: 200% 100%; }
-:root[data-theme='dark'] img[src$='.svg'].design-ink, :root[data-theme='dark'] .ex-design img { filter: invert(1) hue-rotate(180deg); }
 :root[data-theme='dark'] .ip-page, :root[data-theme='dark'] .sp-page { --line: var(--line-d); --soft: var(--surface); --muted: var(--ink-3); --acc-t: var(--stencil-tint); --acc: var(--stencil); }
 :root[data-theme='dark'] .ka-page { --ka-ink: var(--ink); --ka-muted: var(--ink-3); --ka-line: var(--line); --ka-accent: var(--stencil-2); }
 :root[data-theme='dark'] .ka-sum { background: var(--stencil-tint); }
@@ -48,3 +47,4 @@
 :root[data-theme='dark'] .pf-badge svg { stroke: var(--bg); }
 :root[data-theme='dark'] .pf-badge.on svg { stroke: #fff; }
 :root[data-theme='dark'] .tabbar a.cta svg { stroke: currentColor; }
+:root[data-theme='dark'] .ex-design { background: #f4f3ef; }

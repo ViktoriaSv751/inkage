@@ -10,7 +10,8 @@ import { tx } from '@/lib/i18n';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { ARTICLES } from '@/lib/articles';
 import { IMG, KB } from '@/lib/kb';
-import { lsSet, track } from '@/lib/store';
+import { lsGet, lsSet, track } from '@/lib/store';
+import { Icon } from '../ui';
 import { HeroAging } from '../../visuals';
 import { QuickFacts } from './QuickFacts';
 
@@ -24,6 +25,21 @@ export default function ExplorePage() {
     sb()?.rpc('community_feed').then(({ data }) => setFeed(Array.isArray(data) ? data : []));
     sb()?.rpc('trends').then(({ data }) => data && setTrends(data as any));
   }, []);
+  const [dq, setDq] = useState('');
+  const [dstyle, setDstyle] = useState<'all' | 'fine-line' | 'blackwork' | 'traditional' | 'fav'>('all');
+  const [favs, setFavs] = useState<string[]>([]);
+  const [feedPlace, setFeedPlace] = useState<string | null>(null);
+  useEffect(() => setFavs(lsGet<string[]>('ink_fav_designs', [])), []);
+  const toggleFav = (id: string) => {
+    const next = favs.includes(id) ? favs.filter((x) => x !== id) : [id, ...favs];
+    setFavs(next);
+    lsSet('ink_fav_designs', next);
+    track('design_fav', { id, on: !favs.includes(id) });
+  };
+  const norm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const shownDesigns = DESIGNS.filter((d) => (dstyle === 'all' ? true : dstyle === 'fav' ? favs.includes(d.id) : d.style === dstyle)).filter((d) => !dq.trim() || norm(`${d.en} ${d.hu}`).includes(norm(dq.trim())));
+  const feedPlaces = Array.from(new Set((feed || []).map((f) => f.share?.placement).filter(Boolean))) as string[];
+  const shownFeed = (feed || []).filter((f) => !feedPlace || f.share?.placement === feedPlace);
   const popular = (trends?.designs || []).map((d) => DESIGNS.find((x) => x.id === d.id)).filter(Boolean) as typeof DESIGNS;
   const tryDesign = (id: string) => {
     lsSet('ink_pick', id);
@@ -64,8 +80,20 @@ export default function ExplorePage() {
             <h2>{t('From the community', 'A közösségtől')}</h2>
             <span className="small muted">{t('tap to vote', 'koppints és szavazz')}</span>
           </div>
+          {feedPlaces.length > 1 && (
+            <div className="chips">
+              <button className={`chip ${!feedPlace ? 'on' : ''}`} onClick={() => setFeedPlace(null)}>
+                {t('All', 'Mind')}
+              </button>
+              {feedPlaces.map((p) => (
+                <button key={p} className={`chip ${feedPlace === p ? 'on' : ''}`} onClick={() => setFeedPlace(feedPlace === p ? null : p)}>
+                  {placeName(p, ui.lang)}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="hscroll">
-            {feed.map((f) => (
+            {shownFeed.map((f) => (
               <Link key={f.share_id} className="post-card" href={`/v/${f.share_id}`} onClick={() => track('community_open')}>
                 <img src={f.share?.paths?.y50} alt="" loading="lazy" />
                 <span className="post-meta">
@@ -107,19 +135,42 @@ export default function ExplorePage() {
 
       <div className="section-title">
         <h2>{t('Try a design', 'Próbálj ki egy mintát')}</h2>
+        <span className="small muted">{t(`${shownDesigns.length} designs`, `${shownDesigns.length} minta`)}</span>
       </div>
-      <div className="hscroll ex-designs">
-        {DESIGNS.map((d) => (
-          <button
-            key={d.id}
-            className="ex-design"
-            aria-label={t(`Try ${d.en}`, `${d.hu} kipróbálása`)}
-            onClick={() => tryDesign(d.id)}
-          >
-            <img src={d.thumb || d.src} alt="" loading="lazy" onError={(e) => { const i = e.currentTarget; if (i.src !== d.src) i.src = d.src; }} />
-          </button>
-        ))}
+      <div className="ex-dtools">
+        <input className="text" type="search" placeholder={t('Search: moon, rose, wave…', 'Keresés: hold, rózsa, hullám…')} value={dq} onChange={(e) => setDq(e.target.value)} />
+        <div className="chips">
+          {(
+            [
+              ['all', t('All', 'Mind')],
+              ['fine-line', 'Fine line'],
+              ['blackwork', 'Blackwork'],
+              ['traditional', t('Traditional', 'Tradicionális')],
+              ['fav', `♥ ${t('My favorites', 'Kedvenceim')}${favs.length ? ` (${favs.length})` : ''}`],
+            ] as const
+          ).map(([k, l]) => (
+            <button key={k} className={`chip ${dstyle === k ? 'on' : ''}`} onClick={() => setDstyle(k)}>
+              {l}
+            </button>
+          ))}
+        </div>
       </div>
+      {shownDesigns.length === 0 ? (
+        <p className="sub">{dstyle === 'fav' ? t('Tap the heart on a design to keep it here.', 'Koppints egy minta szívére, és itt találod meg.') : t('No design matches.', 'Nincs ilyen minta.')}</p>
+      ) : (
+        <div className="hscroll ex-designs">
+          {shownDesigns.map((d) => (
+            <div key={d.id} className="ex-design-wrap">
+              <button className="ex-design" aria-label={t(`Try ${d.en}`, `${d.hu} kipróbálása`)} title={t(d.en, d.hu)} onClick={() => tryDesign(d.id)}>
+                <img src={d.thumb || d.src} alt="" loading="lazy" onError={(e) => { const i = e.currentTarget; if (i.src !== d.src) i.src = d.src; }} />
+              </button>
+              <button className={`ex-fav ${favs.includes(d.id) ? 'on' : ''}`} aria-label={favs.includes(d.id) ? t('Remove from favorites', 'Kivétel a kedvencek közül') : t('Save to favorites', 'Kedvencekhez')} aria-pressed={favs.includes(d.id)} onClick={() => toggleFav(d.id)}>
+                {Icon.heart}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="section-title">
         <h2>{t('Knowledge base', 'Tudástár')}</h2>

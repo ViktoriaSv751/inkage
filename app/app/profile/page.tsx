@@ -11,6 +11,7 @@ import { anonId, cloud, local, lsGet, lsSet, Preview, track, shares, revokeGuest
 import { shareOrDownload } from '@/lib/client';
 import { placeName } from '../create/steps';
 import type { OnboardingAnswers } from '../create/Onboarding';
+import { MyShares } from './MyShares';
 
 const ADMIN = ['vviktoriasoti@gmail.com'];
 
@@ -31,6 +32,80 @@ export default function ProfilePage() {
   const [fbMsg, setFbMsg] = useState('');
   const [fbEmail, setFbEmail] = useState('');
   const [fbBusy, setFbBusy] = useState(false);
+  // account: name, picture, e-mail, password
+  const [meta, setMeta] = useState<{ name: string; avatar: string | null }>({ name: '', avatar: null });
+  const [editOpen, setEditOpen] = useState(false);
+  const [nameIn, setNameIn] = useState('');
+  const [emailIn, setEmailIn] = useState('');
+  const [pwIn, setPwIn] = useState('');
+  const [accBusy, setAccBusy] = useState('');
+  useEffect(() => {
+    if (!me.user) return setMeta({ name: '', avatar: null });
+    sb()?.auth.getUser().then(async ({ data }) => {
+      const md: any = data.user?.user_metadata || {};
+      let avatar: string | null = null;
+      if (md.avatar_path) avatar = (await sb()!.storage.from('previews').createSignedUrl(md.avatar_path, 60 * 60 * 24)).data?.signedUrl ?? null;
+      setMeta({ name: md.full_name || '', avatar });
+    });
+  }, [me.user]);
+  const openEdit = () => {
+    setNameIn(meta.name);
+    setEmailIn(me.user?.email || '');
+    setPwIn('');
+    setEditOpen(true);
+  };
+  const saveName = async () => {
+    setAccBusy('name');
+    const { error } = (await sb()?.auth.updateUser({ data: { full_name: nameIn.trim().slice(0, 60) } })) || {};
+    setAccBusy('');
+    if (error) return toast(t('Could not save your name. Try again.', 'Nem sikerült menteni a nevet. Próbáld újra.'));
+    setMeta((m) => ({ ...m, name: nameIn.trim().slice(0, 60) }));
+    toast(t('Saved', 'Mentve'));
+  };
+  const saveEmail = async () => {
+    const e = emailIn.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) || e === me.user?.email) return;
+    setAccBusy('email');
+    const { error } = (await sb()?.auth.updateUser({ email: e }, { emailRedirectTo: `${location.origin}/app/profile` })) || {};
+    setAccBusy('');
+    toast(error ? t('Could not change the e-mail. Try again.', 'Nem sikerült módosítani az e-mail-címet. Próbáld újra.') : t('Check both inboxes and confirm the change.', 'Nézd meg mindkét postafiókot, és erősítsd meg a módosítást.'));
+  };
+  const savePassword = async () => {
+    if (pwIn.length < 8) return toast(t('At least 8 characters.', 'Legalább 8 karakter.'));
+    setAccBusy('pw');
+    const { error } = (await sb()?.auth.updateUser({ password: pwIn })) || {};
+    setAccBusy('');
+    setPwIn('');
+    toast(error ? t('Could not change the password. Sign in again and retry.', 'Nem sikerült módosítani a jelszót. Lépj be újra, és próbáld meg ismét.') : t('Password changed', 'Jelszó módosítva'));
+  };
+  const pickAvatar = async (file: File) => {
+    if (!me.user) return;
+    setAccBusy('avatar');
+    try {
+      const { shrink } = await import('@/lib/store');
+      const url = URL.createObjectURL(file);
+      const blob = await shrink(url, 512, 0.86);
+      URL.revokeObjectURL(url);
+      const path = `${me.user.id}/profile/avatar.jpg`;
+      const s = sb()!;
+      const up = await s.storage.from('previews').upload(path, blob, { contentType: 'image/jpeg', upsert: true });
+      if (up.error) throw up.error;
+      await s.auth.updateUser({ data: { avatar_path: path } });
+      const signed = (await s.storage.from('previews').createSignedUrl(path, 60 * 60 * 24)).data?.signedUrl ?? null;
+      setMeta((m) => ({ ...m, avatar: signed ? `${signed}&v=${Date.now()}` : null }));
+      toast(t('Profile picture updated', 'Profilkép frissítve'));
+    } catch {
+      toast(t('Could not upload the picture. Try another one.', 'Nem sikerült feltölteni a képet. Próbálj másikat.'));
+    }
+    setAccBusy('');
+  };
+  const removeAvatar = async () => {
+    if (!me.user) return;
+    const s = sb()!;
+    await s.storage.from('previews').remove([`${me.user.id}/profile/avatar.jpg`]);
+    await s.auth.updateUser({ data: { avatar_path: null } });
+    setMeta((m) => ({ ...m, avatar: null }));
+  };
   useEffect(() => {
     if (me.user) sb()?.rpc('my_invites').then(({ data }) => setJoined((data as any)?.joined ?? null));
   }, [me.user]);
@@ -50,10 +125,31 @@ export default function ProfilePage() {
       exported_at: new Date().toISOString(),
       account: me.user ? { email: me.user.email, plan: me.plan } : null,
       answers: ob,
-      previews: (mine || []).map((p) => ({ created_at: p.created_at, placement: p.placement, size: p.size, score: p.score, notes: p.notes, favorite: p.favorite, folder: p.collection, done_at: p.doneAt ?? null, source: p.source })),
+      shares: shares.all(),
+      previews: (mine || []).map((p) => ({ id: p.id, mode: p.mode ?? 'new', created_at: p.created_at, placement: p.placement, size: p.size, score: p.score, notes: p.notes, favorite: p.favorite, folder: p.collection, done_at: p.doneAt ?? null, source: p.source })),
     };
     track('data_export');
-    await shareOrDownload(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), 'inkage-adataim.json');
+    setBusy(true);
+    try {
+      const { zipSync, strToU8 } = await import('fflate');
+      const files: Record<string, Uint8Array> = { 'adataim.json': strToU8(JSON.stringify(data, null, 2)) };
+      for (const p of mine || []) {
+        const day = p.created_at.slice(0, 10);
+        const all: [string, string | undefined][] = [...Object.entries(p.images), ...Object.entries(p.removal || {}), ['design', p.design]];
+        for (const [k, src] of all) {
+          if (!src) continue;
+          try {
+            const buf = new Uint8Array(await (await fetch(src)).arrayBuffer());
+            files[`elonezetek/${day}-${p.id.slice(0, 6)}/${k}.${k === 'design' ? 'png' : 'jpg'}`] = buf;
+          } catch {}
+        }
+      }
+      const zip = zipSync(files, { level: 0 });
+      await shareOrDownload(new Blob([zip], { type: 'application/zip' }), 'inkage-adataim.zip');
+    } catch {
+      await shareOrDownload(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), 'inkage-adataim.json');
+    }
+    setBusy(false);
   };
   const [ob, setOb] = useState<OnboardingAnswers | null>(null);
 
@@ -157,11 +253,10 @@ export default function ProfilePage() {
   };
 
   const initial = (me.user?.email || '?').slice(0, 1).toUpperCase();
-  const displayName = (() => {
+  const displayName = meta.name || (() => {
     const n = (me.user?.email || '').split('@')[0].replace(/[._-]+/g, ' ').replace(/\d+/g, '').trim();
     return n ? n.replace(/\b\w/g, (c) => c.toUpperCase()) : t('My profile', 'Profilom');
   })();
-  const planName = me.plan === 'lifetime' ? 'Lifetime' : me.plan === 'weekly' ? 'Pro' : t('Free', 'Ingyenes');
 
   return (
     <div className="pf">
@@ -184,7 +279,7 @@ export default function ProfilePage() {
 
       <div className="pf-id">
         <div className="pf-avatar">
-          <span>{me.user ? initial : '✦'}</span>
+          {meta.avatar ? <img src={meta.avatar} alt="" /> : <span>{me.user ? initial : '✦'}</span>}
           <i className={`pf-badge ${me.user ? 'on' : ''}`} aria-hidden="true">
             {me.user ? (
               <svg viewBox="0 0 24 24">
@@ -200,7 +295,7 @@ export default function ProfilePage() {
         <h1>{me.user ? displayName : t('Guest', 'Vendég')}</h1>
         <p className="pf-sub">{me.user ? me.user.email : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</p>
         {me.user ? (
-          <button className="pf-edit" onClick={() => setTab('skin')}>
+          <button className="pf-edit" onClick={openEdit}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" />
             </svg>
@@ -291,6 +386,8 @@ export default function ProfilePage() {
           )}
         </div>
       )}
+
+      {tab === 'previews' && <MyShares />}
 
       {tab === 'skin' && (
       <div className="card" style={{ marginTop: 12 }}>
@@ -437,8 +534,8 @@ export default function ProfilePage() {
         )}
         <button className="list-row" onClick={exportData}>
           <span>
-            {t('Download my data', 'Adataim letöltése')}
-            <small>{t('Your previews’ details and answers, as a file', 'Az előnézeteid adatai és a válaszaid, fájlban')}</small>
+            {busy ? t('Packing your data…', 'Adatok csomagolása…') : t('Download my data', 'Adataim letöltése')}
+            <small>{t('All previews with images, notes and answers, as a ZIP', 'Minden előnézet képekkel, jegyzetekkel és válaszokkal, ZIP-ben')}</small>
           </span>
           <span aria-hidden="true">›</span>
         </button>
@@ -478,11 +575,57 @@ export default function ProfilePage() {
         </button>
       </Sheet>
 
+      <Sheet open={editOpen} onClose={() => setEditOpen(false)} label={t('Edit profile', 'Profil szerkesztése')}>
+        <h2>{t('Edit profile', 'Profil szerkesztése')}</h2>
+        <div className="acc-avatar">
+          <div className="pf-avatar sm">{meta.avatar ? <img src={meta.avatar} alt="" /> : <span>{initial}</span>}</div>
+          <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+            <label className="chipbtn" style={{ cursor: 'pointer' }}>
+              {accBusy === 'avatar' ? t('Uploading…', 'Feltöltés…') : t('Upload a picture', 'Kép feltöltése')}
+              <input type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && pickAvatar(e.target.files[0])} />
+            </label>
+            {meta.avatar && (
+              <button className="chipbtn" onClick={removeAvatar}>
+                {t('Remove', 'Eltávolítás')}
+              </button>
+            )}
+          </div>
+        </div>
+        <label className="acc-field">
+          <span>{t('Name', 'Név')}</span>
+          <div className="acc-row">
+            <input className="text" value={nameIn} maxLength={60} onChange={(e) => setNameIn(e.target.value)} placeholder={t('Your name', 'A neved')} />
+            <button className="btn" disabled={accBusy === 'name' || nameIn.trim() === meta.name} onClick={saveName}>
+              {t('Save', 'Mentés')}
+            </button>
+          </div>
+        </label>
+        <label className="acc-field">
+          <span>{t('E-mail', 'E-mail-cím')}</span>
+          <div className="acc-row">
+            <input className="text" type="email" value={emailIn} onChange={(e) => setEmailIn(e.target.value)} />
+            <button className="btn" disabled={accBusy === 'email' || emailIn.trim() === (me.user?.email || '')} onClick={saveEmail}>
+              {t('Change', 'Módosítás')}
+            </button>
+          </div>
+          <small className="muted">{t('We send a confirmation link to both addresses.', 'Mindkét címre küldünk egy megerősítő linket.')}</small>
+        </label>
+        <label className="acc-field">
+          <span>{t('New password', 'Új jelszó')}</span>
+          <div className="acc-row">
+            <input className="text" type="password" autoComplete="new-password" value={pwIn} onChange={(e) => setPwIn(e.target.value)} placeholder={t('At least 8 characters', 'Legalább 8 karakter')} />
+            <button className="btn" disabled={accBusy === 'pw' || pwIn.length < 8} onClick={savePassword}>
+              {t('Set', 'Beállítás')}
+            </button>
+          </div>
+        </label>
+      </Sheet>
+
       <Sheet open={erase} onClose={() => setErase(false)} label={ui.t('profile.erase')}>
         <h2>{ui.t('profile.erase')}</h2>
         <p className="sub">{ui.t('profile.eraseConfirm')}</p>
-        <input id="erase-confirm" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="DELETE" autoCapitalize="characters" />
-        <button className="btn wide red" disabled={confirm.trim().toUpperCase() !== 'DELETE' || busy} onClick={eraseAll}>
+        <input id="erase-confirm" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder={t('DELETE', 'TÖRLÉS')} autoCapitalize="characters" />
+        <button className="btn wide red" disabled={!['DELETE', 'TÖRLÉS', 'TORLES'].includes(confirm.trim().toUpperCase()) || busy} onClick={eraseAll}>
           {busy ? '…' : t('Delete everything', 'Mindent törlök')}
         </button>
       </Sheet>

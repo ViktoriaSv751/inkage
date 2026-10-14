@@ -172,6 +172,7 @@ export default function CreatePage() {
 
   function applyOnboarding(a: OnboardingAnswers) {
     setOb(a);
+    if (a.goal === 'existing' || a.goal === 'removal') setMode(a.goal);
     if (a.placement) setPlacement(a.placement);
     const cm = Number(a.size) || 8;
     setPl((p) => ({ ...p, w: Math.min(0.8, Math.max(0.1, cm / frameCm(a.placement || 'forearm'))) }));
@@ -688,6 +689,19 @@ export default function CreatePage() {
           removalPending={remPending}
           startView={removalIntent.current ? 'removal' : 'aging'}
           onAging={startAging}
+          onTryPlace={
+            preview.mode !== 'existing' && preview.mode !== 'removal' && design
+              ? (v) => {
+                  setPlacement(v);
+                  setPhoto(null);
+                  setArea(null);
+                  setPreview(null);
+                  setPhase('studio');
+                  window.scrollTo({ top: 0 });
+                  toast(t(`Now add a photo of your ${placeName(v, 'en').toLowerCase()}`, `Most töltsd fel a(z) ${placeName(v, 'hu').toLowerCase()} fotóját`));
+                }
+              : undefined
+          }
           onShared={(sid) => setPreview((p) => (p ? { ...p, share_id: sid } : p))}
           onDone={(d) => patch({ doneAt: d })}
           onNew={restart}

@@ -150,7 +150,7 @@ const HU: Record<Key, string> = {
   'profile.copied': 'Másolva',
   'profile.install': 'InkAge a kezdőképernyőre',
   'profile.erase': 'Fiókom és adataim törlése',
-  'profile.eraseConfirm': 'Írd be: DELETE. Ez törli a fiókodat és minden mentett előnézetet.',
+  'profile.eraseConfirm': 'Írd be: TÖRLÉS. Ez törli a fiókodat és minden mentett előnézetet.',
   'paywall.used': 'Elérted a mai keretet',
   'paywall.sub': 'Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
 };

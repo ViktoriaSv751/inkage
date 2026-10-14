@@ -125,6 +125,7 @@ export function Result({
   onShared,
   onDone,
   onAging,
+  onTryPlace,
 }: {
   preview: Preview;
   pending?: StageKey[];
@@ -152,6 +153,8 @@ export function Result({
   onDone?: (date: string) => void;
   /** removal-only preview: also run the aging stages */
   onAging?: () => void;
+  /** try the same design on another body area (new photo of that spot) */
+  onTryPlace?: (placement: string) => void;
 }) {
   const { ui, me, openAuth, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
@@ -593,18 +596,25 @@ export function Result({
           {report.input && !own && (() => {
             const here = preview.placement.toLowerCase();
             const alts = OTHER_SPOTS.filter(([v]) => !here.includes(v.toLowerCase().split(' ').pop()!))
-              .map(([v, en, hu]) => ({ en, hu, score: longevity({ ...report.input!, placement: v }, ui.lang).score }))
+              .map(([v, en, hu]) => ({ v, en, hu, score: longevity({ ...report.input!, placement: v }, ui.lang).score }))
               .sort((a, b) => b.score - a.score)
               .slice(0, 5);
             return (
               <div className="elsewhere">
                 <b>{t('The same design elsewhere', 'Ugyanez a minta máshol')}</b>
+                {onTryPlace && <p className="small muted" style={{ margin: '2px 0 0' }}>{t('Tap a spot to see it there for real.', 'Koppints egy helyre, és megnézzük ott is, valódi képpel.')}</p>}
                 <div>
-                  {alts.map((a) => (
-                    <span key={a.en} className={a.score > report.score ? 'up' : a.score < report.score ? 'down' : ''}>
-                      {t(a.en, a.hu)} <b>{a.score}</b>
-                    </span>
-                  ))}
+                  {alts.map((a) =>
+                    onTryPlace ? (
+                      <button key={a.en} className={`elsebtn ${a.score > report.score ? 'up' : a.score < report.score ? 'down' : ''}`} onClick={() => onTryPlace(a.v)} title={t('Try it there with a photo of that spot', 'Próbáld ki ott – egy fotó kell arról a helyről')}>
+                        {t(a.en, a.hu)} <b>{a.score}</b>
+                      </button>
+                    ) : (
+                      <span key={a.en} className={a.score > report.score ? 'up' : a.score < report.score ? 'down' : ''}>
+                        {t(a.en, a.hu)} <b>{a.score}</b>
+                      </span>
+                    )
+                  )}
                 </div>
               </div>
             );
