@@ -86,8 +86,8 @@ export default function CreatePage() {
     window.addEventListener('ink:fresh', h);
     return () => window.removeEventListener('ink:fresh', h);
   }, []);
-  // a different photo starts with just the one tattoo again
-  useEffect(() => setExtras([]), [photo?.dataUrl]);
+  // a different main design starts with just that one tattoo again (extras from the same picture are added right after)
+  useEffect(() => setExtras([]), [design?.raw]);
   const [genStep, setGenStep] = useState(0);
   const [err, setErr] = useState('');
   const [paywall, setPaywall] = useState(false);
@@ -643,6 +643,10 @@ export default function CreatePage() {
           setPhoto={setPhoto}
           design={design}
           setDesign={setDesign}
+          onExtras={(ds) =>
+            // stacked under the first one, a little smaller; each can be moved on the next screen
+            setExtras(ds.slice(0, 3).map((d, i) => ({ design: d, pl: { x: pl.x, y: Math.min(0.92, pl.y + 0.2 * (i + 1)), w: pl.w * 0.8, rot: 0, mirror: false } })))
+          }
           existingCm={existingCm}
           setExistingCm={setExistingCm}
           onArea={(a, where, ph, sk) => {

@@ -145,6 +145,7 @@ export function StudioStep({
   setPhoto,
   design,
   setDesign,
+  onExtras,
   onNext,
 }: {
   mode?: 'new' | 'existing' | 'removal';
@@ -155,6 +156,8 @@ export function StudioStep({
   setPhoto: (p: Photo | null) => void;
   design: Design | null;
   setDesign: (d: Design | null) => void;
+  /** more tattoos taken from the same picture: they go onto the photo next to the first one */
+  onExtras?: (ds: Design[]) => void;
   onNext: () => void;
   onArea?: (a: Area | null, where: string, ph: Photo, skin?: Skin | null) => void;
   existingCm?: number | null;
@@ -315,15 +318,50 @@ export function StudioStep({
         : t('Tattoo cut out — only the design goes on your skin', 'Kivágva – csak maga a minta kerül a bőrödre')
     );
   };
-  const usePick = async (box: Box | null) => {
+  // one cut-out, without touching the screen state (used for the extra tattoos)
+  const cutOne = async (raw: string, mode: Design['mode']): Promise<Design | null> => {
+    const r = await api<{ image: string; match?: number; error?: string }>('/api/extract', { image: raw, color: mode === 'color' });
+    if (!r.ok || !r.data.image) return null;
+    const d = await processDesign(r.data.image, mode, { clean: true });
+    return { raw: r.data.image, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, original: raw };
+  };
+  const usePick = async (boxes: Box[] | null) => {
     if (!pick) return;
     const { image, found } = pick;
     setPick({ ...pick, open: false });
     const mode = design?.mode || 'black';
-    const src = box ? await cropImage(image, box) : image;
-    track('tattoo_pick', { kind: found.kind, n: found.tattoos.length, manual: !!box && !found.tattoos.some((x) => x.box === box) });
-    if (found.kind === 'design') return applyDesign(src, mode);
-    return extract(src, mode);
+    const list = boxes && boxes.length ? boxes : [null];
+    const srcs = await Promise.all(list.map((b) => (b ? cropImage(image, b) : Promise.resolve(image))));
+    track('tattoo_pick', { kind: found.kind, n: found.tattoos.length, picked: list.length });
+    // the extra ones are cut out at the same time as the first
+    const rest = srcs.slice(1);
+    const extrasP = rest.length
+      ? Promise.all(
+          rest.map(async (src) => {
+            if (found.kind === 'design') {
+              const d = await processDesign(src, mode).catch(() => null);
+              return d ? ({ raw: src, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode } as Design) : null;
+            }
+            return cutOne(src, mode).catch(() => null);
+          })
+        )
+      : null;
+    if (found.kind === 'design') await applyDesign(srcs[0], mode);
+    else await extract(srcs[0], mode);
+    if (extrasP) {
+      if (found.kind !== 'design') {
+        setBusy(true);
+        setBusyMsg(t(`Cutting out the other ${rest.length} tattoo${rest.length > 1 ? 's' : ''}…`, `A további ${rest.length} tetoválás kivágása…`));
+      }
+      const got = (await extrasP).filter(Boolean) as Design[];
+      setBusy(false);
+      setBusyMsg('');
+      if (got.length) {
+        onExtras?.(got);
+        toast(t(`${got.length + 1} tattoos ready – you can place each of them on the next screen`, `${got.length + 1} tetoválás kész – a következő lépésben mindegyiket elhelyezheted`));
+      }
+      if (got.length < rest.length) toast(t('Some tattoos could not be cut out.', 'Néhány tetoválást nem sikerült kivágni.'));
+    }
   };
   const designFromFile = async (f: File | Blob, src: string) => {
     let p: Photo;
@@ -583,7 +621,7 @@ export function StudioStep({
           open={pick.open}
           image={pick.image}
           found={pick.found}
-          onPick={(b) => usePick(b)}
+          onPick={(bs) => usePick(bs)}
           onWhole={() => usePick(null)}
           onClose={() => setPick({ ...pick, open: false })}
         />

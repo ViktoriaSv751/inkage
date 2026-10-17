@@ -24,13 +24,19 @@ export function TattooPicker({
   open: boolean;
   image: string;
   found: Found;
-  onPick: (box: Box) => void;
+  /** one or more boxes – several tattoos can be taken from one picture */
+  onPick: (boxes: Box[]) => void;
   onWhole: () => void;
   onClose: () => void;
 }) {
   const { ui } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
-  const [sel, setSel] = useState<number>(found.tattoos.length ? 0 : -1);
+  const [sel, setSel] = useState<number[]>(found.tattoos.length ? [0] : []);
+  const toggle = (i: number) => {
+    setSel((s) => (s.includes(i) ? s.filter((x) => x !== i) : [...s, i].sort((a, b) => a - b)));
+    haptic();
+  };
+  const allOn = found.tattoos.length > 0 && sel.length === found.tattoos.length;
   const [manual, setManual] = useState<Box | null>(null);
   const [drawMode, setDrawMode] = useState(!found.tattoos.length);
   const wrap = useRef<HTMLDivElement>(null);
@@ -57,7 +63,8 @@ export function TattooPicker({
     else if (manual) haptic();
   };
 
-  const chosen: Box | null = drawMode ? manual : sel >= 0 ? found.tattoos[sel]?.box ?? null : null;
+  const chosenList: Box[] = drawMode ? (manual ? [manual] : []) : sel.map((i) => found.tattoos[i]?.box).filter(Boolean) as Box[];
+  const chosen: Box | null = chosenList.length === 1 ? chosenList[0] : null;
   const frame = (b: Box) => ({ top: `${b[0] * 100}%`, left: `${b[1] * 100}%`, height: `${(b[2] - b[0]) * 100}%`, width: `${(b[3] - b[1]) * 100}%` });
 
   return (
@@ -67,7 +74,7 @@ export function TattooPicker({
         {drawMode
           ? t('Drag a frame around the tattoo you want. Only that part is used.', 'Húzz keretet a kívánt tetoválás köré. Csak ez a rész kerül felhasználásra.')
           : found.tattoos.length > 1
-            ? t(`We found ${found.tattoos.length} designs. Tap the one you want.`, `${found.tattoos.length} mintát találtunk. Koppints arra, amelyiket szeretnéd.`)
+            ? t(`We found ${found.tattoos.length} designs. Tap the ones you want – one, several or all.`, `${found.tattoos.length} mintát találtunk. Koppints azokra, amelyeket szeretnél – egyre, többre vagy mindre.`)
             : t('Is this the one? Only the framed part is used, without the person or background.', 'Ez az? Csak a bekeretezett rész kerül felhasználásra, ember és háttér nélkül.')}
       </p>
       <div className={`picker ${drawMode ? 'draw' : ''}`}>
@@ -77,16 +84,13 @@ export function TattooPicker({
           found.tattoos.map((x, i) => (
             <button
               key={i}
-              className={`pick-box ${sel === i ? 'on' : ''}`}
+              className={`pick-box ${sel.includes(i) ? 'on' : ''}`}
               style={frame(x.box)}
-              aria-pressed={sel === i}
+              aria-pressed={sel.includes(i)}
               aria-label={`${i + 1}. ${x.label}`}
-              onClick={() => {
-                setSel(i);
-                haptic();
-              }}
+              onClick={() => toggle(i)}
             >
-              <span>{i + 1}</span>
+              <span>{sel.includes(i) ? '✓' : i + 1}</span>
             </button>
           ))}
         {drawMode && manual && <i className="pick-box on manual" style={frame(manual)} />}
@@ -94,17 +98,27 @@ export function TattooPicker({
       </div>
       </div>
       {!drawMode && found.tattoos.length > 1 && (
-        <div className="pick-list" role="radiogroup">
+        <div className="pick-list" role="group" aria-label={t('Designs found', 'Talált minták')}>
+          <button className={`chip ${allOn ? 'on' : ''}`} aria-pressed={allOn} onClick={() => (setSel(allOn ? [] : found.tattoos.map((_, i) => i)), haptic())}>
+            {allOn ? t('✓ All', '✓ Mind') : t('All', 'Mind')}
+          </button>
           {found.tattoos.map((x, i) => (
-            <button key={i} role="radio" aria-checked={sel === i} className={`chip ${sel === i ? 'on' : ''}`} onClick={() => setSel(i)}>
+            <button key={i} role="checkbox" aria-checked={sel.includes(i)} className={`chip ${sel.includes(i) ? 'on' : ''}`} onClick={() => toggle(i)}>
+              {sel.includes(i) ? '✓ ' : ''}
               {i + 1}. {x.label || t('Design', 'Minta')}
             </button>
           ))}
         </div>
       )}
       <div className="pick-actions">
-        <button className="btn wide" disabled={!chosen} onClick={() => chosen && onPick(chosen)}>
-          {found.kind === 'design' ? t('Use this design', 'Ezt a mintát kérem') : t('Cut out this tattoo', 'Ezt a tetoválást vágd ki')}
+        <button className="btn wide" disabled={!chosenList.length} onClick={() => chosenList.length && onPick(chosenList)}>
+          {chosenList.length > 1
+            ? found.kind === 'design'
+              ? t(`Use these ${chosenList.length} designs`, `Ezt a(z) ${chosenList.length} mintát kérem`).replace('a(z) ', 'a ')
+              : t(`Cut out these ${chosenList.length} tattoos`, `Vágd ki ezt a(z) ${chosenList.length} tetoválást`).replace('a(z) ', 'a ')
+            : found.kind === 'design'
+              ? t('Use this design', 'Ezt a mintát kérem')
+              : t('Cut out this tattoo', 'Ezt a tetoválást vágd ki')}
         </button>
         <div className="row" style={{ justifyContent: 'center' }}>
           {(!drawMode || found.tattoos.length > 0) && (
