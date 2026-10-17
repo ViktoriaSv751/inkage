@@ -6,7 +6,7 @@ import { Icon, OutOfPreviews, Waitlist } from './ui';
 import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
 import { aiPlacement } from '@/lib/placements';
-import { abShare, shareVoteLink } from '@/lib/share';
+import { PollSheet } from './PollSheet';
 import { Area, Design, fitToArea, Layer, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx, huArticle } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
@@ -70,6 +70,7 @@ export default function CreatePage() {
   const [pl, setPl] = useState<Placement>({ x: 0.5, y: 0.5, w: 0.3, rot: 0, mirror: false });
   // more tattoos on the same photo
   const [extras, setExtras] = useState<Layer[]>([]);
+  const [pollOpen, setPollOpen] = useState(false);
   // "New design" tapped while already here: empty the slots
   useEffect(() => {
     const h = () => {
@@ -775,22 +776,10 @@ export default function CreatePage() {
         {prevRef.current && prevRef.current.id !== preview.id && preview.images.y50 && (
           <div className="card" style={{ marginTop: 12 }}>
             <h2>{t('Previous vs. this one', 'Előző vs. mostani')}</h2>
-            <button
-              className="chipbtn"
-              style={{ marginBottom: 8 }}
-              onClick={async () => {
-                try {
-                  const lab = (p: Preview) => `${placeName(p.placement, ui.lang)}${p.sizeCm ? ` ${p.sizeCm} cm` : ''}`;
-                  const id = await abShare(prevRef.current!, preview, lab(prevRef.current!), lab(preview));
-                  shares.add({ id, at: new Date().toISOString(), label: `${lab(prevRef.current!)} / ${lab(preview)}`, kind: 'ab' });
-                  await shareVoteLink(id, t('Which tattoo should I get? 👀', 'Melyik tetoválást csináltassam? 👀'), () => toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak')));
-                } catch (e: any) {
-                  toast(trErr(ui.lang, e?.message));
-                }
-              }}
-            >
+            <button className="chipbtn" style={{ marginBottom: 8 }} onClick={() => setPollOpen(true)}>
               {t('Ask friends: which one?', 'Kérdezd meg a barátaidat: melyik legyen?')}
             </button>
+            <PollSheet open={pollOpen} onClose={() => setPollOpen(false)} initial={[prevRef.current, preview]} />
             <p className="muted">{t('Both at 50 years.', 'Mindkettő 50 év múlva.')}</p>
             <div className="cmp">
               {[prevRef.current, preview].map((x, i) => (
