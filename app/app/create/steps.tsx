@@ -913,7 +913,6 @@ export function PlaceStep({
   };
   const bgPts = useRef(new Map<number, { x: number; y: number }>());
   const bgStart = useRef<{ z: number; tx: number; ty: number; d: number; mx: number; my: number; moved: boolean } | null>(null);
-  const lastTap = useRef(0);
   const bgSnap = () => {
     const pts = Array.from(bgPts.current.values());
     const r = box.current!.getBoundingClientRect();
@@ -923,6 +922,8 @@ export function PlaceStep({
   };
   const bgDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest('.ink, .ink-frame, .zoombar')) return;
+    // while a tattoo is selected, a second finger anywhere resizes / turns the tattoo – the photo never zooms by itself
+    if (sel && pointers.current.size > 0) return down(activeRef.current)(e);
     bgPts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     // one finger scrolls the page when not zoomed; two fingers, or a zoomed photo, are ours
     if (bgPts.current.size > 1 || zoom.z > 1) {
@@ -933,6 +934,7 @@ export function PlaceStep({
     bgSnap();
   };
   const bgMove = (e: React.PointerEvent) => {
+    if (pointers.current.has(e.pointerId)) return move(e);
     if (!bgPts.current.has(e.pointerId) || !bgStart.current || !box.current) return;
     bgPts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     const pts = Array.from(bgPts.current.values());
@@ -940,7 +942,7 @@ export function PlaceStep({
     const mx = pts.reduce((a, p) => a + p.x, 0) / pts.length - r.left, my = pts.reduce((a, p) => a + p.y, 0) / pts.length - r.top;
     const s0 = bgStart.current;
     if (Math.hypot(mx - s0.mx, my - s0.my) > 6) s0.moved = true;
-    if (pts.length > 1 && s0.d) {
+    if (pts.length > 1 && s0.d && !sel) {
       const k = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) / s0.d;
       const z = Math.min(4, Math.max(1, s0.z * k));
       const kk = z / s0.z;
@@ -949,20 +951,13 @@ export function PlaceStep({
     } else if (s0.z > 1) setZoom(clampZoom(s0.z, s0.tx + (mx - s0.mx), s0.ty + (my - s0.my)));
   };
   const bgUp = (e: React.PointerEvent) => {
+    if (pointers.current.has(e.pointerId)) return up(e);
     const s0 = bgStart.current;
     bgPts.current.delete(e.pointerId);
     if (bgPts.current.size) return bgSnap();
     bgStart.current = null;
-    if (s0 && !s0.moved) {
-      // a tap: deselect; a double tap: zoom in / back out
-      const now = Date.now();
-      if (now - lastTap.current < 320) {
-        const r = box.current!.getBoundingClientRect();
-        zoomAt(zoom.z > 1 ? 1 : 2.5, e.clientX - r.left, e.clientY - r.top);
-        lastTap.current = 0;
-      } else lastTap.current = now;
-      setSel(false);
-    }
+    // a tap on the photo deselects; zooming is only ever done by the user (pinch with nothing selected, or +/−)
+    if (s0 && !s0.moved) setSel(false);
   };
   // which tattoo is being edited (0 = the first one) and whether its frame + handles show
   const [active, setActive] = useState(0);
@@ -1223,7 +1218,7 @@ export function PlaceStep({
           <button type="button" className="zlabel" onClick={() => setZoom({ z: 1, tx: 0, ty: 0 })} aria-label={t('Reset zoom', 'Eredeti méret')}>{zoom.z.toFixed(zoom.z < 2 ? 1 : 0)}×</button>
           <button type="button" onClick={() => zoomAt(zoom.z * 1.5)} disabled={zoom.z >= 4} aria-label={t('Zoom in', 'Nagyítás')}>+</button>
         </div>
-        {!sel && !drag && <span className="ed-hint">{zoom.z > 1 ? t('Drag the photo to look around · double-tap to zoom out', 'Húzd a fotót a mozgatáshoz · dupla koppintás: vissza') : t('Tap the tattoo to resize it · pinch or + to zoom in', 'Koppints a tetoválásra a méretezéshez · csippentés vagy + a nagyításhoz')}</span>}
+        {!sel && !drag && <span className="ed-hint">{zoom.z > 1 ? t('Drag the photo to look around · 1× to zoom back out', 'Húzd a fotót a mozgatáshoz · 1× gomb: vissza') : t('Tap the tattoo to resize it · pinch or + to zoom in', 'Koppints a tetoválásra a méretezéshez · csippentés vagy + a nagyításhoz')}</span>}
         <span className="cm">≈ {cm.toFixed(cm < 10 ? 1 : 0)} cm</span>
       </div>
       {setExtras && (
