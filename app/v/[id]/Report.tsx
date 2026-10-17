@@ -28,6 +28,7 @@ export function Report({ id, lang }: { id: string; lang: 'en' | 'hu' }) {
     setState('busy');
     const { error } = (await sb()?.rpc('report_share', { p_share: id, p_reason: reason, p_note: note || null, p_reporter: anonId() })) || { error: true };
     track('report', { reason });
+    if (!error) fetch('/api/report-notify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ share: id }) }).catch(() => {});
     setState(error ? 'error' : 'done');
   };
 
