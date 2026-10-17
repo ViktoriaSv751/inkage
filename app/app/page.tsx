@@ -7,11 +7,11 @@ import { Result } from './Result';
 import { Onboarding, OnboardingAnswers } from './create/Onboarding';
 import { aiPlacement } from '@/lib/placements';
 import { abShare, shareVoteLink } from '@/lib/share';
-import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
+import { Area, Design, fitToArea, Layer, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
 import { trErr, tx, huArticle } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, shares, StageKey, STAGES, track } from '@/lib/store';
-import { composeMockup, pasteMask, Placement, Skin } from '@/lib/editor';
+import { composeMockup, mergeLayers, pasteMask, Placement, Skin } from '@/lib/editor';
 import { loadImage } from '@/lib/client';
 import { frameCm, photoCm } from '@/lib/score';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
@@ -61,6 +61,10 @@ export default function CreatePage() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [design, setDesign] = useState<Design | null>(null);
   const [pl, setPl] = useState<Placement>({ x: 0.5, y: 0.5, w: 0.3, rot: 0, mirror: false });
+  // more tattoos on the same photo
+  const [extras, setExtras] = useState<Layer[]>([]);
+  // a different photo starts with just the one tattoo again
+  useEffect(() => setExtras([]), [photo?.dataUrl]);
   const [genStep, setGenStep] = useState(0);
   const [err, setErr] = useState('');
   const [paywall, setPaywall] = useState(false);
@@ -290,8 +294,16 @@ export default function CreatePage() {
   };
 
   const go = async (over?: { design?: Design; pl?: Placement; redo?: string[] }) => {
-    const d = over?.design ?? design;
-    const place = over?.pl ?? pl;
+    let d = over?.design ?? design;
+    let place = over?.pl ?? pl;
+    // several tattoos: merge them into one design laid out exactly as placed
+    if (!over?.design && d && extras.length && photo && mode === 'new') {
+      const m = await mergeLayers(photo, [{ design: d, pl: place }, ...extras]).catch(() => null);
+      if (m) {
+        d = { ...d, ink: m.design.ink, raw: m.design.ink, ratio: m.design.ratio, detail: m.design.detail, mode: m.design.mode, libId: undefined };
+        place = m.pl;
+      }
+    }
     const existing = mode !== 'new';
     removalIntent.current = mode === 'removal';
     if (!photo || (!d && !existing)) return;
@@ -643,6 +655,8 @@ export default function CreatePage() {
             userMoved.current = true;
             setPl(x);
           }}
+          extras={extras}
+          setExtras={setExtras}
           onGo={() => go()}
           canGo
           footer={null}

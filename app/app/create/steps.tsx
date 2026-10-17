@@ -15,6 +15,8 @@ import { BodyMap } from './BodyMap';
 import { Sheet } from '../ui';
 
 export type Photo = { dataUrl: string; w: number; h: number };
+export type Layer = { design: Design; pl: Placement };
+
 export type Design = {
   raw: string;
   ink: string;
@@ -853,10 +855,12 @@ function CameraSheet({ placement, onClose, onShot, onFallback }: { placement: st
 
 export function PlaceStep({
   photo,
-  design,
+  design: design0,
   placement,
-  pl,
-  setPl,
+  pl: pl0,
+  setPl: setPl0,
+  extras = [],
+  setExtras,
   onGo,
   canGo,
   footer,
@@ -874,13 +878,62 @@ export function PlaceStep({
   onFit?: () => void;
   pl: Placement;
   setPl: (p: Placement) => void;
+  /** more tattoos on the same photo (above, below, next to the first) */
+  extras?: Layer[];
+  setExtras?: (l: Layer[]) => void;
   onGo: () => void;
   canGo: boolean;
   footer?: React.ReactNode;
 }) {
-  const { ui } = useApp();
+  const { ui, toast } = useApp();
   const t = L(ui.lang);
   const box = useRef<HTMLDivElement>(null);
+  // which tattoo is being edited (0 = the first one) and whether its frame + handles show
+  const [active, setActive] = useState(0);
+  const [sel, setSel] = useState(false);
+  const layers: Layer[] = [{ design: design0, pl: pl0 }, ...extras];
+  const cur = Math.min(active, layers.length - 1);
+  const design = layers[cur].design;
+  const pl = layers[cur].pl;
+  const setLayerPl = (i: number, p: Placement) => {
+    if (i === 0) setPl0(p);
+    else setExtras?.(extras.map((l, k) => (k === i - 1 ? { ...l, pl: p } : l)));
+  };
+  const activeRef = useRef(0);
+  activeRef.current = cur;
+  const setPl = (p: Placement) => setLayerPl(activeRef.current, p);
+  const [addOpen, setAddOpen] = useState(false);
+  const [addBusy, setAddBusy] = useState(false);
+  const addRef = useRef<HTMLInputElement>(null);
+  const addLayer = async (raw: string, fromPhoto: boolean) => {
+    setAddBusy(true);
+    try {
+      let src = raw;
+      if (fromPhoto) {
+        const r = await api<{ image?: string; error?: string }>('/api/extract', { image: raw, color: design0.mode === 'color' });
+        if (!r.ok || !r.data.image) throw new Error(r.data?.error || 'extract');
+        src = r.data.image;
+      }
+      const d = await processDesign(src, design0.mode, { clean: fromPhoto });
+      // place it right under the first one, a bit smaller
+      const next: Layer = { design: { raw: src, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: design0.mode }, pl: { x: pl0.x, y: Math.min(0.92, pl0.y + 0.18), w: pl0.w * 0.8, rot: 0, mirror: false } };
+      setExtras?.([...extras, next]);
+      setActive(extras.length + 1);
+      setSel(true);
+      setAddOpen(false);
+      haptic('success');
+      toast(t('Added — drag it where you want it', 'Hozzáadva – húzd oda, ahová szeretnéd'));
+    } catch {
+      toast(t('Could not add that picture. Try another one.', 'Ezt a képet nem sikerült hozzáadni. Próbálj egy másikat.'));
+    }
+    setAddBusy(false);
+  };
+  const removeLayer = (i: number) => {
+    if (i === 0) return;
+    setExtras?.(extras.filter((_, k) => k !== i - 1));
+    setActive(0);
+    setSel(false);
+  };
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const start = useRef<{ pl: Placement; d: number; a: number; cx: number; cy: number } | null>(null);
   const [drag, setDrag] = useState(false);
@@ -923,20 +976,27 @@ export function PlaceStep({
     haptic();
   };
 
-  const snapshot = () => {
+  const snapshot = (base: Placement = pl) => {
     const pts = Array.from(pointers.current.values());
     const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
     const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
     const d = pts.length > 1 ? Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) : 0;
     const a = pts.length > 1 ? Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x) : 0;
-    start.current = { pl, d, a, cx, cy };
+    start.current = { pl: base, d, a, cx, cy };
   };
 
-  const down = (e: React.PointerEvent) => {
+  const down = (i: number) => (e: React.PointerEvent) => {
+    e.stopPropagation();
+    if (i !== activeRef.current) {
+      activeRef.current = i;
+      setActive(i);
+      pointers.current.clear();
+    }
+    setSel(true);
     if (!pointers.current.size) remember();
     (e.target as Element).setPointerCapture?.(e.pointerId);
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    snapshot();
+    snapshot(layers[i].pl);
     setDrag(true);
   };
   const move = (e: React.PointerEvent) => {
@@ -1017,7 +1077,7 @@ export function PlaceStep({
         </span>
         <span className="areachg">{t('Change', 'Módosítás')}</span>
       </button>
-      <div className="editor" ref={box}>
+      <div className="editor" ref={box} onPointerDown={(e) => !(e.target as HTMLElement).closest('.ink, .ink-frame') && setSel(false)}>
         {area && (
           <div
             className={`areabox ${drag ? 'show' : ''} ${out ? 'bad' : ''}`}
@@ -1026,25 +1086,29 @@ export function PlaceStep({
         )}
         <img className="bg" src={photo.dataUrl} alt={t('Your photo', 'A fotód')} />
         {veil && <img className={`veil ${drag || off > 0.08 ? 'show' : ''}`} src={veil} alt="" aria-hidden="true" />}
-        <div
-          className={`ink ${drag ? 'drag' : ''}`}
-          style={{
-            width: wPx,
-            left: `${pl.x * 100}%`,
-            top: `${pl.y * 100}%`,
-            transform: `translate(-50%, -50%) rotate(${pl.rot}deg) scaleX(${pl.mirror ? -1 : 1})`,
-          }}
-          onPointerDown={down}
-          onPointerMove={move}
-          onPointerUp={up}
-          onPointerCancel={up}
-          onWheel={(e) => setPl({ ...pl, w: Math.min(1.4, Math.max(0.04, pl.w * (e.deltaY < 0 ? 1.05 : 0.95))) })}
-          role="img"
-          aria-label={t('Tattoo design — drag to move', 'Tetoválásminta – húzd a helyére')}
-        >
-          <img src={design.ink} alt="" draggable={false} />
-        </div>
-        {/* Canva-style frame: corner handles resize, the top handle rotates */}
+        {layers.map((L1, i) => (
+          <div
+            key={i}
+            className={`ink ${drag && i === cur ? 'drag' : ''}`}
+            style={{
+              width: `${L1.pl.w * 100}%`,
+              left: `${L1.pl.x * 100}%`,
+              top: `${L1.pl.y * 100}%`,
+              transform: `translate(-50%, -50%) rotate(${L1.pl.rot}deg) scaleX(${L1.pl.mirror ? -1 : 1})`,
+            }}
+            onPointerDown={down(i)}
+            onPointerMove={move}
+            onPointerUp={up}
+            onPointerCancel={up}
+            onWheel={(e) => i === cur && setPl({ ...pl, w: Math.min(1.4, Math.max(0.04, pl.w * (e.deltaY < 0 ? 1.05 : 0.95))) })}
+            role="img"
+            aria-label={t('Tattoo design — tap to select, drag to move', 'Tetoválásminta – koppints a kijelöléshez, húzd a helyére')}
+          >
+            <img src={L1.design.ink} alt="" draggable={false} />
+          </div>
+        ))}
+        {/* Canva-style frame, only while a tattoo is selected: corners resize, the top handle rotates */}
+        {sel && (
         <div
           className="ink-frame"
           style={{
@@ -1061,9 +1125,68 @@ export function PlaceStep({
           <i className="hdl rot" onPointerDown={handleDown('rotate')} onPointerMove={handleMove} onPointerUp={handleUp} onPointerCancel={handleUp} aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5M19 4v4h-4" /></svg>
           </i>
+          {cur > 0 && (
+            <button type="button" className="hdl-del" onPointerDown={(e) => e.stopPropagation()} onClick={() => removeLayer(cur)} aria-label={t('Remove this tattoo', 'Tetoválás eltávolítása')}>
+              ×
+            </button>
+          )}
         </div>
+        )}
+        {!sel && !drag && <span className="ed-hint">{t('Tap the tattoo to resize or rotate it', 'Koppints a tetoválásra a méretezéshez és forgatáshoz')}</span>}
         <span className="cm">≈ {cm.toFixed(cm < 10 ? 1 : 0)} cm</span>
       </div>
+      {setExtras && (
+        <div className="layer-bar">
+          {layers.length > 1 && (
+            <div className="layer-chips" role="group" aria-label={t('Tattoos on the photo', 'Tetoválások a fotón')}>
+              {layers.map((L1, i) => (
+                <button key={i} type="button" className={`layer-chip ${i === cur ? 'on' : ''}`} onClick={() => (setActive(i), setSel(true))}>
+                  <img src={L1.design.ink} alt="" /> {i + 1}.
+                </button>
+              ))}
+            </div>
+          )}
+          {extras.length < 3 && (
+            <button type="button" className="chipbtn add-layer" onClick={() => setAddOpen(true)}>
+              + {t('Add another tattoo', 'Még egy tetoválás hozzáadása')}
+            </button>
+          )}
+        </div>
+      )}
+      <Sheet open={addOpen} onClose={() => !addBusy && setAddOpen(false)} label={t('Add another tattoo', 'Még egy tetoválás')}>
+        <h2>{t('Add another tattoo', 'Még egy tetoválás')}</h2>
+        <p className="sub">{t('It goes on the same photo – drag it above, below or next to the first one.', 'Ugyanarra a fotóra kerül – húzd a másik fölé, alá vagy mellé.')}</p>
+        <input
+          ref={addRef}
+          className="file-hidden"
+          type="file"
+          accept="image/*,.heic,.heif"
+          tabIndex={-1}
+          aria-hidden="true"
+          onChange={async (e) => {
+            const f = e.target.files?.[0];
+            e.target.value = '';
+            if (!f) return;
+            try {
+              const pimg = await prepareImage(f, 1024, 'image/jpeg');
+              const probe = await processDesign(pimg.dataUrl, design0.mode).catch(() => null);
+              await addLayer(pimg.dataUrl, !!probe?.photoLike);
+            } catch {
+              toast(t('That file could not be opened.', 'Ezt a fájlt nem sikerült megnyitni.'));
+            }
+          }}
+        />
+        <button className="btn wide" disabled={addBusy} onClick={() => addRef.current?.click()}>
+          {addBusy ? t('Cutting it out…', 'Kivágás…') : t('Upload a picture', 'Kép feltöltése')}
+        </button>
+        <div className="layer-lib">
+          {DESIGNS.slice(0, 12).map((d) => (
+            <button key={d.id} type="button" disabled={addBusy} onClick={() => addLayer(d.src, false)} aria-label={t(d.en, d.hu)}>
+              <img src={d.thumb || d.src} alt="" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      </Sheet>
 
       </div>
       <div className="col-b">

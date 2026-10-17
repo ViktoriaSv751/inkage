@@ -278,3 +278,40 @@ export function skinVeil(skin: Skin, w: number, h: number) {
   }
   return c.toDataURL('image/png');
 }
+
+/** Several tattoos on one photo → one combined design and placement, so the rest of the pipeline stays the same. */
+export async function mergeLayers(photo: { w: number; h: number }, layers: { design: { ink: string; ratio: number; detail: number; mode: 'black' | 'color' }; pl: Placement }[]) {
+  const W = Math.max(64, Math.round(photo.w)), H = Math.max(64, Math.round(photo.h));
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext('2d')!;
+  for (const l of layers) {
+    const img = await loadImage(l.design.ink);
+    const w = l.pl.w * W;
+    const h = (w * img.naturalHeight) / img.naturalWidth;
+    ctx.save();
+    ctx.translate(l.pl.x * W, l.pl.y * H);
+    ctx.rotate((l.pl.rot * Math.PI) / 180);
+    if (l.pl.mirror) ctx.scale(-1, 1);
+    ctx.drawImage(img, -w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+  const d = ctx.getImageData(0, 0, W, H).data;
+  let minX = W, minY = H, maxX = -1, maxY = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 10) {
+    if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
+  }
+  if (maxX < 0) return null;
+  const pad = 4;
+  minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad); maxX = Math.min(W - 1, maxX + pad); maxY = Math.min(H - 1, maxY + pad);
+  const bw = maxX - minX + 1, bh = maxY - minY + 1;
+  const out = document.createElement('canvas');
+  out.width = bw;
+  out.height = bh;
+  out.getContext('2d')!.drawImage(c, minX, minY, bw, bh, 0, 0, bw, bh);
+  return {
+    design: { ink: out.toDataURL('image/png'), ratio: bh / bw, detail: Math.max(...layers.map((l) => l.design.detail)), mode: layers.some((l) => l.design.mode === 'color') ? ('color' as const) : ('black' as const) },
+    pl: { x: (minX + bw / 2) / W, y: (minY + bh / 2) / H, w: bw / W, rot: 0, mirror: false } as Placement,
+  };
+}
