@@ -56,7 +56,7 @@ export function freshPrompt(placement: string, size: string, extra = '') {
 export function placedPrompt(placement: string, colorMode: 'black' | 'color', extra = '') {
   return [
     'Image 1 is a real photo of a person. Image 2 is the same photo with a flat digital overlay that shows EXACTLY where the tattoo goes, how big it is and how it is rotated. Image 3 is the original tattoo design.',
-    `Turn the overlay into a real tattoo on the person's ${placement}: same position, same size, same rotation as in image 2. Use image 3 for the exact linework and details.`,
+    `Turn the overlay into a real tattoo on the person's ${placement}: same position, same size, same rotation and the same orientation as in image 2 – do not straighten, turn, tilt or flip it, even if it looks unusual. Image 3 is already turned to that final orientation. Use image 3 for the exact linework and details.`,
     'If image 3 shows anything besides the tattoo design itself (another person, their skin, clothes, a background), ignore all of that and transfer only the inked design.',
     colorMode === 'black'
       ? 'Use black ink only (no colours), as a skilled artist would execute this design.'
@@ -434,7 +434,7 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
 export type QC = { ok: boolean; match: number; note: string; fix: string };
 
 /** Compares the result with the design; returns false when it should be regenerated, with what to fix. */
-export async function qualityCheck(design: Img, result: Img): Promise<QC> {
+export async function qualityCheck(design: Img, result: Img, mockup?: Img | null): Promise<QC> {
   if (!process.env.GEMINI_API_KEY) return { ok: true, match: 10, note: '', fix: '' };
   try {
     const data = await geminiCall(textModels(), {
@@ -442,10 +442,10 @@ export async function qualityCheck(design: Img, result: Img): Promise<QC> {
         {
           role: 'user',
           parts: [
-            ...parts([design, result]),
+            ...parts(mockup ? [design, result, mockup] : [design, result]),
             {
-              text: `Image 1 is a tattoo design. Image 2 should be a realistic photo of a person with exactly that design tattooed on their skin. Reply with JSON only:
-{"designMatch": integer 0-10 (10 = same design, same elements and proportions),
+              text: `Image 1 is a tattoo design. Image 2 should be a realistic photo of a person with exactly that design tattooed on their skin.${mockup ? ' Image 3 is the same photo with a flat overlay showing exactly where the user placed the design, how big and how it is turned.' : ''} Reply with JSON only:
+{"designMatch": integer 0-10 (10 = same design, same elements and proportions),${mockup ? '\n "samePlacement": boolean (the tattoo in image 2 has the same position, size and rotation/orientation as the overlay in image 3; false if it is turned, tilted, flipped, moved or resized noticeably),' : ''}
  "looksReal": boolean (looks like real ink in skin, not a sticker or drawing),
  "anatomyOk": boolean (no distorted hands, extra fingers or broken body parts),
  "staysOnBody": boolean (every part of the tattoo is on skin; nothing is printed on clothing, jewellery, the background or objects),
@@ -463,11 +463,12 @@ export async function qualityCheck(design: Img, result: Img): Promise<QC> {
       j.looksReal === false ? 'it looked like a sticker or drawing: the ink must sit inside the skin with pores and texture showing through' : '',
       j.anatomyOk === false ? 'the body was distorted: keep hands, fingers and the body shape exactly as in the photo' : '',
       j.staysOnBody === false ? 'part of the tattoo was on clothing or the background: keep every line on bare skin only' : '',
+      mockup && j.samePlacement === false ? 'the tattoo was turned, moved or resized: it must have exactly the position, size and rotation of the overlay in image 2, do not straighten it' : '',
     ]
       .filter(Boolean)
       .join('; ');
     // a combined score so the better of two candidates can be picked
-    const score = match + (j.looksReal === false ? -3 : 0) + (j.anatomyOk === false ? -4 : 0) + (j.staysOnBody === false ? -4 : 0);
+    const score = match + (mockup && j.samePlacement === false ? -5 : 0) + (j.looksReal === false ? -3 : 0) + (j.anatomyOk === false ? -4 : 0) + (j.staysOnBody === false ? -4 : 0);
     return { ok: !fix, match: score, note: String(j.note || '').slice(0, 200), fix };
   } catch (e) {
     console.warn('qc failed', e);

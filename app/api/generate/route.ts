@@ -118,7 +118,7 @@ export async function POST(req: Request) {
     } else {
       // Generate, then check against the design (and analyse the skin at the same time).
       image = await protect(await run());
-      let [q, an] = await Promise.all([qualityCheck(designImg, dataUrlToImg(image)), analyse(dataUrlToImg(image))]);
+      let [q, an] = await Promise.all([qualityCheck(designImg, dataUrlToImg(image), mockup ? { ...mockup, name: 'mockup.jpg' } : null), analyse(dataUrlToImg(image))]);
       if (!q.ok) {
         // Two new candidates in parallel, told exactly what went wrong; keep the best of all three.
         console.warn('qc failed, retrying with feedback', q);
@@ -127,7 +127,7 @@ export async function POST(req: Request) {
             const img = await run(q.fix).catch(() => null);
             if (!img) return null;
             const safe = await protect(img);
-            return { img: safe, q: await qualityCheck(designImg, dataUrlToImg(safe)) };
+            return { img: safe, q: await qualityCheck(designImg, dataUrlToImg(safe), mockup ? { ...mockup, name: 'mockup.jpg' } : null) };
           })
         );
         for (const c of more) if (c && c.q.match > q.match) ((image = c.img), (q = c.q));

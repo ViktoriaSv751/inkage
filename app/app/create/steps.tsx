@@ -994,7 +994,9 @@ export function PlaceStep({
     }
     setSel(true);
     if (!pointers.current.size) remember();
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+    try {
+      (e.target as Element).setPointerCapture?.(e.pointerId);
+    } catch {}
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     snapshot(layers[i].pl);
     setDrag(true);
@@ -1026,7 +1028,9 @@ export function PlaceStep({
     e.stopPropagation();
     if (!box.current) return;
     remember();
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+    try {
+      (e.target as Element).setPointerCapture?.(e.pointerId);
+    } catch {}
     const r = box.current.getBoundingClientRect();
     const cx = r.left + pl.x * r.width, cy = r.top + pl.y * r.height;
     hd.current = { mode, cx, cy, d0: Math.hypot(e.clientX - cx, e.clientY - cy) || 1, a0: Math.atan2(e.clientY - cy, e.clientX - cx), pl };
