@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { sb } from '@/lib/sb';
+import { useScrollLock } from '@/lib/scrolllock';
 import { lsGet, lsSet, track } from '@/lib/store';
 import { tx, type Lang } from '@/lib/i18n';
 
@@ -42,17 +43,7 @@ export function AgeGate({ lang, userId }: { lang: Lang; userId: string | null })
 
   const open = state === 'ask' || state === 'under';
   // a fixed, non-scrolling page behind the dialog
-  useEffect(() => {
-    if (!open) return;
-    const h = document.documentElement, b = document.body;
-    const prev = [h.style.overflow, b.style.overflow];
-    h.style.overflow = 'hidden';
-    b.style.overflow = 'hidden';
-    return () => {
-      h.style.overflow = prev[0];
-      b.style.overflow = prev[1];
-    };
-  }, [open]);
+  useScrollLock(open);
 
   if (!open) return null;
   return (

@@ -31,6 +31,7 @@ export type Design = {
 export type Area = { box: [number, number, number, number]; angle: number };
 export type { Skin } from '@/lib/editor';
 import type { Skin } from '@/lib/editor';
+import { useScrollLock } from '@/lib/scrolllock';
 
 /** Place and size the design so it sits inside the detected body area, aligned with the limb. */
 export function fitToArea(area: Area, design: Design, photo: Photo): Placement {
@@ -752,6 +753,7 @@ function CameraSheet({ placement, onClose, onShot, onFallback }: { placement: st
   const vid = useRef<HTMLVideoElement>(null);
   const stream = useRef<MediaStream | null>(null);
   const [facing, setFacing] = useState<'environment' | 'user'>('environment');
+  useScrollLock(true);
 
   useEffect(() => {
     let dead = false;

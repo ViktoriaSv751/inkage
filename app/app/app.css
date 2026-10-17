@@ -79,10 +79,11 @@
 .danger { color: var(--red) !important; }
 
 /* ---------- sheets */
-.sheet-wrap { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, .38); display: grid; place-items: end center; animation: fade .18s; }
+.sheet-wrap { position: fixed; inset: 0; z-index: 60; background: #fff; display: grid; place-items: end center; animation: fade .18s; overscroll-behavior: contain; }
+:root[data-theme='dark'] .sheet-wrap { background: #000; }
 .sheet {
   position: relative; width: min(100%, 520px); max-height: 92dvh; overflow-y: auto;
-  background: var(--surface); border-radius: 28px 28px 0 0;
+  background: var(--surface); border-radius: 28px 28px 0 0; box-shadow: 0 -2px 30px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .06); overscroll-behavior: contain;
   padding: 26px 20px calc(26px + env(safe-area-inset-bottom));
   display: grid; gap: 12px; animation: rise .32s var(--ease);
 }

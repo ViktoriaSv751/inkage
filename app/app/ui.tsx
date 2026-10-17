@@ -8,6 +8,7 @@ import { PUBLIC } from '@/lib/public-config';
 import { haptic } from '@/lib/store';
 import { useApp } from './AppProvider';
 import { tx, huArticle } from '@/lib/i18n';
+import { useScrollLock } from '@/lib/scrolllock';
 import { ThemeToggle } from '../ThemeToggle';
 
 export const Icon = {
@@ -147,6 +148,7 @@ export function BottomNav() {
 }
 
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string }) {
+  useScrollLock(open);
   useEffect(() => {
     if (!open) return;
     const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();

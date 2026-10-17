@@ -9,6 +9,7 @@ import { LangPicker, type Lang } from './LangPicker';
 import { ThemeToggle } from './ThemeToggle';
 import { CookieConsent, CtaBar } from './SiteExtras';
 import './sitenav.css';
+import { useScrollLock } from '@/lib/scrolllock';
 
 const I = {
   home: <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" />,
@@ -29,6 +30,7 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
   const [scrolled, setScrolled] = useState(false);
   const [up, setUp] = useState(false);
   const [menu, setMenu] = useState(false);
+  useScrollLock(menu);
   const [ccOpen, setCcOpen] = useState(false);
   useEffect(() => {
     if (!menu) return;

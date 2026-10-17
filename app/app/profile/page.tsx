@@ -372,7 +372,7 @@ export default function ProfilePage() {
               <div className="pf-grid">
                 {mine.slice(0, 8).map((p) => (
                   <Link key={p.id} href={`/app/gallery?id=${p.id}`} className="pf-tile">
-                    {(p.images.y50 || p.images.y30 || p.images.fresh) && <img src={p.images.y50 || p.images.y30 || p.images.fresh} alt="" loading="lazy" />}
+                    {(p.images.fresh || p.images.y50) && <img src={p.images.fresh || p.images.y50} alt="" loading="lazy" />}
                     <span className="pf-tile-l">
                       <b>{placeName(p.placement, ui.lang)}</b>
                       {typeof p.score === 'number' && <small>{p.score}/100</small>}

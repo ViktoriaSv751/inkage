@@ -41,7 +41,7 @@ body:has(.sn-tabbar) { padding-bottom: calc(68px + env(safe-area-inset-bottom));
 .sn-burger { width: 42px; height: 42px; border-radius: 14px; border: 0; background: var(--surface); color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background .15s; }
 .sn-burger svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .sn-burger:hover { background: var(--surface-2); }
-.sn-drawer-wrap { position: fixed; inset: 0; z-index: 90; background: rgba(13, 11, 20, .28); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; pointer-events: none; transition: opacity .25s; font-family: 'Geist Sans', system-ui, sans-serif; }
+.sn-drawer-wrap { position: fixed; inset: 0; z-index: 90; background: var(--bg, #fff); opacity: 0; pointer-events: none; transition: opacity .25s; font-family: 'Geist Sans', system-ui, sans-serif; }
 .sn-drawer-wrap.open { opacity: 1; pointer-events: auto; }
 .sn-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: var(--bg); display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); transform: translateX(104%); transition: transform .38s cubic-bezier(.2, .85, .2, 1); box-shadow: -40px 0 80px -40px rgba(13, 11, 20, .4); }
 @media (min-width: 480px) { .sn-drawer { top: 10px; right: 10px; bottom: 10px; border-radius: 30px; width: calc(100% - 20px); } }

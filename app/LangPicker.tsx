@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './langpicker.css';
+import { useScrollLock } from '@/lib/scrolllock';
 
 export type Lang = 'en' | 'hu';
 const LANGS: { k: Lang; name: string; en: string; hu: string; flag: string }[] = [
@@ -16,6 +17,7 @@ const LANGS: { k: Lang; name: string; en: string; hu: string; flag: string }[] =
  */
 export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: Lang; onPick: (l: Lang) => void; variant?: 'pill' | 'row' | 'icon'; label?: string }) {
   const [open, setOpen] = useState(false);
+  useScrollLock(open);
   const [sel, setSel] = useState<Lang>(lang);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

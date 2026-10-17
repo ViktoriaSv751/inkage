@@ -13,7 +13,8 @@ import { placeName } from '../create/steps';
 import { abShare, shareVoteLink } from '@/lib/share';
 import { trErr } from '@/lib/i18n';
 
-const thumb = (p: Preview) => p.images.y50 || p.images.y30 || p.removal?.laser10 || p.removal?.laser6 || p.images.fresh || '';
+// the card shows how it looks now (fresh); the years are one tap away in the detail view
+const thumb = (p: Preview) => p.images.fresh || p.images.y10 || p.images.y50 || p.removal?.laser10 || '';
 const PAGE = 120;
 type Sort = 'new' | 'old' | 'score' | 'place';
 type Kind = 'any' | 'new' | 'existing' | 'removal';

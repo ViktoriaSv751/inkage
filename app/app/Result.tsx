@@ -12,6 +12,7 @@ import { artistPdf } from '@/lib/brief';
 import { aftercareIcs, CARE } from '@/lib/aftercare';
 import { placeName } from './create/steps';
 import { longevity } from '@/lib/score';
+import { useScrollLock } from '@/lib/scrolllock';
 
 const toBlob = async (src: string) => (await fetch(src)).blob();
 
@@ -170,6 +171,7 @@ export function Result({
   const [mode, setMode] = useState<'view' | 'split'>('view');
   const [split, setSplit] = useState(50);
   const [zoom, setZoom] = useState(false);
+  useScrollLock(!!zoom);
   const [video, setVideo] = useState(false);
   const [care, setCare] = useState(false);
   const [sharing, setSharing] = useState(false);
