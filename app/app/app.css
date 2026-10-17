@@ -940,3 +940,8 @@ input.switch:checked::after { transform: translateX(18px); }
 .rm-banner small { opacity: .85; }
 .rm-banner-ico { width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 255, 255, .16); display: grid; place-items: center; flex: none; }
 .rm-banner .chipbtn { background: rgba(255, 255, 255, .16); color: #fff; box-shadow: none; white-space: nowrap; }
+
+/* easy to grab, even small tattoos: a larger invisible touch area around each one */
+.editor .ink::before { content: ''; position: absolute; inset: -22px; }
+.frame-hit { position: absolute; inset: -26px; pointer-events: auto; touch-action: none; cursor: grab; z-index: 0; }
+.ink-frame .hdl, .ink-frame .hdl-del { z-index: 1; }

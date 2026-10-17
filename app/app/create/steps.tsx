@@ -1119,6 +1119,8 @@ export function PlaceStep({
             transform: `translate(-50%, -50%) rotate(${pl.rot}deg)`,
           }}
         >
+          {/* the whole framed area (and a margin around it) drags the selected tattoo – easy even when it is tiny */}
+          <div className="frame-hit" onPointerDown={down(cur)} onPointerMove={move} onPointerUp={up} onPointerCancel={up} aria-hidden="true" />
           {(['nw', 'ne', 'se', 'sw'] as const).map((c) => (
             <i key={c} className={`hdl ${c}`} onPointerDown={handleDown('scale')} onPointerMove={handleMove} onPointerUp={handleUp} onPointerCancel={handleUp} aria-hidden="true" />
           ))}
