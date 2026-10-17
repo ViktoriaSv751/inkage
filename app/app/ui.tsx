@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { haptic } from '@/lib/store';
@@ -108,6 +108,20 @@ export function DeskTheme() {
 export function BottomNav() {
   const path = usePathname();
   const { ui } = useApp();
+  const router = useRouter();
+  const [going, setGoing] = useState<string | null>(null);
+  useEffect(() => setGoing(null), [path]);
+  // every tab is ready before it is tapped
+  useEffect(() => {
+    for (const h of ['/app', '/app/gallery', '/app/explore', '/app/profile']) router.prefetch(h);
+  }, [router]);
+  // phones: go on the finger lift itself – iPhone Safari sometimes swallows the first "click" near the bottom edge
+  const lastTouch = useRef(0);
+  const go = (href: string) => {
+    haptic();
+    setGoing(href);
+    if (href !== path) router.push(href);
+  };
   const items = [
     { href: '/app', label: ui.t('nav.create'), icon: Icon.plus },
     { href: '/app/gallery', label: ui.t('nav.gallery'), icon: Icon.grid },
@@ -128,7 +142,22 @@ export function BottomNav() {
       {items.map((it, i) => {
         const on = it.href === '/app' ? path === '/app' : path?.startsWith(it.href);
         return (
-          <Link key={it.href} href={it.href} className={`${i === 0 ? 'cta' : ''} ${on ? 'on' : ''}`} aria-current={on ? 'page' : undefined} onClick={() => haptic()}>
+          <Link
+            key={it.href}
+            href={it.href}
+            className={`${i === 0 ? 'cta' : ''} ${(going ? going === it.href : on) ? 'on' : ''}`}
+            aria-current={on ? 'page' : undefined}
+            onPointerUp={(e) => {
+              if (e.pointerType !== 'touch') return;
+              lastTouch.current = Date.now();
+              go(it.href);
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              if (Date.now() - lastTouch.current < 800) return; // already handled on the touch
+              go(it.href);
+            }}
+          >
             {it.icon}
             <span>{it.label}</span>
           </Link>
