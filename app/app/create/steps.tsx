@@ -1270,7 +1270,7 @@ export function PlaceStep({
               ))}
             </div>
           )}
-          {extras.length < 3 && (
+          {extras.length < 5 && (
             <button type="button" className="chipbtn add-layer" onClick={() => setAddOpen(true)}>
               + {t('Add another tattoo', 'Még egy tetoválás hozzáadása')}
             </button>
