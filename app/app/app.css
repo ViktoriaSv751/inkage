@@ -932,3 +932,11 @@ input.switch:checked::after { transform: translateX(18px); }
 .layer-lib { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .layer-lib button { aspect-ratio: 1; border: 0; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); padding: 6px; cursor: pointer; }
 .layer-lib img { width: 100%; height: 100%; object-fit: contain; }
+
+/* laser removal view: unmistakable header */
+.rm-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 12px; padding: 14px 16px; border-radius: 20px; background: linear-gradient(135deg, #2a1052, #5b3df5); color: #fff; animation: delpop .3s var(--ease); }
+.rm-banner > div { flex: 1 1 180px; display: grid; gap: 2px; }
+.rm-banner b { font-size: 17px; }
+.rm-banner small { opacity: .85; }
+.rm-banner-ico { width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 255, 255, .16); display: grid; place-items: center; flex: none; }
+.rm-banner .chipbtn { background: rgba(255, 255, 255, .16); color: #fff; box-shadow: none; white-space: nowrap; }

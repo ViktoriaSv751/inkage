@@ -376,6 +376,23 @@ export function Result({
         </div>
       )}
 
+      {view === 'removal' && (
+        <div className="rm-banner" role="status">
+          <span className="rm-banner-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3" /><circle cx="12" cy="12" r="2.5" /></svg>
+          </span>
+          <div>
+            <b>{t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</b>
+            <small>{removalPending.length > 0 ? t('Simulating 3, 6 and 10 sessions – about a minute', '3, 6 és 10 kezelés szimulálása – kb. egy perc') : t('How it would fade after 3, 6 and 10 laser sessions', 'Így halványulna 3, 6 és 10 lézeres kezelés után')}</small>
+          </div>
+          {ready.length > 1 && (
+            <button className="chipbtn" onClick={() => (setView('aging'), window.scrollTo({ top: 0, behavior: 'smooth' }))}>
+              {t('Back to aging', 'Vissza az öregedéshez')}
+            </button>
+          )}
+        </div>
+      )}
+
       <div
         className="res-viewer"
         onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
@@ -678,6 +695,9 @@ export function Result({
             className="list-row"
             onClick={() => {
               setView('removal');
+              haptic();
+              // jump to the top so the laser preview is the first thing you see
+              window.scrollTo({ top: 0, behavior: 'smooth' });
               if (!remCount && !removalPending.length) onRemoval();
             }}
             disabled={!img.fresh || pending.length > 0}
