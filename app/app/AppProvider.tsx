@@ -128,7 +128,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-      <AgeGate lang={ui.lang} />
+      <AgeGate lang={ui.lang} userId={me.user?.id || null} />
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>

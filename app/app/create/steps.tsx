@@ -255,8 +255,10 @@ export function StudioStep({
       haptic();
       track('photo_added');
       runCheck(p, placement);
-    } catch {
-      toast(t('That file could not be opened. Try a JPG or PNG.', 'Ezt a fájlt nem sikerült megnyitni. JPG vagy PNG legyen.'));
+    } catch (e) {
+      const f = file as File;
+      track('photo_open_error', { type: f.type || '?', ext: (f.name || '').split('.').pop()?.slice(0, 8) || '', kb: Math.round((f.size || 0) / 1024), msg: String((e as Error)?.message || e).slice(0, 120) });
+      toast(t('That file could not be opened. Try a JPG, PNG or HEIC photo.', 'Ezt a fájlt nem sikerült megnyitni. JPG, PNG vagy HEIC fotó legyen.'));
     }
   };
 
@@ -509,8 +511,8 @@ export function StudioStep({
         <a href={ui.lang === 'hu' ? '/privacy' : '/privacy?lang=en'}>{t('Privacy', 'Adatvédelem')}</a>
       </p>
 
-      <input ref={photoRef} id="photo-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
-      <input ref={designRef} id="design-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
+      <input ref={photoRef} id="photo-input" type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
+      <input ref={designRef} id="design-input" type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
 
       {!existing && design?.original && (
         <div className={`cmpcut ${design.match !== undefined && design.match >= 0 && design.match < 7 ? 'warn' : ''}`}>

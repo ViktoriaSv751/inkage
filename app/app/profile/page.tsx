@@ -87,7 +87,7 @@ export default function ProfilePage() {
     setAccBusy('avatar');
     try {
       const { shrink } = await import('@/lib/store');
-      const url = URL.createObjectURL(file);
+      const url = URL.createObjectURL(await import('@/lib/client').then((m) => m.decodable(file)));
       const blob = await shrink(url, 512, 0.86);
       URL.revokeObjectURL(url);
       const path = `${me.user.id}/profile/avatar.jpg`;
@@ -621,7 +621,7 @@ export default function ProfilePage() {
           <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
             <label className="chipbtn" style={{ cursor: 'pointer' }}>
               {accBusy === 'avatar' ? t('Uploading…', 'Feltöltés…') : t('Upload a picture', 'Kép feltöltése')}
-              <input type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && pickAvatar(e.target.files[0])} />
+              <input type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => e.target.files?.[0] && pickAvatar(e.target.files[0])} />
             </label>
             {meta.avatar && (
               <button className="chipbtn" onClick={removeAvatar}>

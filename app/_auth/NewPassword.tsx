@@ -40,7 +40,7 @@ export function NewPassword({ lang }: { lang: 'en' | 'hu' }) {
     setBusy(false);
     if (error) return setErr(error.message);
     setDone(true);
-    setTimeout(() => router.replace('/app/profile'), 1600);
+    setTimeout(() => router.replace('/app/gallery'), 1600);
   };
   return (
     <div className="au au-single">

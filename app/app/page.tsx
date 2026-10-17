@@ -171,7 +171,9 @@ export default function CreatePage() {
 
   // signed-in users who onboarded on another device skip it too
   useEffect(() => {
-    if (phase === 'onboarding' && me.onboarding?.placement && !againRef.current) {
+    // any saved answers count – the questions are asked once per person, not once per device
+    if (phase === 'onboarding' && me.onboarding && Object.keys(me.onboarding).length > 0 && !againRef.current) {
+      lsSet('ink_onboarding', me.onboarding);
       applyOnboarding(me.onboarding);
       setPhase('studio');
     }
@@ -545,8 +547,9 @@ export default function CreatePage() {
           if (againRef.current) {
             againRef.current = false;
             history.replaceState(null, '', '/app');
-            if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang }).then(() => {}, () => {});
           }
+          // keep the answers on the account so no other device or sign-in asks again
+          if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang }).then(() => {}, () => {});
           setPhase('studio');
         }}
       />

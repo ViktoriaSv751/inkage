@@ -69,7 +69,7 @@ export function RealVsPreview({ preview, onChange }: { preview: Preview; onChang
   const add = async (file: File) => {
     setBusy(true);
     try {
-      const url = URL.createObjectURL(file);
+      const url = URL.createObjectURL(await import('@/lib/client').then((m) => m.decodable(file)));
       const src = await blobToDataUrl(await shrink(url, 1080, 0.86));
       URL.revokeObjectURL(url);
       const at = Date.now();
@@ -117,7 +117,7 @@ export function RealVsPreview({ preview, onChange }: { preview: Preview; onChang
       })}
       <label className="btn ghost wide" style={{ cursor: 'pointer', marginTop: 4 }}>
         {busy ? '…' : t('Add a photo of the real tattoo', 'Fotó a valódi tetoválásról')}
-        <input type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && add(e.target.files[0])} />
+        <input type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => e.target.files?.[0] && add(e.target.files[0])} />
       </label>
     </div>
   );

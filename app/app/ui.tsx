@@ -193,7 +193,7 @@ export function AuthSheet() {
       if (e) setErr(e);
       return;
     }
-    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/profile` } })) || {};
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery` } })) || {};
     if (error) setErr(error.message);
   };
 
@@ -202,7 +202,7 @@ export function AuthSheet() {
     if (!s) return;
     setBusy(true);
     setErr('');
-    const { error } = await s.auth.signInWithOtp({ email, options: { emailRedirectTo: `${location.origin}/app/profile`, shouldCreateUser: true } });
+    const { error } = await s.auth.signInWithOtp({ email, options: { emailRedirectTo: `${location.origin}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
     if (error) return setErr(/rate/i.test(error.message) ? L('Too many emails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
     setSent(true);

@@ -34,7 +34,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
   useEffect(() => {
     sb()
       ?.auth.getSession()
-      .then(({ data }) => data.session && router.replace('/app/profile'));
+      .then(({ data }) => data.session && router.replace('/app/gallery'));
     const url = PUBLIC.supabaseUrl,
       key = PUBLIC.supabaseAnonKey;
     if (url && key)
@@ -74,18 +74,18 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_ok', { mode: 'password' });
-    router.replace('/app/profile');
+    router.replace('/app/gallery');
   };
   const signupPw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!okEmail || pw.length < 8 || !agree || busy) return;
     setBusy(true);
     setErr('');
-    const { data, error } = (await sb()?.auth.signUp({ email: email.trim(), password: pw, options: { data: { full_name: name.trim() }, emailRedirectTo: `${location.origin}/app/profile` } })) || ({ error: { message: 'unavailable' } } as any);
+    const { data, error } = (await sb()?.auth.signUp({ email: email.trim(), password: pw, options: { data: { full_name: name.trim() }, emailRedirectTo: `${location.origin}/app/gallery` } })) || ({ error: { message: 'unavailable' } } as any);
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_signup');
-    if (data?.session) return router.replace('/app/profile');
+    if (data?.session) return router.replace('/app/gallery');
     setSentKind('confirm');
     setStep('sent');
   };
@@ -109,7 +109,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
     if (!s) return setErr(T('Sign-in is not available right now.', 'A belépés most nem érhető el.'));
     setBusy(true);
     setErr('');
-    const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${location.origin}/app/profile`, shouldCreateUser: true } });
+    const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${location.origin}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
     if (error) return setErr(/rate/i.test(error.message) ? T('Too many e-mails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
     track(mode === 'login' ? 'auth_code_login' : 'auth_code_signup');
@@ -126,7 +126,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
     setBusy(false);
     if (error) return setErr(T('That code didn’t work. Use the newest e-mail.', 'Ez a kód nem jó. A legfrissebb e-mailt használd.'));
     track('auth_ok', { mode });
-    router.replace('/app/profile');
+    router.replace('/app/gallery');
   };
 
   const setDigit = (i: number, v: string) => {
@@ -157,7 +157,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
       if (e) setErr(e);
       return;
     }
-    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/profile` } })) || {};
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery` } })) || {};
     if (error) setErr(error.message);
   };
 

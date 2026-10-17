@@ -35,7 +35,7 @@ async function finishAuth(url: string) {
     const { Browser } = await import('@capacitor/browser');
     Browser.close().catch(() => {});
   }
-  location.replace('/app/profile');
+  location.replace('/app/gallery');
 }
 
 /** Called once when the app starts inside the native shell. */

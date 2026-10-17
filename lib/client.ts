@@ -20,7 +20,23 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 /** Read a File, fix orientation, downscale to maxSide, return data URL + size. */
-export async function prepareImage(file: File, maxSide = 1024, type = 'image/jpeg') {
+const isHeic = (f: File | Blob) => /heic|heif/i.test(f.type) || /\.(heic|heif)$/i.test((f as File).name || '');
+
+/** iPhone photos (HEIC/HEIF) can't be decoded by Chrome, Firefox or Android: convert them to JPEG first. */
+export async function decodable(file: File): Promise<File | Blob> {
+  if (!isHeic(file)) return file;
+  try {
+    // Safari can decode HEIC itself
+    await createImageBitmap(file);
+    return file;
+  } catch {}
+  const heic2any = (await import('heic2any')).default as (o: { blob: Blob; toType: string; quality: number }) => Promise<Blob | Blob[]>;
+  const out = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+  return Array.isArray(out) ? out[0] : out;
+}
+
+export async function prepareImage(input: File, maxSide = 1024, type = 'image/jpeg') {
+  const file = (await decodable(input)) as File;
   const url = URL.createObjectURL(file);
   try {
     let src: CanvasImageSource & { width: number; height: number };

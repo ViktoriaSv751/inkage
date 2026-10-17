@@ -85,7 +85,7 @@ export default function Landing() {
               {t('Open the app', 'App megnyitása')}
             </Link>
           </div>
-          <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) startWithPhoto(f); e.target.value = ''; }} />
+          <input ref={fileRef} type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) startWithPhoto(f); e.target.value = ''; }} />
           <p className="fine" style={{ textAlign: 'left' }}>
             {made >= 100
               ? t(`${made.toLocaleString('en')} previews made so far. No sign-up, about a minute.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Regisztráció nélkül, kb. egy perc.`)

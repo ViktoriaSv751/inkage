@@ -875,9 +875,11 @@ input.switch:checked::after { transform: translateX(18px); }
 .uv-box span { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
 .uv-adv { grid-column: 1 / -1; margin: 4px 2px 0; font-size: 14.5px; line-height: 1.5; }
 
-/* 18+ gate */
-.age-gate { position: fixed; inset: 0; z-index: 1000; background: rgba(10, 10, 12, .72); display: grid; place-items: center; padding: 16px; backdrop-filter: blur(6px); }
-.age-card { background: var(--surface, #fff); color: var(--ink, #111); border-radius: 24px; padding: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, .3); }
-.age-card h2 { margin: 0 0 8px; }
-.age-card p { margin: 0 0 16px; }
+/* 18+ gate: plain white, fixed page behind it */
+.age-gate { position: fixed; inset: 0; z-index: 2000; background: #fff; display: grid; place-items: center; padding: 16px; overscroll-behavior: contain; touch-action: none; }
+.age-card { background: #fff; color: #111; border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, .12), 0 0 0 1px rgba(0, 0, 0, .06); touch-action: auto; }
+.age-card h2 { margin: 0 0 8px; color: #111; }
+.age-card p { margin: 0 0 16px; color: #444; }
+.age-card a { color: #111; }
 .age-actions { display: grid; gap: 10px; margin-bottom: 8px; }
+.age-card .btn.ghost { background: #fff; color: #111; box-shadow: inset 0 0 0 1px #ddd; }
