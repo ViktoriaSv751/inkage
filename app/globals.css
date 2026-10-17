@@ -235,3 +235,6 @@ footer a { text-decoration: none; }
 :root[data-theme='dark'] .ab-btn.dark,
 :root[data-theme='dark'] .sn-tabbar a.cta svg,
 :root[data-theme='dark'] .ka-ol li::before { color: var(--bg); }
+
+/* pages never wiggle sideways (no horizontal scroll or rubber-banding on phones) */
+html, body { overflow-x: hidden; overflow-x: clip; overscroll-behavior-x: none; }

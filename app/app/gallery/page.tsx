@@ -7,8 +7,8 @@ import { useApp } from '../AppProvider';
 import { Icon, Sheet } from '../ui';
 import { Result } from '../Result';
 import { HealDiary, RealVsPreview } from './AfterCare';
-import { tx } from '@/lib/i18n';
-import { cloud, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
+import { huArticle, tx } from '@/lib/i18n';
+import { cloud, haptic, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
 import { placeName } from '../create/steps';
 import { abShare, shareVoteLink } from '@/lib/share';
 import { trErr } from '@/lib/i18n';
@@ -39,6 +39,7 @@ export default function GalleryPage() {
   const [folder, setFolder] = useState<string | null>(null);
   const [newFolder, setNewFolder] = useState('');
   const [foldersOpen, setFoldersOpen] = useState(false);
+  const [newOpen, setNewOpen] = useState(false);
   const [moveOpen, setMoveOpen] = useState(false);
   const [extraFolders, setExtraFolders] = useState<string[]>(() => lsGet<string[]>('ink_folders', []));
   const [rename, setRename] = useState<{ from: string; to: string } | null>(null);
@@ -107,20 +108,18 @@ export default function GalleryPage() {
     for (const s of shares.forPreview(p.id)) if (s.kind !== 'preview') await revokeGuestShare(s.id).catch(() => false);
     shares.all().filter((s) => s.previewId === p.id).forEach((s) => shares.drop(s.id));
   };
-  const remove = async (p: Preview) => {
-    if (!confirmDelete()) return;
-    try {
-      await destroy(p);
-      setItems((all) => all?.filter((i) => i.id !== p.id) ?? null);
-      setOpen(null);
-      toast(t('Deleted, with its vote links', 'Törölve, a szavazós linkjeivel együtt'));
-    } catch {
-      toast(t('Could not delete it. Try again.', 'Nem sikerült törölni. Próbáld újra.'));
-    }
-  };
-  const removePicked = async () => {
-    if (!confirmDelete()) return;
+  // deleting asks first, in a clear confirm sheet with the pictures that will go
+  const [delAsk, setDelAsk] = useState<Preview[] | null>(null);
+  const [delBusy, setDelBusy] = useState(false);
+  const remove = (p: Preview) => setDelAsk([p]);
+  const removePicked = () => {
     const list = (items || []).filter((p) => picked.includes(p.id));
+    if (list.length) setDelAsk(list);
+  };
+  const doDelete = async () => {
+    const list = delAsk || [];
+    if (!list.length) return;
+    setDelBusy(true);
     let ok = 0;
     for (const p of list) {
       try {
@@ -128,24 +127,45 @@ export default function GalleryPage() {
         ok++;
       } catch {}
     }
-    setItems((all) => all?.filter((i) => !picked.includes(i.id) || !list.some((p) => p.id === i.id)) ?? null);
-    await load();
-    setPicked([]);
-    setMode('browse');
-    toast(t(`${ok} deleted`, `${ok} törölve`));
-  };
-  // a soft in-app confirm (no browser dialogs)
-  const [armed, setArmed] = useState(false);
-  const confirmDelete = () => {
-    if (armed) {
-      setArmed(false);
-      return true;
+    setDelBusy(false);
+    setDelAsk(null);
+    const gone = new Set(list.map((p) => p.id));
+    setItems((all) => all?.filter((i) => !gone.has(i.id)) ?? null);
+    if (open && gone.has(open.id)) setOpen(null);
+    if (list.length > 1) {
+      await load();
+      setPicked([]);
+      setMode('browse');
     }
-    setArmed(true);
-    toast(t('Tap delete again to confirm', 'Koppints újra a törléshez'));
-    setTimeout(() => setArmed(false), 3000);
-    return false;
+    if (!ok) return toast(t('Could not delete it. Try again.', 'Nem sikerült törölni. Próbáld újra.'));
+    haptic('success');
+    toast(list.length > 1 ? t(`${ok} designs deleted`, `${ok} terv törölve`) : t('Deleted, with its vote links', 'Törölve, a szavazós linkjeivel együtt'));
   };
+  const delSheet = (
+    <Sheet open={!!delAsk} onClose={() => !delBusy && setDelAsk(null)} label={t('Delete', 'Törlés')}>
+      <div className="del-ask">
+        <div className="del-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13M10 11v6M14 11v6" /></svg>
+        </div>
+        <h2>{(delAsk?.length || 0) > 1 ? t(`Delete ${delAsk!.length} designs?`, `Biztosan törlöd a kijelölt ${delAsk!.length} tervet?`) : t('Delete this design?', 'Biztosan törlöd ezt a tervet?')}</h2>
+        <div className="del-thumbs">
+          {(delAsk || []).slice(0, 4).map((p) => (
+            <span key={p.id} className="del-thumb">
+              {thumb(p) && <img src={thumb(p)} alt="" />}
+            </span>
+          ))}
+          {(delAsk?.length || 0) > 4 && <span className="del-thumb more">+{delAsk!.length - 4}</span>}
+        </div>
+        <p className="sub">{t('The pictures, the notes and its vote links are deleted for good. This cannot be undone.', 'A képek, a jegyzetek és a szavazós linkek is véglegesen törlődnek. Ez nem vonható vissza.')}</p>
+        <button className="btn wide danger-btn" onClick={doDelete} disabled={delBusy}>
+          {delBusy ? t('Deleting…', 'Törlés…') : t('Yes, delete', 'Igen, törlöm')}
+        </button>
+        <button className="btn wide ghost" onClick={() => setDelAsk(null)} disabled={delBusy}>
+          {t('Cancel', 'Mégse')}
+        </button>
+      </div>
+    </Sheet>
+  );
 
   /** Start a new preview with the same design and body area. */
   const again = (p: Preview) => {
@@ -184,7 +204,7 @@ export default function GalleryPage() {
             {Icon.back}
           </button>
           <h1>{placeName(open.placement, ui.lang)}</h1>
-          <button className="iconbtn" aria-label={t('Delete', 'Törlés')} onClick={() => remove(open)} style={armed ? { background: 'var(--fresh)', color: '#fff' } : undefined}>
+          <button className="iconbtn" aria-label={t('Delete', 'Törlés')} onClick={() => remove(open)}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" /></svg>
           </button>
         </div>
@@ -199,23 +219,56 @@ export default function GalleryPage() {
               {open.doneAt ? t('Undo', 'Visszavon') : t('✓ I got it done', '✓ Megcsináltattam')}
             </button>
           </div>
-          <div className="folderrow">
-            <span>{t('Folder', 'Mappa')}</span>
-            {folders.map((f) => (
-              <button key={f} className={`chip ${open.collection === f ? 'on' : ''}`} onClick={() => update(open, { collection: open.collection === f ? null : f })}>
-                {f}
-              </button>
-            ))}
-            <form
-              className="newfolder"
-              onSubmit={(e) => {
-                e.preventDefault();
-                addFolder(newFolder, open);
-              }}
-            >
-              <input className="text" id="new-folder" placeholder={t('New folder', 'Új mappa')} maxLength={30} value={newFolder} onChange={(e) => setNewFolder(e.target.value)} />
-              {newFolder.trim() && <button className="chipbtn">{t('Add', 'Hozzáad')}</button>}
-            </form>
+          <div className="folderbox">
+            <div className="folderbox-head">
+              <span className="folderbox-ico" aria-hidden="true">📁</span>
+              <div>
+                <b>{t('Folder', 'Mappa')}</b>
+                <small>{open.collection ? t(`In “${open.collection}”`, `Ebben a mappában: „${open.collection}”`) : t('Not in a folder yet', 'Még nincs mappában')}</small>
+              </div>
+            </div>
+            <div className="folderchips">
+              {folders.map((f) => {
+                const on = open.collection === f;
+                return (
+                  <button
+                    key={f}
+                    className={`folderchip ${on ? 'on' : ''}`}
+                    aria-pressed={on}
+                    onClick={() => {
+                      update(open, { collection: on ? null : f });
+                      haptic();
+                      toast(on ? t(`Removed from “${f}”`, `Kivéve a(z) „${f}” mappából`).replace('a(z) ', huArticle(f) + ' ') : t(`Added to “${f}” ✓`, `Hozzáadva a(z) „${f}” mappához ✓`).replace('a(z) ', huArticle(f) + ' '));
+                    }}
+                  >
+                    <span aria-hidden="true">{on ? '✓' : '📁'}</span> {f}
+                  </button>
+                );
+              })}
+              {!newOpen && (
+                <button className="folderchip add" onClick={() => setNewOpen(true)}>
+                  + {t('New folder', 'Új mappa')}
+                </button>
+              )}
+            </div>
+            {newOpen && (
+              <form
+                className="newfolder big"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const n = newFolder.trim();
+                  if (!n) return;
+                  addFolder(n, open);
+                  setNewOpen(false);
+                  haptic('success');
+                  toast(t(`Folder “${n}” created and added ✓`, `„${n}” mappa létrehozva, a terv benne van ✓`));
+                }}
+              >
+                <input className="text" id="new-folder" autoFocus placeholder={t('Folder name, e.g. Arm ideas', 'Mappa neve, pl. Kar ötletek')} maxLength={30} value={newFolder} onChange={(e) => setNewFolder(e.target.value)} />
+                <button className="btn" disabled={!newFolder.trim()}>{t('Create', 'Létrehoz')}</button>
+                <button type="button" className="chipbtn" onClick={() => (setNewOpen(false), setNewFolder(''))}>{t('Cancel', 'Mégse')}</button>
+              </form>
+            )}
           </div>
           <button className="chipbtn" style={{ marginTop: 10 }} onClick={() => again(open)}>
             {Icon.rotate} {t('New preview with this design', 'Új előnézet ezzel a mintával')}
@@ -241,6 +294,7 @@ export default function GalleryPage() {
           onDone={(d) => update(open, { doneAt: d })}
           startView={isRemoval(open) ? 'removal' : 'aging'}
         />
+        {delSheet}
       </>
     );
 
@@ -389,7 +443,7 @@ export default function GalleryPage() {
             <button className="chipbtn" disabled={!picked.length} onClick={() => setMoveOpen(true)}>
               📁 {t('Move', 'Mappába')}
             </button>
-            <button className="chipbtn danger" disabled={!picked.length} onClick={removePicked} style={armed ? { background: 'var(--fresh)', color: '#fff' } : undefined}>
+            <button className="chipbtn danger" disabled={!picked.length} onClick={removePicked}>
               {t('Delete', 'Törlés')}
             </button>
           </div>
@@ -605,11 +659,12 @@ export default function GalleryPage() {
           const best = pair.reduce((a, b) => ((a.score || 0) >= (b.score || 0) ? a : b));
           return (
             <p className="sub">
-              {t(`The ${placeName(best.placement, 'en').toLowerCase()} version should age best (${best.score}/100).`, `A(z) ${placeName(best.placement, 'hu').toLowerCase()} változat öregszik várhatóan a legjobban (${best.score}/100).`)}
+              {t(`The ${placeName(best.placement, 'en').toLowerCase()} version should age best (${best.score}/100).`, `${huArticle(placeName(best.placement, 'hu')) === 'az' ? 'Az' : 'A'} ${placeName(best.placement, 'hu').toLowerCase()} változat öregszik várhatóan a legjobban (${best.score}/100).`)}
             </p>
           );
         })()}
       </Sheet>
+      {delSheet}
     </>
   );
 }
