@@ -100,6 +100,14 @@ export function PlacementPicker({ value, onChange }: { value: string; onChange: 
 
 // ================================================================ studio: photo + design on one screen
 
+/** Never let a stuck image decode freeze the screen silently. */
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return new Promise((res, rej) => {
+    const t = setTimeout(() => rej(new Error('timeout')), ms);
+    p.then((v) => (clearTimeout(t), res(v)), (e) => (clearTimeout(t), rej(e)));
+  });
+}
+
 /** The last few photos the user added, to pick again with one tap. */
 type Recent = { d: string; w: number; h: number };
 function recentGet(): Recent[] {
@@ -152,6 +160,8 @@ export function StudioStep({
   const { ui, toast } = useApp();
   const t = L(ui.lang);
   const photoRef = useRef<HTMLInputElement>(null);
+  // a fresh file input after every pick: some phones stop reporting a new choice on a reused input
+  const [inputKey, setInputKey] = useState(0);
   const designRef = useRef<HTMLInputElement>(null);
   const [cam, setCam] = useState(false);
   const [check, setCheck] = useState<CheckState>({ state: photo ? 'ok' : 'idle' });
@@ -249,7 +259,7 @@ export function StudioStep({
 
   const takePhoto = async (file: File | Blob) => {
     try {
-      const p = await prepareImage(file as File, 1024);
+      const p = await withTimeout(prepareImage(file as File, 1024), 20000);
       setPhoto(p);
       recentAdd(p);
       haptic();
@@ -313,7 +323,7 @@ export function StudioStep({
   const designFromFile = async (f: File | Blob, src: string) => {
     let p: Photo;
     try {
-      p = await prepareImage(f as File, 1024, 'image/jpeg');
+      p = await withTimeout(prepareImage(f as File, 1024, 'image/jpeg'), 20000);
     } catch {
       return toast(t('That design could not be opened. Try another image.', 'Ezt a mintát nem sikerült megnyitni. Próbálj másik képet.'));
     }
@@ -430,7 +440,7 @@ export function StudioStep({
       <h2 className="sec-title">{existing ? t('Photo of your tattoo', 'Fotó a tetoválásodról') : t('Your photo and the design', 'A fotód és a minta')}</h2>
       <div className={`studio-slots ${existing ? 'one' : ''}`}>
         <div className="studio-col">
-          <button className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => photoRef.current?.click()} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
+          <button className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => { track('photo_pick_open'); photoRef.current?.click(); }} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
             {photo ? <img src={photo.dataUrl} alt={t('Your photo', 'A fotód')} /> : (
               <span className="sslot-empty">
                 {Icon.camera}
@@ -440,11 +450,16 @@ export function StudioStep({
             )}
             <span className="sslot-tag">1</span>
           </button>
+          {photo && (
+            <button type="button" className="sslot-clear" onClick={() => { setPhoto(null); setCheck({ state: 'idle' }); }} aria-label={t('Remove photo', 'Fotó eltávolítása')}>
+              ×
+            </button>
+          )}
           <div className="sslot-btns">
             <button className="chipbtn" onClick={() => setCam(true)}>
               {Icon.camera} {t('Camera', 'Kamera')}
             </button>
-            <button className="chipbtn" onClick={() => photoRef.current?.click()}>
+            <button className="chipbtn" onClick={() => { track('photo_pick_open'); photoRef.current?.click(); }}>
               {Icon.image} {t('Photos', 'Galéria')}
             </button>
           </div>
@@ -511,8 +526,8 @@ export function StudioStep({
         <a href={ui.lang === 'hu' ? '/privacy' : '/privacy?lang=en'}>{t('Privacy', 'Adatvédelem')}</a>
       </p>
 
-      <input ref={photoRef} id="photo-input" type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
-      <input ref={designRef} id="design-input" type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
+      <input key={`p${inputKey}`} ref={photoRef} id="photo-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) takePhoto(f); }} />
+      <input key={`d${inputKey}`} ref={designRef} id="design-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) designFromFile(f, 'upload'); }} />
 
       {!existing && design?.original && (
         <div className={`cmpcut ${design.match !== undefined && design.match >= 0 && design.match < 7 ? 'warn' : ''}`}>
