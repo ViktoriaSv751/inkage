@@ -900,8 +900,13 @@ export function PlaceStep({
   const zoomAt = (z: number, px?: number, py?: number) => {
     const r = box.current?.getBoundingClientRect();
     if (!r) return;
-    const cx = px ?? r.width / 2, cy = py ?? r.height / 2; // point in the box that stays put
     setZoom((o) => {
+      // buttons: bring the tattoo being placed to the middle; double-tap: zoom where the finger is
+      if (px === undefined || py === undefined) {
+        const nz = Math.min(4, Math.max(1, z));
+        return clampZoom(nz, r.width / 2 - plRef.current.x * r.width * nz, r.height / 2 - plRef.current.y * r.height * nz);
+      }
+      const cx = px, cy = py;
       const k = Math.min(4, Math.max(1, z)) / o.z;
       return clampZoom(o.z * k, cx - (cx - o.tx) * k, cy - (cy - o.ty) * k);
     });
@@ -972,6 +977,8 @@ export function PlaceStep({
   };
   const activeRef = useRef(0);
   activeRef.current = cur;
+  const plRef = useRef(pl);
+  plRef.current = pl;
   const setPl = (p: Placement) => setLayerPl(activeRef.current, p);
   const [addOpen, setAddOpen] = useState(false);
   const [addBusy, setAddBusy] = useState(false);
