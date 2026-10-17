@@ -888,6 +888,77 @@ export function PlaceStep({
   const { ui, toast } = useApp();
   const t = L(ui.lang);
   const box = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  // zoom into the photo (pinch, double-tap or the +/− buttons) to place the tattoo precisely
+  const [zoom, setZoom] = useState({ z: 1, tx: 0, ty: 0 });
+  const clampZoom = (z: number, tx: number, ty: number) => {
+    const r = box.current?.getBoundingClientRect();
+    const W = r?.width || 1, H = r?.height || 1;
+    z = Math.min(4, Math.max(1, z));
+    return { z, tx: Math.min(0, Math.max(W * (1 - z), tx)), ty: Math.min(0, Math.max(H * (1 - z), ty)) };
+  };
+  const zoomAt = (z: number, px?: number, py?: number) => {
+    const r = box.current?.getBoundingClientRect();
+    if (!r) return;
+    const cx = px ?? r.width / 2, cy = py ?? r.height / 2; // point in the box that stays put
+    setZoom((o) => {
+      const k = Math.min(4, Math.max(1, z)) / o.z;
+      return clampZoom(o.z * k, cx - (cx - o.tx) * k, cy - (cy - o.ty) * k);
+    });
+  };
+  const bgPts = useRef(new Map<number, { x: number; y: number }>());
+  const bgStart = useRef<{ z: number; tx: number; ty: number; d: number; mx: number; my: number; moved: boolean } | null>(null);
+  const lastTap = useRef(0);
+  const bgSnap = () => {
+    const pts = Array.from(bgPts.current.values());
+    const r = box.current!.getBoundingClientRect();
+    const mx = pts.reduce((a, p) => a + p.x, 0) / pts.length - r.left, my = pts.reduce((a, p) => a + p.y, 0) / pts.length - r.top;
+    const d = pts.length > 1 ? Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) : 0;
+    bgStart.current = { ...zoom, d, mx, my, moved: false };
+  };
+  const bgDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest('.ink, .ink-frame, .zoombar')) return;
+    bgPts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    // one finger scrolls the page when not zoomed; two fingers, or a zoomed photo, are ours
+    if (bgPts.current.size > 1 || zoom.z > 1) {
+      try {
+        (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
+      } catch {}
+    }
+    bgSnap();
+  };
+  const bgMove = (e: React.PointerEvent) => {
+    if (!bgPts.current.has(e.pointerId) || !bgStart.current || !box.current) return;
+    bgPts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const pts = Array.from(bgPts.current.values());
+    const r = box.current.getBoundingClientRect();
+    const mx = pts.reduce((a, p) => a + p.x, 0) / pts.length - r.left, my = pts.reduce((a, p) => a + p.y, 0) / pts.length - r.top;
+    const s0 = bgStart.current;
+    if (Math.hypot(mx - s0.mx, my - s0.my) > 6) s0.moved = true;
+    if (pts.length > 1 && s0.d) {
+      const k = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) / s0.d;
+      const z = Math.min(4, Math.max(1, s0.z * k));
+      const kk = z / s0.z;
+      setZoom(clampZoom(z, mx - (s0.mx - s0.tx) * kk, my - (s0.my - s0.ty) * kk));
+      s0.moved = true;
+    } else if (s0.z > 1) setZoom(clampZoom(s0.z, s0.tx + (mx - s0.mx), s0.ty + (my - s0.my)));
+  };
+  const bgUp = (e: React.PointerEvent) => {
+    const s0 = bgStart.current;
+    bgPts.current.delete(e.pointerId);
+    if (bgPts.current.size) return bgSnap();
+    bgStart.current = null;
+    if (s0 && !s0.moved) {
+      // a tap: deselect; a double tap: zoom in / back out
+      const now = Date.now();
+      if (now - lastTap.current < 320) {
+        const r = box.current!.getBoundingClientRect();
+        zoomAt(zoom.z > 1 ? 1 : 2.5, e.clientX - r.left, e.clientY - r.top);
+        lastTap.current = 0;
+      } else lastTap.current = now;
+      setSel(false);
+    }
+  };
   // which tattoo is being edited (0 = the first one) and whether its frame + handles show
   const [active, setActive] = useState(0);
   const [sel, setSel] = useState(false);
@@ -1002,9 +1073,9 @@ export function PlaceStep({
     setDrag(true);
   };
   const move = (e: React.PointerEvent) => {
-    if (!pointers.current.has(e.pointerId) || !start.current || !box.current) return;
+    if (!pointers.current.has(e.pointerId) || !start.current || !stage.current) return;
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    const r = box.current.getBoundingClientRect();
+    const r = stage.current.getBoundingClientRect();
     const pts = Array.from(pointers.current.values());
     const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
     const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
@@ -1026,12 +1097,12 @@ export function PlaceStep({
   const hd = useRef<{ mode: 'scale' | 'rotate'; cx: number; cy: number; d0: number; a0: number; pl: Placement } | null>(null);
   const handleDown = (mode: 'scale' | 'rotate') => (e: React.PointerEvent) => {
     e.stopPropagation();
-    if (!box.current) return;
+    if (!stage.current) return;
     remember();
     try {
       (e.target as Element).setPointerCapture?.(e.pointerId);
     } catch {}
-    const r = box.current.getBoundingClientRect();
+    const r = stage.current.getBoundingClientRect();
     const cx = r.left + pl.x * r.width, cy = r.top + pl.y * r.height;
     hd.current = { mode, cx, cy, d0: Math.hypot(e.clientX - cx, e.clientY - cy) || 1, a0: Math.atan2(e.clientY - cy, e.clientX - cx), pl };
     setDrag(true);
@@ -1081,7 +1152,8 @@ export function PlaceStep({
         </span>
         <span className="areachg">{t('Change', 'Módosítás')}</span>
       </button>
-      <div className="editor" ref={box} onPointerDown={(e) => !(e.target as HTMLElement).closest('.ink, .ink-frame') && setSel(false)}>
+      <div className={`editor ${zoom.z > 1 ? 'zoomed' : ''}`} ref={box} onPointerDown={bgDown} onPointerMove={bgMove} onPointerUp={bgUp} onPointerCancel={(e) => (bgPts.current.delete(e.pointerId), bgPts.current.size ? bgSnap() : (bgStart.current = null))}>
+        <div className="ed-stage" ref={stage} style={{ transform: `translate(${zoom.tx}px, ${zoom.ty}px) scale(${zoom.z})`, ['--iz' as any]: 1 / zoom.z }}>
         {area && (
           <div
             className={`areabox ${drag ? 'show' : ''} ${out ? 'bad' : ''}`}
@@ -1138,7 +1210,13 @@ export function PlaceStep({
           )}
         </div>
         )}
-        {!sel && !drag && <span className="ed-hint">{t('Tap the tattoo to resize or rotate it', 'Koppints a tetoválásra a méretezéshez és forgatáshoz')}</span>}
+        </div>
+        <div className="zoombar" role="group" aria-label={t('Zoom', 'Nagyítás')}>
+          <button type="button" onClick={() => zoomAt(zoom.z / 1.5)} disabled={zoom.z <= 1} aria-label={t('Zoom out', 'Kicsinyítés')}>−</button>
+          <button type="button" className="zlabel" onClick={() => setZoom({ z: 1, tx: 0, ty: 0 })} aria-label={t('Reset zoom', 'Eredeti méret')}>{zoom.z.toFixed(zoom.z < 2 ? 1 : 0)}×</button>
+          <button type="button" onClick={() => zoomAt(zoom.z * 1.5)} disabled={zoom.z >= 4} aria-label={t('Zoom in', 'Nagyítás')}>+</button>
+        </div>
+        {!sel && !drag && <span className="ed-hint">{zoom.z > 1 ? t('Drag the photo to look around · double-tap to zoom out', 'Húzd a fotót a mozgatáshoz · dupla koppintás: vissza') : t('Tap the tattoo to resize it · pinch or + to zoom in', 'Koppints a tetoválásra a méretezéshez · csippentés vagy + a nagyításhoz')}</span>}
         <span className="cm">≈ {cm.toFixed(cm < 10 ? 1 : 0)} cm</span>
       </div>
       {setExtras && (
