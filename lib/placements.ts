@@ -41,7 +41,9 @@ export type CustomSpot = { view: 'front' | 'back'; x: number; y: number; label: 
 export const isCustom = (v: string) => v.startsWith('@');
 export function parseCustom(v: string): CustomSpot | null {
   const m = /^@(front|back):(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)\|(.*)$/.exec(v);
-  return m ? { view: m[1] as 'front' | 'back', x: Number(m[2]), y: Number(m[3]), label: m[4] } : null;
+  // older saved spots said "a(z) …" – show the proper Hungarian article instead
+  const label = m ? m[4].replace(/^a\(z\)\s+(\S)/i, (_x, c: string) => (/[aáeéiíoóöőuúüű]/i.test(c) ? 'az ' : 'a ') + c) : '';
+  return m ? { view: m[1] as 'front' | 'back', x: Number(m[2]), y: Number(m[3]), label } : null;
 }
 export const makeCustom = (c: CustomSpot) => `@${c.view}:${Math.round(c.x)},${Math.round(c.y)}|${c.label}`;
 
