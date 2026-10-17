@@ -25,13 +25,13 @@ export async function POST(req: Request) {
     // cut out, then check it against the photo: same design, nothing extra left in. One targeted retry if not.
     let image = await editImage([src], extractPrompt(color), 1024, 1024);
     let check = await extractCheck(src, dataUrlToImg(image));
-    if (!check.ok) {
+    // up to two targeted retries while something that is not the tattoo is left in, or the design drifted
+    for (let n = 0; n < 2 && !check.ok; n++) {
       console.warn('extract check failed, retrying', check);
       const again = await editImage([src], extractPrompt(color, check.fix), 1024, 1024).catch(() => null);
-      if (again) {
-        const c2 = await extractCheck(src, dataUrlToImg(again));
-        if (c2.match >= check.match) ((image = again), (check = c2));
-      }
+      if (!again) break;
+      const c2 = await extractCheck(src, dataUrlToImg(again));
+      if (c2.match >= check.match) ((image = again), (check = c2));
     }
     return u.withCookie(json({ image, match: check.match }));
   } catch (e) {

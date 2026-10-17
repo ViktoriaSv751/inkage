@@ -7,7 +7,7 @@ export type Placement = { x: number; y: number; w: number; rot: number; mirror: 
  * Clean a design image: knock out a light background, trim empty borders,
  * and measure how much fine detail it has (0..1).
  */
-export async function processDesign(src: string, mode: 'black' | 'color') {
+export async function processDesign(src: string, mode: 'black' | 'color', opts: { clean?: boolean } = {}) {
   const img = await loadImage(src);
   const max = 900;
   const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
@@ -57,6 +57,47 @@ export async function processDesign(src: string, mode: 'black' | 'color') {
       ink++;
       const x = k % W, y = (k / W) | 0;
       if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+  }
+  // cut-outs from photos: drop leftovers that are not the design – blobs touching the frame edge
+  // (skin edges, sleeves, background) and tiny specks (pores, freckles, noise)
+  if (opts.clean) {
+    const lab = new Int32Array(W * H);
+    const sizes: number[] = [0], edgeTouch: boolean[] = [false];
+    const stack: number[] = [];
+    for (let k0 = 0; k0 < W * H; k0++) {
+      if (!alpha[k0] || lab[k0]) continue;
+      const id = sizes.length;
+      let size = 0, touch = false;
+      stack.push(k0);
+      lab[k0] = id;
+      while (stack.length) {
+        const k = stack.pop()!;
+        size++;
+        const x = k % W, y = (k / W) | 0;
+        if (x <= 1 || y <= 1 || x >= W - 2 || y >= H - 2) touch = true;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          const nk = ny * W + nx;
+          if (alpha[nk] && !lab[nk]) { lab[nk] = id; stack.push(nk); }
+        }
+      }
+      sizes.push(size);
+      edgeTouch.push(touch);
+    }
+    const total = sizes.reduce((a, b) => a + b, 0) || 1;
+    const speck = Math.max(6, W * H * 0.00004);
+    const drop = sizes.map((sz, id) => id > 0 && ((edgeTouch[id] && sz < total * 0.5) || sz < speck));
+    if (drop.some(Boolean)) {
+      ink = 0; minX = W; minY = H; maxX = 0; maxY = 0;
+      for (let k = 0; k < W * H; k++) {
+        if (!alpha[k]) continue;
+        if (drop[lab[k]]) { alpha[k] = 0; p[k * 4 + 3] = 0; continue; }
+        ink++;
+        const x = k % W, y = (k / W) | 0;
+        if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
     }
   }
   ctx.putImageData(d, 0, 0);

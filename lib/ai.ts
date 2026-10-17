@@ -169,6 +169,8 @@ export function extractPrompt(color: boolean, feedback = '') {
     'This image shows a tattoo (it may be on a person\'s skin, photographed at an angle, with clothes and background around it).',
     'Recreate ONLY the tattoo design itself as a clean, flat, front-facing stencil, the way a tattoo artist would trace it for a client:',
     'remove the person, skin, body, hair, clothing, jewellery, shadows, light reflections and background completely;',
+    'only lines and fills that were made with tattoo ink belong to the design: leave out skin folds and wrinkles, the outline of the arm or body, freckles, moles, pores, veins, hair, nails, scars, redness, sleeve or strap edges, and any text, watermark, sticker or app interface that is not part of the tattoo itself;',
+    'do not add a frame, border, outline of the body part or any background shape around the design;',
     'if parts of other tattoos are visible at the edges, leave them out: only the one tattoo in the centre of the image;',
     'undo the perspective and the curvature of the body so the design is flat and centred;',
     'keep every element, proportion, line weight and detail of the design exactly as it is: do not add, redesign, beautify or simplify anything; complete a line that is cut off only if it is obvious;',
@@ -522,7 +524,7 @@ export async function extractCheck(original: Img, cut: Img): Promise<{ match: nu
             {
               text: `Image 1 shows a tattoo (maybe on skin, with surroundings). Image 2 should be exactly that tattoo design redrawn flat on white, with nothing else. Reply with JSON only:
 {"designMatch": integer 0-10 (10 = every element, proportion, line weight and letter is the same),
- "extra": boolean (image 2 still contains skin, a body part, clothing, background, another tattoo or anything that is not the design),
+ "extra": boolean (image 2 still contains skin, the outline of a body part, skin folds, clothing, background, another tattoo, a frame or anything else that was not tattooed ink in image 1),
  "problem": short string naming what is missing, added or changed, or ""}`,
             },
           ],

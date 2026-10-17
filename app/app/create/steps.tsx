@@ -295,10 +295,12 @@ export function StudioStep({
     setBusyMsg('');
     if (!r.ok || !r.data.image) {
       setBusy(false);
-      toast(trErr(ui.lang, r.data?.error));
-      return applyDesign(raw, mode);
+      // never fall back to the raw photo: skin, clothes and background would end up on the body
+      toast(r.data?.error ? trErr(ui.lang, r.data.error) : t('Could not cut the tattoo out. Frame it more tightly and try again.', 'Nem sikerült kivágni a tetoválást. Keretezd szorosabban, és próbáld újra.'));
+      setPick((pk) => (pk ? { ...pk, open: true } : { image: raw, found: { kind: 'photo', tattoos: [] }, open: true }));
+      return;
     }
-    const d = await processDesign(r.data.image, mode);
+    const d = await processDesign(r.data.image, mode, { clean: true });
     const match = typeof r.data.match === 'number' ? r.data.match : -1;
     setDesign({ raw: r.data.image, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode, original: raw, match });
     setBusy(false);
@@ -341,7 +343,8 @@ export function StudioStep({
     const found: Found =
       r.ok && r.data.kind ? { kind: r.data.kind, tattoos: r.data.tattoos || [] } : { kind: probe?.photoLike ? 'photo' : 'design', tattoos: [] };
     track('design_kind', { kind: found.kind, n: found.tattoos.length });
-    // a clean drawing with one motif: use it as it is
+    // a clean drawing with one motif: use it as it is (only when the pixels agree it is not a photo)
+    if (found.kind === 'design' && probe?.photoLike) found.kind = 'photo';
     if (found.kind === 'design' && found.tattoos.length <= 1) return applyDesign(p.dataUrl, mode);
     // a photo with exactly one tattoo: cut that one out straight away
     if (found.kind === 'photo' && found.tattoos.length === 1) {
