@@ -6,6 +6,7 @@ import { sb } from '@/lib/sb';
 import { anonId, lsGet, lsSet, track } from '@/lib/store';
 import { useLang, tx } from '@/lib/i18n';
 import type { Share } from './page';
+import { Report } from './Report';
 
 export function Vote({ id, initial }: { id: string; initial: Share }) {
   const { lang } = useLang();
@@ -148,6 +149,7 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
         </Link>
       </div>
       <p className="fine">{t('AI simulation for inspiration.', 'MI-szimuláció inspirációnak.')}</p>
+      <Report id={id} lang={lang} />
     </main>
   );
 }

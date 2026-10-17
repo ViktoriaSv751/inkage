@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "Az InkAge a kamerával fényképezi le azt a testrészt, ahová a tetoválást szeretnéd.";
+"NSPhotoLibraryUsageDescription" = "Az InkAge a fotóid közül választ testfotót vagy tetoválásmintát.";
+"NSPhotoLibraryAddUsageDescription" = "Az InkAge a kérésedre a fotóid közé menti az előnézeteket.";

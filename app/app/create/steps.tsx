@@ -504,6 +504,11 @@ export function StudioStep({
         </p>
       )}
 
+      <p className="fine ai-note">
+        {t('Your photo and design are sent to our AI providers (Google Gemini, OpenAI as backup) only to check the photo and make your preview. ', 'A fotódat és a mintádat csak az ellenőrzéshez és az előnézethez küldjük el az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). ')}
+        <a href={ui.lang === 'hu' ? '/privacy' : '/privacy?lang=en'}>{t('Privacy', 'Adatvédelem')}</a>
+      </p>
+
       <input ref={photoRef} id="photo-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) takePhoto(f); e.target.value = ''; }} />
       <input ref={designRef} id="design-input" type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) designFromFile(f, 'upload'); e.target.value = ''; }} />
 

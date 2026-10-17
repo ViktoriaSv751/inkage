@@ -188,6 +188,11 @@ export function AuthSheet() {
   }, [authOpen]);
   const oauth = async (provider: 'google' | 'apple') => {
     setErr('');
+    if ((window as any).Capacitor?.isNativePlatform?.()) {
+      const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider));
+      if (e) setErr(e);
+      return;
+    }
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/profile` } })) || {};
     if (error) setErr(error.message);
   };

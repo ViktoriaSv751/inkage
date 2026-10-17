@@ -193,7 +193,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     setIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
-    setInstalled(window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone === true);
+    setInstalled(window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone === true || !!(window as any).Capacitor?.isNativePlatform?.());
     const h = (e: any) => {
       e.preventDefault();
       setInstallEvt(e);

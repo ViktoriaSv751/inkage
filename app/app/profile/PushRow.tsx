@@ -4,16 +4,25 @@ import { useApp } from '../AppProvider';
 import { tx } from '@/lib/i18n';
 import { authHeader } from '@/lib/sb';
 import { disablePush, enablePush, pushState, PushState } from '@/lib/push';
+import { isNative, nativePushEnable, nativePushState, platform } from '@/lib/native';
 
 /** Profile > Settings: phone notifications on/off + test. */
 export function PushRow({ onInstallHelp }: { onInstallHelp: () => void }) {
-  const { ui, toast } = useApp();
+  const { ui, toast, cfg } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [st, setSt] = useState<PushState | null>(null);
   const [busy, setBusy] = useState(false);
+  const native = typeof window !== 'undefined' && isNative();
   useEffect(() => {
-    pushState().then(setSt);
-  }, []);
+    if (!native) pushState().then(setSt);
+    else if (cfg) {
+      const p = platform();
+      // native push needs the Firebase / APNs keys on the server; without them the row stays hidden
+      if (p !== 'web' && cfg.nativePush?.[p]) nativePushState().then(setSt);
+      else setSt('unsupported');
+    }
+  }, [native, cfg]);
+  const enable = native ? nativePushEnable : enablePush;
   if (!st || st === 'unsupported') return null;
 
   const sub =
@@ -43,10 +52,12 @@ export function PushRow({ onInstallHelp }: { onInstallHelp: () => void }) {
             }
             setBusy(true);
             if (e.target.checked) {
-              const r = await enablePush();
+              const r = await enable();
               setSt(r);
               if (r === 'on') toast(t('Notifications are on', 'Értesítések bekapcsolva'));
               else if (r === 'denied') toast(t('Notifications are blocked in your settings', 'Az értesítések le vannak tiltva a beállításokban'));
+            } else if (native) {
+              toast(t('Turn notifications off in your phone’s Settings > InkAge', 'Az értesítéseket a telefon Beállítások > InkAge menüjében kapcsolhatod ki'));
             } else {
               await disablePush();
               setSt('off');
@@ -61,7 +72,7 @@ export function PushRow({ onInstallHelp }: { onInstallHelp: () => void }) {
           disabled={busy}
           onClick={async () => {
             setBusy(true);
-            await enablePush();
+            await enable();
             const r = await fetch('/api/push-test', { method: 'POST', headers: { 'content-type': 'application/json', ...(await authHeader()) }, body: JSON.stringify({ lang: ui.lang }) })
               .then((x) => x.json())
               .catch(() => ({}));

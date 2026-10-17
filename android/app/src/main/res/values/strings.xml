@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">InkAge</string>
+    <string name="title_activity_main">InkAge</string>
+    <string name="package_name">app.inkage</string>
+    <string name="custom_url_scheme">app.inkage</string>
+</resources>

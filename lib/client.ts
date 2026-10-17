@@ -61,6 +61,11 @@ export async function shareOrDownload(blob: Blob, filename: string) {
       return;
     }
   }
+  // store apps: native share sheet (web views cannot download blobs)
+  if ((window as any).Capacitor?.isNativePlatform?.()) {
+    const { nativeShareFile } = await import('./native');
+    if (await nativeShareFile(blob, filename).catch(() => false)) return;
+  }
   const file = new File([blob], filename, { type: blob.type });
   const nav: any = navigator;
   if (nav.canShare?.({ files: [file] })) {

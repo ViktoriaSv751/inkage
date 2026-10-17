@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { api, sb } from '@/lib/sb';
 import { useLang } from '@/lib/i18n';
 import { lsGet, lsSet, migrateLocal, track } from '@/lib/store';
+import { AgeGate } from './AgeGate';
 
 export type Me = {
   user: { id: string; email?: string } | null;
@@ -14,7 +15,7 @@ export type Me = {
   onboarding?: any;
   notifyVotes?: boolean;
 };
-type Cfg = { ai: boolean; auth: boolean; payments: boolean };
+type Cfg = { ai: boolean; auth: boolean; payments: boolean; nativePush?: { android: boolean; ios: boolean } };
 
 type Ctx = {
   me: Me;
@@ -82,10 +83,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     refreshMe();
     const sub = sb()?.auth.onAuthStateChange((evt) => {
       if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') setTimeout(() => refreshMe(), 0);
-      if (evt === 'SIGNED_IN') import('@/lib/push').then((m) => m.syncPush()).catch(() => {});
+      if (evt === 'SIGNED_IN') {
+        if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.nativePushSync()).catch(() => {});
+        else import('@/lib/push').then((m) => m.syncPush()).catch(() => {});
+      }
     });
     // service worker for the installable app
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then(() => import('@/lib/push').then((m) => m.syncPush())).catch(() => {});
+    if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.initNative()).catch(() => {});
+    else if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then(() => import('@/lib/push').then((m) => m.syncPush())).catch(() => {});
     track('app_open', { path: location.pathname });
     // error reporting: what broke and where (max 5 per visit, no personal data)
     let sent = 0;
@@ -123,6 +128,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
+      <AgeGate lang={ui.lang} />
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>

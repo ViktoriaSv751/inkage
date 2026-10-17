@@ -152,6 +152,11 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
     if (providers.loaded && !providers[provider])
       return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
     setErr('');
+    if ((window as any).Capacitor?.isNativePlatform?.()) {
+      const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider));
+      if (e) setErr(e);
+      return;
+    }
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/profile` } })) || {};
     if (error) setErr(error.message);
   };

@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge uses the camera so you can photograph the body area where you want the tattoo.";
+"NSPhotoLibraryUsageDescription" = "InkAge opens your photos so you can choose a body photo or a tattoo design.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge saves your tattoo previews to your photos when you ask it to.";

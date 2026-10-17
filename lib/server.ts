@@ -21,6 +21,7 @@ export function serverConfig() {
     auth: !!(URL_() && ANON() && appSecret('token')),
     payments: false,
     email: !!process.env.RESEND_API_KEY,
+    nativePush: { android: !!process.env.FCM_SERVICE_ACCOUNT, ios: !!(process.env.APNS_KEY_P8 && process.env.APNS_KEY_ID) },
   };
 }
 

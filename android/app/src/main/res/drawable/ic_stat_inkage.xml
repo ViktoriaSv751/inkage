@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- status-bar icon: the InkAge crescent, white on transparent -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="64" android:viewportHeight="64">
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M38,14a20,20 0,1 0,0 36a16,16 0,1 1,0 -36z" />
+</vector>

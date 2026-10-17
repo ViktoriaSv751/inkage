@@ -30,6 +30,12 @@ export default function Admin() {
     await sb()?.rpc('moderate_post', { p_id: id, p_ok: ok });
     setPosts((p) => p.filter((x) => x.id !== id));
   };
+  const [reports, setReports] = useState<any[]>([]);
+  const loadReports = () => sb()?.rpc('admin_reports').then(({ data }) => Array.isArray(data) && setReports(data));
+  const actReport = async (share: string, hide: boolean) => {
+    await sb()?.rpc('admin_report_action', { p_share: share, p_hide: hide });
+    setReports((r) => r.filter((x) => x.share_id !== share));
+  };
   const [feedback, setFeedback] = useState<any[]>([]);
   const loadHealth = async () => {
     const { data } = (await sb()?.rpc('admin_health')) || {};
@@ -52,6 +58,7 @@ export default function Admin() {
     load();
     loadHealth();
     loadPosts();
+    loadReports();
     sb()
       ?.rpc('admin_feedback')
       .then(({ data }) => Array.isArray(data) && setFeedback(data));
@@ -151,6 +158,28 @@ export default function Admin() {
                   <span key={k} style={{ marginRight: 14 }}>
                     {k}: <b>{n as any}</b>
                   </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {reports.length > 0 && (
+            <div style={{ background: '#ffe9e6', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <b>Reported pictures ({reports.length})</b>
+              <p style={{ fontSize: 13, color: 'var(--ink-2)', margin: '4px 0 10px' }}>Answer within 24 hours. 3 reports, or one “minor” report, hide a picture automatically until you decide.</p>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {reports.map((r) => (
+                  <div key={r.share_id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    <img src={r.paths?.fresh} alt="" style={{ width: 80, height: 100, objectFit: 'cover', borderRadius: 10, background: '#ddd' }} />
+                    <img src={r.paths?.y50} alt="" style={{ width: 80, height: 100, objectFit: 'cover', borderRadius: 10, background: '#ddd' }} />
+                    <div style={{ flex: 1, fontSize: 13 }}>
+                      <b>{r.n} report{r.n === 1 ? '' : 's'}{r.hidden ? ' · hidden now' : ''}</b>
+                      <div>{(r.items || []).map((i: any) => i.reason + (i.note ? `: ${i.note}` : '')).join(' · ')}</div>
+                      <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                        <button className="btn" style={{ minHeight: 36, padding: '0 14px', fontSize: 14 }} onClick={() => actReport(r.share_id, true)}>Remove</button>
+                        <button className="btn ghost" style={{ minHeight: 36, padding: '0 14px', fontSize: 14 }} onClick={() => actReport(r.share_id, false)}>Keep</button>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
