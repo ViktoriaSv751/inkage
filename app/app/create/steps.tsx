@@ -768,10 +768,12 @@ function CameraSheet({ placement, onClose, onShot, onFallback }: { placement: st
     })();
     return () => {
       dead = true;
+      // always release the camera, otherwise phones refuse it after a few uses
+      stream.current?.getTracks().forEach((x) => x.stop());
+      stream.current = null;
+      if (vid.current) vid.current.srcObject = null;
     };
   }, [facing]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => () => stream.current?.getTracks().forEach((x) => x.stop()), []);
 
   // live advice while framing: too dark, too bright, hold still
   const [advice, setAdvice] = useState('');
