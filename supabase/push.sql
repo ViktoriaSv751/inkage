@@ -1,0 +1,5 @@
+-- Web push (applied 2026-10-17). VAPID keys live in private.config (vapid_public, vapid_private) – never in the repo.
+-- Tables: public.push_devices (endpoint unique, active flag), public.push_reminders (scheduled phone reminders)
+-- RPCs: vapid_public_key, push_save, push_remove, push_device_count, push_schedule (user);
+--       push_targets, push_drop, push_due (server, secret-checked); vote_notify_target now returns 'user'.
+-- Cron: 'inkage-push-reminders' every minute -> private.kick_push() -> POST /api/push-cron when something is due.

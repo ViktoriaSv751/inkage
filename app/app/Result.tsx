@@ -773,7 +773,7 @@ export function Result({
 }
 
 function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => void; onDone?: (date: string) => void }) {
-  const { ui, toast } = useApp();
+  const { ui, toast, me } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   return (
@@ -793,6 +793,16 @@ function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => vo
         onClick={async () => {
           track('aftercare_ics');
           onDone?.(new Date(date + 'T12:00:00').toISOString());
+          if (me?.user) {
+            // phone reminders too (9:00 on each step day), when notifications can be turned on
+            const st = await import('@/lib/push').then((m) => m.enablePush()).catch(() => 'off');
+            if (st === 'on') {
+              const n = await import('@/lib/push').then((m) =>
+                m.scheduleCare(date, CARE.map((s) => ({ day: s.day, text: t(s.en, s.hu) })), (d) => t(`Healing plan · day ${d}`, `Gyógyulási terv · ${d}. nap`))
+              );
+              if (n > 0) toast(t(`${n} reminders will also arrive on your phone`, `${n} emlékeztető a telefonodra is megérkezik`));
+            }
+          }
           await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-gyogyulas.ics');
           toast(t('Open the file to add the reminders to your calendar', 'Nyisd meg a fájlt, és bekerülnek az emlékeztetők a naptáradba'));
         }}

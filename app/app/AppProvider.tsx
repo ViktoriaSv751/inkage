@@ -82,9 +82,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     refreshMe();
     const sub = sb()?.auth.onAuthStateChange((evt) => {
       if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') setTimeout(() => refreshMe(), 0);
+      if (evt === 'SIGNED_IN') import('@/lib/push').then((m) => m.syncPush()).catch(() => {});
     });
     // service worker for the installable app
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then(() => import('@/lib/push').then((m) => m.syncPush())).catch(() => {});
     track('app_open', { path: location.pathname });
     // error reporting: what broke and where (max 5 per visit, no personal data)
     let sent = 0;

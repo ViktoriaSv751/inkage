@@ -13,6 +13,7 @@ import { placeName } from '../create/steps';
 import type { OnboardingAnswers } from '../create/Onboarding';
 import { MyShares } from './MyShares';
 import { UvCard } from './UvCard';
+import { PushRow } from './PushRow';
 
 const ADMIN = ['vviktoriasoti@gmail.com'];
 
@@ -523,8 +524,8 @@ export default function ProfilePage() {
         {me.user && (
           <label className="list-row" style={{ cursor: 'pointer' }}>
             <span>
-              {t('E-mail me when friends vote', 'E-mail, ha szavaznak a linkemre')}
-              <small>{t('At most once an hour per link', 'Linkenként legfeljebb óránként egyszer')}</small>
+              {t('Tell me when friends vote', 'Szólj, ha szavaznak a linkemre')}
+              <small>{t('E-mail and phone notification, at most once an hour per link', 'E-mail és telefonos értesítés, linkenként legfeljebb óránként egyszer')}</small>
             </span>
             <input
               type="checkbox"
@@ -542,6 +543,7 @@ export default function ProfilePage() {
             />
           </label>
         )}
+        {me.user && <PushRow onInstallHelp={install} />}
         {!installed && (
           <button className="list-row" onClick={install}>
             <span>
