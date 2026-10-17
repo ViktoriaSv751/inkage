@@ -73,23 +73,24 @@ export function placedPrompt(placement: string, colorMode: 'black' | 'color', ex
 function inkAging(a: Analysis, years: number) {
   const fine = a.tattooStyle === 'fine-line';
   const color = a.hasColor || a.tattooStyle === 'color' || a.tattooStyle === 'realism';
+  const friction = /hand|kéz|finger|ujj|palm|tenyér|wrist|csukló|foot|lábfej|feet|ankle|boka/i.test(a.bodyArea || '');
   if (years <= 1)
     return 'The tattoo is fully healed: no redness, no shine, no scabbing; the ink has settled a hair deeper into the skin so lines look very slightly softer and matte. Colours are as bright as they will ever be.';
-  const blur = years >= 50 ? 'strong' : years >= 30 ? 'clear' : 'subtle';
+  // calibrated to how real tattoos age: slow migration, measured in fractions of a millimetre
+  const widen = years >= 50 ? 'about 0.5–1 mm' : years >= 30 ? 'about 0.3–0.6 mm' : 'about 0.1–0.3 mm';
   return [
-    `After ${years} years the ink has migrated in the dermis (${blur} blowout): outlines are ${
-      fine ? (years >= 30 ? 'noticeably thicker and fuzzy, the thinnest lines partly broken or faded out' : 'a little thicker and softer') : years >= 30 ? 'thicker with soft edges' : 'slightly softer'
-    };`,
-    `blacks have shifted toward ${years >= 30 ? 'blue-grey/greenish charcoal' : 'deep charcoal'};`,
-    color ? `colours are ${years >= 30 ? 'heavily faded and muddy (yellows and light colours almost gone, reds turned brick)' : 'visibly duller'};` : '',
-    years >= 30 ? 'very small details and tight negative spaces have merged together;' : 'tiny details are still readable but less crisp;',
-    a.sunExposure === 'high' ? 'sun exposure has faded it more than average.' : '',
-    'The tattoo distorts naturally with the aged skin underneath it (follows new creases and slackness).',
+    `After ${years} years the ink has migrated only slowly in the skin: every line is ${widen} wider than when fresh, with slightly softer edges${fine && years >= 30 ? ', and the very thinnest hairlines are a little broken or faint in places' : ''}.`,
+    'The design stays clearly recognisable and keeps its shape, layout and proportions: no ink clouds, no smudges, no spreading of colour across the skin, no lines melting into blobs. When in doubt, change less, not more.',
+    `Blacks look ${years >= 30 ? 'slightly lighter and a touch blue-grey or charcoal' : 'very slightly less deep'}${years >= 30 ? ' – still clearly dark' : ''}.`,
+    color ? `Colours are ${years >= 30 ? 'faded and less saturated (yellows, whites and pastels faded the most, reds slightly toward brick)' : 'a little duller'}, but still the same colours.` : '',
+    years >= 30 ? 'Only details finer than about 1 mm (tiny dots, very tight gaps) have started to fill in.' : 'Small details are still readable.',
+    friction ? 'On hands, fingers and feet daily friction and washing fade ink faster: the tattoo is a bit lighter and patchier than elsewhere would be, but it does not spread or blur more.' : '',
+    a.sunExposure === 'high' ? 'Frequent sun has faded it somewhat more than average.' : '',
+    'The tattoo follows the aged skin underneath it (new fine creases, slight slackness) without moving or changing size.',
   ]
     .filter(Boolean)
     .join(' ');
 }
-
 function skinAging(a: Analysis, years: number) {
   const age = Math.round(a.apparentAge + years);
   if (years <= 1) return `The person and their skin look the same as today (about ${a.apparentAge} years old).`;
@@ -124,33 +125,40 @@ export function agePrompt(stage: Stage, a: Analysis, fromYears = 0) {
   const delta = years - fromYears;
   const head =
     fromYears > 0
-      ? `This photo shows a person with a tattoo, ${fromYears} years after it was done (the person is about ${Math.round(a.apparentAge + fromYears)} now). Show this exact same photo ${delta} years later, ${years} years after the tattoo was done. Continue from what you see: keep every change that already happened and age it further.`
+      ? `This photo shows a person with a tattoo, ${fromYears} years after it was done (the person is about ${Math.round(a.apparentAge + fromYears)} now). Show this exact same photo ${delta} years later, ${years} years after the tattoo was done. Continue from what you see: keep every change that already happened and add only the small extra change of these ${delta} years – do not exaggerate or repeat the aging that is already there.`
       : `This photo shows a person with a tattoo. Show this exact same photo ${years === 1 ? 'one year later' : `${years} years later`}.`;
   return [
     head,
     inkAging(a, years),
     skinAging(a, years),
     'The tattoo stays exactly where it is, at the same size and angle, with the same design; only aging changes it.',
-    'The change must be medically and physically realistic — not exaggerated, not cartoonish, not a filter.',
+    'The change must be medically and physically realistic, like real photos of people with tattoos of that age — subtle rather than dramatic, never exaggerated, cartoonish or a filter.',
     KEEP,
   ].join(' ');
 }
 
 export function removalPrompt(stage: RemovalStage, a: Analysis) {
   const n = stage === 'laser3' ? 3 : stage === 'laser6' ? 6 : 10;
+  const color = a.hasColor || a.tattooStyle === 'color' || a.tattooStyle === 'realism';
+  // calibrated to typical clinic results for a professional tattoo (Q-switched / picosecond laser, 6–8 weeks apart)
   const look =
     n === 3
-      ? 'the tattoo is clearly lighter and patchy: black has turned to a faded grey-blue, edges are uneven, some lines are broken, colours (if any) are only slightly lighter'
+      ? 'it is only about 20–35% lighter: the whole design is still clearly visible and readable, lines are intact but greyer and a little uneven, dense black areas are still dark'
       : n === 6
-        ? 'the tattoo is a faint, blotchy grey ghost of the design: most lines are barely visible, stubborn dense areas remain darker, colours like green, blue and yellow may persist as pale stains'
-        : 'only a very faint ghost of the design remains in a few spots; the skin may show slight texture change, faint lighter (hypopigmented) or darker patches where the ink was';
+        ? 'it is roughly half as dark: the whole design is still visible as a grey, patchy version of itself, outlines are broken in places, dense areas and overlapping lines stay noticeably darker'
+        : 'it is about 70–85% lighter but NOT gone: a faint grey ghost of the whole design is still visible, with darker remnants where the ink was densest; small tattoos with dense professional ink also keep visible traces';
   return [
-    `This photo shows a person with a tattoo. Show the same photo after ${n} laser tattoo removal sessions, fully healed (no blisters, no redness).`,
+    `This photo shows a person with a tattoo. Show the same photo after ${n} laser tattoo removal sessions, fully healed (no blisters, no redness, no scabs).`,
     `After ${n} sessions ${look}.`,
+    color ? 'Colours fade unevenly: black and dark blue respond best; green, light blue, yellow and white persist much longer as faint stains.' : '',
+    n === 10 ? 'The skin may show slight texture change or faint lighter patches where the ink was.' : '',
+    'Small size does not make it disappear faster: it fades at the same rate, still visible.',
     `The person's age and skin (${a.skinTone}) stay the same as today; only the tattoo area changes.`,
-    'The result must be medically realistic, like a real before/after from a laser clinic — not a clean erase, not a filter.',
+    'The result must look like a real, honest before/after from a laser clinic – never a clean erase, never a filter, and the tattoo never vanishes completely.',
     KEEP,
-  ].join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 }
 
 /** Redraw a design so it ages better: thicker key lines, fewer tiny details, more breathing room. */
