@@ -171,6 +171,9 @@ export default function GalleryPage() {
   const again = (p: Preview) => {
     lsSet('ink_redo', { design: p.design || null, colorMode: p.colorMode || 'black', placement: p.placement, mode: p.mode === 'removal' ? 'removal' : p.mode === 'existing' ? 'existing' : 'new' });
     track('gallery_again');
+    try {
+      sessionStorage.setItem('ink_fresh', '1');
+    } catch {}
     router.push('/app');
   };
 

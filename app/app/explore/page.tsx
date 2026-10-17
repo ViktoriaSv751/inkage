@@ -44,6 +44,9 @@ export default function ExplorePage() {
   const tryDesign = (id: string) => {
     lsSet('ink_pick', id);
     track('explore_design', { id });
+    try {
+      sessionStorage.setItem('ink_fresh', '1');
+    } catch {}
     router.push('/app');
   };
 

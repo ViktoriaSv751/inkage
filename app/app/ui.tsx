@@ -120,7 +120,10 @@ export function BottomNav() {
   const go = (href: string) => {
     haptic();
     setGoing(href);
+    // "New design" always starts with empty photo and design slots (recent photos stay)
+    if (href === '/app') try { sessionStorage.setItem('ink_fresh', '1'); } catch {}
     if (href !== path) router.push(href);
+    else if (href === '/app') window.dispatchEvent(new Event('ink:fresh'));
   };
   const items = [
     { href: '/app', label: ui.t('nav.create'), icon: Icon.plus },

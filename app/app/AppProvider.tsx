@@ -92,6 +92,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.initNative()).catch(() => {});
     else if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then(() => import('@/lib/push').then((m) => m.syncPush())).catch(() => {});
     track('app_open', { path: location.pathname });
+    // any "new design" link starts empty: photo and design slots cleared (recent photos stay)
+    const fresh = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement)?.closest?.('a[href="/app"]');
+      if (a) try { sessionStorage.setItem('ink_fresh', '1'); } catch {}
+    };
+    document.addEventListener('click', fresh, true);
     // error reporting: what broke and where (max 5 per visit, no personal data)
     let sent = 0;
     const report = (msg: string, src?: string) => {
@@ -107,6 +113,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       sub?.data.subscription.unsubscribe();
       window.removeEventListener('error', onErr);
       window.removeEventListener('unhandledrejection', onRej);
+      document.removeEventListener('click', fresh, true);
     };
   }, [refreshMe]);
 

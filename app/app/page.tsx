@@ -70,6 +70,22 @@ export default function CreatePage() {
   const [pl, setPl] = useState<Placement>({ x: 0.5, y: 0.5, w: 0.3, rot: 0, mirror: false });
   // more tattoos on the same photo
   const [extras, setExtras] = useState<Layer[]>([]);
+  // "New design" tapped while already here: empty the slots
+  useEffect(() => {
+    const h = () => {
+      try {
+        sessionStorage.removeItem('ink_fresh');
+        sessionStorage.removeItem('ink_draft');
+      } catch {}
+      setPhoto(null);
+      setDesign(null);
+      setExtras([]);
+      setPhase((ph) => (ph === 'onboarding' || ph === 'loading' ? ph : 'studio'));
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener('ink:fresh', h);
+    return () => window.removeEventListener('ink:fresh', h);
+  }, []);
   // a different photo starts with just the one tattoo again
   useEffect(() => setExtras([]), [photo?.dataUrl]);
   const [genStep, setGenStep] = useState(0);
@@ -153,8 +169,16 @@ export default function CreatePage() {
       applyOnboarding(ans);
       setPhase('studio');
     } else setPhase('onboarding');
-    // keep work in progress when switching tabs
-    if (draft) {
+    // "New design": start with empty slots; otherwise keep work in progress when switching tabs
+    let freshStart = false;
+    try {
+      freshStart = sessionStorage.getItem('ink_fresh') === '1';
+      if (freshStart) {
+        sessionStorage.removeItem('ink_fresh');
+        sessionStorage.removeItem('ink_draft');
+      }
+    } catch {}
+    if (draft && !freshStart) {
       if (draft.placement) setPlacement(draft.placement);
       if (draft.photo) setPhoto(draft.photo);
       if (draft.design) setDesign(draft.design);
