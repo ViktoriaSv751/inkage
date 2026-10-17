@@ -159,6 +159,14 @@ const DICTS: Record<Lang, Record<Key, string>> = { en: EN as any, hu: HU };
 
 export function detectLang(): Lang {
   try {
+    // an explicit ?lang= in the address wins (language links in the footer, shared links) and is remembered
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'hu') {
+      localStorage.setItem('ink_lang', q);
+      return q;
+    }
+  } catch {}
+  try {
     const saved = localStorage.getItem('ink_lang') as Lang | null;
     if (saved === 'en' || saved === 'hu') return saved;
   } catch {}
@@ -230,3 +238,6 @@ export function trErr(lang: Lang, msg: string | undefined | null) {
   if (lang !== 'hu') return m;
   return ERR_HU.find(([re]) => re.test(m))?.[1] ?? m;
 }
+
+/** Hungarian definite article: "az" before a vowel sound, "a" otherwise (instead of the clumsy "a(z)"). */
+export const huArticle = (word: string) => (/^[aáeéiíoóöőuúüű]/i.test(String(word || '').trim()) ? 'az' : 'a');

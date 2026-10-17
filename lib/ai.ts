@@ -399,7 +399,7 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
               text: `A user wants to preview a tattoo on their "${placement}". Check this photo and reply with JSON only:
 {"skinVisible": boolean (is bare skin of a body area suitable for a tattoo clearly visible?),
  "sharp": boolean, "wellLit": boolean,
- "notAllowed": boolean (true if it shows nudity of intimate areas, or the person looks under 18),
+ "notAllowed": boolean (true if it shows exposed genitals, exposed buttocks, female breasts with a visible nipple or areola, any sexual content, or if the person looks under 18; a bare male chest or a covered chest is fine),
  "visibleArea": string (the main body area visible, e.g. "inner left forearm"),
  "box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around the bare skin of the ${placement} where a tattoo could go (exclude clothing, background and other body parts), or null if that area is not visible,
  "angle": number (angle in degrees of the long axis of that body part relative to vertical, positive = leaning right; 0 if unclear),

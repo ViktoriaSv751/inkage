@@ -72,7 +72,7 @@ export function HeroAging({ frames = EXAMPLE, alt }: { frames?: { years: number;
       </div>
 
       <label className="hero-scrub">
-        <span className="sr">Drag to age the tattoo</span>
+        <span className="sr">{L('Drag to age the tattoo', 'Húzd a tetoválás öregítéséhez')}</span>
         <input
           type="range"
           min={0}

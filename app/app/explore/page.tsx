@@ -50,7 +50,7 @@ export default function ExplorePage() {
   return (
     <div className="explore">
       <h1>{ui.t('explore.title')}</h1>
-      <p className="sub">{t('Real results, designs to try and how tattoos really age.', 'Valódi eredmények, kipróbálható minták, és hogyan öregszik valójában a tetoválás.')}</p>
+      <p className="sub">{t('Example previews, designs to try and how tattoos really age.', 'Példa-előnézetek, kipróbálható minták, és hogyan öregszik valójában a tetoválás.')}</p>
 
       <section className="ex-hero">
         <div className="ex-hero-demo">
@@ -65,7 +65,7 @@ export default function ExplorePage() {
           />
         </div>
         <div className="ex-hero-txt">
-          <span className="ex-pill">{t('Real example', 'Valódi példa')}</span>
+          <span className="ex-pill">{t('AI example', 'MI-példa')}</span>
           <h2>{t('One tattoo, fifty years.', 'Egy tetoválás, ötven év.')}</h2>
           <p>{t('Drag the slider and watch the same dotwork mandala change: softer at 10 years, blue-grey at 30 and on ageing skin at 50.', 'Húzd a csúszkát, és nézd meg, hogyan változik ugyanaz a pontozott mandala: 10 évnél lágyabban, 30-nál kékesszürkén, 50-nél öregedő bőrön.')}</p>
           <Link className="btn" href="/app">
@@ -106,7 +106,7 @@ export default function ExplorePage() {
         </>
       )}
 
-      {trends && (trends.places.length > 0 || popular.length > 0) && (
+      {trends && (trends.places.some((p) => p.placement && !/design|extract|minta/i.test(p.placement)) || popular.length > 0) && (
         <>
           <div className="section-title">
             <h2>{t('Trending this week', 'A hét kedvencei')}</h2>
@@ -114,8 +114,8 @@ export default function ExplorePage() {
           </div>
           {trends.places.length > 0 && (
             <div className="row" style={{ gap: 6, marginBottom: 10 }}>
-              {trends.places.map((p, i) => (
-                <span key={p.placement} className="chip">
+              {trends.places.filter((p) => p.placement && !/design|extract|minta/i.test(p.placement)).slice(0, 8).map((p, i) => (
+                <span key={p.placement} className="chip" style={{ whiteSpace: 'normal', maxWidth: '100%' }}>
                   {i + 1}. {placeName(p.placement, ui.lang)}
                 </span>
               ))}

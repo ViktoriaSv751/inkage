@@ -793,9 +793,13 @@ function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => vo
         onClick={async () => {
           track('aftercare_ics');
           onDone?.(new Date(date + 'T12:00:00').toISOString());
+          await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-gyogyulas.ics');
+          toast(t('Open the file to add the reminders to your calendar', 'Nyisd meg a fájlt, és bekerülnek az emlékeztetők a naptáradba'));
           if (me?.user) {
-            // phone reminders too (9:00 on each step day), when notifications can be turned on
-            const st = await import('@/lib/push').then((m) => m.enablePush()).catch(() => 'off');
+            // phone reminders too, after the calendar file (never blocks it)
+            // only when notifications are already on (Profile > Settings); no surprise permission prompt here
+            const native = !!(window as any).Capacitor?.isNativePlatform?.();
+            const st = await (native ? import('@/lib/native').then((m) => m.nativePushState()) : import('@/lib/push').then((m) => m.pushState())).catch(() => 'off');
             if (st === 'on') {
               const n = await import('@/lib/push').then((m) =>
                 m.scheduleCare(date, CARE.map((s) => ({ day: s.day, text: t(s.en, s.hu) })), (d) => t(`Healing plan · day ${d}`, `Gyógyulási terv · ${d}. nap`))
@@ -803,8 +807,6 @@ function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => vo
               if (n > 0) toast(t(`${n} reminders will also arrive on your phone`, `${n} emlékeztető a telefonodra is megérkezik`));
             }
           }
-          await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-gyogyulas.ics');
-          toast(t('Open the file to add the reminders to your calendar', 'Nyisd meg a fájlt, és bekerülnek az emlékeztetők a naptáradba'));
         }}
       >
         {t('Add reminders to my calendar', 'Emlékeztetők a naptáramba')}

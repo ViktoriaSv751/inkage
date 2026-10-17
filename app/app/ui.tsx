@@ -7,7 +7,7 @@ import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { haptic } from '@/lib/store';
 import { useApp } from './AppProvider';
-import { tx } from '@/lib/i18n';
+import { tx, huArticle } from '@/lib/i18n';
 import { ThemeToggle } from '../ThemeToggle';
 
 export const Icon = {
@@ -251,7 +251,7 @@ export function AuthSheet() {
         </>
       ) : (
         <>
-          <p className="sub">{L(`Enter the code we sent to ${email}, or tap the link in the email.`, `Írd be a kódot, amit a(z) ${email} címre küldtünk, vagy koppints a levélben lévő linkre.`)}</p>
+          <p className="sub">{L(`Enter the code we sent to ${email}, or tap the link in the email.`, `Írd be a kódot, amit ${huArticle(email)} ${email} címre küldtünk, vagy koppints a levélben lévő linkre.`)}</p>
           <input id="auth-code" inputMode="numeric" autoComplete="one-time-code" placeholder="123456" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && verify()} />
           <button className="btn wide" disabled={busy || code.trim().length < 6} onClick={verify}>
             {busy ? '…' : L('Continue', 'Tovább')}

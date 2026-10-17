@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
-import { tx } from '@/lib/i18n';
+import { tx, huArticle } from '@/lib/i18n';
 import { haptic } from '@/lib/store';
 import { isCustom, makeCustom, nearest, parseCustom, PLACEMENTS } from '@/lib/placements';
 
@@ -57,7 +57,7 @@ export function BodyMap({ value, onChange }: { value: string; onChange: (v: stri
     const p = pt.matrixTransform(svg.current.getScreenCTM()!.inverse());
     const x = Math.max(10, Math.min(190, p.x)), y = Math.max(10, Math.min(436, p.y));
     const n = nearest(view, x, y);
-    const auto = t(`near the ${n.en.toLowerCase()}`, `a(z) ${n.hu.toLowerCase()} közelében`);
+    const auto = t(`near the ${n.en.toLowerCase()}`, `${huArticle(n.hu)} ${n.hu.toLowerCase()} közelében`);
     // keep a label the user typed; otherwise describe the spot by its nearest area
     const keep = custom && label && !/közelében$|^near the /.test(label) ? label : auto;
     setLabel(keep);

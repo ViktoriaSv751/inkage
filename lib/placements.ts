@@ -55,7 +55,8 @@ export const placeName = (v: string, lang: 'en' | 'hu') => {
   const c = parseCustom(v);
   if (c) return c.label;
   const p = PLACEMENTS.find((x) => x.v === v);
-  return p ? (lang === 'hu' ? p.hu : p.en) : v;
+  // stored AI placements carry a detail in brackets for the model – never show that to people
+  return p ? (lang === 'hu' ? p.hu : p.en) : String(v || '').replace(/\s*\([^)]*\)/g, '').trim();
 };
 
 /** What the AI is told: custom spots keep the user's own words. */

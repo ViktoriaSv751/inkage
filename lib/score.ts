@@ -23,14 +23,14 @@ const AREAS: { re: RegExp; friction: number; sun: number; en: string; hu: string
   { re: /outer forearm|külső alkar/i, friction: 4, sun: 8, en: 'The outer forearm sees a lot of sun', hu: 'A külső alkar sok napot kap' },
   { re: /forearm|alkar/i, friction: 3, sun: 4, en: 'Forearms are a solid, stable spot', hu: 'Az alkar stabil, jó hely' },
   { re: /neck|nyak/i, friction: 5, sun: 7, en: 'The neck is often sun-exposed', hu: 'A nyakat gyakran éri nap' },
-  { re: /ear|fül/i, friction: 4, sun: 6, en: 'Behind the ear: thin skin, hair and glasses rub it', hu: 'Fül mögött: vékony bőr, haj és szemüveg dörzsöli' },
+  { re: /\bears?\b|fül/i, friction: 4, sun: 6, en: 'Behind the ear: thin skin, hair and glasses rub it', hu: 'Fül mögött: vékony bőr, haj és szemüveg dörzsöli' },
   { re: /collar|kulcscsont/i, friction: 4, sun: 6, en: 'Collarbones catch sun and straps', hu: 'A kulcscsontot éri a nap és a pántok' },
   { re: /sternum|szegycsont/i, friction: 3, sun: 3, en: 'The sternum is thin, bony skin', hu: 'A szegycsont fölött vékony a bőr' },
   { re: /chest|mellkas/i, friction: 2, sun: 3, en: 'The chest is fairly protected, but stretches with the body', hu: 'A mellkas elég védett, de a testtel együtt nyúlik' },
-  { re: /stomach|belly|has/i, friction: 3, sun: 1, en: 'The stomach changes most with weight and age', hu: 'A has változik a legtöbbet a súllyal és a korral' },
+  { re: /stomach|belly|\bhas(a|á|on|\b)/i, friction: 3, sun: 1, en: 'The stomach changes most with weight and age', hu: 'A has változik a legtöbbet a súllyal és a korral' },
   { re: /shin|sípcsont/i, friction: 5, sun: 6, en: 'Shins get knocks, sun and trousers rubbing', hu: 'A sípcsontot ütés, nap és nadrág dörzsölése éri' },
   { re: /calf|vádli/i, friction: 3, sun: 5, en: 'Calves catch summer sun', hu: 'A vádlit nyáron sok nap éri' },
-  { re: /rib|borda|back|hát|spine|gerinc|thigh|comb|upper arm|felkar|shoulder|váll|hip|csípő/i, friction: 1, sun: 1, en: 'A protected area with little friction or sun', hu: 'Védett terület, kevés súrlódás és nap' },
+  { re: /\bribs?\b|borda|\bback\b|hát|spine|gerinc|thigh|comb|upper arm|felkar|shoulder|váll|\bhips?\b|csípő/i, friction: 1, sun: 1, en: 'A protected area with little friction or sun', hu: 'Védett terület, kevés súrlódás és nap' },
 ];
 
 export function longevity(input: ScoreInput, lang: Lang = 'en') {
@@ -58,7 +58,7 @@ export function longevity(input: ScoreInput, lang: Lang = 'en') {
   } else if (detail > 0.6) add(-6, L(lang, 'Lots of fine detail packed together', 'Sok apró részlet egymás közelében'));
 
   // area
-  const area = AREAS.find((a) => a.re.test(input.placement));
+  const area = AREAS.find((a) => a.re.test(cleanPlace(input.placement)));
   if (area) add(-(area.friction + area.sun) + 4, L(lang, area.en, area.hu));
 
   // sun habits
@@ -86,19 +86,26 @@ export function longevity(input: ScoreInput, lang: Lang = 'en') {
   return { score, factors: factors.sort((a, b) => a.impact - b.impact), suggestions, tips };
 }
 
+/** Drop the free-text detail AI placements carry, e.g. "(exact spot chosen by the user, near the sternum)" – it made "near" match "ear". */
+export function cleanPlace(p: string) {
+  return String(p || '').replace(/\([^)]*\)/g, ' ').trim();
+}
+
 /** Rough physical width of the visible frame for common shots, used to estimate cm from the editor. */
 export function frameCm(placement: string) {
-  if (/finger|ujj|ear|fül/i.test(placement)) return 9;
+  placement = cleanPlace(placement);
+  if (/finger|ujj|\bears?\b|fül/i.test(placement)) return 9;
   if (/wrist|csukló|hand|kéz|ankle|boka|foot|lábfej/i.test(placement)) return 16;
   if (/forearm|alkar|neck|nyak|tarkó|calf|vádli|shin|sípcsont|elbow|könyök|knee|térd/i.test(placement)) return 24;
   if (/upper arm|felkar|shoulder|váll|collar|kulcscsont/i.test(placement)) return 30;
-  if (/back|hát|rib|borda|thigh|comb|spine|gerinc|hip|csípő|stomach|has|sternum|szegy|chest|mellkas|derék|lapocka|blade/i.test(placement)) return 40;
+  if (/back|hát|rib|borda|thigh|comb|spine|gerinc|hip|csípő|stomach|\bhas(a|á|on|\b)|sternum|szegy|chest|mellkas|derék|lapocka|blade/i.test(placement)) return 40;
   return 26;
 }
 
 
 /** Typical width (cm) across the limb / body part, as seen from the front. */
 export function limbCm(placement: string): number | null {
+  placement = cleanPlace(placement);
   if (/finger|ujj/i.test(placement)) return 2;
   if (/wrist|csukló/i.test(placement)) return 6;
   if (/ankle|boka/i.test(placement)) return 7;

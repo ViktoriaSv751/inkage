@@ -8,7 +8,7 @@ import { Onboarding, OnboardingAnswers } from './create/Onboarding';
 import { aiPlacement } from '@/lib/placements';
 import { abShare, shareVoteLink } from '@/lib/share';
 import { Area, Design, fitToArea, Photo, placeName, PlaceStep, StudioStep } from './create/steps';
-import { trErr, tx } from '@/lib/i18n';
+import { trErr, tx, huArticle } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, shares, StageKey, STAGES, track } from '@/lib/store';
 import { composeMockup, pasteMask, Placement, Skin } from '@/lib/editor';
@@ -712,7 +712,7 @@ export default function CreatePage() {
                   setPreview(null);
                   setPhase('studio');
                   window.scrollTo({ top: 0 });
-                  toast(t(`Now add a photo of your ${placeName(v, 'en').toLowerCase()}`, `Most töltsd fel a(z) ${placeName(v, 'hu').toLowerCase()} fotóját`));
+                  toast(t(`Now add a photo of your ${placeName(v, 'en').toLowerCase()}`, `Most töltsd fel ${huArticle(placeName(v, 'hu'))} ${placeName(v, 'hu').toLowerCase()} fotóját`));
                 }
               : undefined
           }

@@ -35,8 +35,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.vercel.app';
   const abs = (u?: string) => (u && u.startsWith('/') ? `https://${host}${u}` : u);
   if (s) s.paths = { fresh: abs(s.paths.fresh), y50: abs(s.paths.y50), freshB: abs(s.paths.freshB), y50B: abs(s.paths.y50B) };
-  const title = 'Should I get this tattoo? 👀';
-  const description = 'See how it looks fresh and after 50 years, then vote. Made with InkAge.';
+  const hu = /^hu/i.test(headers().get('accept-language') || '');
+  const title = hu ? 'Csináltassam meg ezt a tetoválást? 👀' : 'Should I get this tattoo? 👀';
+  const description = hu ? 'Nézd meg frissen és 50 év múlva, aztán szavazz. InkAge-dzsel készült.' : 'See how it looks fresh and after 50 years, then vote. Made with InkAge.';
   return {
     title,
     description,
