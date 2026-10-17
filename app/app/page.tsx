@@ -212,7 +212,7 @@ export default function CreatePage() {
       applyOnboarding(me.onboarding);
       setPhase('studio');
     }
-  }, [me.onboarding]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [me.onboarding, phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function applyOnboarding(a: OnboardingAnswers) {
     setOb(a);

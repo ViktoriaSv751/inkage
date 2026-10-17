@@ -3,6 +3,8 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import { PUBLIC } from '@/lib/public-config';
 import { Vote } from './Vote';
+import { Poll } from './Poll';
+import type { PollData } from '@/lib/share';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +17,24 @@ export type Share = {
   votes: { yes: number; no: number; change: number };
 };
 
+async function getPoll(id: string): Promise<PollData | null> {
+  if (!/^p[a-f0-9]{10}$/.test(id)) return null;
+  try {
+    const r = await fetch(`${PUBLIC.supabaseUrl}/rest/v1/rpc/get_poll`, {
+      method: 'POST',
+      headers: { apikey: PUBLIC.supabaseAnonKey, Authorization: `Bearer ${PUBLIC.supabaseAnonKey}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ p_share: id }),
+      cache: 'no-store',
+    });
+    if (!r.ok) return null;
+    return (await r.json()) as PollData | null;
+  } catch {
+    return null;
+  }
+}
+
 async function getShare(id: string): Promise<Share | null> {
+  if (id.startsWith('p')) return null;
   try {
     const r = await fetch(`${PUBLIC.supabaseUrl}/rest/v1/rpc/get_share`, {
       method: 'POST',
@@ -31,8 +50,17 @@ async function getShare(id: string): Promise<Share | null> {
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const s = await getShare(params.id);
   const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.vercel.app';
+  if (params.id.startsWith('p')) {
+    const p = await getPoll(params.id);
+    const hu = /^hu/i.test(headers().get('accept-language') || '');
+    const n = p?.options.length || 1;
+    const title = `${p?.question || (n > 1 ? (hu ? 'Melyiket csináltassam meg?' : 'Which one should I get?') : hu ? 'Csináltassam meg ezt a tetoválást?' : 'Should I get this tattoo?')} 👀`;
+    const description = hu ? 'Nézd meg, és szavazz – egy koppintás, regisztráció nélkül.' : 'Take a look and vote – one tap, no sign-up.';
+    const og = p ? [`https://${host}/api/og/${params.id}`] : undefined;
+    return { title, description, robots: { index: false }, openGraph: { title, description, images: og?.map((url) => ({ url, width: 1200, height: 630 })) }, twitter: { card: 'summary_large_image', title, description, images: og } };
+  }
+  const s = await getShare(params.id);
   const abs = (u?: string) => (u && u.startsWith('/') ? `https://${host}${u}` : u);
   if (s) s.paths = { fresh: abs(s.paths.fresh), y50: abs(s.paths.y50), freshB: abs(s.paths.freshB), y50B: abs(s.paths.y50B) };
   const hu = /^hu/i.test(headers().get('accept-language') || '');
@@ -48,6 +76,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 export default async function SharePage({ params }: { params: { id: string } }) {
+  const poll = params.id.startsWith('p') ? await getPoll(params.id) : null;
+  if (poll) return <Poll id={params.id} initial={poll} />;
   const s = await getShare(params.id);
   if (!s)
     return (

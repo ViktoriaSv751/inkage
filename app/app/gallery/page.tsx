@@ -10,7 +10,7 @@ import { HealDiary, RealVsPreview } from './AfterCare';
 import { huArticle, tx } from '@/lib/i18n';
 import { cloud, haptic, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
 import { placeName } from '../create/steps';
-import { abShare, shareVoteLink } from '@/lib/share';
+import { PollSheet } from '../PollSheet';
 import { trErr } from '@/lib/i18n';
 
 // the card shows how it looks now (fresh); the years are one tap away in the detail view
@@ -35,7 +35,7 @@ export default function GalleryPage() {
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<Sort>(() => lsGet<Sort>('ink_gal_sort', 'new'));
   const [kind, setKind] = useState<Kind>('any');
-  const [abBusy, setAbBusy] = useState(false);
+  const [pollOpen, setPollOpen] = useState(false);
   const [folder, setFolder] = useState<string | null>(null);
   const [newFolder, setNewFolder] = useState('');
   const [foldersOpen, setFoldersOpen] = useState(false);
@@ -635,28 +635,10 @@ export default function GalleryPage() {
             </figure>
           ))}
         </div>
-        {pair.length === 2 && pair.every((p) => p.images.y50) ? (
-          <button
-            className="btn wide"
-            style={{ marginTop: 6 }}
-            disabled={abBusy}
-            onClick={async () => {
-              setAbBusy(true);
-              try {
-                const lab = (p: Preview) => `${placeName(p.placement, ui.lang)}${p.sizeCm ? ` ${p.sizeCm} cm` : ''}`;
-                const id = await abShare(pair[0], pair[1], lab(pair[0]), lab(pair[1]));
-                shares.add({ id, at: new Date().toISOString(), label: `${lab(pair[0])} / ${lab(pair[1])}`, kind: 'ab' });
-                await shareVoteLink(id, t('Which tattoo should I get? 👀', 'Melyik tetoválást csináltassam? 👀'), () => toast(t('Link copied — send it to your friends', 'Link másolva – küldd el a barátaidnak')));
-              } catch (e: any) {
-                toast(trErr(ui.lang, e?.message));
-              }
-              setAbBusy(false);
-            }}
-          >
-            {abBusy ? '…' : t('Ask friends: which one?', 'Kérdezd meg a barátaidat: melyik legyen?')}
+        {pair.length >= 2 && (
+          <button className="btn wide" style={{ marginTop: 6 }} onClick={() => setPollOpen(true)}>
+            {t('Ask friends: which one?', 'Kérdezd meg a barátaidat: melyik legyen?')}
           </button>
-        ) : (
-          pair.length === 3 && <p className="sub small">{t('Friends can vote between two previews — pick two to get a vote link.', 'A barátok két előnézet között szavazhatnak – a szavazós linkhez válassz ki kettőt.')}</p>
         )}
         {pair.length >= 2 && pair.every((p) => p.score !== null) && new Set(pair.map((p) => p.score)).size > 1 && (() => {
           const best = pair.reduce((a, b) => ((a.score || 0) >= (b.score || 0) ? a : b));
@@ -667,6 +649,7 @@ export default function GalleryPage() {
           );
         })()}
       </Sheet>
+      <PollSheet open={pollOpen} onClose={() => setPollOpen(false)} initial={pair} />
       {delSheet}
     </>
   );

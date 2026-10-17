@@ -484,7 +484,7 @@ export function StudioStep({
       <h2 className="sec-title">{existing ? t('Photo of your tattoo', 'Fotó a tetoválásodról') : t('Your photo and the design', 'A fotód és a minta')}</h2>
       <div className={`studio-slots ${existing ? 'one' : ''}`}>
         <div className="studio-col">
-          <button className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => { track('photo_pick_open'); photoRef.current?.click(); }} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
+          <label htmlFor="photo-input" role="button" tabIndex={0} className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => track('photo_pick_open')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
             {photo ? <img src={photo.dataUrl} alt={t('Your photo', 'A fotód')} /> : (
               <span className="sslot-empty">
                 {Icon.camera}
@@ -493,7 +493,7 @@ export function StudioStep({
               </span>
             )}
             <span className="sslot-tag">1</span>
-          </button>
+          </label>
           {photo && (
             <button type="button" className="sslot-clear" onClick={() => { setPhoto(null); setCheck({ state: 'idle' }); }} aria-label={t('Remove photo', 'Fotó eltávolítása')}>
               ×
@@ -503,9 +503,9 @@ export function StudioStep({
             <button className="chipbtn" onClick={() => setCam(true)}>
               {Icon.camera} {t('Camera', 'Kamera')}
             </button>
-            <button className="chipbtn" onClick={() => { track('photo_pick_open'); photoRef.current?.click(); }}>
+            <label htmlFor="photo-input" role="button" tabIndex={0} className="chipbtn" onClick={() => track('photo_pick_open')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }}>
               {Icon.image} {t('Photos', 'Galéria')}
-            </button>
+            </label>
           </div>
           {!existing && (
             <button className="linkbtn" onClick={() => setModelOpen(true)}>
@@ -516,7 +516,7 @@ export function StudioStep({
 
         {!existing && (
         <div className="studio-col">
-          <button className={`sslot design ${design ? 'has' : ''} ${over === 'design' ? 'over' : ''}`} onClick={() => designRef.current?.click()} aria-label={t('Choose a design', 'Minta kiválasztása')} {...drop('design')}>
+          <label htmlFor="design-input" role="button" tabIndex={0} className={`sslot design ${design ? 'has' : ''} ${over === 'design' ? 'over' : ''}`} onClick={() => track('design_pick_open')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }} aria-label={t('Choose a design', 'Minta kiválasztása')} {...drop('design')}>
             {design ? <img src={design.ink} alt={t('Your design', 'A mintád')} /> : (
               <span className="sslot-empty">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16" /></svg>
@@ -531,11 +531,11 @@ export function StudioStep({
               </span>
             )}
             <span className="sslot-tag">2</span>
-          </button>
+          </label>
           <div className="sslot-btns">
-            <button className="chipbtn" onClick={() => designRef.current?.click()}>
+            <label htmlFor="design-input" role="button" tabIndex={0} className="chipbtn" onClick={() => track('design_pick_open')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }}>
               {Icon.image} {t('Upload', 'Feltöltés')}
-            </button>
+            </label>
             <button className="chipbtn" onClick={paste}>
               {Icon.clip} {t('Paste', 'Beilleszt')}
             </button>
@@ -1282,6 +1282,8 @@ export function PlaceStep({
         <p className="sub">{t('It goes on the same photo – drag it above, below or next to the first one.', 'Ugyanarra a fotóra kerül – húzd a másik fölé, alá vagy mellé.')}</p>
         <input
           ref={addRef}
+          id="add-layer-input"
+          disabled={addBusy}
           className="file-hidden"
           type="file"
           accept="image/*,.heic,.heif"
@@ -1300,9 +1302,9 @@ export function PlaceStep({
             }
           }}
         />
-        <button className="btn wide" disabled={addBusy} onClick={() => addRef.current?.click()}>
+        <label htmlFor="add-layer-input" role="button" tabIndex={0} className={`btn wide ${addBusy ? 'is-busy' : ''}`} aria-disabled={addBusy} style={{ cursor: 'pointer' }}>
           {addBusy ? t('Cutting it out…', 'Kivágás…') : t('Upload a picture', 'Kép feltöltése')}
-        </button>
+        </label>
         <div className="layer-lib">
           {DESIGNS.slice(0, 12).map((d) => (
             <button key={d.id} type="button" disabled={addBusy} onClick={() => addLayer(d.src, false)} aria-label={t(d.en, d.hu)}>

@@ -342,12 +342,12 @@ export async function migrateLocal(uid: string) {
 
 // ---------------------------------------------------------------- vote links made on this device
 
-export type MyShare = { id: string; at: string; label: string; previewId?: string; kind: 'preview' | 'guest' | 'ab' };
+export type MyShare = { id: string; at: string; label: string; previewId?: string; previewIds?: string[]; kind: 'preview' | 'guest' | 'ab' | 'poll' };
 export const shares = {
   all: () => lsGet<MyShare[]>('ink_shares', []),
   add: (s: MyShare) => lsSet('ink_shares', [s, ...shares.all().filter((x) => x.id !== s.id)].slice(0, 100)),
   drop: (id: string) => lsSet('ink_shares', shares.all().filter((x) => x.id !== id)),
-  forPreview: (pid: string) => shares.all().filter((x) => x.previewId === pid),
+  forPreview: (pid: string) => shares.all().filter((x) => x.previewId === pid || x.previewIds?.includes(pid)),
 };
 
 /** Revoke a vote link made without an account (or as an A/B link). */

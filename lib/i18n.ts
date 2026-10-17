@@ -205,6 +205,11 @@ export const tx = (lang: Lang, en: string, hu: string) => (lang === 'hu' ? hu : 
 
 /** Server messages are English; show them in Hungarian when the app is in Hungarian. */
 const ERR_HU: [RegExp, string][] = [
+  [/^Pick at least one design/, 'Válassz legalább egy tervet.'],
+  [/^Wait for the images first/, 'Várd meg, amíg elkészülnek a képek.'],
+  [/^An image is missing or too big/, 'Egy kép hiányzik vagy túl nagy. Próbáld újra.'],
+  [/^You shared a lot today/, 'Ma már sokat osztottál meg. Próbáld újra holnap.'],
+  [/^Sharing failed/, 'A megosztás nem sikerült. Próbáld újra.'],
   [/^Wait for the 50-year images first/, 'Várd meg, amíg mindkét 50 éves kép elkészül.'],
   [/^That link can’t be opened/, 'Ezt a linket nem tudjuk megnyitni. Másold ki magát a képet, vagy mentsd el és töltsd fel.'],
   [/^We couldn’t find a picture on that page/, 'Ezen az oldalon nem találtunk képet. Másold ki magát a képet, vagy mentsd el és töltsd fel.'],

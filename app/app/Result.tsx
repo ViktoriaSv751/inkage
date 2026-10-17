@@ -13,6 +13,10 @@ import { aftercareIcs, CARE } from '@/lib/aftercare';
 import { placeName } from './create/steps';
 import { longevity } from '@/lib/score';
 import { useScrollLock } from '@/lib/scrolllock';
+import { PollSheet } from './PollSheet';
+import { PollResults } from './PollResults';
+import type { PollData } from '@/lib/share';
+import { closePoll } from '@/lib/share';
 
 const toBlob = async (src: string) => (await fetch(src)).blob();
 
@@ -174,7 +178,7 @@ export function Result({
   useScrollLock(!!zoom);
   const [video, setVideo] = useState(false);
   const [care, setCare] = useState(false);
-  const [sharing, setSharing] = useState(false);
+  const [pollOpen, setPollOpen] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
   const [notes, setNotes] = useState(preview.notes || '');
   const [closeup, setCloseup] = useState(false);
@@ -328,16 +332,6 @@ export function Result({
     if (!r.ok || !r.data.id) throw new Error(r.data?.error || t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
     shares.add({ id: r.data.id, at: new Date().toISOString(), label: placeName(preview.placement, ui.lang), previewId: preview.id, kind: 'guest' });
     return r.data.id;
-  };
-  const share = async () => {
-    setSharing(true);
-    try {
-      await shareLink(await linkFor());
-      setLinksTick((n) => n + 1);
-    } catch (e: any) {
-      toast(e?.message || t('Sharing failed. Try again.', 'A megosztás nem sikerült. Próbáld újra.'));
-    }
-    setSharing(false);
   };
 
   const card = async () => {
@@ -552,7 +546,7 @@ export function Result({
           {Icon.video}
           {t('Video', 'Videó')}
         </button>
-        <button className="act" onClick={share} disabled={sharing}>
+        <button className="act" onClick={() => setPollOpen(true)} disabled={!img.fresh}>
           {Icon.share}
           {t('Ask friends', 'Kérdezd meg')}
         </button>
@@ -673,6 +667,14 @@ export function Result({
       )}
 
       <LinksPanel preview={preview} tick={linksTick} onShared={onShared} />
+      <PollSheet
+        open={pollOpen}
+        onClose={() => {
+          setPollOpen(false);
+          setLinksTick((n) => n + 1);
+        }}
+        initial={[preview]}
+      />
 
       <div className="card toolcard" style={{ marginTop: 12 }}>
         <h3>{t('Next steps', 'Következő lépések')}</h3>
@@ -977,8 +979,8 @@ function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: numbe
     const s = sb();
     if (!s) return;
     let live = true;
-    Promise.all(ids.map((id) => s.rpc('get_share', { p_share: id }).then((r) => [id, r.data as ShareInfo] as const))).then((rows) => live && setInfo(Object.fromEntries(rows)));
-    s.rpc('post_status', { p_shares: ids }).then((r) => live && setPosts((r.data as any) || {}));
+    Promise.all(ids.map((id) => s.rpc(id.startsWith('p') ? 'get_poll' : 'get_share', { p_share: id }).then((r) => [id, r.data as ShareInfo] as const))).then((rows) => live && setInfo(Object.fromEntries(rows)));
+    s.rpc('post_status', { p_shares: ids.filter((id) => !id.startsWith('p')) }).then((r) => live && setPosts((r.data as any) || {}));
     return () => {
       live = false;
     };
@@ -988,7 +990,10 @@ function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: numbe
   const close = async (id: string) => {
     setBusy(id);
     try {
-      if (id === preview.share_id && me.user && preview.source === 'cloud') {
+      if (id.startsWith('p')) {
+        if (!(await closePoll(id))) throw new Error();
+        shares.drop(id);
+      } else if (id === preview.share_id && me.user && preview.source === 'cloud') {
         await cloud.unshare(me.user.id, preview.id);
         shares.drop(id);
         onShared?.(null);
@@ -1016,8 +1021,33 @@ function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: numbe
         const v = info[id]?.votes;
         const total = v ? v.yes + v.no + v.change : 0;
         const pl = postLabel(posts[id]);
+        const poll = id.startsWith('p') ? (info[id] as unknown as PollData | undefined) : undefined;
         return (
           <div key={id} className="link-row">
+            {poll && (
+              <>
+                <b>{poll.question}</b>
+                <PollResults poll={poll} lang={ui.lang} />
+                <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
+                  <a className="chipbtn" href={`/v/${id}`} target="_blank" rel="noreferrer">
+                    {t('Open', 'Megnyitás')}
+                  </a>
+                  <button
+                    className="chipbtn"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(`${location.origin}/v/${id}`).catch(() => {});
+                      toast(t('Link copied', 'Link másolva'));
+                    }}
+                  >
+                    {t('Copy link', 'Link másolása')}
+                  </button>
+                  <button className="chipbtn" disabled={busy === id} onClick={() => close(id)}>
+                    {t('Close link', 'Link lezárása')}
+                  </button>
+                </div>
+              </>
+            )}
+            {!poll && (<>
             <div className="link-votes">
               {v ? (
                 <>
@@ -1052,6 +1082,7 @@ function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: numbe
                 {t('Close link', 'Link lezárása')}
               </button>
             </div>
+            </>)}
           </div>
         );
       })}
