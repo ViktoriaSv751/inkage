@@ -644,8 +644,8 @@ export default function CreatePage() {
           design={design}
           setDesign={setDesign}
           onExtras={(ds) =>
-            // stacked under the first one, a little smaller; each can be moved on the next screen
-            setExtras(ds.slice(0, 5).map((d, i) => ({ design: d, pl: { x: pl.x, y: Math.min(0.92, pl.y + 0.2 * (i + 1)), w: pl.w * 0.8, rot: 0, mirror: false } })))
+            // around the first one (below, above, beside), a little smaller; each can be moved on the next screen
+            setExtras(ds.slice(0, 5).map((d, i) => { const [dx, dy] = [[0, 0.2], [0, -0.2], [0.22, 0], [-0.22, 0], [0.22, 0.2]][i]; return { design: d, pl: { x: Math.min(0.9, Math.max(0.1, pl.x + dx)), y: Math.min(0.92, Math.max(0.08, pl.y + dy)), w: pl.w * 0.8, rot: 0, mirror: false } }; }))
           }
           existingCm={existingCm}
           setExistingCm={setExistingCm}
