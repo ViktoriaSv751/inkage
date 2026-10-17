@@ -1154,7 +1154,7 @@ export function PlaceStep({
         </span>
         <span className="areachg">{t('Change', 'Módosítás')}</span>
       </button>
-      <div className={`editor ${zoom.z > 1 ? 'zoomed' : ''}`} ref={box} onPointerDown={bgDown} onPointerMove={bgMove} onPointerUp={bgUp} onPointerCancel={(e) => (bgPts.current.delete(e.pointerId), bgPts.current.size ? bgSnap() : (bgStart.current = null))}>
+      <div className={`editor ${zoom.z > 1 ? 'zoomed' : ''}`} ref={box} style={{ width: `min(100%, calc(62dvh * ${(photo.w / photo.h).toFixed(4)}))`, marginInline: 'auto' }} onPointerDown={bgDown} onPointerMove={bgMove} onPointerUp={bgUp} onPointerCancel={(e) => (bgPts.current.delete(e.pointerId), bgPts.current.size ? bgSnap() : (bgStart.current = null))}>
         <div className="ed-stage" ref={stage} style={{ transform: `translate(${zoom.tx}px, ${zoom.ty}px) scale(${zoom.z})`, ['--iz' as any]: 1 / zoom.z }}>
         {area && (
           <div

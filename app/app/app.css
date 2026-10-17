@@ -249,7 +249,7 @@
 .areaname small { display: block; font-size: 12px; font-weight: 500; color: var(--ink-3); }
 .areachg { font-size: 14px; font-weight: 600; color: var(--stencil); }
 .editor { position: relative; width: 100%; border-radius: var(--r-lg); overflow: hidden; background: #000; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-.editor > img.bg { display: block; width: 100%; height: auto; pointer-events: none; }
+.editor img.bg { display: block; width: 100%; height: auto; pointer-events: none; }
 .editor .ink { position: absolute; left: 0; top: 0; transform-origin: center; mix-blend-mode: multiply; opacity: .9; cursor: grab; z-index: 2; touch-action: none; }
 .editor .ink img { display: block; width: 100%; height: auto; pointer-events: none; }
 .editor .ink.drag { cursor: grabbing; }
