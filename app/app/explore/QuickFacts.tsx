@@ -24,12 +24,12 @@ export function QuickFacts({ lang }: { lang: Lang }) {
     <section className="qf" aria-labelledby="qf-h">
       <div className="qf-head">
         <h2 id="qf-h">{t('Quick facts', 'Gyors tények')}</h2>
-        <Link href={`/tudastar${q}`} className="qf-all">
+        <Link href={`/app/tudastar${q}`} className="qf-all">
           {t('All guides', 'Összes útmutató')}
         </Link>
       </div>
       <div className="qf-grid">
-        <Link href={`/tudastar/color-vs-black-ink-aging${q}`} className="qf-card ink" onClick={() => track('qf_open', { k: 'ink' })}>
+        <Link href={`/app/tudastar/color-vs-black-ink-aging${q}`} className="qf-card ink" onClick={() => track('qf_open', { k: 'ink' })}>
           <div className="qf-vis" aria-hidden="true">
             <div className="qf-inks">
               {inks.map((x) => (
@@ -49,7 +49,7 @@ export function QuickFacts({ lang }: { lang: Lang }) {
           <p>{t('Pastels, yellow and white usually fade first.', 'A pasztell, a sárga és a fehér általában fakul először.')}</p>
         </Link>
 
-        <Link href={`/tudastar/tattoo-aftercare-sun-protection${q}`} className="qf-card sun" onClick={() => track('qf_open', { k: 'sun' })}>
+        <Link href={`/app/tudastar/tattoo-aftercare-sun-protection${q}`} className="qf-card sun" onClick={() => track('qf_open', { k: 'sun' })}>
           <div className="qf-vis" aria-hidden="true">
             <div className="qf-sun">
               <svg viewBox="0 0 120 120">
@@ -67,7 +67,7 @@ export function QuickFacts({ lang }: { lang: Lang }) {
           <p>{t('Broad-spectrum SPF 50 once healed, reapplied in strong sun.', 'Gyógyulás után széles spektrumú 50-es fényvédő, erős napon újrakenve.')}</p>
         </Link>
 
-        <Link href={`/tudastar/fine-line-tattoos-aging${q}`} className="qf-card lines" onClick={() => track('qf_open', { k: 'lines' })}>
+        <Link href={`/app/tudastar/fine-line-tattoos-aging${q}`} className="qf-card lines" onClick={() => track('qf_open', { k: 'lines' })}>
           <div className="qf-vis" aria-hidden="true">
             <div className="qf-lines">
               <figure>
@@ -91,7 +91,7 @@ export function QuickFacts({ lang }: { lang: Lang }) {
           <p>{t('Closer lines tend to merge within 10–15 years.', 'A közelebbi vonalak 10–15 év alatt gyakran összefolynak.')}</p>
         </Link>
 
-        <Link href={`/tudastar/best-placement-for-tattoo-longevity${q}`} className="qf-card place" onClick={() => track('qf_open', { k: 'place' })}>
+        <Link href={`/app/tudastar/best-placement-for-tattoo-longevity${q}`} className="qf-card place" onClick={() => track('qf_open', { k: 'place' })}>
           <div className="qf-vis" aria-hidden="true">
             <ul className="qf-bars">
               {areas.map((a) => (

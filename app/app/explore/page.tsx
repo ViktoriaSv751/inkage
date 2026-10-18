@@ -99,7 +99,7 @@ export default function ExplorePage() {
           )}
           <div className="hscroll">
             {shownFeed.map((f) => (
-              <Link key={f.share_id} className="post-card" href={`/v/${f.share_id}`} onClick={() => track('community_open')}>
+              <Link key={f.share_id} className="post-card" href={`/app/v/${f.share_id}`} onClick={() => track('community_open')}>
                 <img src={f.share?.paths?.y50} alt="" loading="lazy" />
                 <span className="post-meta">
                   <b>50 {t('yrs', 'év')}</b>
@@ -179,13 +179,13 @@ export default function ExplorePage() {
 
       <div className="section-title">
         <h2>{t('Knowledge base', 'Tudástár')}</h2>
-        <Link className="small" href={`/tudastar${qOf(ui.lang)}`}>
+        <Link className="small" href={`/app/tudastar${qOf(ui.lang)}`}>
           {t('All articles', 'Az összes cikk')} →
         </Link>
       </div>
       <div className="hscroll ex-articles">
         {ARTICLES.map((a) => (
-          <Link key={a.slug} className="article-card" href={`/tudastar/${a.slug}${qOf(ui.lang)}`}>
+          <Link key={a.slug} className="article-card" href={`/app/tudastar/${a.slug}${qOf(ui.lang)}`}>
             {KB[a.slug] && <img src={IMG(KB[a.slug].img, 600)} alt="" loading="lazy" />}
             <span className="tag">{pick(a.tag, ui.lang)}</span>
             <b>{pick(a.title, ui.lang)}</b>

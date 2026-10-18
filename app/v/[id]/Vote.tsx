@@ -6,10 +6,11 @@ import { useEffect, useState } from 'react';
 import { sb } from '@/lib/sb';
 import { anonId, lsGet, lsSet, track } from '@/lib/store';
 import { useLang, tx } from '@/lib/i18n';
-import type { Share } from './page';
+import type { Share } from './SharedView';
 import { Report } from './Report';
 
-export function Vote({ id, initial }: { id: string; initial: Share }) {
+/** inApp: opened from Explore inside the app (no site logo, the call to action stays in the app) */
+export function Vote({ id, initial, inApp = false }: { id: string; initial: Share; inApp?: boolean }) {
   const { lang } = useLang();
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const [s, setS] = useState(initial);
@@ -51,9 +52,11 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
     const tot = s.votes.yes + s.votes.no || 1;
     return (
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
+        {!inApp && (
         <Link href="/" className="logo" style={{ fontSize: 26 }}>
           InkAge
         </Link>
+      )}
         <h1 style={{ fontSize: 'clamp(40px, 10vw, 60px)', margin: '14px 0 6px' }}>{t('Which one should I get?', 'Melyiket csináltassam?')}</h1>
         <p className="sub" style={{ margin: '0 0 14px' }}>{show50 ? t('Both after 50 years.', 'Mindkettő 50 év múlva.') : t('Both fresh.', 'Mindkettő frissen.')}</p>
         <div className="flip" style={{ marginBottom: 12 }}>
@@ -80,9 +83,9 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
         <p className="fine">{mine ? t(`${tot} vote${tot === 1 ? '' : 's'} so far`, `Eddig ${tot} szavazat`) : t('Tap the one you like more.', 'Koppints arra, amelyik jobban tetszik.')}</p>
         <div style={{ background: 'var(--ink)', color: '#fff', borderRadius: 24, padding: 22, marginTop: 24 }}>
           <h2 style={{ fontSize: 30, lineHeight: 1, margin: '0 0 8px' }}>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
-          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
-          <Link className="btn wide light" href={`/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
-            {t('Register and try it', 'Regisztrálok és kipróbálom')}
+          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+          <Link className="btn wide light" href={inApp ? '/app' : `/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
+            {inApp ? t('Make my own', 'Elkészítem a sajátomat') : t('Register and try it', 'Regisztrálok és kipróbálom')}
           </Link>
         </div>
       </main>
@@ -91,9 +94,11 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
 
   return (
     <main style={{ maxWidth: 520, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
+      {!inApp && (
       <Link href="/" className="logo" style={{ fontSize: 26 }}>
         InkAge
       </Link>
+    )}
       <h1 style={{ fontSize: 'clamp(44px, 12vw, 64px)', margin: '14px 0 14px' }}>{t('Should I get this?', 'Csináltassam meg?')}</h1>
       <div className="photo-stack" style={{ maxHeight: 'none', borderRadius: 24 }}>
         {s.paths.fresh && <img src={s.paths.fresh} alt={t('The tattoo, fresh', 'A tetoválás frissen')} />}
@@ -144,9 +149,9 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
         <h2 style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 34, lineHeight: 0.95, margin: '0 0 8px' }}>
           {t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}
         </h2>
-        <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
-        <Link className="btn wide" href={`/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
-          {t('Register and try it', 'Regisztrálok és kipróbálom')}
+        <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+        <Link className="btn wide" href={inApp ? '/app' : `/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
+          {inApp ? t('Make my own', 'Elkészítem a sajátomat') : t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </div>
       <p className="fine">{t('AI simulation for inspiration.', 'MI-szimuláció inspirációnak.')}</p>
