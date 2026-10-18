@@ -679,7 +679,7 @@ export default function ProfilePage() {
         <h2>{ui.t('profile.erase')}</h2>
         <p className="sub">{ui.t('profile.eraseConfirm')}</p>
         <input id="erase-confirm" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder={t('DELETE', 'TÖRLÉS')} autoCapitalize="characters" />
-        <button className="btn wide red" disabled={!['DELETE', 'TÖRLÉS', 'TORLES'].includes(confirm.trim().toUpperCase()) || busy} onClick={eraseAll}>
+        <button className="btn wide red" disabled={![...['DELETE', 'TÖRLÉS', 'TORLES'], t('DELETE', 'TÖRLÉS').toUpperCase()].includes(confirm.trim().toUpperCase()) || busy} onClick={eraseAll}>
           {busy ? '…' : t('Delete everything', 'Mindent törlök')}
         </button>
       </Sheet>

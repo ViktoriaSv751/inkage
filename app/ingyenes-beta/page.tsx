@@ -53,7 +53,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       lede={T('No card, no trial timer, no catch — just a fair daily limit while we’re in beta.', 'Bankkártya, próbaidő és apró betű nélkül – csak egy méltányos napi keret, amíg béta vagyunk.')}
       sections={sections}
       highlights={[
-        { i: 'gift', h: T('0 Ft', '0 Ft'), p: T('For everyone during the beta.', 'Mindenkinek a béta alatt.') },
+        { i: 'gift', h: T('Free', '0 Ft'), p: T('For everyone during the beta.', 'Mindenkinek a béta alatt.') },
         { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple, then everything is free.', 'Google- vagy Apple-fiókkal, utána minden ingyenes.') },
         { i: 'heart', h: T('Invite bonus', 'Meghívási bónusz'), p: T('Extra previews for you and a friend.', 'Extra előnézet neked és a barátodnak.') },
       ]}

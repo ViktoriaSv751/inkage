@@ -7,7 +7,7 @@
 .lp-row-v { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-3); font-weight: 600; }
 .lp-row-v svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-.lp-wrap { position: fixed; inset: 0; z-index: 1000; background: var(--bg); color: var(--ink); font-family: 'Geist Sans', system-ui, sans-serif; animation: lpIn .32s cubic-bezier(.2, .85, .2, 1); overflow-y: auto; }
+.lp-wrap { position: fixed; inset: 0; z-index: 1000; background: var(--bg); color: var(--ink); font-family: 'Geist Sans', system-ui, sans-serif; animation: lpIn .32s cubic-bezier(.2, .85, .2, 1); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; touch-action: pan-y; }
 @media (min-width: 720px) { .lp-wrap { background: var(--bg, #fff); display: grid; place-items: center; padding: 24px; animation: lpFade .2s ease-out; } }
 .lp-page { min-height: 100%; width: 100%; max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); background: var(--bg); }
 @media (min-width: 720px) { .lp-page { min-height: 0; border-radius: 32px; box-shadow: 0 40px 100px -30px rgba(13, 11, 20, .45); overflow: hidden; animation: lpUp .32s cubic-bezier(.2, .85, .2, 1); } }

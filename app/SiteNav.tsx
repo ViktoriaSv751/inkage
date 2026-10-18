@@ -47,7 +47,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
     if (top) top.style.paddingRight = sw ? `${sw}px` : '';
     const stop = (e: Event) => {
       const t = e.target as HTMLElement | null;
-      if (!t?.closest('.sn-dr-scroll')) e.preventDefault();
+      if (!t?.closest('.sn-dr-scroll, .lp-wrap')) e.preventDefault();
     };
     window.addEventListener('wheel', stop, { passive: false });
     window.addEventListener('touchmove', stop, { passive: false });
