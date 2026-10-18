@@ -89,7 +89,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
   const tabs = [
     { href: `/${q}`, base: '/', t: T('Home', 'Főoldal'), i: I.home },
     { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók'), i: I.spark },
-    signedIn ? { href: '/app', base: '/app', t: T('My app', 'Az appom'), i: I.plus, cta: true } : { href: `/regisztracio${q}`, base: '/regisztracio', t: T('Register', 'Regisztráció'), i: I.plus, cta: true },
+    { href: `/regisztracio${q}`, base: '/regisztracio', t: T('Register', 'Regisztráció'), i: I.plus, cta: true },
     { href: `/tudastar${q}`, base: '/tudastar', t: T('Guides', 'Tudástár'), i: I.book },
     { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK'), i: I.help },
   ];
@@ -114,20 +114,12 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
           </nav>
           <div className="sn-r">
             <ThemeToggle lang={lang} />
-            {signedIn ? (
-              <Link className="sn-cta" href="/app" onClick={() => track('nav_app')}>
-                {T('Open app', 'Az appom')}
-              </Link>
-            ) : (
-              <>
-                <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
-                  {T('Sign in', 'Belépés')}
-                </Link>
-                <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => track('nav_signup')}>
-                  {T('Register', 'Regisztráció')}
-                </Link>
-              </>
-            )}
+            <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
+              {T('Sign in', 'Belépés')}
+            </Link>
+            <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => track('nav_signup')}>
+              {T('Register', 'Regisztráció')}
+            </Link>
             <button className="sn-burger" aria-label={T('Menu', 'Menü')} aria-expanded={menu} onClick={() => setMenu(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M10 17h10" />
@@ -220,11 +212,12 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
           </div>
 
           <div className="sn-dr-cta">
-            <Link className="sn-dr-in" href={signedIn ? '/app' : `/belepes${q}`}>
-              {signedIn ? T('Open app', 'App megnyitása') : T('Sign in', 'Belépés')}
+            {/* always Sign in / Register; already signed in, both go straight to your gallery */}
+            <Link className="sn-dr-in" href={`/belepes${q}`} onClick={() => track('drawer_signin')}>
+              {T('Sign in', 'Belépés')}
             </Link>
-            <Link className="sn-dr-try" href={signedIn ? '/app' : `/regisztracio${q}`} onClick={() => track('drawer_cta')}>
-              {signedIn ? T('New preview', 'Új előnézet') : T('Create account', 'Regisztráció')}
+            <Link className="sn-dr-try" href={`/regisztracio${q}`} onClick={() => track('drawer_cta')}>
+              {T('Register', 'Regisztráció')}
             </Link>
           </div>
         </aside>

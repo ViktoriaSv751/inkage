@@ -22,15 +22,7 @@ export function useSignedIn() {
 export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: 'en' | 'hu'; light?: boolean; where?: string; style?: React.CSSProperties }) {
   const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
   const q = lang === 'en' ? '?lang=en' : '';
-  const signedIn = useSignedIn();
-  if (signedIn)
-    return (
-      <div className="auth-cta" style={style}>
-        <Link className={`btn ${light ? 'light' : ''}`} href="/app" onClick={() => track('cta_app', { where })}>
-          {T('Open my app', 'Az appom megnyitása')}
-        </Link>
-      </div>
-    );
+  // always Register / Sign in (signed in already, both pages go straight to the gallery)
   return (
     <div className="auth-cta" style={style}>
       <Link className={`btn ${light ? 'light' : ''}`} href={`/regisztracio${q}`} onClick={() => track('cta_signup', { where })}>
