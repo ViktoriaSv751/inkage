@@ -187,6 +187,29 @@ export function BottomNav() {
   );
 }
 
+/**
+ * Close on the finger lifting, not only on the click: in a scrolling sheet on iPhone the click after a tap is
+ * sometimes swallowed. preventDefault stops the click that would follow, so it never closes twice.
+ */
+export function closeTap(fn: () => void) {
+  let start: { x: number; y: number } | null = null;
+  return {
+    onTouchStart: (e: React.TouchEvent) => {
+      const t = e.touches[0];
+      start = e.touches.length === 1 && t ? { x: t.clientX, y: t.clientY } : null;
+    },
+    onTouchEnd: (e: React.TouchEvent) => {
+      const t = e.changedTouches[0];
+      const s = start;
+      start = null;
+      // only a tap: the finger barely moved (a scroll that started on the button does not close)
+      if (!s || !t || Math.abs(t.clientX - s.x) > 10 || Math.abs(t.clientY - s.y) > 10) return;
+      e.preventDefault();
+      fn();
+    },
+  };
+}
+
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string }) {
   useScrollLock(open);
   // the sheet moves into <body> only once the page runs in the browser (the server and the first render must match)
@@ -198,12 +221,29 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
   }, [open, onClose]);
+  // iPhone: typing in a sheet pans the page for the keyboard and does not always pan it back; taps then land off
+  // their buttons (the × and the buttons seem dead). While a sheet is open the page is locked at the top, so
+  // whenever the keyboard goes away the page is put back there.
+  useEffect(() => {
+    if (!open) return;
+    const back = () => {
+      if (window.scrollY !== 0 || window.scrollX !== 0) window.scrollTo(0, 0);
+    };
+    const vv = window.visualViewport;
+    const onBlur = () => setTimeout(back, 60);
+    document.addEventListener('focusout', onBlur);
+    vv?.addEventListener('resize', back);
+    return () => {
+      document.removeEventListener('focusout', onBlur);
+      vv?.removeEventListener('resize', back);
+    };
+  }, [open]);
   if (!open) return null;
   const sheet = (
     <div className="sheet-wrap" onClick={onClose}>
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
         <div className="grab" />
-        <button className="x" aria-label="Close" onClick={onClose}>
+        <button className="x" aria-label="Close" onClick={onClose} {...closeTap(onClose)}>
           {Icon.close}
         </button>
         {children}
