@@ -294,7 +294,7 @@ export function AuthSheet() {
   );
 }
 
-/** Shown when today's free previews are used up. */
+/** Shown when this month's previews are used up. */
 export function OutOfPreviews({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { me, ui, openAuth, toast } = useApp();
   const link = me.user ? `${typeof location !== 'undefined' ? location.origin : ''}/?ref=${me.user.id}` : '';

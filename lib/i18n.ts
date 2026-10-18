@@ -122,8 +122,8 @@ const EN = {
   'profile.install': 'Add InkAge to your home screen',
   'profile.erase': 'Delete my account and data',
   'profile.eraseConfirm': 'Type DELETE to confirm. This removes your account and every saved preview.',
-  'paywall.used': 'You reached today’s limit',
-  'paywall.sub': 'InkAge is free during the beta, with a daily limit to keep it running. Come back tomorrow — or invite a friend: you both get extra previews.',
+  'paywall.used': 'You reached this month’s limit',
+  'paywall.sub': 'You get 30 previews a month. They start again on the 1st — or invite a friend: you both get extra previews.',
 } as const;
 
 type Key = keyof typeof EN;
@@ -199,8 +199,8 @@ const HU: Record<Key, string> = {
   'profile.install': 'InkAge a kezdőképernyőre',
   'profile.erase': 'Fiókom és adataim törlése',
   'profile.eraseConfirm': 'Írd be: TÖRLÉS. Ez törli a fiókodat és minden mentett előnézetet.',
-  'paywall.used': 'Elérted a mai keretet',
-  'paywall.sub': 'Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
+  'paywall.used': 'Elérted a havi keretet',
+  'paywall.sub': 'Havonta 30 előnézet jár. Minden hónap 1-jén újraindul – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
 };
 
 const DICTS: Record<'en' | 'hu', Record<Key, string>> = { en: EN as any, hu: HU };
@@ -281,7 +281,7 @@ const ERR_HU: [RegExp, string][] = [
   [/^You shared a lot today/, 'Ma már sokat osztottál meg. Próbáld újra holnap.'],
   [/^Sharing failed/, 'A megosztás nem sikerült. Próbáld újra.'],
   [/^You used your free preview/, 'Elhasználtad az ingyenes előnézeteidet mára. Próbáld újra holnap.'],
-  [/^You reached your plan limit/, 'Elérted a mai keretedet. Próbáld újra később.'],
+  [/^You reached (your plan|this month’s) limit/, 'Elérted a havi keretedet. Minden hónap 1-jén újraindul.'],
   [/^So many people are trying InkAge today/, 'Ma nagyon sokan próbálják az InkAge-et, ezért az ingyenes előnézetek szünetelnek. Próbáld újra holnap.'],
   [/^Previews are paused/, 'Az előnézetek rövid ideig szünetelnek. Próbáld újra később.'],
   [/^Lots of people are making previews/, 'Most nagyon sokan készítenek előnézetet. Próbáld újra egy perc múlva.'],

@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const { data: start, error } = await a.db.rpc('start_generation', { p_placement: placement });
     if (error) return json({ error: 'Could not start your preview. Try again.' }, 500);
     if (!start.ok) {
-      return json({ error: start.plan === 'free' ? 'You used your free preview.' : 'You reached your plan limit for now.', code: 'paywall', plan: start.plan }, 402);
+      return json({ error: start.plan === 'free' ? 'You used your free preview.' : 'You reached this month’s limit. It starts again on the 1st.', code: 'paywall', plan: start.plan }, 402);
     }
     gid = start.gid;
     canAge = start.canAge || start.plan === 'free'; // the free preview includes the aging stages too
