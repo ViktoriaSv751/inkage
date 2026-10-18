@@ -24,13 +24,23 @@ export const PICKER: Record<Lang, P> = {
   id: { settings: 'Pengaturan', title: 'Pilih bahasamu', sub: 'Seluruh situs dan aplikasi akan berganti. Kamu bisa mengubahnya kapan saja.', current: 'Saat ini', note: 'Pilihanmu disimpan di perangkat ini.', save: 'Simpan', cancel: 'Batal', back: 'Kembali', language: 'Bahasa' },
   th: { settings: 'การตั้งค่า', title: 'เลือกภาษา', sub: 'ทั้งเว็บไซต์และแอปจะเปลี่ยนภาษา เปลี่ยนได้ทุกเมื่อ', current: 'ปัจจุบัน', note: 'ระบบจะจำตัวเลือกของคุณไว้ในอุปกรณ์นี้', save: 'บันทึก', cancel: 'ยกเลิก', back: 'กลับ', language: 'ภาษา' },
   zh: { settings: '設定', title: '選擇語言', sub: '整個網站和 App 都會切換，隨時可以更改。', current: '目前', note: '你的選擇會記在這台裝置上。', save: '儲存', cancel: '取消', back: '返回', language: '語言' },
+  vi: { settings: "Cài đặt", title: "Chọn ngôn ngữ", sub: "Toàn bộ trang web và ứng dụng sẽ đổi theo. Bạn có thể đổi lại bất cứ lúc nào.", current: "Hiện tại", note: "Lựa chọn của bạn được lưu trên thiết bị này.", save: "Lưu", cancel: "Hủy", back: "Quay lại", language: "Ngôn ngữ" },
+  fil: { settings: "Mga setting", title: "Piliin ang wika mo", sub: "Magpapalit ang buong site at ang app. Puwede mo itong baguhin anumang oras.", current: "Kasalukuyan", note: "Naka-save ang pinili mo sa device na ito.", save: "I-save", cancel: "Kanselahin", back: "Bumalik", language: "Wika" },
+  ms: { settings: "Tetapan", title: "Pilih bahasa anda", sub: "Seluruh laman web dan aplikasi akan bertukar. Anda boleh mengubahnya bila-bila masa.", current: "Semasa", note: "Pilihan anda disimpan pada peranti ini.", save: "Simpan", cancel: "Batal", back: "Kembali", language: "Bahasa" },
+  zhs: { settings: "设置", title: "选择语言", sub: "整个网站和应用都会切换，随时可以更改。", current: "当前", note: "你的选择会保存在这台设备上。", save: "保存", cancel: "取消", back: "返回", language: "语言" },
+  da: { settings: "Indstillinger", title: "Vælg dit sprog", sub: "Hele siden og appen skifter med. Du kan altid ændre det.", current: "Nuværende", note: "Dit valg gemmes på denne enhed.", save: "Gem", cancel: "Annuller", back: "Tilbage", language: "Sprog" },
+  'no': { settings: "Innstillinger", title: "Velg språk", sub: "Hele nettstedet og appen bytter språk. Du kan endre det når som helst.", current: "Nåværende", note: "Valget ditt lagres på denne enheten.", save: "Lagre", cancel: "Avbryt", back: "Tilbake", language: "Språk" },
+  fi: { settings: "Asetukset", title: "Valitse kieli", sub: "Koko sivusto ja sovellus vaihtavat kielen. Voit muuttaa sitä milloin tahansa.", current: "Nykyinen", note: "Valintasi tallennetaan tälle laitteelle.", save: "Tallenna", cancel: "Peruuta", back: "Takaisin", language: "Kieli" },
+  sk: { settings: "Nastavenia", title: "Vyber si jazyk", sub: "Prepne sa celý web aj aplikácia. Môžeš to kedykoľvek zmeniť.", current: "Aktuálny", note: "Tvoja voľba sa uloží v tomto zariadení.", save: "Uložiť", cancel: "Zrušiť", back: "Späť", language: "Jazyk" },
+  hr: { settings: "Postavke", title: "Odaberi jezik", sub: "Promijenit će se cijela stranica i aplikacija. Možeš to promijeniti bilo kada.", current: "Trenutni", note: "Tvoj odabir sprema se na ovom uređaju.", save: "Spremi", cancel: "Odustani", back: "Natrag", language: "Jezik" },
+  bg: { settings: "Настройки", title: "Избери език", sub: "Целият сайт и приложението ще се сменят. Можеш да го промениш по всяко време.", current: "Текущ", note: "Изборът ти се запазва на това устройство.", save: "Запази", cancel: "Отказ", back: "Назад", language: "Език" },
 };
 
 /** A language's name written in another language (from the browser), falling back to the English name. */
 export function langName(code: string, inLang: string, locale: string, fallback: string) {
   try {
     const dn = new (Intl as any).DisplayNames([locale], { type: 'language' });
-    const v = dn.of(code === 'zh' ? 'zh-Hant' : code === 'pt' ? 'pt-BR' : code);
+    const v = dn.of(code === 'zh' ? 'zh-Hant' : code === 'zhs' ? 'zh-Hans' : code === 'no' ? 'nb' : code === 'pt' ? 'pt-BR' : code);
     if (v && v !== code) return v.charAt(0).toLocaleUpperCase(locale) + v.slice(1);
   } catch {}
   void inLang;

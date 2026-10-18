@@ -1,3 +1,4 @@
+import READY from '@/lib/locales/ready.json';
 import { tx, qOf } from '@/lib/tr';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -198,7 +199,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
             <li>
               <Ico k="globe" />
               <span>
-                <b>{T('In 10 languages', '10 nyelven')}</b>
+                <b>{T('In 10 languages', '10 nyelven').replace('10', String((READY as string[]).length))}</b>
                 {T('Switch any time from the menu.', 'Bármikor átválthatod a menüben.')}
               </span>
             </li>

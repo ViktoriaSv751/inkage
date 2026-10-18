@@ -4,7 +4,7 @@
 
 import READY from './locales/ready.json';
 
-export const LANGS = ['hu', 'en', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh'] as const;
+export const LANGS = ['hu', 'en', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh', 'vi', 'fil', 'ms', 'zhs', 'da', 'no', 'fi', 'sk', 'hr', 'bg'] as const;
 export type Lang = (typeof LANGS)[number];
 
 export const LANG_INFO: Record<Lang, { native: string; en: string; hu: string; locale: string; flag: string }> = {
@@ -28,6 +28,16 @@ export const LANG_INFO: Record<Lang, { native: string; en: string; hu: string; l
   id: { native: 'Bahasa Indonesia', en: 'Indonesian', hu: 'Indonéz', locale: 'id-ID', flag: '🇮🇩' },
   th: { native: 'ไทย', en: 'Thai', hu: 'Thai', locale: 'th-TH', flag: '🇹🇭' },
   zh: { native: '繁體中文', en: 'Chinese (Traditional)', hu: 'Kínai (hagyományos)', locale: 'zh-TW', flag: '🇹🇼' },
+  vi: { native: 'Tiếng Việt', en: 'Vietnamese', hu: 'Vietnámi', locale: 'vi-VN', flag: '🇻🇳' },
+  fil: { native: 'Filipino', en: 'Filipino', hu: 'Filippínó', locale: 'fil-PH', flag: '🇵🇭' },
+  ms: { native: 'Bahasa Melayu', en: 'Malay', hu: 'Maláj', locale: 'ms-MY', flag: '🇲🇾' },
+  zhs: { native: '简体中文', en: 'Chinese (Simplified)', hu: 'Kínai (egyszerűsített)', locale: 'zh-CN', flag: '🇨🇳' },
+  da: { native: 'Dansk', en: 'Danish', hu: 'Dán', locale: 'da-DK', flag: '🇩🇰' },
+  'no': { native: 'Norsk', en: 'Norwegian', hu: 'Norvég', locale: 'nb-NO', flag: '🇳🇴' },
+  fi: { native: 'Suomi', en: 'Finnish', hu: 'Finn', locale: 'fi-FI', flag: '🇫🇮' },
+  sk: { native: 'Slovenčina', en: 'Slovak', hu: 'Szlovák', locale: 'sk-SK', flag: '🇸🇰' },
+  hr: { native: 'Hrvatski', en: 'Croatian', hu: 'Horvát', locale: 'hr-HR', flag: '🇭🇷' },
+  bg: { native: 'Български', en: 'Bulgarian', hu: 'Bolgár', locale: 'bg-BG', flag: '🇧🇬' },
 };
 
 export const isLang = (x: unknown): x is Lang => typeof x === 'string' && (LANGS as readonly string[]).includes(x);
@@ -40,14 +50,19 @@ export const langOf = (sp?: { lang?: string | string[] } | null): Lang => {
 export const qOf = (lang: Lang) => (lang === 'hu' ? '' : `?lang=${lang}`);
 /** Same, to append to a link that already has a query string. */
 export const ampOf = (lang: Lang) => (lang === 'hu' ? '' : `&lang=${lang}`);
+/** Value for the html lang attribute / hreflang. */
+export const htmlLang = (lang: Lang) => (lang === 'zhs' ? 'zh-Hans' : lang === 'zh' ? 'zh-Hant' : lang === 'no' ? 'nb' : lang);
 export const localeOf = (lang: Lang) => LANG_INFO[lang]?.locale || 'en-GB';
 /** Best match for a browser language ("de-AT" → de), English otherwise. */
 export const fromBrowser = (nav?: string | null): Lang => {
   const v = String(nav || '').toLowerCase().trim();
   const two = v.slice(0, 2);
-  // Chinese: traditional for Taiwan / Hong Kong / Macau only (simplified is not offered yet)
-  if (two === 'zh') return /^zh[-_](tw|hk|mo|hant)/.test(v) && (READY as string[]).includes('zh') ? 'zh' : 'en';
-  return isLang(two) && (READY as string[]).includes(two) ? two : 'en';
+  const ok = (l: string): Lang => (isLang(l) && (READY as string[]).includes(l) ? l : 'en');
+  // Chinese: traditional for Taiwan / Hong Kong / Macau, simplified everywhere else
+  if (two === 'zh') return /^zh[-_](tw|hk|mo|hant)/.test(v) ? ok('zh') : ok('zhs');
+  if (two === 'nb' || two === 'nn') return ok('no');
+  if (two === 'tl' || v.startsWith('fil')) return ok('fil');
+  return ok(two);
 };
 
 type Dict = { exact: Record<string, string>; tpl?: [string, string][] };

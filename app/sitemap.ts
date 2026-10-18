@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { ARTICLES } from '@/lib/articles';
 import { seoSlugs } from '@/lib/seo';
-import { LANGS, qOf } from '@/lib/tr';
+import { LANGS, qOf, htmlLang } from '@/lib/tr';
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://inkage.vercel.app';
 
@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // every page in every language (?lang=…), each listing its translations
   const withLangs = (list: MetadataRoute.Sitemap): MetadataRoute.Sitemap =>
     list.flatMap((e) => {
-      const languages = Object.fromEntries(LANGS.map((l) => [l, `${e.url}${qOf(l)}`]));
+      const languages = Object.fromEntries(LANGS.map((l) => [htmlLang(l), `${e.url}${qOf(l)}`]));
       return LANGS.map((l) => ({ ...e, url: `${e.url}${qOf(l)}`, alternates: { languages } }));
     });
   return withLangs([

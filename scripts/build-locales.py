@@ -6,7 +6,7 @@ TR = sys.argv[1] if len(sys.argv) > 1 else '/tmp/claude-0/tr'
 items = {str(x['id']): x for x in json.load(open(f'{TR}/all.json'))}
 if os.path.exists(f'{TR}/extra-items.json'):
     items.update({str(x['id']): x for x in json.load(open(f'{TR}/extra-items.json'))})
-langs = ['de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh']
+langs = ['de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh', 'vi', 'fil', 'ms', 'zhs', 'da', 'no', 'fi', 'sk', 'hr', 'bg']
 ph = lambda s: set(re.findall(r'\{\d+\}', s))
 report = {}
 for l in langs:
