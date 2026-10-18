@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { track } from '@/lib/store';
+import { oauthParams, authErrorText } from '@/lib/auth-help';
 import './auth.css';
 
 
@@ -43,7 +44,10 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
         .then((r) => r.json())
         .then((d) => setProviders({ google: !!d?.external?.google, apple: !!d?.external?.apple, loaded: true }))
         .catch(() => {});
-  }, [router]);
+    // a failed Google / Apple sign-in comes back here with ?err=<code>
+    const code = new URLSearchParams(location.search).get('err');
+    if (code) setErr(authErrorText(code, lang));
+  }, [router, lang]);
   useEffect(() => {
     if (wait <= 0) return;
     const id = setTimeout(() => setWait(wait - 1), 1000);
@@ -158,7 +162,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
       if (e) setErr(e);
       return;
     }
-    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery` } })) || {};
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
 

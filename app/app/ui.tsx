@@ -1,5 +1,6 @@
 'use client';
 import { qOf } from '@/lib/tr';
+import { oauthParams } from '@/lib/auth-help';
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -227,7 +228,7 @@ export function AuthSheet() {
       if (e) setErr(e);
       return;
     }
-    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery` } })) || {};
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
 

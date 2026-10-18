@@ -1,5 +1,6 @@
 'use client';
 import { tx, qOf } from '@/lib/tr';
+import { authErrorCode } from '@/lib/auth-help';
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { api, sb } from '@/lib/sb';
@@ -47,7 +48,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const toLogin = useCallback(() => {
     setGate('out');
     const q = qOf(ui.lang);
-    location.replace(`/belepes${q}`);
+    // a Google / Apple sign-in that failed comes back with #error=… – show why on the sign-in page
+    const failed = authErrorCode(new URLSearchParams(location.hash.slice(1) + '&' + location.search.slice(1)));
+    location.replace(`/belepes${q}${failed ? `${q ? '&' : '?'}err=${encodeURIComponent(failed)}` : ''}`);
   }, [ui.lang]);
 
   const toast = useCallback((m: string) => {

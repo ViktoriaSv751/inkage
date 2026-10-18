@@ -2,6 +2,7 @@
 /* Native (Capacitor) bridge. The store apps are a thin shell around the live web app; everything
    here is a no-op in a normal browser, so the web keeps working exactly as before. */
 import { sb } from './sb';
+import { oauthParams, authErrorCode } from './auth-help';
 
 export const NATIVE_SCHEME = 'app.inkage';
 export const AUTH_CALLBACK = `${NATIVE_SCHEME}://auth`;
@@ -15,7 +16,7 @@ export const platform = (): 'ios' | 'android' | 'web' => (isNative() ? ((cap()?.
 export async function nativeOAuth(provider: 'google' | 'apple'): Promise<string | null> {
   const s = sb();
   if (!s) return 'Not available';
-  const { data, error } = await s.auth.signInWithOAuth({ provider, options: { redirectTo: AUTH_CALLBACK, skipBrowserRedirect: true } });
+  const { data, error } = await s.auth.signInWithOAuth({ provider, options: { redirectTo: AUTH_CALLBACK, skipBrowserRedirect: true, queryParams: oauthParams(provider) } });
   if (error || !data?.url) return error?.message || 'Sign-in failed';
   const { Browser } = await import('@capacitor/browser');
   await Browser.open({ url: data.url, presentationStyle: 'popover' });
@@ -28,6 +29,12 @@ async function finishAuth(url: string) {
   const u = new URL(url.replace(`${NATIVE_SCHEME}://`, 'https://x/'));
   const p = new URLSearchParams(u.hash.replace(/^#/, '') || u.search.replace(/^\?/, ''));
   const access_token = p.get('access_token'), refresh_token = p.get('refresh_token');
+  const failed = authErrorCode(p);
+  if (failed) {
+    const { Browser } = await import('@capacitor/browser');
+    Browser.close().catch(() => {});
+    return void location.replace(`/belepes?err=${encodeURIComponent(failed)}`);
+  }
   try {
     if (access_token && refresh_token) await s.auth.setSession({ access_token, refresh_token });
     else if (p.get('code')) await s.auth.exchangeCodeForSession(p.get('code')!);
