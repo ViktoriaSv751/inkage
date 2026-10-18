@@ -96,7 +96,10 @@
 .sheet .grab { width: 38px; height: 5px; border-radius: 5px; background: var(--line); margin: -14px auto 0; }
 /* sticky, not absolute: it stays in the corner while the sheet scrolls, so nothing else (e.g. Restore) slides under the finger */
 .sheet .x { position: sticky; top: 0; justify-self: end; margin: -15px -6px -46px 0; z-index: 5; box-shadow: 0 0 0 4px var(--surface); width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); }
-.sheet .x svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.2; fill: none; }
+.sheet .x svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.2; fill: none; pointer-events: none; }
+/* a bigger, sure tap target around the close button (44 px, as phones expect), and no double-tap zoom delay */
+.sheet .x { touch-action: manipulation; cursor: pointer; }
+.sheet .x::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
 .perks { margin: 0; padding-left: 20px; color: var(--ink-2); display: grid; gap: 6px; }
 .copybox input { color: var(--ink-2) !important; font-size: 15px !important; }
 
