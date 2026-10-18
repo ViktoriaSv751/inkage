@@ -53,6 +53,20 @@ export default function GalleryPage() {
     return [...l, ...c];
   }, [me.user]);
 
+  // designs that went missing earlier come back on their own
+  const recovering = useRef(false);
+  useEffect(() => {
+    if (!me.user || recovering.current) return;
+    recovering.current = true;
+    cloud
+      .recoverMissing(me.user.id)
+      .then(async (n) => {
+        if (!n) return;
+        await load();
+        toast(t(`${n} missing design${n > 1 ? 's' : ''} restored to your gallery`, `${n} elveszettnek hitt terv visszakerült a galériádba`));
+      })
+      .catch(() => {});
+  }, [me.user]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     load().then((all) => {
       // a preview linked from the profile page
