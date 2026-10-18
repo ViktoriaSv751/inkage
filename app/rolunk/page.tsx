@@ -198,7 +198,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
             <li>
               <Ico k="globe" />
               <span>
-                <b>{T('Hungarian and English', 'Magyarul és angolul')}</b>
+                <b>{T('In 10 languages', '10 nyelven')}</b>
                 {T('Switch any time from the menu.', 'Bármikor átválthatod a menüben.')}
               </span>
             </li>

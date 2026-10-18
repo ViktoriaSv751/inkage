@@ -4,6 +4,8 @@ import json, glob, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TR = sys.argv[1] if len(sys.argv) > 1 else '/tmp/claude-0/tr'
 items = {str(x['id']): x for x in json.load(open(f'{TR}/all.json'))}
+if os.path.exists(f'{TR}/extra-items.json'):
+    items.update({str(x['id']): x for x in json.load(open(f'{TR}/extra-items.json'))})
 langs = ['de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro']
 ph = lambda s: set(re.findall(r'\{\d+\}', s))
 report = {}
@@ -36,4 +38,13 @@ for l in langs:
     json.dump(content, open(f'{ROOT}/lib/locales/content-{l}.json', 'w'), ensure_ascii=False, separators=(',', ':'))
     report[l] = {'ok': len(items) - len(missing) - len(bad), 'missing': len(missing), 'bad': len(bad)}
     open(f'{TR}/missing-{l}.json', 'w').write(json.dumps([{'id': int(i), 'en': items[i]['en']} for i in missing + bad], ensure_ascii=False))
+# browser copies of the UI dictionaries, loaded by the page before the app starts
+import hashlib
+os.makedirs(f'{ROOT}/public/locales', exist_ok=True)
+man = {}
+for l in langs:
+    raw = open(f'{ROOT}/lib/locales/{l}.json').read()
+    open(f'{ROOT}/public/locales/{l}.js', 'w').write(f"window.__INK_LANG='{l}';window.__INK_DICT={raw};")
+    man[l] = hashlib.sha1(raw.encode()).hexdigest()[:10]
+json.dump(man, open(f'{ROOT}/lib/locales/manifest.json', 'w'))
 print(json.dumps(report, indent=1))

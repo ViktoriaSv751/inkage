@@ -36,9 +36,11 @@ export const fromBrowser = (nav?: string | null): Lang => {
 };
 
 type Dict = { exact: Record<string, string>; tpl?: [string, string][] };
-const DICTS: Partial<Record<Lang, Dict>> = {};
-const compiled: Partial<Record<Lang, { re: RegExp; to: string }[]>> = {};
-const cache: Partial<Record<Lang, Map<string, string>>> = {};
+// kept on globalThis: on the server the same dictionaries serve every bundle (pages, client-component SSR, API)
+const G = globalThis as any;
+const DICTS: Partial<Record<Lang, Dict>> = (G.__inkDicts ||= {});
+const compiled: Partial<Record<Lang, { re: RegExp; to: string }[]>> = (G.__inkTpl ||= {});
+const cache: Partial<Record<Lang, Map<string, string>>> = (G.__inkCache ||= {});
 
 export function registerDict(lang: Lang, d: Dict) {
   DICTS[lang] = d;
@@ -94,4 +96,10 @@ export function pick<T extends string | string[] | readonly string[]>(o: { en: T
   if (lang === 'en') return o.en;
   if (o[lang] !== undefined) return o[lang];
   return (Array.isArray(o.en) ? (o.en as string[]).map((s) => tr(lang, s)) : tr(lang, o.en as string)) as T;
+}
+
+// in the browser the page ships its language's dictionary (public/locales/<lang>.js), before the app starts
+if (typeof window !== 'undefined') {
+  const w = window as any;
+  if (w.__INK_DICT && isLang(w.__INK_LANG) && !DICTS[w.__INK_LANG as Lang]) registerDict(w.__INK_LANG, w.__INK_DICT);
 }

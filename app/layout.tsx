@@ -7,6 +7,9 @@ import '@fontsource/geist-sans/800.css';
 import './globals.css';
 import './dark.css';
 import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
+import { isLang } from '@/lib/tr';
+import LOCALE_VER from '@/lib/locales/manifest.json';
 
 export const metadata: Metadata = {
   title: 'InkAge – See your tattoo in 50 years',
@@ -23,9 +26,14 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#ffffff', colorScheme: 'light' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const h = headers().get('x-ink-lang');
+  const lang = isLang(h) ? h : 'hu';
+  const ver = (LOCALE_VER as Record<string, string>)[lang];
   return (
-    <html lang="hu" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
+        {/* this language's words, before the page starts (Hungarian and English are built in) */}
+        {ver && <script src={`/locales/${lang}.js?v=${ver}`} />}
         {/* theme + language before first paint, so there is no flash */}
         <script
           dangerouslySetInnerHTML={{

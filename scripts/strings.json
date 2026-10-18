@@ -96,8 +96,16 @@
    ],
    "kind": "call"
   },
-  "free for everyone during the beta": {
-   "hu": "mindenkinek ingyenes a béta alatt",
+  "Free": {
+   "hu": "0 Ft",
+   "files": [
+    "app/LandingMore.tsx",
+    "app/ingyenes-beta/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "for everyone after sign-up": {
+   "hu": "regisztráció után mindenkinek",
    "files": [
     "app/LandingMore.tsx"
    ],
@@ -1399,8 +1407,8 @@
    ],
    "kind": "call"
   },
-  "More languages are on the way. Your choice is remembered on this device.": {
-   "hu": "További nyelvek is érkeznek. A választásodat ezen az eszközön megjegyezzük.",
+  "Your choice is remembered on this device.": {
+   "hu": "A választásodat ezen az eszközön megjegyezzük.",
    "files": [
     "app/LangPicker.tsx"
    ],
@@ -6976,8 +6984,8 @@
    ],
    "kind": "pair"
   },
-  "They are used to make your preview. As a guest they stay on this device; signed in, they are stored privately in your account. Shared links only contain the two small images you chose to share. You can delete everything here in Profile.": {
-   "hu": "Az előnézet elkészítéséhez használjuk őket. Vendégként ezen az eszközön maradnak, bejelentkezve privát módon a fiókodban. A megosztott link csak a két kis képet tartalmazza, amit megosztottál. Itt a Profilban mindent törölhetsz.",
+  "They are used to make your preview and are stored privately in your account. Shared links only contain the small images you chose to share. You can delete everything here in Profile.": {
+   "hu": "Az előnézet elkészítéséhez használjuk őket, és privát módon a fiókodban tároljuk. A megosztott link csak azokat a kis képeket tartalmazza, amiket megosztottál. Itt a Profilban mindent törölhetsz.",
    "files": [
     "app/app/profile/page.tsx"
    ],
@@ -6997,8 +7005,8 @@
    ],
    "kind": "pair"
   },
-  "Yes, while we are in beta. There is a daily limit so it stays free for everyone.": {
-   "hu": "Igen, a tesztidőszak alatt. Van egy napi keret, hogy mindenkinek ingyenes maradhasson.",
+  "Yes, after you sign up. There is a daily limit so it stays free for everyone.": {
+   "hu": "Igen, regisztráció után. Van egy napi keret, hogy mindenkinek ingyenes maradhasson.",
    "files": [
     "app/app/profile/page.tsx"
    ],
@@ -8458,13 +8466,6 @@
    ],
    "kind": "call"
   },
-  "0 Ft": {
-   "hu": "0 Ft",
-   "files": [
-    "app/ingyenes-beta/page.tsx"
-   ],
-   "kind": "call"
-  },
   "For everyone during the beta.": {
    "hu": "Mindenkinek a béta alatt.",
    "files": [
@@ -9483,8 +9484,8 @@
    ],
    "kind": "call"
   },
-  "Hungarian and English": {
-   "hu": "Magyarul és angolul",
+  "In 10 languages": {
+   "hu": "10 nyelven",
    "files": [
     "app/rolunk/page.tsx"
    ],
