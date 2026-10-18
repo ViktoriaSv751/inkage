@@ -719,6 +719,9 @@ export default function ProfilePage() {
             </button>
           </div>
         </div>
+        <button className="btn wide ghost" onClick={() => setEditOpen(false)}>
+          {t('Done', 'Kész')}
+        </button>
       </Sheet>
 
       <Sheet open={erase} onClose={() => setErase(false)} label={ui.t('profile.erase')}>

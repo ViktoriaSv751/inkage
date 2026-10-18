@@ -187,6 +187,9 @@ export function BottomNav() {
 
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string }) {
   useScrollLock(open);
+  // the sheet moves into <body> only once the page runs in the browser (the server and the first render must match)
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return;
     const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -194,8 +197,7 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
     return () => window.removeEventListener('keydown', k);
   }, [open, onClose]);
   if (!open) return null;
-  // rendered straight into <body>: inside the photo editor (or any moving parent) a fixed sheet could shift sideways
-  return createPortal(
+  const sheet = (
     <div className="sheet-wrap" onClick={onClose}>
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
         <div className="grab" />
@@ -204,9 +206,10 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
         </button>
         {children}
       </div>
-    </div>,
-    document.body
+    </div>
   );
+  // rendered straight into <body>: inside the photo editor (or any moving parent) a fixed sheet could shift sideways.
+  return mounted ? createPortal(sheet, document.body) : sheet;
 }
 
 export function AuthSheet() {
