@@ -20,10 +20,10 @@ export function authErrorText(code: string, lang: Lang): string {
   if (code === 'user_banned')
     return tx(
       lang,
-      'This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID, or sign up with your e-mail.',
-      'Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t, vagy regisztrálj e-mail-címmel.'
+      'This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID to register again.',
+      'Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t az újbóli regisztrációhoz.'
     );
   if (code === 'access_denied')
     return tx(lang, 'Sign-in was cancelled. Try again.', 'A belépés megszakadt. Próbáld újra.');
-  return tx(lang, 'Sign-in didn’t work. Try again, or use your e-mail.', 'A belépés nem sikerült. Próbáld újra, vagy lépj be e-mail-címmel.');
+  return tx(lang, 'Sign-in didn’t work. Try again, or use the other option (Google or Apple).', 'A belépés nem sikerült. Próbáld újra, vagy használd a másik lehetőséget (Google vagy Apple).');
 }

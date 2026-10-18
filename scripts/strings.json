@@ -1369,69 +1369,6 @@
    ],
    "kind": "call"
   },
-  "Back": {
-   "hu": "Vissza",
-   "files": [
-    "app/LangPicker.tsx",
-    "app/_auth/AuthScreen.tsx",
-    "app/app/create/BodyMap.tsx"
-   ],
-   "kind": "call"
-  },
-  "Settings": {
-   "hu": "Beállítások",
-   "files": [
-    "app/LangPicker.tsx",
-    "app/app/profile/page.tsx"
-   ],
-   "kind": "call"
-  },
-  "Choose your language": {
-   "hu": "Válassz nyelvet",
-   "files": [
-    "app/LangPicker.tsx"
-   ],
-   "kind": "call"
-  },
-  "The whole site and the app will switch. You can change it any time.": {
-   "hu": "A teljes oldal és az app is átvált. Bármikor módosíthatod.",
-   "files": [
-    "app/LangPicker.tsx"
-   ],
-   "kind": "call"
-  },
-  "Current": {
-   "hu": "Jelenlegi",
-   "files": [
-    "app/LangPicker.tsx"
-   ],
-   "kind": "call"
-  },
-  "Your choice is remembered on this device.": {
-   "hu": "A választásodat ezen az eszközön megjegyezzük.",
-   "files": [
-    "app/LangPicker.tsx"
-   ],
-   "kind": "call"
-  },
-  "Save": {
-   "hu": "Mentés",
-   "files": [
-    "app/LangPicker.tsx",
-    "app/app/Result.tsx",
-    "app/app/gallery/page.tsx"
-   ],
-   "kind": "call"
-  },
-  "Cancel": {
-   "hu": "Mégse",
-   "files": [
-    "app/LangPicker.tsx",
-    "app/app/gallery/page.tsx",
-    "app/v/[id]/Report.tsx"
-   ],
-   "kind": "call"
-  },
   "Start free": {
    "hu": "Kezdd el ingyen",
    "files": [
@@ -1841,7 +1778,8 @@
   "See your tattoo in 50 years": {
    "hu": "Nézd meg a tetoválásod 50 év múlva",
    "files": [
-    "app/SiteNav.tsx"
+    "app/SiteNav.tsx",
+    "app/layout.tsx"
    ],
    "kind": "call"
   },
@@ -2195,6 +2133,15 @@
    ],
    "kind": "call"
   },
+  "Back": {
+   "hu": "Vissza",
+   "files": [
+    "app/_auth/AuthScreen.tsx",
+    "app/app/create/BodyMap.tsx",
+    "app/app/create/Onboarding.tsx"
+   ],
+   "kind": "call"
+  },
   "We sent a 6-digit code to ": {
    "hu": "Küldtünk egy 6 jegyű kódot ide: ",
    "files": [
@@ -2336,6 +2283,34 @@
    "hu": "Jelszó mentése",
    "files": [
     "app/_auth/NewPassword.tsx"
+   ],
+   "kind": "call"
+  },
+  "Something went wrong": {
+   "hu": "Valami elromlott",
+   "files": [
+    "app/_err/Recover.tsx"
+   ],
+   "kind": "call"
+  },
+  "Reload the page. If it keeps happening, sign in again – your designs stay safe.": {
+   "hu": "Töltsd újra az oldalt. Ha újra előjön, lépj be újra – a terveid megmaradnak.",
+   "files": [
+    "app/_err/Recover.tsx"
+   ],
+   "kind": "call"
+  },
+  "Reload": {
+   "hu": "Újratöltés",
+   "files": [
+    "app/_err/Recover.tsx"
+   ],
+   "kind": "call"
+  },
+  "Sign out and sign in again": {
+   "hu": "Kijelentkezés és újra belépés",
+   "files": [
+    "app/_err/Recover.tsx"
    ],
    "kind": "call"
   },
@@ -3583,6 +3558,15 @@
    "files": [
     "app/app/Result.tsx",
     "app/app/gallery/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Save": {
+   "hu": "Mentés",
+   "files": [
+    "app/app/Result.tsx",
+    "app/app/gallery/page.tsx",
+    "app/app/profile/page.tsx"
    ],
    "kind": "call"
   },
@@ -5915,6 +5899,15 @@
    ],
    "kind": "call"
   },
+  "Cancel": {
+   "hu": "Mégse",
+   "files": [
+    "app/app/gallery/page.tsx",
+    "app/v/[id]/Report.tsx",
+    "lib/i18n.ts"
+   ],
+   "kind": "call"
+  },
   "Folder removed — the previews stay": {
    "hu": "Mappa törölve – az előnézetek megmaradnak",
    "files": [
@@ -6782,6 +6775,13 @@
   },
   "Share invite link": {
    "hu": "Meghívó link megosztása",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Settings": {
+   "hu": "Beállítások",
    "files": [
     "app/app/profile/page.tsx"
    ],
@@ -8727,6 +8727,14 @@
    ],
    "kind": "call"
   },
+  "Upload a photo and see any design on your skin at 10, 30 and 50 years.": {
+   "hu": "Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.",
+   "files": [
+    "app/layout.tsx",
+    "app/tudastar/[slug]/page.tsx"
+   ],
+   "kind": "call"
+  },
   "What is InkAge? – InkAge": {
    "hu": "Mi az InkAge? – InkAge",
    "files": [
@@ -10173,13 +10181,6 @@
    ],
    "kind": "call"
   },
-  "Upload a photo and see any design on your skin at 10, 30 and 50 years.": {
-   "hu": "Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.",
-   "files": [
-    "app/tudastar/[slug]/page.tsx"
-   ],
-   "kind": "call"
-  },
   "About this article": {
    "hu": "A cikkről",
    "files": [
@@ -11541,6 +11542,27 @@
     "lib/articles2.ts"
    ],
    "kind": "obj"
+  },
+  "This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID, or sign up with your e-mail.": {
+   "hu": "Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t, vagy regisztrálj e-mail-címmel.",
+   "files": [
+    "lib/auth-help.ts"
+   ],
+   "kind": "call"
+  },
+  "Sign-in was cancelled. Try again.": {
+   "hu": "A belépés megszakadt. Próbáld újra.",
+   "files": [
+    "lib/auth-help.ts"
+   ],
+   "kind": "call"
+  },
+  "Sign-in didn’t work. Try again, or use your e-mail.": {
+   "hu": "A belépés nem sikerült. Próbáld újra, vagy lépj be e-mail-címmel.",
+   "files": [
+    "lib/auth-help.ts"
+   ],
+   "kind": "call"
   },
   "Tattoo brief for my artist": {
    "hu": "Tetoválás-terv a tetoválómnak",
@@ -20721,6 +20743,146 @@
   },
   "Romanian": {
    "hu": "Román",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dutch": {
+   "hu": "Holland",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Swedish": {
+   "hu": "Svéd",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Czech": {
+   "hu": "Cseh",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Greek": {
+   "hu": "Görög",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Ukrainian": {
+   "hu": "Ukrán",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Japanese": {
+   "hu": "Japán",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Korean": {
+   "hu": "Koreai",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Indonesian": {
+   "hu": "Indonéz",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Thai": {
+   "hu": "Thai",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Chinese (Traditional)": {
+   "hu": "Kínai (hagyományos)",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Vietnamese": {
+   "hu": "Vietnámi",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Filipino": {
+   "hu": "Filippínó",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Malay": {
+   "hu": "Maláj",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Chinese (Simplified)": {
+   "hu": "Kínai (egyszerűsített)",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Danish": {
+   "hu": "Dán",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Norwegian": {
+   "hu": "Norvég",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Finnish": {
+   "hu": "Finn",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Slovak": {
+   "hu": "Szlovák",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Croatian": {
+   "hu": "Horvát",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Bulgarian": {
+   "hu": "Bolgár",
    "files": [
     "lib/tr.ts"
    ],
