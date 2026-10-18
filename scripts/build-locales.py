@@ -6,7 +6,7 @@ TR = sys.argv[1] if len(sys.argv) > 1 else '/tmp/claude-0/tr'
 items = {str(x['id']): x for x in json.load(open(f'{TR}/all.json'))}
 if os.path.exists(f'{TR}/extra-items.json'):
     items.update({str(x['id']): x for x in json.load(open(f'{TR}/extra-items.json'))})
-langs = ['de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro']
+langs = ['de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh']
 ph = lambda s: set(re.findall(r'\{\d+\}', s))
 report = {}
 for l in langs:
@@ -46,5 +46,8 @@ for l in langs:
     raw = open(f'{ROOT}/lib/locales/{l}.json').read()
     open(f'{ROOT}/public/locales/{l}.js', 'w').write(f"window.__INK_LANG='{l}';window.__INK_DICT={raw};")
     man[l] = hashlib.sha1(raw.encode()).hexdigest()[:10]
-json.dump(man, open(f'{ROOT}/lib/locales/manifest.json', 'w'))
+ready = ['hu', 'en'] + [l for l in langs if report[l]['ok'] >= 0.9 * len(items)]
+json.dump({l: v for l, v in man.items() if l in ready}, open(f'{ROOT}/lib/locales/manifest.json', 'w'))
+# only languages that are (almost) fully translated are offered in the picker
+json.dump(ready, open(f'{ROOT}/lib/locales/ready.json', 'w'))
 print(json.dumps(report, indent=1))

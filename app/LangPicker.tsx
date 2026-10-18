@@ -7,7 +7,9 @@ import { createPortal } from 'react-dom';
 import './langpicker.css';
 import { useScrollLock } from '@/lib/scrolllock';
 
-const LANGS: { k: Lang; name: string; en: string; hu: string; flag: string }[] = ALL.map((k) => ({ k, name: LANG_INFO[k].native, en: LANG_INFO[k].en, hu: LANG_INFO[k].hu, flag: LANG_INFO[k].flag }));
+import READY from '@/lib/locales/ready.json';
+import { PICKER, langName } from './pickerText';
+const LANGS: { k: Lang; name: string; en: string; hu: string; flag: string }[] = ALL.filter((k) => (READY as string[]).includes(k)).map((k) => ({ k, name: LANG_INFO[k].native, en: LANG_INFO[k].en, hu: LANG_INFO[k].hu, flag: LANG_INFO[k].flag }));
 
 /**
  * Language button + picker sheet: a list with radio circles and a confirm step,
@@ -17,6 +19,7 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
   const [open, setOpen] = useState(false);
   useScrollLock(open);
   const [sel, setSel] = useState<Lang>(lang);
+  const W = PICKER[sel] || PICKER.en;
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   useEffect(() => {
@@ -63,15 +66,15 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
       {open &&
         mounted &&
         createPortal(
-          <div className="lp-wrap" role="dialog" aria-modal="true" aria-label={T('Language', 'Nyelv')}>
+          <div className="lp-wrap" role="dialog" aria-modal="true" aria-label={W.language} lang={sel}>
             <div className="lp-page">
               <header className="lp-bar">
-                <button type="button" className="lp-x" aria-label={T('Back', 'Vissza')} onClick={() => setOpen(false)}>
+                <button type="button" className="lp-x" aria-label={W.back} onClick={() => setOpen(false)}>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M15 5l-7 7 7 7" />
                   </svg>
                 </button>
-                <span className="lp-bar-t">{T('Settings', 'Beállítások')}</span>
+                <span className="lp-bar-t">{W.settings}</span>
                 <span />
               </header>
               <div className="lp-body">
@@ -82,10 +85,10 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                       <path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z" />
                     </svg>
                   </span>
-                  <h2>{T('Choose your language', 'Válassz nyelvet')}</h2>
-                  <p>{T('The whole site and the app will switch. You can change it any time.', 'A teljes oldal és az app is átvált. Bármikor módosíthatod.')}</p>
+                  <h2>{W.title}</h2>
+                  <p>{W.sub}</p>
                 </div>
-                <ul className="lp-cards" role="radiogroup" aria-label={T('Language', 'Nyelv')}>
+                <ul className="lp-cards" role="radiogroup" aria-label={W.language}>
                   {LANGS.map((l) => (
                     <li key={l.k}>
                       <button type="button" role="radio" aria-checked={sel === l.k} className={sel === l.k ? 'on' : ''} onClick={() => setSel(l.k)}>
@@ -94,9 +97,9 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                         </span>
                         <span className="lp-name">
                           <b>{l.name}</b>
-                          <small>{pick(l, lang)}</small>
+                          <small>{langName(l.k, sel, LANG_INFO[sel].locale, sel === 'hu' ? l.hu : l.en)}</small>
                         </span>
-                        {l.k === lang ? <span className="lp-cur">{T('Current', 'Jelenlegi')}</span> : <span />}
+                        {l.k === lang ? <span className="lp-cur">{W.current}</span> : <span />}
                         <span className="lp-radio" aria-hidden="true">
                           <svg viewBox="0 0 24 24">
                             <path d="M6 12.5l4 4L18 8" />
@@ -110,7 +113,7 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18zM12 11v5M12 8h.01" />
                   </svg>
-                  {T('Your choice is remembered on this device.', 'A választásodat ezen az eszközön megjegyezzük.')}
+                  {W.note}
                 </p>
               </div>
               <footer className="lp-actions">
@@ -123,10 +126,10 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                     if (sel !== lang) onPick(sel);
                   }}
                 >
-                  {tx(sel, 'Save', 'Mentés')}
+                  {W.save}
                 </button>
                 <button type="button" className="lp-cancel" onClick={() => setOpen(false)}>
-                  {T('Cancel', 'Mégse')}
+                  {W.cancel}
                 </button>
               </footer>
             </div>

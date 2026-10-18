@@ -1,0 +1,1 @@
+window.__INK_LANG='th';window.__INK_DICT={"exact":{},"tpl":[]};
