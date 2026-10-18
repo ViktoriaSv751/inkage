@@ -166,13 +166,15 @@ type Row = {
 
 async function signed(paths: Partial<Record<string, string>>) {
   const s = sb()!;
-  const list = Object.entries(paths).filter(([, p]) => !!p) as [string, string][];
-  if (!list.length) return {};
+  const out: Partial<Record<string, string>> = {};
+  // images restored from the server's generation records are served from there
+  for (const [k, p] of Object.entries(paths)) if (p && p.startsWith('job:')) out[k] = `/api/job-img/${p.split(':')[1]}/${p.split(':')[2] || k}`;
+  const list = Object.entries(paths).filter(([, p]) => !!p && !p.startsWith('job:')) as [string, string][];
+  if (!list.length) return out;
   const { data } = await s.storage.from('previews').createSignedUrls(
     list.map(([, p]) => p),
     60 * 60 * 24
   );
-  const out: Partial<Record<string, string>> = {};
   list.forEach(([k], i) => {
     const u = data?.[i]?.signedUrl;
     if (u) out[k] = u;
