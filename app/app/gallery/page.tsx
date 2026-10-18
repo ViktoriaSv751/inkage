@@ -3,7 +3,7 @@ import { localeOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
 import { Icon, Sheet } from '../ui';
 import { Result } from '../Result';
@@ -63,6 +63,15 @@ export default function GalleryPage() {
     });
     track('gallery_open');
   }, [load]);
+  // opening a design (or going back to the grid) starts at the top of that view
+  useLayoutEffect(() => {
+    // 'instant': the page has smooth scrolling on, which would stop halfway while the images load
+    const top = () => window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    top();
+    const r = requestAnimationFrame(top);
+    const id = setTimeout(top, 120);
+    return () => (cancelAnimationFrame(r), clearTimeout(id));
+  }, [open?.id]);
   useEffect(() => lsSet('ink_gal_sort', sort), [sort]);
   useEffect(() => lsSet('ink_folders', extraFolders), [extraFolders]);
 
@@ -138,10 +147,32 @@ export default function GalleryPage() {
     }
     setRestoring('');
   };
+  // emptying it is for good, in one tap; a single design can go for good from its own row
+  const [purging, setPurging] = useState('');
+  const purge = async (ids?: string[]) => {
+    setPurging(ids ? ids[0] : 'all');
+    try {
+      await cloud.purgeTrash(ids);
+      const left = ids ? trash.filter((p) => !ids.includes(p.id)) : [];
+      setTrash(left);
+      if (!left.length) setTrashOpen(false);
+      haptic('success');
+      toast(ids ? t('Deleted for good', 'Végleg törölve') : t('Recently deleted emptied', 'A Nemrég törölt kiürítve'));
+    } catch {
+      toast(t('Could not delete it. Try again.', 'Nem sikerült törölni. Próbáld újra.'));
+    }
+    setPurging('');
+  };
+  const closeTrash = () => setTrashOpen(false);
   const trashSheet = (
-    <Sheet open={trashOpen} onClose={() => setTrashOpen(false)} label={t('Recently deleted', 'Nemrég törölt')}>
+    <Sheet open={trashOpen} onClose={closeTrash} label={t('Recently deleted', 'Nemrég törölt')}>
       <h2>{t('Recently deleted', 'Nemrég törölt')}</h2>
-      <p className="sub">{t('Tap Restore to put a design back in your gallery.', 'A „Visszaállítás” gombbal visszakerül a galériádba.')}</p>
+      <p className="sub">{t('Restore puts a design back in your gallery. Delete removes it for good.', 'A „Visszaállítás” visszateszi a galériádba, a „Törlés” véglegesen eltávolítja.')}</p>
+      {trash.length > 0 && (
+        <button className="btn wide danger-btn" onClick={() => purge()} disabled={!!purging}>
+          {purging === 'all' ? t('Deleting…', 'Törlés…') : t(`Empty Recently deleted (${trash.length})`, `Nemrég törölt kiürítése (${trash.length})`)}
+        </button>
+      )}
       <div className="trash-list">
         {trash.map((p) => (
           <div key={p.id} className="trash-row">
@@ -150,9 +181,14 @@ export default function GalleryPage() {
               <b>{placeName(p.placement, ui.lang)}</b>
               <small>{new Date(p.created_at).toLocaleDateString(localeOf(ui.lang))}</small>
             </span>
-            <button className="chipbtn" disabled={restoring === p.id} onClick={() => restore(p)}>
-              {restoring === p.id ? '…' : t('Restore', 'Visszaállítás')}
-            </button>
+            <span className="trash-acts">
+              <button className="chipbtn" disabled={restoring === p.id || !!purging} onClick={() => restore(p)}>
+                {restoring === p.id ? '…' : t('Restore', 'Visszaállítás')}
+              </button>
+              <button className="chipbtn danger" disabled={restoring === p.id || !!purging} onClick={() => purge([p.id])}>
+                {purging === p.id ? '…' : t('Delete', 'Törlés')}
+              </button>
+            </span>
           </div>
         ))}
         {!trash.length && <p className="muted">{t('Nothing here.', 'Itt nincs semmi.')}</p>}
@@ -700,6 +736,9 @@ export default function GalleryPage() {
         <p style={{ textAlign: 'center', margin: '18px 0 8px' }}>
           <button className="chipbtn" onClick={() => setTrashOpen(true)}>
             🗑 {t(`Recently deleted (${trash.length})`, `Nemrég törölt (${trash.length})`)}
+          </button>{' '}
+          <button className="chipbtn danger" onClick={() => purge()} disabled={!!purging}>
+            {purging === 'all' ? t('Deleting…', 'Törlés…') : t('Empty it', 'Kiürítés')}
           </button>
         </p>
       )}

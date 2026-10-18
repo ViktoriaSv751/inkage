@@ -10,6 +10,8 @@ import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
 import { isLang, tx, htmlLang } from '@/lib/tr';
 import LOCALE_VER from '@/lib/locales/manifest.json';
+import { Suspense } from 'react';
+import { ScrollTop } from './ScrollTop';
 
 export function generateMetadata(): Metadata {
   const h = headers().get('x-ink-lang');
@@ -43,7 +45,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={null}>
+          <ScrollTop />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }

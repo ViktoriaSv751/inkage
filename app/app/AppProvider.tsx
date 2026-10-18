@@ -59,9 +59,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     timer.current = setTimeout(() => setMsg(''), 3200);
   }, []);
 
+  const meRef = useRef<Me>({ user: null });
   const refreshMe = useCallback(async () => {
     const r = await api<Me>('/api/me');
-    const data = r.ok ? r.data : { user: null };
+    let data: Me = r.ok ? r.data : { user: null };
+    if (!data.user) {
+      // there are no guest accounts: while this device holds a session, it is that account –
+      // a slow or failed /api/me never shows a signed-out screen
+      const u = (await sb()?.auth.getSession().catch(() => null))?.data.session?.user;
+      if (u) data = { ...meRef.current, ...(r.ok ? data : {}), user: { id: u.id, email: u.email } };
+    }
+    meRef.current = data;
     setMe(data);
     if (data.user && !migrated.current) {
       migrated.current = true;
@@ -91,9 +99,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     api<Cfg>('/api/config').then((r) => setCfg(r.ok ? r.data : { ai: false, auth: false, payments: false }));
-    refreshMe();
     const s0 = sb();
-    if (!s0) setGate('in');
+    // the app only shows once the account is known – never a guest screen first
+    const enter = () => refreshMe().then(() => setGate('in'), () => setGate('in'));
+    if (!s0) enter();
     else
       s0.auth
         .getSession()
@@ -107,15 +116,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               await s0.auth.signOut({ scope: 'local' }).catch(() => {});
               return toLogin();
             }
-            refreshMe();
           }
-          setGate('in');
+          await enter();
         })
-        .catch(() => setGate('in'));
+        .catch(() => enter());
     const sub = sb()?.auth.onAuthStateChange((evt, session) => {
-      if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') setTimeout(() => refreshMe(), 0);
-      if (evt === 'SIGNED_IN' && session) setGate('in');
-      if (evt === 'SIGNED_OUT') toLogin();
+      if (evt === 'SIGNED_IN' && session) setTimeout(() => refreshMe().then(() => setGate('in'), () => setGate('in')), 0);
+      if (evt === 'SIGNED_OUT') {
+        meRef.current = { user: null };
+        toLogin();
+      }
       if (evt === 'SIGNED_IN') {
         if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.nativePushSync()).catch(() => {});
         else import('@/lib/push').then((m) => m.syncPush()).catch(() => {});

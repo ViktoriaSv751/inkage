@@ -321,6 +321,14 @@ export const cloud = {
     if (error) throw error;
     return !!data;
   },
+  /** Empty Recently deleted for good (all, or the given ids): the images are removed from storage too. */
+  async purgeTrash(ids?: string[]) {
+    const s = sb()!;
+    const { data, error } = await s.rpc('purge_trash', { p_ids: ids ?? null });
+    if (error) throw error;
+    const paths = ((data as string[]) || []).filter(Boolean);
+    for (let i = 0; i < paths.length; i += 100) await s.storage.from('previews').remove(paths.slice(i, i + 100)).catch(() => {});
+  },
   /** Close a preview's vote link (the preview stays). */
   async unshare(uid: string, id: string) {
     const s = sb()!;

@@ -83,7 +83,7 @@ export default function CreatePage() {
       setDesign(null);
       setExtras([]);
       setPhase((ph) => (ph === 'onboarding' || ph === 'loading' ? ph : 'studio'));
-      window.scrollTo({ top: 0 });
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     };
     window.addEventListener('ink:fresh', h);
     return () => window.removeEventListener('ink:fresh', h);
@@ -349,7 +349,7 @@ export default function CreatePage() {
     setErr('');
     setPhase('gen');
     setGenStep(0);
-    window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     haptic();
     track('generate_start', { placement, lib: d?.libId || null, mode });
     const timers = [setTimeout(() => setGenStep(1), 3500), setTimeout(() => setGenStep(2), 17000)];
@@ -575,11 +575,11 @@ export default function CreatePage() {
     setPreview(null);
     setFailed([]);
     setPhase('studio');
-    window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
   const replace = () => {
     setPhase('place');
-    window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
   // ---------------------------------------------------------------- render
@@ -658,7 +658,7 @@ export default function CreatePage() {
           onNext={() => {
             if (mode !== 'new') return go();
             setPhase('place');
-            window.scrollTo({ top: 0 });
+            window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
           }}
         />
         <Waitlist open={waitlist} onClose={() => setWaitlist(false)} />
@@ -765,7 +765,7 @@ export default function CreatePage() {
                   setArea(null);
                   setPreview(null);
                   setPhase('studio');
-                  window.scrollTo({ top: 0 });
+                  window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
                   toast(t(`Now add a photo of your ${placeName(v, 'en').toLowerCase()}`, `Most töltsd fel ${huArticle(placeName(v, 'hu'))} ${placeName(v, 'hu').toLowerCase()} fotóját`));
                 }
               : undefined

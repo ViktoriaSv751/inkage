@@ -1,6 +1,5 @@
 'use client';
 import { tx, qOf, type Lang } from '@/lib/tr';
-import { IMG } from '@/lib/kb';
 import { ThemeToggle } from '../ThemeToggle';
 
 import Link from 'next/link';
@@ -10,11 +9,12 @@ import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { track } from '@/lib/store';
 import { oauthParams, authErrorText } from '@/lib/auth-help';
+import { AuthArt } from './AuthArt';
 import './auth.css';
 
 
 /** Full-page sign-in / sign-up with e-mail code (and Google / Apple when switched on). */
-export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'forgot'; lang: Lang; img: string }) {
+export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'; lang: Lang; img?: string }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const q = qOf(lang);
   const router = useRouter();
@@ -168,46 +168,37 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
 
   return (
     <div className="au">
-      <aside className="au-art">
-        <img src={IMG(img, 1400)} alt="" />
-        <div className="au-art-in">
-          <Link href={`/${q}`} className="au-logo light" aria-label="InkAge">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="30" />
-              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+      <header className="au-bar">
+        <Link href={`/${q}`} className="au-logo" aria-label="InkAge">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" />
+            <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
+          </svg>
+          InkAge
+        </Link>
+        <span className="au-top-r">
+          <ThemeToggle lang={lang} />
+          <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
             </svg>
-            InkAge
           </Link>
-          <div>
-            <h2>{T('See it before it’s permanent.', 'Nézd meg, mielőtt végleges lesz.')}</h2>
-            <ul>
-              <li>{T('Your designs on every device', 'A terveid minden eszközödön')}</li>
-              <li>{T('Bonus previews for inviting friends', 'Bónusz előnézetek a meghívásokért')}</li>
-              <li>{T('Free after sign-up', 'Regisztráció után ingyenes')}</li>
-            </ul>
-          </div>
+        </span>
+      </header>
+
+      <aside className="au-art">
+        <AuthArt lang={lang} />
+        <div className="au-art-copy">
+          <h2>{T('See it before it’s permanent.', 'Nézd meg, mielőtt végleges lesz.')}</h2>
+          <ul>
+            <li>{T('Your designs on every device', 'A terveid minden eszközödön')}</li>
+            <li>{T('Bonus previews for inviting friends', 'Bónusz előnézetek a meghívásokért')}</li>
+            <li>{T('Free after sign-up', 'Regisztráció után ingyenes')}</li>
+          </ul>
         </div>
       </aside>
 
       <main className="au-main">
-        <header className="au-top">
-          <Link href={`/${q}`} className="au-logo" aria-label="InkAge">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="30" />
-              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-            </svg>
-            InkAge
-          </Link>
-          <span className="au-top-r">
-            <ThemeToggle lang={lang} />
-            <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </Link>
-          </span>
-        </header>
-
         <div className="au-card">
           {step === 'sent' ? (
             <div className="au-done">
@@ -248,6 +239,12 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
                   </svg>
                   {T('Back to sign in', 'Vissza a belépéshez')}
                 </Link>
+              )}
+              {mode !== 'forgot' && (
+                <p className="au-kick">
+                  <i aria-hidden="true" />
+                  {mode === 'login' ? T('Pick up where you left off', 'Folytasd, ahol abbahagytad') : T('Free · takes under a minute', 'Ingyenes · kevesebb mint 1 perc')}
+                </p>
               )}
               <h1>{mode === 'login' ? T('Welcome back', 'Üdv újra itt') : mode === 'signup' ? T('Create your account', 'Hozd létre a fiókodat') : T('Forgot your password?', 'Elfelejtetted a jelszavad?')}</h1>
               <p className="au-sub">
@@ -306,7 +303,20 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
                       </span>
                     </label>
                   ) : null}
-                  <p className="au-hint">{T('Free after sign-up. We never post anything on your behalf.', 'A regisztráció után ingyenes. A nevedben soha nem posztolunk semmit.')}</p>
+                  <ul className="au-trust">
+                    <li>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z" /></svg>
+                      {T('Private account', 'Privát fiók')}
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM6.5 6.5l11 11" /></svg>
+                      {T('No posting for you', 'Nem posztolunk')}
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                      {T('Free', 'Ingyenes')}
+                    </li>
+                  </ul>
                 </div>
               )}
             </>

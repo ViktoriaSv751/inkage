@@ -312,7 +312,7 @@ export default function ProfilePage() {
             )}
           </i>
         </div>
-        <h1>{me.user ? displayName : t('Guest', 'Vendég')}</h1>
+        <h1>{me.user ? displayName : ''}</h1>
         <p className="pf-sub">{me.user ? me.user.email : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</p>
         {me.user ? (
           <div className="pf-acts">
