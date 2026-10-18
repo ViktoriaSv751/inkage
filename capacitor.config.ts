@@ -13,19 +13,20 @@ const config: CapacitorConfig = {
     cleartext: false,
     errorPath: 'index.html',
   },
+  // dark first: the native frame around the web app is black (takes effect with the next store build)
   ios: {
     contentInset: 'never',
-    backgroundColor: '#f3d6c8',
+    backgroundColor: '#000000',
     preferredContentMode: 'mobile',
     limitsNavigationsToAppBoundDomains: false,
   },
   android: {
-    backgroundColor: '#f3d6c8',
+    backgroundColor: '#000000',
     allowMixedContent: false,
   },
   plugins: {
     SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#f3d6c8', androidScaleType: 'CENTER_CROP', showSpinner: false },
-    StatusBar: { style: 'DEFAULT', overlaysWebView: false, backgroundColor: '#f3d6c8' },
+    StatusBar: { style: 'DARK', overlaysWebView: false, backgroundColor: '#000000' },
     // Android 15+ draws edge to edge: the web app pads itself with env(safe-area-inset-*) (viewport-fit=cover)
     SystemBars: { insetsHandling: 'css', initialViewportFitValueHint: 'cover' },
     PushNotifications: { presentationOptions: ['badge', 'sound', 'alert'] },
