@@ -35,6 +35,11 @@ const LOADERS: Partial<Record<Lang, () => Promise<any>>> = {
   sk: () => import('./locales/sk.json'),
   hr: () => import('./locales/hr.json'),
   bg: () => import('./locales/bg.json'),
+  sl: () => import('./locales/sl.json'),
+  lt: () => import('./locales/lt.json'),
+  lv: () => import('./locales/lv.json'),
+  et: () => import('./locales/et.json'),
+  sr: () => import('./locales/sr.json'),
 };
 export async function loadDict(l: Lang) {
   if (hasDict(l)) return;

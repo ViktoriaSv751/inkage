@@ -34,13 +34,18 @@ export const PICKER: Record<Lang, P> = {
   sk: { settings: "Nastavenia", title: "Vyber si jazyk", sub: "Prepne sa celý web aj aplikácia. Môžeš to kedykoľvek zmeniť.", current: "Aktuálny", note: "Tvoja voľba sa uloží v tomto zariadení.", save: "Uložiť", cancel: "Zrušiť", back: "Späť", language: "Jazyk" },
   hr: { settings: "Postavke", title: "Odaberi jezik", sub: "Promijenit će se cijela stranica i aplikacija. Možeš to promijeniti bilo kada.", current: "Trenutni", note: "Tvoj odabir sprema se na ovom uređaju.", save: "Spremi", cancel: "Odustani", back: "Natrag", language: "Jezik" },
   bg: { settings: "Настройки", title: "Избери език", sub: "Целият сайт и приложението ще се сменят. Можеш да го промениш по всяко време.", current: "Текущ", note: "Изборът ти се запазва на това устройство.", save: "Запази", cancel: "Отказ", back: "Назад", language: "Език" },
+  sl: { settings: "Nastavitve", title: "Izberi jezik", sub: "Zamenjala se bosta celotna stran in aplikacija. Kadar koli lahko spremeniš.", current: "Trenutni", note: "Tvoja izbira se shrani v tej napravi.", save: "Shrani", cancel: "Prekliči", back: "Nazaj", language: "Jezik" },
+  lt: { settings: "Nustatymai", title: "Pasirink kalbą", sub: "Pasikeis visa svetainė ir programėlė. Gali pakeisti bet kada.", current: "Dabartinė", note: "Tavo pasirinkimas išsaugomas šiame įrenginyje.", save: "Išsaugoti", cancel: "Atšaukti", back: "Atgal", language: "Kalba" },
+  lv: { settings: "Iestatījumi", title: "Izvēlies valodu", sub: "Mainīsies visa vietne un lietotne. Vari to mainīt jebkurā laikā.", current: "Pašreizējā", note: "Tava izvēle tiek saglabāta šajā ierīcē.", save: "Saglabāt", cancel: "Atcelt", back: "Atpakaļ", language: "Valoda" },
+  et: { settings: "Seaded", title: "Vali keel", sub: "Kogu sait ja rakendus vahetavad keelt. Saad seda igal ajal muuta.", current: "Praegune", note: "Sinu valik salvestatakse selles seadmes.", save: "Salvesta", cancel: "Tühista", back: "Tagasi", language: "Keel" },
+  sr: { settings: "Podešavanja", title: "Izaberi jezik", sub: "Promeniće se ceo sajt i aplikacija. Možeš to promeniti bilo kada.", current: "Trenutni", note: "Tvoj izbor se čuva na ovom uređaju.", save: "Sačuvaj", cancel: "Otkaži", back: "Nazad", language: "Jezik" },
 };
 
 /** A language's name written in another language (from the browser), falling back to the English name. */
 export function langName(code: string, inLang: string, locale: string, fallback: string) {
   try {
     const dn = new (Intl as any).DisplayNames([locale], { type: 'language' });
-    const v = dn.of(code === 'zh' ? 'zh-Hant' : code === 'zhs' ? 'zh-Hans' : code === 'no' ? 'nb' : code === 'pt' ? 'pt-BR' : code);
+    const v = dn.of(code === 'zh' ? 'zh-Hant' : code === 'zhs' ? 'zh-Hans' : code === 'no' ? 'nb' : code === 'sr' ? 'sr-Latn' : code === 'pt' ? 'pt-BR' : code);
     if (v && v !== code) return v.charAt(0).toLocaleUpperCase(locale) + v.slice(1);
   } catch {}
   void inLang;

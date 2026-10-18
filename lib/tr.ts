@@ -4,7 +4,7 @@
 
 import READY from './locales/ready.json';
 
-export const LANGS = ['hu', 'en', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh', 'vi', 'fil', 'ms', 'zhs', 'da', 'no', 'fi', 'sk', 'hr', 'bg'] as const;
+export const LANGS = ['hu', 'en', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'tr', 'ro', 'nl', 'sv', 'cs', 'el', 'uk', 'ja', 'ko', 'id', 'th', 'zh', 'vi', 'fil', 'ms', 'zhs', 'da', 'no', 'fi', 'sk', 'hr', 'bg', 'sl', 'lt', 'lv', 'et', 'sr'] as const;
 export type Lang = (typeof LANGS)[number];
 
 export const LANG_INFO: Record<Lang, { native: string; en: string; hu: string; locale: string; flag: string }> = {
@@ -38,6 +38,11 @@ export const LANG_INFO: Record<Lang, { native: string; en: string; hu: string; l
   sk: { native: 'Slovenčina', en: 'Slovak', hu: 'Szlovák', locale: 'sk-SK', flag: '🇸🇰' },
   hr: { native: 'Hrvatski', en: 'Croatian', hu: 'Horvát', locale: 'hr-HR', flag: '🇭🇷' },
   bg: { native: 'Български', en: 'Bulgarian', hu: 'Bolgár', locale: 'bg-BG', flag: '🇧🇬' },
+  sl: { native: 'Slovenščina', en: 'Slovenian', hu: 'Szlovén', locale: 'sl-SI', flag: '🇸🇮' },
+  lt: { native: 'Lietuvių', en: 'Lithuanian', hu: 'Litván', locale: 'lt-LT', flag: '🇱🇹' },
+  lv: { native: 'Latviešu', en: 'Latvian', hu: 'Lett', locale: 'lv-LV', flag: '🇱🇻' },
+  et: { native: 'Eesti', en: 'Estonian', hu: 'Észt', locale: 'et-EE', flag: '🇪🇪' },
+  sr: { native: 'Srpski', en: 'Serbian', hu: 'Szerb', locale: 'sr-Latn-RS', flag: '🇷🇸' },
 };
 
 export const isLang = (x: unknown): x is Lang => typeof x === 'string' && (LANGS as readonly string[]).includes(x);
@@ -51,7 +56,7 @@ export const qOf = (lang: Lang) => (lang === 'hu' ? '' : `?lang=${lang}`);
 /** Same, to append to a link that already has a query string. */
 export const ampOf = (lang: Lang) => (lang === 'hu' ? '' : `&lang=${lang}`);
 /** Value for the html lang attribute / hreflang. */
-export const htmlLang = (lang: Lang) => (lang === 'zhs' ? 'zh-Hans' : lang === 'zh' ? 'zh-Hant' : lang === 'no' ? 'nb' : lang);
+export const htmlLang = (lang: Lang) => (lang === 'zhs' ? 'zh-Hans' : lang === 'zh' ? 'zh-Hant' : lang === 'no' ? 'nb' : lang === 'sr' ? 'sr-Latn' : lang);
 export const localeOf = (lang: Lang) => LANG_INFO[lang]?.locale || 'en-GB';
 /** Best match for a browser language ("de-AT" → de), English otherwise. */
 export const fromBrowser = (nav?: string | null): Lang => {
