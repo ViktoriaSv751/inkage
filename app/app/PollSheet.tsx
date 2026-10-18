@@ -93,7 +93,8 @@ export function PollSheet({ open, onClose, initial }: { open: boolean; onClose: 
 
   const extra = (all || []).filter((p) => !initial.some((x) => x.id === p.id));
   const shown = more ? [...initial, ...extra] : [...initial, ...extra.filter((p) => sel.includes(p.id))];
-  const thumb = (p: Preview) => p.images.y50 || p.images.fresh;
+  // how it looks now (fresh), like the gallery; the years are part of the poll itself
+  const thumb = (p: Preview) => p.images.fresh || p.images.healed || p.images.y10 || p.images.y50;
 
   return (
     <Sheet open={open} onClose={onClose} label={t('Ask friends', 'Kérdezd meg a barátaidat')}>

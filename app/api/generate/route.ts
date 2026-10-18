@@ -123,10 +123,11 @@ export async function POST(req: Request) {
       image = await protect(await run());
       let [q, an] = await Promise.all([qualityCheck(designImg, dataUrlToImg(image), mockup ? { ...mockup, name: 'mockup.jpg' } : null), analyse(dataUrlToImg(image))]);
       if (!q.ok) {
-        // Two new candidates in parallel, told exactly what went wrong; keep the best of all three.
+        // One new candidate, told exactly what went wrong; keep the better of the two.
+        // (Two parallel candidates made a failed check cost three paid images.)
         console.warn('qc failed, retrying with feedback', q);
         const more = await Promise.all(
-          [0, 1].map(async () => {
+          [0].map(async () => {
             const img = await run(q.fix).catch(() => null);
             if (!img) return null;
             const safe = await protect(img);

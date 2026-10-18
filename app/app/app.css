@@ -82,7 +82,7 @@
 .sheet-wrap { position: fixed; inset: 0; z-index: 60; background: #fff; display: grid; place-items: end center; animation: fade .18s; overscroll-behavior: contain; }
 :root[data-theme='dark'] .sheet-wrap { background: #000; }
 .sheet {
-  position: relative; width: min(100%, 520px); max-height: 92dvh; overflow-y: auto;
+  position: relative; width: min(100%, 520px); max-height: 92dvh; overflow-y: auto; overflow-x: hidden; min-width: 0;
   background: var(--surface); border-radius: 28px 28px 0 0; box-shadow: 0 -2px 30px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .06); overscroll-behavior: contain;
   padding: 26px 20px calc(26px + env(safe-area-inset-bottom));
   display: grid; gap: 12px; animation: rise .32s var(--ease);
@@ -832,7 +832,9 @@
 .desk-tg { display: none !important; }
 @media (min-width: 960px) { .desk-tg { display: grid !important; position: fixed; top: 20px; right: 28px; z-index: 50; box-shadow: 0 0 0 1px var(--line); } }
 /* profile editor */
-.pf-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+/* the picture always fills an exact circle, whatever its own shape (a portrait photo used to stretch it into an oval) */
+.pf-avatar { flex: none; aspect-ratio: 1; }
+.pf-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
 .pf-avatar.sm { width: 72px; height: 72px; font-size: 28px; margin: 0; }
 .acc-avatar { display: flex; align-items: center; gap: 16px; margin: 6px 0 18px; }
 .acc-field { display: grid; gap: 6px; margin-bottom: 16px; }
@@ -930,9 +932,10 @@ input.switch:checked::after { transform: translateX(18px); }
 .layer-chip img { width: 34px; height: 34px; object-fit: contain; background: #fff; border-radius: 10px; }
 .layer-chip.on { box-shadow: inset 0 0 0 2px #5b3df5; color: #5b3df5; }
 .add-layer { justify-self: start; color: #5b3df5; box-shadow: inset 0 0 0 1.5px #5b3df5; background: transparent; }
-.layer-lib { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+/* minmax(0, …): the columns may never grow to the pictures' own width (that pushed the sheet sideways) */
+.layer-lib { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .layer-lib button { aspect-ratio: 1; border: 0; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); padding: 6px; cursor: pointer; }
-.layer-lib img { width: 100%; height: 100%; object-fit: contain; }
+.layer-lib img { width: 100%; height: 100%; max-width: 100%; object-fit: contain; display: block; }
 
 /* laser removal view: unmistakable header */
 .rm-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 12px; padding: 14px 16px; border-radius: 20px; background: linear-gradient(135deg, #2a1052, #5b3df5); color: #fff; animation: delpop .3s var(--ease); }
@@ -1026,3 +1029,16 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .uploads-row button { flex: none; width: 72px; height: 72px; border-radius: 14px; overflow: hidden; border: 0; padding: 0; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface-2); }
 .uploads-row img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .upload-big { display: block; width: 100%; max-height: 55vh; object-fit: contain; border-radius: 16px; background: var(--surface-2); margin: 8px 0; }
+
+/* edit profile: password change and a pending e-mail change */
+.acc-pw { display: grid; gap: 8px; }
+.acc-show { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.sheet .acc-show input { width: 18px; height: 18px; padding: 0; flex: none; accent-color: var(--stencil); }
+.acc-err { margin: 0; font-size: 14px; color: #d93025; font-weight: 600; }
+.acc-pending { color: var(--stencil); font-weight: 600; }
+
+/* photo editor: one-tap copy of the selected tattoo, and the headings in the "add another" sheet */
+.hdl-dup { position: absolute; right: 100%; top: -34px; margin-right: -15px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: #5b3df5; color: #fff; pointer-events: auto; display: grid; place-items: center; box-shadow: 0 1px 6px rgba(0, 0, 0, .35); z-index: 1; }
+.hdl-dup svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+.ed-stage .hdl-dup { scale: var(--iz, 1); }
+.layer-lib-h { margin: 6px 0 -2px; font-size: 14px; font-weight: 700; color: var(--ink-2); }

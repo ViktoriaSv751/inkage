@@ -17,10 +17,18 @@ export type Me = {
   onboarding?: any;
   notifyVotes?: boolean;
 };
+/** What the person set on their account (name, picture) and an e-mail change still waiting for confirmation.
+    Kept here, so the top bar, the profile and the edit sheet always show the same thing. */
+export type Profile = { name: string; avatar: string | null; pendingEmail: string | null; hasPassword: boolean };
+const NO_PROFILE: Profile = { name: '', avatar: null, pendingEmail: null, hasPassword: false };
+
 type Cfg = { ai: boolean; auth: boolean; payments: boolean; nativePush?: { android: boolean; ios: boolean } };
 
 type Ctx = {
   me: Me;
+  profile: Profile;
+  setProfile: (p: Partial<Profile>) => void;
+  loadProfile: () => Promise<void>;
   cfg: Cfg | null;
   refreshMe: () => Promise<Me>;
   toast: (msg: string) => void;
@@ -37,6 +45,19 @@ export const useApp = () => useContext(AppCtx);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const ui = useLang();
   const [me, setMe] = useState<Me>({ user: null });
+  const [profile, setProfileState] = useState<Profile>(NO_PROFILE);
+  const setProfile = useCallback((p: Partial<Profile>) => setProfileState((x) => ({ ...x, ...p })), []);
+  const loadProfile = useCallback(async () => {
+    const s = sb();
+    const u = s ? (await s.auth.getUser().catch(() => null))?.data.user : null;
+    if (!s || !u) return setProfileState(NO_PROFILE);
+    const md: any = u.user_metadata || {};
+    let avatar: string | null = null;
+    if (md.avatar_path) avatar = (await s.storage.from('previews').createSignedUrl(md.avatar_path, 60 * 60 * 24)).data?.signedUrl ?? null;
+    // Google / Apple sign-ins have no password until the person sets one
+    const providers: string[] = (u.app_metadata as any)?.providers || [(u.app_metadata as any)?.provider].filter(Boolean);
+    setProfileState({ name: String(md.full_name || '').trim(), avatar, pendingEmail: (u as any).new_email || null, hasPassword: providers.includes('email') });
+  }, []);
   const [cfg, setCfg] = useState<Cfg | null>(null);
   const [msg, setMsg] = useState('');
   const [authOpen, setAuthOpen] = useState(false);
@@ -71,6 +92,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     meRef.current = data;
     setMe(data);
+    if (data.user) loadProfile();
+    else setProfileState(NO_PROFILE);
     if (data.user && !migrated.current) {
       migrated.current = true;
       // referral captured on landing
@@ -95,7 +118,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (ob && !data.onboarding) sb()?.rpc('save_profile', { p_onboarding: ob, p_lang: ui.lang })?.then(() => {}, () => {});
     }
     return data;
-  }, [toast, ui.lang]);
+  }, [toast, ui.lang, loadProfile]);
 
   useEffect(() => {
     api<Cfg>('/api/config').then((r) => setCfg(r.ok ? r.data : { ai: false, auth: false, payments: false }));
@@ -122,6 +145,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         .catch(() => enter());
     const sub = sb()?.auth.onAuthStateChange((evt, session) => {
       if (evt === 'SIGNED_IN' && session) setTimeout(() => refreshMe().then(() => setGate('in'), () => setGate('in')), 0);
+      // a confirmed e-mail change (or a name / picture saved on another tab) arrives as USER_UPDATED
+      if (evt === 'USER_UPDATED') setTimeout(() => refreshMe(), 0);
       if (evt === 'SIGNED_OUT') {
         meRef.current = { user: null };
         toLogin();
@@ -164,6 +189,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     <AppCtx.Provider
       value={{
         me,
+        profile,
+        setProfile,
+        loadProfile,
         cfg,
         refreshMe,
         toast,

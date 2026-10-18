@@ -1126,6 +1126,38 @@ export function PlaceStep({
     }
     setAddBusy(false);
   };
+  /** One tap: the same tattoo again, a little to the side, ready to drag (same design, size and angle). */
+  const duplicateLayer = (i: number) => {
+    if (!setExtras || extras.length >= 5) return toast(t('Up to 6 tattoos on one photo.', 'Egy fotón legfeljebb 6 tetoválás lehet.'));
+    const src = layers[i];
+    const next: Layer = { design: src.design, pl: { ...src.pl, x: src.pl.x + (src.pl.x > 0.7 ? -0.1 : 0.1), y: Math.min(0.95, src.pl.y + 0.06) } };
+    setExtras([...extras, next]);
+    setActive(extras.length + 1);
+    setSel(true);
+    setAddOpen(false);
+    haptic('success');
+    toast(t('Copied — drag it where you want it', 'Lemásolva – húzd oda, ahová szeretnéd'));
+  };
+  // the designs this person uploaded before (from the account), to add with one tap
+  const [myDesigns, setMyDesigns] = useState<{ id: string; src: string }[]>([]);
+  useEffect(() => {
+    if (!addOpen || !me.user) return;
+    uploads.list('design', 12).then((u) => setMyDesigns(u.map((x) => ({ id: x.id, src: x.src }))), () => {});
+  }, [addOpen, me.user]);
+  /** A saved upload is a signed link: it is turned back into a picture, then added like a fresh upload. */
+  const addSaved = async (src: string) => {
+    setAddBusy(true);
+    try {
+      const blob = await (await fetch(src)).blob();
+      const pimg = await prepareImage(new File([blob], 'design.jpg', { type: blob.type || 'image/jpeg' }), 1024, 'image/jpeg');
+      const probe = await processDesign(pimg.dataUrl, design0.mode).catch(() => null);
+      setAddBusy(false);
+      await addLayer(pimg.dataUrl, !!probe?.photoLike);
+    } catch {
+      setAddBusy(false);
+      toast(t('Could not add that picture. Try another one.', 'Ezt a képet nem sikerült hozzáadni. Próbálj egy másikat.'));
+    }
+  };
   const removeLayer = (i: number) => {
     if (i === 0) return;
     setExtras?.(extras.filter((_, k) => k !== i - 1));
@@ -1330,6 +1362,11 @@ export function PlaceStep({
           <i className="hdl rot" onPointerDown={handleDown('rotate')} onPointerMove={handleMove} onPointerUp={handleUp} onPointerCancel={handleUp} aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5M19 4v4h-4" /></svg>
           </i>
+          {setExtras && extras.length < 5 && (
+            <button type="button" className="hdl-dup" onPointerDown={(e) => e.stopPropagation()} onClick={() => duplicateLayer(cur)} aria-label={t('Duplicate this tattoo', 'Tetoválás duplikálása')}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" /></svg>
+            </button>
+          )}
           {cur > 0 && (
             <button type="button" className="hdl-del" onPointerDown={(e) => e.stopPropagation()} onClick={() => removeLayer(cur)} aria-label={t('Remove this tattoo', 'Tetoválás eltávolítása')}>
               ×
@@ -1358,9 +1395,14 @@ export function PlaceStep({
             </div>
           )}
           {extras.length < 5 && (
-            <button type="button" className="chipbtn add-layer" onClick={() => setAddOpen(true)}>
-              + {t('Add another tattoo', 'Még egy tetoválás hozzáadása')}
-            </button>
+            <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+              <button type="button" className="chipbtn add-layer" onClick={() => setAddOpen(true)}>
+                + {t('Add another tattoo', 'Még egy tetoválás hozzáadása')}
+              </button>
+              <button type="button" className="chipbtn add-layer" onClick={() => duplicateLayer(cur)}>
+                ⧉ {layers.length > 1 ? t(`Duplicate no. ${cur + 1}`, `${cur + 1}. duplikálása`) : t('Duplicate', 'Duplikálás')}
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -1393,6 +1435,27 @@ export function PlaceStep({
         <label htmlFor="add-layer-input" role="button" tabIndex={0} className={`btn wide ${addBusy ? 'is-busy' : ''}`} aria-disabled={addBusy} style={{ cursor: 'pointer' }}>
           {addBusy ? t('Cutting it out…', 'Kivágás…') : t('Upload a picture', 'Kép feltöltése')}
         </label>
+        <p className="layer-lib-h">{t('Copy one that is already on the photo', 'Egy már fent lévő másolása')}</p>
+        <div className="layer-lib">
+          {layers.map((L1, i) => (
+            <button key={`l${i}`} type="button" disabled={addBusy} onClick={() => duplicateLayer(i)} aria-label={t(`Duplicate tattoo ${i + 1}`, `${i + 1}. tetoválás duplikálása`)}>
+              <img src={L1.design.ink} alt="" />
+            </button>
+          ))}
+        </div>
+        {myDesigns.length > 0 && (
+          <>
+            <p className="layer-lib-h">{t('Your uploads', 'Feltöltött mintáid')}</p>
+            <div className="layer-lib">
+              {myDesigns.map((d) => (
+                <button key={d.id} type="button" disabled={addBusy} onClick={() => addSaved(d.src)} aria-label={t('Your uploaded design', 'Feltöltött mintád')}>
+                  <img src={d.src} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+        <p className="layer-lib-h">{t('From the library', 'A mintatárból')}</p>
         <div className="layer-lib">
           {DESIGNS.slice(0, 12).map((d) => (
             <button key={d.id} type="button" disabled={addBusy} onClick={() => addLayer(d.src, false)} aria-label={t(d.en, d.hu)}>
