@@ -413,6 +413,37 @@ function polys(v: any): [number, number][][] | null {
 }
 
 /** Fast pre-check of the user's photo before we spend money on image generation. */
+/** Server-side safety check of what goes into a preview, run alongside the generation (adds no waiting time).
+ *  Blocks sexual content and minors in the photo, and hateful, extremist or sexual designs – Google Play requires
+ *  AI apps to prevent restricted content, not only to let people report it. Fails open if the check itself fails. */
+export async function inputSafety(photo: Img | null, design: Img | null): Promise<{ block: 'photo' | 'design' | null }> {
+  if (!process.env.GEMINI_API_KEY || (!photo && !design)) return { block: null };
+  try {
+    const imgs = [photo, design].filter(Boolean) as Img[];
+    const data = await geminiCall(textModels(), {
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            ...parts(imgs),
+            {
+              text: `${photo ? 'Image 1 is a body photo' : ''}${photo && design ? ', image 2' : 'The image'} ${design ? 'is a tattoo design the user wants to try on' : ''}. Reply with JSON only:
+{${photo ? '"photoNotAllowed": boolean (true if the photo shows exposed genitals, exposed buttocks, a female nipple or areola, sexual activity, or a person who looks under 18),' : ''}
+ ${design ? '"designNotAllowed": boolean (true ONLY if the design is clearly a hate symbol (e.g. swastika used as Nazi symbol, SS runes, white-power or terrorist emblems), praises violent extremism, or is sexually explicit; ordinary tattoo motifs such as skulls, weapons, religious symbols, nudes in classic art style, text and logos are fine)' : ''}}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+    });
+    const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    return { block: j.photoNotAllowed ? 'photo' : j.designNotAllowed ? 'design' : null };
+  } catch (e) {
+    console.warn('input safety check failed', e);
+    return { block: null };
+  }
+}
+
 export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCheck> {
   if (!process.env.GEMINI_API_KEY) return { ok: true, code: 'ok', area: placement };
   try {

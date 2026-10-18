@@ -27,7 +27,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
         T('- All traffic is encrypted with HTTPS.', '- Minden adatforgalom HTTPS-titkosítással megy.'),
         T('- Row-level security in the database: every request is checked against who is signed in.', '- Sorszintű jogosultság az adatbázisban: minden kérésnél ellenőrizzük, ki van bejelentkezve.'),
         T('- Server keys never reach your browser; sensitive actions run on the server.', '- A szerverkulcsok soha nem jutnak el a böngésződbe; az érzékeny műveletek a szerveren futnak.'),
-        T('- For guests we keep a random device ID and a one-way hash of the IP address — never the raw IP — to apply fair limits.', '- Vendégeknél egy véletlenszerű eszközazonosítót és az IP-cím egyirányú hash-ét tároljuk – soha nem magát az IP-t –, hogy méltányos kereteket alkalmazhassunk.'),
+        T('- To prevent abuse we keep a random device ID and a one-way hash of the IP address — never the raw IP — to apply fair limits.', '- A visszaélések megelőzésére egy véletlenszerű eszközazonosítót és az IP-cím egyirányú hash-ét tároljuk – soha nem magát az IP-t –, hogy méltányos kereteket alkalmazhassunk.'),
         T('- Photos of minors and nude images are refused automatically.', '- A kiskorúakat ábrázoló és a meztelen képeket automatikusan elutasítjuk.'),
       ],
     },

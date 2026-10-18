@@ -1,7 +1,7 @@
 import { tx, isLang } from '@/lib/tr';
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
-import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
+import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, inputSafety, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
 import { pasteBack } from '@/lib/composite';
 import { jobPut } from '@/lib/jobs';
 import { longevity } from '@/lib/score';
@@ -111,6 +111,8 @@ export async function POST(req: Request) {
       }
     };
 
+    // safety check of the photo and the design, alongside the generation
+    const safety = inputSafety({ ...photo, name: 'photo.jpg' }, existing ? null : designImg);
     let image: string;
     let qc: QC = { ok: true, match: 10, note: '', fix: '' };
     let analysis;
@@ -139,6 +141,17 @@ export async function POST(req: Request) {
       analysis = an;
     }
 
+    const safe = await safety;
+    if (safe.block) {
+      const msg =
+        safe.block === 'design'
+          ? 'This design can’t be used: it looks like a hate symbol or explicit content. Try another design.'
+          : 'The AI safety filter blocked this photo. Use a photo that shows only the body area, with no nudity and no minors.';
+      await jobPut(body.job, owner, 'error', msg);
+      if (a) await a.db.rpc('refund_generation', { p_gid: gid });
+      else await guestRefund(gid, guest!.id).catch(() => {});
+      return withCookie(json({ error: msg, code: 'not_allowed' }, 422), guest?.setCookie ?? null);
+    }
     // the age the user told us beats a guess from a photo of an arm
     const AGE: Record<string, number> = { '18-24': 21, '25-34': 30, '35-44': 40, '45-54': 50, '55+': 60 };
     if (AGE[body.ageHint]) analysis = { ...analysis, apparentAge: AGE[body.ageHint] };

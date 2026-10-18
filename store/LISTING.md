@@ -51,6 +51,7 @@ Az eredmény MI-szimuláció inspirációnak, nem orvosi tanács. A valós eredm
 
 See it before it's permanent. InkAge shows any tattoo on your own photo, fresh and aged 1, 10, 30 and 50 years.
 
+- Sign in with one tap with Apple or Google – then everything is free.
 - Upload a photo of the body area and pick a design, or describe what you want.
 - See it on your own skin tone and light.
 - Slide through the years to see how ink spreads and fades.
@@ -62,9 +63,24 @@ Results are an AI simulation for inspiration, not medical advice. Real results d
 
 **Keywords:** tattoo,preview,aging,ink,fade,design,artist,healing,ai,tattoo idea
 
-## Bírálói megjegyzés (App Store Review Notes)
+## Bírálói megjegyzés (App Store Review Notes és Google Play → App access)
 
-> InkAge needs an account because every preview is saved to the user's own gallery and synced across devices. Sign in with Apple (or Google) on the first screen – the reviewer can use any Apple ID. Then confirm 18+, tap Create, add a body photo and a design (or "Try it on a model"), and generate a preview. Account deletion: Profile > Settings > Delete account. User content: shared vote links can be reported with "Report this picture"; 3 reports or one "minor" report hide the picture automatically and we review reports within 24 hours. Photos are sent to our AI providers (Google Gemini, OpenAI) only to create the preview; nudity and minors are rejected automatically. Demo account (optional): `[ e-mail ]` / `[ jelszó ]`.
+**Google Play → App content → App access:** „All or some functionality is restricted”, majd *Add instructions*:
+- Name: `Reviewer test account`
+- Username / e-mail: `[ a teszt Google-fiók címe ]` · Password: `[ a jelszava ]` – a jelszót csak a Play Console-ba írd be, ide ne.
+- A teszt Google-fiókon a kétlépcsős azonosítás legyen KIKAPCSOLVA, és lépj be vele egyszer telefonon, hogy ne kérjen ellenőrzést.
+
+**Instructions (angolul, mindkét áruházba bemásolható):**
+
+> InkAge needs an account because every preview is saved to the user's private gallery and synced across devices. Sign-in is only with Google or Apple.
+> 1. On the first screen tap "Continue with Google" and sign in with the test account above (Apple reviewers can use any Apple ID with "Sign in with Apple").
+> 2. Confirm you are 18 or older.
+> 3. Tap Create, add a photo of a body area (or tap "No good photo? Use a model" if you don't want to use your own photo), pick a design from the library, and tap "Show me my tattoo". The preview takes about 30–60 seconds.
+> 4. Slide through the years (fresh, 1, 10, 30, 50) on the result.
+> Reporting: every AI result has "Report inappropriate content" under the image; shared vote links have "Report this picture". 3 reports or one "minor" report hide a shared picture automatically; we review all reports within 24 hours.
+> Safety: photos are checked before and during generation; nudity, minors, hate symbols and explicit designs are rejected automatically.
+> Account deletion: Profile → "Delete account" (top) → type DELETE → "Delete everything". Web: https://inkage.vercel.app/fiok-torlese
+> Photos are sent to our AI providers (Google Gemini, OpenAI) only to create the preview.
 
 ## Korhatár
 
@@ -85,10 +101,31 @@ Követés (tracking): **Nem**. Gyűjtött adatok, mind a felhasználóhoz kötve
 
 ## Google Play – Data safety
 
-- Adatgyűjtés: **igen**. Megosztás harmadik féllel: **nem** (a Gemini és az OpenAI a nevünkben dolgozó adatfeldolgozó, ez a Google szerint nem „megosztás”, de a leírásban megnevezzük őket).
-- Titkosítás átvitel közben: **igen**. Kérhető törlés: **igen** (appban és a /fiok-torlese oldalon).
-- Gyűjtött adatok: *Személyes adatok → E-mail-cím* (fiók, opcionális); *Fotók és videók → Fotók* (app működése, nem kötelező megőrizni: vendégként csak az eszközön); *Alkalmazástevékenység → Interakciók* (analitika, névtelen); *App-információ → Összeomlási naplók* (app működése); *Eszköz- vagy egyéb azonosítók* (visszaélés-szűrés).
-- MI-adatkezelés (2026. júliusi szabály): a fotó és a minta a Google Gemini és (tartalékként) az OpenAI szerveréhez kerül az előnézet elkészítéséhez; a szolgáltatók saját szabályzatuk szerint korlátozott ideig, visszaélés-szűrésre őrizhetik; a felhasználó a feltöltés előtt látja és elfogadja ezt (adatvédelmi tájékoztató, appon belüli figyelmeztetés).
+- Adatgyűjtés: **igen**. Megosztás harmadik féllel: **nem** (a Supabase, a Google Gemini, az OpenAI, a Firebase és a Resend a nevünkben dolgozó adatfeldolgozó – a Google szerint ez nem „megosztás”).
+- Titkosítás átvitel közben: **igen**. Kérhető törlés: **igen** – appban (Profil → Fiók törlése) és weben: https://inkage.vercel.app/fiok-torlese
+- Gyűjtött adatok (mindegyik: a felhasználóhoz kötve, nem kerül eladásra, nem hirdetésre):
+
+| Kategória → típus | Kötelező? | Cél |
+| --- | --- | --- |
+| Személyes adatok → Név | Kötelező | Fiókkezelés |
+| Személyes adatok → E-mail-cím | Kötelező | Fiókkezelés, app működése |
+| Személyes adatok → Felhasználói azonosítók | Kötelező | Fiókkezelés |
+| Fotók és videók → Fotók | Kötelező | App működése |
+| Alkalmazástevékenység → Alkalmazásbeli interakciók | Opcionális (süti-hozzájárulás) | Analitika |
+| Alkalmazástevékenység → Egyéb, felhasználó által létrehozott tartalom (jegyzetek, jelentések) | Opcionális | App működése, biztonság |
+| Üzenetek → Egyéb üzenetek (kapcsolati üzenet, visszajelzés) | Opcionális | Ügyfélszolgálat |
+| Eszköz- vagy egyéb azonosítók (push-token, véletlenszerű eszközazonosító) | Opcionális | App működése (értesítés), visszaélés-szűrés |
+
+- Összeomlási napló: jelenleg csak a szerveroldali hibákat naplózzuk, az appból nem gyűjtünk crash-reportot – ezért ezt **ne** jelöld.
+- MI-adatkezelés (2026. júliusi pontosítás): a fotó és a minta a Google Gemini és (tartalékként) az OpenAI szerveréhez kerül az előnézet elkészítéséhez; a felhasználó a feltöltés előtt látja ezt az appban, és az adatvédelmi tájékoztató is leírja.
+
+## Egyéb Play Console-űrlapok
+
+- **Ads:** nem tartalmaz hirdetést.
+- **Target audience:** csak 18+ (a 13–17 éves sávot ne jelöld).
+- **Health apps declaration:** „My app doesn't provide any health features”.
+- **Government / Financial / News:** nem.
+- **Engedélyek indoklása:** `CAMERA` – az appon belüli kamera a testrész lefotózásához; `POST_NOTIFICATIONS` – szavazási és gyógyulási emlékeztetők, csak ha a felhasználó bekapcsolja.
 
 ## Képernyőképek
 

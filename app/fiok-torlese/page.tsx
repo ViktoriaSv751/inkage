@@ -1,6 +1,7 @@
 import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
+import { PUBLIC } from '@/lib/public-config';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
@@ -10,31 +11,40 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
+  const mail = PUBLIC.contactEmail;
   const sections: InfoSec[] = [
     {
-      h: T('If you have an account', 'Ha van fiókod'),
+      h: T('Delete it yourself in the app', 'Töröld magad az appban'),
       icon: 'user',
       ps: [
         T('1. Open InkAge and sign in.', '1. Nyisd meg az InkAge-et, és jelentkezz be.'),
-        T('2. Go to Profile.', '2. Lépj a Profil oldalra.'),
-        T('3. Tap “Delete my account and data”.', '3. Koppints a „Fiókom és adataim törlése” lehetőségre.'),
-        T('4. Type DELETE to confirm and tap “Delete everything”.', '4. Megerősítésként írd be: DELETE, majd koppints a „Mindent törlök” gombra.'),
-        T('Your account, every saved preview and your vote links are removed. This can’t be undone.', 'Ezzel törlődik a fiókod, minden mentett előnézeted és a szavazós linkjeid. Ez nem vonható vissza.'),
-        T('> Want to keep something? Download your previews or use Profile → Download my data first.', '> Szeretnél megtartani valamit? Előtte töltsd le az előnézeteidet, vagy használd a Profil → Adataim letöltése lehetőséget.'),
+        T('2. Go to Profile and tap “Delete account” at the top.', '2. Lépj a Profil oldalra, és koppints fent a „Fiók törlése” gombra.'),
+        T('3. Type DELETE to confirm and tap “Delete everything”.', '3. Megerősítésként írd be: TÖRLÉS, majd koppints a „Mindent törlök” gombra.'),
+        T('> Want to keep something? Use Profile → Download my data first.', '> Szeretnél megtartani valamit? Előtte használd a Profil → Adataim letöltése lehetőséget.'),
       ],
     },
     {
-      h: T('If you never signed in', 'Ha soha nem jelentkeztél be'),
-      icon: 'phone',
-      ps: [T('Your previews live only in this browser. Delete them one by one in the gallery, or clear this site’s data in your browser settings.', 'Az előnézeteid csak ebben a böngészőben vannak. Törölheted őket egyenként a galériában, vagy a böngésző beállításaiban törölheted az oldal adatait.')],
+      h: T('Ask us to delete it – no app needed', 'Kérd tőlünk – app nélkül is'),
+      id: 'request',
+      icon: 'mail',
+      ps: [
+        mail
+          ? T(`Write to ${mail} from the e-mail address of your Google account or Apple ID, with the subject “Delete my InkAge account”. You can also use the contact page.`, `Írj a ${mail} címre a Google-fiókod vagy Apple ID-d e-mail-címéről, „InkAge-fiók törlése” tárggyal. A kapcsolat oldalt is használhatod.`)
+          : T('Send us a message on the contact page with the subject “Delete my InkAge account”, from the e-mail address of your Google account or Apple ID.', 'Írj nekünk a kapcsolat oldalon „InkAge-fiók törlése” tárggyal, a Google-fiókod vagy Apple ID-d e-mail-címéről.'),
+        T('We confirm that the address is yours and delete the account within 30 days, usually within 2 working days, then let you know.', 'Ellenőrizzük, hogy a cím a tiéd, és 30 napon belül, általában 2 munkanapon belül töröljük a fiókot, majd értesítünk.'),
+      ],
     },
     {
-      h: T('Can’t get into your account?', 'Nem tudsz belépni?'),
-      icon: 'mail',
-      ps: [T('Send us a message on the contact page from the e-mail address you signed up with and we’ll delete your data for you.', 'Írj nekünk a kapcsolat oldalon arról az e-mail-címről, amellyel regisztráltál, és töröljük helyetted az adataidat.')],
+      h: T('What is deleted and what is kept', 'Mi törlődik és mi marad meg'),
+      icon: 'trash',
+      ps: [
+        T('- **Deleted at once:** your name, e-mail address and profile picture, every photo, design and preview (including Recently deleted), your vote links and Explore posts, notes, folders, onboarding answers, notification tokens and planned reminders.', '- **Azonnal törlődik:** a neved, e-mail-címed és profilképed, minden fotó, minta és előnézet (a Nemrég törölt mappával együtt), a szavazós linkek és a Felfedezés bejegyzései, a jegyzetek, mappák, bevezető válaszok, értesítési azonosítók és a beállított emlékeztetők.'),
+        T('- **Kept:** a closed record with a random ID and the dates of past previews (no name, e-mail or image), so the free limit cannot be abused with the same sign-in, and the reason of reports you sent, for up to 12 months.', '- **Megmarad:** egy lezárt bejegyzés véletlenszerű azonosítóval és a korábbi előnézetek dátumaival (név, e-mail és kép nélkül), hogy ugyanazzal a belépéssel ne lehessen visszaélni az ingyenes kerettel, valamint az általad küldött jelentések oka, legfeljebb 12 hónapig.'),
+        T('Deleting can’t be undone. You can sign up again later with the same Google account or Apple ID; that starts a new, empty account.', 'A törlés nem vonható vissza. Később ugyanazzal a Google-fiókkal vagy Apple ID-val újra regisztrálhatsz; ez egy új, üres fiókot indít.'),
+      ],
     },
   ];
-  return <InfoPage lang={L} path="/fiok-torlese" kicker={T('Delete account', 'Fiók törlése')} title={T('Delete your account and data.', 'Fiók és adatok törlése.')} lede={T('You can do it yourself, in the app, in under a minute.', 'Magad is megteheted az appban, kevesebb mint egy perc alatt.')} sections={sections} cta={false} kickerIcon="trash" highlights={[
+  return <InfoPage lang={L} path="/fiok-torlese" kicker={T('Delete account', 'Fiók törlése')} title={T('Delete your InkAge account and data.', 'InkAge-fiók és adatok törlése.')} lede={T('Do it yourself in the app in under a minute, or ask us here – no app needed.', 'Megteheted magad az appban egy perc alatt, vagy kérheted tőlünk itt – app nélkül is.')} sections={sections} cta={false} kickerIcon="trash" highlights={[
     { i: 'clock', h: T('Under a minute', 'Egy percen belül'), p: T('Done in the app, by you.', 'Az appban, magad intézed.') },
     { i: 'trash', h: T('Everything goes', 'Minden törlődik'), p: T('Account, previews and vote links.', 'Fiók, előnézetek és szavazós linkek.') },
     { i: 'download', h: T('Keep a copy first', 'Előtte ments'), p: T('Download your data before deleting.', 'Töltsd le az adataidat törlés előtt.') },

@@ -26,6 +26,8 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#f3d6c8', androidScaleType: 'CENTER_CROP', showSpinner: false },
     StatusBar: { style: 'DEFAULT', overlaysWebView: false, backgroundColor: '#f3d6c8' },
+    // Android 15+ draws edge to edge: the web app pads itself with env(safe-area-inset-*) (viewport-fit=cover)
+    SystemBars: { insetsHandling: 'css', initialViewportFitValueHint: 'cover' },
     PushNotifications: { presentationOptions: ['badge', 'sound', 'alert'] },
   },
 };

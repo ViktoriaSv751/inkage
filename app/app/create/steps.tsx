@@ -541,7 +541,7 @@ export function StudioStep({
               <span className="sslot-empty">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16" /></svg>
                 <b>{t('The design', 'A minta')}</b>
-                <small>{t('Pinterest, screenshot, sketch', 'Pinterest, képernyőfotó, rajz')}</small>
+                <small>{t('Screenshot, saved image, sketch', 'Képernyőfotó, mentett kép, rajz')}</small>
               </span>
             )}
             {busy && (
@@ -587,6 +587,7 @@ export function StudioStep({
 
       <p className="fine ai-note">
         {t('Your photo and design are sent to our AI providers (Google Gemini, OpenAI as backup) only to check the photo and make your preview. ', 'A fotódat és a mintádat csak az ellenőrzéshez és az előnézethez küldjük el az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). ')}
+        {t('Only upload photos of yourself, or of someone who agreed to it. ', 'Csak saját magadról készült fotót tölts fel, vagy olyanról, aki ebbe beleegyezett. ')}
         <a href={`/privacy${qOf(ui.lang)}`}>{t('Privacy', 'Adatvédelem')}</a>
       </p>
 
