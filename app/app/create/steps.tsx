@@ -509,7 +509,7 @@ export function StudioStep({
         : removal
           ? t('Show the laser sessions', 'Mutasd a lézeres kezeléseket')
           : existing
-          ? t('Show me how it ages', 'Mutasd, hogyan öregszik')
+          ? t('Continue', 'Tovább')
           : t('Continue — place it', 'Tovább – elhelyezés');
 
   return (

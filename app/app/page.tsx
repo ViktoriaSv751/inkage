@@ -313,14 +313,17 @@ export default function CreatePage() {
       }
     }, removal ? 400 : 200);
   };
+  /** The years on request: 1, 10, 30 and 50 years, added to the saved preview as they arrive. */
   const startAging = () => {
     const j = job.current;
     if (!j) return toast(t('Start a new preview to see the aging.', 'Az öregedéshez indíts új előnézetet.'));
+    const was = removalIntent.current;
     removalIntent.current = false;
     started.current = new Set();
+    setFailed([]);
     setPending(AGE_STAGES);
     AGE_STAGES.filter((k) => PARENT[k] === 'fresh').forEach((k) => ageOne(k));
-    track('removal_then_aging');
+    track(was ? 'removal_then_aging' : 'aging_start');
   };
 
   const removalOne = async (k: RemovalKey) => {
@@ -481,6 +484,9 @@ export default function CreatePage() {
         startRemoval();
         return;
       }
+      // Aging is optional: the fresh result is saved straight away, and the years are made only when asked
+      // ("Show how it ages" on the result). A recovered preview whose aging had already started carries on.
+      if (!AGE_STAGES.some((k) => images[k])) return setPending([]);
       missing.filter((k) => PARENT[k] === 'fresh' || images[PARENT[k]!]).forEach((k) => ageOne(k));
     } else lsSet('ink_job', null);
   };
@@ -522,7 +528,7 @@ export default function CreatePage() {
     const nd = await processDesign(r.data.image, design.mode);
     const next: Design = { raw: r.data.image, ink: nd.dataUrl, ratio: nd.ratio, detail: nd.detail, mode: design.mode };
     setDesign(next);
-    toast(t('Redrawn to last — now showing how it ages', 'Átrajzolva – most megnézzük, hogyan öregszik'));
+    toast(t('Redrawn to last — here is the new version', 'Átrajzolva, hogy tartós legyen – itt az új változat'));
     go({ design: next });
   };
   const resize = (cm: number) => {

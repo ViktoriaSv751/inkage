@@ -539,6 +539,14 @@ export function Result({
         <p className="why" aria-live="polite">{t(...WHY[active])}</p>
       )}
       {img.fresh && <AiReport previewId={preview.id} image={img[ready[Math.round(pos)] as StageKey] || img.fresh} />}
+      {!removalOnly && onAging && view === 'aging' && ready.length <= 1 && pending.length === 0 && failed.length === 0 && img.fresh && (
+        <div className="age-offer">
+          <p>{t('Saved to your gallery. Want to see how it looks over the years?', 'Elmentve a galériádba. Megnézed, hogyan néz ki az évek múlásával?')}</p>
+          <button className="btn wide" onClick={onAging}>
+            {t('Show how it ages (1–50 years)', 'Mutasd, hogyan öregszik (1–50 év)')}
+          </button>
+        </div>
+      )}
       {removalOnly && onAging && (
         <button className="btn ghost wide" style={{ margin: '4px 0 12px' }} onClick={onAging} disabled={removalPending.length > 0}>
           {t('Also show how it ages over 50 years', 'Az öregedését is megnézem 50 évre')}
