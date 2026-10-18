@@ -72,7 +72,16 @@ export async function initNative() {
     if (canGoBack && location.pathname !== '/app') history.back();
     else App.minimizeApp().catch(() => {});
   });
-  import('@capacitor/status-bar').then(({ StatusBar, Style }) => StatusBar.setStyle({ style: Style.Default }).catch(() => {}));
+  // the status bar follows the app's theme (dark unless light was chosen): light text on black, or dark on white
+  import('@capacitor/status-bar').then(({ StatusBar, Style }) => {
+    const paint = () => {
+      const light = document.documentElement.dataset.theme === 'light';
+      StatusBar.setStyle({ style: light ? Style.Light : Style.Dark }).catch(() => {});
+      StatusBar.setBackgroundColor({ color: light ? '#ffffff' : '#000000' }).catch(() => {});
+    };
+    paint();
+    window.addEventListener('ink-theme', paint);
+  });
   import('@capacitor/splash-screen').then(({ SplashScreen }) => SplashScreen.hide().catch(() => {}));
 }
 

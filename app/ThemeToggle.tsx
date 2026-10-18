@@ -4,11 +4,13 @@ import { tx, type Lang } from '@/lib/tr';
 import { useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
-const read = (): Theme => (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+// dark is the default: only an explicit light choice makes it light
+const read = (): Theme => (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
 
 export function applyTheme(t: Theme) {
   document.documentElement.dataset.theme = t;
-  // only for this visit: every time the app is opened it starts in light mode
+  document.documentElement.style.colorScheme = t;
+  // only for this visit: every time the app is opened it starts in dark mode
   try {
     sessionStorage.setItem('ink_theme', t);
   } catch {}
@@ -18,7 +20,7 @@ export function applyTheme(t: Theme) {
 
 /** Light / dark switch, kept in sync across every toggle on the page. */
 export function ThemeToggle({ className = '', lang = 'hu' }: { className?: string; lang?: Lang }) {
-  const [t, setT] = useState<Theme>('light');
+  const [t, setT] = useState<Theme>('dark');
   useEffect(() => {
     const cur = read();
     setT(cur);
