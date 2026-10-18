@@ -80,7 +80,8 @@ export function TopBar() {
   return (
     <header className={`topbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="topbar-in">
-        <Link className="logo" href="/app" aria-label="InkAge">
+        {/* signed in, the logo leads to your designs (the gallery); otherwise to the start */}
+        <Link className="logo" href={me.user ? '/app/gallery' : '/app'} aria-label="InkAge">
           <svg viewBox="0 0 64 64" aria-hidden="true">
             <circle cx="32" cy="32" r="30" />
             <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
@@ -114,7 +115,7 @@ export function DeskTheme() {
 
 export function BottomNav() {
   const path = usePathname();
-  const { ui } = useApp();
+  const { ui, me } = useApp();
   const router = useRouter();
   const [going, setGoing] = useState<string | null>(null);
   useEffect(() => setGoing(null), [path]);
@@ -141,7 +142,7 @@ export function BottomNav() {
   const q = qOf(ui.lang);
   return (
     <nav className="tabbar" aria-label="Main">
-      <Link href="/" className="rail-logo" aria-label="InkAge">
+      <Link href={me.user ? '/app/gallery' : '/'} className="rail-logo" aria-label="InkAge">
         <svg viewBox="0 0 64 64" aria-hidden="true">
           <circle cx="32" cy="32" r="30" />
           <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />

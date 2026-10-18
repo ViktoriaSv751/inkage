@@ -99,7 +99,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
     <>
       <header className={`sn-top ${scrolled ? 'scrolled' : ''}`}>
         <div className="sn-in">
-          <Link href={`/${q}`} className="sn-logo" aria-label="InkAge">
+          <Link href={signedIn ? '/app/gallery' : `/${q}`} className="sn-logo" aria-label="InkAge">
             <svg viewBox="0 0 64 64" aria-hidden="true">
               <circle cx="32" cy="32" r="30" />
               <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
@@ -133,7 +133,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
       <div className={`sn-drawer-wrap ${menu ? 'open' : ''}`} aria-hidden={!menu} onClick={() => setMenu(false)}>
         <aside className="sn-drawer" role="dialog" aria-modal="true" aria-label={T('Menu', 'Menü')} onClick={(e) => e.stopPropagation()}>
           <div className="sn-dr-head">
-            <Link href={`/${q}`} className="sn-logo" aria-label="InkAge">
+            <Link href={signedIn ? '/app/gallery' : `/${q}`} className="sn-logo" aria-label="InkAge">
               <svg viewBox="0 0 64 64" aria-hidden="true">
                 <circle cx="32" cy="32" r="30" />
                 <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
