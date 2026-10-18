@@ -45,4 +45,37 @@
 @keyframes lpIn { from { transform: translateX(28px); opacity: 0; } }
 @keyframes lpFade { from { opacity: 0; } }
 @keyframes lpUp { from { transform: translateY(24px) scale(.98); opacity: 0; } }
+.lp-close { display: none; }
+
+/* computer: a centred dialog over the page, languages in a grid, buttons in a row */
+@media (min-width: 720px) {
+  .lp-wrap { background: rgba(13, 11, 20, .42); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); overflow: hidden; padding: 32px; }
+  .lp-page { max-width: 880px; max-height: calc(100vh - 64px); max-height: calc(100dvh - 64px); border-radius: 28px; padding-top: 0; }
+  .lp-bar { position: static; height: auto; padding: 22px 22px 0 32px; grid-template-columns: 1fr 40px; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .lp-bar > .lp-x:first-child { display: none; }
+  .lp-bar-t { text-align: left; font-size: 13px; letter-spacing: .02em; text-transform: uppercase; }
+  .lp-close { display: grid; width: 40px; height: 40px; border-radius: 50%; }
+  .lp-body { overflow-y: auto; overscroll-behavior: contain; padding: 4px 32px 8px; min-height: 0; }
+  .lp-hero { display: grid; grid-template-columns: 48px 1fr; column-gap: 16px; align-items: center; padding: 4px 0 22px; }
+  .lp-globe { grid-row: span 2; }
+  .lp-globe { flex: none; width: 48px; height: 48px; border-radius: 15px; margin: 0; }
+  .lp-globe svg { width: 24px; height: 24px; }
+  .lp-hero h2 { font-size: 26px; }
+  .lp-hero p { margin-top: 2px; font-size: 14.5px; }
+  .lp-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .lp-cards button { grid-template-columns: 36px 1fr auto 22px; gap: 11px; padding: 11px 12px; border-radius: 16px; }
+  .lp-flag { width: 36px; height: 36px; font-size: 20px; }
+  .lp-name b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lp-name small { font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lp-cur { font-size: 11px; padding: 4px 7px; }
+  .lp-radio { width: 22px; height: 22px; }
+  .lp-radio svg { width: 12px; height: 12px; }
+  .lp-note { margin: 16px 0 6px; }
+  .lp-actions { position: static; display: flex; flex-direction: row-reverse; justify-content: flex-start; gap: 10px; padding: 16px 32px 22px; border-top: 1px solid var(--line); background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .lp-ok, .lp-cancel { width: auto; height: 48px; padding: 0 28px; font-size: 15px; }
+  .lp-cancel { box-shadow: inset 0 0 0 1px var(--line); }
+  .lp-cancel:hover { background: var(--surface); }
+}
+@media (min-width: 720px) and (max-width: 940px) { .lp-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 @media (prefers-reduced-motion: reduce) { .lp-wrap, .lp-page { animation: none; } }

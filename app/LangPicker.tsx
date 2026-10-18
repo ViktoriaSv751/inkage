@@ -66,7 +66,7 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
       {open &&
         mounted &&
         createPortal(
-          <div className="lp-wrap" role="dialog" aria-modal="true" aria-label={W.language} lang={sel}>
+          <div className="lp-wrap" role="dialog" aria-modal="true" aria-label={W.language} lang={sel} onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
             <div className="lp-page">
               <header className="lp-bar">
                 <button type="button" className="lp-x" aria-label={W.back} onClick={() => setOpen(false)}>
@@ -75,7 +75,11 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                   </svg>
                 </button>
                 <span className="lp-bar-t">{W.settings}</span>
-                <span />
+                <button type="button" className="lp-x lp-close" aria-label={W.cancel} onClick={() => setOpen(false)}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </button>
               </header>
               <div className="lp-body">
                 <div className="lp-hero">

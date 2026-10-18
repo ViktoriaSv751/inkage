@@ -8,21 +8,23 @@ import './globals.css';
 import './dark.css';
 import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
-import { isLang } from '@/lib/tr';
+import { isLang, tx } from '@/lib/tr';
 import LOCALE_VER from '@/lib/locales/manifest.json';
 
-export const metadata: Metadata = {
-  title: 'InkAge – See your tattoo in 50 years',
-  description: 'Upload a photo and any tattoo design. See it fresh, healed, and aged 10, 30 and 50 years – then make a time-lapse video.',
-  manifest: '/manifest.webmanifest',
-  appleWebApp: { capable: true, title: 'InkAge', statusBarStyle: 'default' },
-  icons: { icon: '/icon.svg', apple: '/icons/apple-touch-icon.png' },
-  openGraph: {
-    title: 'InkAge – See your tattoo in 50 years',
-    description: 'Try a tattoo on your own photo and watch it age 50 years.',
-    type: 'website',
-  },
-};
+export function generateMetadata(): Metadata {
+  const h = headers().get('x-ink-lang');
+  const L = isLang(h) ? h : 'hu';
+  const title = `InkAge – ${tx(L, 'See your tattoo in 50 years', 'Nézd meg a tetoválásod 50 év múlva')}`;
+  const description = tx(L, 'Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.');
+  return {
+    title,
+    description,
+    manifest: '/manifest.webmanifest',
+    appleWebApp: { capable: true, title: 'InkAge', statusBarStyle: 'default' },
+    icons: { icon: '/icon.svg', apple: '/icons/apple-touch-icon.png' },
+    openGraph: { title, description, type: 'website' },
+  };
+}
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#ffffff', colorScheme: 'light' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
