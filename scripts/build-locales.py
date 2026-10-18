@@ -11,7 +11,7 @@ ph = lambda s: set(re.findall(r'\{\d+\}', s))
 report = {}
 for l in langs:
     got = {}
-    for f in sorted(glob.glob(f'{TR}/out/{l}-*.json')) + sorted(glob.glob(f'{TR}/extra/{l}*.json')):
+    for f in sorted(glob.glob(f'{TR}/out/{l}-*.json')) + sorted(glob.glob(f'{TR}/extra/{l}.json') + glob.glob(f'{TR}/extra/{l}-*.json')):
         try:
             got.update({str(k): v for k, v in json.load(open(f)).items()})
         except Exception as e:
