@@ -310,33 +310,6 @@ export const cloud = {
     const { error } = await s.rpc('trash_preview', { p_id: id });
     if (error) throw error;
   },
-  /**
-   * Previews that were generated but are missing from the gallery (lost before "Recently deleted" existed):
-   * the server still has their images, so they are uploaded again and put back. Runs once per account.
-   */
-  async recoverMissing(uid: string): Promise<number> {
-    const s = sb()!;
-    const { data: list } = await s.rpc('my_recoverable_jobs');
-    let n = 0;
-    for (const j of (list as { job_id: string; created_at: string; preview_id: string | null; placement: string | null }[]) || []) {
-      try {
-        const { data } = await s.rpc('my_job_images', { p_job: j.job_id });
-        if (!data) continue;
-        const id = j.preview_id || crypto.randomUUID();
-        const paths: Record<string, string> = {};
-        for (const [k, v] of Object.entries(data as Record<string, any>)) {
-          const src = typeof v === 'string' ? v : v?.image;
-          if (typeof src !== 'string' || !src.startsWith('data:image')) continue;
-          const path = await upload(uid, id, k, src).catch(() => null);
-          if (path) paths[k] = path;
-        }
-        if (!paths.fresh) continue;
-        const { error } = await s.rpc('restore_from_job', { p_job: j.job_id, p_preview: id, p_paths: paths, p_placement: j.placement, p_created: j.created_at });
-        if (!error) n++;
-      } catch {}
-    }
-    return n;
-  },
   /** Recently deleted designs (restorable). */
   async trash(): Promise<Preview[]> {
     const { data, error } = await sb()!.from('previews').select('*').eq('hidden', true).not('deleted_at', 'is', null).order('deleted_at', { ascending: false }).limit(60);
