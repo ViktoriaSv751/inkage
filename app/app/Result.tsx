@@ -15,6 +15,7 @@ import { placeName } from './create/steps';
 import { longevity } from '@/lib/score';
 import { useScrollLock } from '@/lib/scrolllock';
 import { PollSheet } from './PollSheet';
+import { AiReport } from './AiReport';
 import { PollResults } from './PollResults';
 import type { PollData } from '@/lib/share';
 import { closePoll } from '@/lib/share';
@@ -537,6 +538,7 @@ export function Result({
       {view === 'aging' && mode === 'view' && (
         <p className="why" aria-live="polite">{t(...WHY[active])}</p>
       )}
+      {img.fresh && <AiReport previewId={preview.id} image={img[ready[Math.round(pos)] as StageKey] || img.fresh} />}
       {removalOnly && onAging && (
         <button className="btn ghost wide" style={{ margin: '4px 0 12px' }} onClick={onAging} disabled={removalPending.length > 0}>
           {t('Also show how it ages over 50 years', 'Az öregedését is megnézem 50 évre')}
@@ -836,6 +838,7 @@ function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => vo
       >
         {t('Add reminders to my calendar', 'Emlékeztetők a naptáramba')}
       </button>
+      <p className="fine">{t('General aftercare tips, not medical advice. Follow your tattoo artist’s instructions, and see a doctor if you notice signs of infection.', 'Általános utókezelési tippek, nem orvosi tanács. Kövesd a tetoválód utasításait, és fordulj orvoshoz, ha fertőzés jeleit látod.')}</p>
       <p className="fine">{t('General aftercare information, not medical advice. Follow your artist’s instructions.', 'Általános ápolási tájékoztató, nem orvosi tanács. Kövesd a tetoválód utasításait.')}</p>
     </Sheet>
   );

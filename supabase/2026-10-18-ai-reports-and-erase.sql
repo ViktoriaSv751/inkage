@@ -1,0 +1,4 @@
+-- Applied 2026-10-18 via the Supabase MCP:
+--  * public.ai_reports + report_ai (secret-protected, used by /api/ai-report), admin_ai_reports, admin_ai_report_done
+--  * erase_my_account now also clears AI-report pictures/notes, push devices, pending reminders and feedback e-mail
+-- See the live definitions in the database (pg_get_functiondef) for the exact SQL.

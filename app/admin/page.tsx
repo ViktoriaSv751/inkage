@@ -36,6 +36,12 @@ export default function Admin() {
     await sb()?.rpc('admin_report_action', { p_share: share, p_hide: hide });
     setReports((r) => r.filter((x) => x.share_id !== share));
   };
+  const [aiReports, setAiReports] = useState<any[]>([]);
+  const loadAiReports = () => sb()?.rpc('admin_ai_reports').then(({ data }) => Array.isArray(data) && setAiReports(data));
+  const doneAiReport = async (id: string) => {
+    await sb()?.rpc('admin_ai_report_done', { p_id: id });
+    setAiReports((r) => r.filter((x) => x.id !== id));
+  };
   const [feedback, setFeedback] = useState<any[]>([]);
   const loadHealth = async () => {
     const { data } = (await sb()?.rpc('admin_health')) || {};
@@ -59,6 +65,7 @@ export default function Admin() {
     loadHealth();
     loadPosts();
     loadReports();
+    loadAiReports();
     sb()
       ?.rpc('admin_feedback')
       .then(({ data }) => Array.isArray(data) && setFeedback(data));
@@ -178,6 +185,24 @@ export default function Admin() {
                         <button className="btn" style={{ minHeight: 36, padding: '0 14px', fontSize: 14 }} onClick={() => actReport(r.share_id, true)}>Remove</button>
                         <button className="btn ghost" style={{ minHeight: 36, padding: '0 14px', fontSize: 14 }} onClick={() => actReport(r.share_id, false)}>Keep</button>
                       </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {aiReports.length > 0 && (
+            <div style={{ background: '#ffe9e6', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <b>Reported AI results ({aiReports.length})</b>
+              <p style={{ fontSize: 13, color: 'var(--ink-2)', margin: '4px 0 10px' }}>People reported one of their own previews from the app. Review within 24 hours and use them to tighten the safety filters.</p>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {aiReports.map((r) => (
+                  <div key={r.id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    {r.thumb ? <img src={r.thumb} alt="" style={{ width: 80, height: 100, objectFit: 'cover', borderRadius: 10, background: '#ddd' }} /> : <div style={{ width: 80, height: 100, borderRadius: 10, background: '#ddd' }} />}
+                    <div style={{ flex: 1, fontSize: 13 }}>
+                      <b>{r.reason}</b> · {new Date(r.created_at).toLocaleString()}
+                      {r.note && <div>{r.note}</div>}
+                      <button className="btn ghost" style={{ minHeight: 36, padding: '0 14px', fontSize: 14, marginTop: 6 }} onClick={() => doneAiReport(r.id)}>Reviewed</button>
                     </div>
                   </div>
                 ))}

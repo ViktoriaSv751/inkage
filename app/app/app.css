@@ -1042,3 +1042,6 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .hdl-dup svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
 .ed-stage .hdl-dup { scale: var(--iz, 1); }
 .layer-lib-h { margin: 6px 0 -2px; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+
+.report-link { display: block; margin: 0 auto 10px; border: 0; background: none; color: var(--ink-3); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; padding: 6px 10px; cursor: pointer; }
+.report-note { width: 100%; border-radius: 14px; padding: 10px 12px; border: 1px solid var(--line); font: inherit; margin: 10px 0; background: var(--bg); color: var(--ink); }
