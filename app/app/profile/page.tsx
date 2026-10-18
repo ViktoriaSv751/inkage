@@ -4,7 +4,7 @@ import { qOf } from '@/lib/tr';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useApp } from '../AppProvider';
-import { Sheet } from '../ui';
+import { closeTap, Sheet } from '../ui';
 import { LangPicker } from '../../LangPicker';
 import { tx } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
@@ -719,7 +719,7 @@ export default function ProfilePage() {
             </button>
           </div>
         </div>
-        <button className="btn wide ghost" onClick={() => setEditOpen(false)}>
+        <button className="btn wide ghost" onClick={() => setEditOpen(false)} {...closeTap(() => setEditOpen(false))}>
           {t('Done', 'Kész')}
         </button>
       </Sheet>
