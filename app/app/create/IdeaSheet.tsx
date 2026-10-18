@@ -26,15 +26,19 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
   const [inputKey, setInputKey] = useState(0);
   const [link, setLink] = useState('');
   const [busy, setBusy] = useState<'' | 'link' | 'file' | 'save'>('');
-  const [pic, setPic] = useState<(Photo & { sourceUrl: string | null }) | null>(null);
+  // several pictures can be picked at once; they are saved together (with the same note)
+  const [pics, setPics] = useState<(Photo & { sourceUrl: string | null })[]>([]);
+  const [progress, setProgress] = useState('');
   const [note, setNote] = useState('');
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(0);
+  const pic = pics.length === 1 ? pics[0] : null;
 
   const reset = () => {
-    setPic(null);
+    setPics([]);
+    setProgress('');
     setLink('');
     setNote('');
-    setSaved(false);
+    setSaved(0);
   };
   const close = () => {
     if (busy) return;
@@ -42,18 +46,30 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
     onClose();
   };
 
-  const fromFile = async (f: File | Blob, sourceUrl: string | null = null) => {
+  const MAX = 20;
+  /** One or many pictures from the photo library (or one from a link); they join what is already picked. */
+  const fromFiles = async (files: (File | Blob)[], sourceUrl: string | null = null) => {
+    const list = files.slice(0, Math.max(0, MAX - pics.length));
+    if (files.length > list.length) toast(t(`Up to ${MAX} pictures at once.`, `Egyszerre legfeljebb ${MAX} kép.`));
+    if (!list.length) return;
     setBusy('file');
-    try {
-      const p = await prepareImage(f as File, 1280);
-      setPic({ ...p, sourceUrl });
-      setSaved(false);
-      haptic();
-    } catch {
-      toast(t('That picture could not be opened. Try a JPG, PNG or HEIC.', 'Ezt a képet nem sikerült megnyitni. JPG, PNG vagy HEIC legyen.'));
+    setSaved(0);
+    let bad = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (list.length > 1) setProgress(`${i + 1}/${list.length}`);
+      try {
+        const p = await prepareImage(list[i] as File, 1280);
+        setPics((cur) => [...cur, { ...p, sourceUrl }]);
+      } catch {
+        bad++;
+      }
     }
+    setProgress('');
     setBusy('');
+    if (bad) toast(bad === list.length ? t('That picture could not be opened. Try a JPG, PNG or HEIC.', 'Ezt a képet nem sikerült megnyitni. JPG, PNG vagy HEIC legyen.') : t(`${bad} picture(s) could not be opened.`, `${bad} képet nem sikerült megnyitni.`));
+    else haptic();
   };
+  const fromFile = (f: File | Blob, sourceUrl: string | null = null) => fromFiles([f], sourceUrl);
   const fromLink = async (raw: string) => {
     const url = linkIn(raw);
     if (!url) return toast(t('Paste a link that starts with https://', 'Olyan linket illessz be, ami https://-sel kezdődik'));
@@ -85,15 +101,29 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
   };
 
   const save = async () => {
-    if (!pic) return;
+    if (!pics.length) return;
     if (!me.user) return openAuth(t('Sign in to keep your ideas on every device.', 'Jelentkezz be, hogy az ötleteid minden eszközön meglegyenek.'));
     setBusy('save');
-    const u = await uploads.add(me.user.id, 'idea', pic.dataUrl, pic.w, pic.h, { sourceUrl: pic.sourceUrl, note });
+    let ok = 0;
+    const left: typeof pics = [];
+    for (let i = 0; i < pics.length; i++) {
+      if (pics.length > 1) setProgress(`${i + 1}/${pics.length}`);
+      const p = pics[i];
+      const u = await uploads.add(me.user.id, 'idea', p.dataUrl, p.w, p.h, { sourceUrl: p.sourceUrl, note });
+      if (u) ok++;
+      else left.push(p);
+    }
+    setProgress('');
     setBusy('');
-    if (!u) return toast(t('Could not save it. Check your connection and try again.', 'Nem sikerült menteni. Ellenőrizd a kapcsolatot, és próbáld újra.'));
-    track('idea_saved', { from: pic.sourceUrl ? 'link' : 'file' });
+    track('idea_saved', { n: ok, from: pics.some((p) => p.sourceUrl) ? 'link' : 'file' });
+    if (!ok) return toast(t('Could not save it. Check your connection and try again.', 'Nem sikerült menteni. Ellenőrizd a kapcsolatot, és próbáld újra.'));
+    if (left.length) {
+      // the ones that did not make it stay picked, so a second tap saves just those
+      setPics(left);
+      return toast(t(`${ok} saved, ${left.length} not. Tap Save again.`, `${ok} elmentve, ${left.length} nem. Koppints újra a Mentésre.`));
+    }
     haptic('success');
-    setSaved(true);
+    setSaved(ok);
   };
   const tryIt = async () => {
     if (!pic || !onTry) return;
@@ -107,11 +137,11 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
       <h2>{t('Save a tattoo idea', 'Tetoválás-ötlet mentése')}</h2>
       <p className="sub">{t('Found something you like? Save it from your photos or a link (Pinterest, Instagram, any page). It waits in your gallery under Ideas.', 'Láttál valamit, ami tetszik? Mentsd el a fotótárból vagy linkről (Pinterest, Instagram, bármilyen oldal). A galériában, az Ötletek között vár.')}</p>
 
-      {!pic ? (
+      {!pics.length ? (
         <div className="idea-pick">
-          <input key={inputKey} ref={fileRef} id="idea-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) fromFile(f); }} />
+          <input key={inputKey} ref={fileRef} id="idea-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" multiple tabIndex={-1} aria-hidden="true" onChange={(e) => { const fs = Array.from(e.target.files || []); setInputKey((k) => k + 1); if (fs.length) fromFiles(fs); }} />
           <label htmlFor="idea-input" role="button" tabIndex={0} className={`btn wide ${busy === 'file' ? 'is-busy' : ''}`} style={{ cursor: 'pointer' }}>
-            {busy === 'file' ? t('Opening…', 'Megnyitás…') : t('From your photos', 'Fotótárból')}
+            {busy === 'file' ? `${t('Opening…', 'Megnyitás…')} ${progress}` : t('From your photos (one or more)', 'Fotótárból (egy vagy több)')}
           </label>
           <div className="idea-link">
             <input
@@ -149,28 +179,55 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
         </div>
       ) : (
         <div className="idea-preview">
-          <img src={pic.dataUrl} alt="" />
-          {pic.sourceUrl && <small className="muted idea-src">{new URL(pic.sourceUrl).hostname.replace(/^www\./, '')}</small>}
+          {pic ? (
+            <>
+              <img src={pic.dataUrl} alt="" />
+              {pic.sourceUrl && <small className="muted idea-src">{new URL(pic.sourceUrl).hostname.replace(/^www\./, '')}</small>}
+            </>
+          ) : (
+            <div className="idea-multi">
+              {pics.map((p, i) => (
+                <div key={i} className="idea-mtile">
+                  <img src={p.dataUrl} alt="" />
+                  {!saved && (
+                    <button type="button" aria-label={t('Remove', 'Eltávolítás')} disabled={!!busy} onClick={() => setPics((cur) => cur.filter((_, k) => k !== i))}>
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
           {!saved ? (
             <>
-              <input className="text" value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder={t('A note (optional): where, how big, why…', 'Megjegyzés (nem kötelező): hová, mekkora, miért…')} aria-label={t('Note', 'Megjegyzés')} />
-              <button className="btn wide" disabled={busy === 'save'} onClick={save}>
-                {busy === 'save' ? t('Saving…', 'Mentés…') : t('Save to Ideas', 'Mentés az Ötletek közé')}
+              {pics.length < MAX && (
+                <label htmlFor="idea-input" role="button" tabIndex={0} className={`chipbtn idea-more ${busy === 'file' ? 'is-busy' : ''}`}>
+                  {busy === 'file' ? `${t('Opening…', 'Megnyitás…')} ${progress}` : t('+ Add more from your photos', '+ Még képek a fotótárból')}
+                </label>
+              )}
+              <input key={inputKey} id="idea-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" multiple tabIndex={-1} aria-hidden="true" onChange={(e) => { const fs = Array.from(e.target.files || []); setInputKey((k) => k + 1); if (fs.length) fromFiles(fs); }} />
+              <input className="text" value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder={pics.length > 1 ? t('A note for all of them (optional)', 'Megjegyzés mindegyikhez (nem kötelező)') : t('A note (optional): where, how big, why…', 'Megjegyzés (nem kötelező): hová, mekkora, miért…')} aria-label={t('Note', 'Megjegyzés')} />
+              <button className="btn wide" disabled={!!busy} onClick={save}>
+                {busy === 'save'
+                  ? `${t('Saving…', 'Mentés…')} ${progress}`
+                  : pics.length > 1
+                    ? t(`Save ${pics.length} ideas`, `${pics.length} ötlet mentése`)
+                    : t('Save to Ideas', 'Mentés az Ötletek közé')}
               </button>
-              <button className="btn wide ghost" disabled={!!busy} onClick={() => setPic(null)}>
-                {t('Pick another', 'Másikat választok')}
+              <button className="btn wide ghost" disabled={!!busy} onClick={() => setPics([])}>
+                {pics.length > 1 ? t('Start over', 'Újrakezdem') : t('Pick another', 'Másikat választok')}
               </button>
             </>
           ) : (
             <>
-              <p className="idea-ok" role="status">✓ {t('Saved to your Ideas', 'Elmentve az Ötletek közé')}</p>
-              {onTry && (
+              <p className="idea-ok" role="status">✓ {saved > 1 ? t(`${saved} ideas saved`, `${saved} ötlet elmentve`) : t('Saved to your Ideas', 'Elmentve az Ötletek közé')}</p>
+              {onTry && pic && (
                 <button className="btn wide" onClick={tryIt}>
                   {t('Try it on now', 'Kipróbálom most')}
                 </button>
               )}
               <button className="btn wide ghost" onClick={reset}>
-                {t('Save another idea', 'Még egy ötlet')}
+                {t('Save more ideas', 'Még ötletek mentése')}
               </button>
               <button className="btn wide ghost" onClick={() => (close(), router.push('/app/gallery?view=ideas'))}>
                 {t('See my Ideas', 'Ötleteim megnézése')}

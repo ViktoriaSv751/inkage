@@ -1079,3 +1079,9 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 /* result: aging is offered, not started on its own */
 .age-offer { display: grid; gap: 10px; margin: 6px 0 14px; padding: 14px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 .age-offer p { margin: 0; color: var(--ink-2); font-size: 15px; }
+/* several ideas picked at once */
+.idea-multi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-height: 46vh; overflow-y: auto; }
+.idea-mtile { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+.idea-mtile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.idea-mtile button { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .6); color: #fff; font-size: 16px; line-height: 1; display: grid; place-items: center; cursor: pointer; }
+.idea-more { justify-self: center; cursor: pointer; }
