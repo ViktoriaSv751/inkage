@@ -52,11 +52,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const u = s ? (await s.auth.getUser().catch(() => null))?.data.user : null;
     if (!s || !u) return setProfileState(NO_PROFILE);
     const md: any = u.user_metadata || {};
+    // the name the person set is kept in profiles: a Google / Apple sign-in rewrites user_metadata.full_name every time
+    const { data: pr } = await s.from('profiles').select('display_name').eq('id', u.id).maybeSingle();
     let avatar: string | null = null;
     if (md.avatar_path) avatar = (await s.storage.from('previews').createSignedUrl(md.avatar_path, 60 * 60 * 24)).data?.signedUrl ?? null;
     // Google / Apple sign-ins have no password until the person sets one
     const providers: string[] = (u.app_metadata as any)?.providers || [(u.app_metadata as any)?.provider].filter(Boolean);
-    setProfileState({ name: String(md.full_name || '').trim(), avatar, pendingEmail: (u as any).new_email || null, hasPassword: providers.includes('email') });
+    setProfileState({ name: String((pr as any)?.display_name || md.full_name || md.name || '').trim(), avatar, pendingEmail: (u as any).new_email || null, hasPassword: providers.includes('email') });
   }, []);
   const [cfg, setCfg] = useState<Cfg | null>(null);
   const [msg, setMsg] = useState('');
