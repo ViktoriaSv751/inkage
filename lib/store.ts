@@ -86,7 +86,12 @@ export function track(name: string, props: Record<string, unknown> = {}) {
 export function lsGet<T>(k: string, fallback: T): T {
   try {
     const v = localStorage.getItem(k);
-    return v ? (JSON.parse(v) as T) : fallback;
+    if (!v) return fallback;
+    const got = JSON.parse(v);
+    // a broken saved value (null, or not a list where a list is expected) must never crash a page
+    if (got === null && fallback !== null) return fallback;
+    if (Array.isArray(fallback) && !Array.isArray(got)) return fallback;
+    return got as T;
   } catch {
     return fallback;
   }

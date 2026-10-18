@@ -257,7 +257,11 @@ export default function ProfilePage() {
       lsSet('ink_posts', []);
       const mine = await local.all().catch(() => []);
       for (const p of mine) await local.remove(p.id);
-      ['ink_onboarding', 'ink_ref', 'ink_folders'].forEach((k) => lsSet(k, null));
+      ['ink_onboarding', 'ink_ref', 'ink_folders'].forEach((k) => {
+        try {
+          localStorage.removeItem(k);
+        } catch {}
+      });
       await s.auth.signOut({ scope: 'local' });
       setErase(false);
       location.replace(`/${qOf(ui.lang)}`);
