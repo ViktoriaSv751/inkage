@@ -247,7 +247,7 @@ export default function ProfilePage() {
       for (const bucket of ['previews', 'shares']) {
         const { data: dirs } = await s.storage.from(bucket).list(uid, { limit: 1000 });
         for (const d of dirs || []) {
-          const { data: files } = await s.storage.from(bucket).list(`${uid}/${d.name}`, { limit: 100 });
+          const { data: files } = await s.storage.from(bucket).list(`${uid}/${d.name}`, { limit: 1000 });
           const paths = (files || []).map((f) => `${uid}/${d.name}/${f.name}`);
           if (paths.length) await s.storage.from(bucket).remove(paths);
         }
@@ -257,7 +257,7 @@ export default function ProfilePage() {
       lsSet('ink_posts', []);
       const mine = await local.all().catch(() => []);
       for (const p of mine) await local.remove(p.id);
-      ['ink_onboarding', 'ink_ref', 'ink_folders'].forEach((k) => {
+      ['ink_onboarding', 'ink_ref', 'ink_folders', 'ink_recent_photos'].forEach((k) => {
         try {
           localStorage.removeItem(k);
         } catch {}

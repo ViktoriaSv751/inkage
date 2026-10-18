@@ -8,6 +8,7 @@ import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
 import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
+import { uploads } from '@/lib/uploads';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { cropImage, offSkin, processDesign, Placement, skinVeil } from '@/lib/editor';
 import { Box, Found, TattooPicker } from './Picker';
@@ -112,8 +113,9 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   });
 }
 
-/** The last few photos the user added, to pick again with one tap. */
-type Recent = { d: string; w: number; h: number };
+/** The last few photos the user added, to pick again with one tap. Signed in, they come from the account
+    (every device sees them); the device's own list is only the fallback. */
+type Recent = { d: string; w: number; h: number; id?: string };
 function recentGet(): Recent[] {
   try {
     return JSON.parse(localStorage.getItem('ink_recent_photos') || '[]');
@@ -164,7 +166,7 @@ export function StudioStep({
   existingCm?: number | null;
   setExistingCm?: (n: number | null) => void;
 }) {
-  const { ui, toast } = useApp();
+  const { ui, toast, me } = useApp();
   const t = L(ui.lang);
   const photoRef = useRef<HTMLInputElement>(null);
   // a fresh file input after every pick: some phones stop reporting a new choice on a reused input
@@ -181,7 +183,41 @@ export function StudioStep({
   const existing = mode === 'existing' || mode === 'removal';
   const removal = mode === 'removal';
   const [recent, setRecent] = useState<Recent[]>([]);
-  useEffect(() => setRecent(recentGet()), [photo?.dataUrl]);
+  useEffect(() => {
+    const mine = recentGet();
+    setRecent(mine);
+    if (!me.user) return;
+    let off = false;
+    uploads
+      .list('photo', 8)
+      .then((u) => {
+        if (off || !u.length) return;
+        // a photo added just now on this device is shown from its local copy until the account list has it
+        const ids = new Set(u.map((x) => x.id));
+        setRecent((cur) => [...cur.filter((r) => r.id && !ids.has(r.id) && r.d.startsWith('data:')), ...u.map((x) => ({ d: x.src, w: x.w, h: x.h, id: x.id }))].slice(0, 8));
+      })
+      .catch(() => {});
+    return () => {
+      off = true;
+    };
+  }, [photo?.dataUrl, me.user]);
+  /** A photo from the account list is a signed link: it is loaded back into a picture before use. */
+  const pickRecent = async (r: Recent) => {
+    if (r.d.startsWith('data:')) return usePhoto({ dataUrl: r.d, w: r.w, h: r.h });
+    try {
+      const blob = await withTimeout(fetch(r.d).then((x) => x.blob()), 20000);
+      usePhoto(await prepareImage(new File([blob], 'photo.jpg', { type: blob.type || 'image/jpeg' }), 1024));
+    } catch {
+      toast(t('That photo could not be loaded. Check your connection and try again.', 'Ezt a fotót nem sikerült betölteni. Ellenőrizd a kapcsolatot, és próbáld újra.'));
+    }
+  };
+  /** Every picture the user adds is kept on the account, so it shows on all their devices and in the gallery. */
+  const keep = (kind: 'photo' | 'design', p: Photo) => {
+    if (!me.user) return;
+    uploads.add(me.user.id, kind, p.dataUrl, p.w, p.h).then((u) => {
+      if (u && kind === 'photo') setRecent((cur) => [{ d: p.dataUrl, w: p.w, h: p.h, id: u.id }, ...cur.filter((r) => r.d.slice(-80) !== p.dataUrl.slice(-80))].slice(0, 8));
+    });
+  };
   const [modelOpen, setModelOpen] = useState(false);
   const [tone, setTone] = useState(3);
   const [modelBusy, setModelBusy] = useState(false);
@@ -288,6 +324,7 @@ export function StudioStep({
       const p = await withTimeout(prepareImage(file as File, 1024), 20000);
       setPhoto(p);
       recentAdd(p);
+      keep('photo', p);
       haptic();
       track('photo_added');
       runCheck(p, placement);
@@ -391,6 +428,7 @@ export function StudioStep({
       return toast(t('That design could not be opened. Try another image.', 'Ezt a mintát nem sikerült megnyitni. Próbálj másik képet.'));
     }
     track('design_added', { src });
+    keep('design', p);
     const mode = design?.mode || 'black';
     setBusy(true);
     setBusyMsg(t('Looking at your picture…', 'Megnézzük a képet…'));
@@ -571,7 +609,7 @@ export function StudioStep({
         <div className="recents" aria-label={t('Recent photos', 'Legutóbbi fotóid')}>
           <span>{t('Recent', 'Legutóbbi')}</span>
           {recent.map((r, i) => (
-            <button key={i} className={photo?.dataUrl.slice(-80) === r.d.slice(-80) ? 'on' : ''} onClick={() => usePhoto({ dataUrl: r.d, w: r.w, h: r.h })} aria-label={t(`Recent photo ${i + 1}`, `${i + 1}. legutóbbi fotó`)}>
+            <button key={r.id || i} className={photo?.dataUrl.slice(-80) === r.d.slice(-80) ? 'on' : ''} onClick={() => pickRecent(r)} aria-label={t(`Recent photo ${i + 1}`, `${i + 1}. legutóbbi fotó`)}>
               <img src={r.d} alt="" />
             </button>
           ))}
@@ -972,7 +1010,7 @@ export function PlaceStep({
   canGo: boolean;
   footer?: React.ReactNode;
 }) {
-  const { ui, toast } = useApp();
+  const { ui, toast, me } = useApp();
   const t = L(ui.lang);
   const box = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -1344,6 +1382,7 @@ export function PlaceStep({
             if (!f) return;
             try {
               const pimg = await prepareImage(f, 1024, 'image/jpeg');
+              if (me.user) void uploads.add(me.user.id, 'design', pimg.dataUrl, pimg.w, pimg.h);
               const probe = await processDesign(pimg.dataUrl, design0.mode).catch(() => null);
               await addLayer(pimg.dataUrl, !!probe?.photoLike);
             } catch {
