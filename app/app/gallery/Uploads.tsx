@@ -19,7 +19,8 @@ export function Uploads() {
 
   useEffect(() => {
     if (!me.user) return setItems([]);
-    uploads.list(undefined, 200).then(setItems, () => setItems([]));
+    // photos and designs only: ideas have their own place in the gallery
+    uploads.list(undefined, 200).then((u) => setItems(u.filter((x) => x.kind !== 'idea')), () => setItems([]));
   }, [me.user]);
 
   if (!items || !items.length) return null;
@@ -27,7 +28,7 @@ export function Uploads() {
 
   /** Start a new design with this picture as the body photo or as the tattoo design. */
   const use = (u: Upload) => {
-    lsSet(USE_UPLOAD_KEY, { kind: u.kind, src: u.src });
+    lsSet(USE_UPLOAD_KEY, { kind: u.kind === 'photo' ? 'photo' : 'design', src: u.src });
     track('upload_reuse', { kind: u.kind });
     try {
       sessionStorage.setItem('ink_fresh', '1');
