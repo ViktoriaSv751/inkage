@@ -1,7 +1,7 @@
 import { langOf, qOf, tx } from '@/lib/tr';
 import Link from 'next/link';
 
-export const metadata = { title: 'Hírlevél – InkAge', robots: { index: false } };
+export const generateMetadata = ({ searchParams }: { searchParams: { lang?: string } }) => ({ title: `${tx(langOf(searchParams), 'Newsletter', 'Hírlevél')} – InkAge`, robots: { index: false } });
 
 export default function Newsletter({ searchParams }: { searchParams: { status?: string; lang?: string } }) {
   const st = searchParams.status;
