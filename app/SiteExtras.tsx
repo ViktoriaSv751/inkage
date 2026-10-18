@@ -1,15 +1,15 @@
 'use client';
+import { tx, qOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { track } from '@/lib/store';
 import './consent.css';
 
-type Lang = 'en' | 'hu';
 
 /** Desktop: a slim "start free" bar along the bottom of every public page. */
 export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const [show, setShow] = useState(false);
   const [closed, setClosed] = useState(true);
   useEffect(() => {
@@ -43,10 +43,10 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
           <span>{T('No card · One-tap sign-up with Google or Apple · About a minute', 'Bankkártya nélkül · Egy koppintásos Google- vagy Apple-regisztráció · Kb. egy perc')}</span>
         </div>
         <div className="ctabar-act">
-          <Link href={lang === 'en' ? '/belepes?lang=en' : '/belepes'} className="ctabar-ghost" tabIndex={visible ? 0 : -1}>
+          <Link href={`/belepes${qOf(lang)}`} className="ctabar-ghost" tabIndex={visible ? 0 : -1}>
             {T('Sign in', 'Belépés')}
           </Link>
-          <Link href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} className="ctabar-go" tabIndex={visible ? 0 : -1} onClick={() => track('ctabar_click')}>
+          <Link href={`/regisztracio${qOf(lang)}`} className="ctabar-go" tabIndex={visible ? 0 : -1} onClick={() => track('ctabar_click')}>
             {T('Register', 'Regisztráció')}
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" />
@@ -75,7 +75,7 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
 
 /** First visit: which cookies and local storage we use, with an honest choice. */
 export function CookieConsent({ lang, onChange }: { lang: Lang; onChange?: (open: boolean) => void }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(false);
   useEffect(() => {
@@ -133,7 +133,7 @@ export function CookieConsent({ lang, onChange }: { lang: Lang; onChange?: (open
           <button className="cc-more" onClick={() => setMore(!more)} aria-expanded={more}>
             {more ? T('Less', 'Kevesebb') : T('Details', 'Részletek')}
           </button>
-          <Link className="cc-more" href={lang === 'en' ? '/suti?lang=en' : '/suti'}>
+          <Link className="cc-more" href={`/suti${qOf(lang)}`}>
             {T('Cookie policy', 'Süti tájékoztató')}
           </Link>
         </div>

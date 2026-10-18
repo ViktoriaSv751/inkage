@@ -1,4 +1,5 @@
 'use client';
+import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -131,8 +132,7 @@ export function BottomNav() {
     { href: '/app/explore', label: ui.t('nav.explore'), icon: Icon.compass },
     { href: '/app/profile', label: ui.t('nav.profile'), icon: Icon.user },
   ];
-  const hu = ui.lang === 'hu';
-  const q = hu ? '' : '?lang=en';
+  const q = qOf(ui.lang);
   return (
     <nav className="tabbar" aria-label="Main">
       <Link href="/" className="rail-logo" aria-label="InkAge">

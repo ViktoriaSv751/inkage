@@ -1,4 +1,5 @@
 'use client';
+import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -77,14 +78,14 @@ export function AgeGate({ lang, userId }: { lang: Lang; userId: string | null })
               </button>
             </div>
             <p className="fine">
-              <Link href={lang === 'hu' ? '/terms' : '/terms?lang=en'}>{t('Terms', 'Felhasználási feltételek')}</Link>
+              <Link href={`/terms${qOf(lang)}`}>{t('Terms', 'Felhasználási feltételek')}</Link>
             </p>
           </>
         ) : (
           <>
             <h2 id="age-gate-title">{t('Sorry, InkAge is 18+', 'Sajnáljuk, az InkAge 18 év feletti')}</h2>
             <p>{t('You can read our tattoo guides on the website instead.', 'A tetoválásról szóló útmutatóinkat a weboldalon olvashatod.')}</p>
-            <Link className="btn wide" href={lang === 'hu' ? '/tudastar' : '/tudastar?lang=en'}>
+            <Link className="btn wide" href={`/tudastar${qOf(lang)}`}>
               {t('Tattoo guides', 'Útmutatók')}
             </Link>
           </>

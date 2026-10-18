@@ -1,4 +1,6 @@
 'use client';
+import { pick } from '@/lib/tr';
+import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -177,17 +179,17 @@ export default function ExplorePage() {
 
       <div className="section-title">
         <h2>{t('Knowledge base', 'Tudástár')}</h2>
-        <Link className="small" href={ui.lang === 'hu' ? '/tudastar' : '/tudastar?lang=en'}>
+        <Link className="small" href={`/tudastar${qOf(ui.lang)}`}>
           {t('All articles', 'Az összes cikk')} →
         </Link>
       </div>
       <div className="hscroll ex-articles">
         {ARTICLES.map((a) => (
-          <Link key={a.slug} className="article-card" href={`/tudastar/${a.slug}${ui.lang === 'hu' ? '' : '?lang=en'}`}>
+          <Link key={a.slug} className="article-card" href={`/tudastar/${a.slug}${qOf(ui.lang)}`}>
             {KB[a.slug] && <img src={IMG(KB[a.slug].img, 600)} alt="" loading="lazy" />}
-            <span className="tag">{a.tag[ui.lang]}</span>
-            <b>{a.title[ui.lang]}</b>
-            <span>{a.desc[ui.lang]}</span>
+            <span className="tag">{pick(a.tag, ui.lang)}</span>
+            <b>{pick(a.title, ui.lang)}</b>
+            <span>{pick(a.desc, ui.lang)}</span>
           </Link>
         ))}
       </div>

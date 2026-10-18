@@ -1,11 +1,12 @@
 'use client';
+import { tx, type Lang } from '@/lib/tr';
 
 import { useState } from 'react';
 import { api } from '@/lib/sb';
 import { anonId, track } from '@/lib/store';
 
-export function ContactForm({ lang }: { lang: 'en' | 'hu' }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+export function ContactForm({ lang }: { lang: Lang }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const [kind, setKind] = useState<'question' | 'idea' | 'bug'>('question');
   const [msg, setMsg] = useState('');
   const [email, setEmail] = useState('');

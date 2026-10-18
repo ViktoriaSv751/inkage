@@ -1,3 +1,4 @@
+import { tx, type Lang } from '@/lib/tr';
 // Ink Longevity Score: a transparent 0–100 estimate of how well a tattoo will hold up.
 // Based on widely shared tattoo-artist rules of thumb, not a medical prediction.
 
@@ -11,8 +12,7 @@ export type ScoreInput = {
   age: number | null;
 };
 
-type Lang = 'en' | 'hu';
-const L = (lang: Lang, en: string, hu: string) => (lang === 'hu' ? hu : en);
+const L = (lang: Lang, en: string, hu: string) => tx(lang, en, hu);
 
 const AREAS: { re: RegExp; friction: number; sun: number; en: string; hu: string }[] = [
   { re: /finger|ujj/i, friction: 22, sun: 6, en: 'Fingers fade fastest (constant friction and washing)', hu: 'Az ujjakon fakul a leggyorsabban (súrlódás, kézmosás)' },

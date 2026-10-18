@@ -1,0 +1,28 @@
+// Server side: every language's dictionary (UI + knowledge-base articles), registered once.
+import { registerDict } from './tr';
+import deUi from './locales/de.json';
+import deContent from './locales/content-de.json';
+import esUi from './locales/es.json';
+import esContent from './locales/content-es.json';
+import ptUi from './locales/pt.json';
+import ptContent from './locales/content-pt.json';
+import frUi from './locales/fr.json';
+import frContent from './locales/content-fr.json';
+import itUi from './locales/it.json';
+import itContent from './locales/content-it.json';
+import plUi from './locales/pl.json';
+import plContent from './locales/content-pl.json';
+import trUi from './locales/tr.json';
+import trContent from './locales/content-tr.json';
+import roUi from './locales/ro.json';
+import roContent from './locales/content-ro.json';
+const merge = (a: any, b: any) => ({ exact: { ...(b.exact || {}), ...(a.exact || {}) }, tpl: [...(a.tpl || []), ...(b.tpl || [])] });
+registerDict('de', merge(deUi, deContent));
+registerDict('es', merge(esUi, esContent));
+registerDict('pt', merge(ptUi, ptContent));
+registerDict('fr', merge(frUi, frContent));
+registerDict('it', merge(itUi, itContent));
+registerDict('pl', merge(plUi, plContent));
+registerDict('tr', merge(trUi, trContent));
+registerDict('ro', merge(roUi, roContent));
+export const SERVER_DICTS = true;

@@ -1,3 +1,4 @@
+import { tx, type Lang, LANG_INFO } from '@/lib/tr';
 import OpenAI, { toFile } from 'openai';
 
 export const STAGES = ['healed', 'y10', 'y30', 'y50'] as const;
@@ -502,7 +503,7 @@ export async function qualityCheck(design: Img, result: Img, mockup?: Img | null
 
 /** What kind of picture was uploaded as the design, and where the tattoos are in it. */
 export type Found = { kind: 'design' | 'photo'; tattoos: { box: [number, number, number, number]; label: string }[] };
-export async function findTattoos(image: Img, lang: 'en' | 'hu'): Promise<Found | null> {
+export async function findTattoos(image: Img, lang: Lang): Promise<Found | null> {
   if (!process.env.GEMINI_API_KEY) return null;
   try {
     const data = await geminiCall(textModels(), {
@@ -514,7 +515,7 @@ export async function findTattoos(image: Img, lang: 'en' | 'hu'): Promise<Found 
             {
               text: `Someone uploaded this image as the tattoo design they want. Reply with JSON only:
 {"kind": "design" if it is a clean drawing, flash sheet, stencil or digital design on a plain background with nothing else; "photo" if it is a photograph or screenshot that also shows a person, skin, body parts, clothing, a room, scenery or app interface,
- "tattoos": array (max 8) of every separate tattoo design visible, largest first, each {"box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around that one design, "label": 2-4 word description in ${lang === 'hu' ? 'Hungarian' : 'English'} such as "${lang === 'hu' ? 'rózsa az alkaron' : 'rose on the forearm'}"}}`,
+ "tattoos": array (max 8) of every separate tattoo design visible, largest first, each {"box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around that one design, "label": 2-4 word description in ${LANG_INFO[lang].en} (for example "${tx(lang, 'rose on the forearm', 'rózsa az alkaron')}")}}`,
             },
           ],
         },

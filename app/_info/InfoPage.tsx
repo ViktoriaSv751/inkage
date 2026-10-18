@@ -1,3 +1,4 @@
+import { tx, qOf, type Lang } from '@/lib/tr';
 import { TryLink } from '../AuthCta';
 import Link from 'next/link';
 import { KbChrome } from '../tudastar/KbChrome';
@@ -9,8 +10,7 @@ import './info.css';
 
 export type IconKey = keyof typeof ICONS;
 export type InfoSec = { h: string; id?: string; ps: string[]; img?: string; icon?: IconKey; cards?: { i: IconKey; h: string; p: string }[] };
-export type Lang = 'en' | 'hu';
-export const langOf = (sp: { lang?: string }): Lang => (sp?.lang === 'en' ? 'en' : 'hu');
+export { langOf } from '@/lib/tr';
 
 export const ICONS = {
   spark: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z',
@@ -89,9 +89,9 @@ export function InfoPage({
   cta?: boolean;
   numbered?: boolean;
 }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const secs = sections.map((s) => ({ ...s, id: s.id || slug(s.h) }));
-  const q = lang === 'en' ? '?lang=en' : '';
+  const q = qOf(lang);
   return (
     <div className="ip-page">
       <KbChrome lang={lang} path={path} />

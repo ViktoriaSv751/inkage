@@ -1,4 +1,5 @@
 'use client';
+import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -230,7 +231,7 @@ export default function ProfilePage() {
   const signOut = async () => {
     // only this device: signing out here must not sign you out (and empty the gallery) on your other devices
     await sb()?.auth.signOut({ scope: 'local' });
-    location.replace(ui.lang === 'en' ? '/belepes?lang=en' : '/belepes');
+    location.replace(`/belepes${qOf(ui.lang)}`);
   };
 
   const eraseAll = async () => {
@@ -259,7 +260,7 @@ export default function ProfilePage() {
       ['ink_onboarding', 'ink_ref', 'ink_folders'].forEach((k) => lsSet(k, null));
       await s.auth.signOut({ scope: 'local' });
       setErase(false);
-      location.replace(ui.lang === 'en' ? '/?lang=en' : '/');
+      location.replace(`/${qOf(ui.lang)}`);
       toast(t('Your account and data were deleted.', 'A fiókodat és az adataidat töröltük.'));
     } catch {
       toast(t('Deleting failed. Try again or email us.', 'A törlés nem sikerült. Próbáld újra, vagy írj nekünk.'));
@@ -331,7 +332,7 @@ export default function ProfilePage() {
             </button>
           </div>
         ) : (
-          <Link className="pf-edit dark" href={ui.lang === 'en' ? '/belepes?lang=en' : '/belepes'}>
+          <Link className="pf-edit dark" href={`/belepes${qOf(ui.lang)}`}>
             {ui.t('common.signin')}
           </Link>
         )}
@@ -495,9 +496,9 @@ export default function ProfilePage() {
           {(
             [
               ['How accurate is the preview?', 'Mennyire pontos az előnézet?', 'It is an AI simulation based on how ink and skin usually age (spreading, fading, sun, skin changes). Real results depend on your artist, your skin and aftercare — use it to compare options, not as a guarantee.', 'MI-szimuláció, ami azon alapul, hogyan öregszik általában a tinta és a bőr (szétterülés, fakulás, nap, bőrváltozás). A valós eredmény a tetoválótól, a bőrödtől és az utókezeléstől függ – lehetőségek összevetésére használd, ne garanciaként.'],
-              ['What happens to my photos?', 'Mi történik a fotóimmal?', 'They are used to make your preview. As a guest they stay on this device; signed in, they are stored privately in your account. Shared links only contain the two small images you chose to share. You can delete everything here in Profile.', 'Az előnézet elkészítéséhez használjuk őket. Vendégként ezen az eszközön maradnak, bejelentkezve privát módon a fiókodban. A megosztott link csak a két kis képet tartalmazza, amit megosztottál. Itt a Profilban mindent törölhetsz.'],
+              ['What happens to my photos?', 'Mi történik a fotóimmal?', 'They are used to make your preview and are stored privately in your account. Shared links only contain the small images you chose to share. You can delete everything here in Profile.', 'Az előnézet elkészítéséhez használjuk őket, és privát módon a fiókodban tároljuk. A megosztott link csak azokat a kis képeket tartalmazza, amiket megosztottál. Itt a Profilban mindent törölhetsz.'],
               ['The tattoo landed on my clothes / looks wrong', 'Ruhára került / rossz lett a tetoválás', 'Tap “Not right? Make it again” under the result and tick what went wrong — the next try avoids exactly that. A close, sharp daylight photo of bare skin gives the best results.', 'Koppints az eredmény alatt a „Nem lett jó? Újracsináljuk” gombra, és jelöld be, mi a baj – az új próbálkozás pont ezt kerüli el. A közeli, éles, nappali fényes fotó csupasz bőrről adja a legjobb eredményt.'],
-              ['Is it free?', 'Ingyenes?', 'Yes, while we are in beta. There is a daily limit so it stays free for everyone.', 'Igen, a tesztidőszak alatt. Van egy napi keret, hogy mindenkinek ingyenes maradhasson.'],
+              ['Is it free?', 'Ingyenes?', 'Yes, after you sign up. There is a daily limit so it stays free for everyone.', 'Igen, regisztráció után. Van egy napi keret, hogy mindenkinek ingyenes maradhasson.'],
             ] as const
           ).map(([qe, qh, ae, ah]) => (
             <details key={qe}>
@@ -567,7 +568,7 @@ export default function ProfilePage() {
             <span aria-hidden="true">›</span>
           </button>
         )}
-        <Link className="list-row" href={ui.lang === 'hu' ? '/tudastar' : '/tudastar?lang=en'}>
+        <Link className="list-row" href={`/tudastar${qOf(ui.lang)}`}>
           <span>{t('Tattoo aging guides', 'Útmutatók a tetoválás öregedéséről')}</span>
           <span aria-hidden="true">›</span>
         </Link>

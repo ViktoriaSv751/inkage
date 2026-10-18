@@ -1,4 +1,5 @@
 'use client';
+import { tx, type Lang } from '@/lib/tr';
 
 import { useEffect, useState } from 'react';
 
@@ -16,7 +17,7 @@ export function applyTheme(t: Theme) {
 }
 
 /** Light / dark switch, kept in sync across every toggle on the page. */
-export function ThemeToggle({ className = '', lang = 'hu' }: { className?: string; lang?: 'en' | 'hu' }) {
+export function ThemeToggle({ className = '', lang = 'hu' }: { className?: string; lang?: Lang }) {
   const [t, setT] = useState<Theme>('light');
   useEffect(() => {
     const cur = read();
@@ -27,7 +28,7 @@ export function ThemeToggle({ className = '', lang = 'hu' }: { className?: strin
     return () => window.removeEventListener('ink-theme', h);
   }, []);
   const dark = t === 'dark';
-  const label = dark ? (lang === 'hu' ? 'Világos mód' : 'Light mode') : lang === 'hu' ? 'Sötét mód' : 'Dark mode';
+  const label = dark ? (tx(lang, 'Light mode', 'Világos mód')) : tx(lang, 'Dark mode', 'Sötét mód');
   return (
     <button type="button" className={`theme-tg ${className}`} aria-label={label} title={label} aria-pressed={dark} onClick={() => applyTheme(dark ? 'light' : 'dark')}>
       <svg viewBox="0 0 24 24" aria-hidden="true" className="tg-sun">

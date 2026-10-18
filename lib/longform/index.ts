@@ -1,3 +1,5 @@
+import { pick } from '@/lib/tr';
+import { type Lang } from '@/lib/tr';
 // All long-form knowledge base articles, keyed by slug. Server-side only (large).
 import type { LongArticle } from './types';
 import a1 from './how-tattoos-age';
@@ -18,8 +20,8 @@ export const LONG: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11
 export const longArticle = (slug: string) => LONG.find((a) => a.slug === slug);
 
 /** Words in the body (markup stripped). */
-export function words(a: LongArticle, lang: 'en' | 'hu') {
-  return a.body[lang]
+export function words(a: LongArticle, lang: Lang) {
+  return pick(a.body, lang)
     .filter((p) => !p.startsWith('[['))
     .join(' ')
     .replace(/^(#+ |- |\d+\. |> |!! )/gm, '')

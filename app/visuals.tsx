@@ -1,4 +1,5 @@
 'use client';
+import { tx } from '@/lib/tr';
 
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '@/lib/i18n';
@@ -20,7 +21,7 @@ export const EXAMPLE = [
 export function HeroAging({ frames = EXAMPLE, alt }: { frames?: { years: number; src: string }[]; alt?: string } = {}) {
   const EX = frames;
   const { lang } = useLang();
-  const L = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const L = (en: string, hu: string) => tx(lang, en, hu);
   const [years, setYears] = useState(0);
   const touched = useRef(false);
 

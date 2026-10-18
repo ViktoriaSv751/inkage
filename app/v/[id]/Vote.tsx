@@ -1,4 +1,5 @@
 'use client';
+import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -80,7 +81,7 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
         <div style={{ background: 'var(--ink)', color: '#fff', borderRadius: 24, padding: 22, marginTop: 24 }}>
           <h2 style={{ fontSize: 30, lineHeight: 1, margin: '0 0 8px' }}>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
           <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
-          <Link className="btn wide light" href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} onClick={() => track('share_cta')}>
+          <Link className="btn wide light" href={`/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
             {t('Register and try it', 'Regisztrálok és kipróbálom')}
           </Link>
         </div>
@@ -144,7 +145,7 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
           {t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}
         </h2>
         <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
-        <Link className="btn wide" href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} onClick={() => track('share_cta')}>
+        <Link className="btn wide" href={`/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
           {t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </div>

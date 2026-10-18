@@ -1,4 +1,5 @@
 'use client';
+import { tx, type Lang } from '@/lib/tr';
 
 export type CareStep = { day: number; en: string; hu: string };
 
@@ -20,8 +21,8 @@ const ymd = (d: Date) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getD
 const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 
 /** Calendar file with one all-day reminder per step, plus a yearly sunscreen reminder each June. */
-export function aftercareIcs(start: Date, lang: 'en' | 'hu') {
-  const L = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+export function aftercareIcs(start: Date, lang: Lang) {
+  const L = (en: string, hu: string) => tx(lang, en, hu);
   const stamp = `${ymd(new Date())}T000000Z`;
   const ev: string[] = [];
   for (const s of CARE) {

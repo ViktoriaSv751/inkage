@@ -1,9 +1,10 @@
 'use client';
+import { tx, type Lang } from '@/lib/tr';
 
 import { useState } from 'react';
 import { track } from '@/lib/store';
 
-export function ShareBtn({ title, lang }: { title: string; lang: 'en' | 'hu' }) {
+export function ShareBtn({ title, lang }: { title: string; lang: Lang }) {
   const [done, setDone] = useState(false);
   return (
     <button
@@ -22,14 +23,14 @@ export function ShareBtn({ title, lang }: { title: string; lang: 'en' | 'hu' }) 
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6" />
       </svg>
-      {done ? (lang === 'hu' ? 'Link másolva' : 'Link copied') : lang === 'hu' ? 'Megosztás' : 'Share'}
+      {done ? (tx(lang, 'Link copied', 'Link másolva')) : tx(lang, 'Share', 'Megosztás')}
     </button>
   );
 }
 
-export function Helpful({ slug, lang }: { slug: string; lang: 'en' | 'hu' }) {
+export function Helpful({ slug, lang }: { slug: string; lang: Lang }) {
   const [v, setV] = useState<'' | 'yes' | 'no'>('');
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   return (
     <div className="ka-helpful">
       <b>{v ? T('Thanks for the feedback!', 'Köszönjük a visszajelzést!') : T('Was this page helpful?', 'Hasznos volt ez az oldal?')}</b>

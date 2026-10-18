@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf, type Lang } from '@/lib/tr';
 
 import { useState } from 'react';
 import { api } from '@/lib/sb';
@@ -8,8 +9,8 @@ import { setLang as saveLang } from '@/lib/i18n';
 import { LangPicker } from './LangPicker';
 
 /** Monthly guides newsletter, double opt-in. */
-export function FooterSignup({ lang }: { lang: 'en' | 'hu' }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+export function FooterSignup({ lang }: { lang: Lang }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'' | 'busy' | 'confirm' | 'saved' | 'already' | 'err'>('');
   const ok = /\S+@\S+\.\S+/.test(email);
@@ -44,7 +45,7 @@ export function FooterSignup({ lang }: { lang: 'en' | 'hu' }) {
 }
 
 /** Language picker in the footer; switches in place and updates the URL. */
-export function FooterLang({ lang }: { lang: 'en' | 'hu' }) {
+export function FooterLang({ lang }: { lang: Lang }) {
   const router = useRouter();
   const path = usePathname() || '/';
   return (
@@ -53,7 +54,7 @@ export function FooterLang({ lang }: { lang: 'en' | 'hu' }) {
       variant="pill"
       onPick={(l) => {
         saveLang(l);
-        router.push(`${path}${l === 'en' ? '?lang=en' : ''}`);
+        router.push(`${path}${qOf(l)}`);
       }}
     />
   );

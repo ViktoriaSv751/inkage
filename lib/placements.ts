@@ -1,3 +1,4 @@
+import { pick, type Lang } from '@/lib/tr';
 export type PlacementDef = { v: string; en: string; hu: string; view: 'front' | 'back'; x: number; y: number };
 
 /**
@@ -53,12 +54,12 @@ export function nearest(view: 'front' | 'back', x: number, y: number) {
 }
 
 /** Display name of a stored placement value in the current language. */
-export const placeName = (v: string, lang: 'en' | 'hu') => {
+export const placeName = (v: string, lang: Lang) => {
   const c = parseCustom(v);
   if (c) return c.label;
   const p = PLACEMENTS.find((x) => x.v === v);
   // stored AI placements carry a detail in brackets for the model – never show that to people
-  return p ? (lang === 'hu' ? p.hu : p.en) : String(v || '').replace(/\s*\([^)]*\)/g, '').trim();
+  return p ? (pick(p, lang)) : String(v || '').replace(/\s*\([^)]*\)/g, '').trim();
 };
 
 /** What the AI is told: custom spots keep the user's own words. */

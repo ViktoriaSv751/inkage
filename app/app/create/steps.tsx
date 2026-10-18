@@ -1,4 +1,5 @@
 'use client';
+import { qOf, type Lang } from '@/lib/tr';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
@@ -66,7 +67,7 @@ export function overflows(area: Area, design: Design, photo: Photo, pl: Placemen
 export { PLACEMENTS } from '@/lib/placements';
 import { PLACEMENTS } from '@/lib/placements';
 
-const L = (lang: 'en' | 'hu') => (en: string, hu: string) => tx(lang, en, hu);
+const L = (lang: Lang) => (en: string, hu: string) => tx(lang, en, hu);
 
 /** Body-area chips. Always visible, so the area can be changed at any point. */
 export function PlacementPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
@@ -586,7 +587,7 @@ export function StudioStep({
 
       <p className="fine ai-note">
         {t('Your photo and design are sent to our AI providers (Google Gemini, OpenAI as backup) only to check the photo and make your preview. ', 'A fotódat és a mintádat csak az ellenőrzéshez és az előnézethez küldjük el az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). ')}
-        <a href={ui.lang === 'hu' ? '/privacy' : '/privacy?lang=en'}>{t('Privacy', 'Adatvédelem')}</a>
+        <a href={`/privacy${qOf(ui.lang)}`}>{t('Privacy', 'Adatvédelem')}</a>
       </p>
 
       <input key={`p${inputKey}`} ref={photoRef} id="photo-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) takePhoto(f); }} />

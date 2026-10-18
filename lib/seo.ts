@@ -1,3 +1,4 @@
+import { type Lang } from '@/lib/tr';
 // Programmatic guide pages: "<style> tattoo on the <area> after 10, 30 and 50 years".
 import { longevity, ScoreInput } from './score';
 
@@ -24,7 +25,7 @@ export const SEO_AREAS = [
 
 export const seoSlugs = () => SEO_STYLES.flatMap((s) => SEO_AREAS.map((a) => `${s.k}-${a.k}`));
 
-export function seoPage(slug: string, lang: 'en' | 'hu') {
+export function seoPage(slug: string, lang: Lang) {
   const s = SEO_STYLES.find((x) => slug.startsWith(x.k + '-'));
   const a = s && SEO_AREAS.find((x) => slug === `${s.k}-${x.k}`);
   if (!s || !a) return null;

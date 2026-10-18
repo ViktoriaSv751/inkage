@@ -1,3 +1,4 @@
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf } from '../_info/InfoPage';
 import { FaqExplorer } from './FaqExplorer';
@@ -5,14 +6,14 @@ import { FaqExplorer } from './FaqExplorer';
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
   const L = langOf(searchParams);
-  return { title: L === 'hu' ? 'Gyakori kérdések – InkAge' : 'FAQ – InkAge' };
+  return { title: tx(L, 'FAQ – InkAge', 'Gyakori kérdések – InkAge') };
 }
 
 type QA = [string, string];
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(L, en, hu);
   const groups: { h: string; i: string; items: QA[] }[] = [
     {
       h: T('Getting started', 'Kezdés'), i: 'start',

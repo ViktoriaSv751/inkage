@@ -1,4 +1,5 @@
 'use client';
+import { tx, localeOf, type Lang } from '@/lib/tr';
 import { loadImage } from './client';
 import type { Preview } from './store';
 
@@ -7,8 +8,8 @@ import type { Preview } from './store';
  * previews, the longevity notes and the user's own notes. Drawn on a canvas (so Hungarian
  * accents render with the app's fonts) and wrapped into a PDF.
  */
-export async function artistPdf(p: Preview, lang: 'en' | 'hu', placeLabel: string) {
-  const L = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+export async function artistPdf(p: Preview, lang: Lang, placeLabel: string) {
+  const L = (en: string, hu: string) => tx(lang, en, hu);
   const W = 1240, H = 1754, M = 80;
   const c = document.createElement('canvas');
   c.width = W;
@@ -55,7 +56,7 @@ export async function artistPdf(p: Preview, lang: 'en' | 'hu', placeLabel: strin
   // header
   text('INKAGE', M, 110, '800 44px "Geist Sans", system-ui', '#5b3df5');
   let y = text(L('Tattoo brief for my artist', 'Tetoválás-terv a tetoválómnak'), M, 190, '800 72px "Geist Sans", system-ui');
-  y = text(new Date(p.created_at).toLocaleDateString(lang === 'hu' ? 'hu-HU' : 'en-GB'), M, y, '600 26px "Geist Sans", system-ui', '#5c5c62');
+  y = text(new Date(p.created_at).toLocaleDateString(localeOf(lang)), M, y, '600 26px "Geist Sans", system-ui', '#5c5c62');
 
   // facts row
   const facts: [string, string][] = [

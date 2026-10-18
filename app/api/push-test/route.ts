@@ -1,3 +1,4 @@
+import { tx, isLang, type Lang } from '@/lib/tr';
 import { getAuthed, json } from '@/lib/server';
 import { pushToUser } from '@/lib/push-server';
 
@@ -8,10 +9,10 @@ export async function POST(req: Request) {
   const a = await getAuthed(req);
   if (!a) return json({ ok: false, error: 'auth' }, 401);
   const b = await req.json().catch(() => ({}));
-  const hu = b.lang !== 'en';
+  const lang: Lang = isLang(b.lang) ? b.lang : 'hu';
   const sent = await pushToUser(a.user.id, {
     title: 'InkAge',
-    body: hu ? 'Az értesítések működnek ezen az eszközön. ✨' : 'Notifications work on this device. ✨',
+    body: tx(lang, 'Notifications work on this device. ✨', 'Az értesítések működnek ezen az eszközön. ✨'),
     url: '/app/profile',
     tag: 'inkage-test',
   });

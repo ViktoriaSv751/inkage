@@ -1,3 +1,4 @@
+import { tx, isLang } from '@/lib/tr';
 import { dataUrlToBuffer, json } from '@/lib/server';
 import { aiConfigured, findTattoos } from '@/lib/ai';
 
@@ -15,6 +16,6 @@ export async function POST(req: Request) {
     return json({ kind: null, tattoos: [] }, 400);
   }
   if (img.buf.length > 3_000_000) return json({ kind: null, tattoos: [] }, 413);
-  const found = await findTattoos({ ...img, name: 'design.jpg' }, body.lang === 'hu' ? 'hu' : 'en');
+  const found = await findTattoos({ ...img, name: 'design.jpg' }, isLang(body.lang) ? body.lang : 'en');
   return json(found || { kind: null, tattoos: [] });
 }

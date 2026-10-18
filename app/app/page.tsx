@@ -1,4 +1,5 @@
 'use client';
+import { pick } from '@/lib/tr';
 
 import { useEffect, useRef, useState } from 'react';
 import { useApp } from './AppProvider';
@@ -719,7 +720,7 @@ export default function CreatePage() {
           ))}
         </ul>
         {busyNote && <p className="warnbox" role="status">{t('Lots of people are making previews right now — you’re in the queue, we’ll retry automatically.', 'Most sokan készítenek előnézetet – sorban állsz, automatikusan újrapróbáljuk.')}</p>}
-        <p className="gen-fact" dangerouslySetInnerHTML={{ __html: FACTS[ui.lang][fact] }} />
+        <p className="gen-fact" dangerouslySetInnerHTML={{ __html: pick(FACTS, ui.lang)[fact] }} />
       </div>
     );
 

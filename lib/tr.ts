@@ -43,7 +43,7 @@ const cache: Partial<Record<Lang, Map<string, string>>> = {};
 export function registerDict(lang: Lang, d: Dict) {
   DICTS[lang] = d;
   compiled[lang] = (d.tpl || []).map(([from, to]) => ({
-    re: new RegExp('^' + from.replace(/[.*+?^$()|[\]\\]/g, '\\$&').replace(/\\?\{(\d+)\\?\}/g, '([\\s\\S]+?)') + '$'),
+    re: new RegExp('^' + from.replace(/[.*+?^$()|[\]\\]/g, '\\$&').replace(/\\?\{(\d+)\\?\}/g, '([\\s\\S]*?)') + '$'),
     to,
   }));
   cache[lang] = new Map();

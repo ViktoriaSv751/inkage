@@ -1,3 +1,4 @@
+import { tx, isLang, type Lang } from '@/lib/tr';
 import { appSecret, json, userClient } from '@/lib/server';
 import { layout, sendMail, SITE } from '@/lib/mail';
 
@@ -6,25 +7,24 @@ export const dynamic = 'force-dynamic';
 /** Sign up for the monthly guides e-mail (double opt-in). */
 export async function POST(req: Request) {
   const b = await req.json().catch(() => ({}));
-  const lang = b.lang === 'en' ? 'en' : 'hu';
+  const lang: Lang = isLang(b.lang) ? b.lang : 'hu';
   const { data, error } = await userClient().rpc('newsletter_subscribe', { p_secret: appSecret('db'), p_email: String(b.email || '').trim(), p_lang: lang });
   const r = data as { ok: boolean; token?: string; confirmed?: boolean; send?: boolean } | null;
-  if (error || !r?.ok) return json({ error: lang === 'hu' ? 'Ez nem tűnik e-mail-címnek.' : 'That doesn’t look like an e-mail address.' }, 400);
+  if (error || !r?.ok) return json({ error: tx(lang, 'That doesn’t look like an e-mail address.', 'Ez nem tűnik e-mail-címnek.') }, 400);
   if (r.confirmed) return json({ ok: true, state: 'already' });
   if (!r.send) return json({ ok: true, state: 'confirm' }); // a confirmation mail just went out
   const link = `${SITE()}/api/newsletter?confirm=${r.token}`;
   const unsub = `${SITE()}/api/newsletter?unsub=${r.token}`;
-  const hu = lang === 'hu';
   const sent = await sendMail(
     String(b.email).trim(),
-    hu ? 'Erősítsd meg a feliratkozást – InkAge' : 'Confirm your subscription – InkAge',
+    tx(lang, 'Confirm your subscription – InkAge', 'Erősítsd meg a feliratkozást – InkAge'),
     layout({
-      title: hu ? 'Még egy kattintás' : 'One more click',
-      lines: [hu ? 'Havonta egyszer küldünk egy új útmutatót arról, hogyan marad szép a tetoválás. Ha te iratkoztál fel, erősítsd meg:' : 'Once a month we send a new guide on keeping tattoos looking good. If this was you, please confirm:'],
-      button: { href: link, label: hu ? 'Feliratkozás megerősítése' : 'Confirm subscription' },
-      foot: hu ? `Ha nem te voltál, hagyd figyelmen kívül ezt a levelet. Leiratkozás: ${unsub}` : `If this wasn’t you, just ignore this e-mail. Unsubscribe: ${unsub}`,
+      title: tx(lang, 'One more click', 'Még egy kattintás'),
+      lines: [tx(lang, 'Once a month we send a new guide on keeping tattoos looking good. If this was you, please confirm:', 'Havonta egyszer küldünk egy új útmutatót arról, hogyan marad szép a tetoválás. Ha te iratkoztál fel, erősítsd meg:')],
+      button: { href: link, label: tx(lang, 'Confirm subscription', 'Feliratkozás megerősítése') },
+      foot: tx(lang, `If this wasn’t you, just ignore this e-mail. Unsubscribe: ${unsub}`, `Ha nem te voltál, hagyd figyelmen kívül ezt a levelet. Leiratkozás: ${unsub}`),
     }),
-    `${hu ? 'Megerősítés' : 'Confirm'}: ${link}`
+    `${tx(lang, 'Confirm', 'Megerősítés')}: ${link}`
   );
   return json({ ok: true, state: sent ? 'confirm' : 'saved' });
 }

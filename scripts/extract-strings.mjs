@@ -72,6 +72,12 @@ for (const file of files) {
       // server error messages: json({ error: '...' })
       if (props.error && (file.includes('/api/') || file.includes('/lib/'))) put(props.error, null, file, 'err');
     }
+    // ['English', 'Magyar'] pairs (tuples used with t(...pair))
+    if (ts.isArrayLiteralExpression(n) && n.elements.length >= 2) {
+      const el = n.elements.map((e) => textOf(e));
+      const HU = /[áéíóöőúüűÁÉÍÓÖŐÚÜŰ]/;
+      for (let i = 1; i < el.length; i++) if (el[i] && el[i - 1] && HU.test(el[i].s) && !HU.test(el[i - 1].s)) put(n.elements[i - 1], n.elements[i], file, 'pair');
+    }
     // new Error('...') messages shown to people
     if (ts.isNewExpression(n) && ts.isIdentifier(n.expression) && n.expression.text === 'Error' && n.arguments?.length) put(n.arguments[0], null, file, 'err');
     ts.forEachChild(n, visit);
@@ -79,6 +85,14 @@ for (const file of files) {
   visit(sf);
 }
 
+// the keyed UI dictionary (ui.t('…')) in lib/i18n.ts
+{
+  const src = fs.readFileSync(path.join(ROOT, 'lib/i18n.ts'), 'utf8');
+  const en = src.slice(src.indexOf('const EN = {'), src.indexOf('};', src.indexOf('const EN = {')));
+  const hu = src.slice(src.indexOf('const HU'), src.indexOf('};', src.indexOf('const HU')));
+  const huMap = Object.fromEntries([...hu.matchAll(/'([\w.]+)':\s*'((?:[^'\\]|\\.)*)'/g)].map((m) => [m[1], m[2]]));
+  for (const m of en.matchAll(/'([\w.]+)':\s*'((?:[^'\\]|\\.)*)'/g)) add(exact, m[2].replace(/\\'/g, "'"), huMap[m[1]], path.join(ROOT, 'lib/i18n.ts'), 'key');
+}
 const out = {
   exact: Object.fromEntries([...exact].map(([k, v]) => [k, { hu: v.hu, files: [...v.files].slice(0, 3), kind: v.kind }])),
   tpl: Object.fromEntries([...tpl].map(([k, v]) => [k, { hu: v.hu, files: [...v.files].slice(0, 3), kind: v.kind }])),

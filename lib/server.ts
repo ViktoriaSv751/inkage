@@ -1,3 +1,4 @@
+import './tr-server';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import crypto from 'crypto';
 

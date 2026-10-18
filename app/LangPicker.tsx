@@ -1,15 +1,13 @@
 'use client';
+import { tx, pick, LANGS as ALL, LANG_INFO, type Lang } from '@/lib/tr';
+export type { Lang } from '@/lib/tr';
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './langpicker.css';
 import { useScrollLock } from '@/lib/scrolllock';
 
-export type Lang = 'en' | 'hu';
-const LANGS: { k: Lang; name: string; en: string; hu: string; flag: string }[] = [
-  { k: 'hu', name: 'Magyar', en: 'Hungarian', hu: 'Magyarország', flag: '🇭🇺' },
-  { k: 'en', name: 'English', en: 'English', hu: 'Angol · nemzetközi', flag: '🇬🇧' },
-];
+const LANGS: { k: Lang; name: string; en: string; hu: string; flag: string }[] = ALL.map((k) => ({ k, name: LANG_INFO[k].native, en: LANG_INFO[k].en, hu: LANG_INFO[k].hu, flag: LANG_INFO[k].flag }));
 
 /**
  * Language button + picker sheet: a list with radio circles and a confirm step,
@@ -38,7 +36,7 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
       document.documentElement.style.overflow = '';
     };
   }, [open]);
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const cur = LANGS.find((l) => l.k === lang)!;
 
   return (
@@ -96,7 +94,7 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                         </span>
                         <span className="lp-name">
                           <b>{l.name}</b>
-                          <small>{lang === 'hu' ? l.hu : l.en}</small>
+                          <small>{pick(l, lang)}</small>
                         </span>
                         {l.k === lang ? <span className="lp-cur">{T('Current', 'Jelenlegi')}</span> : <span />}
                         <span className="lp-radio" aria-hidden="true">
@@ -125,7 +123,7 @@ export function LangPicker({ lang, onPick, variant = 'pill', label }: { lang: La
                     if (sel !== lang) onPick(sel);
                   }}
                 >
-                  {sel === 'hu' ? 'Mentés' : 'Save'}
+                  {tx(sel, 'Save', 'Mentés')}
                 </button>
                 <button type="button" className="lp-cancel" onClick={() => setOpen(false)}>
                   {T('Cancel', 'Mégse')}

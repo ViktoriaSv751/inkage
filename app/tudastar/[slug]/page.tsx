@@ -1,3 +1,4 @@
+import { tx, pick, LANGS, qOf, localeOf, langOf } from '@/lib/tr';
 import { TryLink } from '../../AuthCta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -21,13 +22,13 @@ export const dynamic = 'force-dynamic';
 export function generateMetadata({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }): Metadata {
   const a = longArticle(params.slug);
   if (!a) return {};
-  const L = searchParams.lang === 'en' ? 'en' : 'hu';
+  const L = langOf(searchParams);
   const img = KB[a.slug]?.img;
   return {
-    title: `${a.title[L]} – InkAge Tudástár`,
-    description: a.desc[L],
-    alternates: { canonical: `/tudastar/${a.slug}`, languages: { hu: `/tudastar/${a.slug}`, en: `/tudastar/${a.slug}?lang=en` } },
-    openGraph: { type: 'article', title: a.title[L], description: a.desc[L], images: img ? [{ url: IMG(img, 1200) }] : undefined },
+    title: `${pick(a.title, L)} – InkAge Tudástár`,
+    description: pick(a.desc, L),
+    alternates: { canonical: `/tudastar/${a.slug}`, languages: Object.fromEntries(LANGS.map((l) => [l, `/tudastar/${a.slug}${qOf(l)}`])) },
+    openGraph: { type: 'article', title: pick(a.title, L), description: pick(a.desc, L), images: img ? [{ url: IMG(img, 1200) }] : undefined },
   };
 }
 
@@ -42,14 +43,14 @@ const slugify = (s: string) =>
 export default function ArticlePage({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }) {
   const a = longArticle(params.slug);
   if (!a) notFound();
-  const L = searchParams.lang === 'en' ? 'en' : 'hu';
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
-  const sfx = L === 'en' ? '?lang=en' : '';
+  const L = langOf(searchParams);
+  const T = (en: string, hu: string) => tx(L, en, hu);
+  const sfx = qOf(L);
   const meta = KB[a.slug];
   const mins = readMin(a, L);
   const n = words(a, L);
 
-  const body = a.body[L];
+  const body = pick(a.body, L);
   const first = body.findIndex((p) => p.startsWith('## '));
   const intro = first === -1 ? body : body.slice(0, first);
   const sections: { h: string; id: string; ps: string[] }[] = [];
@@ -61,9 +62,9 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
   const toc = [...sections.map((s) => ({ h: s.h, id: s.id })), { h: T('Frequently asked questions', 'Gyakori kérdések'), id: faqId }];
   const figs: Record<string, Fig> = meta
     ? {
-        img2: { src: IMG(meta.img2, 1400), set: IMGSET(meta.img2, 1400), cap: a.captions.img2[L] },
-        img3: { src: IMG(meta.img3, 1400), set: IMGSET(meta.img3, 1400), cap: a.captions.img3[L] },
-        img4: { src: IMG(meta.img4, 1400), set: IMGSET(meta.img4, 1400), cap: a.captions.img4[L] },
+        img2: { src: IMG(meta.img2, 1400), set: IMGSET(meta.img2, 1400), cap: pick(a.captions.img2, L) },
+        img3: { src: IMG(meta.img3, 1400), set: IMGSET(meta.img3, 1400), cap: pick(a.captions.img3, L) },
+        img4: { src: IMG(meta.img4, 1400), set: IMGSET(meta.img4, 1400), cap: pick(a.captions.img4, L) },
       }
     : {};
   const idx = LONG.findIndex((x) => x.slug === a.slug);
@@ -76,8 +77,8 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Article', headline: a.title[L], description: a.desc[L], inLanguage: L, wordCount: n, datePublished: meta?.date, dateModified: meta?.date, image: meta ? [`https://inkage.vercel.app${IMG(meta.img, 1200)}`] : undefined, author: { '@type': 'Organization', name: 'InkAge' }, publisher: { '@type': 'Organization', name: 'InkAge' } },
-      { '@type': 'FAQPage', mainEntity: a.faq.map((f) => ({ '@type': 'Question', name: f.q[L], acceptedAnswer: { '@type': 'Answer', text: f.a[L] } })) },
+      { '@type': 'Article', headline: pick(a.title, L), description: pick(a.desc, L), inLanguage: L, wordCount: n, datePublished: meta?.date, dateModified: meta?.date, image: meta ? [`https://inkage.vercel.app${IMG(meta.img, 1200)}`] : undefined, author: { '@type': 'Organization', name: 'InkAge' }, publisher: { '@type': 'Organization', name: 'InkAge' } },
+      { '@type': 'FAQPage', mainEntity: a.faq.map((f) => ({ '@type': 'Question', name: pick(f.q, L), acceptedAnswer: { '@type': 'Answer', text: pick(f.a, L) } })) },
     ],
   };
 
@@ -93,10 +94,10 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
           <nav className="ka-bc2" aria-label={T('Breadcrumb', 'Morzsamenü')}>
             <Link href={`/tudastar${sfx}`}>{T('Knowledge base', 'Tudástár')}</Link>
             <span aria-hidden="true">/</span>
-            <span>{a.tag[L]}</span>
+            <span>{pick(a.tag, L)}</span>
           </nav>
-          <h1>{a.title[L]}</h1>
-          <p className="ka-dek">{a.desc[L]}</p>
+          <h1>{pick(a.title, L)}</h1>
+          <p className="ka-dek">{pick(a.desc, L)}</p>
           <div className="ka-meta2">
             <span className="ka-by">
               <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -110,7 +111,7 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
               {mins} {T('min read', 'perc olvasás')}
             </span>
             <span>
-              {n.toLocaleString(L === 'hu' ? 'hu-HU' : 'en-GB')} {T('words', 'szó')}
+              {n.toLocaleString(localeOf(L))} {T('words', 'szó')}
             </span>
           </div>
         </div>
@@ -125,7 +126,7 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
           <section className="ka-sum" aria-label={T('In short', 'Röviden')}>
             <p className="ka-sum-h">{T('In short', 'Röviden')}</p>
             <ul>
-              {a.summary[L].map((s, i) => (
+              {pick(a.summary, L).map((s, i) => (
                 <li key={i}>{rich(s)}</li>
               ))}
             </ul>
@@ -177,8 +178,8 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
             <h2>{T('Frequently asked questions', 'Gyakori kérdések')}</h2>
             {a.faq.map((f, i) => (
               <details key={i} open={i === 0}>
-                <summary>{f.q[L]}</summary>
-                <p>{f.a[L]}</p>
+                <summary>{pick(f.q, L)}</summary>
+                <p>{pick(f.a, L)}</p>
               </details>
             ))}
           </section>
@@ -204,7 +205,7 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
 
           <div className="ka-actions">
             <Helpful slug={a.slug} lang={L} />
-            <ShareBtn title={a.title[L]} lang={L} />
+            <ShareBtn title={pick(a.title, L)} lang={L} />
           </div>
         </article>
 
@@ -225,8 +226,8 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
           <img src={IMG(KB[next.slug]?.img || KB_STILL, 1600)} alt="" loading="lazy" />
           <div>
             <span>{T('Next article', 'Következő cikk')}</span>
-            <b>{next.title[L]}</b>
-            <p>{next.desc[L]}</p>
+            <b>{pick(next.title, L)}</b>
+            <p>{pick(next.desc, L)}</p>
             <em>
               {readMin(next, L)} {T('min read', 'perc olvasás')}
             </em>
@@ -238,9 +239,9 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
             <Link key={r.slug} href={`/tudastar/${r.slug}${sfx}`} className="ka-rel">
               <img src={IMG(KB[r.slug]?.img || KB_STILL, 700)} alt="" loading="lazy" />
               <span className="ka-rel-cat">
-                {r.tag[L]} · {readMin(r, L)} {T('min', 'perc')}
+                {pick(r.tag, L)} · {readMin(r, L)} {T('min', 'perc')}
               </span>
-              <b>{r.title[L]}</b>
+              <b>{pick(r.title, L)}</b>
             </Link>
           ))}
         </div>

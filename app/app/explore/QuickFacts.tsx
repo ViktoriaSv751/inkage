@@ -1,16 +1,17 @@
 'use client';
+import { tx, qOf, pick, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { seoPage } from '@/lib/seo';
 import { track } from '@/lib/store';
 
 /** "Quick facts": four illustrated rules of thumb, each linking to the full guide. */
-export function QuickFacts({ lang }: { lang: 'en' | 'hu' }) {
-  const t = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const q = lang === 'en' ? '?lang=en' : '';
+export function QuickFacts({ lang }: { lang: Lang }) {
+  const t = (en: string, hu: string) => tx(lang, en, hu);
+  const q = qOf(lang);
   const areas = (['back', 'upper-arm', 'forearm', 'hand', 'finger'] as const).map((k) => {
     const p = seoPage(`fine-line-${k}`, lang);
-    return { k, name: p ? (lang === 'hu' ? p.a.hu : p.a.en) : k, v: p?.medium ?? 0 };
+    return { k, name: p ? (pick(p.a, lang)) : k, v: p?.medium ?? 0 };
   });
   const inks = [
     { c: '#111', n: t('Black', 'Fekete'), f: 0.92 },

@@ -1,3 +1,4 @@
+import { tx, qOf } from '@/lib/tr';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { IMG } from '@/lib/kb';
@@ -8,18 +9,16 @@ export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
   const L = langOf(searchParams);
   return {
-    title: L === 'hu' ? 'Rólunk – InkAge' : 'About – InkAge',
+    title: tx(L, 'About – InkAge', 'Rólunk – InkAge'),
     description:
-      L === 'hu'
-        ? 'Miért építettük az InkAge-et, miben hiszünk, és hogyan készül egy öregedési előnézet.'
-        : 'Why we built InkAge, what we believe, and how an aging preview is made.',
+      tx(L, 'Why we built InkAge, what we believe, and how an aging preview is made.', 'Miért építettük az InkAge-et, miben hiszünk, és hogyan készül egy öregedési előnézet.'),
   };
 }
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
-  const q = L === 'en' ? '?lang=en' : '';
+  const T = (en: string, hu: string) => tx(L, en, hu);
+  const q = qOf(L);
 
   const beliefs: { i: IconKey; h: string; p: string }[] = [
     { i: 'eye', h: T('Honest previews', 'Őszinte előnézetek'), p: T('Every image is an AI estimate, and we label it that way. We never promise how your skin will age.', 'Minden kép MI-becslés, és így is jelöljük. Soha nem ígérjük meg, hogyan fog öregedni a bőröd.') },

@@ -1,3 +1,4 @@
+import { tx, isLang } from '@/lib/tr';
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
 import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
@@ -141,7 +142,7 @@ export async function POST(req: Request) {
     // the age the user told us beats a guess from a photo of an arm
     const AGE: Record<string, number> = { '18-24': 21, '25-34': 30, '35-44': 40, '45-54': 50, '55+': 60 };
     if (AGE[body.ageHint]) analysis = { ...analysis, apparentAge: AGE[body.ageHint] };
-    const lang = body.lang === 'hu' ? 'hu' : 'en';
+    const lang = isLang(body.lang) ? body.lang : 'en';
     const sun = ['low', 'medium', 'high'].includes(body.sun) ? body.sun : analysis.sunExposure;
     const input = {
       style: analysis.tattooStyle,

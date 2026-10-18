@@ -1,15 +1,16 @@
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf } from '../_info/InfoPage';
 import { ContactForm } from './ContactForm';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
-  return { title: langOf(searchParams) === 'hu' ? 'Kapcsolat – InkAge' : 'Contact – InkAge' };
+  return { title: tx(langOf(searchParams), 'Contact – InkAge', 'Kapcsolat – InkAge') };
 }
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(L, en, hu);
   return (
     <InfoPage
       lang={L}

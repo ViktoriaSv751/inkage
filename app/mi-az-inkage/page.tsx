@@ -1,15 +1,16 @@
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
   const L = langOf(searchParams);
-  return { title: L === 'hu' ? 'Mi az InkAge? – InkAge' : 'What is InkAge? – InkAge', description: L === 'hu' ? 'Az InkAge megmutatja a tetoválásodat a saját bőrödön frissen és 50 év múlva.' : 'InkAge shows your tattoo on your own skin, fresh and 50 years later.' };
+  return { title: tx(L, 'What is InkAge? – InkAge', 'Mi az InkAge? – InkAge'), description: tx(L, 'InkAge shows your tattoo on your own skin, fresh and 50 years later.', 'Az InkAge megmutatja a tetoválásodat a saját bőrödön frissen és 50 év múlva.') };
 }
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [
     {
       h: T('A preview of the next 50 years', 'Előnézet a következő 50 évről'),

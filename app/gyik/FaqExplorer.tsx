@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
@@ -13,9 +14,9 @@ const ICON: Record<string, string> = {
   privacy: 'M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM9 12l2 2 4-4',
 };
 
-export function FaqExplorer({ groups, lang }: { groups: G[]; lang: 'en' | 'hu' }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const q = lang === 'en' ? '?lang=en' : '';
+export function FaqExplorer({ groups, lang }: { groups: G[]; lang: Lang }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
+  const q = qOf(lang);
   const [cat, setCat] = useState<number>(-1);
   const [s, setS] = useState('');
   const norm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');

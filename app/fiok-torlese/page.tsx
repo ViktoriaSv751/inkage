@@ -1,14 +1,15 @@
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
-  return { title: langOf(searchParams) === 'hu' ? 'Fiók törlése – InkAge' : 'Delete your account – InkAge' };
+  return { title: tx(langOf(searchParams), 'Delete your account – InkAge', 'Fiók törlése – InkAge') };
 }
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [
     {
       h: T('If you have an account', 'Ha van fiókod'),

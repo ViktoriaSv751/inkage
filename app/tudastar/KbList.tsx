@@ -1,12 +1,13 @@
 'use client';
+import { tx, qOf, localeOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import type { KbItem } from '@/lib/kb-server';
 import { track } from '@/lib/store';
 
-export function KbList({ items, lang }: { items: KbItem[]; lang: 'en' | 'hu' }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+export function KbList({ items, lang }: { items: KbItem[]; lang: Lang }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<'new' | 'old' | 'short'>('new');
   const [cat, setCat] = useState<string>('');
@@ -20,8 +21,8 @@ export function KbList({ items, lang }: { items: KbItem[]; lang: 'en' | 'hu' }) 
     .filter((i) => !cat || i.cat === cat)
     .filter((i) => !q.trim() || norm(`${i.title} ${i.desc} ${i.cat}`).includes(norm(q.trim())))
     .sort((a, b) => (sort === 'short' ? a.min - b.min : sort === 'old' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date)));
-  const date = (iso: string) => new Date(iso + 'T12:00:00Z').toLocaleDateString(lang === 'hu' ? 'hu-HU' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-  const sfx = lang === 'en' ? '?lang=en' : '';
+  const date = (iso: string) => new Date(iso + 'T12:00:00Z').toLocaleDateString(localeOf(lang), { year: 'numeric', month: 'long', day: 'numeric' });
+  const sfx = qOf(lang);
 
   return (
     <section className="kb-wrap">

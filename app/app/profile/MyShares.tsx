@@ -1,4 +1,5 @@
 'use client';
+import { localeOf } from '@/lib/tr';
 
 import { useEffect, useState } from 'react';
 import { useApp } from '../AppProvider';
@@ -67,7 +68,7 @@ export function MyShares() {
         <div key={m.share_id} className="link-row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
             <b>{m.question || t('Vote', 'Szavazás')}</b>
-            <span className="muted small">{new Date(m.created_at).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB')}</span>
+            <span className="muted small">{new Date(m.created_at).toLocaleDateString(localeOf(ui.lang))}</span>
           </div>
           {m.poll && <PollResults poll={m.poll} comments={m.comments} lang={ui.lang} />}
           <div className="row" style={{ gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
@@ -104,7 +105,7 @@ export function MyShares() {
                 {r.kind === 'ab' ? t('Which one? ', 'Melyik? ') : ''}
                 {r.label}
               </b>
-              <span className="muted small">{new Date(r.at).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB')}</span>
+              <span className="muted small">{new Date(r.at).toLocaleDateString(localeOf(ui.lang))}</span>
             </div>
             <div className="link-votes" style={{ marginTop: 8 }}>
               <span>👍 {v?.yes ?? 0}</span>

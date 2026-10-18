@@ -1,4 +1,5 @@
 'use client';
+import { localeOf } from '@/lib/tr';
 
 import { useEffect, useState } from 'react';
 import { useApp } from '../AppProvider';
@@ -103,7 +104,7 @@ export function RealVsPreview({ preview, onChange }: { preview: Preview; onChang
             <figure>
               <img src={r.src} alt="" loading="lazy" />
               <figcaption>
-                {t('Real', 'Valódi')} · {new Date(r.at).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB')}
+                {t('Real', 'Valódi')} · {new Date(r.at).toLocaleDateString(localeOf(ui.lang))}
               </figcaption>
             </figure>
             {n && preview.images[n[0]] && (

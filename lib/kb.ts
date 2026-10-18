@@ -1,3 +1,4 @@
+import { localeOf, type Lang } from '@/lib/tr';
 // Knowledge base extras: pictures, categories, dates and short FAQs for every guide.
 
 
@@ -173,5 +174,5 @@ export const KB: Record<string, KbMeta> = {
 
 export const kbMeta = (slug: string) => KB[slug];
 
-export const fmtDate = (iso: string, lang: 'en' | 'hu') =>
-  new Date(iso + 'T12:00:00Z').toLocaleDateString(lang === 'hu' ? 'hu-HU' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+export const fmtDate = (iso: string, lang: Lang) =>
+  new Date(iso + 'T12:00:00Z').toLocaleDateString(localeOf(lang), { year: 'numeric', month: 'long', day: 'numeric' });

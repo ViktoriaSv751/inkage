@@ -1,3 +1,4 @@
+import { tx, qOf, langOf } from '@/lib/tr';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { IMG, IMGSET, KB_HERO } from '@/lib/kb';
@@ -15,8 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default function Tudastar({ searchParams }: { searchParams: { lang?: string } }) {
-  const lang = searchParams.lang === 'en' ? 'en' : 'hu';
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const lang = langOf(searchParams);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   return (
     <div className="kb-page">
       <KbChrome lang={lang} back={null} />
@@ -37,7 +38,7 @@ export default function Tudastar({ searchParams }: { searchParams: { lang?: stri
       <section className="kb-guides">
         <h2>{T('Every style, every body area', 'Minden stílus, minden testrész')}</h2>
         <p>{T('Scores and 50-year outlooks for 50 style and body-area combinations.', 'Pontszámok és 50 éves kilátások 50 stílus–testrész párosításra.')}</p>
-        <Link className="kb-more" href={`/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}`}>
+        <Link className="kb-more" href={`/tattoo/fine-line-forearm${qOf(lang)}`}>
           {T('Open the guides', 'Megnyitom')} <span aria-hidden="true">→</span>
         </Link>
       </section>

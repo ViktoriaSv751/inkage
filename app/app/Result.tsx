@@ -1,4 +1,5 @@
 'use client';
+import { pick } from '@/lib/tr';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from './AppProvider';
@@ -848,7 +849,7 @@ export function VideoSheet({ open, onClose, preview }: { open: boolean; onClose:
   const [prog, setProg] = useState<number | null>(null);
   const [out, setOut] = useState<{ url: string; blob: Blob; ext: string } | null>(null);
   const [err, setErr] = useState('');
-  const hooks = HOOKS[ui.lang];
+  const hooks = pick(HOOKS, ui.lang);
   const [canVideo, setCanVideo] = useState(true);
   const [slidesBusy, setSlidesBusy] = useState(false);
   useEffect(() => setCanVideo(canRecordVideo()), []);

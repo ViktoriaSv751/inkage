@@ -1,4 +1,5 @@
 'use client';
+import { type Lang } from '@/lib/tr';
 
 import type { PollComment, PollData } from '@/lib/share';
 import { tx } from '@/lib/i18n';
@@ -6,7 +7,7 @@ import { tx } from '@/lib/i18n';
 const VERDICT: Record<string, [string, string]> = { yes: ['Get it 🔥', 'Csináltasd 🔥'], change: ['Change something ✏️', 'Változtass rajta ✏️'], no: ['Don’t 😬', 'Ne csináld 😬'] };
 
 /** Results of a poll for its owner: a bar per design (or per answer with one design) and the comments. */
-export function PollResults({ poll, comments, lang }: { poll: PollData; comments?: PollComment[]; lang: 'en' | 'hu' }) {
+export function PollResults({ poll, comments, lang }: { poll: PollData; comments?: PollComment[]; lang: Lang }) {
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const single = poll.options.length === 1;
   const total = poll.total || 0;

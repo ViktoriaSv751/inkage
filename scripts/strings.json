@@ -1,12 +1,5 @@
 {
  "exact": {
-  "Open my app": {
-   "hu": "Az appom megnyitása",
-   "files": [
-    "app/AuthCta.tsx"
-   ],
-   "kind": "call"
-  },
   "Create a free account": {
    "hu": "Regisztráció",
    "files": [
@@ -383,7 +376,8 @@
    "hu": "1 év",
    "files": [
     "app/LandingMore.tsx",
-    "app/tattoo/[slug]/page.tsx"
+    "app/tattoo/[slug]/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -405,7 +399,8 @@
    "hu": "10 év",
    "files": [
     "app/LandingMore.tsx",
-    "app/tattoo/[slug]/page.tsx"
+    "app/tattoo/[slug]/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -428,7 +423,8 @@
    "hu": "30 év",
    "files": [
     "app/LandingMore.tsx",
-    "app/tattoo/[slug]/page.tsx"
+    "app/tattoo/[slug]/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -872,7 +868,8 @@
   "Delete my account and data": {
    "hu": "Fiókom és adataim törlése",
    "files": [
-    "app/LandingMore.tsx"
+    "app/LandingMore.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -1095,7 +1092,8 @@
    "hu": "A fotód",
    "files": [
     "app/LandingSections.tsx",
-    "app/app/create/steps.tsx"
+    "app/app/create/steps.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -1130,7 +1128,8 @@
   "Place it": {
    "hu": "Helyezd el",
    "files": [
-    "app/LandingSections.tsx"
+    "app/LandingSections.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -1206,7 +1205,8 @@
    "hu": "Tartóssági pontszám",
    "files": [
     "app/LandingSections.tsx",
-    "app/funkciok/page.tsx"
+    "app/funkciok/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -1352,25 +1352,12 @@
    ],
    "kind": "call"
   },
-  "Hungarian": {
-   "hu": "Magyarország",
-   "files": [
-    "app/LangPicker.tsx"
-   ],
-   "kind": "obj"
-  },
-  "English": {
-   "hu": "Angol · nemzetközi",
-   "files": [
-    "app/LangPicker.tsx"
-   ],
-   "kind": "obj"
-  },
   "Language": {
    "hu": "Nyelv",
    "files": [
     "app/LangPicker.tsx",
-    "app/SiteNav.tsx"
+    "app/SiteNav.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -1416,6 +1403,15 @@
    "hu": "További nyelvek is érkeznek. A választásodat ezen az eszközön megjegyezzük.",
    "files": [
     "app/LangPicker.tsx"
+   ],
+   "kind": "call"
+  },
+  "Save": {
+   "hu": "Mentés",
+   "files": [
+    "app/LangPicker.tsx",
+    "app/app/Result.tsx",
+    "app/app/gallery/page.tsx"
    ],
    "kind": "call"
   },
@@ -1587,8 +1583,7 @@
   "Open app": {
    "hu": "Megnyitás",
    "files": [
-    "app/SiteFooter.tsx",
-    "app/SiteNav.tsx"
+    "app/SiteFooter.tsx"
    ],
    "kind": "call"
   },
@@ -1790,13 +1785,6 @@
    ],
    "kind": "call"
   },
-  "My app": {
-   "hu": "Az appom",
-   "files": [
-    "app/SiteNav.tsx"
-   ],
-   "kind": "call"
-  },
   "Guides": {
    "hu": "Tudástár",
    "files": [
@@ -1913,22 +1901,6 @@
    ],
    "kind": "call"
   },
-  "New preview": {
-   "hu": "Új előnézet",
-   "files": [
-    "app/SiteNav.tsx",
-    "app/app/page.tsx"
-   ],
-   "kind": "call"
-  },
-  "Create account": {
-   "hu": "Regisztráció",
-   "files": [
-    "app/SiteNav.tsx",
-    "app/_auth/AuthScreen.tsx"
-   ],
-   "kind": "call"
-  },
   "Site": {
    "hu": "Oldal",
    "files": [
@@ -1940,6 +1912,20 @@
    "hu": "Vissza a tetejére",
    "files": [
     "app/SiteNav.tsx"
+   ],
+   "kind": "call"
+  },
+  "Light mode": {
+   "hu": "Világos mód",
+   "files": [
+    "app/ThemeToggle.tsx"
+   ],
+   "kind": "call"
+  },
+  "Dark mode": {
+   "hu": "Sötét mód",
+   "files": [
+    "app/ThemeToggle.tsx"
    ],
    "kind": "call"
   },
@@ -2038,7 +2024,8 @@
    "hu": "Bezárás",
    "files": [
     "app/_auth/AuthScreen.tsx",
-    "app/v/[id]/Poll.tsx"
+    "app/v/[id]/Poll.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -2086,6 +2073,13 @@
   },
   "Didn’t get it? Check spam, or try again in a minute.": {
    "hu": "Nem jött meg? Nézd meg a spam mappát, vagy próbáld újra egy perc múlva.",
+   "files": [
+    "app/_auth/AuthScreen.tsx"
+   ],
+   "kind": "call"
+  },
+  "Create account": {
+   "hu": "Regisztráció",
    "files": [
     "app/_auth/AuthScreen.tsx"
    ],
@@ -2204,7 +2198,8 @@
    "hu": "Tovább",
    "files": [
     "app/_auth/AuthScreen.tsx",
-    "app/app/ui.tsx"
+    "app/app/ui.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -2378,6 +2373,13 @@
    "files": [
     "app/_info/InfoPage.tsx",
     "app/tudastar/[slug]/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Data security – InkAge": {
+   "hu": "Adatbiztonság – InkAge",
+   "files": [
+    "app/adatbiztonsag/page.tsx"
    ],
    "kind": "call"
   },
@@ -2605,6 +2607,34 @@
    ],
    "kind": "err"
   },
+  "Previews are open again – InkAge": {
+   "hu": "Újra lehet előnézetet készíteni – InkAge",
+   "files": [
+    "app/api/admin-waitlist/route.ts"
+   ],
+   "kind": "call"
+  },
+  "We’re back!": {
+   "hu": "Újra mehet!",
+   "files": [
+    "app/api/admin-waitlist/route.ts"
+   ],
+   "kind": "call"
+  },
+  "As promised: previews are available again.": {
+   "hu": "Ahogy ígértük, szólunk: az előnézetek újra elérhetők.",
+   "files": [
+    "app/api/admin-waitlist/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Try it": {
+   "hu": "Kipróbálom",
+   "files": [
+    "app/api/admin-waitlist/route.ts"
+   ],
+   "kind": "call"
+  },
   "Not set up yet.": {
    "hu": null,
    "files": [
@@ -2822,6 +2852,55 @@
    ],
    "kind": "err"
   },
+  "That doesn’t look like an e-mail address.": {
+   "hu": "Ez nem tűnik e-mail-címnek.",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Confirm your subscription – InkAge": {
+   "hu": "Erősítsd meg a feliratkozást – InkAge",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "One more click": {
+   "hu": "Még egy kattintás",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Once a month we send a new guide on keeping tattoos looking good. If this was you, please confirm:": {
+   "hu": "Havonta egyszer küldünk egy új útmutatót arról, hogyan marad szép a tetoválás. Ha te iratkoztál fel, erősítsd meg:",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Confirm subscription": {
+   "hu": "Feliratkozás megerősítése",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Confirm": {
+   "hu": "Megerősítés",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "FRISS · FRESH": {
+   "hu": "50 ÉV · 50 YEARS",
+   "files": [
+    "app/api/og/[id]/route.tsx"
+   ],
+   "kind": "pair"
+  },
   "Pick at least one design.": {
    "hu": null,
    "files": [
@@ -2844,6 +2923,83 @@
     "app/app/gallery/page.tsx"
    ],
    "kind": "err"
+  },
+  "Notifications work on this device. ✨": {
+   "hu": "Az értesítések működnek ezen az eszközön. ✨",
+   "files": [
+    "app/api/push-test/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Someone voted on your tattoo idea": {
+   "hu": "Szavaztak a tetoválás-tervedre",
+   "files": [
+    "app/api/vote-notify/route.ts"
+   ],
+   "kind": "call"
+  },
+  "A new vote came in": {
+   "hu": "Új szavazat érkezett",
+   "files": [
+    "app/api/vote-notify/route.ts"
+   ],
+   "kind": "call"
+  },
+  "See the results": {
+   "hu": "Eredmények megnézése",
+   "files": [
+    "app/api/vote-notify/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Turn these off under Profile > Settings.": {
+   "hu": "Ezeket az értesítéseket a Profil > Beállítások alatt kapcsolhatod ki.",
+   "files": [
+    "app/api/vote-notify/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Welcome to InkAge": {
+   "hu": "Üdv az InkAge-ben",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Welcome!": {
+   "hu": "Üdv!",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Your designs are now on every device you use.": {
+   "hu": "A terveid most már minden eszközödön megvannak.",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Three things worth trying: two sizes on the same spot, the “Make it last” redraw, and a vote link for your friends.": {
+   "hu": "Három dolog, amit érdemes kipróbálni: két különböző méret ugyanazon a helyen, a „Tedd tartóssá” átrajzolás, és egy szavazós link a barátaidnak.",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Everything is free after sign-up. If something doesn’t work, just reply to this e-mail.": {
+   "hu": "Regisztráció után minden ingyenes. Ha bármi nem működik, válaszolj erre a levélre.",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Make a preview": {
+   "hu": "Új előnézet készítése",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
   },
   "Are you 18 or older?": {
    "hu": "Elmúltál 18 éves?",
@@ -2888,6 +3044,36 @@
    ],
    "kind": "call"
   },
+  "Bonus: you got an extra free preview 🎉": {
+   "hu": "Bónusz: kaptál egy ingyenes előnézetet 🎉",
+   "files": [
+    "app/app/AppProvider.tsx"
+   ],
+   "kind": "call"
+  },
+  "Get it 🔥": {
+   "hu": "Csináltasd 🔥",
+   "files": [
+    "app/app/PollResults.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Change something ✏️": {
+   "hu": "Változtass rajta ✏️",
+   "files": [
+    "app/app/PollResults.tsx",
+    "app/v/[id]/Poll.tsx",
+    "app/v/[id]/Vote.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Don’t 😬": {
+   "hu": "Ne csináld 😬",
+   "files": [
+    "app/app/PollResults.tsx"
+   ],
+   "kind": "pair"
+  },
   "No votes yet — send the link to a few friends.": {
    "hu": "Még nincs szavazat – küldd el pár barátodnak.",
    "files": [
@@ -2908,7 +3094,8 @@
    "hu": "Csináltassam meg ezt a tetoválást?",
    "files": [
     "app/app/PollSheet.tsx",
-    "app/v/[id]/Poll.tsx"
+    "app/v/[id]/Poll.tsx",
+    "app/v/[id]/page.tsx"
    ],
    "kind": "call"
   },
@@ -2952,7 +3139,8 @@
    "hu": "Kérdezd meg a barátaidat",
    "files": [
     "app/app/PollSheet.tsx",
-    "app/app/Result.tsx"
+    "app/app/Result.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -3057,6 +3245,104 @@
     "app/app/profile/MyShares.tsx"
    ],
    "kind": "call"
+  },
+  "Fresh: lines are slightly raised and shiny; the redness settles within days.": {
+   "hu": "Friss: a vonalak kicsit kiemelkednek és fényesek, a pirosság pár nap alatt elmúlik.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "1 year: fully healed — the ink has settled a touch deeper, lines look a little softer.": {
+   "hu": "1 év: teljesen begyógyult – a tinta kicsit mélyebbre ült, a vonalak picit lágyabbak.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "10 years: ink spreads about 0.1 mm; the finest details lose their edge, sun fades colours first.": {
+   "hu": "10 év: a tinta kb. 0,1 mm-t terül; a legfinomabb részletek élessége csökken, a nap először a színeket fakítja.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "30 years: black shifts towards blue-grey and lines closer than ~1 mm start to merge.": {
+   "hu": "30 év: a fekete kékesszürke felé tolódik, és a kb. 1 mm-nél közelebbi vonalak összeérnek.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "50 years: thinner, looser skin carries a softer, wider design — bold lines still read clearly.": {
+   "hu": "50 év: a vékonyabb, lazább bőrön a minta lágyabb és szélesebb – a vastag vonalak még jól olvashatók.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "on the back": {
+   "hu": "háton",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "on the ribs": {
+   "hu": "bordán",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "on the ankle": {
+   "hu": "bokán",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "on the hand": {
+   "hu": "kézfejen",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "It went onto clothes or the background": {
+   "hu": "Ruhára vagy a háttérre került",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "It’s not my design / details changed": {
+   "hu": "Nem az én mintám / változtak a részletek",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Wrong place or size": {
+   "hu": "Rossz helyen vagy rossz méretben van",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Hand or body looks distorted": {
+   "hu": "Torz a kéz vagy a test",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Looks fake, like a sticker": {
+   "hu": "Nem élethű, matricának tűnik",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "pair"
   },
   "limit": {
    "hu": null,
@@ -3289,15 +3575,6 @@
    "files": [
     "app/app/Result.tsx",
     "app/app/gallery/page.tsx"
-   ],
-   "kind": "call"
-  },
-  "Save": {
-   "hu": "Mentés",
-   "files": [
-    "app/app/Result.tsx",
-    "app/app/gallery/page.tsx",
-    "app/app/profile/page.tsx"
    ],
    "kind": "call"
   },
@@ -3655,7 +3932,8 @@
   "Before / after": {
    "hu": "Előtte / utána",
    "files": [
-    "app/app/Result.tsx"
+    "app/app/Result.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -3817,7 +4095,8 @@
    "hu": "Link másolva",
    "files": [
     "app/app/Result.tsx",
-    "app/app/profile/MyShares.tsx"
+    "app/app/profile/MyShares.tsx",
+    "app/tudastar/ArticleBits.tsx"
    ],
    "kind": "call"
   },
@@ -4226,7 +4505,8 @@
   "Skip": {
    "hu": "Kihagyom",
    "files": [
-    "app/app/create/Onboarding.tsx"
+    "app/app/create/Onboarding.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -4329,7 +4609,8 @@
    "hu": "Testrész",
    "files": [
     "app/app/create/steps.tsx",
-    "app/app/gallery/page.tsx"
+    "app/app/gallery/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -4633,7 +4914,8 @@
   "The design": {
    "hu": "A minta",
    "files": [
-    "app/app/create/steps.tsx"
+    "app/app/create/steps.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -5190,14 +5472,16 @@
    "hu": "Kész",
    "files": [
     "app/app/create/steps.tsx",
-    "app/app/gallery/page.tsx"
+    "app/app/gallery/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
   "Black": {
    "hu": "Fekete",
    "files": [
-    "app/app/explore/QuickFacts.tsx"
+    "app/app/explore/QuickFacts.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -5682,7 +5966,8 @@
   "Create": {
    "hu": "Létrehoz",
    "files": [
-    "app/app/gallery/page.tsx"
+    "app/app/gallery/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -6089,6 +6374,13 @@
   },
   "Pick the spot and add a photo of the tattoo.": {
    "hu": "Válaszd ki a helyet, és töltsd fel a tetoválás fotóját.",
+   "files": [
+    "app/app/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "New preview": {
+   "hu": "Új előnézet",
    "files": [
     "app/app/page.tsx"
    ],
@@ -6511,7 +6803,8 @@
   "Sign out": {
    "hu": "Kijelentkezés",
    "files": [
-    "app/app/profile/page.tsx"
+    "app/app/profile/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -6661,6 +6954,55 @@
     "app/app/profile/page.tsx"
    ],
    "kind": "call"
+  },
+  "How accurate is the preview?": {
+   "hu": "Mennyire pontos az előnézet?",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "It is an AI simulation based on how ink and skin usually age (spreading, fading, sun, skin changes). Real results depend on your artist, your skin and aftercare — use it to compare options, not as a guarantee.": {
+   "hu": "MI-szimuláció, ami azon alapul, hogyan öregszik általában a tinta és a bőr (szétterülés, fakulás, nap, bőrváltozás). A valós eredmény a tetoválótól, a bőrödtől és az utókezeléstől függ – lehetőségek összevetésére használd, ne garanciaként.",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "What happens to my photos?": {
+   "hu": "Mi történik a fotóimmal?",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "They are used to make your preview. As a guest they stay on this device; signed in, they are stored privately in your account. Shared links only contain the two small images you chose to share. You can delete everything here in Profile.": {
+   "hu": "Az előnézet elkészítéséhez használjuk őket. Vendégként ezen az eszközön maradnak, bejelentkezve privát módon a fiókodban. A megosztott link csak a két kis képet tartalmazza, amit megosztottál. Itt a Profilban mindent törölhetsz.",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "The tattoo landed on my clothes / looks wrong": {
+   "hu": "Ruhára került / rossz lett a tetoválás",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Tap “Not right? Make it again” under the result and tick what went wrong — the next try avoids exactly that. A close, sharp daylight photo of bare skin gives the best results.": {
+   "hu": "Koppints az eredmény alatt a „Nem lett jó? Újracsináljuk” gombra, és jelöld be, mi a baj – az új próbálkozás pont ezt kerüli el. A közeli, éles, nappali fényes fotó csupasz bőrről adja a legjobb eredményt.",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Yes, while we are in beta. There is a daily limit so it stays free for everyone.": {
+   "hu": "Igen, a tesztidőszak alatt. Van egy napi keret, hogy mindenkinek ingyenes maradhasson.",
+   "files": [
+    "app/app/profile/page.tsx"
+   ],
+   "kind": "pair"
   },
   "Idea": {
    "hu": "Ötlet",
@@ -6987,6 +7329,27 @@
    ],
    "kind": "call"
   },
+  "Sign in – InkAge": {
+   "hu": "Belépés – InkAge",
+   "files": [
+    "app/belepes/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Reset password – InkAge": {
+   "hu": "Elfelejtett jelszó – InkAge",
+   "files": [
+    "app/elfelejtett-jelszo/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Delete your account – InkAge": {
+   "hu": "Fiók törlése – InkAge",
+   "files": [
+    "app/fiok-torlese/page.tsx"
+   ],
+   "kind": "call"
+  },
   "If you have an account": {
    "hu": "Ha van fiókod",
    "files": [
@@ -7140,6 +7503,20 @@
    "hu": "Segítünk, ha elakadtál.",
    "files": [
     "app/fiok-torlese/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Features – InkAge": {
+   "hu": "Funkciók – InkAge",
+   "files": [
+    "app/funkciok/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Ageing previews, longevity score, laser preview, videos, voting and a PDF for your artist.": {
+   "hu": "Öregedési előnézet, tartóssági pontszám, lézeres előnézet, videók, szavazás és PDF a tetoválódnak.",
+   "files": [
+    "app/funkciok/page.tsx"
    ],
    "kind": "call"
   },
@@ -7420,6 +7797,13 @@
    ],
    "kind": "call"
   },
+  "FAQ – InkAge": {
+   "hu": "Gyakori kérdések – InkAge",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Getting started": {
    "hu": "Kezdés",
    "files": [
@@ -7610,6 +7994,69 @@
    ],
    "kind": "call"
   },
+  "You’re subscribed": {
+   "hu": "Feliratkoztál",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Once a month we send you a new guide. Every e-mail has a one-click unsubscribe link at the bottom.": {
+   "hu": "Havonta egyszer küldünk egy új útmutatót. Minden levél alján egy kattintással leiratkozhatsz.",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "You’re unsubscribed": {
+   "hu": "Leiratkoztál",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "We won’t send you more e-mails. If you change your mind, you can subscribe again at the bottom of the website.": {
+   "hu": "Több levelet nem küldünk. Ha meggondolod magad, a weboldal alján újra feliratkozhatsz.",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "This link is no longer valid": {
+   "hu": "Ez a link már nem érvényes",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "You may have used it already. You can subscribe again at the bottom of the website any time.": {
+   "hu": "Lehet, hogy már használtad. A weboldal alján bármikor újra feliratkozhatsz.",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Back to the home page": {
+   "hu": "Vissza a főoldalra",
+   "files": [
+    "app/hirlevel/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How it works – InkAge": {
+   "hu": "Hogyan működik? – InkAge",
+   "files": [
+    "app/hogyan-mukodik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "One photo, one design and about a minute: how the 50-year preview is made.": {
+   "hu": "Egy fotó, egy minta és nagyjából egy perc: így készül az 50 éves előnézet.",
+   "files": [
+    "app/hogyan-mukodik/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Open InkAge and take a photo of the place where the tattoo would go — forearm, calf, shoulder blade, anywhere. You can also pick one from your gallery.": {
    "hu": "Nyisd meg az InkAge-et, és fotózd le azt a helyet, ahová a tetoválás kerülne – alkar, vádli, lapocka, bármi. A galériádból is választhatsz.",
    "files": [
@@ -7704,7 +8151,8 @@
   "Add InkAge to your home screen": {
    "hu": "Tedd ki az InkAge-et a kezdőképernyőre",
    "files": [
-    "app/hogyan-mukodik/page.tsx"
+    "app/hogyan-mukodik/page.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -7872,6 +8320,13 @@
    "hu": "Gyors válaszok a gyakori kérdésekre.",
    "files": [
     "app/hogyan-mukodik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Free beta – InkAge": {
+   "hu": "Ingyenes béta – InkAge",
+   "files": [
+    "app/ingyenes-beta/page.tsx"
    ],
    "kind": "call"
   },
@@ -8068,6 +8523,13 @@
    ],
    "kind": "call"
   },
+  "Legal – InkAge": {
+   "hu": "Jogi információk – InkAge",
+   "files": [
+    "app/jog/page.tsx"
+   ],
+   "kind": "call"
+  },
   "The fine print, made readable.": {
    "hu": "Az apró betű, olvashatóan.",
    "files": [
@@ -8180,6 +8642,13 @@
    ],
    "kind": "call"
   },
+  "Contact – InkAge": {
+   "hu": "Kapcsolat – InkAge",
+   "files": [
+    "app/kapcsolat/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Write to us.": {
    "hu": "Írj nekünk.",
    "files": [
@@ -8254,6 +8723,20 @@
    "hu": "Üzenet küldése",
    "files": [
     "app/kapcsolat/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "What is InkAge? – InkAge": {
+   "hu": "Mi az InkAge? – InkAge",
+   "files": [
+    "app/mi-az-inkage/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "InkAge shows your tattoo on your own skin, fresh and 50 years later.": {
+   "hu": "Az InkAge megmutatja a tetoválásodat a saját bőrödön frissen és 50 év múlva.",
+   "files": [
+    "app/mi-az-inkage/page.tsx"
    ],
    "kind": "call"
   },
@@ -8440,10 +8923,46 @@
    ],
    "kind": "call"
   },
+  "No internet connection": {
+   "hu": "Nincs internetkapcsolat",
+   "files": [
+    "app/offline/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Previews need the internet. Your saved designs are safe – reconnect to continue.": {
+   "hu": "Az előnézetekhez internet kell. Az ezen az eszközön mentett terveid megmaradnak – csatlakozz újra, és folytathatod.",
+   "files": [
+    "app/offline/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Try again": {
+   "hu": "Újrapróbálom",
+   "files": [
+    "app/offline/page.tsx",
+    "lib/i18n.ts"
+   ],
+   "kind": "call"
+  },
+  "Your tattoo,|50 years|from now.": {
+   "hu": "A tetoválásod|50 év|múlva.",
+   "files": [
+    "app/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Put any design on a photo of your own body. See it fresh, healed, and at 10, 30 and 50 years — on your skin — before it’s permanent.": {
    "hu": "Tegyél bármilyen mintát a saját testedről készült fotóra. Nézd meg frissen, gyógyultan, 10, 30 és 50 év múlva – a saját bőrödön –, mielőtt végleges lesz.",
    "files": [
     "app/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Privacy policy – InkAge": {
+   "hu": "Adatvédelmi tájékoztató – InkAge",
+   "files": [
+    "app/privacy/page.tsx"
    ],
    "kind": "call"
   },
@@ -8547,6 +9066,27 @@
    "files": [
     "app/privacy/page.tsx",
     "app/terms/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Create account – InkAge": {
+   "hu": "Regisztráció – InkAge",
+   "files": [
+    "app/regisztracio/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "About – InkAge": {
+   "hu": "Rólunk – InkAge",
+   "files": [
+    "app/rolunk/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Why we built InkAge, what we believe, and how an aging preview is made.": {
+   "hu": "Miért építettük az InkAge-et, miben hiszünk, és hogyan készül egy öregedési előnézet.",
+   "files": [
+    "app/rolunk/page.tsx"
    ],
    "kind": "call"
   },
@@ -8978,6 +9518,13 @@
    ],
    "kind": "call"
   },
+  "Cookie notice – InkAge": {
+   "hu": "Süti tájékoztató – InkAge",
+   "files": [
+    "app/suti/page.tsx"
+   ],
+   "kind": "call"
+  },
   "In short": {
    "hu": "Röviden",
    "files": [
@@ -9225,6 +9772,13 @@
    ],
    "kind": "call"
   },
+  "Install InkAge – InkAge": {
+   "hu": "Telepítés a kezdőképernyőre – InkAge",
+   "files": [
+    "app/telepites/page.tsx"
+   ],
+   "kind": "call"
+  },
   "iPhone and iPad": {
    "hu": "iPhone és iPad",
    "files": [
@@ -9379,6 +9933,13 @@
    ],
    "kind": "call"
   },
+  "Terms of use – InkAge": {
+   "hu": "Felhasználási feltételek (ÁSZF) – InkAge",
+   "files": [
+    "app/terms/page.tsx"
+   ],
+   "kind": "call"
+  },
   "The service": {
    "hu": "A szolgáltatás",
    "files": [
@@ -9488,6 +10049,13 @@
    "hu": "Hogyan kezeljük az adataidat.",
    "files": [
     "app/terms/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Share": {
+   "hu": "Megosztás",
+   "files": [
+    "app/tudastar/ArticleBits.tsx"
    ],
    "kind": "call"
   },
@@ -9695,6 +10263,13 @@
    ],
    "kind": "call"
   },
+  "New password – InkAge": {
+   "hu": "Új jelszó – InkAge",
+   "files": [
+    "app/uj-jelszo/page.tsx"
+   ],
+   "kind": "call"
+  },
   "In 50 years": {
    "hu": "50 év múlva",
    "files": [
@@ -9704,14 +10279,6 @@
   },
   "Get it! 🔥": {
    "hu": "Csináltasd! 🔥",
-   "files": [
-    "app/v/[id]/Poll.tsx",
-    "app/v/[id]/Vote.tsx"
-   ],
-   "kind": "call"
-  },
-  "Change something ✏️": {
-   "hu": "Változtass rajta ✏️",
    "files": [
     "app/v/[id]/Poll.tsx",
     "app/v/[id]/Vote.tsx"
@@ -9841,6 +10408,55 @@
    ],
    "kind": "call"
   },
+  "Nudity or sexual content": {
+   "hu": "Meztelenség vagy szexuális tartalom",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Shows a minor": {
+   "hu": "Kiskorú látható rajta",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Hate or harassment": {
+   "hu": "Gyűlöletkeltő vagy zaklató",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Violence": {
+   "hu": "Erőszak",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Copies someone else’s work": {
+   "hu": "Más alkotását másolja",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Spam": {
+   "hu": "Kéretlen reklám",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Something else": {
+   "hu": "Egyéb",
+   "files": [
+    "app/v/[id]/Report.tsx"
+   ],
+   "kind": "pair"
+  },
   "Report this picture": {
    "hu": "Kép jelentése",
    "files": [
@@ -9922,6 +10538,41 @@
    "hu": "Tartósság",
    "files": [
     "app/v/[id]/Vote.tsx"
+   ],
+   "kind": "call"
+  },
+  "Take a look and vote – one tap, no sign-up.": {
+   "hu": "Nézd meg, és szavazz – egy koppintás, regisztráció nélkül.",
+   "files": [
+    "app/v/[id]/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Should I get this tattoo? 👀": {
+   "hu": "Csináltassam meg ezt a tetoválást? 👀",
+   "files": [
+    "app/v/[id]/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "See how it looks fresh and after 50 years, then vote. Made with InkAge.": {
+   "hu": "Nézd meg frissen és 50 év múlva, aztán szavazz. InkAge-dzsel készült.",
+   "files": [
+    "app/v/[id]/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "This link no longer works": {
+   "hu": "Ez a link már nem él",
+   "files": [
+    "app/v/[id]/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Its owner closed or removed it, or the address is wrong.": {
+   "hu": "A készítője lezárta vagy törölte, vagy elírás van a címben.",
+   "files": [
+    "app/v/[id]/page.tsx"
    ],
    "kind": "call"
   },
@@ -10045,6 +10696,13 @@
    ],
    "kind": "err"
   },
+  "rose on the forearm": {
+   "hu": "rózsa az alkaron",
+   "files": [
+    "lib/ai.ts"
+   ],
+   "kind": "call"
+  },
   "Basics": {
    "hu": "Alapok",
    "files": [
@@ -10131,6 +10789,13 @@
     "lib/articles.ts"
    ],
    "kind": "obj"
+  },
+  "## Mit tehetsz?": {
+   "hu": "Válassz akkora méretet, ahol a részleteknek van helyük, részesítsd előnyben az erős fekete kontúrt, védd 50-es fényvédővel, és tervezz 8–10 évente egy frissítést. Az InkAge-dzsel előre megnézheted a valószínű eredményt a saját bőrödön.",
+   "files": [
+    "lib/articles.ts"
+   ],
+   "kind": "pair"
   },
   "Do fine line tattoos last? An honest guide": {
    "hu": "Tartósak a fine line tetoválások? Őszinte útmutató",
@@ -10413,7 +11078,8 @@
    "hu": "Tinta",
    "files": [
     "lib/articles2.ts",
-    "lib/longform/color-vs-black-ink-aging.ts"
+    "lib/longform/color-vs-black-ink-aging.ts",
+    "lib/i18n.ts"
    ],
    "kind": "obj"
   },
@@ -10804,6 +11470,13 @@
    ],
    "kind": "obj"
   },
+  "## Minta": {
+   "hu": "Olyat válassz, ami pár hét nézegetés után is tetszik. Mentsd el az eredeti képet, és ha más munkája, kérd meg a tetoválót, hogy rajzolja meg a saját változatát.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "pair"
+  },
   "Weight change, pregnancy and muscles: how tattoos stretch": {
    "hu": "Testsúly, terhesség, izom: hogyan nyúlik a tetoválás?",
    "files": [
@@ -11133,6 +11806,13 @@
     "lib/designs.ts"
    ],
    "kind": "obj"
+  },
+  "Something went wrong. Try again.": {
+   "hu": "Valami hiba történt. Próbáld újra.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "call"
   },
   "Ink in skin behaves a little like ink in water: very slowly, it spreads outwards.": {
    "hu": "A tinta a bőrben kicsit úgy viselkedik, mint a vízben: nagyon lassan, de kifelé terül.",
@@ -12183,6 +12863,13 @@
     "lib/longform/best-placement-for-tattoo-longevity.ts"
    ],
    "kind": "obj"
+  },
+  "## A legrosszabb helyek: ahol gyorsan elmegy a tinta": {
+   "hu": "Vannak testrészek, ahol a tetoválás szinte biztosan gyorsabban fakul, akármilyen ügyes a tetováló és akármennyire vigyázol rá. Ez nem a tetoválók hibája, hanem a bőr és a mindennapi használat természete. Érdemes előre tudni róluk, hogy ne érjen meglepetés.",
+   "files": [
+    "lib/longform/best-placement-for-tattoo-longevity.ts"
+   ],
+   "kind": "pair"
   },
   "The upper back, shoulder blade, upper arm and outer thigh. They get little sun and little friction, and the skin there stays fairly stable over the years. The inner forearm and calf are also good choices.": {
    "hu": "A hát felső része, a lapocka, a felkar és a comb külső oldala. Kevés napot és kevés súrlódást kapnak, a bőr pedig az évek során viszonylag stabil marad. A belső alkar és a vádli is jó választás.",
@@ -15418,6 +16105,20 @@
    ],
    "kind": "obj"
   },
+  "## Az immunrendszered soha nem adja fel": {
+   "hu": "A szervezeted a tintát idegen anyagnak tekinti, és megpróbál megszabadulni tőle. A tetoválás utáni napokban immunsejtek lepik el a területet, és a festékszemcsék egy részét elszállítják – ezért szivárog egy kis tinta a friss tetoválásból, és ezért halványabb kissé a gyógyult minta, mint az első napon. A maradék pigmentet nagyrészt az irhában élő falósejtek, a **makrofágok** kebelezik be, és ott is tartják.",
+   "files": [
+    "lib/longform/how-tattoos-age.ts"
+   ],
+   "kind": "pair"
+  },
+  "### Mit jelent ez a gyakorlatban?": {
+   "hu": "- Az apró betűk belső terei (az „e”, az „a” és az „o” közepe) töltődnek ki elsőként, ezért a pici feliratok olvashatatlanná válhatnak.",
+   "files": [
+    "lib/longform/how-tattoos-age.ts"
+   ],
+   "kind": "pair"
+  },
   "Every tattoo softens a little, because pigment slowly drifts in the skin over decades. Bold lines with enough space between them, however, stay readable for decades. Very fine, tightly packed details blur first.": {
    "hu": "Minden tetoválás lágyul valamennyit, mert a pigment évtizedeken át lassan vándorol a bőrben. A vastag, elég térközzel húzott vonalak azonban évtizedekig olvashatók maradnak. A nagyon finom, sűrű részletek mosódnak el először.",
    "files": [
@@ -16789,6 +17490,13 @@
     "lib/longform/tattoo-aftercare-sun-protection.ts"
    ],
    "kind": "obj"
+  },
+  "### Mikor fordulj orvoshoz?": {
+   "hu": "Van néhány jel, ami **nem** a normális gyógyulás része. Ha ezek közül bármelyiket észleled, ne várj vele, és ne próbáld otthon, saját kútfőből kezelni, hanem fordulj orvoshoz:",
+   "files": [
+    "lib/longform/tattoo-aftercare-sun-protection.ts"
+   ],
+   "kind": "pair"
   },
   "Once it has fully healed and stopped flaking, usually after 3–4 weeks. Until then, keep it covered with loose clothing and out of the sun. After that, a broad-spectrum SPF 50 whenever it sees the sun.": {
    "hu": "Ha teljesen begyógyult és már nem hámlik, általában 3–4 hét után. Addig bő ruhával takard, és tartsd távol a naptól. Utána pedig minden alkalommal széles spektrumú, 50-es fényvédő, amikor napot kap.",
@@ -19947,6 +20655,76 @@
    ],
    "kind": "call"
   },
+  "Hungarian": {
+   "hu": "Magyar",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "English": {
+   "hu": "Angol",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "German": {
+   "hu": "Német",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Spanish": {
+   "hu": "Spanyol",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Portuguese (Brazil)": {
+   "hu": "Portugál (brazil)",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "French": {
+   "hu": "Francia",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Italian": {
+   "hu": "Olasz",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Polish": {
+   "hu": "Lengyel",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Turkish": {
+   "hu": "Török",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
+  "Romanian": {
+   "hu": "Román",
+   "files": [
+    "lib/tr.ts"
+   ],
+   "kind": "obj"
+  },
   "my tattoo in 50 years 👀": {
    "hu": "a tetoválásom 50 év múlva 👀",
    "files": [
@@ -19981,6 +20759,769 @@
     "lib/video.ts"
    ],
    "kind": "err"
+  },
+  "Gallery": {
+   "hu": "Galéria",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Explore": {
+   "hu": "Felfedezés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Profile": {
+   "hu": "Profil",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Show the spot where the tattoo will go, in daylight, nothing covering it.": {
+   "hu": "Azt a testrészt mutasd, ahová a tetoválás kerül, nappali fényben, takarás nélkül.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Take a photo": {
+   "hu": "Fotó készítése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Choose from library": {
+   "hu": "Választás a galériából",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Checking your photo…": {
+   "hu": "A fotó ellenőrzése…",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Looks good": {
+   "hu": "Jó lesz",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A screenshot, a Pinterest pin, a sketch — or pick one from the library.": {
+   "hu": "Képernyőfotó, Pinterest-kép, saját rajz – vagy válassz a könyvtárból.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Upload a design": {
+   "hu": "Minta feltöltése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Paste from clipboard": {
+   "hu": "Beillesztés vágólapról",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Browse designs": {
+   "hu": "Minták böngészése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Drag to move. Pinch or use the sliders to resize and rotate.": {
+   "hu": "Húzd a helyére. Két ujjal vagy a csúszkákkal méretezhető és forgatható.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Rotate": {
+   "hu": "Forgatás",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Mirror": {
+   "hu": "Tükrözés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Original colors": {
+   "hu": "Eredeti színek",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Show me my tattoo": {
+   "hu": "Mutasd a tetoválásom",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Free with your account.": {
+   "hu": "A fiókoddal ingyenes.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Reading your skin tone and light": {
+   "hu": "Bőrtónus és fények elemzése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Tattooing the design onto your photo": {
+   "hu": "A minta rátetoválása a fotódra",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Checking the result": {
+   "hu": "Az eredmény ellenőrzése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Aging it 1, 10, 30 and 50 years": {
+   "hu": "Öregítés: 1, 10, 30 és 50 év",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Make a TikTok video": {
+   "hu": "TikTok-videó készítése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Save image": {
+   "hu": "Kép mentése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "New design": {
+   "hu": "Új minta",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Saved to your gallery": {
+   "hu": "Elmentve a galériádba",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Saved on this device. Sign in to keep it everywhere.": {
+   "hu": "Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Notes for your artist": {
+   "hu": "Jegyzet a tetoválónak",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Keep it looking fresh": {
+   "hu": "Így marad szép",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Your designs": {
+   "hu": "A terveid",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Your previews will appear here. Make your first one — it takes about a minute.": {
+   "hu": "Itt jelennek meg az előnézeteid. Készítsd el az elsőt – kb. egy perc.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Compare two": {
+   "hu": "Két terv összehasonlítása",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Favorites": {
+   "hu": "Kedvencek",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Invite a friend": {
+   "hu": "Hívj meg egy barátot",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "You both get an extra free preview when they sign up with your link.": {
+   "hu": "Ha a linkeddel regisztrál, mindketten kaptok egy újabb ingyenes előnézetet.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Copied": {
+   "hu": "Másolva",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Type DELETE to confirm. This removes your account and every saved preview.": {
+   "hu": "Írd be: TÖRLÉS. Ez törli a fiókodat és minden mentett előnézetet.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "You reached today’s limit": {
+   "hu": "Elérted a mai keretet",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "InkAge is free during the beta, with a daily limit to keep it running. Come back tomorrow — or invite a friend: you both get extra previews.": {
+   "hu": "Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Új terv": {
+   "hu": "Új terv",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Galéria": {
+   "hu": "Galéria",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Felfedezés": {
+   "hu": "Felfedezés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Profil": {
+   "hu": "Profil",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Tovább": {
+   "hu": "Tovább",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Vissza": {
+   "hu": "Vissza",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Kihagyom": {
+   "hu": "Kihagyom",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Mégse": {
+   "hu": "Mégse",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Mentés": {
+   "hu": "Mentés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Kész": {
+   "hu": "Kész",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Újra": {
+   "hu": "Újra",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Bejelentkezés": {
+   "hu": "Bejelentkezés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Kijelentkezés": {
+   "hu": "Kijelentkezés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Bezárás": {
+   "hu": "Bezárás",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Friss": {
+   "hu": "Friss",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "1 év": {
+   "hu": "1 év",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "10 év": {
+   "hu": "10 év",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "30 év": {
+   "hu": "30 év",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "50 év": {
+   "hu": "50 év",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A fotód": {
+   "hu": "A fotód",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Azt a testrészt mutasd, ahová a tetoválás kerül, nappali fényben, takarás nélkül.": {
+   "hu": "Azt a testrészt mutasd, ahová a tetoválás kerül, nappali fényben, takarás nélkül.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Fotó készítése": {
+   "hu": "Fotó készítése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Választás a galériából": {
+   "hu": "Választás a galériából",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A fotó ellenőrzése…": {
+   "hu": "A fotó ellenőrzése…",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Jó lesz": {
+   "hu": "Jó lesz",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A minta": {
+   "hu": "A minta",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Képernyőfotó, Pinterest-kép, saját rajz – vagy válassz a könyvtárból.": {
+   "hu": "Képernyőfotó, Pinterest-kép, saját rajz – vagy válassz a könyvtárból.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Minta feltöltése": {
+   "hu": "Minta feltöltése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Beillesztés vágólapról": {
+   "hu": "Beillesztés vágólapról",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Minták böngészése": {
+   "hu": "Minták böngészése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Helyezd el": {
+   "hu": "Helyezd el",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Húzd a helyére. Két ujjal vagy a csúszkákkal méretezhető és forgatható.": {
+   "hu": "Húzd a helyére. Két ujjal vagy a csúszkákkal méretezhető és forgatható.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Méret": {
+   "hu": "Méret",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Forgatás": {
+   "hu": "Forgatás",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Tükrözés": {
+   "hu": "Tükrözés",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Tinta": {
+   "hu": "Tinta",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Fekete": {
+   "hu": "Fekete",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Eredeti színek": {
+   "hu": "Eredeti színek",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Testrész": {
+   "hu": "Testrész",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Mutasd a tetoválásom": {
+   "hu": "Mutasd a tetoválásom",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A fiókoddal ingyenes.": {
+   "hu": "A fiókoddal ingyenes.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Bőrtónus és fények elemzése": {
+   "hu": "Bőrtónus és fények elemzése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A minta rátetoválása a fotódra": {
+   "hu": "A minta rátetoválása a fotódra",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Az eredmény ellenőrzése": {
+   "hu": "Az eredmény ellenőrzése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Öregítés: 1, 10, 30 és 50 év": {
+   "hu": "Öregítés: 1, 10, 30 és 50 év",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Tartóssági pontszám": {
+   "hu": "Tartóssági pontszám",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Előtte / utána": {
+   "hu": "Előtte / utána",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "TikTok-videó készítése": {
+   "hu": "TikTok-videó készítése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Kép mentése": {
+   "hu": "Kép mentése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Kérd ki a barátaid véleményét": {
+   "hu": "Kérd ki a barátaid véleményét",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Új minta": {
+   "hu": "Új minta",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Elmentve a galériádba": {
+   "hu": "Elmentve a galériádba",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.": {
+   "hu": "Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Jegyzet a tetoválónak": {
+   "hu": "Jegyzet a tetoválónak",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Így marad szép": {
+   "hu": "Így marad szép",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "A terveid": {
+   "hu": "A terveid",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Itt jelennek meg az előnézeteid. Készítsd el az elsőt – kb. egy perc.": {
+   "hu": "Itt jelennek meg az előnézeteid. Készítsd el az elsőt – kb. egy perc.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Két terv összehasonlítása": {
+   "hu": "Két terv összehasonlítása",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Kedvencek": {
+   "hu": "Kedvencek",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Mind": {
+   "hu": "Mind",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Nyelv": {
+   "hu": "Nyelv",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Hívj meg egy barátot": {
+   "hu": "Hívj meg egy barátot",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Ha a linkeddel regisztrál, mindketten kaptok egy újabb ingyenes előnézetet.": {
+   "hu": "Ha a linkeddel regisztrál, mindketten kaptok egy újabb ingyenes előnézetet.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Link másolása": {
+   "hu": "Link másolása",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Másolva": {
+   "hu": "Másolva",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "InkAge a kezdőképernyőre": {
+   "hu": "InkAge a kezdőképernyőre",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Fiókom és adataim törlése": {
+   "hu": "Fiókom és adataim törlése",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Írd be: TÖRLÉS. Ez törli a fiókodat és minden mentett előnézetet.": {
+   "hu": "Írd be: TÖRLÉS. Ez törli a fiókodat és minden mentett előnézetet.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Elérted a mai keretet": {
+   "hu": "Elérted a mai keretet",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
+  },
+  "Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.": {
+   "hu": "Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.",
+   "files": [
+    "lib/i18n.ts"
+   ],
+   "kind": "key"
   }
  },
  "tpl": {
@@ -20009,6 +21550,48 @@
    "hu": "Új kódot {0} mp múlva kérhetsz",
    "files": [
     "app/_auth/AuthScreen.tsx"
+   ],
+   "kind": "call"
+  },
+  "If this wasn’t you, just ignore this e-mail. Unsubscribe: {0}": {
+   "hu": "Ha nem te voltál, hagyd figyelmen kívül ezt a levelet. Leiratkozás: {0}",
+   "files": [
+    "app/api/newsletter/route.ts"
+   ],
+   "kind": "call"
+  },
+  "{0} votes so far – see which one leads": {
+   "hu": "Eddig {0} szavazat – nézd meg, melyik vezet",
+   "files": [
+    "app/api/vote-notify/route.ts"
+   ],
+   "kind": "call"
+  },
+  "So far: 👍 {0} · 👎 {1} · ✏️ {2}": {
+   "hu": "Eddig: 👍 {0} · 👎 {1} · ✏️ {2}",
+   "files": [
+    "app/api/vote-notify/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Welcome, {0}!": {
+   "hu": "Üdv, {0}!",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Welcome to InkAge! {0}/app": {
+   "hu": "Üdv az InkAge-ben! {0}/app",
+   "files": [
+    "app/api/welcome/route.ts"
+   ],
+   "kind": "call"
+  },
+  "{0} saved design{1} moved to your account": {
+   "hu": "{0} terv átkerült a fiókodba",
+   "files": [
+    "app/app/AppProvider.tsx"
    ],
    "kind": "call"
   },
@@ -20351,6 +21934,20 @@
    ],
    "kind": "call"
   },
+  "{0} tattoo on the {1}: how it looks after 10, 30 and 50 years": {
+   "hu": "{0} tetoválás – {1}: így néz ki 10, 30 és 50 év múlva",
+   "files": [
+    "app/tattoo/[slug]/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How a {0} tattoo on the {1} ages, which size lasts, and how to see it on your own skin.": {
+   "hu": "Hogyan öregszik egy {0} tetoválás ({1}), melyik méret tart, és hogyan nézheted meg a saját bőrödön.",
+   "files": [
+    "app/tattoo/[slug]/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Ink spreads roughly a tenth of a millimetre; the finest details of a {0} piece lose their edge first.": {
    "hu": "A tinta kb. egytized millimétert terül; egy {0} minta legfinomabb részletei veszítenek először az élességükből.",
    "files": [
@@ -20378,13 +21975,6 @@
     "app/tudastar/KbList.tsx"
    ],
    "kind": "call"
-  },
-  "/tudastar/{0}?lang=en": {
-   "hu": "/tudastar/{0}",
-   "files": [
-    "app/tudastar/[slug]/page.tsx"
-   ],
-   "kind": "obj"
   },
   "Tap the one you like best. {0}": {
    "hu": "Koppints arra, amelyik a legjobban tetszik. {0}",

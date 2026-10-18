@@ -1,14 +1,15 @@
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
-  return { title: langOf(searchParams) === 'hu' ? 'Adatvédelmi tájékoztató – InkAge' : 'Privacy policy – InkAge' };
+  return { title: tx(langOf(searchParams), 'Privacy policy – InkAge', 'Adatvédelmi tájékoztató – InkAge') };
 }
 
 export default function Privacy({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [
     { h: T('Photos and designs', 'Fotók és minták'), ps: [
       T('Your photo and design are sent to our AI providers (Google Gemini, and OpenAI as a backup) only to check the photo and create your preview. The providers may keep data for a limited time for abuse monitoring under their own policies; they do not use it to identify you.', 'A fotódat és a mintádat csak a fotó ellenőrzéséhez és az előnézet elkészítéséhez küldjük el az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). A szolgáltatók saját szabályzatuk szerint korlátozott ideig megőrizhetik az adatokat visszaélések kiszűrésére; nem használják fel őket a személyazonosításodra.'),

@@ -1,18 +1,19 @@
+import { tx, qOf, type Lang } from '@/lib/tr';
 import Link from 'next/link';
 import { FooterLang, FooterSignup } from './FooterSignup';
 import './footer.css';
 
 /** The site-wide footer: brand + sign-up, five link columns, copyright and language. */
-export function SiteFooter({ lang, hideLang = false }: { lang: 'en' | 'hu'; hideLang?: boolean }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const q = lang === 'en' ? '?lang=en' : '';
+export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: boolean }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
+  const q = qOf(lang);
   const cols: { h: string; links: { t: string; href: string }[] }[] = [
     {
       h: T('Product', 'Termék'),
       links: [
         { t: T('How it works', 'Hogyan működik'), href: `/hogyan-mukodik${q}` },
         { t: T('Features', 'Funkciók'), href: `/funkciok${q}` },
-        { t: T('Styles', 'Stílusok'), href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}` },
+        { t: T('Styles', 'Stílusok'), href: `/tattoo/fine-line-forearm${qOf(lang)}` },
         { t: T('Free beta', 'Ingyenes béta'), href: `/ingyenes-beta${q}` },
         { t: T('FAQ', 'GYIK'), href: `/gyik${q}` },
       ],

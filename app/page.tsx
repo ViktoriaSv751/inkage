@@ -54,23 +54,14 @@ export default function Landing() {
       <section className="hero">
         <div className="hero-copy">
           <h1>
-            {lang === 'hu' ? (
-              <>
-                A tetoválásod
-                <br />
-                50 év
-                <br />
-                múlva.
-              </>
-            ) : (
-              <>
-                Your tattoo,
-                <br />
-                50 years
-                <br />
-                from now.
-              </>
-            )}
+            {t('Your tattoo,|50 years|from now.', 'A tetoválásod|50 év|múlva.')
+              .split('|')
+              .map((line, i) => (
+                <span key={i}>
+                  {i > 0 && <br />}
+                  {line}
+                </span>
+              ))}
           </h1>
           <p className="lede">
             {t(

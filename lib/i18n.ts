@@ -1,7 +1,30 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { fromBrowser, hasDict, isLang, Lang, registerDict, tr, tx } from './tr';
 
-export type Lang = 'en' | 'hu';
+export type { Lang } from './tr';
+export { tx, tr, pick, qOf, ampOf, localeOf, langOf, LANGS, LANG_INFO, isLang } from './tr';
+
+/** The dictionary for a language other than Hungarian / English, loaded only when that language is used. */
+const LOADERS: Partial<Record<Lang, () => Promise<any>>> = {
+  de: () => import('./locales/de.json'),
+  es: () => import('./locales/es.json'),
+  pt: () => import('./locales/pt.json'),
+  fr: () => import('./locales/fr.json'),
+  it: () => import('./locales/it.json'),
+  pl: () => import('./locales/pl.json'),
+  tr: () => import('./locales/tr.json'),
+  ro: () => import('./locales/ro.json'),
+};
+export async function loadDict(l: Lang) {
+  if (hasDict(l)) return;
+  const f = LOADERS[l];
+  if (!f) return;
+  try {
+    const m = await f();
+    registerDict(l, (m.default || m) as any);
+  } catch {}
+}
 
 const EN = {
   'nav.create': 'Create',
@@ -155,31 +178,34 @@ const HU: Record<Key, string> = {
   'paywall.sub': 'Az InkAge a tesztidőszakban ingyenes, napi kerettel. Gyere vissza holnap – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
 };
 
-const DICTS: Record<Lang, Record<Key, string>> = { en: EN as any, hu: HU };
+const DICTS: Record<'en' | 'hu', Record<Key, string>> = { en: EN as any, hu: HU };
 
 export function detectLang(): Lang {
   try {
     // an explicit ?lang= in the address wins (language links in the footer, shared links) and is remembered
     const q = new URLSearchParams(location.search).get('lang');
-    if (q === 'en' || q === 'hu') {
+    if (isLang(q)) {
       localStorage.setItem('ink_lang', q);
       return q;
     }
   } catch {}
   try {
-    const saved = localStorage.getItem('ink_lang') as Lang | null;
-    if (saved === 'en' || saved === 'hu') return saved;
+    const saved = localStorage.getItem('ink_lang');
+    if (isLang(saved)) return saved;
   } catch {}
-  return typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('hu') ? 'hu' : 'en';
+  return typeof navigator !== 'undefined' ? fromBrowser(navigator.language) : 'en';
 }
 
 let current: Lang = 'en';
 const listeners = new Set<(l: Lang) => void>();
 
-export function setLang(l: Lang) {
+export async function setLang(l: Lang) {
+  await loadDict(l);
   current = l;
   try {
     localStorage.setItem('ink_lang', l);
+    // the website's server pages read this too
+    document.cookie = `ink_lang=${l}; Path=/; Max-Age=31536000; SameSite=Lax`;
   } catch {}
   document.documentElement.lang = l;
   listeners.forEach((f) => f(l));
@@ -188,20 +214,21 @@ export function setLang(l: Lang) {
 export function useLang() {
   const [lang, set] = useState<Lang>(current);
   useEffect(() => {
-    current = detectLang();
-    set(current);
-    document.documentElement.lang = current;
+    const l = detectLang();
     listeners.add(set);
+    loadDict(l).then(() => {
+      current = l;
+      set(l);
+      document.documentElement.lang = l;
+    });
     return () => {
       listeners.delete(set);
     };
   }, []);
-  const t = (k: Key) => DICTS[lang][k] ?? EN[k];
+  const t = (k: Key) => (lang === 'hu' ? HU[k] ?? EN[k] : lang === 'en' ? EN[k] : tr(lang, EN[k]));
   return { lang, t, setLang };
 }
 
-/** Pick between an English and Hungarian string inline (for longer copy). */
-export const tx = (lang: Lang, en: string, hu: string) => (lang === 'hu' ? hu : en);
 
 /** Server messages are English; show them in Hungarian when the app is in Hungarian. */
 const ERR_HU: [RegExp, string][] = [
@@ -239,8 +266,8 @@ const ERR_HU: [RegExp, string][] = [
   [/^Network error/, 'Hálózati hiba. Próbáld újra.'],
 ];
 export function trErr(lang: Lang, msg: string | undefined | null) {
-  const m = msg || (lang === 'hu' ? 'Valami hiba történt. Próbáld újra.' : 'Something went wrong. Try again.');
-  if (lang !== 'hu') return m;
+  const m = msg || tx(lang, 'Something went wrong. Try again.', 'Valami hiba történt. Próbáld újra.');
+  if (lang !== 'hu') return tr(lang, m);
   return ERR_HU.find(([re]) => re.test(m))?.[1] ?? m;
 }
 

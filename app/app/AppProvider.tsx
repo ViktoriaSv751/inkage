@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf } from '@/lib/tr';
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { api, sb } from '@/lib/sb';
@@ -45,7 +46,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [gate, setGate] = useState<'checking' | 'in' | 'out'>('checking');
   const toLogin = useCallback(() => {
     setGate('out');
-    const q = ui.lang === 'en' ? '?lang=en' : '';
+    const q = qOf(ui.lang);
     location.replace(`/belepes${q}`);
   }, [ui.lang]);
 
@@ -67,13 +68,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         sb()?.rpc('apply_referral', { p_ref: ref }).then(({ data: ok }) => {
           lsSet('ink_ref', null);
           if (ok) {
-            toast(ui.lang === 'hu' ? 'Bónusz: kaptál egy ingyenes előnézetet 🎉' : 'Bonus: you got an extra free preview 🎉');
+            toast(tx(ui.lang, 'Bonus: you got an extra free preview 🎉', 'Bónusz: kaptál egy ingyenes előnézetet 🎉'));
             api<Me>('/api/me').then((x) => x.ok && setMe(x.data));
           }
         });
       }
       // guest previews → account
-      migrateLocal(data.user.id).then((n) => n && toast(ui.lang === 'hu' ? `${n} terv átkerült a fiókodba` : `${n} saved design${n > 1 ? 's' : ''} moved to your account`));
+      migrateLocal(data.user.id).then((n) => n && toast(tx(ui.lang, `${n} saved design${n > 1 ? 's' : ''} moved to your account`, `${n} terv átkerült a fiókodba`)));
       // once per account: a welcome e-mail
       api('/api/welcome', { lang: ui.lang }).catch(() => {});
       // vote links made on this device → account (so they can be listed and closed anywhere)

@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf, pick, type Lang } from '@/lib/tr';
 
 import { AuthCta } from './AuthCta';
 import Link from 'next/link';
@@ -26,10 +27,10 @@ const STYLE_IMG: Record<string, string> = {
   realism: 'hf_20261013_090754_884850ef-3a8a-4f13-9702-e5afbd3729d0',
 };
 
-export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; made: number; onUpload: () => void }) {
-  const t = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const kbSfx = lang === 'hu' ? '' : '?lang=en';
-  const seoSfx = lang === 'en' ? '?lang=en' : '';
+export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: number; onUpload: () => void }) {
+  const t = (en: string, hu: string) => tx(lang, en, hu);
+  const kbSfx = qOf(lang);
+  const seoSfx = qOf(lang);
   const [style, setStyle] = useState<(typeof SEO_STYLES)[number]['k']>('fine-line');
   const st = SEO_STYLES.find((s) => s.k === style)!;
   const ranked = SEO_AREAS.map((a) => ({ a, score: seoPage(`${style}-${a.k}`, lang)?.medium ?? 0 })).sort((x, y) => y.score - x.score);
@@ -178,9 +179,9 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
             <Link key={a.slug} href={`/tudastar/${a.slug}${kbSfx}`} className={`ls-art ${i === 0 ? 'big' : ''}`}>
               <img src={IMG(KB[a.slug].img, i === 0 ? 1400 : 700)} alt="" loading="lazy" />
               <div>
-                <span className="ls-tag">{a.tag[lang]}</span>
-                <b>{a.title[lang]}</b>
-                {i === 0 && <p>{a.desc[lang]}</p>}
+                <span className="ls-tag">{pick(a.tag, lang)}</span>
+                <b>{pick(a.title, lang)}</b>
+                {i === 0 && <p>{pick(a.desc, lang)}</p>}
               </div>
             </Link>
           ))}
@@ -205,7 +206,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
           <figure className="ls-style-pic">
             <img src={IMG(STYLE_IMG[style], 900)} alt="" />
             <figcaption>
-              <b>{lang === 'hu' ? st.hu : st.en}</b>
+              <b>{pick(st, lang)}</b>
               <span>{t('Score at 8 cm, average sun', 'Pontszám 8 cm-en, átlagos napfény mellett')}</span>
             </figcaption>
           </figure>
@@ -213,7 +214,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
             {ranked.map(({ a, score }) => (
               <li key={a.k}>
                 <Link href={`/tattoo/${style}-${a.k}${seoSfx}`}>
-                  <span className="ls-bar-name">{lang === 'hu' ? a.hu : a.en}</span>
+                  <span className="ls-bar-name">{pick(a, lang)}</span>
                   <span className="ls-bar">
                     <i style={{ width: `${score}%`, background: score >= 75 ? 'var(--green)' : score >= 55 ? 'var(--amber)' : 'var(--red)' }} />
                   </span>

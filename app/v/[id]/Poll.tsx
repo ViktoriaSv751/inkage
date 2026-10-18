@@ -1,4 +1,5 @@
 'use client';
+import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -294,7 +295,7 @@ export function Poll({ id, initial }: { id: string; initial: PollData }) {
       <div className="pp-cta">
         <h2>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
         <p>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
-        <Link className="btn wide" href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} onClick={() => track('share_cta')}>
+        <Link className="btn wide" href={`/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
           {t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </div>

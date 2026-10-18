@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf } from '@/lib/tr';
 import { useSignedIn } from './AuthCta';
 
 import Link from 'next/link';
@@ -25,7 +26,7 @@ const I = {
  * `onLang` is given on pages that switch language in place; otherwise the URL gets ?lang=.
  */
 export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onLang?: (l: Lang) => void; signedIn?: boolean }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(lang, en, hu);
   const signedIn = useSignedIn();
   const pathname = usePathname() || '/';
   const router = useRouter();
@@ -73,12 +74,12 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
     window.addEventListener('scroll', h, { passive: true });
     return () => window.removeEventListener('scroll', h);
   }, []);
-  const q = !onLang && lang === 'en' ? '?lang=en' : '';
+  const q = (onLang ? '' : qOf(lang));
   const pick = (l: Lang) => {
     saveLang(l);
     track('lang_pick', { l });
     if (onLang) onLang(l);
-    else router.push(`${path || pathname}${l === 'en' ? '?lang=en' : ''}`);
+    else router.push(`${path || pathname}${qOf(l)}`);
   };
   const links = [
     { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik') },
@@ -168,7 +169,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
                 { href: `/${q}`, base: '/', t: T('Home', 'Főoldal'), d: T('Start here', 'Kezdőlap'), i: 'M4 10.5L12 4l8 6.5V20H4z' },
                 { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), d: T('Five steps, a minute', 'Öt lépés, egy perc'), i: 'M4 8h4l2-3h4l2 3h4v11H4zM12 17a4 4 0 1 0 0-8a4 4 0 0 0 0 8z' },
                 { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók'), d: T('Everything it can do', 'Minden, amit tud'), i: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z' },
-                { href: `/tattoo/fine-line-forearm${lang === 'en' ? '?lang=en' : ''}`, base: '/tattoo', t: T('Styles', 'Stílusok'), d: T('Scores by body area', 'Pontszámok testrészenként'), i: 'M4 20V10M10 20V4M16 20v-7M22 20H2' },
+                { href: `/tattoo/fine-line-forearm${qOf(lang)}`, base: '/tattoo', t: T('Styles', 'Stílusok'), d: T('Scores by body area', 'Pontszámok testrészenként'), i: 'M4 20V10M10 20V4M16 20v-7M22 20H2' },
                 { href: `/tudastar${q}`, base: '/tudastar', t: T('Guides', 'Tudástár'), d: T('12 in-depth articles', '12 részletes cikk'), i: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5' },
                 { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK'), d: T('Quick answers', 'Gyors válaszok'), i: 'M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18zM9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.8M12 17h.01' },
               ].map((l) => (

@@ -1,4 +1,5 @@
 'use client';
+import { type Lang } from '@/lib/tr';
 
 import { useState } from 'react';
 import { sb } from '@/lib/sb';
@@ -16,7 +17,7 @@ const REASONS: [string, string, string][] = [
 ];
 
 /** "Report this picture" – required for user-generated and AI content in the app stores. */
-export function Report({ id, lang }: { id: string; lang: 'en' | 'hu' }) {
+export function Report({ id, lang }: { id: string; lang: Lang }) {
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState('');

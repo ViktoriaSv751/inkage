@@ -1,3 +1,4 @@
+import { fromBrowser, qOf, tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -53,19 +54,19 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.vercel.app';
   if (params.id.startsWith('p')) {
     const p = await getPoll(params.id);
-    const hu = /^hu/i.test(headers().get('accept-language') || '');
+    const lang = fromBrowser(headers().get('accept-language') || '');
     const n = p?.options.length || 1;
-    const title = `${p?.question || (n > 1 ? (hu ? 'Melyiket csináltassam meg?' : 'Which one should I get?') : hu ? 'Csináltassam meg ezt a tetoválást?' : 'Should I get this tattoo?')} 👀`;
-    const description = hu ? 'Nézd meg, és szavazz – egy koppintás, regisztráció nélkül.' : 'Take a look and vote – one tap, no sign-up.';
+    const title = `${p?.question || (n > 1 ? (tx(lang, 'Which one should I get?', 'Melyiket csináltassam meg?')) : tx(lang, 'Should I get this tattoo?', 'Csináltassam meg ezt a tetoválást?'))} 👀`;
+    const description = tx(lang, 'Take a look and vote – one tap, no sign-up.', 'Nézd meg, és szavazz – egy koppintás, regisztráció nélkül.');
     const og = p ? [`https://${host}/api/og/${params.id}`] : undefined;
     return { title, description, robots: { index: false }, openGraph: { title, description, images: og?.map((url) => ({ url, width: 1200, height: 630 })) }, twitter: { card: 'summary_large_image', title, description, images: og } };
   }
   const s = await getShare(params.id);
   const abs = (u?: string) => (u && u.startsWith('/') ? `https://${host}${u}` : u);
   if (s) s.paths = { fresh: abs(s.paths.fresh), y50: abs(s.paths.y50), freshB: abs(s.paths.freshB), y50B: abs(s.paths.y50B) };
-  const hu = /^hu/i.test(headers().get('accept-language') || '');
-  const title = hu ? 'Csináltassam meg ezt a tetoválást? 👀' : 'Should I get this tattoo? 👀';
-  const description = hu ? 'Nézd meg frissen és 50 év múlva, aztán szavazz. InkAge-dzsel készült.' : 'See how it looks fresh and after 50 years, then vote. Made with InkAge.';
+  const lang = fromBrowser(headers().get('accept-language') || '');
+  const title = tx(lang, 'Should I get this tattoo? 👀', 'Csináltassam meg ezt a tetoválást? 👀');
+  const description = tx(lang, 'See how it looks fresh and after 50 years, then vote. Made with InkAge.', 'Nézd meg frissen és 50 év múlva, aztán szavazz. InkAge-dzsel készült.');
   return {
     title,
     description,
@@ -79,16 +80,17 @@ export default async function SharePage({ params }: { params: { id: string } }) 
   const poll = params.id.startsWith('p') ? await getPoll(params.id) : null;
   if (poll) return <Poll id={params.id} initial={poll} />;
   const s = await getShare(params.id);
-  if (!s)
+  if (!s) {
+    const lang = fromBrowser(headers().get('accept-language') || '');
     return (
       <main className="legal" style={{ textAlign: 'center' }}>
-        <h1>Ez a link már nem él</h1>
-        <p>A készítője lezárta vagy törölte, vagy elírás van a címben.</p>
-        <p className="muted small" lang="en">This vote link was closed or removed, or the address is wrong.</p>
-        <Link className="btn" href="/regisztracio">
-          Regisztrálok és kipróbálom
+        <h1>{tx(lang, 'This link no longer works', 'Ez a link már nem él')}</h1>
+        <p>{tx(lang, 'Its owner closed or removed it, or the address is wrong.', 'A készítője lezárta vagy törölte, vagy elírás van a címben.')}</p>
+        <Link className="btn" href={`/regisztracio${qOf(lang)}`}>
+          {tx(lang, 'Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </main>
     );
+  }
   return <Vote id={params.id} initial={s} />;
 }

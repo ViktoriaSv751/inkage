@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -7,9 +8,9 @@ import { sb } from '@/lib/sb';
 import './auth.css';
 
 /** Landing page of the password-reset e-mail: set a new password. */
-export function NewPassword({ lang }: { lang: 'en' | 'hu' }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const q = lang === 'en' ? '?lang=en' : '';
+export function NewPassword({ lang }: { lang: Lang }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
+  const q = qOf(lang);
   const router = useRouter();
   const [ready, setReady] = useState<'wait' | 'ok' | 'none'>('wait');
   const [pw, setPw] = useState('');

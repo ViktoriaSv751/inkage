@@ -1,3 +1,4 @@
+import { tx, isLang, type Lang } from '@/lib/tr';
 import { appSecret, getAuthed, json, userClient } from '@/lib/server';
 import { layout, mailReady, sendMail, SITE } from '@/lib/mail';
 
@@ -13,11 +14,11 @@ export async function POST(req: Request) {
   const list = (data as { email: string; lang: string | null }[]) || [];
   let sent = 0;
   for (const w of list) {
-    const hu = w.lang !== 'en';
+    const lang: Lang = isLang(w.lang) ? w.lang : 'hu';
     const ok = await sendMail(
       w.email,
-      hu ? 'Újra lehet előnézetet készíteni – InkAge' : 'Previews are open again – InkAge',
-      layout({ title: hu ? 'Újra mehet!' : 'We’re back!', lines: [hu ? 'Ahogy ígértük, szólunk: az előnézetek újra elérhetők.' : 'As promised: previews are available again.'], button: { href: `${SITE()}/app`, label: hu ? 'Kipróbálom' : 'Try it' } }),
+      tx(lang, 'Previews are open again – InkAge', 'Újra lehet előnézetet készíteni – InkAge'),
+      layout({ title: tx(lang, 'We’re back!', 'Újra mehet!'), lines: [tx(lang, 'As promised: previews are available again.', 'Ahogy ígértük, szólunk: az előnézetek újra elérhetők.')], button: { href: `${SITE()}/app`, label: tx(lang, 'Try it', 'Kipróbálom') } }),
       `${SITE()}/app`
     );
     if (ok) sent++;

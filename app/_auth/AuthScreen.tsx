@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf, type Lang } from '@/lib/tr';
 import { IMG } from '@/lib/kb';
 import { ThemeToggle } from '../ThemeToggle';
 
@@ -12,9 +13,9 @@ import './auth.css';
 
 
 /** Full-page sign-in / sign-up with e-mail code (and Google / Apple when switched on). */
-export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'forgot'; lang: 'en' | 'hu'; img: string }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const q = lang === 'en' ? '?lang=en' : '';
+export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'forgot'; lang: Lang; img: string }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
+  const q = qOf(lang);
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [agree, setAgree] = useState(false);

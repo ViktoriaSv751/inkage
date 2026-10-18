@@ -1,14 +1,15 @@
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
-  return { title: langOf(searchParams) === 'hu' ? 'Felhasználási feltételek (ÁSZF) – InkAge' : 'Terms of use – InkAge' };
+  return { title: tx(langOf(searchParams), 'Terms of use – InkAge', 'Felhasználási feltételek (ÁSZF) – InkAge') };
 }
 
 export default function Terms({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
-  const T = (en: string, hu: string) => (L === 'hu' ? hu : en);
+  const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [
     { h: T('The service', 'A szolgáltatás'), ps: [T('InkAge creates AI-generated simulations of how a tattoo could look on your photo, now and as it ages. Results are illustrations for planning and inspiration only. They are not a promise of how a real tattoo will look or age, and they are not medical or professional advice. Always consult a licensed tattoo artist.', 'Az InkAge MI által készített szimulációkat hoz létre arról, hogyan nézhet ki egy tetoválás a fotódon most és az évek során. Az eredmények kizárólag tervezést és inspirációt szolgáló illusztrációk. Nem ígéretek arra, hogyan fog kinézni vagy öregedni egy valódi tetoválás, és nem orvosi vagy szakmai tanácsok. Mindig konzultálj engedéllyel rendelkező tetoválóval.')] },
     { h: T('Age', 'Életkor'), ps: [T('You must be at least 18 years old to use InkAge.', 'Az InkAge használatához legalább 18 évesnek kell lenned.')] },

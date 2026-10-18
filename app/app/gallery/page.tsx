@@ -1,4 +1,5 @@
 'use client';
+import { localeOf } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -161,7 +162,7 @@ export default function GalleryPage() {
             {thumb(p) && <img src={thumb(p)} alt="" />}
             <span>
               <b>{placeName(p.placement, ui.lang)}</b>
-              <small>{new Date(p.created_at).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB')}</small>
+              <small>{new Date(p.created_at).toLocaleDateString(localeOf(ui.lang))}</small>
             </span>
             <button className="chipbtn" disabled={restoring === p.id} onClick={() => restore(p)}>
               {restoring === p.id ? '…' : t('Restore', 'Visszaállítás')}
@@ -269,7 +270,7 @@ export default function GalleryPage() {
           </button>
         </div>
         <p className="sub small">
-          {new Date(open.created_at).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB', { year: 'numeric', month: 'short', day: 'numeric' })} · {open.size}
+          {new Date(open.created_at).toLocaleDateString(localeOf(ui.lang), { year: 'numeric', month: 'short', day: 'numeric' })} · {open.size}
           {open.source === 'local' && ` · ${t('on this device only', 'csak ezen az eszközön')}`}
         </p>
         <div className="card detail-meta">

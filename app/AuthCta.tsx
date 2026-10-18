@@ -1,4 +1,5 @@
 'use client';
+import { tx, qOf, type Lang, isLang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -19,9 +20,9 @@ export function useSignedIn() {
 }
 
 /** Register / Sign in buttons for the website (the app needs an account; it's free after sign-up). */
-export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: 'en' | 'hu'; light?: boolean; where?: string; style?: React.CSSProperties }) {
-  const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
-  const q = lang === 'en' ? '?lang=en' : '';
+export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: Lang; light?: boolean; where?: string; style?: React.CSSProperties }) {
+  const T = (en: string, hu: string) => tx(lang, en, hu);
+  const q = qOf(lang);
   // always Register / Sign in (signed in already, both pages go straight to the gallery)
   return (
     <div className="auth-cta" style={style}>
@@ -36,11 +37,11 @@ export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: '
 }
 
 /** A single call to action: the app when signed in, otherwise registration. */
-export function TryLink({ className, children, onClick, lang }: { className?: string; children: React.ReactNode; onClick?: () => void; lang?: 'en' | 'hu' }) {
+export function TryLink({ className, children, onClick, lang }: { className?: string; children: React.ReactNode; onClick?: () => void; lang?: Lang }) {
   const signedIn = useSignedIn();
-  const l = lang || (typeof document !== 'undefined' && document.documentElement.lang === 'en' ? 'en' : 'hu');
+  const l = lang || (typeof document !== 'undefined' && (isLang(document.documentElement.lang) ? document.documentElement.lang : 'hu')) || 'hu';
   return (
-    <Link className={className} href={signedIn ? '/app' : `/regisztracio${l === 'en' ? '?lang=en' : ''}`} onClick={onClick}>
+    <Link className={className} href={signedIn ? '/app' : `/regisztracio${qOf(l)}`} onClick={onClick}>
       {children}
     </Link>
   );

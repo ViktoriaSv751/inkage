@@ -1,3 +1,4 @@
+import { tx, qOf, langOf, pick } from '@/lib/tr';
 import { TryLink } from '../../AuthCta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -13,13 +14,13 @@ import './seo.css';
 export const dynamic = 'force-dynamic';
 
 export function generateMetadata({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }): Metadata {
-  const L = searchParams.lang === 'en' ? 'en' : 'hu';
+  const L = langOf(searchParams);
   const p = seoPage(params.slug, L);
   if (!p) return {};
-  const title = L === 'en' ? `${p.s.en} tattoo on the ${p.a.en}: how it looks after 10, 30 and 50 years` : `${p.s.hu} tetoválás – ${p.a.hu}: így néz ki 10, 30 és 50 év múlva`;
+  const title = tx(L, `${p.s.en} tattoo on the ${p.a.en}: how it looks after 10, 30 and 50 years`, `${p.s.hu} tetoválás – ${p.a.hu}: így néz ki 10, 30 és 50 év múlva`);
   return {
     title: `${title} – InkAge`,
-    description: L === 'en' ? `How a ${p.s.en.toLowerCase()} tattoo on the ${p.a.en} ages, which size lasts, and how to see it on your own skin.` : `Hogyan öregszik egy ${p.s.hu.toLowerCase()} tetoválás (${p.a.hu}), melyik méret tart, és hogyan nézheted meg a saját bőrödön.`,
+    description: tx(L, `How a ${p.s.en.toLowerCase()} tattoo on the ${p.a.en} ages, which size lasts, and how to see it on your own skin.`, `Hogyan öregszik egy ${p.s.hu.toLowerCase()} tetoválás (${p.a.hu}), melyik méret tart, és hogyan nézheted meg a saját bőrödön.`),
     alternates: { canonical: `/tattoo/${params.slug}` },
   };
 }
@@ -27,14 +28,14 @@ export function generateMetadata({ params, searchParams }: { params: { slug: str
 const tone = (v: number) => (v >= 75 ? 'good' : v >= 55 ? 'mid' : 'low');
 
 export default function SeoPage({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }) {
-  const L = searchParams.lang === 'en' ? 'en' : 'hu';
+  const L = langOf(searchParams);
   const p = seoPage(params.slug, L);
   if (!p) notFound();
   const { s, a, report } = p;
-  const T = (en: string, h: string) => (L === 'hu' ? h : en);
-  const q = L === 'en' ? '?lang=en' : '';
-  const sN = L === 'hu' ? s.hu : s.en;
-  const aN = L === 'hu' ? a.hu : a.en;
+  const T = (en: string, h: string) => tx(L, en, h);
+  const q = qOf(L);
+  const sN = pick(s, L);
+  const aN = pick(a, L);
   const verdict =
     report.score >= 75 ? T('This combination usually ages well.', 'Ez a kombináció általában jól öregszik.') : report.score >= 55 ? T('A good choice, with a few things to watch.', 'Jó választás, néhány dologra figyelni kell.') : T('Likely to blur or fade noticeably.', 'Valószínűleg észrevehetően elmosódik vagy fakul.');
   const areas = SEO_AREAS.map((x) => ({ x, v: seoPage(`${s.k}-${x.k}`, L)?.medium ?? 0 })).sort((m, n) => n.v - m.v);
@@ -159,7 +160,7 @@ export default function SeoPage({ params, searchParams }: { params: { slug: stri
             {areas.map(({ x, v }) => (
               <li key={x.k}>
                 <Link href={`/tattoo/${s.k}-${x.k}${q}`} className={x.k === a.k ? 'on' : ''} aria-current={x.k === a.k ? 'page' : undefined}>
-                  <span>{L === 'hu' ? x.hu : x.en}</span>
+                  <span>{pick(x, L)}</span>
                   <i>
                     <em className={tone(v)} style={{ width: `${v}%` }} />
                   </i>
