@@ -36,7 +36,9 @@ for l in langs:
     ui['tpl'].sort(key=lambda p: -len(p[0]))
     json.dump(ui, open(f'{ROOT}/lib/locales/{l}.json', 'w'), ensure_ascii=False, separators=(',', ':'))
     json.dump(content, open(f'{ROOT}/lib/locales/content-{l}.json', 'w'), ensure_ascii=False, separators=(',', ':'))
-    report[l] = {'ok': len(items) - len(missing) - len(bad), 'missing': len(missing), 'bad': len(bad)}
+    nui = [i for i, x in items.items() if not x['content']]
+    lost = set(missing + bad)
+    report[l] = {'ok': len(items) - len(missing) - len(bad), 'missing': len(missing), 'bad': len(bad), 'ui_ok': sum(1 for i in nui if i not in lost), 'ui': len(nui)}
     open(f'{TR}/missing-{l}.json', 'w').write(json.dumps([{'id': int(i), 'en': items[i]['en']} for i in missing + bad], ensure_ascii=False))
 # browser copies of the UI dictionaries, loaded by the page before the app starts
 import hashlib
@@ -46,7 +48,7 @@ for l in langs:
     raw = open(f'{ROOT}/lib/locales/{l}.json').read()
     open(f'{ROOT}/public/locales/{l}.js', 'w').write(f"window.__INK_LANG='{l}';window.__INK_DICT={raw};")
     man[l] = hashlib.sha1(raw.encode()).hexdigest()[:10]
-ready = ['hu', 'en'] + [l for l in langs if report[l]['ok'] >= 0.9 * len(items)]
+ready = ['hu', 'en'] + [l for l in langs if report[l]['ui_ok'] >= 0.9 * report[l]['ui']]  # app texts done; articles fall back to English until translated
 json.dump({l: v for l, v in man.items() if l in ready}, open(f'{ROOT}/lib/locales/manifest.json', 'w'))
 # only languages that are (almost) fully translated are offered in the picker
 json.dump(ready, open(f'{ROOT}/lib/locales/ready.json', 'w'))
