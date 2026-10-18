@@ -1,6 +1,6 @@
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken, verifyToken } from '@/lib/server';
-import { agePrompt, aiConfigured, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage, stageYears } from '@/lib/ai';
+import { agePrompt, aiConfigured, secondaryImageModels, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage, stageYears } from '@/lib/ai';
 import { guestBumpAge, guestFrom } from '@/lib/guest';
 import { jobPut } from '@/lib/jobs';
 
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     const from = Number(t.y) || 0;
     if (!isRemoval && from >= stageYears(stage as Stage)) return json({ error: 'Start a new preview and try again.' }, 400);
     if (isRemoval && from > 0) return json({ error: 'Start a new preview and try again.' }, 400);
-    const image = await editImage([{ ...img, name: 'fresh.jpg' }], isRemoval ? removalPrompt(stage as RemovalStage, t.an) : agePrompt(stage as Stage, t.an, from), t.w, t.hh);
+    const image = await editImage([{ ...img, name: 'fresh.jpg' }], isRemoval ? removalPrompt(stage as RemovalStage, t.an) : agePrompt(stage as Stage, t.an, from), t.w, t.hh, secondaryImageModels());
     // a token for this image, so the next stage can continue from it
     const token = isRemoval ? null : signToken({ ...t, h: sha(image), y: stageYears(stage as Stage) });
     await jobPut(body.job, t.uid, stage, { image, token });

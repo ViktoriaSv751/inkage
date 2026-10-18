@@ -1,6 +1,6 @@
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, json } from '@/lib/server';
-import { aiConfigured, dataUrlToImg, editImage, extractCheck, extractPrompt, friendlyAiError } from '@/lib/ai';
+import { aiConfigured, dataUrlToImg, editImage, extractCheck, extractPrompt, friendlyAiError, secondaryImageModels } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
@@ -23,12 +23,13 @@ export async function POST(req: Request) {
     const src = { ...img, name: 'design.jpg' };
     const color = body.color === true;
     // cut out, then check it against the photo: same design, nothing extra left in. One targeted retry if not.
-    let image = await editImage([src], extractPrompt(color), 1024, 1024);
+    let image = await editImage([src], extractPrompt(color), 1024, 1024, secondaryImageModels());
     let check = await extractCheck(src, dataUrlToImg(image));
-    // up to two targeted retries while something that is not the tattoo is left in, or the design drifted
-    for (let n = 0; n < 2 && !check.ok; n++) {
+    // one targeted retry while something that is not the tattoo is left in, or the design drifted
+    // (each retry is a paid image; a second one rarely did better)
+    for (let n = 0; n < 1 && !check.ok; n++) {
       console.warn('extract check failed, retrying', check);
-      const again = await editImage([src], extractPrompt(color, check.fix), 1024, 1024).catch(() => null);
+      const again = await editImage([src], extractPrompt(color, check.fix), 1024, 1024, secondaryImageModels()).catch(() => null);
       if (!again) break;
       const c2 = await extractCheck(src, dataUrlToImg(again));
       if (c2.match >= check.match) ((image = again), (check = c2));

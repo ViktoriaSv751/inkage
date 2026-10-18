@@ -8,6 +8,7 @@ import { useApp } from '../AppProvider';
 import { Icon, Sheet } from '../ui';
 import { Result } from '../Result';
 import { HealDiary, RealVsPreview } from './AfterCare';
+import { Uploads } from './Uploads';
 import { huArticle, tx } from '@/lib/i18n';
 import { cloud, haptic, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
 import { placeName } from '../create/steps';
@@ -432,6 +433,8 @@ export default function GalleryPage() {
           </div>
         )}
       </div>
+
+      <Uploads />
 
       {!me.user && items && items.length > 0 && (
         <button className="banner" style={{ marginTop: 12 }} onClick={() => openAuth()}>

@@ -346,11 +346,21 @@ async function openaiImage(images: Img[], prompt: string, w: number, h: number) 
   return `data:${b64.startsWith('iVBOR') ? 'image/png' : 'image/jpeg'};base64,${b64}`;
 }
 
+/**
+ * The model for the work that follows the first render (aging stages, laser sessions, cut-outs). Each preview makes
+ * four aging images, so this is where most of the cost goes: GEMINI_AGE_MODEL set to a Flash image model
+ * (e.g. gemini-3.1-flash-image) makes those images several times cheaper. Unset: the same models as the first render.
+ */
+export function secondaryImageModels() {
+  const m = process.env.GEMINI_AGE_MODEL;
+  return m ? [m, ...imageModels().filter((x) => x !== m)] : imageModels();
+}
+
 /** Edit a photo. Uses Gemini (Nano Banana) when configured, otherwise OpenAI. */
-export async function editImage(images: Img[], prompt: string, w: number, h: number) {
+export async function editImage(images: Img[], prompt: string, w: number, h: number, models = imageModels()) {
   if (process.env.GEMINI_API_KEY) {
     try {
-      return await geminiImage(images, prompt, w, h);
+      return await geminiImage(images, prompt, w, h, models);
     } catch (e) {
       if (!process.env.OPENAI_API_KEY) throw e;
       console.warn('gemini failed, falling back to openai', e);

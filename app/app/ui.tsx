@@ -5,6 +5,7 @@ import { oauthParams } from '@/lib/auth-help';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { haptic } from '@/lib/store';
@@ -68,7 +69,7 @@ export const Icon = {
 };
 
 export function TopBar() {
-  const { me, ui } = useApp();
+  const { me, ui, profile } = useApp();
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 4);
@@ -89,8 +90,12 @@ export function TopBar() {
         <div className="topbar-r">
         <ThemeToggle className="sm" lang={ui.lang} />
         {me.user ? (
-          <Link href="/app/profile" className="avatar" style={{ width: 34, height: 34, fontSize: 15, textDecoration: 'none' }} aria-label={ui.t('nav.profile')}>
-            {(me.user.email || '?').slice(0, 1).toUpperCase()}
+          <Link href="/app/profile" className="avatar" style={{ width: 34, height: 34, fontSize: 15, textDecoration: 'none', position: 'relative', overflow: 'hidden', flex: 'none' }} aria-label={ui.t('nav.profile')}>
+            {profile.avatar ? (
+              <img src={profile.avatar} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            ) : (
+              (profile.name || me.user.email || '?').slice(0, 1).toUpperCase()
+            )}
           </Link>
         ) : (
           <span className="beta-pill">{tx(ui.lang, 'Free beta', 'Ingyenes béta')}</span>
@@ -189,7 +194,8 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
     return () => window.removeEventListener('keydown', k);
   }, [open, onClose]);
   if (!open) return null;
-  return (
+  // rendered straight into <body>: inside the photo editor (or any moving parent) a fixed sheet could shift sideways
+  return createPortal(
     <div className="sheet-wrap" onClick={onClose}>
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
         <div className="grab" />
@@ -198,7 +204,8 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -287,7 +294,7 @@ export function AuthSheet() {
   );
 }
 
-/** Shown when today's free previews are used up. */
+/** Shown when this month's previews are used up. */
 export function OutOfPreviews({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { me, ui, openAuth, toast } = useApp();
   const link = me.user ? `${typeof location !== 'undefined' ? location.origin : ''}/?ref=${me.user.id}` : '';

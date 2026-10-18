@@ -13,7 +13,8 @@ import { trErr, tx, huArticle } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
 import { cloud, haptic, local, lsGet, Preview, REMOVAL_STAGES, RemovalKey, shares, StageKey, STAGES, track } from '@/lib/store';
 import { composeMockup, mergeLayers, pasteMask, Placement, Skin } from '@/lib/editor';
-import { loadImage } from '@/lib/client';
+import { loadImage, prepareImage } from '@/lib/client';
+import { USE_UPLOAD_KEY, type UseUpload } from '@/lib/uploads';
 import { frameCm, photoCm } from '@/lib/score';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { processDesign } from '@/lib/editor';
@@ -203,6 +204,19 @@ export default function CreatePage() {
       lsSet('ink_pick', null);
       setMode('new');
       processDesign(pick.src, 'black').then((d) => setDesign({ raw: pick.src, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: 'black', libId: pick.id }));
+    }
+    // "Use" on a picture in the gallery's uploads
+    const use = lsGet<UseUpload | null>(USE_UPLOAD_KEY, null);
+    if (use?.src) {
+      lsSet(USE_UPLOAD_KEY, null);
+      (async () => {
+        const blob = await (await fetch(use.src)).blob();
+        const p = await prepareImage(new File([blob], 'upload.jpg', { type: blob.type || 'image/jpeg' }), 1024);
+        if (use.kind === 'photo') return setPhoto(p);
+        setMode('new');
+        const d = await processDesign(p.dataUrl, 'black');
+        setDesign({ raw: p.dataUrl, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: 'black' });
+      })().catch(() => toast(t('That picture could not be loaded. Try again.', 'Ezt a képet nem sikerült betölteni. Próbáld újra.')));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

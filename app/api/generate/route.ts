@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const { data: start, error } = await a.db.rpc('start_generation', { p_placement: placement });
     if (error) return json({ error: 'Could not start your preview. Try again.' }, 500);
     if (!start.ok) {
-      return json({ error: start.plan === 'free' ? 'You used your free preview.' : 'You reached your plan limit for now.', code: 'paywall', plan: start.plan }, 402);
+      return json({ error: start.plan === 'free' ? 'You used your free preview.' : 'You reached this month’s limit. It starts again on the 1st.', code: 'paywall', plan: start.plan }, 402);
     }
     gid = start.gid;
     canAge = start.canAge || start.plan === 'free'; // the free preview includes the aging stages too
@@ -125,10 +125,11 @@ export async function POST(req: Request) {
       image = await protect(await run());
       let [q, an] = await Promise.all([qualityCheck(designImg, dataUrlToImg(image), mockup ? { ...mockup, name: 'mockup.jpg' } : null), analyse(dataUrlToImg(image))]);
       if (!q.ok) {
-        // Two new candidates in parallel, told exactly what went wrong; keep the best of all three.
+        // One new candidate, told exactly what went wrong; keep the better of the two.
+        // (Two parallel candidates made a failed check cost three paid images.)
         console.warn('qc failed, retrying with feedback', q);
         const more = await Promise.all(
-          [0, 1].map(async () => {
+          [0].map(async () => {
             const img = await run(q.fix).catch(() => null);
             if (!img) return null;
             const safe = await protect(img);
