@@ -56,10 +56,11 @@ export default function ProfilePage() {
   const saveName = async () => {
     const name = nameIn.trim().slice(0, 60);
     setAccBusy('name');
-    const { error } = (await sb()?.auth.updateUser({ data: { full_name: name } })) || {};
+    // saved in profiles, not in the sign-in data: a Google / Apple sign-in would overwrite that with the provider's name
+    const { data, error } = (await sb()?.rpc('set_display_name', { p_name: name })) || { data: null, error: new Error('offline') };
     setAccBusy('');
     if (error) return toast(t('Could not save your name. Try again.', 'Nem sikerült menteni a nevet. Próbáld újra.'));
-    setProfile({ name });
+    setProfile({ name: (data as string | null) || '' });
     toast(t('Saved', 'Mentve'));
   };
   const saveEmail = async () => {
