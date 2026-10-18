@@ -11543,8 +11543,8 @@
    ],
    "kind": "obj"
   },
-  "This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID, or sign up with your e-mail.": {
-   "hu": "Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t, vagy regisztrálj e-mail-címmel.",
+  "This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID to register again.": {
+   "hu": "Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t az újbóli regisztrációhoz.",
    "files": [
     "lib/auth-help.ts"
    ],
@@ -11557,8 +11557,8 @@
    ],
    "kind": "call"
   },
-  "Sign-in didn’t work. Try again, or use your e-mail.": {
-   "hu": "A belépés nem sikerült. Próbáld újra, vagy lépj be e-mail-címmel.",
+  "Sign-in didn’t work. Try again, or use the other option (Google or Apple).": {
+   "hu": "A belépés nem sikerült. Próbáld újra, vagy használd a másik lehetőséget (Google vagy Apple).",
    "files": [
     "lib/auth-help.ts"
    ],
@@ -21961,13 +21961,6 @@
    "hu": "{0}. nap a 28-ból",
    "files": [
     "app/app/gallery/AfterCare.tsx"
-   ],
-   "kind": "call"
-  },
-  "{0} missing design{1} restored to your gallery": {
-   "hu": "{0} elveszettnek hitt terv visszakerült a galériádba",
-   "files": [
-    "app/app/gallery/page.tsx"
    ],
    "kind": "call"
   },
