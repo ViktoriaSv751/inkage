@@ -9,6 +9,7 @@ import { Icon, Sheet } from '../ui';
 import { Result } from '../Result';
 import { HealDiary, RealVsPreview } from './AfterCare';
 import { Uploads } from './Uploads';
+import { Ideas } from './Ideas';
 import { huArticle, tx } from '@/lib/i18n';
 import { cloud, haptic, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
 import { placeName } from '../create/steps';
@@ -37,6 +38,20 @@ export default function GalleryPage() {
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<Sort>(() => lsGet<Sort>('ink_gal_sort', 'new'));
   const [kind, setKind] = useState<Kind>('any');
+  // previews, or the tattoo ideas saved for later (/app/gallery?view=ideas opens them)
+  const [view, setView] = useState<'previews' | 'ideas'>('previews');
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('view') === 'ideas') setView('ideas');
+  }, []);
+  const pickView = (v: 'previews' | 'ideas') => {
+    setView(v);
+    try {
+      const u = new URL(location.href);
+      if (v === 'ideas') u.searchParams.set('view', 'ideas');
+      else u.searchParams.delete('view');
+      history.replaceState(history.state, '', u.toString());
+    } catch {}
+  };
   const [pollOpen, setPollOpen] = useState(false);
   const [folder, setFolder] = useState<string | null>(null);
   const [newFolder, setNewFolder] = useState('');
@@ -408,7 +423,7 @@ export default function GalleryPage() {
           <p className="kicker">{items ? `${items.length}${more ? '+' : ''} ${t('saved', 'mentve')}` : '…'}</p>
           <h1 style={{ margin: 0 }}>{ui.t('gallery.title')}</h1>
         </div>
-        {items && items.length > 0 && (
+        {view === 'previews' && items && items.length > 0 && (
           <div className="row" style={{ gap: 6 }}>
             {items.length > 1 && (
               <button
@@ -434,6 +449,19 @@ export default function GalleryPage() {
         )}
       </div>
 
+      <div className="seg galview" role="radiogroup" aria-label={t('Show', 'Mutasd')} style={{ marginTop: 12 }}>
+        <button role="radio" aria-checked={view === 'previews'} className={view === 'previews' ? 'on' : ''} onClick={() => pickView('previews')}>
+          {t('Previews', 'Előnézetek')}
+        </button>
+        <button role="radio" aria-checked={view === 'ideas'} className={view === 'ideas' ? 'on' : ''} onClick={() => pickView('ideas')}>
+          💡 {t('Ideas', 'Ötletek')}
+        </button>
+      </div>
+
+      {view === 'ideas' ? (
+        <Ideas />
+      ) : (
+      <>
       <Uploads />
 
       {!me.user && items && items.length > 0 && (
@@ -472,6 +500,9 @@ export default function GalleryPage() {
                 {k === 'any' ? t('All types', 'Mind') : k === 'new' ? t('New designs', 'Új minták') : k === 'existing' ? t('My tattoos', 'Meglévő tetoválásaim') : t('Removal', 'Eltávolítás')}
               </button>
             ))}
+            <button className="chip" onClick={() => pickView('ideas')}>
+              💡 {t('Ideas', 'Ötletek')}
+            </button>
           </div>
         </div>
       )}
@@ -601,6 +632,8 @@ export default function GalleryPage() {
         <button className="btn ghost wide" style={{ marginTop: 16 }} onClick={loadMore}>
           {t('Load more', 'Továbbiak betöltése')}
         </button>
+      )}
+      </>
       )}
 
       <Sheet open={foldersOpen} onClose={() => (setFoldersOpen(false), setRename(null))} label={t('Folders', 'Mappák')}>

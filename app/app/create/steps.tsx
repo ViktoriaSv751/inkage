@@ -9,6 +9,7 @@ import { api } from '@/lib/sb';
 import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
 import { uploads } from '@/lib/uploads';
+import { IdeaSheet } from './IdeaSheet';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { cropImage, offSkin, processDesign, Placement, skinVeil } from '@/lib/editor';
 import { Box, Found, TattooPicker } from './Picker';
@@ -229,6 +230,7 @@ export function StudioStep({
     return () => clearInterval(id);
   }, [modelBusy]);
   const [linkOpen, setLinkOpen] = useState(false);
+  const [ideaOpen, setIdeaOpen] = useState(false);
   const [link, setLink] = useState('');
   const [linkBusy, setLinkBusy] = useState(false);
   const [libQ, setLibQ] = useState('');
@@ -526,6 +528,23 @@ export function StudioStep({
           </button>
         </div>
       )}
+      {setMode && (
+        <button type="button" className="idea-btn" onClick={() => (setIdeaOpen(true), track('idea_open'))}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z" /></svg>
+          <span>
+            <b>{t('Save a tattoo idea', 'Tetoválás-ötlet mentése')}</b>
+            <small>{t('From your photos or a link, to your gallery', 'Fotótárból vagy linkről, a galériádba')}</small>
+          </span>
+        </button>
+      )}
+      <IdeaSheet
+        open={ideaOpen}
+        onClose={() => setIdeaOpen(false)}
+        onTry={(blob) => {
+          setMode?.('new');
+          designFromFile(blob, 'idea');
+        }}
+      />
       {removal && (
         <div className="rm-note">
           <b>{t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</b>
