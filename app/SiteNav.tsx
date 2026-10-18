@@ -78,8 +78,8 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
   const pick = (l: Lang) => {
     saveLang(l);
     track('lang_pick', { l });
-    if (onLang) onLang(l);
-    else router.push(`${path || pathname}${qOf(l)}`);
+    // the page reloads in the new language
+
   };
   const links = [
     { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik') },

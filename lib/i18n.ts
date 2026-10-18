@@ -199,16 +199,25 @@ export function detectLang(): Lang {
 let current: Lang = 'en';
 const listeners = new Set<(l: Lang) => void>();
 
+/**
+ * Switch the language: remembered (device + cookie for the server), then the page reloads in it,
+ * so every part – website, app, server-rendered pages – comes back in the new language at once.
+ */
 export async function setLang(l: Lang) {
-  await loadDict(l);
   current = l;
   try {
     localStorage.setItem('ink_lang', l);
-    // the website's server pages read this too
     document.cookie = `ink_lang=${l}; Path=/; Max-Age=31536000; SameSite=Lax`;
   } catch {}
-  document.documentElement.lang = l;
-  listeners.forEach((f) => f(l));
+  try {
+    const u = new URL(location.href);
+    if (/^\/(app|v|admin|offline)(\/|$)/.test(u.pathname) || l === 'hu') u.searchParams.delete('lang');
+    else u.searchParams.set('lang', l);
+    location.replace(u.toString());
+    if (u.toString() === location.href) location.reload();
+  } catch {
+    location.reload();
+  }
 }
 
 export function useLang() {

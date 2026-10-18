@@ -54,7 +54,6 @@ export function FooterLang({ lang }: { lang: Lang }) {
       variant="pill"
       onPick={(l) => {
         saveLang(l);
-        router.push(`${path}${qOf(l)}`);
       }}
     />
   );

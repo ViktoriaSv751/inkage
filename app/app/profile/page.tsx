@@ -531,9 +531,10 @@ export default function ProfilePage() {
         <LangPicker
           lang={ui.lang}
           variant="row"
-          onPick={(l) => {
+          onPick={async (l) => {
+            // saved to the account first (e-mails in that language), then the app reloads in it
+            if (me.user) await Promise.resolve(sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l })).catch(() => {});
             ui.setLang(l);
-            if (me.user) sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l })?.then(() => {}, () => {});
           }}
         />
         {me.user && (
