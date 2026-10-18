@@ -149,7 +149,9 @@ export function BottomNav() {
         InkAge
       </Link>
       {items.map((it, i) => {
-        const on = it.href === '/app' ? path === '/app' : path?.startsWith(it.href);
+        // articles, guides and community posts opened from Explore keep Explore lit
+        const fromExplore = it.href === '/app/explore' && /^\/app\/(tudastar|tattoo|v)(\/|$)/.test(path || '');
+        const on = it.href === '/app' ? path === '/app' : fromExplore || path?.startsWith(it.href);
         return (
           <Link
             key={it.href}

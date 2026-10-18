@@ -6,7 +6,8 @@ import { useMemo, useState } from 'react';
 import type { KbItem } from '@/lib/kb-server';
 import { track } from '@/lib/store';
 
-export function KbList({ items, lang }: { items: KbItem[]; lang: Lang }) {
+/** base: '/tudastar' on the public site, '/app/tudastar' inside the app */
+export function KbList({ items, lang, base = '/tudastar' }: { items: KbItem[]; lang: Lang; base?: string }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<'new' | 'old' | 'short'>('new');
@@ -64,7 +65,7 @@ export function KbList({ items, lang }: { items: KbItem[]; lang: Lang }) {
       <div className="kb-list">
         {shown.map((i, n) => (
           <article key={i.slug} className={`kb-item ${n === 0 && !q && !cat ? 'lead' : ''}`}>
-            <Link href={`/tudastar/${i.slug}${sfx}`} className="kb-img" aria-hidden="true" tabIndex={-1} onClick={() => track('kb_open', { slug: i.slug })}>
+            <Link href={`${base}/${i.slug}${sfx}`} className="kb-img" aria-hidden="true" tabIndex={-1} onClick={() => track('kb_open', { slug: i.slug })}>
               <img src={i.img} alt="" loading={n < 2 ? 'eager' : 'lazy'} />
             </Link>
             <div className="kb-text">
@@ -76,12 +77,12 @@ export function KbList({ items, lang }: { items: KbItem[]; lang: Lang }) {
                 <span>{date(i.date)}</span>
               </p>
               <h2>
-                <Link href={`/tudastar/${i.slug}${sfx}`} onClick={() => track('kb_open', { slug: i.slug })}>
+                <Link href={`${base}/${i.slug}${sfx}`} onClick={() => track('kb_open', { slug: i.slug })}>
                   {i.title}
                 </Link>
               </h2>
               <p className="kb-desc">{i.desc}</p>
-              <Link className="kb-more" href={`/tudastar/${i.slug}${sfx}`}>
+              <Link className="kb-more" href={`${base}/${i.slug}${sfx}`}>
                 {T('Read it', 'Elolvasom')} <span aria-hidden="true">→</span>
               </Link>
             </div>

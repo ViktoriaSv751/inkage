@@ -13,7 +13,8 @@ type Mine = { idx: number; verdict: 'yes' | 'no' | 'change' | null; commented?: 
 const LETTER = (i: number) => String.fromCharCode(65 + i);
 
 /** A friend's poll: look at the designs (fresh and in 50 years), pick one, say why. */
-export function Poll({ id, initial }: { id: string; initial: PollData }) {
+/** inApp: opened from Explore inside the app (no site logo, the call to action stays in the app) */
+export function Poll({ id, initial, inApp = false }: { id: string; initial: PollData; inApp?: boolean }) {
   const { lang } = useLang();
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const [p, setP] = useState(initial);
@@ -112,9 +113,11 @@ export function Poll({ id, initial }: { id: string; initial: PollData }) {
 
   return (
     <main className="pollpage">
+      {!inApp && (
       <Link href="/" className="logo" style={{ fontSize: 26 }}>
         InkAge
       </Link>
+    )}
       {owner && (
         <div className="pp-owner">
           <b>{t('This is your poll', 'Ez a te szavazásod')}</b>
@@ -294,9 +297,9 @@ export function Poll({ id, initial }: { id: string; initial: PollData }) {
 
       <div className="pp-cta">
         <h2>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
-        <p>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
-        <Link className="btn wide" href={`/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
-          {t('Register and try it', 'Regisztrálok és kipróbálom')}
+        <p>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+        <Link className="btn wide" href={inApp ? '/app' : `/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
+          {inApp ? t('Make my own', 'Elkészítem a sajátomat') : t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </div>
       <p className="fine">{t('AI simulation for inspiration.', 'MI-szimuláció inspirációnak.')}</p>

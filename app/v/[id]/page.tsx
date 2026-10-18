@@ -1,54 +1,9 @@
-import { fromBrowser, qOf, tx } from '@/lib/tr';
+import { fromBrowser, tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import Link from 'next/link';
-import { PUBLIC } from '@/lib/public-config';
-import { Vote } from './Vote';
-import { Poll } from './Poll';
-import type { PollData } from '@/lib/share';
+import { getPoll, getShare, SharedView } from './SharedView';
 
 export const dynamic = 'force-dynamic';
-
-export type Share = {
-  paths: { fresh?: string; y50?: string; freshB?: string; y50B?: string };
-  labels?: { a?: string | null; b?: string | null };
-  placement: string;
-  score: number | null;
-  created_at: string;
-  votes: { yes: number; no: number; change: number };
-};
-
-async function getPoll(id: string): Promise<PollData | null> {
-  if (!/^p[a-f0-9]{10}$/.test(id)) return null;
-  try {
-    const r = await fetch(`${PUBLIC.supabaseUrl}/rest/v1/rpc/get_poll`, {
-      method: 'POST',
-      headers: { apikey: PUBLIC.supabaseAnonKey, Authorization: `Bearer ${PUBLIC.supabaseAnonKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ p_share: id }),
-      cache: 'no-store',
-    });
-    if (!r.ok) return null;
-    return (await r.json()) as PollData | null;
-  } catch {
-    return null;
-  }
-}
-
-async function getShare(id: string): Promise<Share | null> {
-  if (id.startsWith('p')) return null;
-  try {
-    const r = await fetch(`${PUBLIC.supabaseUrl}/rest/v1/rpc/get_share`, {
-      method: 'POST',
-      headers: { apikey: PUBLIC.supabaseAnonKey, Authorization: `Bearer ${PUBLIC.supabaseAnonKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ p_share: id }),
-      cache: 'no-store',
-    });
-    if (!r.ok) return null;
-    return (await r.json()) as Share | null;
-  } catch {
-    return null;
-  }
-}
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.vercel.app';
@@ -77,20 +32,5 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 export default async function SharePage({ params }: { params: { id: string } }) {
-  const poll = params.id.startsWith('p') ? await getPoll(params.id) : null;
-  if (poll) return <Poll id={params.id} initial={poll} />;
-  const s = await getShare(params.id);
-  if (!s) {
-    const lang = fromBrowser(headers().get('accept-language') || '');
-    return (
-      <main className="legal" style={{ textAlign: 'center' }}>
-        <h1>{tx(lang, 'This link no longer works', 'Ez a link már nem él')}</h1>
-        <p>{tx(lang, 'Its owner closed or removed it, or the address is wrong.', 'A készítője lezárta vagy törölte, vagy elírás van a címben.')}</p>
-        <Link className="btn" href={`/regisztracio${qOf(lang)}`}>
-          {tx(lang, 'Register and try it', 'Regisztrálok és kipróbálom')}
-        </Link>
-      </main>
-    );
-  }
-  return <Vote id={params.id} initial={s} />;
+  return <SharedView id={params.id} />;
 }
