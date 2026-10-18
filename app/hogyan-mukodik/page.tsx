@@ -80,12 +80,12 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       path="/hogyan-mukodik"
       kicker={T('How it works', 'Hogyan működik?')}
       title={T('From one photo to 50 years, in about a minute.', 'Egy fotótól az 50 évig, nagyjából egy perc alatt.')}
-      lede={T('Five steps, no sign-up for your first preview. Your photo is only used to check the light and find the bare skin, then to make your preview.', 'Öt lépés, az első előnézethez nem kell regisztráció. A fotódat csak a fény és a csupasz bőr ellenőrzésére, majd az előnézet elkészítésére használjuk.')}
+      lede={T('Five steps after a one-tap sign-up with Google or Apple. Your photo is only used to check the light and find the bare skin, then to make your preview.', 'Öt lépés egy koppintásos Google- vagy Apple-regisztráció után. A fotódat csak a fény és a csupasz bőr ellenőrzésére, majd az előnézet elkészítésére használjuk.')}
       sections={sections}
       toc
       highlights={[
         { i: 'clock', h: T('About a minute', 'Kb. egy perc'), p: T('From photo to five ageing stages.', 'A fotótól az öt öregedési stádiumig.') },
-        { i: 'user', h: T('No sign-up', 'Regisztráció nélkül'), p: T('Your first preview needs no account.', 'Az első előnézethez nem kell fiók.') },
+        { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple – free after that.', 'Google- vagy Apple-fiókkal – utána ingyenes.') },
         { i: 'spark', h: T('Free in beta', 'Ingyenes a béta alatt'), p: T('Every feature, no card needed.', 'Minden funkció, kártya nélkül.') },
       ]}
       related={[

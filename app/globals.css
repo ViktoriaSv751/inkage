@@ -287,3 +287,9 @@ html, body { overflow-x: hidden; overflow-x: clip; overscroll-behavior-x: none; 
 .pp-cta h2 { font-size: 28px; line-height: 1.05; margin: 0 0 8px; }
 .pp-cta p { opacity: .8; margin: 0 0 16px; }
 .pp-cta .btn { background: var(--surface); color: var(--ink); }
+
+/* Register / Sign in buttons on the website */
+.auth-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.auth-cta .btn { text-decoration: none; }
+.auth-cta .btn.ghost.on-dark { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .5); }
+.auth-cta .btn.light { background: #fff; color: #000; }

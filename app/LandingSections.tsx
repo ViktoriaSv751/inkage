@@ -1,5 +1,6 @@
 'use client';
 
+import { AuthCta } from './AuthCta';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ARTICLES } from '@/lib/articles';
@@ -128,7 +129,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
               <div>
                 <h3>{t('What if you regret it?', 'Mi van, ha megbánod?')}</h3>
                 <p>{t('A laser removal preview after 3, 6 and 10 sessions.', 'Lézeres eltávolítás előnézete 3, 6 és 10 kezelés után.')}</p>
-                <span className="ls-go">{t('Try the removal preview', 'Kipróbálom az eltávolítást')} →</span>
+                <span className="ls-go">{t('See the removal preview', 'Az eltávolítás előnézete')} →</span>
               </div>
             </Link>
             <div className="ls-tile pic">
@@ -236,17 +237,10 @@ export function LandingSections({ lang, made, onUpload }: { lang: 'en' | 'hu'; m
           <h2>{t('See it before it’s permanent.', 'Nézd meg, mielőtt végleges lesz.')}</h2>
           <p>
             {made >= 100
-              ? t(`${made.toLocaleString('en')} previews made so far. Free while in beta, no sign-up.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. A tesztidőszakban ingyenes, regisztráció nélkül.`)
-              : t('Free while in beta. No sign-up for your first preview.', 'A tesztidőszakban ingyenes. Az első előnézethez nem kell regisztrálni.')}
+              ? t(`${made.toLocaleString('en')} previews made so far. Free after sign-up.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Regisztráció után ingyenes.`)
+              : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}
           </p>
-          <div className="ls-final-btns">
-            <button className="btn" onClick={onUpload}>
-              {t('Upload my photo', 'Feltöltöm a fotómat')}
-            </button>
-            <Link className="btn ghost" href="/app">
-              {t('Open the app', 'App megnyitása')}
-            </Link>
-          </div>
+          <AuthCta lang={lang} light where="final" style={{ justifyContent: 'center' }} />
         </div>
       </section>
 

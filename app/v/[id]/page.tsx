@@ -85,8 +85,8 @@ export default async function SharePage({ params }: { params: { id: string } }) 
         <h1>Ez a link már nem él</h1>
         <p>A készítője lezárta vagy törölte, vagy elírás van a címben.</p>
         <p className="muted small" lang="en">This vote link was closed or removed, or the address is wrong.</p>
-        <Link className="btn" href="/app">
-          Kipróbálom a saját fotómon
+        <Link className="btn" href="/regisztracio">
+          Regisztrálok és kipróbálom
         </Link>
       </main>
     );

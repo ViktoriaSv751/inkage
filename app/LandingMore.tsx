@@ -1,5 +1,6 @@
 'use client';
 
+import { TryLink } from './AuthCta';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { IMG } from '@/lib/kb';
@@ -161,9 +162,9 @@ export function UseCases({ t }: { t: T }) {
               <li key={p}>{p}</li>
             ))}
           </ul>
-          <Link className="btn" href="/app" onClick={() => track('landing_usecase_cta', { k })}>
-            {t('Try it on my photo', 'Kipróbálom a fotómon')}
-          </Link>
+          <TryLink className="btn" onClick={() => track('landing_usecase_cta', { k })}>
+            {t('Register and try it', 'Regisztrálok és kipróbálom')}
+          </TryLink>
         </div>
       </div>
     </section>
@@ -342,9 +343,9 @@ export function CompareTable({ t }: { t: T }) {
           <span role="cell" className="cx-c" />
           <span role="cell" className="cx-c" />
           <span role="cell" className="cx-c cx-us">
-            <Link href="/app" className="cx-try" onClick={() => track('landing_compare_cta')}>
-              {t('Try free', 'Kipróbálom')}
-            </Link>
+            <TryLink className="cx-try" onClick={() => track('landing_compare_cta')}>
+              {t('Register', 'Regisztráció')}
+            </TryLink>
           </span>
         </div>
       </div>
@@ -438,7 +439,7 @@ export function BetaInstall({ t }: { t: T }) {
   return (
     <section className="ls-sec lm-beta" id="beta">
       <div className="lm-beta-card">
-        <h2>{t('Everything is free during the beta.', 'A béta alatt minden ingyenes.')}</h2>
+        <h2>{t('Everything is free after sign-up.', 'Regisztráció után minden ingyenes.')}</h2>
         <p>{t('All features, no card, no trial timer. We keep a fair daily limit so it stays free for everyone.', 'Minden funkció, kártya és próbaidő nélkül. Egy méltányos napi keretet tartunk, hogy mindenkinek ingyenes maradhasson.')}</p>
         <ul>
           <li>{t('Ageing previews at 1, 10, 30 and 50 years', 'Öregedési előnézet 1, 10, 30 és 50 évre')}</li>
@@ -446,9 +447,7 @@ export function BetaInstall({ t }: { t: T }) {
           <li>{t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</li>
           <li>{t('Videos, vote links and the PDF for your artist', 'Videók, szavazós linkek és PDF a tetoválódnak')}</li>
         </ul>
-        <Link className="btn" href="/app">
-          {t('Start free', 'Ingyenes kezdés')}
-        </Link>
+        <TryLink className="btn">{t('Create a free account', 'Ingyenes regisztráció')}</TryLink>
       </div>
       <div className="lm-install" id="telepites">
         <div className="lm-hs" aria-hidden="true">

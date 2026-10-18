@@ -228,9 +228,9 @@ export default function ProfilePage() {
   };
 
   const signOut = async () => {
-    await sb()?.auth.signOut();
-    await refreshMe();
-    toast(t('Signed out', 'Kijelentkeztél'));
+    // only this device: signing out here must not sign you out (and empty the gallery) on your other devices
+    await sb()?.auth.signOut({ scope: 'local' });
+    location.replace(ui.lang === 'en' ? '/belepes?lang=en' : '/belepes');
   };
 
   const eraseAll = async () => {
@@ -257,9 +257,9 @@ export default function ProfilePage() {
       const mine = await local.all().catch(() => []);
       for (const p of mine) await local.remove(p.id);
       ['ink_onboarding', 'ink_ref', 'ink_folders'].forEach((k) => lsSet(k, null));
-      await s.auth.signOut();
-      await refreshMe();
+      await s.auth.signOut({ scope: 'local' });
       setErase(false);
+      location.replace(ui.lang === 'en' ? '/?lang=en' : '/');
       toast(t('Your account and data were deleted.', 'A fiókodat és az adataidat töröltük.'));
     } catch {
       toast(t('Deleting failed. Try again or email us.', 'A törlés nem sikerült. Próbáld újra, vagy írj nekünk.'));
@@ -310,12 +310,26 @@ export default function ProfilePage() {
         <h1>{me.user ? displayName : t('Guest', 'Vendég')}</h1>
         <p className="pf-sub">{me.user ? me.user.email : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</p>
         {me.user ? (
-          <button className="pf-edit" onClick={openEdit}>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" />
-            </svg>
-            {t('Edit profile', 'Szerkesztés')}
-          </button>
+          <div className="pf-acts">
+            <button className="pf-edit" onClick={openEdit}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" />
+              </svg>
+              {t('Edit profile', 'Szerkesztés')}
+            </button>
+            <button className="pf-edit" onClick={signOut}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10" />
+              </svg>
+              {t('Sign out', 'Kijelentkezés')}
+            </button>
+            <button className="pf-edit danger" onClick={() => setErase(true)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" />
+              </svg>
+              {t('Delete account', 'Fiók törlése')}
+            </button>
+          </div>
         ) : (
           <Link className="pf-edit dark" href={ui.lang === 'en' ? '/belepes?lang=en' : '/belepes'}>
             {ui.t('common.signin')}

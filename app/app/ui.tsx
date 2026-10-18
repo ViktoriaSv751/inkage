@@ -259,29 +259,15 @@ export function AuthSheet() {
       <h2>{sent ? L('Check your email', 'Nézd meg az e-mailjeidet') : L('Keep your designs', 'Őrizd meg a terveidet')}</h2>
       {!sent ? (
         <>
-          <p className="sub">{authReason || L('Sign in to save your previews on every device. We’ll email you a 6-digit code.', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid. Küldünk egy 6 jegyű kódot.')}</p>
-          {(providers.google || providers.apple) && (
-            <div className="oauth">
-              {providers.apple && (
-                <button className="btn wide dark" onClick={() => oauth('apple')}>
-                   {L('Continue with Apple', 'Folytatás Apple-fiókkal')}
-                </button>
-              )}
-              {providers.google && (
-                <button className="btn wide ghost" onClick={() => oauth('google')}>
-                  <b style={{ color: '#4285f4' }}>G</b> {L('Continue with Google', 'Folytatás Google-fiókkal')}
-                </button>
-              )}
-              <p className="fine" style={{ margin: '4px 0 2px' }}>{L('or with your email', 'vagy e-maillel')}</p>
-            </div>
-          )}
-          <input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} />
-          <button className="btn wide" disabled={busy || !/\S+@\S+\.\S+/.test(email)} onClick={send}>
-            {busy ? '…' : L('Email me a code', 'Kérem a kódot')}
-          </button>
-          <Link className="linkbtn" href={ui.lang === 'en' ? '/belepes?lang=en' : '/belepes'} onClick={closeAuth}>
-            {L('Use a password or create an account', 'Belépés jelszóval vagy regisztráció')}
-          </Link>
+          <p className="sub">{authReason || L('Sign in with Google or Apple to keep your previews on every device.', 'Lépj be Google- vagy Apple-fiókkal, hogy minden eszközön meglegyenek a terveid.')}</p>
+          <div className="oauth">
+            <button className="btn wide dark" onClick={() => oauth('apple')}>
+               {L('Continue with Apple', 'Folytatás Apple-fiókkal')}
+            </button>
+            <button className="btn wide ghost" onClick={() => oauth('google')}>
+              <b style={{ color: '#4285f4' }}>G</b> {L('Continue with Google', 'Folytatás Google-fiókkal')}
+            </button>
+          </div>
         </>
       ) : (
         <>

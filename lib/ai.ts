@@ -213,6 +213,17 @@ export function designPrompt(text: string, style: string) {
 export async function makeImage(prompt: string, w = 1024, h = 1024) {
   return editImage([], prompt, w, h);
 }
+/** A fresh image from text with the quick models (falls back to the usual ones). */
+export async function makeImageFast(prompt: string, w = 1024, h = 1024) {
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      return await geminiImage([], prompt, w, h, fastImageModels());
+    } catch (e) {
+      if (!process.env.OPENAI_API_KEY) throw e;
+    }
+  }
+  return openaiImage([], prompt, w, h);
+}
 
 const ANALYSIS_PROMPT = `You are analysing a photo for a tattoo-aging simulator. Reply with JSON only, no prose:
 {"apparentAge": number (best estimate of the person's current age in years, 16-90),
@@ -284,8 +295,13 @@ function aspectFor(w: number, h: number) {
   return opts.reduce((best, o) => (Math.abs(o[1] - r) < Math.abs(best[1] - r) ? o : best))[0];
 }
 
-async function geminiImage(images: Img[], prompt: string, w: number, h: number) {
-  const data = await geminiCall(imageModels(), {
+/** The quick image models first: for stand-in photos speed matters more than the last bit of detail. */
+export function fastImageModels() {
+  return [process.env.GEMINI_FAST_IMAGE_MODEL, 'gemini-3.1-flash-image', 'gemini-2.5-flash-image', ...imageModels()].filter((m, i, arr): m is string => !!m && arr.indexOf(m) === i);
+}
+
+async function geminiImage(images: Img[], prompt: string, w: number, h: number, models = imageModels()) {
+  const data = await geminiCall(models, {
     contents: [{ role: 'user', parts: [...parts(images), { text: prompt }] }],
     generationConfig: {
       responseModalities: ['TEXT', 'IMAGE'],

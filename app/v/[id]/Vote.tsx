@@ -79,9 +79,9 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
         <p className="fine">{mine ? t(`${tot} vote${tot === 1 ? '' : 's'} so far`, `Eddig ${tot} szavazat`) : t('Tap the one you like more.', 'Koppints arra, amelyik jobban tetszik.')}</p>
         <div style={{ background: 'var(--ink)', color: '#fff', borderRadius: 24, padding: 22, marginTop: 24 }}>
           <h2 style={{ fontSize: 30, lineHeight: 1, margin: '0 0 8px' }}>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
-          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free, takes about a minute, no sign-up.', 'Ingyenes, kb. egy perc, regisztráció nélkül.')}</p>
-          <Link className="btn wide light" href="/app" onClick={() => track('share_cta')}>
-            {t('Try it on my photo', 'Kipróbálom a fotómon')}
+          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+          <Link className="btn wide light" href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} onClick={() => track('share_cta')}>
+            {t('Register and try it', 'Regisztrálok és kipróbálom')}
           </Link>
         </div>
       </main>
@@ -143,9 +143,9 @@ export function Vote({ id, initial }: { id: string; initial: Share }) {
         <h2 style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 34, lineHeight: 0.95, margin: '0 0 8px' }}>
           {t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}
         </h2>
-        <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free, takes about a minute, no sign-up.', 'Ingyenes, kb. egy perc, regisztráció nélkül.')}</p>
-        <Link className="btn wide" href="/app" onClick={() => track('share_cta')}>
-          {t('Try it on my photo', 'Kipróbálom a fotómon')}
+        <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+        <Link className="btn wide" href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} onClick={() => track('share_cta')}>
+          {t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </div>
       <p className="fine">{t('AI simulation for inspiration.', 'MI-szimuláció inspirációnak.')}</p>

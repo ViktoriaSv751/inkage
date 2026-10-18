@@ -40,14 +40,14 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
         </div>
         <div className="ctabar-txt">
           <b>{T('See your tattoo 50 years from now', 'Nézd meg a tetoválásod 50 év múlva')}</b>
-          <span>{T('No card · No sign-up for the first preview · About a minute', 'Bankkártya nélkül · Az elsőhöz regisztráció sem kell · Kb. egy perc')}</span>
+          <span>{T('No card · One-tap sign-up with Google or Apple · About a minute', 'Bankkártya nélkül · Egy koppintásos Google- vagy Apple-regisztráció · Kb. egy perc')}</span>
         </div>
         <div className="ctabar-act">
           <Link href={lang === 'en' ? '/belepes?lang=en' : '/belepes'} className="ctabar-ghost" tabIndex={visible ? 0 : -1}>
             {T('Sign in', 'Belépés')}
           </Link>
-          <Link href="/app" className="ctabar-go" tabIndex={visible ? 0 : -1} onClick={() => track('ctabar_click')}>
-            {T('Start free', 'Kezdd el ingyen')}
+          <Link href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} className="ctabar-go" tabIndex={visible ? 0 : -1} onClick={() => track('ctabar_click')}>
+            {T('Register', 'Regisztráció')}
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>

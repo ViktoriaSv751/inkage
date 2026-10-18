@@ -1,5 +1,6 @@
 'use client';
 
+import { AuthCta } from './AuthCta';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -77,19 +78,12 @@ export default function Landing() {
               'Tegyél bármilyen mintát a saját testedről készült fotóra. Nézd meg frissen, gyógyultan, 10, 30 és 50 év múlva – a saját bőrödön –, mielőtt végleges lesz.'
             )}
           </p>
-          <div className="row" style={{ alignItems: 'center' }}>
-            <button className="btn" onClick={() => (track('landing_cta'), fileRef.current?.click())}>
-              {t('Upload my photo — free', 'Feltöltöm a fotómat – ingyen')}
-            </button>
-            <Link className="btn ghost" href="/app" onClick={() => track('landing_cta_app')}>
-              {t('Open the app', 'App megnyitása')}
-            </Link>
-          </div>
+          <AuthCta lang={lang} where="hero" />
           <input ref={fileRef} type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) startWithPhoto(f); e.target.value = ''; }} />
           <p className="fine" style={{ textAlign: 'left' }}>
             {made >= 100
-              ? t(`${made.toLocaleString('en')} previews made so far. No sign-up, about a minute.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Regisztráció nélkül, kb. egy perc.`)
-              : t('No sign-up for your first preview. Takes about a minute.', 'Az első előnézethez nem kell regisztrálni. Kb. egy perc.')}
+              ? t(`${made.toLocaleString('en')} previews made so far. Free after sign-up with Google or Apple.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Google- vagy Apple-fiókkal regisztrálva ingyenes.`)
+              : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}
           </p>
         </div>
         <HeroAging />

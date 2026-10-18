@@ -1,6 +1,7 @@
+import sharp from 'sharp';
 import { logServerError } from '@/lib/errlog';
-import { json } from '@/lib/server';
-import { aiConfigured, checkPhoto, dataUrlToImg, friendlyAiError, makeImage } from '@/lib/ai';
+import { appSecret, json, userClient } from '@/lib/server';
+import { aiConfigured, checkPhoto, dataUrlToImg, friendlyAiError, makeImageFast } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
@@ -13,13 +14,32 @@ const TONES: Record<string, string> = {
   4: 'brown skin (Fitzpatrick IV-V)',
   5: 'dark brown skin (Fitzpatrick V-VI)',
 };
+// areas where clothing matters: the stand-in photo is checked for nudity before it's shown
+const RISKY = /chest|breast|rib|side|stomach|belly|abdomen|hip|back|spine|shoulder blade|thigh|buttock|glute|pelvi|torso|sternum|collar|waist/i;
+
+const jpeg = async (dataUrl: string) => {
+  const buf = Buffer.from(dataUrl.split(',')[1] || '', 'base64');
+  const out = await sharp(buf).rotate().resize({ width: 900, height: 1200, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 84, mozjpeg: true }).toBuffer();
+  return `data:image/jpeg;base64,${out.toString('base64')}`;
+};
 
 /** "I don't have a good photo": a realistic stand-in photo of that body area, in the chosen skin tone. */
 export async function POST(req: Request) {
   if (!aiConfigured()) return json({ error: 'The AI is not switched on yet.' }, 503);
   const body = await req.json().catch(() => ({}));
   const area = String(body.area || 'inner forearm').replace(/[^\p{L}\p{N} ,'()-]/gu, '').slice(0, 80);
-  const tone = TONES[String(body.tone)] || TONES[3];
+  const toneN = Math.min(5, Math.max(1, Number(body.tone) || 3));
+  const tone = TONES[String(toneN)];
+  const fresh = !!body.fresh;
+  const secret = appSecret('db');
+  const db = userClient();
+
+  // ready ones first: instant
+  if (!fresh && secret) {
+    const { data } = await db.rpc('model_photo_get', { p_secret: secret, p_area: area, p_tone: toneN, p_not: Number(body.not) || null });
+    if (data?.image) return json({ image: data.image, id: data.id, cached: true });
+  }
+
   const u = await startUnit(req, 'model photo');
   if (!u.ok) return u.res;
   try {
@@ -33,17 +53,21 @@ export async function POST(req: Request) {
         strict ? 'Frame tightly on the target area so that no breast, nipple, buttock or genital area is in the picture at all.' : '',
         'Only the body area, no face.',
       ].join(' ');
-    let image = await makeImage(prompt(false), 768, 1024);
-    // double-check the stand-in photo; one stricter retry, then give up rather than show nudity
-    const check = async (img: string) => (typeof img === 'string' && img.startsWith('data:') ? checkPhoto({ ...dataUrlToImg(img), name: 'model.jpg' }, area) : null);
-    if ((await check(image))?.code === 'not_allowed') {
-      image = await makeImage(prompt(true), 768, 1024);
+    let image = await jpeg(await makeImageFast(prompt(false), 768, 1024));
+    // double-check where clothing matters; one stricter retry, then give up rather than show nudity
+    if (RISKY.test(area)) {
+      const check = async (img: string) => checkPhoto({ ...dataUrlToImg(img), name: 'model.jpg' }, area);
       if ((await check(image))?.code === 'not_allowed') {
-        await u.refund();
-        return u.withCookie(json({ error: 'Could not make a suitable stand-in photo for this area. Please use your own photo.' }, 422));
+        image = await jpeg(await makeImageFast(prompt(true), 768, 1024));
+        if ((await check(image))?.code === 'not_allowed') {
+          await u.refund();
+          return u.withCookie(json({ error: 'Could not make a suitable stand-in photo for this area. Please use your own photo.' }, 422));
+        }
       }
     }
-    return u.withCookie(json({ image }));
+    // kept for the next person who asks for the same area and tone
+    const id = secret ? (await db.rpc('model_photo_put', { p_secret: secret, p_area: area, p_tone: toneN, p_image: image })).data : null;
+    return u.withCookie(json({ image, id }));
   } catch (e) {
     console.error('model photo failed', e);
     await logServerError('model-photo', e);

@@ -1,4 +1,5 @@
 'use client';
+import { useSignedIn } from './AuthCta';
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -23,8 +24,9 @@ const I = {
  * Header + app-style bottom tab bar for every public page (landing, knowledge base, info pages).
  * `onLang` is given on pages that switch language in place; otherwise the URL gets ?lang=.
  */
-export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; path?: string; onLang?: (l: Lang) => void; signedIn?: boolean }) {
+export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onLang?: (l: Lang) => void; signedIn?: boolean }) {
   const T = (en: string, hu: string) => (lang === 'hu' ? hu : en);
+  const signedIn = useSignedIn();
   const pathname = usePathname() || '/';
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -87,7 +89,7 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
   const tabs = [
     { href: `/${q}`, base: '/', t: T('Home', 'Főoldal'), i: I.home },
     { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók'), i: I.spark },
-    { href: '/app', base: '/app', t: T('Try it', 'Kipróbálom'), i: I.plus, cta: true },
+    signedIn ? { href: '/app', base: '/app', t: T('My app', 'Az appom'), i: I.plus, cta: true } : { href: `/regisztracio${q}`, base: '/regisztracio', t: T('Register', 'Regisztráció'), i: I.plus, cta: true },
     { href: `/tudastar${q}`, base: '/tudastar', t: T('Guides', 'Tudástár'), i: I.book },
     { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK'), i: I.help },
   ];
@@ -112,12 +114,20 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
           </nav>
           <div className="sn-r">
             <ThemeToggle lang={lang} />
-            <Link className="sn-signin" href={signedIn ? '/app' : `/belepes${q}`} onClick={() => track('nav_signin')}>
-              {signedIn ? T('Open app', 'App') : T('Sign in', 'Belépés')}
-            </Link>
-            <Link className="sn-cta" href="/app" onClick={() => track('nav_cta')}>
-              {T('Try it free', 'Kipróbálom')}
-            </Link>
+            {signedIn ? (
+              <Link className="sn-cta" href="/app" onClick={() => track('nav_app')}>
+                {T('Open app', 'Az appom')}
+              </Link>
+            ) : (
+              <>
+                <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
+                  {T('Sign in', 'Belépés')}
+                </Link>
+                <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => track('nav_signup')}>
+                  {T('Register', 'Regisztráció')}
+                </Link>
+              </>
+            )}
             <button className="sn-burger" aria-label={T('Menu', 'Menü')} aria-expanded={menu} onClick={() => setMenu(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M10 17h10" />
@@ -137,6 +147,9 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
               </svg>
               InkAge
             </Link>
+            <span style={{ marginLeft: 'auto', marginRight: 8 }}>
+              <ThemeToggle lang={lang} />
+            </span>
             <button className="sn-dr-x" aria-label={T('Close menu', 'Menü bezárása')} onClick={() => setMenu(false)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
@@ -145,9 +158,9 @@ export function SiteNav({ lang, path, onLang, signedIn = false }: { lang: Lang; 
           </div>
 
           <div className="sn-dr-scroll">
-            <Link href="/app" className="sn-dr-feature" onClick={() => track('drawer_feature')}>
+            <Link href={signedIn ? '/app' : `/regisztracio${q}`} className="sn-dr-feature" onClick={() => track('drawer_feature')}>
               <div>
-                <span>{T('Free during the beta', 'Ingyenes a béta alatt')}</span>
+                <span>{signedIn ? T('Your account', 'A fiókod') : T('Free after sign-up', 'Regisztráció után ingyenes')}</span>
                 <b>{T('See your tattoo in 50 years', 'Nézd meg a tetoválásod 50 év múlva')}</b>
               </div>
               <i aria-hidden="true">

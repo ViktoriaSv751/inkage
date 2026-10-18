@@ -58,6 +58,8 @@ export async function POST(req: Request) {
     plan = start.plan;
     owner = a.user.id;
   } else {
+    // an account is needed to use InkAge (free after sign-up)
+    if (process.env.ALLOW_GUESTS !== '1') return json({ error: 'Sign in to continue.', code: 'auth' }, 401);
     const g = guest!;
     const start = await guestStart(g.id, g.ipHash, placement).catch(() => null);
     if (!start) return withCookie(json({ error: 'Could not start your preview. Try again.' }, 500), g.setCookie);

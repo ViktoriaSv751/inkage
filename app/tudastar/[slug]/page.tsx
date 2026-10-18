@@ -1,3 +1,4 @@
+import { TryLink } from '../../AuthCta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -166,7 +167,7 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
                     <b>{T('Wondering how yours would age?', 'Kíváncsi vagy, a tiéd hogyan öregedne?')}</b>
                     <p>{T('Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.')}</p>
                   </div>
-                  <Link href="/app">{T('Try it free', 'Kipróbálom ingyen')}</Link>
+                  <TryLink lang={L}>{T('Register free', 'Ingyenes regisztráció')}</TryLink>
                 </aside>
               )}
             </section>
@@ -213,7 +214,7 @@ export default function ArticlePage({ params, searchParams }: { params: { slug: 
             <div>
               <b>{T('See it on your skin', 'Nézd meg a bőrödön')}</b>
               <p>{T('Fresh, then at 10, 30 and 50 years. Free, about a minute.', 'Frissen, majd 10, 30 és 50 év múlva. Ingyenes, kb. egy perc.')}</p>
-              <Link href="/app">{T('Upload my photo', 'Feltöltöm a fotómat')}</Link>
+              <TryLink lang={L}>{T('Register and try it', 'Regisztrálok és kipróbálom')}</TryLink>
             </div>
           </div>
         </aside>

@@ -1,3 +1,4 @@
+import { TryLink } from '../AuthCta';
 import Link from 'next/link';
 import { KbChrome } from '../tudastar/KbChrome';
 import { SiteFooter } from '../SiteFooter';
@@ -213,9 +214,9 @@ export function InfoPage({
         <section className="ip-cta">
           <div>
             <h2>{T('See it on your skin before it’s permanent.', 'Nézd meg a bőrödön, mielőtt végleges lesz.')}</h2>
-            <p>{T('Free during the beta. No sign-up for your first preview.', 'A béta alatt ingyenes. Az első előnézethez nem kell regisztrálni.')}</p>
+            <p>{T('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
           </div>
-          <Link href="/app">{T('Try it free', 'Kipróbálom ingyen')}</Link>
+          <TryLink lang={lang}>{T('Register free', 'Ingyenes regisztráció')}</TryLink>
         </section>
       )}
       <SiteFooter lang={lang} />

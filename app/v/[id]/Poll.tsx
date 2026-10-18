@@ -293,9 +293,9 @@ export function Poll({ id, initial }: { id: string; initial: PollData }) {
 
       <div className="pp-cta">
         <h2>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
-        <p>{t('Free, takes about a minute, no sign-up.', 'Ingyenes, kb. egy perc, regisztráció nélkül.')}</p>
-        <Link className="btn wide" href="/app" onClick={() => track('share_cta')}>
-          {t('Try it on my photo', 'Kipróbálom a fotómon')}
+        <p>{t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+        <Link className="btn wide" href={lang === 'en' ? '/regisztracio?lang=en' : '/regisztracio'} onClick={() => track('share_cta')}>
+          {t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>
       </div>
       <p className="fine">{t('AI simulation for inspiration.', 'MI-szimuláció inspirációnak.')}</p>

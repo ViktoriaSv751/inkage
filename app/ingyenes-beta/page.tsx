@@ -53,7 +53,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       sections={sections}
       highlights={[
         { i: 'gift', h: T('0 Ft', '0 Ft'), p: T('For everyone during the beta.', 'Mindenkinek a béta alatt.') },
-        { i: 'user', h: T('No sign-up', 'Regisztráció nélkül'), p: T('For your first preview.', 'Az első előnézethez.') },
+        { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple, then everything is free.', 'Google- vagy Apple-fiókkal, utána minden ingyenes.') },
         { i: 'heart', h: T('Invite bonus', 'Meghívási bónusz'), p: T('Extra previews for you and a friend.', 'Extra előnézet neked és a barátodnak.') },
       ]}
       related={[

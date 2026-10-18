@@ -989,3 +989,29 @@ input.switch:checked::after { transform: translateX(18px); }
 .poll-comments li { background: var(--surface-2); border-radius: 12px; padding: 8px 12px; font-size: 14px; }
 .poll-comments li small { color: var(--ink-3); font-weight: 700; margin-right: 6px; }
 label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.gate-wait { position: fixed; inset: 0; background: var(--bg, #fff); z-index: 50; }
+.pf-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
+.pf-acts .pf-edit { margin-top: 0; }
+.pf-edit.danger { color: #d33a2c; box-shadow: 0 0 0 1px rgba(211, 58, 44, .35); }
+.trash-list { display: grid; gap: 8px; margin-top: 10px; }
+.trash-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 8px; border-radius: 16px; background: var(--surface-2); }
+.trash-row img { width: 56px; height: 68px; object-fit: cover; border-radius: 12px; }
+.trash-row span { display: grid; gap: 2px; min-width: 0; }
+.trash-row small { color: var(--ink-3); }
+
+/* model photo: a stage that comes alive while the photo is made, then reveals it */
+.model-stage { position: relative; aspect-ratio: 3 / 4; max-height: 46dvh; margin: 12px auto 4px; border-radius: 22px; overflow: hidden; background: linear-gradient(160deg, color-mix(in srgb, var(--tone) 70%, #fff), var(--tone)); transition: background .4s; box-shadow: 0 18px 40px -24px rgba(0,0,0,.45); }
+.model-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: model-in .9s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes model-in { from { opacity: 0; transform: scale(1.08); filter: blur(14px) saturate(.6); clip-path: inset(0 0 100% 0 round 22px); } 60% { clip-path: inset(0 0 0 0 round 22px); } to { opacity: 1; transform: none; filter: none; } }
+.model-ph { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 12px; color: rgba(0,0,0,.72); text-align: center; padding: 20px; }
+.model-ph b { position: relative; font-size: 15px; }
+.model-silhouette { position: relative; width: 70px; opacity: .3; }
+.model-silhouette svg { width: 100%; fill: rgba(0,0,0,.55); }
+.model-stage.busy .model-silhouette { animation: model-breathe 1.6s ease-in-out infinite; }
+@keyframes model-breathe { 50% { opacity: .55; transform: scale(1.04); } }
+.model-glow { position: absolute; inset: -40%; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.55) 50%, transparent 65%); transform: translateX(-60%); }
+.model-stage.busy .model-glow { animation: model-sweep 1.8s ease-in-out infinite; }
+@keyframes model-sweep { to { transform: translateX(60%); } }
+.model-bar { position: relative; display: block; width: 60%; height: 6px; border-radius: 99px; background: rgba(255,255,255,.45); overflow: hidden; }
+.model-bar i { position: absolute; inset: 0 auto 0 0; background: rgba(0,0,0,.65); border-radius: 99px; transition: width 2.4s ease-out; }
+@media (prefers-reduced-motion: reduce) { .model-stage img, .model-glow, .model-silhouette { animation: none !important; } }

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#ffffff', colorScheme: 'light dark' };
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#ffffff', colorScheme: 'light' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* theme + language before first paint, so there is no flash */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var t=localStorage.getItem('ink_theme');d.dataset.theme=t==='dark'?'dark':'light';if(t==='dark'){var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#000000');}var q=new URLSearchParams(location.search).get('lang');var l=q||(location.pathname.indexOf('/app')===0?localStorage.getItem('ink_lang'):null)||'hu';d.lang=l==='en'?'en':'hu';}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement;var t=null;try{localStorage.removeItem('ink_theme');t=sessionStorage.getItem('ink_theme');}catch(e){}d.dataset.theme=t==='dark'?'dark':'light';if(t==='dark'){var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#000000');}var q=new URLSearchParams(location.search).get('lang');var l=q||(location.pathname.indexOf('/app')===0?localStorage.getItem('ink_lang'):null)||'hu';d.lang=l==='en'?'en':'hu';}catch(e){}})();`,
           }}
         />
       </head>

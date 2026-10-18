@@ -1,3 +1,4 @@
+import { TryLink } from '../../AuthCta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -145,9 +146,9 @@ export default function SeoPage({ params, searchParams }: { params: { slug: stri
         <section className="sp-cta">
           <div>
             <h2>{T('See it on your own skin', 'Nézd meg a saját bőrödön')}</h2>
-            <p>{T('Upload a photo of your own body and any design. Free, about a minute, no sign-up.', 'Tölts fel egy fotót a saját testedről és bármilyen mintát. Ingyenes, kb. egy perc, regisztráció nélkül.')}</p>
+            <p>{T('Upload a photo of your own body and any design. Free after a one-tap sign-up.', 'Tölts fel egy fotót a saját testedről és bármilyen mintát. Egy koppintásos regisztráció után ingyenes.')}</p>
           </div>
-          <Link href="/app">{T('Try it on my photo', 'Kipróbálom a fotómon')}</Link>
+          <TryLink lang={L}>{T('Register and try it', 'Regisztrálok és kipróbálom')}</TryLink>
         </section>
 
         <section className="sp-sec">

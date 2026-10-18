@@ -184,6 +184,13 @@ export function StudioStep({
   const [modelOpen, setModelOpen] = useState(false);
   const [tone, setTone] = useState(3);
   const [modelBusy, setModelBusy] = useState(false);
+  const [modelImg, setModelImg] = useState<{ src: string; id?: number | null; tone: number } | null>(null);
+  const [modelStep, setModelStep] = useState(0);
+  useEffect(() => {
+    if (!modelBusy) return setModelStep(0);
+    const id = setInterval(() => setModelStep((n) => Math.min(n + 1, 3)), 2600);
+    return () => clearInterval(id);
+  }, [modelBusy]);
   const [linkOpen, setLinkOpen] = useState(false);
   const [link, setLink] = useState('');
   const [linkBusy, setLinkBusy] = useState(false);
@@ -196,15 +203,27 @@ export function StudioStep({
     runCheck(p, placement);
   };
   // "I don't have a good photo": a stand-in photo of that body area in the chosen skin tone
-  const modelPhoto = async () => {
+  const modelPhoto = async (another = false) => {
     setModelBusy(true);
-    track('model_photo', { tone });
-    const r = await api<{ image?: string; error?: string }>('/api/model-photo', { area: aiPlacement(placement), tone });
+    track('model_photo', { tone, another });
+    const r = await api<{ image?: string; id?: number | null; error?: string }>('/api/model-photo', {
+      area: aiPlacement(placement),
+      tone,
+      // "another one": a fresh photo, never the same as the one on screen
+      fresh: another,
+      not: another ? modelImg?.id ?? null : null,
+    });
     setModelBusy(false);
     if (!r.ok || !r.data.image) return toast(trErr(ui.lang, r.data?.error));
-    const blob = await (await fetch(r.data.image)).blob();
+    haptic('success');
+    setModelImg({ src: r.data.image, id: r.data.id, tone });
+  };
+  const useModel = async () => {
+    if (!modelImg) return;
+    const blob = await (await fetch(modelImg.src)).blob();
     const p = await prepareImage(new File([blob], 'model.jpg', { type: blob.type }), 1024);
     setModelOpen(false);
+    setModelImg(null);
     usePhoto(p);
   };
   // a design from a link (Pinterest, Instagram, any image address)
@@ -749,17 +768,46 @@ export function StudioStep({
       </div>
 
       </div>
-      <Sheet open={modelOpen} onClose={() => setModelOpen(false)} label={t('Model photo', 'Modellfotó')}>
+      <Sheet open={modelOpen} onClose={() => !modelBusy && setModelOpen(false)} label={t('Model photo', 'Modellfotó')}>
         <h2>{t('Try it on a model', 'Próbáld ki egy modellen')}</h2>
-        <p className="sub">{t(`We make a realistic photo of a ${placeName(placement, 'en').toLowerCase()} in the skin tone you pick. Best is still your own photo — this is for a quick try.`, `Készítünk egy élethű fotót (${placeName(placement, 'hu').toLowerCase()}) a választott bőrtónussal. A saját fotód a legpontosabb – ez gyors kipróbáláshoz jó.`)}</p>
+        <p className="sub">{t(`A realistic photo of a ${placeName(placement, 'en').toLowerCase()} in the skin tone you pick.`, `Élethű fotó (${placeName(placement, 'hu').toLowerCase()}) a választott bőrtónussal.`)}</p>
+        <div className={`model-stage ${modelBusy ? 'busy' : ''} ${modelImg ? 'has' : ''}`} style={{ ['--tone' as any]: SKIN_TONES[(modelImg && !modelBusy ? modelImg.tone : tone) - 1] }}>
+          {modelImg && !modelBusy ? (
+            <img key={modelImg.src.slice(-40)} src={modelImg.src} alt={t('Model photo', 'Modellfotó')} />
+          ) : (
+            <div className="model-ph" aria-live="polite">
+              <span className="model-glow" />
+              <span className="model-silhouette" aria-hidden="true">
+                <svg viewBox="0 0 60 120"><path d="M22 6c-3 18-6 40-6 62 0 20 3 36 6 46h16c3-10 6-26 6-46 0-22-3-44-6-62z" /></svg>
+              </span>
+              <b>
+                {modelBusy
+                  ? [t('Setting up the light…', 'Fény beállítása…'), t('Matching your skin tone…', 'Bőrtónus illesztése…'), t('Adding skin texture…', 'Bőrtextúra hozzáadása…'), t('Almost there…', 'Mindjárt kész…')][modelStep]
+                  : t('Pick a skin tone', 'Válassz bőrtónust')}
+              </b>
+              {modelBusy && <i className="model-bar"><i style={{ width: `${25 + modelStep * 22}%` }} /></i>}
+            </div>
+          )}
+        </div>
         <div className="tones" role="radiogroup" aria-label={t('Skin tone', 'Bőrtónus')}>
           {SKIN_TONES.map((c, i) => (
-            <button key={c} role="radio" aria-checked={tone === i + 1} className={tone === i + 1 ? 'on' : ''} style={{ background: c }} onClick={() => setTone(i + 1)} aria-label={t(`Skin tone ${i + 1}`, `${i + 1}. bőrtónus`)} />
+            <button key={c} role="radio" aria-checked={tone === i + 1} className={tone === i + 1 ? 'on' : ''} style={{ background: c }} disabled={modelBusy} onClick={() => setTone(i + 1)} aria-label={t(`Skin tone ${i + 1}`, `${i + 1}. bőrtónus`)} />
           ))}
         </div>
-        <button className="btn wide" onClick={modelPhoto} disabled={modelBusy}>
-          {modelBusy ? t('Making the photo…', 'Fotó készül…') : t('Make the photo', 'Fotó készítése')}
-        </button>
+        {modelImg && !modelBusy && modelImg.tone === tone ? (
+          <>
+            <button className="btn wide" onClick={useModel}>
+              {t('Use this photo', 'Ezt a fotót használom')}
+            </button>
+            <button className="btn wide ghost" style={{ marginTop: 8 }} onClick={() => modelPhoto(true)}>
+              {t('Another model', 'Másik modellt kérek')}
+            </button>
+          </>
+        ) : (
+          <button className="btn wide" onClick={() => modelPhoto(false)} disabled={modelBusy}>
+            {modelBusy ? t('Making the photo…', 'Fotó készül…') : t('Show me the model', 'Mutasd a modellt')}
+          </button>
+        )}
       </Sheet>
       <Sheet open={linkOpen} onClose={() => setLinkOpen(false)} label={t('Design from a link', 'Minta linkről')}>
         <h2>{t('Design from a link', 'Minta linkről')}</h2>

@@ -26,6 +26,8 @@ export async function startUnit(req: Request, label: string) {
       };
     return { ok: true as const, owner: a.user.id, gid: data.gid as number, refund: async () => void (await a.db.rpc('refund_generation', { p_gid: data.gid })), withCookie };
   }
+  // an account is needed to use InkAge (free after sign-up)
+  if (process.env.ALLOW_GUESTS !== '1') return { ok: false as const, res: json({ error: 'Sign in to continue.', code: 'auth' }, 401) };
   const start = await guestHelperStart(g!.id, g!.ipHash, label).catch(() => null);
   if (!start) return { ok: false as const, res: withCookie(json({ error: 'Could not start your preview. Try again.' }, 500)) };
   if (!start.ok)

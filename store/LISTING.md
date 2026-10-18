@@ -29,6 +29,7 @@ Minden szöveg bemásolható. Ahol `[ ]` van, ott még a te adatod kell.
 
 Mielőtt végleges lesz, nézd meg. Az InkAge a saját fotódon mutatja meg, hogyan néz ki egy tetoválás frissen, és hogyan öregszik 1, 10, 30 és 50 év alatt.
 
+- Lépj be egy koppintással Apple- vagy Google-fiókkal – utána minden ingyenes.
 - Tölts fel egy fotót a testrészről, és válassz mintát, vagy írd le, mit szeretnél.
 - Lásd a tetoválást a saját bőrtónusodon, a saját fényeiddel.
 - Csúsztasd az éveket, és nézd, hogyan terül szét és fakul a tinta.
@@ -63,7 +64,7 @@ Results are an AI simulation for inspiration, not medical advice. Real results d
 
 ## Bírálói megjegyzés (App Store Review Notes)
 
-> InkAge works without an account (guest mode): open the app, confirm 18+, tap Create, add a body photo and a design, and generate a preview. Sign-in (e-mail, Sign in with Apple, Google) only adds sync across devices. Account deletion: Profile > Settings > Delete account. User content: shared vote links can be reported with "Report this picture"; 3 reports or one "minor" report hide the picture automatically and we review reports within 24 hours. Photos are sent to our AI providers (Google Gemini, OpenAI) only to create the preview; nudity and minors are rejected automatically. Demo account (optional): `[ e-mail ]` / `[ jelszó ]`.
+> InkAge needs an account because every preview is saved to the user's own gallery and synced across devices. Sign in with Apple (or Google) on the first screen – the reviewer can use any Apple ID. Then confirm 18+, tap Create, add a body photo and a design (or "Try it on a model"), and generate a preview. Account deletion: Profile > Settings > Delete account. User content: shared vote links can be reported with "Report this picture"; 3 reports or one "minor" report hide the picture automatically and we review reports within 24 hours. Photos are sent to our AI providers (Google Gemini, OpenAI) only to create the preview; nudity and minors are rejected automatically. Demo account (optional): `[ e-mail ]` / `[ jelszó ]`.
 
 ## Korhatár
 

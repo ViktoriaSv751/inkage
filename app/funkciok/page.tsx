@@ -55,7 +55,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('Free during the beta', 'Ingyenes a béta alatt'),
+      h: T('Free after sign-up', 'Regisztráció után ingyenes'),
       icon: 'gift',
       id: 'beta',
       ps: [

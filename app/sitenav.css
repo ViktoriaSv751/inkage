@@ -12,7 +12,15 @@
 .sn-links a.on { color: var(--ink); background: var(--surface); }
 .sn-r { display: flex; align-items: center; gap: 8px; }
 .sn-signin { height: 40px; display: inline-flex; align-items: center; padding: 0 16px; border-radius: 999px; background: var(--ink); color: var(--bg); text-decoration: none; font-weight: 700; font-size: 14px; }
-.sn-cta { display: none; height: 40px; align-items: center; padding: 0 18px; border-radius: 999px; background: #5b3df5; color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 10px 24px -12px rgba(91, 61, 245, .9); }
+.sn-cta { display: inline-flex; height: 40px; align-items: center; padding: 0 18px; border-radius: 999px; background: #5b3df5; color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 10px 24px -12px rgba(91, 61, 245, .9); }
+@media (max-width: 520px) {
+  .sn-r .theme-tg { display: none; }
+}
+@media (max-width: 420px) {
+  .sn-signin, .sn-cta { padding: 0 12px; font-size: 13px; height: 36px; }
+  .sn-r { gap: 6px; }
+  .sn-logo { font-size: 18px; }
+}
 @media (min-width: 1000px) {
   .sn-links { display: flex; }
   .sn-signin { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }

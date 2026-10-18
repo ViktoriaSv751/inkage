@@ -41,6 +41,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [authReason, setAuthReason] = useState('');
   const timer = useRef<any>();
   const migrated = useRef(false);
+  // an account is needed to use the app: no session → the sign-in page
+  const [gate, setGate] = useState<'checking' | 'in' | 'out'>('checking');
+  const toLogin = useCallback(() => {
+    setGate('out');
+    const q = ui.lang === 'en' ? '?lang=en' : '';
+    location.replace(`/belepes${q}`);
+  }, [ui.lang]);
 
   const toast = useCallback((m: string) => {
     setMsg(m);
@@ -81,8 +88,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     api<Cfg>('/api/config').then((r) => setCfg(r.ok ? r.data : { ai: false, auth: false, payments: false }));
     refreshMe();
-    const sub = sb()?.auth.onAuthStateChange((evt) => {
+    const s0 = sb();
+    if (!s0) setGate('in');
+    else
+      s0.auth
+        .getSession()
+        .then(async ({ data }) => {
+          if (!data.session) return toLogin();
+          // a session ended elsewhere (signed out on another device, expired) is not a sign-in: check it with the server
+          const { error } = await s0.auth.getUser();
+          if (error && (error.status === 401 || error.status === 403 || /session/i.test(error.message))) {
+            const r = await s0.auth.refreshSession().catch(() => ({ error }));
+            if (r.error) {
+              await s0.auth.signOut({ scope: 'local' }).catch(() => {});
+              return toLogin();
+            }
+            refreshMe();
+          }
+          setGate('in');
+        })
+        .catch(() => setGate('in'));
+    const sub = sb()?.auth.onAuthStateChange((evt, session) => {
       if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') setTimeout(() => refreshMe(), 0);
+      if (evt === 'SIGNED_IN' && session) setGate('in');
+      if (evt === 'SIGNED_OUT') toLogin();
       if (evt === 'SIGNED_IN') {
         if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.nativePushSync()).catch(() => {});
         else import('@/lib/push').then((m) => m.syncPush()).catch(() => {});
@@ -134,8 +163,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         closeAuth: () => setAuthOpen(false),
       }}
     >
-      {children}
-      <AgeGate lang={ui.lang} userId={me.user?.id || null} />
+      {gate === 'in' ? children : <div className="gate-wait" aria-busy="true" />}
+      {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>

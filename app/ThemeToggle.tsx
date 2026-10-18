@@ -7,8 +7,9 @@ const read = (): Theme => (typeof document !== 'undefined' && document.documentE
 
 export function applyTheme(t: Theme) {
   document.documentElement.dataset.theme = t;
+  // only for this visit: every time the app is opened it starts in light mode
   try {
-    localStorage.setItem('ink_theme', t);
+    sessionStorage.setItem('ink_theme', t);
   } catch {}
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#000000' : '#ffffff');
   window.dispatchEvent(new CustomEvent('ink-theme', { detail: t }));

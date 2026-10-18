@@ -116,6 +116,48 @@ export default function GalleryPage() {
     const list = (items || []).filter((p) => picked.includes(p.id));
     if (list.length) setDelAsk(list);
   };
+  // Recently deleted: nothing is lost by accident
+  const [trash, setTrash] = useState<Preview[]>([]);
+  const [trashOpen, setTrashOpen] = useState(false);
+  const [restoring, setRestoring] = useState('');
+  const loadTrash = useCallback(() => {
+    if (me.user) cloud.trash().then(setTrash).catch(() => {});
+  }, [me.user]);
+  useEffect(() => loadTrash(), [loadTrash]);
+  const restore = async (p: Preview) => {
+    setRestoring(p.id);
+    try {
+      if (!(await cloud.restore(p.id))) throw new Error();
+      setTrash((x) => x.filter((y) => y.id !== p.id));
+      await load();
+      haptic('success');
+      toast(t('Restored to your gallery', 'Visszaállítva a galériádba'));
+    } catch {
+      toast(t('Could not restore it. Try again.', 'Nem sikerült visszaállítani. Próbáld újra.'));
+    }
+    setRestoring('');
+  };
+  const trashSheet = (
+    <Sheet open={trashOpen} onClose={() => setTrashOpen(false)} label={t('Recently deleted', 'Nemrég törölt')}>
+      <h2>{t('Recently deleted', 'Nemrég törölt')}</h2>
+      <p className="sub">{t('Tap Restore to put a design back in your gallery.', 'A „Visszaállítás” gombbal visszakerül a galériádba.')}</p>
+      <div className="trash-list">
+        {trash.map((p) => (
+          <div key={p.id} className="trash-row">
+            {thumb(p) && <img src={thumb(p)} alt="" />}
+            <span>
+              <b>{placeName(p.placement, ui.lang)}</b>
+              <small>{new Date(p.created_at).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB')}</small>
+            </span>
+            <button className="chipbtn" disabled={restoring === p.id} onClick={() => restore(p)}>
+              {restoring === p.id ? '…' : t('Restore', 'Visszaállítás')}
+            </button>
+          </div>
+        ))}
+        {!trash.length && <p className="muted">{t('Nothing here.', 'Itt nincs semmi.')}</p>}
+      </div>
+    </Sheet>
+  );
   const doDelete = async () => {
     const list = delAsk || [];
     if (!list.length) return;
@@ -137,9 +179,10 @@ export default function GalleryPage() {
       setPicked([]);
       setMode('browse');
     }
+    loadTrash();
     if (!ok) return toast(t('Could not delete it. Try again.', 'Nem sikerült törölni. Próbáld újra.'));
     haptic('success');
-    toast(list.length > 1 ? t(`${ok} designs deleted`, `${ok} terv törölve`) : t('Deleted, with its vote links', 'Törölve, a szavazós linkjeivel együtt'));
+    toast(list.length > 1 ? t(`${ok} designs deleted`, `${ok} terv törölve`) : t('Moved to Recently deleted', 'Áthelyezve a Nemrég törölt részbe'));
   };
   const delSheet = (
     <Sheet open={!!delAsk} onClose={() => !delBusy && setDelAsk(null)} label={t('Delete', 'Törlés')}>
@@ -156,7 +199,7 @@ export default function GalleryPage() {
           ))}
           {(delAsk?.length || 0) > 4 && <span className="del-thumb more">+{delAsk!.length - 4}</span>}
         </div>
-        <p className="sub">{t('The pictures, the notes and its vote links are deleted for good. This cannot be undone.', 'A képek, a jegyzetek és a szavazós linkek is véglegesen törlődnek. Ez nem vonható vissza.')}</p>
+        <p className="sub">{t('It moves to Recently deleted at the bottom of your gallery – you can bring it back from there. Its vote links are closed.', 'A galériád alján lévő „Nemrég törölt” részbe kerül – onnan bármikor visszaállíthatod. A szavazós linkjei lezárulnak.')}</p>
         <button className="btn wide danger-btn" onClick={doDelete} disabled={delBusy}>
           {delBusy ? t('Deleting…', 'Törlés…') : t('Yes, delete', 'Igen, törlöm')}
         </button>
@@ -651,6 +694,14 @@ export default function GalleryPage() {
       </Sheet>
       <PollSheet open={pollOpen} onClose={() => setPollOpen(false)} initial={pair} />
       {delSheet}
+      {trashSheet}
+      {trash.length > 0 && (
+        <p style={{ textAlign: 'center', margin: '18px 0 8px' }}>
+          <button className="chipbtn" onClick={() => setTrashOpen(true)}>
+            🗑 {t(`Recently deleted (${trash.length})`, `Nemrég törölt (${trash.length})`)}
+          </button>
+        </p>
+      )}
     </>
   );
 }

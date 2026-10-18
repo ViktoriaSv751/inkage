@@ -178,7 +178,7 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
             <ul>
               <li>{T('Your designs on every device', 'A terveid minden eszközödön')}</li>
               <li>{T('Bonus previews for inviting friends', 'Bónusz előnézetek a meghívásokért')}</li>
-              <li>{T('Free during the beta', 'Ingyenes a béta alatt')}</li>
+              <li>{T('Free after sign-up', 'Regisztráció után ingyenes')}</li>
             </ul>
           </div>
         </div>
@@ -247,9 +247,9 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
               <h1>{mode === 'login' ? T('Welcome back', 'Üdv újra itt') : mode === 'signup' ? T('Create your account', 'Hozd létre a fiókodat') : T('Forgot your password?', 'Elfelejtetted a jelszavad?')}</h1>
               <p className="au-sub">
                 {mode === 'login'
-                  ? T('Sign in to see your previews on every device.', 'Lépj be, és minden eszközödön látod az előnézeteidet.')
+                  ? T('Sign in with Google or Apple to try InkAge on your own photo.', 'Lépj be Google- vagy Apple-fiókkal, és próbáld ki az InkAge-et a saját fotódon.')
                   : mode === 'signup'
-                    ? T('Save your designs, sync them everywhere and get bonus previews.', 'Mentsd el a terveidet, érd el őket bárhol, és kapj bónusz előnézeteket.')
+                    ? T('One tap with Google or Apple – then try it free on your own photo.', 'Egy koppintás Google- vagy Apple-fiókkal – utána ingyen kipróbálhatod a saját fotódon.')
                     : T('Enter your e-mail and we’ll send you a link to set a new one.', 'Add meg az e-mail-címed, és küldünk egy linket az új jelszó beállításához.')}
               </p>
 
@@ -270,86 +270,40 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
                     </svg>
                     {T('Continue with Google', 'Folytatás Google-lel')}
                   </button>
-                  <div className="au-or">
-                    <span>{T('or with e-mail', 'vagy e-maillel')}</span>
-                  </div>
                 </div>
               )}
 
-              <form onSubmit={mode === 'forgot' ? forgot : withCode ? send : mode === 'login' ? loginPw : signupPw} className="au-form">
-                {mode === 'signup' && !withCode && (
+              {mode === 'forgot' ? (
+                <form onSubmit={forgot} className="au-form">
                   <label className="au-field">
-                    <span>{T('Name', 'Név')}</span>
-                    <input autoComplete="name" placeholder={T('Your name', 'A neved')} value={name} onChange={(e) => setName(e.target.value)} />
+                    <span>{T('E-mail address', 'E-mail-cím')}</span>
+                    <input type="email" autoComplete="email" inputMode="email" placeholder={T('you@email.com', 'te@email.hu')} value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </label>
-                )}
-                <label className="au-field">
-                  <span>{T('E-mail address', 'E-mail-cím')}</span>
-                  <input type="email" autoComplete="email" inputMode="email" placeholder={T('you@email.com', 'te@email.hu')} value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </label>
-                {mode !== 'forgot' && !withCode && (
-                  <label className="au-field">
-                    <span className="au-field-row">
-                      {T('Password', 'Jelszó')}
-                      {mode === 'login' && (
-                        <Link href={`/elfelejtett-jelszo${q}`} className="au-forgot">
-                          {T('Forgot it?', 'Elfelejtetted?')}
-                        </Link>
-                      )}
-                    </span>
-                    <span className="au-pw">
-                      <input type={show ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder={mode === 'signup' ? T('At least 8 characters', 'Legalább 8 karakter') : '••••••••'} value={pw} onChange={(e) => setPw(e.target.value)} required minLength={mode === 'signup' ? 8 : 6} />
-                      <button type="button" className="au-eye" aria-label={show ? T('Hide password', 'Jelszó elrejtése') : T('Show password', 'Jelszó mutatása')} onClick={() => setShow(!show)}>
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                          {show ? <path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.5 9.5 0 0 1 12 5c5.5 0 9 7 9 7a16 16 0 0 1-3.2 4M6.6 6.6C4.3 8.1 3 12 3 12s3.5 7 9 7a9 9 0 0 0 4.3-1.1" /> : <path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7zM12 9a3 3 0 1 0 0 6a3 3 0 0 0 0-6z" />}
-                        </svg>
-                      </button>
-                    </span>
-                    {mode === 'signup' && pw && (
-                      <span className={`au-meter s${pwScore}`} aria-live="polite">
-                        <i />
-                        <i />
-                        <i />
-                        <em>{pwScore <= 1 ? T('Weak', 'Gyenge') : pwScore === 2 ? T('Good', 'Jó') : T('Strong', 'Erős')}</em>
-                      </span>
-                    )}
-                  </label>
-                )}
-                {mode === 'signup' && (
-                  <label className="au-check">
-                    <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-                    <span className="au-box" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path d="M6 12.5l4 4L18 8" />
-                      </svg>
-                    </span>
-                    <span>
-                      {T('I’m over 18 and accept the ', 'Elmúltam 18 éves, és elfogadom az ')}
-                      <Link href={`/terms${q}`}>{T('Terms', 'ÁSZF-et')}</Link>
-                      {T(' and the ', ' és az ')}
-                      <Link href={`/privacy${q}`}>{T('Privacy policy', 'Adatvédelmi tájékoztatót')}</Link>.
-                    </span>
-                  </label>
-                )}
-                <button className="au-btn" disabled={busy || !okEmail || (mode === 'signup' && !agree) || (mode !== 'forgot' && !withCode && pw.length < (mode === 'signup' ? 8 : 6))}>
-                  {busy ? (
-                    <i className="au-spin" aria-hidden="true" />
-                  ) : mode === 'forgot' ? (
-                    T('Send reset link', 'Visszaállító link küldése')
-                  ) : withCode ? (
-                    T('Send me a code', 'Kérem a belépőkódot')
-                  ) : mode === 'login' ? (
-                    T('Sign in', 'Belépés')
-                  ) : (
-                    T('Create account', 'Fiók létrehozása')
-                  )}
-                </button>
-                {mode !== 'forgot' && (
-                  <button type="button" className="au-alt" onClick={() => (setWithCode(!withCode), setErr(''))}>
-                    {withCode ? T('Use a password instead', 'Inkább jelszóval') : T('No password? Get a one-time code by e-mail', 'Jelszó nélkül: egyszer használatos kód e-mailben')}
+                  <button className="au-btn" disabled={busy || !okEmail}>
+                    {busy ? <i className="au-spin" aria-hidden="true" /> : T('Send reset link', 'Visszaállító link küldése')}
                   </button>
-                )}
-              </form>
+                </form>
+              ) : (
+                <div className="au-form">
+                  {mode === 'signup' ? (
+                    <label className="au-check">
+                      <input type="checkbox" checked={agree} onChange={(e) => (setAgree(e.target.checked), setErr(''))} />
+                      <span className="au-box" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M6 12.5l4 4L18 8" />
+                        </svg>
+                      </span>
+                      <span>
+                        {T('I’m over 18 and accept the ', 'Elmúltam 18 éves, és elfogadom az ')}
+                        <Link href={`/terms${q}`}>{T('Terms', 'ÁSZF-et')}</Link>
+                        {T(' and the ', ' és az ')}
+                        <Link href={`/privacy${q}`}>{T('Privacy policy', 'Adatvédelmi tájékoztatót')}</Link>.
+                      </span>
+                    </label>
+                  ) : null}
+                  <p className="au-hint">{T('Free after sign-up. We never post anything on your behalf.', 'A regisztráció után ingyenes. A nevedben soha nem posztolunk semmit.')}</p>
+                </div>
+              )}
             </>
           ) : (
             <>
@@ -420,9 +374,6 @@ export function AuthScreen({ mode, lang, img }: { mode: 'login' | 'signup' | 'fo
               <Link href={`/belepes${q}`}>{T('Sign in', 'Lépj be')}</Link>
             </>
           )}
-        </p>
-        <p className="au-guest">
-          <Link href="/app">{T('Continue without an account', 'Folytatás fiók nélkül')}</Link>
         </p>
       </main>
     </div>

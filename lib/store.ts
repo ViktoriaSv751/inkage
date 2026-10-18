@@ -245,10 +245,13 @@ export const cloud = {
       ['design', p.design],
       ...(p.real || []).map((r) => [r.key || `real_${new Date(r.at).getTime()}`, r.src] as [string, string | undefined]),
     ];
-    for (const [k, src] of all) {
-      if (!src) continue;
-      const path = await upload(uid, id, k, src);
-      if (path) paths[k] = path;
+    // the row is created right after the first image, so a preview can never go missing
+    // when the app is closed halfway through the upload; the other images are added one by one
+    const list = all.filter(([, src]) => !!src) as [string, string][];
+    const first = list.find(([k]) => k === 'fresh') || list[0];
+    if (first) {
+      const path = await upload(uid, id, first[0], first[1]);
+      if (path) paths[first[0]] = path;
     }
     const { error } = await s.from('previews').insert({
       id,
@@ -266,6 +269,11 @@ export const cloud = {
       paths,
     });
     if (error) throw error;
+    for (const [k, src] of list) {
+      if (first && k === first[0]) continue;
+      const path = await upload(uid, id, k, src).catch(() => null);
+      if (path) await s.rpc('add_preview_paths', { p_id: id, p_paths: { [k]: path } });
+    }
     return id;
   },
   /** Add images made later (laser removal) to a saved preview. */
@@ -287,16 +295,24 @@ export const cloud = {
     const { error } = await sb()!.from('previews').update(patch).eq('id', id);
     if (error) throw error;
   },
-  /** Delete for real: the images in storage, the share link, its votes and any Explore post. */
+  /** Delete: moves it to Recently deleted (the share link and any Explore post go away). */
   async remove(uid: string, id: string) {
     const s = sb()!;
-    const { error } = await s.rpc('delete_preview', { p_id: id });
+    // moved to Recently deleted: the images stay, so it can be restored
+    void uid;
+    const { error } = await s.rpc('trash_preview', { p_id: id });
     if (error) throw error;
-    for (const bucket of ['previews', 'shares']) {
-      const { data } = await s.storage.from(bucket).list(`${uid}/${id}`);
-      const files = (data || []).map((f) => `${uid}/${id}/${f.name}`);
-      if (files.length) await s.storage.from(bucket).remove(files);
-    }
+  },
+  /** Recently deleted designs (restorable). */
+  async trash(): Promise<Preview[]> {
+    const { data, error } = await sb()!.from('previews').select('*').eq('hidden', true).not('deleted_at', 'is', null).order('deleted_at', { ascending: false }).limit(60);
+    if (error) throw error;
+    return Promise.all(((data as Row[]) || []).filter((r) => r.paths && Object.keys(r.paths).length).map(fromRow));
+  },
+  async restore(id: string) {
+    const { data, error } = await sb()!.rpc('restore_preview', { p_id: id });
+    if (error) throw error;
+    return !!data;
   },
   /** Close a preview's vote link (the preview stays). */
   async unshare(uid: string, id: string) {
