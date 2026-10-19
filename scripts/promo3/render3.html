@@ -1,0 +1,195 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script src="a/mark.js"></script>
+<style>
+@font-face{font-family:B;src:url(f/bricolage-grotesque-latin-standard-normal.woff2) format('woff2-variations');font-weight:200 800;font-stretch:75% 100%;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:B;src:url(f/bricolage-grotesque-latin-ext-standard-normal.woff2) format('woff2-variations');font-weight:200 800;font-stretch:75% 100%;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:I;src:url(f/inter-tight-latin-wght-normal.woff2) format('woff2-variations');font-weight:100 900;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+@font-face{font-family:I;src:url(f/inter-tight-latin-ext-wght-normal.woff2) format('woff2-variations');font-weight:100 900;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
+:root{--st:#5b3df5;--lil:#b4a5ff;--glow:#7c66ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100vw;height:100vh;overflow:hidden;background:#000}
+body{font-family:I,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.fr{position:relative;width:100vw;height:100vh;overflow:hidden;color:#fff;isolation:isolate}
+.fr.dark{background:radial-gradient(110vw 80vh at 70% 75%,rgba(91,61,245,.24),rgba(91,61,245,0) 60%),#000}
+.fr.vio{background:radial-gradient(110vw 80vh at 80% 20%,#7a5fff,transparent 60%),linear-gradient(165deg,#5b3df5 0%,#4527e0 55%,#2a12a6 100%)}
+.fr.light{background:radial-gradient(110vw 70vh at 50% 85%,#f1effa,transparent 70%),#fff;color:#000}
+.light .card.g{background:#fff;color:#000;border:0;backdrop-filter:none;box-shadow:0 .4vh 1vh rgba(0,0,0,.06),0 3vh 8vh rgba(20,10,80,.18)}
+.light .chip.dk{background:#000!important;color:#fff!important}
+.light .big{-webkit-text-stroke-color:rgba(0,0,0,.12)}
+.fr::after{content:'';position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.10;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.fr.light::after{opacity:.05;mix-blend-mode:multiply}
+
+.hd{position:absolute;z-index:10;left:7vw;right:6vw;top:var(--ht,9vh)}
+h1{font-family:B;font-weight:800;font-stretch:82%;font-size:var(--hs,13.6vw);line-height:.88;letter-spacing:-.025em;text-wrap:balance}
+.hd p{font-family:I;margin-top:3.4vw;font-size:4.3vw;line-height:1.3;font-weight:450;letter-spacing:-.01em;color:rgba(255,255,255,.74);max-width:82vw;text-wrap:pretty}
+.light .hd p{color:#55555c}
+.brand{position:absolute;z-index:10;left:7vw;top:4.2vh;display:flex;align-items:center;gap:2vw;font-family:B;font-weight:700;font-stretch:90%;font-size:5.6vw;letter-spacing:-.02em}
+.brand svg{width:8.8vw;height:8.2vw;fill:currentColor}
+
+.ph{position:absolute;z-index:5;height:var(--h,70vh);aspect-ratio:9/19.4;border-radius:calc(var(--h)*.075);padding:calc(var(--h)*.012);
+ background:linear-gradient(140deg,#5a5a62,#121214 22%,#2a2a2f 60%,#6d6d76 100%);
+ box-shadow:0 0 0 calc(var(--h)*.0018) #9a9aa3 inset,0 0 0 calc(var(--h)*.004) #1a1a1e,0 4vh 8vh rgba(0,0,0,.35),0 12vh 22vh rgba(20,8,90,.45);transform-style:preserve-3d}
+.light .ph{box-shadow:0 0 0 calc(var(--h)*.0018) #9a9aa3 inset,0 0 0 calc(var(--h)*.004) #1a1a1e,0 3vh 6vh rgba(30,20,90,.18),0 10vh 20vh rgba(60,40,200,.22)}
+.ph img{display:block;width:100%;height:100%;border-radius:calc(var(--h)*.064);object-fit:cover}
+.ph::before{content:'';position:absolute;z-index:2;top:calc(var(--h)*.024);left:50%;transform:translateX(-50%);width:28%;height:calc(var(--h)*.037);border-radius:9em;background:#000}
+.ph::after{content:'';position:absolute;inset:calc(var(--h)*.012);border-radius:calc(var(--h)*.064);background:linear-gradient(115deg,rgba(255,255,255,.16),rgba(255,255,255,0) 32%);pointer-events:none}
+
+.card{position:absolute;z-index:7;border-radius:4.6vw;padding:3.6vw 4.2vw;font-family:I}
+.card.g{background:rgba(24,22,36,.62);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 3vh 8vh rgba(0,0,0,.45);color:#fff}
+.card.w{background:#fff;color:#000;box-shadow:0 .4vh 1vh rgba(0,0,0,.06),0 3vh 8vh rgba(20,10,80,.22)}
+.card h4{font-size:3.9vw;font-weight:650;letter-spacing:-.02em;line-height:1.15}
+.card p{font-size:3vw;opacity:.7;margin-top:.8vw;line-height:1.3;font-weight:500}
+.card .k{font-size:2.7vw;font-weight:600;opacity:.6;letter-spacing:.01em}
+
+.ink{position:absolute;z-index:3;top:0;left:0;height:100vh;width:800vw;pointer-events:none}
+.big{position:absolute;z-index:1;font-family:B;font-weight:800;font-stretch:75%;line-height:.8;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:.45vw rgba(255,255,255,.38)}
+.photo{position:absolute;overflow:hidden;background:#222 center/cover}
+.chip{display:inline-flex;align-items:center;height:7.6vw;padding:0 3.4vw;border-radius:6vw;font-family:I;font-size:3.2vw;font-weight:650;letter-spacing:-.01em}
+.split{position:absolute;inset:0;z-index:0;--x:53%}
+.split img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 50%}
+.split img.a{clip-path:inset(0 calc(100% - var(--x)) 0 0)}
+.split .ln{position:absolute;z-index:2;top:0;bottom:0;left:var(--x);width:.7vw;margin-left:-.35vw;background:#fff;box-shadow:0 0 3vw rgba(124,102,255,.9),0 0 9vw rgba(124,102,255,.6)}
+.split .kn{position:absolute;z-index:3;top:63%;left:var(--x);width:15vw;height:15vw;margin:-7.5vw 0 0 -7.5vw;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2.2vw rgba(255,255,255,.22),0 2vw 6vw rgba(0,0,0,.4)}
+.split .kn svg{width:52%;height:52%}
+.play{--hs:12.4vw;--ht:6.5vh}
+.play .hd p{font-size:3.9vw;margin-top:2.6vw}
+.play .brand{top:3vh}
+.play.hero{--ht:10.5vh}
+</style></head><body><div id="root"></div>
+<script>
+const q=new URLSearchParams(location.search);
+const S=+q.get('s')||1, L=q.get('l')||'en', F=q.get('f')||'ios';
+const A=p=>'a/'+p;
+const mark=()=>`<svg viewBox="0 0 1213 1135"><path d="${window.MARK}" fill-rule="evenodd"/></svg>`;
+const T={
+en:{h:[,
+ ['See your tattoo before it’s forever.','On your own photo. Today, and every year after.'],
+ ['How it looks on your skin today.','Your photo, your skin tone, true to size.'],
+ ['And in 10, 30 and 50 years.','Watch sun and skin soften the lines, year by year.'],
+ ['Find the spot that ages best.','A longevity score for every body part, style and size.'],
+ ['Make it last. Or let it go.','Redraw a design to age better, or preview laser removal first.'],
+ ['Every idea on one board.','Save from Pinterest, Instagram or your camera roll, with notes.'],
+ ['Can’t choose? Let friends vote.','Share one link. They pick, you decide.'],
+ ['Heal it well. Keep it sharp.','A 28-day healing diary, live UV index and expert guides.']],
+ today:'Today',y50:'50 years',ages:['Today','10 years','30 years','50 years'],
+ match:'Skin tone matched',size:'True to size',sizeV:'8 cm wide',
+ best:'Best spot',bestV:'Upper back',worst:'Fingers',fine:'Fine line · 8 cm',
+ redrawn:'Redrawn to last',orig:'Original',lon:'Longevity',removal:'Laser removal preview',removalP:'If you ever change your mind',
+ src:['Pinterest','Instagram','Photos'],note:'Inner forearm, ~10 cm',
+ votes:['Moon','Moon','Wildflowers','Moon'],pct:'of friends picked the moon',
+ uv:'UV index 7 · High',uvP:'SPF 50 on tattoos today',guide:'How tattoos age',guideK:'Expert guide · 6 min',day:'Day 9 of 28'},
+hu:{h:[,
+ ['Lásd a tetoválásod, mielőtt örökre szól.','A saját fotódon. Ma, és minden évben utána.'],
+ ['Így néz ki ma a bőrödön.','A saját fotód, a bőrtónusod, valódi méretben.'],
+ ['És 10, 30, 50 év múlva.','Nézd, ahogy a nap és a bőr évről évre lágyítja a vonalakat.'],
+ ['Hol öregszik a legszebben?','Tartóssági pontszám minden testrészre, stílusra és méretre.'],
+ ['Tedd tartóssá. Vagy engedd el.','Rajzold át tartósra, vagy nézd meg előre a lézeres eltávolítást.'],
+ ['Minden ötleted egy helyen.','Mentsd Pinterestről, Instagramról vagy a galériádból, jegyzetekkel.'],
+ ['Nem tudsz dönteni? Szavazzanak.','Egy link a barátaidnak: ők választanak, te döntesz.'],
+ ['Szép gyógyulás, éles vonalak.','28 napos gyógyulási napló, élő UV-index és szakértői cikkek.']],
+ today:'Ma',y50:'50 év',ages:['Ma','10 év','30 év','50 év'],
+ match:'Bőrtónus illesztve',size:'Valódi méret',sizeV:'8 cm széles',
+ best:'Legjobb hely',bestV:'Hát felső része',worst:'Ujjak',fine:'Fine line · 8 cm',
+ redrawn:'Tartósra átrajzolva',orig:'Eredeti',lon:'Tartósság',removal:'Lézeres eltávolítás',removalP:'Ha meggondolnád magad',
+ src:['Pinterest','Instagram','Galéria'],note:'Belső alkar, kb. 10 cm',
+ votes:['Hold','Hold','Vadvirág','Hold'],pct:'a barátaidból a holdat választotta',
+ uv:'UV 7 · magas',uvP:'Ma 50-es fényvédő a tetoválásra',guide:'Hogyan öregszik a tetoválás',guideK:'Szakértői cikk · 6 perc',day:'9. nap / 28'}}[L];
+
+const phone=(n,h,st,cls='')=>`<div class="ph ${cls}" style="--h:${h}vh;${st}"><img src="${A('scr-'+L+'-'+n+'.png')}"></div>`;
+const hd=n=>`<div class="hd"><h1>${T.h[n][0]}</h1><p>${T.h[n][1]}</p></div>`;
+const photo=(f,st,pos='50% 50%')=>`<div class="photo" style="background-image:url(${A(f)});background-position:${pos};${st}"></div>`;
+
+/* one continuous ink stroke across slides 2–8 (x in vw on an 800vw sheet, y in vh) */
+const PTS=[[100,96],[130,80],[170,56],[200,62],[240,84],[290,96],[330,70],[372,46],[400,52],[440,72],[480,92],[520,74],[560,50],[600,56],[640,78],[690,95],[730,72],[770,52],[800,60]];
+function pathD(p){let d=`M${p[0][0]} ${p[0][1]}`;for(let i=0;i<p.length-1;i++){const p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
+ d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`;}return d;}
+const ink=(s)=>{const d=pathD(PTS);return `<svg class="ink" viewBox="0 0 800 100" preserveAspectRatio="none" style="left:${-(s-1)*100}vw">
+ <defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="100" x2="800" y1="0" y2="0">
+  <stop offset="0" stop-color="#6a4dff"/><stop offset="1" stop-color="#6a4dff"/></linearGradient>
+  <filter id="b" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="1.6"/></filter></defs>
+ <path d="${d}" fill="none" stroke="url(#g)" stroke-width="3.6" stroke-linecap="round" opacity=".55" filter="url(#b)" vector-effect="non-scaling-stroke" style="stroke-width:7vw"/>
+ <path d="${d}" fill="none" stroke="url(#g)" stroke-linecap="round" vector-effect="non-scaling-stroke" style="stroke-width:2.6vw"/>
+ <path d="${d}" fill="none" stroke="#fff" stroke-linecap="round" stroke-dasharray="0.1 9" vector-effect="non-scaling-stroke" style="stroke-width:.9vw;opacity:.85"/>
+</svg>`;};
+
+const arrows=`<svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const sw=['#f3d8c6','#e9c2a6','#d6a27f','#b67c57','#8a5a3c','#5e3c27'];
+
+const SL={
+1(){return `<div class="fr dark hero">
+  <div class="split"><img src="${A('sw4.jpg')}"><img class="a" src="${A('sw0.jpg')}"><span class="ln"></span><span class="kn">${arrows}</span></div>
+  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(#000 0%,rgba(0,0,0,.86) 26%,rgba(0,0,0,.25) 46%,rgba(0,0,0,0) 60%,rgba(0,0,0,.55) 100%)"></div>
+  <div class="brand">${mark()}InkAge</div>${hd(1)}
+  <span class="chip" style="position:absolute;z-index:5;left:7vw;bottom:5.5vh;background:rgba(255,255,255,.95);color:#000">${T.today}</span>
+  <span class="chip" style="position:absolute;z-index:5;right:7vw;bottom:5.5vh;background:var(--st);color:#fff;box-shadow:0 0 6vw rgba(124,102,255,.8)">${T.y50}</span>
+ </div>`;},
+2(){return `<div class="fr light">${ink(2)}${hd(2)}
+  ${phone(2,66,'left:13vw;top:33vh;transform:perspective(220vw) rotateY(16deg) rotateZ(-3deg)')}
+  <div class="card g" style="right:4vw;top:40vh;width:50vw">
+   <div class="k">${T.match}</div>
+   <div style="display:flex;gap:1.6vw;margin-top:2.4vw">${sw.map((c,i)=>`<i style="width:6vw;height:6vw;border-radius:50%;background:${c};${i===2?'box-shadow:0 0 0 .8vw #000,0 0 0 1.4vw #fff':''}"></i>`).join('')}</div></div>
+  <div class="card w" style="right:7vw;top:79vh;width:46vw">
+   <div class="k" style="opacity:.55">${T.size}</div><h4 style="font-size:6.4vw;font-family:B;font-weight:800;font-stretch:80%;margin-top:.6vw">${T.sizeV}</h4>
+   <div style="margin-top:2vw;height:3.6vw;background:repeating-linear-gradient(90deg,#000 0 .3vw,transparent .3vw 3.6vw) bottom/100% 55% no-repeat"></div></div>
+ </div>`;},
+3(){const ims=['md0','md1','md2','md3'];
+ const rot=[-9,-3,3,9],x=[2,25,48,71],y=[45,42,42,45];
+ return `<div class="fr dark">${ink(3)}<div class="big" style="font-size:150vw;left:-4vw;top:24vh">50</div>${hd(3)}
+  ${ims.map((k,i)=>`<div style="position:absolute;z-index:${5+i};left:${x[i]}vw;top:${y[i]}vh;width:27vw;transform:rotate(${rot[i]}deg);transform-origin:50% 120%">
+    <div class="photo" style="position:relative;height:44vh;border-radius:5vw;background-image:url(${A(k+'.jpg')});background-position:50% 42%;background-size:auto 112%;box-shadow:0 0 0 1vw #fff,0 3vh 8vh rgba(20,0,80,.45)"></div>
+    <div style="text-align:center;margin-top:4.2vw"><span class="chip" style="height:7vw;font-size:3vw;background:${i===3?'#fff':'rgba(255,255,255,.18)'};color:${i===3?'var(--st)':'#fff'}">${T.ages[i]}</span></div></div>`).join('')}
+ </div>`;},
+4(){return `<div class="fr light">${ink(4)}${hd(4)}
+  ${phone(4,68,'right:6vw;top:31vh;transform:perspective(220vw) rotateY(-14deg) rotateZ(2deg)')}
+  <div class="card w" style="left:5vw;top:42vh;width:52vw;display:flex;align-items:center;gap:3.6vw;padding:4vw">
+   <div style="position:relative;width:21vw;height:21vw;flex:none"><svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg)"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#ececf1" stroke-width="3.4"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="#1f9d63" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="${.8*97.4} 97.4"/></svg><b style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:B;font-weight:800;font-stretch:80%;font-size:8.4vw">80</b></div>
+   <div><div class="k">${T.best}</div><h4 style="font-size:4.6vw;margin-top:.6vw">${T.bestV}</h4><p>${T.fine}</p></div></div>
+  <div class="card w" style="left:9vw;top:78vh;display:flex;align-items:center;gap:3vw;padding:3vw 4.4vw">
+   <b style="font-family:B;font-weight:800;font-stretch:80%;font-size:7vw;color:#e5484d">54</b><div><div class="k">${T.worst}</div><p style="margin-top:.2vw">${T.fine}</p></div></div>
+ </div>`;},
+5(){const cd=(f,l,r,x,on)=>`<div style="position:absolute;z-index:6;left:${x}vw;top:33vh;width:43vw;transform:rotate(${r}deg)">
+   <div style="background:#fff;border-radius:5vw;padding:2vw;box-shadow:${on?'0 0 0 1vw var(--st),0 0 12vw rgba(124,102,255,.75)':'0 3vh 8vh rgba(0,0,0,.5)'}"><div class="photo" style="position:relative;height:29vh;border-radius:3.4vw;background-image:url(${A(f)});background-color:#fff;background-size:112% auto;background-repeat:no-repeat"></div></div>
+   <div style="text-align:center;margin-top:4vw"><span class="chip" style="background:${on?'var(--st)':'rgba(255,255,255,.14)'};color:#fff">${l}</span></div></div>`;
+ return `<div class="fr dark">${ink(5)}${hd(5)}
+  ${cd('d-frose.png',T.orig,-6,4,0)}${cd('d-frose-bold.png',T.redrawn,5,51,1)}
+  <div class="card w" style="left:calc(50vw - 15vw);top:31vh;z-index:8;width:30vw;text-align:center;padding:2.4vw"><div class="k" style="opacity:.55">${T.lon}</div><b style="font-family:B;font-weight:800;font-stretch:80%;font-size:7.6vw;color:#1f9d63">75→93</b></div>
+  <div class="card g" style="left:7vw;right:7vw;top:79vh;padding:2.6vw;display:flex;gap:3vw;align-items:center">
+   <div style="display:flex;gap:1.4vw;flex:none"><div class="photo" style="position:relative;width:20vw;height:20vw;border-radius:3vw;background-image:url(${A('rose0.jpg')});background-size:240% auto;background-position:46% 40%"></div><div class="photo" style="position:relative;width:20vw;height:20vw;border-radius:3vw;background-image:url(${A('remnant.jpg')});background-size:260% auto;background-position:50% 55%"></div></div>
+   <div><h4>${T.removal}</h4><p>${T.removalP}</p></div></div>
+ </div>`;},
+6(){const C=[['moonfl.jpg',-6,40,30,-8,T.src[0]],['d-humm.png',66,36,30,9,''],['backfl.jpg',-8,74,32,6,T.src[1]],['wildfl.jpg',72,70,30,-7,T.src[2]],['d-sunmoon.png',64,100,30,-4,''],['fineh.jpg',-4,100,28,10,'']];
+ return `<div class="fr light">${ink(6)}${hd(6)}
+  ${C.map(([f,x,y,w,r,s])=>`<div style="position:absolute;z-index:2;left:${x}vw;top:${y}vh;width:${w}vw;transform:rotate(${r}deg);background:#fff;padding:1.4vw;border-radius:3.6vw;box-shadow:0 2vh 6vh rgba(30,20,90,.2)">
+    <div class="photo" style="position:relative;height:${f.startsWith('d-')?22:26}vh;border-radius:2.6vw;background-image:url(${A(f)});${f.startsWith('d-')?'background-size:120% auto;background-color:#fff;background-repeat:no-repeat':''}"></div>
+    ${s?`<span class="chip" style="position:absolute;left:3vw;bottom:3vw;height:6vw;font-size:2.6vw;background:rgba(255,255,255,.95);color:#000">${s}</span>`:''}</div>`).join('')}
+  ${phone(6,66,'left:calc(50vw - 66vh*9/19.4/2);top:33vh')}
+  <div class="card w" style="left:28vw;top:83vh;width:66vw;display:flex;align-items:center;gap:3vw;padding:2.4vw 4vw 2.4vw 2.4vw">
+   <div class="photo" style="position:relative;width:14vw;height:14vw;border-radius:2.6vw;flex:none;background-image:url(${A('moonfl.jpg')})"></div><h4>${T.note}</h4></div>
+ </div>`;},
+7(){const av=[['friends.jpg','30% 30%',5,50,T.votes[0]],['friends.jpg','55% 28%',70,44,T.votes[1]],['friends.jpg','80% 34%',60,73,T.votes[2]],['phone.jpg','40% 20%',3,80,T.votes[3]]];
+ return `<div class="fr dark">${ink(7)}${hd(7)}
+  ${phone(7,66,'left:calc(50vw - 66vh*9/19.4/2);top:33vh')}
+  ${av.map(([f,pos,x,y,v],i)=>`<div style="position:absolute;z-index:8;left:${x}vw;top:${y}vh;display:flex;align-items:center;gap:2vw;padding:1.4vw 3.6vw 1.4vw 1.4vw;border-radius:9vw;background:#fff;color:#000;box-shadow:0 2vh 6vh rgba(20,0,80,.35);font-weight:650;font-size:3.2vw"><span style="width:10vw;height:10vw;border-radius:50%;background:url(${A(f)}) ${pos}/320% auto"></span>${v}</div>`).join('')}
+  <div class="card w" style="left:7vw;top:64vh;padding:3vw 4.4vw;transform:rotate(-4deg)"><b style="font-family:B;font-weight:800;font-stretch:78%;font-size:13vw;line-height:.9;color:var(--st)">64%</b><p style="max-width:34vw">${T.pct}</p></div>
+ </div>`;},
+8(){return `<div class="fr light">${ink(8)}${hd(8)}
+  ${phone(8,66,'right:7vw;top:33vh;transform:perspective(220vw) rotateY(-14deg) rotateZ(3deg)')}
+  <div class="card g" style="left:5vw;top:42vh;width:52vw">
+   <div style="display:flex;align-items:center;gap:2.6vw"><span style="width:10vw;height:10vw;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 35%,#ffe08a,#f39b1a);box-shadow:0 0 6vw rgba(243,155,26,.7)"></span><div><h4>${T.uv}</h4><p style="margin-top:.4vw">${T.uvP}</p></div></div></div>
+  <div class="card w" style="left:6vw;top:62vh;width:44vw;padding:3.4vw 4vw">
+   <div class="k" style="opacity:.55">${T.day}</div>
+   <div style="display:flex;gap:.6vw;margin-top:2.2vw">${Array.from({length:14},(_,i)=>`<i style="flex:1;height:2.2vw;border-radius:1vw;background:${i<5?'var(--st)':'#e6e6ec'}"></i>`).join('')}</div></div>
+  <div class="card g" style="left:5vw;top:78vh;width:56vw;padding:2.4vw;display:flex;gap:3vw;align-items:center">
+   <div class="photo" style="position:relative;width:17vw;height:17vw;border-radius:3vw;flex:none;background-image:url(${A('sw4.jpg')});background-size:260% auto;background-position:60% 32%"></div>
+   <div><div class="k">${T.guideK}</div><h4 style="margin-top:.6vw">${T.guide}</h4></div></div>
+ </div>`;},
+};
+const root=document.getElementById('root'); root.innerHTML=SL[S](); const fr=root.firstElementChild; fr.classList.add(F);
+document.fonts.ready.then(async()=>{
+  const h1=fr.querySelector('h1'); let fs=parseFloat(getComputedStyle(h1).fontSize);
+  while(h1.getBoundingClientRect().height>parseFloat(getComputedStyle(h1).lineHeight)*3.05&&fs>20){fs-=1;h1.style.fontSize=fs+'px';}
+  await Promise.all([...document.images].map(i=>i.decode().catch(()=>0)));
+  document.body.dataset.ready=1;});
+</script></body></html>

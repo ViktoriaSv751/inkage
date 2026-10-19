@@ -1,0 +1,335 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script src="a/mark.js"></script>
+<style>
+@font-face{font-family:G;src:url(f/geist-sans-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:G;src:url(f/geist-sans-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:G;src:url(f/geist-sans-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:G;src:url(f/geist-sans-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:G;src:url(f/geist-sans-latin-800-normal.woff2);font-weight:800}
+:root{
+  --ink:#000; --ink2:#5c5c62; --ink3:#8c8c94; --paper:#fff; --mist:#f4f4f7; --line:#e7e7ec;
+  --st:#5b3df5; --st2:#4528d8; --sttint:#eeeaff; --faded:#6f86a6;
+  --green:#1f9d63; --amber:#d98b16; --red:#e5484d;
+  --pw:74vw; --ptop:58vw; --hpad:7vw; --htop:15vw;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100vw;height:100vh;overflow:hidden;background:#fff}
+body{font-family:G,system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:'ss01','cv11';color:var(--ink)}
+.fr{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--paper)}
+.fr.dark{background:#000;color:#fff}
+.fr.vio{background:#5b3df5;color:#fff}
+.vio .hd p{color:rgba(255,255,255,.8)}
+.vio .ph{box-shadow:0 0 0 calc(var(--pw)*.004) #7a7a82 inset,0 4vw 8vw rgba(20,0,90,.25),0 14vw 26vw rgba(20,0,90,.4)}
+
+/* panorama stencil art (slides 2–7 read as one continuous sheet) */
+.pano{position:absolute;top:0;height:100%;width:600vw;pointer-events:none}
+.pano img{position:absolute;display:block}
+
+/* headline block */
+.hd{position:absolute;left:var(--hpad);right:var(--hpad);top:var(--htop);z-index:5}
+.hd h1{font-weight:800;font-size:10.4vw;line-height:.95;letter-spacing:-.052em;text-wrap:balance}
+.hd p{margin-top:3.6vw;font-size:4.15vw;line-height:1.32;font-weight:500;color:var(--ink2);letter-spacing:-.012em;max-width:80vw;text-wrap:pretty}
+.dark .hd p{color:#a9a9b3}
+.hd .tm{color:var(--ink3)}
+.dark .hd .tm{color:#77777f}
+
+/* phone */
+.ph{position:absolute;z-index:3;width:var(--pw);left:calc(50vw - var(--pw)/2);top:var(--ptop);aspect-ratio:9/19.4;border-radius:calc(var(--pw)*.165);
+  background:linear-gradient(145deg,#3a3a3f,#0d0d0f 30%,#1d1d21 70%,#4a4a50);padding:calc(var(--pw)*.026);
+  box-shadow:0 0 0 calc(var(--pw)*.004) #6b6b72 inset, 0 3vw 6vw rgba(18,10,60,.16), 0 12vw 22vw rgba(18,10,60,.22)}
+.dark .ph{box-shadow:0 0 0 calc(var(--pw)*.004) #8a8a92 inset,0 0 0 .25vw #2a2a30, 0 10vw 24vw rgba(91,61,245,.28)}
+.scr{position:relative;width:100%;height:100%;border-radius:calc(var(--pw)*.142);overflow:hidden;background:#fff;color:#000;font-size:calc(var(--pw)*.948/393*16)}
+.island{position:absolute;z-index:9;top:.62em;left:50%;transform:translateX(-50%);width:7.6em;height:2.2em;border-radius:2em;background:#000}
+.sb{position:relative;z-index:8;height:3.4em;display:flex;align-items:flex-end;justify-content:space-between;padding:0 1.9em .55em 2.3em;font-weight:600;font-size:1.02em;letter-spacing:-.01em}
+.sb .ic{display:flex;gap:.36em;align-items:center}
+.sig{display:flex;gap:.12em;align-items:flex-end;height:.75em}.sig i{display:block;width:.2em;background:currentColor;border-radius:.06em}
+.bat{width:1.55em;height:.75em;border:.09em solid currentColor;border-radius:.24em;padding:.08em;opacity:.95;position:relative}.bat::after{content:'';position:absolute;right:-.2em;top:.22em;width:.1em;height:.3em;background:currentColor;border-radius:0 .1em .1em 0}.bat i{display:block;height:100%;width:80%;background:currentColor;border-radius:.12em}
+.wifi{width:1em;height:.75em}
+.scr.over .sb{color:#fff}
+
+/* app chrome */
+.ab{display:flex;align-items:center;justify-content:space-between;padding:.5em 1.25em .7em}
+.lg{display:flex;align-items:center;gap:.42em;font-weight:800;font-size:1.22em;letter-spacing:-.035em}
+.lg svg{width:1.3em;height:1.2em;fill:currentColor}
+.av{width:2em;height:2em;border-radius:50%;background:center/cover}
+.pg{padding:0 1.25em}
+.t1{font-size:1.75em;font-weight:800;letter-spacing:-.04em;line-height:1.05}
+.t2{font-size:.92em;color:var(--ink2);margin-top:.3em}
+.cap{font-size:.8em;font-weight:600;color:var(--ink2)}
+.btn{display:flex;align-items:center;justify-content:center;height:3.1em;border-radius:3em;background:#000;color:#fff;font-weight:600;font-size:1em;letter-spacing:-.01em}
+.btn.st{background:var(--st)}
+.chip{display:inline-flex;align-items:center;height:2.1em;padding:0 .9em;border-radius:2em;background:var(--mist);font-size:.84em;font-weight:600;color:#333}
+.chip.on{background:#000;color:#fff}
+.pill{position:absolute;display:inline-flex;align-items:center;gap:.35em;height:2em;padding:0 .8em;border-radius:2em;background:rgba(255,255,255,.94);font-size:.8em;font-weight:600;color:#000;backdrop-filter:blur(8px)}
+.pill.dk{background:rgba(0,0,0,.55);color:#fff}
+.ph-img{position:relative;border-radius:1.25em;overflow:hidden;background:#ddd center/cover}
+.tabs{position:absolute;left:0;right:0;bottom:0;height:5.4em;background:rgba(255,255,255,.96);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding-top:.75em;font-size:.68em;font-weight:600;color:#9a9aa2}
+.tabs b{display:flex;flex-direction:column;align-items:center;gap:.35em;font-weight:600}.tabs b i{display:block;width:1.9em;height:1.9em;border-radius:.6em;background:#e3e3e8}.tabs b.on{color:#000}.tabs b.on i{background:#000}
+
+/* floating cards */
+.fc{position:absolute;z-index:6;background:#fff;color:#000;border-radius:4.4vw;padding:3.6vw 4vw;
+  box-shadow:0 .3vw .8vw rgba(0,0,0,.05),0 3vw 7vw rgba(25,15,70,.13),0 9vw 18vw rgba(25,15,70,.12)}
+.fc h4{font-size:3.5vw;font-weight:700;letter-spacing:-.025em;line-height:1.15}
+.fc p{font-size:2.85vw;color:var(--ink2);margin-top:.9vw;line-height:1.3;font-weight:500}
+.fc .k{font-size:2.6vw;font-weight:600;color:var(--ink3)}
+.dark .fc{background:#16161b;color:#fff;box-shadow:0 0 0 .2vw #2a2a33 inset,0 6vw 16vw rgba(0,0,0,.6)}
+.dark .fc p{color:#a9a9b3}
+
+/* hero strips */
+.strips{position:absolute;left:0;right:0;bottom:0;display:flex;gap:.3vw;z-index:1}
+.strip{position:relative;flex:1;overflow:hidden}
+.strip img{position:absolute;top:0;height:100%;width:100vw;object-fit:cover}
+.strip span{position:absolute;left:50%;transform:translateX(-50%);bottom:6.5vw;font-size:3.2vw;font-weight:600;color:#fff;white-space:nowrap;letter-spacing:-.01em;text-shadow:0 .2vw 1.4vw rgba(0,0,0,.5)}
+.strips::before{content:'';position:absolute;z-index:2;left:0;right:0;top:-1px;height:30%;background:linear-gradient(#000,rgba(0,0,0,0))}
+.strips::after{content:'';position:absolute;z-index:2;left:0;right:0;bottom:0;height:22%;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.55))}
+.strip span{z-index:3}
+.brand{position:absolute;z-index:5;left:var(--hpad);top:calc(var(--htop) - 9.5vw);display:flex;align-items:center;gap:2.4vw;font-weight:800;font-size:4.8vw;letter-spacing:-.04em}
+.brand i{display:flex;align-items:center;justify-content:center;width:8.6vw;height:8.6vw;border-radius:2.1vw;background:#fff;color:#000}
+.brand svg{width:66%;height:66%;fill:currentColor}
+
+.split{position:absolute;left:0;right:0;bottom:0;overflow:hidden;--x:51%}
+.split img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
+.split img.a{clip-path:inset(0 calc(100% - var(--x)) 0 0)}
+.split::before{content:'';position:absolute;z-index:2;left:0;right:0;top:-1px;height:26%;background:linear-gradient(#000,rgba(0,0,0,0))}
+.hand{position:absolute;z-index:3;top:0;bottom:0;left:var(--x);width:0}
+.hand i{position:absolute;top:0;bottom:0;left:-.3vw;width:.6vw;background:#fff;box-shadow:0 0 2vw rgba(0,0,0,.35)}
+.hand b{position:absolute;top:58%;left:-6.5vw;width:13vw;height:13vw;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1vw 4vw rgba(0,0,0,.35)}
+.hand svg{width:55%;height:55%}
+.lb{position:absolute;z-index:3;bottom:8vw;height:9vw;display:flex;align-items:center;padding:0 3.8vw;border-radius:6vw;font-size:3.7vw;font-weight:700;letter-spacing:-.02em}
+.lb.l{left:6vw;background:rgba(255,255,255,.94);color:#000}
+.lb.r{right:6vw;background:#5b3df5;color:#fff}
+/* score bars */
+.row{display:flex;align-items:center;gap:.7em;padding:.72em 0;border-bottom:1px solid var(--line)}
+.row b{flex:none;width:7.6em;font-size:.92em;font-weight:600}
+.bar{flex:1;height:.5em;border-radius:1em;background:var(--mist);overflow:hidden}.bar i{display:block;height:100%;border-radius:1em}
+.row em{flex:none;width:2em;text-align:right;font-style:normal;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* play format: shorter canvas */
+.play{--pw:62vw;--ptop:52vw;--htop:11vw}
+.play .hd h1{font-size:9.6vw}
+.play .hd p{font-size:3.9vw;margin-top:3vw}
+.ios63{}
+</style></head>
+<body><div id="root"></div>
+<script>
+const q=new URLSearchParams(location.search);
+const S=+q.get('s')||1, LANG=q.get('l')||'en', FMT=q.get('f')||'ios';
+const A=p=>'a/'+p;
+const mark=(c='')=>`<svg viewBox="0 0 1213 1135" class="${c}"><path d="${window.MARK}" fill-rule="evenodd"/></svg>`;
+
+const TX={
+en:{
+ h:[,
+  ['See your tattoo before it’s forever.','On your own photo. Today, and every year after.'],
+  ['How it looks on your skin today.','Your photo, your skin tone, true to size.'],
+  ['And in 10, 30 and 50 years.','Slide through time and watch sun and skin soften the lines.'],
+  ['Find the spot that ages best.','A longevity score for every body part, style and size.'],
+  ['Make it last. Or see it go.','Redraw a design to age better, or preview laser removal first.'],
+  ['Every idea on one board.','Save from Pinterest, Instagram or your camera roll, with notes.'],
+  ['Can’t choose? Let friends vote.','Share one link. They pick, you decide.'],
+  ['Heal it well. Keep it sharp.','A 28-day healing diary, live UV index and expert guides.'],
+ ],
+ ages:['Today','1 year','10 years','30 years','50 years'],
+ today:'Today', yrs:'years later', skin:'Skin tone', matched:'Skin tone matched', size:'True to size', sizeV:'8 cm wide', see10:'See it in 10 years', calf:'Calf', prev:'Your preview', fore:'Inner forearm',
+ film:'Same tattoo, four moments', y:['Today','10','30','50'],
+ lon:'Longevity', lonSub:'Fine line · 8 cm', places:[['Upper back',80],['Inner forearm',75],['Wrist',68],['Back of hand',58],['Fingers',54]],
+ styles:['Fine line','Blackwork','Color'], best:'Best spot', bestV:'Upper back', tip:'Fine single-needle lines spread over time. Thicker key lines help.',
+ redraw:'Redraw it to last', orig:'Original', redrawn:'Redrawn', redrawNote:'Bolder key lines, room to settle', removal:'Laser removal preview', removalNote:'If you ever change your mind',
+ ideas:'Ideas', ideasSub:'12 saved', note:'Inner forearm, about 10 cm', src:['Pinterest','Instagram','Photos'], tryit:'Try it on my photo',
+ poll:'Which one should I get?', votes:'14 votes', a:'Moon & florals', b:'Wildflowers', share:'Share vote link', friend:'“The moon one. 100%.”', friendN:'Anna',
+ diary:'Healing diary', day:'Day 9 of 28', steps:['Wash gently, pat dry','Very thin layer of ointment','No pools, baths or sauna'], nextS:'Day 10', nextT:'Most flakes are gone. It can look a bit cloudy.',
+ uv:'UV index 7 · High', uvT:'SPF 50 on tattoos, shade around midday.', guide:'How tattoos age', guideK:'Expert guide · 6 min',
+},
+hu:{
+ h:[,
+  ['Lásd a tetoválásod, mielőtt örökre szól.','A saját fotódon. Ma, és minden évben utána.'],
+  ['Így néz ki ma a bőrödön.','A saját fotód, a bőrtónusod, valódi méretben.'],
+  ['És 10, 30, 50 év múlva.','Húzd végig az időt, és nézd, hogyan lágyítja a nap és a bőr a vonalakat.'],
+  ['Hol öregszik a legszebben?','Tartóssági pontszám minden testrészre, stílusra és méretre.'],
+  ['Tedd tartóssá. Vagy engedd el.','Rajzold át tartósra, vagy nézd meg előre a lézeres eltávolítást.'],
+  ['Minden ötleted egy helyen.','Mentsd Pinterestről, Instagramról vagy a galériádból, jegyzetekkel.'],
+  ['Nem tudsz dönteni? Szavazzanak.','Egy link a barátaidnak: ők választanak, te döntesz.'],
+  ['Szép gyógyulás, éles vonalak.','28 napos gyógyulási napló, élő UV-index és szakértői cikkek.'],
+ ],
+ ages:['Ma','1 év','10 év','30 év','50 év'],
+ today:'Ma', yrs:'év múlva', skin:'Bőrtónus', matched:'Bőrtónus illesztve', size:'Valódi méret', sizeV:'8 cm széles', see10:'Megnézem 10 év múlva', calf:'Vádli', prev:'Az előnézeted', fore:'Belső alkar',
+ film:'Ugyanaz a tetoválás, négy pillanat', y:['Ma','10','30','50'],
+ lon:'Tartósság', lonSub:'Fine line · 8 cm', places:[['Hát felső része',80],['Belső alkar',75],['Csukló',68],['Kézfej',58],['Ujjak',54]],
+ styles:['Fine line','Blackwork','Színes'], best:'Legjobb hely', bestV:'Hát felső része', tip:'Az egytűs vonalak idővel szétterülnek. A vastagabb fő vonalak segítenek.',
+ redraw:'Rajzold át tartósra', orig:'Eredeti', redrawn:'Átrajzolva', redrawNote:'Erősebb fő vonalak, hely a terülésnek', removal:'Lézeres eltávolítás előnézete', removalNote:'Ha meggondolnád magad',
+ ideas:'Ötletek', ideasSub:'12 mentve', note:'Belső alkar, kb. 10 cm', src:['Pinterest','Instagram','Galéria'], tryit:'Kipróbálom a fotómon',
+ poll:'Melyiket csináltassam?', votes:'14 szavazat', a:'Hold és virágok', b:'Vadvirágok', share:'Szavazó-link megosztása', friend:'„A holdas. 100%.”', friendN:'Anna',
+ diary:'Gyógyulási napló', day:'9. nap / 28', steps:['Óvatos mosás, szárazra itatás','Nagyon vékony réteg krém','Uszoda, kád, szauna még nem'], nextS:'10. nap', nextT:'A hámlás nagy része elmúlt, kicsit tejszerű lehet.',
+ uv:'UV 7 · magas', uvT:'50-es fényvédő a tetoválásra, délben árnyék.', guide:'Hogyan öregszik a tetoválás', guideK:'Szakértői cikk · 6 perc',
+}}[LANG];
+
+const sb=`<div class="island"></div><div class="sb"><span>9:41</span><span class="ic"><span class="sig"><i style="height:35%"></i><i style="height:55%"></i><i style="height:78%"></i><i style="height:100%"></i></span><svg class="wifi" viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0L8 11.5Zm-4.2-4.3L2.4 5.8a8 8 0 0 1 11.2 0l-1.4 1.4a6 6 0 0 0-8.4 0ZM.3 3.7-.1 3.3" fill="currentColor"/><path d="M1 4.4a10 10 0 0 1 14 0l-1.4 1.4a8 8 0 0 0-11.2 0L1 4.4Z" fill="currentColor"/></svg><span class="bat"><i></i></span></span></div>`;
+const appbar=(right='')=>`<div class="ab"><div class="lg">${mark()}InkAge</div>${right||'<div class="av" style="background:var(--sttint);color:var(--st2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9em">V</div>'}</div>`;
+const phone=(inner,cls='')=>`<div class="ph"><div class="scr ${cls}">${sb}${inner}</div></div>`;
+const tabs=(on)=>{const n=LANG==='hu'?['Előnézet','Felfedezés','Galéria','Profil']:['Preview','Explore','Gallery','Profile'];return `<div class="tabs">${n.map((t,i)=>`<b class="${i===on?'on':''}"><i></i>${t}</b>`).join('')}</div>`};
+const hd=(n)=>`<div class="hd"><h1>${TX.h[n][0]}</h1><p>${TX.h[n][1]}</p></div>`;
+
+/* panorama art: x in panorama vw (0..600 = slides 2..7) */
+const PANO=[
+  ['d-compass-st.png',  60, 112, 78, -8],
+  ['d-frose-st.png',   150,  70, 60, 6],
+  ['d-sunmoon-st.png', 238, 120, 74, 0],
+  ['d-humm-st.png',    330,  80, 70, -10],
+  ['d-peony-st.png',   418, 132, 64, 8],
+  ['d-lav-st.png',     505,  86, 62, 4],
+  ['d-fern-st.png',    586, 120, 58, -14],
+];
+const art=(f,x,y,w,r=0,op=.95)=>`<img class="art" src="${A(f)}" style="position:absolute;z-index:1;left:${x}vw;top:calc(var(--ptop) + var(--pw) * ${y/74});width:${w}vw;transform:rotate(${r}deg);opacity:${op}">`;
+const pano=(slide)=>{
+  const off=(slide-2)*100;
+  return `<div class="pano" style="left:${-off}vw">${PANO.map(([f,x,y,w,r])=>`<img src="${A(f)}" style="left:${x-w/2}vw;top:${y}vw;width:${w}vw;transform:rotate(${r}deg);opacity:.95">`).join('')}</div>`;
+};
+
+const slides={
+1(){
+  return `<div class="fr dark">
+   <div class="brand"><i>${mark()}</i>InkAge</div>
+   <div class="hd"><h1>${TX.h[1][0]}</h1><p>${TX.h[1][1]}</p></div>
+   <div class="split" style="top:var(--stripTop)">
+     <img src="${A('sw4.jpg')}"><img class="a" src="${A('sw0.jpg')}">
+     <div class="hand"><i></i><b><svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></b></div>
+     <span class="lb l">${TX.ages[0]}</span><span class="lb r">${TX.ages[4]}</span>
+   </div>
+  </div>`;
+},
+2(){
+  const sw=['#f3d8c6','#e9c2a6','#d6a27f','#b67c57','#8a5a3c','#5e3c27'];
+  const scr=`${appbar()}
+   <div class="pg"><div class="t1">${TX.prev}</div><div class="t2">${TX.fore} · ${TX.sizeV}</div></div>
+   <div class="pg" style="margin-top:1em"><div class="ph-img" style="height:25.5em;background-image:url(${A('sun0.jpg')});background-position:40% 50%">
+     <span class="pill" style="right:.8em;top:.8em">${TX.today}</span></div></div>
+   <div class="pg" style="margin-top:1.1em"><div class="cap">${TX.skin}</div>
+     <div style="display:flex;gap:.55em;margin-top:.6em">${sw.map((c,i)=>`<span style="width:2.3em;height:2.3em;border-radius:50%;background:${c};${i===2?'box-shadow:0 0 0 .18em #fff,0 0 0 .34em #000':''}"></span>`).join('')}</div></div>
+   <div class="pg" style="margin-top:1.3em"><div class="btn">${TX.see10}</div></div>${tabs(0)}`;
+  return `<div class="fr">${art('d-compass-st.png',58,18,80,-8)}${art('d-frose-st.png',-30,40,62,10)}${hd(2)}${phone(scr)}
+   <div class="fc" style="left:4.5vw;top:calc(var(--ptop) + var(--pw) * 0.4865);width:46vw">
+     <div style="display:flex;align-items:center;gap:2.4vw"><span style="width:7vw;height:7vw;border-radius:50%;background:#d6a27f;box-shadow:0 0 0 .7vw #fff,0 0 0 1.1vw #000;flex:none"></span><div><h4>${TX.matched}</h4><p style="margin-top:.3vw">${TX.size} · ${TX.sizeV}</p></div></div>
+     <div style="margin-top:2.6vw;height:4.2vw;border-radius:1vw;background:repeating-linear-gradient(90deg,#000 0 .25vw,transparent .25vw 3.4vw),var(--mist);background-size:100% 45%,100% 100%;background-repeat:no-repeat;position:relative"></div>
+   </div></div>`;
+},
+3(){
+  const scr=`<div class="ph-img" style="position:absolute;inset:0;border-radius:0;background-image:url(${A('md2.jpg')});background-position:50% 40%"></div>
+   <div style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 55%,rgba(0,0,0,.72))"></div>
+   <div style="position:relative;padding:.4em 1.25em"><span class="pill dk" style="position:static">${TX.calf}</span></div>
+   <div style="position:absolute;left:1.3em;right:1.3em;bottom:2.4em;color:#fff">
+     <div style="font-size:6.2em;font-weight:800;letter-spacing:-.06em;line-height:.9">30</div>
+     <div style="font-size:1.05em;font-weight:600;margin:.35em 0 1.3em;opacity:.92">${TX.yrs}</div>
+     <div style="position:relative;height:1.6em">
+       <div style="position:absolute;top:.7em;left:0;right:0;height:.22em;border-radius:1em;background:rgba(255,255,255,.35)"></div>
+       <div style="position:absolute;top:.7em;left:0;width:75%;height:.22em;border-radius:1em;background:#fff"></div>
+       ${[0,25,50,75,100].map(p=>`<span style="position:absolute;left:${p}%;top:.38em;width:.85em;height:.85em;margin-left:-.42em;border-radius:50%;background:${p<=75?'#fff':'rgba(255,255,255,.45)'}"></span>`).join('')}
+       <span style="position:absolute;left:75%;top:-.05em;width:1.7em;height:1.7em;margin-left:-.85em;border-radius:50%;background:#fff;box-shadow:0 .2em .8em rgba(0,0,0,.35),0 0 0 .3em var(--st)"></span>
+     </div>
+     <div style="display:flex;justify-content:space-between;font-size:.78em;font-weight:600;opacity:.85;margin-top:.5em"><span>0</span><span>1</span><span>10</span><span>30</span><span>50</span></div>
+   </div>`;
+  const film=['md0','md1','md2','md3'];
+  return `<div class="fr vio">${art('d-sunmoon-wh.png',40,10,92,0,.22)}${art('d-eye-wh.png',-40,90,80,0,.18)}${hd(3)}${phone(scr,'over')}
+   <div class="fc" style="right:4.5vw;top:calc(var(--ptop) + var(--pw) * 0.2973);padding:3vw">
+     <div class="k" style="margin-bottom:2vw">${TX.film}</div>
+     <div style="display:flex;gap:1.6vw">${film.map((k,i)=>`<div><div style="width:13vw;height:17vw;border-radius:2vw;background:url(${A(k+'.jpg')}) 50% 42%/260% auto;${i===2?'box-shadow:0 0 0 .5vw #fff,0 0 0 1vw var(--st)':''}"></div><div style="font-size:2.6vw;font-weight:700;text-align:center;margin-top:1.2vw;color:${i===2?'var(--st)':'#000'}">${TX.y[i]}</div></div>`).join('')}</div>
+   </div></div>`;
+},
+4(){
+  const col=v=>v>=75?'var(--green)':v>=62?'var(--amber)':'var(--red)';
+  const scr=`${appbar()}
+   <div class="pg"><div class="t1">${TX.lon}</div><div class="t2">${TX.lonSub}</div></div>
+   <div class="pg" style="display:flex;gap:.45em;margin-top:1em">${TX.styles.map((s,i)=>`<span class="chip ${i?'':'on'}">${s}</span>`).join('')}<span class="chip">8 cm</span></div>
+   <div class="pg" style="margin-top:1.1em;display:flex;gap:1em;align-items:center">
+     <div style="position:relative;width:8.2em;height:16em;flex:none;border-radius:1.2em;background:var(--mist)">
+       <svg viewBox="0 0 100 200" style="position:absolute;inset:.6em;width:calc(100% - 1.2em);height:calc(100% - 1.2em)"><g fill="#d9d9e0"><circle cx="50" cy="20" r="13"/><rect x="30" y="36" width="40" height="68" rx="14"/><rect x="14" y="40" width="13" height="62" rx="6.5"/><rect x="73" y="40" width="13" height="62" rx="6.5"/><rect x="33" y="98" width="15" height="92" rx="7.5"/><rect x="52" y="98" width="15" height="92" rx="7.5"/></g>
+       <circle cx="50" cy="52" r="7" fill="var(--green)"/><circle cx="50" cy="52" r="12" fill="none" stroke="var(--green)" stroke-width="1.6" opacity=".45"/>
+       <circle cx="80" cy="80" r="5" fill="var(--green)"/><circle cx="80" cy="99" r="4.5" fill="var(--amber)"/><circle cx="20" cy="103" r="4.5" fill="var(--red)"/></svg>
+     </div>
+     <div style="flex:1;min-width:0">${TX.places.map(([n,v])=>`<div class="row" style="flex-wrap:wrap;gap:.35em .5em"><b style="width:auto;flex:1">${n}</b><em style="color:${col(v)}">${v}</em><div class="bar" style="flex:0 0 100%"><i style="width:${v}%;background:${col(v)}"></i></div></div>`).join('')}</div>
+   </div>
+   <div class="pg" style="margin-top:1.2em"><div style="border-radius:1em;background:var(--sttint);color:var(--st2);padding:.85em 1em;font-size:.86em;font-weight:500;line-height:1.35">${TX.tip}</div></div>${tabs(0)}`;
+  return `<div class="fr">${art('d-humm-st.png',52,0,78,-6)}${art('d-lav-st.png',-28,70,58,8)}${hd(4)}${phone(scr)}
+   <div class="fc" style="right:4.5vw;top:calc(var(--ptop) + var(--pw) * 1.6622);display:flex;align-items:center;gap:3.4vw;padding:3.4vw 5vw 3.4vw 3.6vw">
+     <div style="position:relative;width:17vw;height:17vw;flex:none"><svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg)"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#ececf1" stroke-width="3.2"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--green)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="${0.8*97.4} 97.4"/></svg><b style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5.4vw;font-weight:800;letter-spacing:-.04em">80</b></div>
+     <div><div class="k">${TX.best}</div><h4 style="font-size:4.1vw">${TX.bestV}</h4></div>
+   </div></div>`;
+},
+5(){
+  const scr=`${appbar()}
+   <div class="pg"><div class="t1">${TX.redraw}</div></div>
+   <div class="pg" style="display:flex;gap:.7em;margin-top:1em">
+     ${[['d-frose.png',TX.orig,0],['d-frose-bold.png',TX.redrawn,1]].map(([f,l,on])=>`<div style="flex:1"><div style="height:15em;border-radius:1.1em;background:#fff url(${A(f)}) center/118% auto no-repeat;box-shadow:0 0 0 ${on?'.16em var(--st)':'1px var(--line)'}"></div><div style="font-size:.86em;font-weight:700;margin-top:.55em;color:${on?'var(--st)':'#000'}">${l}</div></div>`).join('')}
+   </div>
+   <div class="pg" style="margin-top:.4em"><div class="t2">${TX.redrawNote}</div></div>
+   <div class="pg" style="margin-top:1.1em"><div class="btn st">${TX.redraw}</div></div>
+   <div class="pg" style="margin-top:1.3em"><div style="display:flex;align-items:center;justify-content:space-between;border-radius:1em;background:var(--mist);padding:.9em 1.1em"><span class="cap" style="color:#000;font-size:.9em">${TX.lon}</span><span style="font-weight:800;font-size:1.5em;letter-spacing:-.03em"><span style="color:var(--ink3)">75</span> <span style="font-weight:500;color:var(--ink3);font-size:.7em">→</span> <span style="color:var(--green)">93</span></span></div></div>${tabs(0)}`;
+  return `<div class="fr dark">${art('d-dagger-st.png',50,4,80,-10,.85)}${art('d-peony-st.png',-34,82,70,6,.75)}${hd(5)}${phone(scr)}
+   <div class="fc" style="right:4.5vw;top:calc(var(--ptop) + var(--pw) * 1.4595);width:46vw;padding:2.6vw">
+     <div style="display:flex;gap:1.4vw"><div style="flex:1;height:19vw;border-radius:2.4vw;background:url(${A('rose0.jpg')}) 46% 40%/200% auto"></div><div style="flex:1;height:19vw;border-radius:2.4vw;background:url(${A('remnant.jpg')}) 50% 55%/240% auto"></div></div>
+     <h4 style="margin:2.2vw .6vw 0">${TX.removal}</h4><p style="margin:.6vw .6vw 0">${TX.removalNote}</p>
+   </div></div>`;
+},
+6(){
+  const it=[['moonfl.jpg',13,'50% 50%',TX.src[0]],['d-humm.png',9.5,'center/120% auto',''],['backfl.jpg',10,'50% 40%',TX.src[1]],['wildfl.jpg',12.5,'50% 55%',TX.src[2]],['d-sunmoon.png',9,'center/112% auto',''],['fineh.jpg',10.5,'55% 55%',TX.src[1]]];
+  const col=(arr)=>arr.map(([f,h,pos,s])=>`<div style="position:relative;height:${h}em;border-radius:1em;margin-bottom:.6em;background:${f.startsWith('d-')?'#fff url('+A(f)+') '+pos+' no-repeat':'url('+A(f)+') '+pos+'/cover'};${f.startsWith('d-')?'box-shadow:0 0 0 1px var(--line)':''}">${s?`<span class="pill" style="left:.5em;bottom:.5em;font-size:.68em">${s}</span>`:''}</div>`).join('');
+  const scr=`${appbar()}
+   <div class="pg" style="display:flex;align-items:flex-end;justify-content:space-between"><div><div class="t1">${TX.ideas}</div><div class="t2">${TX.ideasSub}</div></div><span style="width:2.6em;height:2.6em;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3em;font-weight:500">+</span></div>
+   <div class="pg" style="display:flex;gap:.6em;margin-top:1em"><div style="flex:1">${col([it[0],it[1],it[2]])}</div><div style="flex:1">${col([it[3],it[4],it[5]])}</div></div>${tabs(2)}`;
+  return `<div class="fr">${art('d-fern-st.png',62,10,62,-16)}${art('d-cherry-st.png',-36,64,74,12)}${hd(6)}${phone(scr)}
+   <div class="fc" style="left:4.5vw;top:calc(var(--ptop) + var(--pw) * 1.2973);width:52vw;padding:2.6vw 2.6vw 3.4vw">
+     <div style="height:26vw;border-radius:2.6vw;background:url(${A('moonfl.jpg')}) 50% 50%/cover"></div>
+     <h4 style="margin:2.6vw 1vw 0">${TX.note}</h4>
+     <div style="margin:2.4vw 1vw 0;display:inline-flex;align-items:center;height:7vw;padding:0 3.4vw;border-radius:5vw;background:#000;color:#fff;font-size:2.8vw;font-weight:600">${TX.tryit}</div>
+   </div></div>`;
+},
+7(){
+  const scr=`${appbar('<span style="font-size:.86em;font-weight:600;color:var(--ink2)">'+TX.votes+'</span>')}
+   <div class="pg"><div class="t1" style="font-size:1.6em">${TX.poll}</div></div>
+   <div class="pg" style="display:flex;gap:.6em;margin-top:1em">
+    ${[['moonfl.jpg',TX.a,64,1],['wildfl.jpg',TX.b,36,0]].map(([f,l,v,on])=>`<div style="flex:1;border-radius:1.2em;padding:.4em;background:${on?'var(--sttint)':'var(--mist)'};box-shadow:${on?'0 0 0 .14em var(--st)':'none'}"><div style="height:17em;border-radius:.9em;background:url(${A(f)}) 50% 50%/cover"></div><div style="display:flex;justify-content:space-between;padding:.6em .3em .2em;font-size:.84em;font-weight:700"><span>${l}</span><span style="color:${on?'var(--st)':'var(--ink3)'}">${v}%</span></div><div class="bar" style="margin:.35em .3em .45em;height:.42em;background:${on?'#fff':'#e4e4ea'}"><i style="width:${v}%;background:${on?'var(--st)':'#b9b9c2'}"></i></div></div>`).join('')}
+   </div>
+   <div class="pg" style="margin-top:1.2em;display:flex;align-items:center;gap:.7em"><div style="display:flex">${['#e9c2a6','#b67c57','#d6a27f','#8a5a3c'].map((c,i)=>`<span style="width:2.1em;height:2.1em;border-radius:50%;background:${c};margin-left:${i?-.55:0}em;box-shadow:0 0 0 .16em #fff"></span>`).join('')}</div><span style="font-size:.86em;font-weight:600;color:var(--ink2)">+10</span></div>
+   <div class="pg" style="margin-top:1.2em"><div class="btn">${TX.share}</div></div>${tabs(2)}`;
+  return `<div class="fr vio">${art('d-moonless-wh.png',0,0,1,0,0)}${art('d-lotus-wh.png',52,8,80,0,.28)}${art('d-olive-wh.png',-34,70,70,-20,.3)}${hd(7)}${phone(scr)}
+   <div class="fc" style="left:4.5vw;top:calc(var(--ptop) + var(--pw) * 1.4324);width:56vw;display:flex;gap:3vw;align-items:center;padding:2.6vw 3.6vw 2.6vw 2.6vw">
+     <div style="width:15vw;height:15vw;border-radius:3vw;flex:none;background:url(${A('friends.jpg')}) 50% 40%/cover"></div>
+     <div><h4>${TX.friend}</h4><p>${TX.friendN}</p></div>
+   </div></div>`;
+},
+8(){
+  const scr=`${appbar()}
+   <div class="pg"><div class="t1">${TX.diary}</div><div class="t2">${TX.day}</div></div>
+   <div class="pg" style="margin-top:1em"><div style="display:flex;gap:.22em">${Array.from({length:28},(_,i)=>`<i style="flex:1;height:.55em;border-radius:1em;background:${i<9?'var(--st)':'#e6e6ec'}"></i>`).join('')}</div></div>
+   <div class="pg" style="margin-top:1.1em"><div class="ph-img" style="height:13em;background-image:url(${A('lotion.jpg')});background-position:50% 50%"></div></div>
+   <div class="pg" style="margin-top:.8em">${TX.steps.map((s,i)=>`<div class="row" style="gap:.7em"><span style="width:1.5em;height:1.5em;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:${i<2?'#000':'#fff'};box-shadow:${i<2?'none':'0 0 0 .12em #c9c9d1 inset'}">${i<2?'<svg viewBox="0 0 12 12" style="width:.8em;height:.8em"><path d="M2.5 6.2 5 8.6l4.6-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</span><b style="width:auto;font-weight:${i<2?500:600};color:${i<2?'var(--ink3)':'#000'};${i<2?'text-decoration:line-through':''}">${s}</b></div>`).join('')}</div>
+   <div class="pg" style="margin-top:1em"><div style="border-radius:1em;background:var(--mist);padding:.8em 1em"><div class="cap">${TX.nextS}</div><div style="font-size:.9em;font-weight:500;margin-top:.25em;line-height:1.3">${TX.nextT}</div></div></div>${tabs(2)}`;
+  return `<div class="fr dark">
+   <img src="${A('d-sunmoon-st.png')}" style="position:absolute;width:96vw;left:30vw;top:calc(var(--ptop) + var(--pw) * 0.5405);opacity:.55;filter:brightness(1.35)">
+   ${hd(8)}${phone(scr)}
+   <div class="fc" style="right:4vw;top:calc(var(--ptop) + var(--pw) * 0.5946);width:47vw">
+     <div style="display:flex;align-items:center;gap:2.2vw"><span style="width:8vw;height:8vw;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 35%,#ffd36b,#f39b1a);box-shadow:0 0 3vw rgba(243,155,26,.55)"></span><h4>${TX.uv}</h4></div>
+     <p style="margin-top:1.8vw">${TX.uvT}</p></div>
+   <div class="fc" style="left:4vw;top:calc(var(--ptop) + var(--pw) * 1.6486);width:54vw;padding:2.4vw;display:flex;gap:2.6vw;align-items:center">
+     <div style="width:16vw;height:16vw;border-radius:2.4vw;flex:none;background:url(${A('sw4.jpg')}) 60% 30%/250% auto"></div>
+     <div><div class="k" style="color:#8a8a93">${TX.guideK}</div><h4 style="margin-top:.6vw">${TX.guide}</h4></div></div>
+  </div>`;
+},
+};
+
+const root=document.getElementById('root');
+root.innerHTML=slides[S]();
+const fr=root.firstElementChild; fr.classList.add(FMT);
+// hero strips start right under the text
+function layout(){
+  const hd=fr.querySelector('.hd');
+  if(S===1){ const b=hd.getBoundingClientRect().bottom; fr.style.setProperty('--stripTop',(b+innerWidth*.07)+'px'); }
+  else { const b=hd.getBoundingClientRect().bottom; fr.style.setProperty('--ptop',(b+innerWidth*.075)+'px'); }
+}
+// fit headline to max 3 lines
+function fit(){const h1=fr.querySelector('.hd h1');
+if(h1){ let fs=parseFloat(getComputedStyle(h1).fontSize); const lh=()=>parseFloat(getComputedStyle(h1).lineHeight);
+  while(h1.getBoundingClientRect().height>lh()*3.05 && fs>20){ fs-=1; h1.style.fontSize=fs+'px'; } }}
+if(q.get('scr')){document.head.insertAdjacentHTML('beforeend','<style>.fr>*:not(.ph){display:none!important}.fr{background:#fff!important}.ph{position:fixed!important;left:0!important;top:0!important;width:100vw!important;height:100vh!important;padding:0!important;border-radius:0!important;box-shadow:none!important;background:none!important;--pw:100vw}.scr{border-radius:0!important}</style>');}
+document.fonts.ready.then(()=>{ fit(); layout(); document.body.dataset.ready=1; });
+</script></body></html>
