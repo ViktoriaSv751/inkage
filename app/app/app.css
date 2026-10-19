@@ -1033,12 +1033,7 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .uploads-row img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .upload-big { display: block; width: 100%; max-height: 55vh; object-fit: contain; border-radius: 16px; background: var(--surface-2); margin: 8px 0; }
 
-/* edit profile: password change and a pending e-mail change */
-.acc-pw { display: grid; gap: 8px; }
-.acc-show { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--ink-2); }
-.sheet .acc-show input { width: 18px; height: 18px; padding: 0; flex: none; accent-color: var(--stencil); }
-.acc-err { margin: 0; font-size: 14px; color: #d93025; font-weight: 600; }
-.acc-pending { color: var(--stencil); font-weight: 600; }
+/* edit profile */
 
 /* photo editor: one-tap copy of the selected tattoo, and the headings in the "add another" sheet */
 .hdl-dup { position: absolute; right: 100%; top: -34px; margin-right: -15px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: #5b3df5; color: #fff; pointer-events: auto; display: grid; place-items: center; box-shadow: 0 1px 6px rgba(0, 0, 0, .35); z-index: 1; }
@@ -1085,3 +1080,4 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .idea-mtile img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .idea-mtile button { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .6); color: #fff; font-size: 16px; line-height: 1; display: grid; place-items: center; cursor: pointer; }
 .idea-more { justify-self: center; cursor: pointer; }
+.acc-note { margin: -4px 0 14px; font-size: 14px; }

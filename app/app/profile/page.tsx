@@ -35,22 +35,16 @@ export default function ProfilePage() {
   const [fbMsg, setFbMsg] = useState('');
   const [fbEmail, setFbEmail] = useState('');
   const [fbBusy, setFbBusy] = useState(false);
-  // account: name, picture, e-mail, password (name and picture live in the app state, so the top bar updates too)
+  // account: name and picture (they live in the app state, so the top bar updates too); e-mail and password belong
+  // to the Google / Apple account the person signs in with
   const meta = profile;
   const [editOpen, setEditOpen] = useState(false);
   const [nameIn, setNameIn] = useState('');
-  const [emailIn, setEmailIn] = useState('');
-  const [pw, setPw] = useState({ cur: '', next: '', again: '' });
-  const [pwShow, setPwShow] = useState(false);
-  const [pwErr, setPwErr] = useState('');
   const [accBusy, setAccBusy] = useState('');
   const [notifyOn, setNotifyOn] = useState(true);
   useEffect(() => setNotifyOn(me.notifyVotes !== false), [me.notifyVotes]);
   const openEdit = () => {
     setNameIn(meta.name);
-    setEmailIn(me.user?.email || '');
-    setPw({ cur: '', next: '', again: '' });
-    setPwErr('');
     setEditOpen(true);
   };
   const saveName = async () => {
@@ -62,49 +56,6 @@ export default function ProfilePage() {
     if (error) return toast(t('Could not save your name. Try again.', 'Nem sikerült menteni a nevet. Próbáld újra.'));
     setProfile({ name: (data as string | null) || '' });
     toast(t('Saved', 'Mentve'));
-  };
-  const saveEmail = async () => {
-    const e = emailIn.trim().toLowerCase();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return toast(t('That e-mail address does not look right.', 'Ez az e-mail-cím nem tűnik helyesnek.'));
-    if (e === (me.user?.email || '').toLowerCase()) return;
-    setAccBusy('email');
-    const { error } = (await sb()?.auth.updateUser({ email: e }, { emailRedirectTo: `${location.origin}/app/profile` })) || {};
-    setAccBusy('');
-    if (error) return toast(/registered|exists|already/i.test(error.message) ? t('This e-mail is already used by another account.', 'Ezt az e-mail-címet már egy másik fiók használja.') : t('Could not change the e-mail. Try again.', 'Nem sikerült módosítani az e-mail-címet. Próbáld újra.'));
-    setProfile({ pendingEmail: e });
-    toast(t('Check both inboxes and confirm the change.', 'Nézd meg mindkét postafiókot, és erősítsd meg a módosítást.'));
-  };
-  /** What is wrong with the new password, or '' when it is fine. */
-  const pwProblem = (p: string) =>
-    p.length < 8
-      ? t('At least 8 characters.', 'Legalább 8 karakter legyen.')
-      : !/[a-zA-ZÀ-ž]/.test(p) || !/\d/.test(p)
-        ? t('Use letters and at least one number.', 'Legyen benne betű és legalább egy szám.')
-        : '';
-  const savePassword = async () => {
-    const s = sb();
-    if (!s || !me.user?.email) return;
-    setPwErr('');
-    if (meta.hasPassword && !pw.cur) return setPwErr(t('Enter your current password.', 'Add meg a jelenlegi jelszavad.'));
-    const bad = pwProblem(pw.next);
-    if (bad) return setPwErr(bad);
-    if (pw.next !== pw.again) return setPwErr(t('The two new passwords do not match.', 'A két új jelszó nem egyezik.'));
-    if (meta.hasPassword && pw.cur === pw.next) return setPwErr(t('The new password must differ from the current one.', 'Az új jelszó legyen más, mint a jelenlegi.'));
-    setAccBusy('pw');
-    // the current password is checked first: someone at an unlocked phone cannot take over the account
-    if (meta.hasPassword) {
-      const { error } = await s.auth.signInWithPassword({ email: me.user.email, password: pw.cur });
-      if (error) {
-        setAccBusy('');
-        return setPwErr(t('The current password is not right.', 'A jelenlegi jelszó nem helyes.'));
-      }
-    }
-    const { error } = await s.auth.updateUser({ password: pw.next });
-    setAccBusy('');
-    if (error) return setPwErr(/same|different/i.test(error.message) ? t('The new password must differ from the current one.', 'Az új jelszó legyen más, mint a jelenlegi.') : t('Could not change the password. Sign in again and retry.', 'Nem sikerült módosítani a jelszót. Lépj be újra, és próbáld meg ismét.'));
-    setPw({ cur: '', next: '', again: '' });
-    setProfile({ hasPassword: true });
-    toast(t('Password changed', 'Jelszó módosítva'));
   };
   const pickAvatar = async (file: File) => {
     if (!me.user) return;
@@ -337,7 +288,7 @@ export default function ProfilePage() {
           </i>
         </div>
         <h1>{me.user ? displayName : ''}</h1>
-        <p className="pf-sub">{me.user ? (meta.pendingEmail ? `${me.user.email} → ${meta.pendingEmail} (${t('to confirm', 'megerősítésre vár')})` : me.user.email) : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</p>
+        <p className="pf-sub">{me.user ? me.user.email : t('Sign in to keep your designs on every device', 'Jelentkezz be, hogy minden eszközön meglegyenek a terveid')}</p>
         {me.user ? (
           <div className="pf-acts">
             <button className="pf-edit" onClick={openEdit}>
@@ -683,42 +634,9 @@ export default function ProfilePage() {
             </button>
           </div>
         </label>
-        <label className="acc-field">
-          <span>{t('E-mail', 'E-mail-cím')}</span>
-          <div className="acc-row">
-            <input className="text" type="email" value={emailIn} onChange={(e) => setEmailIn(e.target.value)} />
-            <button className="btn" disabled={accBusy === 'email' || emailIn.trim() === (me.user?.email || '')} onClick={saveEmail}>
-              {t('Change', 'Módosítás')}
-            </button>
-          </div>
-          {meta.pendingEmail ? (
-            <small className="acc-pending">
-              {t(`Waiting for confirmation: ${meta.pendingEmail}. Open the link we sent to both addresses; until then you sign in with the current one.`, `Megerősítésre vár: ${meta.pendingEmail}. Nyisd meg a linket, amit mindkét címre elküldtünk; addig a mostanival lépsz be.`)}
-            </small>
-          ) : (
-            <small className="muted">{t('We send a confirmation link to both addresses.', 'Mindkét címre küldünk egy megerősítő linket.')}</small>
-          )}
-        </label>
-        <div className="acc-field">
-          <span>{meta.hasPassword ? t('Change password', 'Jelszó módosítása') : t('Set a password', 'Jelszó beállítása')}</span>
-          {!meta.hasPassword && <small className="muted">{t('You sign in with Google or Apple. With a password you can also sign in with your e-mail.', 'Google-lel vagy Apple-lel lépsz be. Jelszóval az e-mail-címeddel is be tudsz lépni.')}</small>}
-          <div className="acc-pw">
-            {meta.hasPassword && (
-              <input className="text" type={pwShow ? 'text' : 'password'} autoComplete="current-password" value={pw.cur} onChange={(e) => setPw({ ...pw, cur: e.target.value })} placeholder={t('Current password', 'Jelenlegi jelszó')} aria-label={t('Current password', 'Jelenlegi jelszó')} />
-            )}
-            <input className="text" type={pwShow ? 'text' : 'password'} autoComplete="new-password" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} placeholder={t('New password (8+ characters, a number)', 'Új jelszó (min. 8 karakter, egy szám)')} aria-label={t('New password', 'Új jelszó')} />
-            <input className="text" type={pwShow ? 'text' : 'password'} autoComplete="new-password" value={pw.again} onChange={(e) => setPw({ ...pw, again: e.target.value })} placeholder={t('New password again', 'Új jelszó még egyszer')} aria-label={t('New password again', 'Új jelszó még egyszer')} />
-            <label className="acc-show">
-              <input type="checkbox" checked={pwShow} onChange={(e) => setPwShow(e.target.checked)} /> {t('Show passwords', 'Jelszavak mutatása')}
-            </label>
-            {pw.next && !pwErr && pwProblem(pw.next) && <small className="muted">{pwProblem(pw.next)}</small>}
-            {pw.again && pw.next !== pw.again && !pwErr && <small className="muted">{t('The two new passwords do not match yet.', 'A két új jelszó még nem egyezik.')}</small>}
-            {pwErr && <p className="acc-err" role="alert">{pwErr}</p>}
-            <button className="btn wide" disabled={accBusy === 'pw' || !pw.next || !pw.again || (meta.hasPassword && !pw.cur)} onClick={savePassword}>
-              {accBusy === 'pw' ? t('Saving…', 'Mentés…') : meta.hasPassword ? t('Change password', 'Jelszó módosítása') : t('Set password', 'Jelszó beállítása')}
-            </button>
-          </div>
-        </div>
+        <p className="muted acc-note">
+          {t('You sign in with Google or Apple, so your e-mail and password are managed there.', 'Google- vagy Apple-fiókkal lépsz be, így az e-mail-címed és a jelszavad ott kezelhető.')}
+        </p>
         <button className="btn wide ghost" onClick={() => setEditOpen(false)} {...closeTap(() => setEditOpen(false))}>
           {t('Done', 'Kész')}
         </button>
