@@ -2,6 +2,8 @@
 import { siteOrigin } from '@/lib/site';
 import { tx, qOf, type Lang } from '@/lib/tr';
 import { ThemeToggle } from '../ThemeToggle';
+import { LangPicker } from '../LangPicker';
+import { setLang } from '@/lib/i18n';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -177,6 +179,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
           InkAge
         </Link>
         <span className="au-top-r">
+          <LangPicker lang={lang} variant="icon" onPick={(l) => setLang(l)} />
           <ThemeToggle lang={lang} />
           <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
