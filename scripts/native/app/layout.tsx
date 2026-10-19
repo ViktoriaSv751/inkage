@@ -21,7 +21,7 @@ var L=['hu','en','de','es','pt','fr','it','pl','tr','ro','nl','sv','cs','el','uk
 function dev(){var ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);for(var i=0;i<ls.length;i++){var x=String(ls[i]).toLowerCase();if(/^zh-(cn|hans|sg)/.test(x))return 'zhs';if(/^zh/.test(x))return 'zh';var b=x.split('-')[0];if(b==='nb'||b==='nn')b='no';if(b==='tl')b='fil';if(L.indexOf(b)>=0)return b;}return 'en';}
 var q=new URLSearchParams(location.search).get('lang');var s=null;try{s=localStorage.getItem('ink_lang');}catch(e){}
 var l=(q&&L.indexOf(q)>=0)?q:(s&&L.indexOf(s)>=0)?s:dev();d.lang=l;try{if(!s)localStorage.setItem('ink_lang',l);}catch(e){}
-var v=${JSON.stringify(MANIFEST)}[l];if(v)document.write('<script src="/locales/'+l+'.js?v='+v+'"><'+'/script>');}catch(e){}})();`;
+var v=${JSON.stringify(MANIFEST)}[l];if(v)document.write('<script src="https://inkage.app/locales/'+l+'.js?v='+v+'"><'+'/script>');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
