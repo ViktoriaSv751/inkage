@@ -11,7 +11,6 @@ import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
 import { uploads } from '@/lib/uploads';
 import { IdeaSheet } from './IdeaSheet';
-import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { cropImage, offSkin, processDesign, Placement, skinVeil } from '@/lib/editor';
 import { Box, Found, TattooPicker } from './Picker';
 import { frameCm, photoCm } from '@/lib/score';
@@ -234,8 +233,6 @@ export function StudioStep({
   const [ideaOpen, setIdeaOpen] = useState(false);
   const [link, setLink] = useState('');
   const [linkBusy, setLinkBusy] = useState(false);
-  const [libQ, setLibQ] = useState('');
-  const [libStyle, setLibStyle] = useState<'' | 'fine-line' | 'blackwork' | 'traditional'>('');
 
   const usePhoto = (p: Photo) => {
     setPhoto(p);
@@ -737,34 +734,6 @@ export function StudioStep({
         </div>
       ) : (
         <>
-      <div className="section-title" style={{ marginTop: 18 }}>
-        <h2 style={{ fontSize: 20 }}>{t('No design? Try one of ours', 'Nincs mintád? Próbáld ki a mieinket')}</h2>
-      </div>
-      <div className="libtools">
-        <input type="search" id="lib-search" placeholder={t('Search: rose, moon, wave…', 'Keresés: rózsa, hold, hullám…')} value={libQ} onChange={(e) => setLibQ(e.target.value)} />
-        <div className="row" style={{ gap: 6 }}>
-          {(['', 'fine-line', 'blackwork', 'traditional'] as const).map((st) => (
-            <button key={st || 'all'} className={`chip ${libStyle === st ? 'on' : ''}`} onClick={() => setLibStyle(st)}>
-              {st === '' ? t('All', 'Mind') : st === 'fine-line' ? t('Fine line', 'Finom vonalas') : st === 'blackwork' ? 'Blackwork' : t('Classic', 'Klasszikus')}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="hscroll">
-        {DESIGNS.filter((d) => (!libStyle || d.style === libStyle) && (!libQ.trim() || `${d.en} ${d.hu}`.toLowerCase().includes(libQ.trim().toLowerCase()))).map((d) => (
-          <button
-            key={d.id}
-            className={`ex-design small ${design?.libId === d.id ? 'on' : ''}`}
-            aria-label={t(d.en, d.hu)}
-            onClick={() => {
-              track('design_added', { src: 'library', id: d.id });
-              applyDesign(d.src, 'black', d.id);
-            }}
-          >
-            <img src={d.thumb || d.src} alt="" loading="lazy" onError={(e) => { const i = e.currentTarget; if (i.src !== d.src) i.src = d.src; }} />
-          </button>
-        ))}
-      </div>
           <div className="card aimaker">
             <h3>{t('Describe it — we’ll draw it', 'Írd le – megrajzoljuk')}</h3>
             <textarea
@@ -1476,14 +1445,6 @@ export function PlaceStep({
             </div>
           </>
         )}
-        <p className="layer-lib-h">{t('From the library', 'A mintatárból')}</p>
-        <div className="layer-lib">
-          {DESIGNS.slice(0, 12).map((d) => (
-            <button key={d.id} type="button" disabled={addBusy} onClick={() => addLayer(d.src, false)} aria-label={t(d.en, d.hu)}>
-              <img src={d.thumb || d.src} alt="" loading="lazy" />
-            </button>
-          ))}
-        </div>
       </Sheet>
 
       </div>
