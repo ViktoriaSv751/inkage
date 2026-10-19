@@ -1,0 +1,29 @@
+name: Android AAB (unsigned)
+on:
+  push:
+    branches: [aab-build]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm ci --ignore-scripts
+      - name: Firebase config (push) from the GOOGLE_SERVICES_JSON_B64 secret, if set
+        env: { GS: '${{ secrets.GOOGLE_SERVICES_JSON_B64 }}' }
+        run: |
+          if [ -n "$GS" ]; then echo "$GS" | base64 -d > android/app/google-services.json; echo "push: on";
+          else echo "CAP_NO_PUSH=1" >> "$GITHUB_ENV"; echo "push: off (no secret) – push plugin left out so nothing can crash"; fi
+      - run: npx cap sync android
+      - run: cd android && chmod +x gradlew && ./gradlew --no-daemon bundleRelease
+      - name: Publish result to aab-out branch
+        run: |
+          mkdir /tmp/out && cp android/app/build/outputs/bundle/release/*.aab /tmp/out/app-release-unsigned.aab
+          cd /tmp/out && git init -q -b aab-out && git add -f . \
+            && git -c user.name=ci -c user.email=ci@inkage.app commit -qm "AAB ${GITHUB_SHA}" \
+            && git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" aab-out

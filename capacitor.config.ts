@@ -23,6 +23,10 @@ const config: CapacitorConfig = {
   android: {
     backgroundColor: '#000000',
     allowMixedContent: false,
+    // a build without Firebase (no google-services.json) must not ship the push plugin: calling it would crash
+    ...(process.env.CAP_NO_PUSH === '1'
+      ? { includePlugins: ['@capacitor/app', '@capacitor/browser', '@capacitor/camera', '@capacitor/filesystem', '@capacitor/haptics', '@capacitor/local-notifications', '@capacitor/share', '@capacitor/splash-screen', '@capacitor/status-bar'] }
+      : {}),
   },
   plugins: {
     SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#ffffff', androidScaleType: 'CENTER_CROP', showSpinner: false },
