@@ -17,10 +17,10 @@ export type Me = {
   onboarding?: any;
   notifyVotes?: boolean;
 };
-/** What the person set on their account (name, picture) and an e-mail change still waiting for confirmation.
-    Kept here, so the top bar, the profile and the edit sheet always show the same thing. */
-export type Profile = { name: string; avatar: string | null; pendingEmail: string | null; hasPassword: boolean };
-const NO_PROFILE: Profile = { name: '', avatar: null, pendingEmail: null, hasPassword: false };
+/** What the person set on their account (name, picture). Kept here, so the top bar, the profile and the edit sheet
+    always show the same thing. */
+export type Profile = { name: string; avatar: string | null };
+const NO_PROFILE: Profile = { name: '', avatar: null };
 
 type Cfg = { ai: boolean; auth: boolean; payments: boolean; nativePush?: { android: boolean; ios: boolean } };
 
@@ -56,9 +56,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const { data: pr } = await s.from('profiles').select('display_name').eq('id', u.id).maybeSingle();
     let avatar: string | null = null;
     if (md.avatar_path) avatar = (await s.storage.from('previews').createSignedUrl(md.avatar_path, 60 * 60 * 24)).data?.signedUrl ?? null;
-    // Google / Apple sign-ins have no password until the person sets one
-    const providers: string[] = (u.app_metadata as any)?.providers || [(u.app_metadata as any)?.provider].filter(Boolean);
-    setProfileState({ name: String((pr as any)?.display_name || md.full_name || md.name || '').trim(), avatar, pendingEmail: (u as any).new_email || null, hasPassword: providers.includes('email') });
+    setProfileState({ name: String((pr as any)?.display_name || md.full_name || md.name || '').trim(), avatar });
   }, []);
   const [cfg, setCfg] = useState<Cfg | null>(null);
   const [msg, setMsg] = useState('');
