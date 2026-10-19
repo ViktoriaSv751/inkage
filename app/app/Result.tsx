@@ -1,4 +1,5 @@
 'use client';
+import { siteOrigin } from '@/lib/site';
 import { pick, qOf } from '@/lib/tr';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -301,7 +302,7 @@ export function Result({
   };
 
   const shareLink = async (id: string) => {
-    const url = `${location.origin}/v/${id}`;
+    const url = `${siteOrigin()}/v/${id}`;
     track('share_link', { id });
     const nav: any = navigator;
     const text = t('Should I get this tattoo? Here’s how it looks in 50 years 👀', 'Csináltassam meg ezt a tetoválást? Így néz ki 50 év múlva 👀');
@@ -1059,7 +1060,7 @@ function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: numbe
                   <button
                     className="chipbtn"
                     onClick={async () => {
-                      await navigator.clipboard.writeText(`${location.origin}/v/${id}`).catch(() => {});
+                      await navigator.clipboard.writeText(`${siteOrigin()}/v/${id}`).catch(() => {});
                       toast(t('Link copied', 'Link másolva'));
                     }}
                   >
@@ -1091,7 +1092,7 @@ function LinksPanel({ preview, tick, onShared }: { preview: Preview; tick: numbe
               <button
                 className="chipbtn"
                 onClick={async () => {
-                  await navigator.clipboard.writeText(`${location.origin}/v/${id}`).catch(() => {});
+                  await navigator.clipboard.writeText(`${siteOrigin()}/v/${id}`).catch(() => {});
                   toast(t('Link copied', 'Link másolva'));
                 }}
               >

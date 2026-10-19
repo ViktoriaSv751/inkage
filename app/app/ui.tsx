@@ -1,4 +1,5 @@
 'use client';
+import { siteOrigin } from '@/lib/site';
 import { qOf } from '@/lib/tr';
 import { oauthParams } from '@/lib/auth-help';
 
@@ -278,7 +279,7 @@ export function AuthSheet() {
       return;
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
-    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
 
@@ -287,7 +288,7 @@ export function AuthSheet() {
     if (!s) return;
     setBusy(true);
     setErr('');
-    const { error } = await s.auth.signInWithOtp({ email, options: { emailRedirectTo: `${location.origin}/app/gallery`, shouldCreateUser: true } });
+    const { error } = await s.auth.signInWithOtp({ email, options: { emailRedirectTo: `${siteOrigin()}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
     if (error) return setErr(/rate/i.test(error.message) ? L('Too many emails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
     setSent(true);
@@ -364,7 +365,7 @@ export function AuthSheet() {
 /** Shown when this month's previews are used up. */
 export function OutOfPreviews({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { me, ui, openAuth, toast } = useApp();
-  const link = me.user ? `${typeof location !== 'undefined' ? location.origin : ''}/?ref=${me.user.id}` : '';
+  const link = me.user ? `${siteOrigin()}/?ref=${me.user.id}` : '';
   return (
     <Sheet open={open} onClose={onClose} label="Out of previews">
       <h2>{ui.t('paywall.used')}</h2>

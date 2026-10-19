@@ -1,18 +1,17 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-/* The store apps are a thin native shell around the live web app (https://inkage.app/app),
-   with native sign-in, push, share sheet, splash screen and deep links. Change `server.url`
-   if the production domain changes. `cap-www` is only the offline fallback page. */
+/* The store apps carry their own copy of the app screens (cap-native/, built by scripts/native-build.mjs:
+   App Store rule 4.2), with native sign-in, camera, push, local reminders, share sheet and deep links.
+   The API, photos and website pages stay on https://inkage.app. CAP_SERVER_URL=<url> switches back to
+   loading a live site (for debugging only). */
 const config: CapacitorConfig = {
   appId: 'app.inkage',
   appName: 'InkAge',
-  webDir: 'cap-www',
+  webDir: 'cap-native',
   appendUserAgent: 'InkAgeApp',
-  server: {
-    url: process.env.CAP_SERVER_URL || 'https://inkage.app/app',
-    cleartext: false,
-    errorPath: 'index.html',
-  },
+  server: process.env.CAP_SERVER_URL
+    ? { url: process.env.CAP_SERVER_URL, cleartext: false }
+    : { androidScheme: 'https', hostname: 'localhost' },
   // dark first: the native frame around the web app is black (takes effect with the next store build)
   ios: {
     contentInset: 'never',

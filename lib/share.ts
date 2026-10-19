@@ -1,4 +1,5 @@
 'use client';
+import { siteOrigin } from '@/lib/site';
 import { loadImage } from './client';
 import { api, sb } from './sb';
 import { Preview, track } from './store';
@@ -19,7 +20,7 @@ export async function smallJpeg(src: string, max = 900) {
 
 /** Open the share sheet (or copy) for a vote link. */
 export async function shareVoteLink(id: string, text: string, copied: () => void) {
-  const url = `${location.origin}/v/${id}`;
+  const url = `${siteOrigin()}/v/${id}`;
   track('share_link', { id });
   const nav: any = navigator;
   if (nav.share) await nav.share({ url, title: 'InkAge', text }).catch(() => {});

@@ -1,5 +1,6 @@
 'use client';
 
+import { siteOrigin } from '@/lib/site';
 import { useEffect, useMemo, useState } from 'react';
 import { useApp } from './AppProvider';
 import { Sheet } from './ui';
@@ -64,7 +65,7 @@ export function PollSheet({ open, onClose, initial }: { open: boolean; onClose: 
     setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length >= MAX ? (toast(t(`Up to ${MAX} designs`, `Legfeljebb ${MAX} terv`)), s) : [...s, id]));
   };
 
-  const url = made ? `${typeof location !== 'undefined' ? location.origin : ''}/v/${made}` : '';
+  const url = made ? `${siteOrigin()}/v/${made}` : '';
   const send = async () => {
     const nav: any = navigator;
     track('share_link', { id: made });

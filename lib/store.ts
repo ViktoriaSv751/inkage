@@ -173,7 +173,7 @@ async function signed(paths: Partial<Record<string, string>>) {
   const s = sb()!;
   const out: Partial<Record<string, string>> = {};
   // images restored from the server's generation records are served from there
-  for (const [k, p] of Object.entries(paths)) if (p && p.startsWith('job:')) out[k] = `/api/job-img/${p.split(':')[1]}/${p.split(':')[2] || k}`;
+  for (const [k, p] of Object.entries(paths)) if (p && p.startsWith('job:')) out[k] = `${process.env.NEXT_PUBLIC_NATIVE_BUNDLE ? "https://inkage.app" : ""}/api/job-img/${p.split(':')[1]}/${p.split(':')[2] || k}`;
   const list = Object.entries(paths).filter(([, p]) => !!p && !p.startsWith('job:')) as [string, string][];
   if (!list.length) return out;
   const { data } = await s.storage.from('previews').createSignedUrls(
