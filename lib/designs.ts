@@ -95,7 +95,7 @@ export const DESIGNS: LibDesign[] = [
 
 /** Original flash designs (AI-drawn for InkAge, black ink on white). */
 // served through our own /api/lib-img (edge-cached copies of the original files)
-const CDN = '/api/lib-img?f=';
+const CDN = (process.env.NEXT_PUBLIC_NATIVE_BUNDLE ? 'https://inkage.app' : '') + '/api/lib-img?f=';
 export const FLASH: LibDesign[] = [
   { id: 'rose', en: 'Rose', hu: 'Rózsa', style: 'fine-line', src: CDN + 'hf_20261012_155954_fd830d0f-7102-4ef8-94d3-6f8b588ae649.png', thumb: CDN + 'hf_20261012_155954_fd830d0f-7102-4ef8-94d3-6f8b588ae649.png&w=240' },
   { id: 'peony', en: 'Peony', hu: 'Bazsarózsa', style: 'traditional', src: CDN + 'hf_20261012_155956_d83e6d90-66cb-436c-b967-28a5369f392e.png', thumb: CDN + 'hf_20261012_155956_d83e6d90-66cb-436c-b967-28a5369f392e.png&w=240' },

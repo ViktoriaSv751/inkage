@@ -1,4 +1,5 @@
 'use client';
+import { siteOrigin } from '@/lib/site';
 import { tx, qOf, type Lang } from '@/lib/tr';
 import { ThemeToggle } from '../ThemeToggle';
 
@@ -87,7 +88,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     if (!okEmail || pw.length < 8 || !agree || busy) return;
     setBusy(true);
     setErr('');
-    const { data, error } = (await sb()?.auth.signUp({ email: email.trim(), password: pw, options: { data: { full_name: name.trim() }, emailRedirectTo: `${location.origin}/app/gallery` } })) || ({ error: { message: 'unavailable' } } as any);
+    const { data, error } = (await sb()?.auth.signUp({ email: email.trim(), password: pw, options: { data: { full_name: name.trim() }, emailRedirectTo: `${siteOrigin()}/app/gallery` } })) || ({ error: { message: 'unavailable' } } as any);
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_signup');
@@ -100,7 +101,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     if (!okEmail || busy) return;
     setBusy(true);
     setErr('');
-    const { error } = (await sb()?.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${location.origin}/uj-jelszo${q}` })) || { error: { message: 'unavailable' } as any };
+    const { error } = (await sb()?.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${siteOrigin()}/uj-jelszo${q}` })) || { error: { message: 'unavailable' } as any };
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_reset_request');
@@ -115,7 +116,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     if (!s) return setErr(T('Sign-in is not available right now.', 'A belépés most nem érhető el.'));
     setBusy(true);
     setErr('');
-    const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${location.origin}/app/gallery`, shouldCreateUser: true } });
+    const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${siteOrigin()}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
     if (error) return setErr(/rate/i.test(error.message) ? T('Too many e-mails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
     track(mode === 'login' ? 'auth_code_login' : 'auth_code_signup');
@@ -164,7 +165,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
       return;
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
-    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
+    const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
 

@@ -1,4 +1,5 @@
 'use client';
+import { siteOrigin } from '@/lib/site';
 import { localeOf } from '@/lib/tr';
 
 import { useEffect, useState } from 'react';
@@ -75,7 +76,7 @@ export function MyShares() {
             <button
               className="chipbtn"
               onClick={async () => {
-                const url = `${location.origin}/v/${m.share_id}`;
+                const url = `${siteOrigin()}/v/${m.share_id}`;
                 const nav: any = navigator;
                 if (nav.share) await nav.share({ url, title: 'InkAge', text: `${m.question || ''} 👀` }).catch(() => {});
                 else {
@@ -117,7 +118,7 @@ export function MyShares() {
               <button
                 className="chipbtn"
                 onClick={async () => {
-                  await navigator.clipboard.writeText(`${location.origin}/v/${r.id}`).catch(() => {});
+                  await navigator.clipboard.writeText(`${siteOrigin()}/v/${r.id}`).catch(() => {});
                   toast(t('Link copied', 'Link másolva'));
                 }}
               >

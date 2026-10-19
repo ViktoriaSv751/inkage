@@ -6,3 +6,5 @@ public/img
 
 # Firebase config for the Android app (kept out of the public repo; copy it into android/app/)
 android/app/google-services.json
+.native-build/
+cap-native/

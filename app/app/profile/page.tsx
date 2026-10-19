@@ -1,4 +1,5 @@
 'use client';
+import { siteOrigin } from '@/lib/site';
 import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
@@ -178,7 +179,7 @@ export default function ProfilePage() {
     return () => window.removeEventListener('beforeinstallprompt', h);
   }, []);
 
-  const link = me.user ? `${location.origin}/?ref=${me.user.id}` : '';
+  const link = me.user ? `${siteOrigin()}/?ref=${me.user.id}` : '';
   const invite = async () => {
     track('invite_share');
     try {

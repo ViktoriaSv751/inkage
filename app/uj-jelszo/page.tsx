@@ -1,9 +1,12 @@
-import { qOf, langOf } from '@/lib/tr';
-import { redirect } from 'next/navigation';
+import { tx, langOf } from '@/lib/tr';
+import type { Metadata } from 'next';
+import { NewPassword } from '../_auth/NewPassword';
 
 export const dynamic = 'force-dynamic';
+export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+  return { title: tx(langOf(searchParams), 'New password – InkAge', 'Új jelszó – InkAge'), robots: { index: false } };
+}
 
-/** Sign-in is only with Google or Apple: there is no password to reset, so an old link leads to sign-in. */
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
-  redirect(`/belepes${qOf(langOf(searchParams))}`);
+  return <NewPassword lang={langOf(searchParams)} />;
 }
