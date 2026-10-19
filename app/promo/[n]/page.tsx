@@ -43,7 +43,7 @@ const T = {
     tag: 'See any tattoo on your own photo – fresh and after 1, 10, 30 and 50 years.',
   },
   hu: {
-    s1: ['Tetoválás-öregedés előnézet', 'Nézd meg a tetoválásod', '50 év múlva', 'A saját fotódon, mielőtt végleges lesz.'],
+    s1: ['Tetoválás-öregedés előnézet', 'A tetoválásod', '50 év múlva', 'A saját fotódon, mielőtt végleges lesz.'],
     s2: ['Friss vagy 50 éves', 'Ugyanaz a tetoválás.', 'Ötven év különbség.', 'Húzd a vonalat: nap, bőr és idő.'],
     s3: ['Saját fotó, bármilyen minta', 'A te bőröd.', 'A te fényeid.', 'Fotózd le a helyét, válassz mintát vagy írd le.'],
     s4: ['Méret és elhelyezés', 'Dönts nyugodtan,', 'ne a székben.', 'Valódi centiméter, három hely, egy este.'],
