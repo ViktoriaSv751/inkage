@@ -11,6 +11,7 @@ import { track } from '@/lib/store';
 import { oauthParams, authErrorText } from '@/lib/auth-help';
 import { AuthArt } from './AuthArt';
 import './auth.css';
+import { LogoMark } from '../LogoMark';
 
 
 /** Full-page sign-in / sign-up with e-mail code (and Google / Apple when switched on). */
@@ -170,10 +171,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     <div className="au">
       <header className="au-bar">
         <Link href={`/${q}`} className="au-logo" aria-label="InkAge">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <circle cx="32" cy="32" r="30" />
-            <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-          </svg>
+          <LogoMark />
           InkAge
         </Link>
         <span className="au-top-r">

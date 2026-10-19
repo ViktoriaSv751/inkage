@@ -5,6 +5,13 @@
       "size": "1024x1024",
       "filename": "AppIcon-512@2x.png",
       "platform": "ios"
+    },
+    {
+      "appearances": [{ "appearance": "luminosity", "value": "dark" }],
+      "idiom": "universal",
+      "size": "1024x1024",
+      "filename": "AppIcon-dark.png",
+      "platform": "ios"
     }
   ],
   "info": {

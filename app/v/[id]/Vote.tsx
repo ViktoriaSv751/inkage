@@ -8,6 +8,7 @@ import { anonId, lsGet, lsSet, track } from '@/lib/store';
 import { useLang, tx } from '@/lib/i18n';
 import type { Share } from './SharedView';
 import { Report } from './Report';
+import { LogoMark } from '../../LogoMark';
 
 /** inApp: opened from Explore inside the app (no site logo, the call to action stays in the app) */
 export function Vote({ id, initial, inApp = false }: { id: string; initial: Share; inApp?: boolean }) {
@@ -54,6 +55,7 @@ export function Vote({ id, initial, inApp = false }: { id: string; initial: Shar
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
         {!inApp && (
         <Link href="/" className="logo" style={{ fontSize: 26 }}>
+          <LogoMark />
           InkAge
         </Link>
       )}
@@ -96,6 +98,7 @@ export function Vote({ id, initial, inApp = false }: { id: string; initial: Shar
     <main style={{ maxWidth: 520, margin: '0 auto', padding: '20px 16px 60px', position: 'relative', zIndex: 1 }}>
       {!inApp && (
       <Link href="/" className="logo" style={{ fontSize: 26 }}>
+        <LogoMark />
         InkAge
       </Link>
     )}

@@ -15,7 +15,7 @@ export function layout(o: { title: string; lines: string[]; button?: { href: str
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f7;padding:28px 12px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fff;border-radius:24px;padding:32px 28px">
 <tr><td>
-<p style="margin:0 0 22px;font-weight:800;font-size:20px;letter-spacing:-.02em;color:#000">● InkAge</p>
+<p style="margin:0 0 22px;font-weight:800;font-size:20px;letter-spacing:-.02em;color:#000"><img src="https://inkage.app/brand/mark-black-96.png" width="30" height="28" alt="" style="vertical-align:-6px;border:0;margin-right:8px">InkAge</p>
 <h1 style="margin:0 0 16px;font-size:26px;line-height:1.15;letter-spacing:-.02em;color:#000">${esc(o.title)}</h1>
 ${p}${btn}
 <p style="margin:26px 0 0;font-size:13px;line-height:1.5;color:#8a8a93">${esc(o.foot || 'InkAge · AI previews for inspiration, not a guarantee.')}</p>

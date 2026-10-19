@@ -12,6 +12,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { CookieConsent, CtaBar } from './SiteExtras';
 import './sitenav.css';
 import { useScrollLock } from '@/lib/scrolllock';
+import { LogoMark } from './LogoMark';
 
 const I = {
   home: <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" />,
@@ -100,10 +101,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
       <header className={`sn-top ${scrolled ? 'scrolled' : ''}`}>
         <div className="sn-in">
           <Link href={signedIn ? '/app/gallery' : `/${q}`} className="sn-logo" aria-label="InkAge">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="30" />
-              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-            </svg>
+            <LogoMark />
             InkAge
           </Link>
           <nav className="sn-links" aria-label={T('Main', 'Fő menü')}>
@@ -134,10 +132,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
         <aside className="sn-drawer" role="dialog" aria-modal="true" aria-label={T('Menu', 'Menü')} onClick={(e) => e.stopPropagation()}>
           <div className="sn-dr-head">
             <Link href={signedIn ? '/app/gallery' : `/${q}`} className="sn-logo" aria-label="InkAge">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <circle cx="32" cy="32" r="30" />
-                <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-              </svg>
+              <LogoMark />
               InkAge
             </Link>
             <span style={{ marginLeft: 'auto', marginRight: 8 }}>

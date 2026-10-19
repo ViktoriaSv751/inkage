@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { sb } from '@/lib/sb';
 import './auth.css';
+import { LogoMark } from '../LogoMark';
 
 /** Landing page of the password-reset e-mail: set a new password. */
 export function NewPassword({ lang }: { lang: Lang }) {
@@ -48,10 +49,7 @@ export function NewPassword({ lang }: { lang: Lang }) {
       <main className="au-main">
         <header className="au-top">
           <Link href={`/${q}`} className="au-logo" aria-label="InkAge">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="30" />
-              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-            </svg>
+            <LogoMark />
             InkAge
           </Link>
         </header>

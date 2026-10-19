@@ -2,6 +2,7 @@ import { tx, qOf, type Lang } from '@/lib/tr';
 import Link from 'next/link';
 import { FooterLang, FooterSignup } from './FooterSignup';
 import './footer.css';
+import { LogoMark } from './LogoMark';
 
 /** The site-wide footer: brand + sign-up, five link columns, copyright and language. */
 export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: boolean }) {
@@ -68,10 +69,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
         <div className="sf-top">
           <div className="sf-brand">
             <Link href="/" className="sf-logo" aria-label="InkAge">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <circle cx="32" cy="32" r="30" />
-                <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-              </svg>
+              <LogoMark />
               InkAge
             </Link>
             <p>{T('See any tattoo on your own skin — fresh, and 10, 30 and 50 years later — before it’s permanent.', 'Nézd meg bármelyik tetoválást a saját bőrödön – frissen, majd 10, 30 és 50 év múlva –, mielőtt végleges lesz.')}</p>

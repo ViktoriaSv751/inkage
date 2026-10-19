@@ -252,3 +252,6 @@ main:has(.ls-final) { padding-bottom: 0; }
 .ls-link { display: grid; white-space: normal; min-width: 0; }
 .ls-link h3, .ls-link p { color: #fff; }
 .ls-link p { overflow-wrap: anywhere; }
+/* home-screen preview shows the real app icon: black ink bottle on white */
+.lm-hs-app > span { background: #fff; color: #000; }
+.lm-hs-app svg.logo-mark { width: 72%; height: 72%; }

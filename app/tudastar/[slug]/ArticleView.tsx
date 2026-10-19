@@ -15,6 +15,7 @@ import { Blocks, rich, type Fig } from './Blocks';
 import { ReadProgress, TocNav } from './Reader';
 import '../kb.css';
 import './article.css';
+import { LogoMark } from '../../LogoMark';
 
 const slugify = (s: string) =>
   s
@@ -89,10 +90,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
           <p className="ka-dek">{pick(a.desc, L)}</p>
           <div className="ka-meta2">
             <span className="ka-by">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <circle cx="32" cy="32" r="30" />
-                <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-              </svg>
+              <LogoMark />
               {T('InkAge editorial team', 'InkAge szerkesztőség')}
             </span>
             <span>{fmtDate(meta?.date || '2026-10-12', L)}</span>
@@ -174,10 +172,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
           </section>
 
           <section className="ka-editorial">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="30" />
-              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-            </svg>
+            <LogoMark />
             <div>
               <b>{T('About this article', 'A cikkről')}</b>
               <p>

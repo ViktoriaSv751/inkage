@@ -13,6 +13,7 @@ import { useApp } from './AppProvider';
 import { tx, huArticle } from '@/lib/i18n';
 import { useScrollLock } from '@/lib/scrolllock';
 import { ThemeToggle } from '../ThemeToggle';
+import { LogoMark } from '../LogoMark';
 
 export const Icon = {
   plus: (
@@ -82,10 +83,7 @@ export function TopBar() {
       <div className="topbar-in">
         {/* signed in, the logo leads to your designs (the gallery); otherwise to the start */}
         <Link className="logo" href={me.user ? '/app/gallery' : '/app'} aria-label="InkAge">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <circle cx="32" cy="32" r="30" />
-            <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-          </svg>
+          <LogoMark />
           InkAge
         </Link>
         <div className="topbar-r">
@@ -143,10 +141,7 @@ export function BottomNav() {
   return (
     <nav className="tabbar" aria-label="Main">
       <Link href={me.user ? '/app/gallery' : '/'} className="rail-logo" aria-label="InkAge">
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx="32" cy="32" r="30" />
-          <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-        </svg>
+        <LogoMark />
         InkAge
       </Link>
       {items.map((it, i) => {

@@ -25,7 +25,7 @@ const config: CapacitorConfig = {
     allowMixedContent: false,
   },
   plugins: {
-    SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#f3d6c8', androidScaleType: 'CENTER_CROP', showSpinner: false },
+    SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#ffffff', androidScaleType: 'CENTER_CROP', showSpinner: false },
     StatusBar: { style: 'DARK', overlaysWebView: false, backgroundColor: '#000000' },
     // Android 15+ draws edge to edge: the web app pads itself with env(safe-area-inset-*) (viewport-fit=cover)
     SystemBars: { insetsHandling: 'css', initialViewportFitValueHint: 'cover' },

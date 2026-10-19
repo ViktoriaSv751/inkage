@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { IMG } from '@/lib/kb';
 import { track } from '@/lib/store';
+import { LogoMark } from './LogoMark';
 
 type T = (en: string, hu: string) => string;
 
@@ -315,10 +316,7 @@ export function CompareTable({ t }: { t: T }) {
             </span>
           ))}
           <span role="columnheader" className="cx-c cx-us">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="30" />
-              <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-            </svg>
+            <LogoMark />
             <span>InkAge</span>
           </span>
         </div>
@@ -458,10 +456,7 @@ export function BetaInstall({ t }: { t: T }) {
               ))}
               <span className="lm-hs-app">
                 <span>
-                  <svg viewBox="0 0 64 64">
-                    <circle cx="32" cy="32" r="30" />
-                    <path d="M38 14a20 20 0 1 0 0 36a16 16 0 1 1 0-36z" />
-                  </svg>
+                  <LogoMark />
                 </span>
                 <small>InkAge</small>
               </span>
