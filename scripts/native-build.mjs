@@ -40,10 +40,28 @@ fs.cpSync(path.join(root, 'app/app/template.tsx'), path.join(work, 'app/app/temp
 // the store-app versions of the root layout, start page, sign-in pages and Next config
 fs.cpSync(path.join(root, 'scripts/native'), work, { recursive: true });
 
+// languages other than Hungarian / English load their words from the website (keeps the app small)
+const i18n = path.join(work, 'lib/i18n.ts');
+let src = fs.readFileSync(i18n, 'utf8');
+src = src.replace(/const LOADERS:[\s\S]*?\n};\n/, `const LOADERS: Partial<Record<Lang, () => Promise<any>>> = new Proxy({}, {
+  get: (_t, l: string) => () =>
+    new Promise((ok, no) => {
+      const s = document.createElement('script');
+      s.src = 'https://inkage.app/locales/' + l + '.js';
+      s.onload = () => ((window as any).__INK_LANG === l ? ok((window as any).__INK_DICT) : no(new Error('lang')));
+      s.onerror = no;
+      document.head.appendChild(s);
+    }),
+});
+`);
+if (!src.includes('new Proxy')) throw new Error('i18n loader not replaced');
+fs.writeFileSync(i18n, src);
+
 execSync('npx next build', { cwd: work, stdio: 'inherit', env: { ...process.env, NEXT_PUBLIC_NATIVE_BUNDLE: '1', NEXT_TELEMETRY_DISABLED: '1' } });
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.cpSync(path.join(work, 'out'), out, { recursive: true });
+fs.rmSync(path.join(out, 'locales'), { recursive: true, force: true });
 // an offline page for when the API cannot be reached is part of the app itself
 fs.cpSync(path.join(root, 'cap-www/index.html'), path.join(out, 'offline.html'));
 console.log('native bundle ->', path.relative(root, out));
