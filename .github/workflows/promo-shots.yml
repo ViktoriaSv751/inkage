@@ -1,0 +1,19 @@
+name: Promo screenshots
+on:
+  push:
+    branches: [promo-shots]
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: mkdir /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1.49.1 && npx playwright install --with-deps chromium
+      - run: cp scripts/promo-shots.mjs /tmp/pw/ && cd /tmp/pw && node promo-shots.mjs https://inkage.app /tmp/out
+      - run: |
+          cd /tmp/out && git init -q -b promo-out && git add -f . \
+            && git -c user.name=ci -c user.email=ci@inkage.app commit -qm "promo ${GITHUB_SHA}" \
+            && git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" promo-out
