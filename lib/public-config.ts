@@ -5,9 +5,9 @@ export const PUBLIC = {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnBkYmJjbnlvcWF6b2RrbW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MDc3NjAsImV4cCI6MjEwNzM4Mzc2MH0.DgduJDsqCudF4prmLHg7AFN-hMuIS7S5wwQgHVVni2o',
   /** Who runs InkAge (shown in the privacy policy and on the account deletion page). */
-  operatorName: process.env.NEXT_PUBLIC_OPERATOR_NAME || '',
+  operatorName: process.env.NEXT_PUBLIC_OPERATOR_NAME || 'Sóti Viktória',
   operatorAddress: process.env.NEXT_PUBLIC_OPERATOR_ADDRESS || '',
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'viktoriasoti@yahoo.com',
   priceWeekly: process.env.NEXT_PUBLIC_PRICE_WEEKLY_LABEL || '$5.99 / week',
   priceLifetime: process.env.NEXT_PUBLIC_PRICE_LIFETIME_LABEL || '$49.99 once',
 };
