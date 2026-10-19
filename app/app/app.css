@@ -1085,4 +1085,7 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .idea-more { justify-self: center; cursor: pointer; }
 .acc-note { margin: -4px 0 14px; font-size: 14px; }
 .pw-login { display: grid; gap: 8px; margin-top: 8px; }
-.pw-toggle { font-size: 14px; color: var(--ink-2); }
+.or-mail { display: flex; align-items: center; gap: 10px; margin: 14px 0 8px; color: var(--ink-3); font-size: 13px; font-weight: 600; }
+.or-mail::before, .or-mail::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.pw-links { display: flex; justify-content: space-between; gap: 12px; margin: 10px 2px 0; font-size: 14px; }
+.pw-links a { color: var(--ink-2); font-weight: 600; text-underline-offset: 2px; }

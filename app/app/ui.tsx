@@ -255,7 +255,6 @@ export function AuthSheet() {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [pw, setPw] = useState('');
-  const [pwOpen, setPwOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -302,7 +301,6 @@ export function AuthSheet() {
     if (error) return setErr(/invalid login/i.test(error.message) ? L('Wrong e-mail or password.', 'Hibás e-mail-cím vagy jelszó.') : error.message);
     closeAuth();
     setPw('');
-    setPwOpen(false);
     await refreshMe();
     toast(L('Signed in', 'Bejelentkezve'));
   };
@@ -333,19 +331,18 @@ export function AuthSheet() {
               <b style={{ color: '#4285f4' }}>G</b> {L('Continue with Google', 'Folytatás Google-fiókkal')}
             </button>
           </div>
-          {pwOpen ? (
-            <form className="pw-login" onSubmit={(e) => (e.preventDefault(), loginPw())}>
-              <input id="auth-email" type="email" autoComplete="username" inputMode="email" placeholder={L('E-mail address', 'E-mail-cím')} value={email} onChange={(e) => setEmail(e.target.value)} />
-              <input id="auth-pw" type="password" autoComplete="current-password" placeholder={L('Password', 'Jelszó')} value={pw} onChange={(e) => setPw(e.target.value)} />
-              <button className="btn wide" disabled={busy || !/\S+@\S+\.\S+/.test(email) || pw.length < 6}>
-                {busy ? '…' : L('Sign in', 'Belépés')}
-              </button>
-            </form>
-          ) : (
-            <button type="button" className="linkbtn pw-toggle" onClick={() => (setPwOpen(true), setErr(''))}>
-              {L('Sign in with e-mail and password', 'Belépés e-maillel és jelszóval')}
+          <p className="or-mail"><span>{L('or with e-mail', 'vagy e-maillel')}</span></p>
+          <form className="pw-login" onSubmit={(e) => (e.preventDefault(), loginPw())}>
+            <input id="auth-email" type="email" autoComplete="username" inputMode="email" placeholder={L('E-mail address', 'E-mail-cím')} value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input id="auth-pw" type="password" autoComplete="current-password" placeholder={L('Password', 'Jelszó')} value={pw} onChange={(e) => setPw(e.target.value)} />
+            <button className="btn wide" disabled={busy || !/\S+@\S+\.\S+/.test(email) || pw.length < 6}>
+              {busy ? '…' : L('Sign in with e-mail', 'Belépés e-maillel')}
             </button>
-          )}
+          </form>
+          <p className="pw-links">
+            <a href={`/regisztracio${qOf(ui.lang)}`}>{L('Create an account with e-mail', 'Regisztráció e-maillel')}</a>
+            <a href={`/elfelejtett-jelszo${qOf(ui.lang)}`}>{L('Forgot password?', 'Elfelejtett jelszó')}</a>
+          </p>
         </>
       ) : (
         <>

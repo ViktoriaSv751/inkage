@@ -185,13 +185,17 @@
 @keyframes auIn { from { opacity: 0; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) { .au-card > * { animation: none; } }
 
-/* e-mail + password sign-in for existing accounts (store review accounts, people who signed up by e-mail) */
-.au-pwtoggle { display: block; width: 100%; margin-top: 2px; padding: 8px 0 2px; border: 0; background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--ink-2); cursor: pointer; text-align: center; }
-.au-pwtoggle:hover { color: var(--ink); }
-.au-pw { margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+/* e-mail + password: sign-in and sign-up, always visible under the Apple / Google buttons */
+.au-or { margin: 22px 0 16px; }
+.au-pw { display: grid; gap: 14px; width: 100%; }
+.au-pw .au-btn { width: 100%; padding: 0 24px; }
+.au-pw .au-field-row a.au-forgot { font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
 .au-showpw { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
 .au-showpw input { width: 18px; height: 18px; accent-color: var(--ink); }
-.au-forgot { justify-self: center; font-size: 14px; font-weight: 600; color: var(--ink-2); }
-.au-social .au-pw { display: grid; gap: 14px; width: 100%; }
-.au-social .au-pw .au-btn { width: 100%; padding: 0 24px; }
-.au-social .au-pw a.au-forgot { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+.au-strength { display: grid; grid-template-columns: repeat(3, 1fr) auto; align-items: center; gap: 6px; margin-top: -4px; }
+.au-strength i { height: 4px; border-radius: 4px; background: var(--surface-2); }
+.au-strength span { font-size: 12.5px; font-weight: 600; color: var(--ink-3); margin-left: 6px; }
+.au-strength[data-s='1'] i:nth-child(-n+1) { background: var(--red); }
+.au-strength[data-s='2'] i:nth-child(-n+2) { background: var(--amber); }
+.au-strength[data-s='3'] i { background: var(--green); }
+.au-pw + .au-form { margin-top: 16px; }
