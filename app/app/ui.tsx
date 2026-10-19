@@ -254,6 +254,8 @@ export function AuthSheet() {
   const { authOpen, closeAuth, authReason, ui, refreshMe, toast } = useApp();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+  const [pw, setPw] = useState('');
+  const [pwOpen, setPwOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -291,6 +293,19 @@ export function AuthSheet() {
     if (error) return setErr(/rate/i.test(error.message) ? L('Too many emails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
     setSent(true);
   };
+  const loginPw = async () => {
+    if (!/\S+@\S+\.\S+/.test(email) || pw.length < 6 || busy) return;
+    setBusy(true);
+    setErr('');
+    const { error } = (await sb()?.auth.signInWithPassword({ email: email.trim(), password: pw })) || { error: { message: 'unavailable' } as any };
+    setBusy(false);
+    if (error) return setErr(/invalid login/i.test(error.message) ? L('Wrong e-mail or password.', 'Hibás e-mail-cím vagy jelszó.') : error.message);
+    closeAuth();
+    setPw('');
+    setPwOpen(false);
+    await refreshMe();
+    toast(L('Signed in', 'Bejelentkezve'));
+  };
   const verify = async () => {
     setBusy(true);
     setErr('');
@@ -318,6 +333,19 @@ export function AuthSheet() {
               <b style={{ color: '#4285f4' }}>G</b> {L('Continue with Google', 'Folytatás Google-fiókkal')}
             </button>
           </div>
+          {pwOpen ? (
+            <form className="pw-login" onSubmit={(e) => (e.preventDefault(), loginPw())}>
+              <input id="auth-email" type="email" autoComplete="username" inputMode="email" placeholder={L('E-mail address', 'E-mail-cím')} value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input id="auth-pw" type="password" autoComplete="current-password" placeholder={L('Password', 'Jelszó')} value={pw} onChange={(e) => setPw(e.target.value)} />
+              <button className="btn wide" disabled={busy || !/\S+@\S+\.\S+/.test(email) || pw.length < 6}>
+                {busy ? '…' : L('Sign in', 'Belépés')}
+              </button>
+            </form>
+          ) : (
+            <button type="button" className="linkbtn pw-toggle" onClick={() => (setPwOpen(true), setErr(''))}>
+              {L('Sign in with e-mail and password', 'Belépés e-maillel és jelszóval')}
+            </button>
+          )}
         </>
       ) : (
         <>

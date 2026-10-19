@@ -26,6 +26,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
   const [name, setName] = useState('');
   const [pw, setPw] = useState('');
   const [show, setShow] = useState(false);
+  const [pwOpen, setPwOpen] = useState(false);
   const [sentKind, setSentKind] = useState<'confirm' | 'reset'>('confirm');
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [busy, setBusy] = useState(false);
@@ -274,6 +275,32 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
                   <Link href={`/app/explore${q}`} className="au-browse" style={{ display: 'block', textAlign: 'center', padding: '10px 0 2px', fontSize: 15, fontWeight: 600, textDecoration: 'underline', color: 'inherit' }}>
                     {T('Look around first, without an account', 'Előbb körülnézek, fiók nélkül')}
                   </Link>
+                  {mode === 'login' &&
+                    (pwOpen ? (
+                      <form onSubmit={loginPw} className="au-form au-pw">
+                        <label className="au-field">
+                          <span>{T('E-mail address', 'E-mail-cím')}</span>
+                          <input type="email" autoComplete="username" inputMode="email" placeholder={T('you@email.com', 'te@email.hu')} value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        </label>
+                        <label className="au-field">
+                          <span>{T('Password', 'Jelszó')}</span>
+                          <input type={show ? 'text' : 'password'} autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} required />
+                        </label>
+                        <label className="au-showpw">
+                          <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> {T('Show password', 'Jelszó megjelenítése')}
+                        </label>
+                        <button className="au-btn" disabled={busy || !okEmail || pw.length < 6}>
+                          {busy ? <i className="au-spin" aria-hidden="true" /> : T('Sign in', 'Belépés')}
+                        </button>
+                        <Link href={`/elfelejtett-jelszo${q}`} className="au-forgot">
+                          {T('Forgot your password?', 'Elfelejtetted a jelszavad?')}
+                        </Link>
+                      </form>
+                    ) : (
+                      <button type="button" className="au-pwtoggle" onClick={() => (setPwOpen(true), setErr(''))}>
+                        {T('Sign in with e-mail and password', 'Belépés e-maillel és jelszóval')}
+                      </button>
+                    ))}
                 </div>
               )}
 
