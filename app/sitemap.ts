@@ -3,7 +3,7 @@ import { ARTICLES } from '@/lib/articles';
 import { seoSlugs } from '@/lib/seo';
 import { LANGS, qOf, htmlLang } from '@/lib/tr';
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://inkage.vercel.app';
+const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://inkage.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // every page in every language (?lang=…), each listing its translations

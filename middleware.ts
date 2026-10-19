@@ -8,6 +8,11 @@ import { fromBrowser, isLang } from './lib/tr';
  */
 export function middleware(req: NextRequest) {
   const url = req.nextUrl;
+  // the old address moves to the new domain (pages only; the API and app-link files keep working on both)
+  if ((req.headers.get('host') || '').startsWith('inkage.vercel.app')) {
+    const to = new URL(url.pathname + url.search, 'https://inkage.app');
+    return NextResponse.redirect(to, 308);
+  }
   const cookie = req.cookies.get('ink_lang')?.value;
   const app = /^\/(app|v|admin|offline)(\/|$)/.test(url.pathname);
   const q = url.searchParams.get('lang');

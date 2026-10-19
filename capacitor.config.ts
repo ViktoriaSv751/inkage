@@ -1,6 +1,6 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-/* The store apps are a thin native shell around the live web app (https://inkage.vercel.app/app),
+/* The store apps are a thin native shell around the live web app (https://inkage.app/app),
    with native sign-in, push, share sheet, splash screen and deep links. Change `server.url`
    if the production domain changes. `cap-www` is only the offline fallback page. */
 const config: CapacitorConfig = {
@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
   webDir: 'cap-www',
   appendUserAgent: 'InkAgeApp',
   server: {
-    url: process.env.CAP_SERVER_URL || 'https://inkage.vercel.app/app',
+    url: process.env.CAP_SERVER_URL || 'https://inkage.app/app',
     cleartext: false,
     errorPath: 'index.html',
   },

@@ -1,7 +1,7 @@
 // Transactional e-mail through Resend (needs RESEND_API_KEY; MAIL_FROM on a verified domain).
 export const mailReady = () => !!process.env.RESEND_API_KEY;
 const FROM = () => process.env.MAIL_FROM || process.env.ALERT_FROM || 'InkAge <onboarding@resend.dev>';
-export const SITE = () => process.env.SITE_URL || 'https://inkage.vercel.app';
+export const SITE = () => process.env.SITE_URL || 'https://inkage.app';
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 

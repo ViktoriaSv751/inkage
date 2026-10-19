@@ -12,11 +12,11 @@ Minden szöveg bemásolható. Ahol `[ ]` van, ott még a te adatod kell.
 | Kategória | Életmód (Lifestyle); másodlagos: Fotó és videó |
 | Ár | Ingyenes, nincs alkalmazáson belüli vásárlás |
 | Eszközök | Csak iPhone (iPad kikapcsolva), Android telefon |
-| Adatvédelmi URL | https://inkage.vercel.app/privacy |
-| Felhasználási feltételek | https://inkage.vercel.app/terms |
-| Támogatás URL | https://inkage.vercel.app/kapcsolat |
-| Fióktörlés URL (Google kéri) | https://inkage.vercel.app/fiok-torlese |
-| Marketing URL | https://inkage.vercel.app |
+| Adatvédelmi URL | https://inkage.app/privacy |
+| Felhasználási feltételek | https://inkage.app/terms |
+| Támogatás URL | https://inkage.app/kapcsolat |
+| Fióktörlés URL (Google kéri) | https://inkage.app/fiok-torlese |
+| Marketing URL | https://inkage.app |
 | Kapcsolattartó e-mail | `[ ]` |
 
 ## Szövegek (magyar)
@@ -79,7 +79,7 @@ Results are an AI simulation for inspiration, not medical advice. Real results d
 > 4. Slide through the years (fresh, 1, 10, 30, 50) on the result.
 > Reporting: every AI result has "Report inappropriate content" under the image; shared vote links have "Report this picture". 3 reports or one "minor" report hide a shared picture automatically; we review all reports within 24 hours.
 > Safety: photos are checked before and during generation; nudity, minors, hate symbols and explicit designs are rejected automatically.
-> Account deletion: Profile → "Delete account" (top) → type DELETE → "Delete everything". Web: https://inkage.vercel.app/fiok-torlese
+> Account deletion: Profile → "Delete account" (top) → type DELETE → "Delete everything". Web: https://inkage.app/fiok-torlese
 > Photos are sent to our AI providers (Google Gemini, OpenAI) only to create the preview.
 
 ## Korhatár
@@ -102,7 +102,7 @@ Követés (tracking): **Nem**. Gyűjtött adatok, mind a felhasználóhoz kötve
 ## Google Play – Data safety
 
 - Adatgyűjtés: **igen**. Megosztás harmadik féllel: **nem** (a Supabase, a Google Gemini, az OpenAI, a Firebase és a Resend a nevünkben dolgozó adatfeldolgozó – a Google szerint ez nem „megosztás”).
-- Titkosítás átvitel közben: **igen**. Kérhető törlés: **igen** – appban (Profil → Fiók törlése) és weben: https://inkage.vercel.app/fiok-torlese
+- Titkosítás átvitel közben: **igen**. Kérhető törlés: **igen** – appban (Profil → Fiók törlése) és weben: https://inkage.app/fiok-torlese
 - Gyűjtött adatok (mindegyik: a felhasználóhoz kötve, nem kerül eladásra, nem hirdetésre):
 
 | Kategória → típus | Kötelező? | Cél |

@@ -6,7 +6,7 @@ import { getPoll, getShare, SharedView } from './SharedView';
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.vercel.app';
+  const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.app';
   if (params.id.startsWith('p')) {
     const p = await getPoll(params.id);
     const lang = fromBrowser(headers().get('accept-language') || '');

@@ -80,7 +80,7 @@ async function makeCard(fresh: string, old: string, o: { left: string; right: st
   if (o.score) x.fillText(o.score, pad, H - 64);
   x.textAlign = 'right';
   x.fillStyle = '#fff';
-  x.fillText('inkage.vercel.app', W - pad, H - 64);
+  x.fillText('inkage.app', W - pad, H - 64);
   return new Promise<Blob>((res) => c.toBlob((bl) => res(bl!), 'image/jpeg', 0.9));
 }
 

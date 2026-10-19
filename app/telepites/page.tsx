@@ -15,7 +15,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       h: T('iPhone and iPad', 'iPhone és iPad'),
       icon: 'phone',
       ps: [
-        T('1. Open inkage.vercel.app in Safari.', '1. Nyisd meg az inkage.vercel.app oldalt Safariban.'),
+        T('1. Open inkage.app in Safari.', '1. Nyisd meg az inkage.app oldalt Safariban.'),
         T('2. Tap the Share button (the square with an arrow).', '2. Koppints a Megosztás gombra (négyzet nyíllal).'),
         T('3. Scroll down and choose “Add to Home Screen”.', '3. Görgess le, és válaszd a „Főképernyőhöz adás” lehetőséget.'),
         T('4. Tap “Add”. InkAge appears with its own icon.', '4. Koppints a „Hozzáadás” gombra. Megjelenik az InkAge saját ikonnal.'),
@@ -25,7 +25,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       h: T('Android', 'Android'),
       icon: 'phone',
       ps: [
-        T('1. Open inkage.vercel.app in Chrome.', '1. Nyisd meg az inkage.vercel.app oldalt Chrome-ban.'),
+        T('1. Open inkage.app in Chrome.', '1. Nyisd meg az inkage.app oldalt Chrome-ban.'),
         T('2. Tap the menu (⋮) in the top right.', '2. Koppints a jobb felső menüre (⋮).'),
         T('3. Choose “Install app” or “Add to Home screen”.', '3. Válaszd az „Alkalmazás telepítése” vagy „Hozzáadás a kezdőképernyőhöz” lehetőséget.'),
       ],

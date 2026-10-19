@@ -434,7 +434,7 @@ export function BetaInstall({ t }: { t: T }) {
     return () => window.removeEventListener('beforeinstallprompt', h);
   }, []);
   const steps = ios
-    ? [t('Open inkage.vercel.app in Safari', 'Nyisd meg az oldalt Safariban'), t('Tap the Share button', 'Koppints a Megosztás gombra'), t('Choose “Add to Home Screen”', 'Válaszd: „Főképernyőhöz adás”')]
+    ? [t('Open inkage.app in Safari', 'Nyisd meg az oldalt Safariban'), t('Tap the Share button', 'Koppints a Megosztás gombra'), t('Choose “Add to Home Screen”', 'Válaszd: „Főképernyőhöz adás”')]
     : [t('Open the browser menu (⋮)', 'Nyisd meg a böngésző menüjét (⋮)'), t('Choose “Install app”', 'Válaszd: „Alkalmazás telepítése”'), t('Open InkAge from your home screen', 'Nyisd meg az InkAge-et a kezdőképernyőről')];
   return (
     <section className="ls-sec lm-beta" id="beta">

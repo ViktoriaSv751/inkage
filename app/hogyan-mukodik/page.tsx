@@ -59,7 +59,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ps: [
         T('InkAge works in the browser and can be installed like an app, without an app store.', 'Az InkAge böngészőben működik, és alkalmazásbolt nélkül, appként is telepíthető.'),
         T('### iPhone and iPad', '### iPhone és iPad'),
-        T('1. Open inkage.vercel.app in Safari.', '1. Nyisd meg az inkage.vercel.app oldalt Safariban.'),
+        T('1. Open inkage.app in Safari.', '1. Nyisd meg az inkage.app oldalt Safariban.'),
         T('2. Tap the Share button (the square with an arrow).', '2. Koppints a Megosztás gombra (négyzet nyíllal).'),
         T('3. Choose “Add to Home Screen”, then “Add”.', '3. Válaszd a „Főképernyőhöz adás”, majd a „Hozzáadás” lehetőséget.'),
         T('### Android and desktop', '### Android és számítógép'),

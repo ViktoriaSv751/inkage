@@ -97,7 +97,7 @@ export async function artistPdf(p: Preview, lang: Lang, placeLabel: string) {
     y = text(p.notes, M, y + 4, '500 26px "Geist Sans", system-ui', '#000000');
   }
   text(
-    L('Previews are AI simulations made with InkAge (inkage.vercel.app). Your artist has the final say on size, needle and technique.', 'Az előnézetek az InkAge MI-szimulációi (inkage.vercel.app). A méretről, tűről és technikáról a tetoválód dönt.'),
+    L('Previews are AI simulations made with InkAge (inkage.app). Your artist has the final say on size, needle and technique.', 'Az előnézetek az InkAge MI-szimulációi (inkage.app). A méretről, tűről és technikáról a tetoválód dönt.'),
     M,
     H - 90,
     '500 22px "Geist Sans", system-ui',

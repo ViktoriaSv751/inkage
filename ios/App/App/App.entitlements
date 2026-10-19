@@ -6,6 +6,7 @@
 	<string>production</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>applinks:inkage.app</string>
 		<string>applinks:inkage.vercel.app</string>
 	</array>
 </dict>
