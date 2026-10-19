@@ -1,0 +1,21 @@
+name: Promo assets
+on:
+  push:
+    branches: [promo-assets]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download
+        run: |
+          mkdir -p out/photo out/design
+          while read id; do curl -sfL -o out/photo/$id.webp "https://inkage.app/img/$id-1600.webp" || echo "miss $id"; done < scripts/promo-photo-ids.txt
+          while read id; do curl -sfL -o out/design/$id.png "https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/$id.png" || echo "miss $id"; done < scripts/promo-design-ids.txt
+          ls out/photo | wc -l; ls out/design | wc -l; du -sh out
+      - name: Publish
+        run: |
+          cd out && git init -q && git checkout -q -b promo-assets-out && git add . && git -c user.name=ci -c user.email=ci@inkage.app commit -qm assets
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" promo-assets-out
