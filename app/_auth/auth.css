@@ -116,7 +116,7 @@
 .au-field { display: grid; gap: 8px; }
 .au-field span { font-size: 14px; font-weight: 700; }
 .au-field input { height: 56px; padding: 0 18px; border-radius: 16px; border: 0; background: var(--surface); font: inherit; font-size: 17px; color: var(--ink); outline: none; transition: background .15s, box-shadow .15s; }
-.au-field input:focus { background: var(--bg); box-shadow: inset 0 0 0 2px #0d0b14; }
+.au-field input:focus { background: var(--bg); box-shadow: inset 0 0 0 2px var(--ink); }
 .au-check { position: relative; display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); cursor: pointer; }
 .au-check input { position: absolute; opacity: 0; width: 24px; height: 24px; margin: 0; }
 .au-box { width: 24px; height: 24px; border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--line); display: grid; place-items: center; transition: background .15s; }
@@ -184,3 +184,18 @@
 .au-card > *:nth-child(6) { animation-delay: .2s; }
 @keyframes auIn { from { opacity: 0; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) { .au-card > * { animation: none; } }
+
+/* e-mail + password: sign-in and sign-up, always visible under the Apple / Google buttons */
+.au-or { margin: 22px 0 16px; }
+.au-pw { display: grid; gap: 14px; width: 100%; }
+.au-pw .au-btn { width: 100%; padding: 0 24px; }
+.au-pw .au-field-row a.au-forgot { font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+.au-showpw { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+.au-showpw input { width: 18px; height: 18px; accent-color: var(--ink); }
+.au-strength { display: grid; grid-template-columns: repeat(3, 1fr) auto; align-items: center; gap: 6px; margin-top: -4px; }
+.au-strength i { height: 4px; border-radius: 4px; background: var(--surface-2); }
+.au-strength span { font-size: 12.5px; font-weight: 600; color: var(--ink-3); margin-left: 6px; }
+.au-strength[data-s='1'] i:nth-child(-n+1) { background: var(--red); }
+.au-strength[data-s='2'] i:nth-child(-n+2) { background: var(--amber); }
+.au-strength[data-s='3'] i { background: var(--green); }
+.au-pw + .au-form { margin-top: 16px; }

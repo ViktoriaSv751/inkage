@@ -248,9 +248,9 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
               <h1>{mode === 'login' ? T('Welcome back', 'Üdv újra itt') : mode === 'signup' ? T('Create your account', 'Hozd létre a fiókodat') : T('Forgot your password?', 'Elfelejtetted a jelszavad?')}</h1>
               <p className="au-sub">
                 {mode === 'login'
-                  ? T('Sign in with Google or Apple to try InkAge on your own photo.', 'Lépj be Google- vagy Apple-fiókkal, és próbáld ki az InkAge-et a saját fotódon.')
+                  ? T('Sign in with Apple, Google or your e-mail to try InkAge on your own photo.', 'Lépj be Apple-, Google-fiókkal vagy e-maillel, és próbáld ki az InkAge-et a saját fotódon.')
                   : mode === 'signup'
-                    ? T('One tap with Google or Apple – then try it free on your own photo.', 'Egy koppintás Google- vagy Apple-fiókkal – utána ingyen kipróbálhatod a saját fotódon.')
+                    ? T('One tap with Apple or Google, or sign up with your e-mail – then try it free on your own photo.', 'Egy koppintás Apple- vagy Google-fiókkal, vagy regisztrálj e-maillel – utána ingyen kipróbálhatod a saját fotódon.')
                     : T('Enter your e-mail and we’ll send you a link to set a new one.', 'Add meg az e-mail-címed, és küldünk egy linket az új jelszó beállításához.')}
               </p>
 
@@ -275,6 +275,50 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
                     {T('Look around first, without an account', 'Előbb körülnézek, fiók nélkül')}
                   </Link>
                 </div>
+              )}
+
+              {mode !== 'forgot' && (
+                <>
+                  <div className="au-or" role="separator">
+                    <span>{mode === 'login' ? T('or sign in with e-mail', 'vagy belépés e-maillel') : T('or sign up with e-mail', 'vagy regisztráció e-maillel')}</span>
+                  </div>
+                  <form onSubmit={mode === 'login' ? loginPw : signupPw} className="au-form au-pw" id="email-auth">
+                    {mode === 'signup' && (
+                      <label className="au-field">
+                        <span>{T('Name (optional)', 'Név (nem kötelező)')}</span>
+                        <input type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+                      </label>
+                    )}
+                    <label className="au-field">
+                      <span>{T('E-mail address', 'E-mail-cím')}</span>
+                      <input type="email" autoComplete={mode === 'login' ? 'username' : 'email'} inputMode="email" placeholder={T('you@email.com', 'te@email.hu')} value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    </label>
+                    <label className="au-field">
+                      <span className="au-field-row">
+                        {T('Password', 'Jelszó')}
+                        {mode === 'login' && (
+                          <Link href={`/elfelejtett-jelszo${q}`} className="au-forgot">
+                            {T('Forgot it?', 'Elfelejtetted?')}
+                          </Link>
+                        )}
+                      </span>
+                      <input type={show ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder={mode === 'signup' ? T('At least 8 characters', 'Legalább 8 karakter') : ''} value={pw} onChange={(e) => setPw(e.target.value)} required />
+                    </label>
+                    {mode === 'signup' && pw.length > 0 && (
+                      <div className="au-strength" data-s={pwScore} aria-hidden="true">
+                        <i /><i /><i />
+                        <span>{[T('Too short', 'Túl rövid'), T('Weak', 'Gyenge'), T('Good', 'Jó'), T('Strong', 'Erős')][pwScore]}</span>
+                      </div>
+                    )}
+                    <label className="au-showpw">
+                      <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> {T('Show password', 'Jelszó megjelenítése')}
+                    </label>
+                    <button className="au-btn" disabled={busy || !okEmail || pw.length < (mode === 'login' ? 6 : 8) || (mode === 'signup' && !agree)}>
+                      {busy ? <i className="au-spin" aria-hidden="true" /> : mode === 'login' ? T('Sign in with e-mail', 'Belépés e-maillel') : T('Create account with e-mail', 'Regisztráció e-maillel')}
+                    </button>
+                    {mode === 'signup' && !agree && <p className="au-hint">{T('Tick the box below to continue.', 'A folytatáshoz pipáld be a lenti mezőt.')}</p>}
+                  </form>
+                </>
               )}
 
               {mode === 'forgot' ? (

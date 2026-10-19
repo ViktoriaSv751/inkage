@@ -882,14 +882,17 @@ input.switch:checked::after { transform: translateX(18px); }
 .uv-box span { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
 .uv-adv { grid-column: 1 / -1; margin: 4px 2px 0; font-size: 14.5px; line-height: 1.5; }
 
-/* 18+ gate: plain white, fixed page behind it */
-.age-gate { position: fixed; inset: 0; z-index: 2000; background: #fff; display: grid; place-items: center; padding: 16px; overscroll-behavior: contain; touch-action: none; }
-.age-card { background: #fff; color: #111; border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, .12), 0 0 0 1px rgba(0, 0, 0, .06); touch-action: auto; }
-.age-card h2 { margin: 0 0 8px; color: #111; }
-.age-card p { margin: 0 0 16px; color: #444; }
-.age-card a { color: #111; }
+/* 18+ gate and the AI-consent question: follow the page theme (light or dark), fixed page behind */
+.age-gate { position: fixed; inset: 0; z-index: 2000; background: var(--bg); color: var(--ink); display: grid; place-items: center; padding: 16px; overscroll-behavior: contain; touch-action: none; }
+.age-card { background: var(--bg); color: var(--ink); border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 380px; max-height: calc(100dvh - 32px); overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, .1), 0 0 0 1px var(--line); touch-action: auto; }
+.age-card h2 { margin: 0 0 8px; color: var(--ink); font-size: 22px; letter-spacing: -.02em; }
+.age-card p { margin: 0 0 16px; color: var(--ink-2); line-height: 1.5; }
+.age-card p.fine { color: var(--ink-3); margin: 10px 0 0; }
+.age-card a:not(.btn) { color: var(--ink); text-underline-offset: 2px; }
+.age-card .btn { text-decoration: none; }
 .age-actions { display: grid; gap: 10px; margin-bottom: 8px; }
-.age-card .btn.ghost { background: #fff; color: #111; box-shadow: inset 0 0 0 1px #ddd; }
+.age-card .btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+:root[data-theme='dark'] .age-card { background: var(--surface); box-shadow: 0 10px 40px rgba(0, 0, 0, .6), 0 0 0 1px var(--line); }
 
 /* file pickers: visually hidden but not display:none (iOS is more reliable this way) */
 .file-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip: rect(0 0 0 0); pointer-events: none; }
@@ -1081,3 +1084,8 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .idea-mtile button { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .6); color: #fff; font-size: 16px; line-height: 1; display: grid; place-items: center; cursor: pointer; }
 .idea-more { justify-self: center; cursor: pointer; }
 .acc-note { margin: -4px 0 14px; font-size: 14px; }
+.pw-login { display: grid; gap: 8px; margin-top: 8px; }
+.or-mail { display: flex; align-items: center; gap: 10px; margin: 14px 0 8px; color: var(--ink-3); font-size: 13px; font-weight: 600; }
+.or-mail::before, .or-mail::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.pw-links { display: flex; justify-content: space-between; gap: 12px; margin: 10px 2px 0; font-size: 14px; }
+.pw-links a { color: var(--ink-2); font-weight: 600; text-underline-offset: 2px; }
