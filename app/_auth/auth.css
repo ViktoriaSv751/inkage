@@ -192,3 +192,6 @@
 .au-showpw { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
 .au-showpw input { width: 18px; height: 18px; accent-color: var(--ink); }
 .au-forgot { justify-self: center; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.au-social .au-pw { display: grid; gap: 14px; width: 100%; }
+.au-social .au-pw .au-btn { width: 100%; padding: 0 24px; }
+.au-social .au-pw a.au-forgot { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
