@@ -23,6 +23,7 @@ export function Report({ id, lang }: { id: string; lang: Lang }) {
   const [reason, setReason] = useState('');
   const [note, setNote] = useState('');
   const [state, setState] = useState<'idle' | 'busy' | 'done' | 'error'>('idle');
+  const [block, setBlock] = useState<'idle' | 'busy' | 'done' | 'error'>('idle');
 
   const send = async () => {
     if (!reason) return;
@@ -33,12 +34,28 @@ export function Report({ id, lang }: { id: string; lang: Lang }) {
     setState(error ? 'error' : 'done');
   };
 
+  const linkBtn = { background: 'none', border: 0, padding: 8, textDecoration: 'underline', color: 'inherit', font: 'inherit', cursor: 'pointer' } as const;
+  const hideAuthor = async () => {
+    setBlock('busy');
+    const { error } = (await sb()?.rpc('block_author', { p_share: id, p_blocker: anonId() })) || { error: true };
+    track('block_author');
+    setBlock(error ? 'error' : 'done');
+  };
+
   if (!open)
     return (
       <p className="fine" style={{ textAlign: 'center' }}>
-        <button type="button" onClick={() => setOpen(true)} style={{ background: 'none', border: 0, padding: 8, textDecoration: 'underline', color: 'inherit', font: 'inherit', cursor: 'pointer' }}>
+        <button type="button" onClick={() => setOpen(true)} style={linkBtn}>
           {t('Report this picture', 'Kép jelentése')}
         </button>
+        {' · '}
+        {block === 'done' ? (
+          <span role="status">{t('Hidden. You won’t see this person’s posts in Explore any more.', 'Elrejtve. Ennek a személynek a posztjait többé nem látod a Felfedezésben.')}</span>
+        ) : (
+          <button type="button" onClick={hideAuthor} disabled={block === 'busy'} style={linkBtn}>
+            {block === 'error' ? t('Could not hide. Try again.', 'Nem sikerült elrejteni. Próbáld újra.') : t('Hide posts from this person', 'Ennek a személynek a posztjai elrejtése')}
+          </button>
+        )}
       </p>
     );
 

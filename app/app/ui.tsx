@@ -276,6 +276,7 @@ export function AuthSheet() {
       if (e) setErr(e);
       return;
     }
+    (await import('@/lib/apple-token')).markOAuthStart(provider);
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };

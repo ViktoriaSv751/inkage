@@ -12,7 +12,7 @@ import { tx } from '@/lib/i18n';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { ARTICLES } from '@/lib/articles';
 import { IMG, KB } from '@/lib/kb';
-import { lsGet, lsSet, track } from '@/lib/store';
+import { anonId, lsGet, lsSet, track } from '@/lib/store';
 import { Icon } from '../ui';
 import { HeroAging } from '../../visuals';
 import { QuickFacts } from './QuickFacts';
@@ -24,7 +24,11 @@ export default function ExplorePage() {
   const [feed, setFeed] = useState<any[] | null>(null);
   const [trends, setTrends] = useState<{ places: { placement: string; n: number }[]; designs: { id: string; n: number }[]; previews_total: number } | null>(null);
   useEffect(() => {
-    sb()?.rpc('community_feed').then(({ data }) => setFeed(Array.isArray(data) ? data : []));
+    // the feed leaves out authors this person chose to hide (falls back to the plain feed on an older database)
+    sb()
+      ?.rpc('community_feed_for', { p_viewer: anonId() })
+      .then(async ({ data, error }) => (error ? (await sb()!.rpc('community_feed')).data : data))
+      .then((data) => setFeed(Array.isArray(data) ? data : []));
     sb()?.rpc('trends').then(({ data }) => data && setTrends(data as any));
   }, []);
   const [dq, setDq] = useState('');

@@ -16,6 +16,7 @@ export const platform = (): 'ios' | 'android' | 'web' => (isNative() ? ((cap()?.
 export async function nativeOAuth(provider: 'google' | 'apple'): Promise<string | null> {
   const s = sb();
   if (!s) return 'Not available';
+  (await import('./apple-token')).markOAuthStart(provider);
   const { data, error } = await s.auth.signInWithOAuth({ provider, options: { redirectTo: AUTH_CALLBACK, skipBrowserRedirect: true, queryParams: oauthParams(provider) } });
   if (error || !data?.url) return error?.message || 'Sign-in failed';
   const { Browser } = await import('@capacitor/browser');
@@ -36,7 +37,10 @@ async function finishAuth(url: string) {
     return void location.replace(`/belepes?err=${encodeURIComponent(failed)}`);
   }
   try {
-    if (access_token && refresh_token) await s.auth.setSession({ access_token, refresh_token });
+    if (access_token && refresh_token) {
+      const { data } = await s.auth.setSession({ access_token, refresh_token });
+      if (data.user) await (await import('./apple-token')).saveAppleToken(s, data.user.id, p.get('provider_refresh_token'));
+    }
     else if (p.get('code')) await s.auth.exchangeCodeForSession(p.get('code')!);
   } finally {
     const { Browser } = await import('@capacitor/browser');
@@ -67,6 +71,15 @@ export async function initNative() {
       if (/inkage/.test(u.host)) location.assign(u.pathname + u.search + u.hash);
     } catch {}
   });
+  // a tapped healing-plan reminder opens the gallery
+  import('@capacitor/local-notifications')
+    .then(({ LocalNotifications }) =>
+      LocalNotifications.addListener('localNotificationActionPerformed', (a) => {
+        const u = (a?.notification?.extra as any)?.url;
+        location.assign(typeof u === 'string' && u.startsWith('/') ? u : '/app/gallery');
+      })
+    )
+    .catch(() => {});
   // Android back button: go back inside the app, leave it only from the start screen
   App.addListener('backButton', ({ canGoBack }) => {
     if (canGoBack && location.pathname !== '/app') history.back();
@@ -149,4 +162,48 @@ export async function nativePushEnable(): Promise<'on' | 'off' | 'denied' | 'uns
 /** On start: if allowed, refresh the device token silently. */
 export async function nativePushSync() {
   if ((await nativePushState()) === 'on') await nativePushEnable().catch(() => {});
+}
+
+/** Native camera / photo library picker (one sheet with both), instead of the web view's file input. */
+export async function nativePickPhoto(lang: string): Promise<Blob | null> {
+  if (!isNative()) return null;
+  const hu = lang === 'hu';
+  const { Camera, CameraResultType, CameraSource } = await import('@capacitor/camera');
+  try {
+    const p = await Camera.getPhoto({
+      source: CameraSource.Prompt,
+      resultType: CameraResultType.DataUrl,
+      quality: 90,
+      width: 2400,
+      correctOrientation: true,
+      promptLabelHeader: hu ? 'Fotó' : 'Photo',
+      promptLabelPhoto: hu ? 'Választás a fotók közül' : 'Choose from photos',
+      promptLabelPicture: hu ? 'Fénykép készítése' : 'Take a photo',
+      promptLabelCancel: hu ? 'Mégse' : 'Cancel',
+    });
+    if (!p.dataUrl) return null;
+    return await (await fetch(p.dataUrl)).blob();
+  } catch {
+    return null; // cancelled or permission refused
+  }
+}
+
+/** Healing-plan reminders as native local notifications (no server, work offline). Returns how many were set. */
+export async function scheduleCareLocal(startDate: string, items: { day: number; text: string }[], title: (day: number) => string): Promise<number> {
+  if (!isNative()) return 0;
+  const { LocalNotifications } = await import('@capacitor/local-notifications');
+  const perm = await LocalNotifications.requestPermissions().catch(() => ({ display: 'denied' as const }));
+  if (perm.display !== 'granted') return 0;
+  const base = new Date(`${startDate}T09:00:00`);
+  const now = Date.now();
+  const pending = await LocalNotifications.getPending().catch(() => ({ notifications: [] as { id: number }[] }));
+  const old = pending.notifications.filter((n) => n.id >= 7000 && n.id < 7100);
+  if (old.length) await LocalNotifications.cancel({ notifications: old.map((n) => ({ id: n.id })) }).catch(() => {});
+  const list = items
+    .map((s) => ({ s, at: new Date(base.getTime() + s.day * 86400000) }))
+    .filter(({ at }) => at.getTime() > now)
+    .map(({ s, at }) => ({ id: 7000 + s.day, title: title(s.day), body: s.text, schedule: { at }, extra: { url: '/app/gallery' } }));
+  if (!list.length) return 0;
+  await LocalNotifications.schedule({ notifications: list });
+  return list.length;
 }

@@ -3,10 +3,12 @@ import { tx, qOf } from '@/lib/tr';
 import { authErrorCode } from '@/lib/auth-help';
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { api, sb } from '@/lib/sb';
 import { useLang } from '@/lib/i18n';
 import { lsGet, lsSet, migrateLocal, track } from '@/lib/store';
 import { AgeGate } from './AgeGate';
+import { AiConsent } from './AiConsent';
 
 export type Me = {
   user: { id: string; email?: string } | null;
@@ -66,7 +68,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const migrated = useRef(false);
   // an account is needed to use the app: no session → the sign-in page
   const [gate, setGate] = useState<'checking' | 'in' | 'out'>('checking');
+  // browsing without an account: Explore, the guides and shared posts (App Store 5.1.1 – only account features ask to sign in)
+  const path = usePathname() || '';
+  const isOpenPath = (p: string) => /^\/app\/(explore|tudastar|tattoo|v)(\/|$)/.test(p);
+  const guest = useRef(false);
   const toLogin = useCallback(() => {
+    if (isOpenPath(location.pathname)) {
+      guest.current = true;
+      return void refreshMeRef.current?.().then(() => setGate('in'), () => setGate('in'));
+    }
     setGate('out');
     const q = qOf(ui.lang);
     // a Google / Apple sign-in that failed comes back with #error=… – show why on the sign-in page
@@ -80,6 +90,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     timer.current = setTimeout(() => setMsg(''), 3200);
   }, []);
 
+  const refreshMeRef = useRef<null | (() => Promise<any>)>(null);
   const meRef = useRef<Me>({ user: null });
   const refreshMe = useCallback(async () => {
     const r = await api<Me>('/api/me');
@@ -119,6 +130,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     return data;
   }, [toast, ui.lang, loadProfile]);
+
+  refreshMeRef.current = refreshMe;
+  // a guest who leaves the open pages goes to sign-in
+  useEffect(() => {
+    if (gate === 'in' && guest.current && !me.user && !isOpenPath(path)) {
+      guest.current = false;
+      toLogin();
+    }
+    if (me.user) guest.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, gate, me.user]);
 
   useEffect(() => {
     api<Cfg>('/api/config').then((r) => setCfg(r.ok ? r.data : { ai: false, auth: false, payments: false }));
@@ -207,6 +229,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     >
       {gate === 'in' ? children : <div className="gate-wait" aria-busy="true" />}
       {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
+      <AiConsent lang={ui.lang} />
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>

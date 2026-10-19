@@ -9,6 +9,12 @@ export function sb(): SupabaseClient | null {
   const url = PUBLIC.supabaseUrl;
   const key = PUBLIC.supabaseAnonKey;
   c = url && key ? createClient(url, key, { auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' } }) : null;
+  // keep Apple's refresh token after an Apple sign-in, so deleting the account can revoke it (App Store 5.1.1(v))
+  c?.auth.onAuthStateChange((evt, session) => {
+    const rt = (session as any)?.provider_refresh_token as string | undefined;
+    if (evt === 'SIGNED_IN' && rt && session?.user && c)
+      import('./apple-token').then((m) => m.saveAppleToken(c!, session.user.id, rt)).catch(() => {});
+  });
   return c;
 }
 
@@ -20,6 +26,13 @@ export async function authHeader(): Promise<Record<string, string>> {
 }
 
 export async function api<T = any>(path: string, body?: unknown): Promise<{ ok: boolean; status: number; data: T }> {
+  if (typeof window !== 'undefined') {
+    const m = await import('./ai-consent');
+    if (m.AI_PATHS.test(path) && !(await m.askAiConsent())) {
+      const hu = document.documentElement.lang === 'hu';
+      return { ok: false, status: 0, data: { code: 'ai_consent', error: hu ? 'Az előnézethez engedélyezned kell, hogy a fotódat elküldjük az MI-szolgáltatóinknak.' : 'To make a preview, allow sending your photo to our AI providers.' } as any };
+    }
+  }
   let res: Response;
   try {
     res = await fetch(path, {

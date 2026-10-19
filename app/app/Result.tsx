@@ -1,5 +1,5 @@
 'use client';
-import { pick } from '@/lib/tr';
+import { pick, qOf } from '@/lib/tr';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from './AppProvider';
@@ -770,7 +770,10 @@ export function Result({
         <input className="text" id="post-caption" maxLength={120} placeholder={t('Caption (optional), e.g. my first tattoo idea', 'Felirat (nem kötelező), pl. az első tetoválás-ötletem')} value={caption} onChange={(e) => setCaption(e.target.value)} />
         <label className="consent">
           <input type="checkbox" checked={pubOk} onChange={(e) => setPubOk(e.target.checked)} />
-          <span>{t('The photo is of me, I’m over 18, no face or private details are visible, and I have the right to the design.', 'A fotón én vagyok, elmúltam 18, nem látszik arc vagy személyes adat, és jogom van a mintához.')}</span>
+          <span>
+            {t('The photo is of me, I’m over 18, no face or private details are visible, I have the right to the design, and I accept the ', 'A fotón én vagyok, elmúltam 18, nem látszik arc vagy személyes adat, jogom van a mintához, és elfogadom a ')}
+            <a href={`/terms${qOf(ui.lang)}`} target="_blank" rel="noreferrer">{t('community rules', 'közösségi szabályokat')}</a>.
+          </span>
         </label>
         <button className="btn wide" disabled={!pubOk || pubBusy} onClick={publish}>
           {pubBusy ? '…' : t('Send for review', 'Küldés ellenőrzésre')}
@@ -826,8 +829,17 @@ function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => vo
       <button
         className="btn wide"
         onClick={async () => {
-          track('aftercare_ics');
           onDone?.(new Date(date + 'T12:00:00').toISOString());
+          // in the store apps: native reminders on the phone itself
+          if ((window as any).Capacitor?.isNativePlatform?.()) {
+            track('aftercare_local');
+            const n = await import('@/lib/native')
+              .then((m) => m.scheduleCareLocal(date, CARE.map((s) => ({ day: s.day, text: t(s.en, s.hu) })), (d) => t(`Healing plan · day ${d}`, `Gyógyulási terv · ${d}. nap`)))
+              .catch(() => 0);
+            if (n > 0) return void toast(t(`${n} reminders set on this phone`, `${n} emlékeztető beállítva a telefonodon`));
+            toast(t('Allow notifications in Settings to get the reminders, or use the calendar file.', 'Engedélyezd az értesítéseket a Beállításokban, vagy használd a naptárfájlt.'));
+          }
+          track('aftercare_ics');
           await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-gyogyulas.ics');
           toast(t('Open the file to add the reminders to your calendar', 'Nyisd meg a fájlt, és bekerülnek az emlékeztetők a naptáradba'));
           if (me?.user) {

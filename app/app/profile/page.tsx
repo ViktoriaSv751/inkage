@@ -217,6 +217,8 @@ export default function ProfilePage() {
       const uid = me.user.id;
       // vote links made on this device without an account
       for (const x of shares.all()) if (x.kind !== 'preview') await revokeGuestShare(x.id).catch(() => false);
+      // Sign in with Apple: revoke Apple's token first (App Store 5.1.1(v)); never blocks the deletion
+      await api('/api/me/apple-revoke', {}).catch(() => null);
       const { error } = await s.rpc('erase_my_account');
       if (error) throw error;
       for (const bucket of ['previews', 'shares']) {

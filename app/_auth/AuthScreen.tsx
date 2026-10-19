@@ -163,6 +163,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
       if (e) setErr(e);
       return;
     }
+    (await import('@/lib/apple-token')).markOAuthStart(provider);
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${location.origin}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
@@ -270,6 +271,9 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
                     </svg>
                     {T('Continue with Google', 'Folytatás Google-lel')}
                   </button>
+                  <Link href={`/app/explore${q}`} className="au-browse" style={{ display: 'block', textAlign: 'center', padding: '10px 0 2px', fontSize: 15, fontWeight: 600, textDecoration: 'underline', color: 'inherit' }}>
+                    {T('Look around first, without an account', 'Előbb körülnézek, fiók nélkül')}
+                  </Link>
                 </div>
               )}
 

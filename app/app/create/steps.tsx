@@ -6,6 +6,7 @@ import { useApp } from '../AppProvider';
 import { Icon } from '../ui';
 import { trErr, tx } from '@/lib/i18n';
 import { api } from '@/lib/sb';
+import { isNative, nativePickPhoto } from '@/lib/native';
 import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
 import { uploads } from '@/lib/uploads';
@@ -561,7 +562,7 @@ export function StudioStep({
       <h2 className="sec-title">{existing ? t('Photo of your tattoo', 'Fotó a tetoválásodról') : t('Your photo and the design', 'A fotód és a minta')}</h2>
       <div className={`studio-slots ${existing ? 'one' : ''}`}>
         <div className="studio-col">
-          <label htmlFor="photo-input" role="button" tabIndex={0} className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={() => track('photo_pick_open')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
+          <label htmlFor="photo-input" role="button" tabIndex={0} className={`sslot ${photo ? 'has' : ''} ${over === 'photo' ? 'over' : ''}`} onClick={(e) => { track('photo_pick_open'); if (isNative()) { e.preventDefault(); nativePickPhoto(ui.lang).then((b) => b && takePhoto(b)); } }} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }} aria-label={t('Choose your photo', 'Fotó kiválasztása')} {...drop('photo')}>
             {photo ? <img src={photo.dataUrl} alt={t('Your photo', 'A fotód')} /> : (
               <span className="sslot-empty">
                 {Icon.camera}
@@ -580,7 +581,7 @@ export function StudioStep({
             <button className="chipbtn" onClick={() => setCam(true)}>
               {Icon.camera} {t('Camera', 'Kamera')}
             </button>
-            <label htmlFor="photo-input" role="button" tabIndex={0} className="chipbtn" onClick={() => track('photo_pick_open')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }}>
+            <label htmlFor="photo-input" role="button" tabIndex={0} className="chipbtn" onClick={(e) => { track('photo_pick_open'); if (isNative()) { e.preventDefault(); nativePickPhoto(ui.lang).then((b) => b && takePhoto(b)); } }} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLElement).click(); } }}>
               {Icon.image} {t('Photos', 'Galéria')}
             </label>
           </div>
