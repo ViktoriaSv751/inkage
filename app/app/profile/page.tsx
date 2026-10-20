@@ -5,7 +5,7 @@ import { qOf } from '@/lib/tr';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useApp } from '../AppProvider';
-import { closeTap, Sheet } from '../ui';
+import { closeTap, Confirm, Sheet } from '../ui';
 import { LangPicker } from '../../LangPicker';
 import { tx } from '@/lib/i18n';
 import { api, sb } from '@/lib/sb';
@@ -204,9 +204,17 @@ export default function ProfilePage() {
     } else setHowto(true);
   };
 
-  const signOut = async () => {
+  const [askOut, setAskOut] = useState(false);
+  const signOut = () => setAskOut(true);
+  const doSignOut = async () => {
+    setAskOut(false);
+    const { coverSplash, markSplash } = await import('@/lib/splash');
+    coverSplash();
+    markSplash('out');
+    const started = Date.now();
     // only this device: signing out here must not sign you out (and empty the gallery) on your other devices
-    await sb()?.auth.signOut({ scope: 'local' });
+    await Promise.resolve(sb()?.auth.signOut({ scope: 'local' })).catch(() => {});
+    await new Promise((r) => setTimeout(r, Math.max(0, 700 - (Date.now() - started))));
     location.replace(`/belepes${qOf(ui.lang)}`);
   };
 
@@ -645,6 +653,20 @@ export default function ProfilePage() {
         </button>
       </Sheet>
 
+      <Confirm
+        open={askOut}
+        title={t('Sure you want to sign out?', 'Biztosan kijelentkezel?')}
+        text={t('Your designs stay saved in your account.', 'A mintáid a fiókodban maradnak.')}
+        yes={t('Sign out', 'Kijelentkezés')}
+        no={t('Cancel', 'Mégse')}
+        onYes={doSignOut}
+        onClose={() => setAskOut(false)}
+        icon={
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10" />
+          </svg>
+        }
+      />
       <Sheet open={erase} onClose={() => setErase(false)} label={ui.t('profile.erase')}>
         <h2>{ui.t('profile.erase')}</h2>
         <p className="sub">{ui.t('profile.eraseConfirm')}</p>

@@ -136,12 +136,39 @@ export async function shrink(dataUrl: string, maxSide = 900, quality = 0.84): Pr
     i.onerror = rej;
     i.src = dataUrl;
   });
+  // iOS decodes big images lazily: drawn before decoding (or with several big images in memory, as while
+  // the years are being made) the canvas can come out black. Decode first, and check the result.
+  await img.decode?.().catch(() => {});
   const s = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
   const c = document.createElement('canvas');
   c.width = Math.round(img.naturalWidth * s);
   c.height = Math.round(img.naturalHeight * s);
-  c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
-  return new Promise((res) => c.toBlob((b) => res(b!), 'image/jpeg', quality));
+  const ctx = c.getContext('2d')!;
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  const blob = await new Promise<Blob | null>((res) => c.toBlob((b) => res(b), 'image/jpeg', quality));
+  if (blob && !looksEmpty(ctx, c.width, c.height)) return blob;
+  // fall back to the original picture rather than saving a black one
+  return await (await fetch(dataUrl)).blob();
+}
+
+/** True when the canvas came out (almost) all one colour – a failed draw, not a real photo. */
+function looksEmpty(ctx: CanvasRenderingContext2D, w: number, h: number) {
+  try {
+    const pts = [
+      [0.5, 0.5], [0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75], [0.5, 0.2], [0.5, 0.8], [0.2, 0.5], [0.8, 0.5],
+    ];
+    let first = -1;
+    for (const [x, y] of pts) {
+      const d = ctx.getImageData(Math.floor(w * x), Math.floor(h * y), 1, 1).data;
+      const v = d[0] * 65536 + d[1] * 256 + d[2];
+      if (d[3] === 0) return true;
+      if (first < 0) first = v;
+      else if (v !== first) return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const blobToDataUrl = (b: Blob) =>
@@ -170,19 +197,14 @@ type Row = {
 };
 
 async function signed(paths: Partial<Record<string, string>>) {
-  const s = sb()!;
   const out: Partial<Record<string, string>> = {};
   // images restored from the server's generation records are served from there
   for (const [k, p] of Object.entries(paths)) if (p && p.startsWith('job:')) out[k] = `${process.env.NEXT_PUBLIC_NATIVE_BUNDLE ? "https://inkage.app" : ""}/api/job-img/${p.split(':')[1]}/${p.split(':')[2] || k}`;
   const list = Object.entries(paths).filter(([, p]) => !!p && !p.startsWith('job:')) as [string, string][];
   if (!list.length) return out;
-  const { data } = await s.storage.from('previews').createSignedUrls(
-    list.map(([, p]) => p),
-    60 * 60 * 24
-  );
+  const urls = await (await import('./signcache')).signPaths(list.map(([, p]) => p));
   list.forEach(([k], i) => {
-    const u = data?.[i]?.signedUrl;
-    if (u) out[k] = u;
+    if (urls[i]) out[k] = urls[i];
   });
   return out;
 }
@@ -192,7 +214,8 @@ async function upload(uid: string, id: string, k: string, src: string) {
   const png = k === 'design';
   const blob = src.startsWith('data:') ? (png ? await (await fetch(src)).blob() : await shrink(src, 1080)) : await (await fetch(src)).blob();
   const path = `${uid}/${id}/${k}.${png ? 'png' : 'jpg'}`;
-  const { error } = await s.storage.from('previews').upload(path, blob, { contentType: png ? 'image/png' : 'image/jpeg', upsert: true });
+  const { error } = await s.storage.from('previews').upload(path, blob, { contentType: png ? 'image/png' : 'image/jpeg', upsert: true, cacheControl: '604800' });
+  (await import('./signcache')).forgetSigned([path]);
   return error ? null : path;
 }
 

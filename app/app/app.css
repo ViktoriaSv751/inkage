@@ -833,7 +833,7 @@
 @media (max-width: 599px) { .gal-head > .row { width: 100%; } }
 .topbar-r { display: flex; align-items: center; gap: 8px; }
 .desk-tg { display: none !important; }
-@media (min-width: 960px) { .desk-tg { display: grid !important; position: fixed; top: 20px; right: 28px; z-index: 50; box-shadow: 0 0 0 1px var(--line); } }
+@media (min-width: 960px) { .desk-tg { display: flex !important; gap: 8px; position: fixed; top: 20px; right: 28px; z-index: 50; } .desk-tg .theme-tg, .desk-tg .lp-btn.icon { box-shadow: 0 0 0 1px var(--line); } }
 /* profile editor */
 /* the picture always fills an exact circle, whatever its own shape (a portrait photo used to stretch it into an oval) */
 .pf-avatar { flex: none; aspect-ratio: 1; }
@@ -1089,3 +1089,15 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .or-mail::before, .or-mail::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 .pw-links { display: flex; justify-content: space-between; gap: 12px; margin: 10px 2px 0; font-size: 14px; }
 .pw-links a { color: var(--ink-2); font-weight: 600; text-underline-offset: 2px; }
+
+/* centred confirm (sign out) */
+.cf-wrap { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 24px; background: rgba(0, 0, 0, .55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: fade .18s; }
+.cf-box { width: min(360px, 100%); background: var(--bg); color: var(--ink); border-radius: 26px; padding: 26px 22px 20px; box-shadow: 0 0 0 1px var(--line), 0 24px 60px rgba(0, 0, 0, .35); display: grid; justify-items: center; text-align: center; gap: 10px; animation: cfpop .32s var(--ease); }
+.cf-box h2 { margin: 4px 0 0; font-size: 20px; letter-spacing: -0.01em; }
+.cf-box p { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.45; }
+.cf-ico { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--ink); }
+.cf-ico svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cf-acts { width: 100%; display: grid; gap: 8px; margin-top: 10px; }
+.cf-acts .btn.wide { width: 100%; }
+.cf-no { background: transparent !important; color: var(--ink) !important; box-shadow: inset 0 0 0 1px var(--line) !important; }
+@keyframes cfpop { from { transform: translateY(10px) scale(.94); opacity: 0; } }

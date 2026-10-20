@@ -202,6 +202,11 @@ footer a { text-decoration: none; }
 :root[data-theme='dark'] .theme-tg .tg-sun { opacity: 1; transform: none; }
 .theme-tg.sm { width: 36px; height: 36px; border-radius: 12px; }
 .theme-tg.sm svg { width: 18px; height: 18px; }
+/* language switch: same shape as the theme switch, sits to its left */
+.tg-lang { display: contents; }
+.tg-lang .lp-btn.icon { width: 42px; height: 42px; flex: none; border-radius: 14px; background: var(--surface); box-shadow: none; color: var(--ink); }
+.tg-lang .lp-btn.icon:hover { background: var(--surface-2); box-shadow: none; }
+.tg-lang.sm .lp-btn.icon { width: 36px; height: 36px; border-radius: 12px; }
 
 /* dark theme: text on inverted (ink) fills */
 :root[data-theme='dark'] .au-check input:checked + .au-box,
@@ -297,3 +302,24 @@ html, body { overflow-x: hidden; overflow-x: clip; overscroll-behavior-x: none; 
 /* brand mark (ink bottle): follows the text colour, black on light, white on dark */
 svg.logo-mark { display: inline-block; flex: none; stroke: none !important; }
 svg.logo-mark path { fill: currentColor !important; stroke: none !important; }
+
+/* sign-in / sign-out logo screen */
+.ink-splash { display: none; }
+html.splash .ink-splash { display: grid; place-items: center; position: fixed; inset: 0; z-index: 10000; background: var(--bg); color: var(--ink); pointer-events: all; }
+html.splash body { overflow: hidden; }
+.ink-splash-in { display: grid; justify-items: center; gap: 18px; }
+.ink-splash-in .logo-mark { width: 96px; height: auto; fill: currentColor; }
+.ink-splash-in span { font: 800 26px/1 'Geist Sans', system-ui, sans-serif; letter-spacing: -0.02em; }
+html.splash .ink-splash-in { animation: ink-sp-in 0.75s cubic-bezier(.2,.8,.2,1) both; }
+html.splash .ink-splash-in span { animation: ink-sp-word 0.9s 0.15s cubic-bezier(.2,.8,.2,1) both; }
+html.splash-cover .ink-splash { animation: ink-sp-fade 0.35s ease both; }
+html.splash-leave .ink-splash { animation: ink-sp-out 0.85s cubic-bezier(.7,0,.2,1) forwards; }
+html.splash-leave .ink-splash-in { animation: ink-sp-zoom 0.85s cubic-bezier(.7,0,.2,1) forwards; }
+html.splash-leave body > *:not(.ink-splash) { animation: ink-sp-page 0.95s 0.15s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ink-sp-in { from { opacity: 0; transform: scale(.82); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes ink-sp-word { from { opacity: 0; transform: translateY(10px); letter-spacing: .2em; } to { opacity: 1; transform: none; } }
+@keyframes ink-sp-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ink-sp-zoom { 0% { transform: none; opacity: 1; } 35% { transform: scale(.92); opacity: 1; } 100% { transform: scale(9); opacity: 0; } }
+@keyframes ink-sp-out { 0%, 40% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+@keyframes ink-sp-page { from { opacity: 0; transform: scale(1.06); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) { html.splash .ink-splash-in, html.splash-leave .ink-splash, html.splash-leave .ink-splash-in, html.splash-leave body > * { animation-duration: .01s !important; } }

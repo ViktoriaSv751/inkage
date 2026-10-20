@@ -112,6 +112,9 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
             ))}
           </nav>
           <div className="sn-r">
+            <span className="tg-lang">
+              <LangPicker lang={lang} onPick={pick} variant="icon" />
+            </span>
             <ThemeToggle lang={lang} />
             <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
               {T('Sign in', 'Belépés')}
@@ -135,7 +138,10 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
               <LogoMark />
               InkAge
             </Link>
-            <span style={{ marginLeft: 'auto', marginRight: 8 }}>
+            <span style={{ marginLeft: 'auto', marginRight: 8, display: 'inline-flex', gap: 8 }}>
+              <span className="tg-lang">
+                <LangPicker lang={lang} onPick={pick} variant="icon" />
+              </span>
               <ThemeToggle lang={lang} />
             </span>
             <button className="sn-dr-x" aria-label={T('Close menu', 'Menü bezárása')} onClick={() => setMenu(false)}>

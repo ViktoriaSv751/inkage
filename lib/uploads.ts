@@ -51,9 +51,9 @@ export const uploads = {
     if (error) throw error;
     const rows = (data as Row[]) || [];
     if (!rows.length) return [];
-    const { data: urls } = await s.storage.from('previews').createSignedUrls(rows.map((r) => r.path), 60 * 60 * 24);
+    const urls = await (await import('./signcache')).signPaths(rows.map((r) => r.path));
     return rows
-      .map((r, i) => ({ id: r.id, created_at: r.created_at, kind: r.kind, w: r.w || 0, h: r.h || 0, src: urls?.[i]?.signedUrl || '', sourceUrl: r.source_url, note: r.note }))
+      .map((r, i) => ({ id: r.id, created_at: r.created_at, kind: r.kind, w: r.w || 0, h: r.h || 0, src: urls[i] || '', sourceUrl: r.source_url, note: r.note }))
       .filter((u) => !!u.src);
   },
   /** Change an idea's note. */

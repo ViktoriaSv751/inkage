@@ -12,6 +12,7 @@ import { isLang, tx, htmlLang } from '@/lib/tr';
 import LOCALE_VER from '@/lib/locales/manifest.json';
 import { Suspense } from 'react';
 import { ScrollTop } from './ScrollTop';
+import { Splash } from './Splash';
 
 export function generateMetadata(): Metadata {
   const h = headers().get('x-ink-lang');
@@ -42,11 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* theme (dark unless light was chosen this visit) + language before first paint, so there is no flash */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var t=null;try{localStorage.removeItem('ink_theme');t=sessionStorage.getItem('ink_theme');}catch(e){}d.dataset.theme=t==='light'?'light':'dark';d.style.colorScheme=d.dataset.theme;var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t==='light'?'#ffffff':'#000000');var q=new URLSearchParams(location.search).get('lang');var L=['hu','en','de','es','pt','fr','it','pl','tr','ro','nl','sv','cs','el','uk','ja','ko','id','th','zh','vi','fil','ms','zhs','da','no','fi','sk','hr','bg','sl','lt','lv','et','sr'];var l=q||localStorage.getItem('ink_lang')||'hu';d.lang=L.indexOf(l)>=0?l:'hu';}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement;var t=null;try{localStorage.removeItem('ink_theme');t=sessionStorage.getItem('ink_theme');}catch(e){}d.dataset.theme=t==='light'?'light':'dark';d.style.colorScheme=d.dataset.theme;var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t==='light'?'#ffffff':'#000000');var q=new URLSearchParams(location.search).get('lang');var L=['hu','en','de','es','pt','fr','it','pl','tr','ro','nl','sv','cs','el','uk','ja','ko','id','th','zh','vi','fil','ms','zhs','da','no','fi','sk','hr','bg','sl','lt','lv','et','sr'];var l=q||localStorage.getItem('ink_lang')||'hu';d.lang=L.indexOf(l)>=0?l:'hu';try{var s=JSON.parse(sessionStorage.getItem('ink_splash')||'null');sessionStorage.removeItem('ink_splash');if(s&&Date.now()-s.t<180000)d.classList.add('splash','splash-'+(s.k==='out'?'out':'in'));}catch(e){}}catch(e){}})();`,
           }}
         />
       </head>
       <body>
+        <Splash />
         <Suspense fallback={null}>
           <ScrollTop />
         </Suspense>

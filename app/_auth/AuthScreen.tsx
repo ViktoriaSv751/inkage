@@ -4,6 +4,7 @@ import { tx, qOf, type Lang } from '@/lib/tr';
 import { ThemeToggle } from '../ThemeToggle';
 import { LangPicker } from '../LangPicker';
 import { setLang } from '@/lib/i18n';
+import { markSplash, playSplash } from '@/lib/splash';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -88,6 +89,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_ok', { mode: 'password' });
+    playSplash('in');
     router.replace('/app/gallery');
   };
   const signupPw = async (e: React.FormEvent) => {
@@ -99,7 +101,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_signup');
-    if (data?.session) return router.replace('/app/gallery');
+    if (data?.session) return playSplash('in'), router.replace('/app/gallery');
     setSentKind('confirm');
     setStep('sent');
   };
@@ -140,6 +142,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
     setBusy(false);
     if (error) return setErr(T('That code didn’t work. Use the newest e-mail.', 'Ez a kód nem jó. A legfrissebb e-mailt használd.'));
     track('auth_ok', { mode });
+    playSplash('in');
     router.replace('/app/gallery');
   };
 
@@ -172,6 +175,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
       return;
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
+    markSplash('in');
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
@@ -184,7 +188,9 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
           InkAge
         </Link>
         <span className="au-top-r">
-          <LangPicker lang={lang} variant="icon" onPick={(l) => setLang(l)} />
+          <span className="tg-lang">
+            <LangPicker lang={lang} variant="icon" onPick={(l) => setLang(l)} />
+          </span>
           <ThemeToggle lang={lang} />
           <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
             <svg viewBox="0 0 24 24" aria-hidden="true">

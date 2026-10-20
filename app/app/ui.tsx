@@ -14,6 +14,7 @@ import { useApp } from './AppProvider';
 import { tx, huArticle } from '@/lib/i18n';
 import { useScrollLock } from '@/lib/scrolllock';
 import { ThemeToggle } from '../ThemeToggle';
+import { LangPicker } from '../LangPicker';
 import { LogoMark } from '../LogoMark';
 
 export const Icon = {
@@ -88,6 +89,7 @@ export function TopBar() {
           InkAge
         </Link>
         <div className="topbar-r">
+        <AppLang className="sm" />
         <ThemeToggle className="sm" lang={ui.lang} />
         {me.user ? (
           <Link href="/app/profile" className="avatar" style={{ width: 34, height: 34, fontSize: 15, textDecoration: 'none', position: 'relative', overflow: 'hidden', flex: 'none' }} aria-label={ui.t('nav.profile')}>
@@ -109,7 +111,29 @@ export function TopBar() {
 /** Desktop: the light/dark switch in the top right corner. */
 export function DeskTheme() {
   const { ui } = useApp();
-  return <ThemeToggle className="desk-tg" lang={ui.lang} />;
+  return (
+    <div className="desk-tg">
+      <AppLang />
+      <ThemeToggle lang={ui.lang} />
+    </div>
+  );
+}
+
+/** The language switch next to the light/dark switch (saved to the account too). */
+export function AppLang({ className = '' }: { className?: string }) {
+  const { ui, me } = useApp();
+  return (
+    <span className={`tg-lang ${className}`}>
+      <LangPicker
+        lang={ui.lang}
+        variant="icon"
+        onPick={async (l) => {
+          if (me.user) await Promise.resolve(sb()?.rpc('save_profile', { p_onboarding: me.onboarding ?? null, p_lang: l })).catch(() => {});
+          ui.setLang(l);
+        }}
+      />
+    </span>
+  );
 }
 
 export function BottomNav() {
@@ -207,6 +231,38 @@ export function closeTap(fn: () => void) {
   };
 }
 
+/** A small centred question with two answers (e.g. "Sure you want to sign out?"). */
+export function Confirm({ open, title, text, yes, no, onYes, onClose, icon }: { open: boolean; title: string; text?: string; yes: string; no: string; onYes: () => void; onClose: () => void; icon?: React.ReactNode }) {
+  useScrollLock(open);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    if (!open) return;
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [open, onClose]);
+  if (!open || !mounted) return null;
+  return createPortal(
+    <div className="cf-wrap" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="cf-box" role="alertdialog" aria-modal="true" aria-labelledby="cf-t">
+        {icon && <span className="cf-ico">{icon}</span>}
+        <h2 id="cf-t">{title}</h2>
+        {text && <p>{text}</p>}
+        <div className="cf-acts">
+          <button type="button" className="btn wide" onClick={onYes} autoFocus>
+            {yes}
+          </button>
+          <button type="button" className="btn wide ghost cf-no" onClick={onClose}>
+            {no}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string }) {
   useScrollLock(open);
   // the sheet moves into <body> only once the page runs in the browser (the server and the first render must match)
@@ -279,6 +335,7 @@ export function AuthSheet() {
       return;
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
+    (await import('@/lib/splash')).markSplash('in');
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(error.message);
   };
@@ -302,6 +359,7 @@ export function AuthSheet() {
     if (error) return setErr(/invalid login/i.test(error.message) ? L('Wrong e-mail or password.', 'Hibás e-mail-cím vagy jelszó.') : error.message);
     closeAuth();
     setPw('');
+    (await import('@/lib/splash')).playSplash('in');
     await refreshMe();
     toast(L('Signed in', 'Bejelentkezve'));
   };

@@ -702,19 +702,6 @@ export function StudioStep({
           onClose={() => setPick({ ...pick, open: false })}
         />
       )}
-      {!existing && design && (
-        <div className="inkrow">
-          <b>{ui.t('create.place.ink')}</b>
-          <div className="seg" role="radiogroup">
-            {(['black', 'color'] as const).map((m) => (
-              <button key={m} role="radio" aria-checked={design.mode === m} className={design.mode === m ? 'on' : ''} onClick={() => applyDesign(design.raw, m, design.libId)}>
-                {m === 'black' ? ui.t('create.place.black') : ui.t('create.place.color')}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {existing ? (
         <div className="card" style={{ marginTop: 16 }}>
           <h3>{removal ? t('How big is the tattoo?', 'Mekkora a tetoválás?') : t('See your tattoo in 10, 30 and 50 years', 'Nézd meg a tetoválásod 10, 30 és 50 év múlva')}</h3>
@@ -732,62 +719,7 @@ export function StudioStep({
             </>
           )}
         </div>
-      ) : (
-        <>
-          <div className="card aimaker">
-            <h3>{t('Describe it — we’ll draw it', 'Írd le – megrajzoljuk')}</h3>
-            <textarea
-              className="notes"
-              id="ai-design"
-              rows={2}
-              maxLength={200}
-              placeholder={t('e.g. a small swallow carrying an olive branch', 'pl. egy kis fecske olajággal a csőrében')}
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-            />
-            <div className="row" style={{ marginTop: 8, alignItems: 'center', justifyContent: 'space-between' }}>
-              <div className="seg" role="radiogroup">
-                {(['fine-line', 'blackwork', 'traditional'] as const).map((st) => (
-                  <button key={st} role="radio" aria-checked={aiStyle === st} className={aiStyle === st ? 'on' : ''} onClick={() => setAiStyle(st)}>
-                    {st === 'fine-line' ? t('Fine', 'Finom') : st === 'blackwork' ? 'Blackwork' : t('Classic', 'Klasszikus')}
-                  </button>
-                ))}
-              </div>
-              <button className="btn" style={{ padding: '12px 18px' }} disabled={drawing || prompt.trim().length < 3} onClick={aiDesign}>
-                {drawing ? t('Drawing…', 'Rajzolás…') : t('Draw it', 'Rajzold meg')}
-              </button>
-            </div>
-            {variants.length > 0 && (
-              <>
-                <div className="variants" role="radiogroup" aria-label={t('Versions', 'Változatok')}>
-                  {variants.map((v, i) => (
-                    <button key={i} role="radio" aria-checked={design?.raw === v} className={design?.raw === v ? 'on' : ''} onClick={() => applyDesign(v, design?.mode || 'black')}>
-                      <img src={v} alt={t(`Version ${i + 1}`, `${i + 1}. változat`)} />
-                    </button>
-                  ))}
-                </div>
-                {design && variants.includes(design.raw) && (
-                  <div className="row" style={{ marginTop: 8, gap: 8, flexWrap: 'nowrap' }}>
-                    <input
-                      className="text"
-                      id="ai-change"
-                      style={{ flex: 1, minWidth: 0 }}
-                      maxLength={160}
-                      placeholder={t('Like this, but… e.g. thinner lines, add a small star', 'Ilyet, de… pl. vékonyabb vonalak, egy kis csillaggal')}
-                      value={change}
-                      onChange={(e) => setChange(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && refine()}
-                    />
-                    <button className="btn ghost" style={{ padding: '0 16px', minHeight: 46 }} disabled={drawing || change.trim().length < 3} onClick={refine}>
-                      {t('Change', 'Módosít')}
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </>
-      )}
+      ) : null}
       <p className="fine">{t('Only use designs you have the right to use — respect artists’ work.', 'Csak olyan mintát használj, amihez jogod van – tiszteld a tetoválóművészek munkáját.')}</p>
 
       <div className="stickycta">

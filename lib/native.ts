@@ -46,6 +46,7 @@ async function finishAuth(url: string) {
     const { Browser } = await import('@capacitor/browser');
     Browser.close().catch(() => {});
   }
+  (await import('./splash')).markSplash('in');
   location.replace('/app/gallery');
 }
 
