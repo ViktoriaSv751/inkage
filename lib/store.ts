@@ -223,8 +223,40 @@ async function upload(uid: string, id: string, k: string, src: string) {
 const fromRows = async (rows: Row[]): Promise<Preview[]> => {
   const paths = rows.flatMap((r) => Object.values(r.paths || {}).filter((p): p is string => !!p && !p.startsWith('job:')));
   if (paths.length) await (await import('./signcache')).signPaths(paths).catch(() => []);
-  return Promise.all(rows.map(fromRow));
+  const out = await Promise.all(rows.map(fromRow));
+  // pictures still kept with their generation record load slowly (the server reads them from the database
+  // each time): move them into storage once, in the background, so they load like the others next time
+  const slow = rows.filter((r) => Object.values(r.paths || {}).some((p) => p?.startsWith('job:')));
+  if (slow.length && typeof window !== 'undefined') setTimeout(() => slow.forEach((r) => healJobPaths(r).catch(() => {})), 1500);
+  return out;
 };
+
+const healing = new Set<string>();
+async function healJobPaths(r: Row) {
+  const s = sb();
+  if (!s || healing.has(r.id)) return;
+  healing.add(r.id);
+  const { data } = await s.auth.getUser();
+  const uid = data.user?.id;
+  if (!uid) return;
+  const add: Record<string, string> = {};
+  for (const [k, p] of Object.entries(r.paths || {})) {
+    if (!p?.startsWith('job:')) continue;
+    const [, job, key] = p.split(':');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_NATIVE_BUNDLE ? 'https://inkage.app' : ''}/api/job-img/${job}/${key || k}`);
+    if (!res.ok) continue;
+    const blob = await res.blob();
+    const png = k === 'design';
+    const path = `${uid}/${r.id}/${k}.${png ? 'png' : 'jpg'}`;
+    const small = png ? blob : await shrink(URL.createObjectURL(blob), 1080).catch(() => blob);
+    const up = await s.storage.from('previews').upload(path, small, { contentType: png ? 'image/png' : 'image/jpeg', upsert: true, cacheControl: '604800' });
+    if (!up.error) add[k] = path;
+  }
+  if (Object.keys(add).length) {
+    (await import('./signcache')).forgetSigned(Object.values(add));
+    await s.rpc('add_preview_paths', { p_id: r.id, p_paths: add });
+  }
+}
 
 const fromRow = async (r: Row): Promise<Preview> => {
   const all = await signed(r.paths || {});

@@ -193,6 +193,15 @@
 .studio-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .studio-slots.one { grid-template-columns: 1fr; }
 .studio-slots.one .sslot { aspect-ratio: 4/3.2; }
+/* phones: the photo and the design one under the other, each the full width (bigger to tap, easier to see) */
+@media (max-width: 640px) {
+  .studio-slots { grid-template-columns: 1fr; gap: 18px; }
+  .studio-slots .sslot { aspect-ratio: 4/3.1; }
+  .sslot-empty svg { width: 38px; height: 38px; }
+  .sslot-empty b { font-size: 18px; }
+  .sslot-empty small { font-size: 14px; }
+  .sslot-tag { display: grid; place-items: center; position: absolute; top: 12px; left: 12px; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--bg); font: 800 14px/1 'Geist Sans', system-ui, sans-serif; z-index: 2; }
+}
 .studio-col { display: grid; gap: 8px; align-content: start; }
 .sslot { position: relative; width: 100%; aspect-ratio: 4/5; border-radius: var(--r-lg); overflow: hidden; padding: 0; border: 1.5px dashed #c9c9c5; background: var(--surface); display: grid; place-items: center; transition: border-color .15s, background .15s; }
 .sslot:hover { border-color: var(--ink-3); }
@@ -1101,3 +1110,7 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .cf-acts .btn.wide { width: 100%; }
 .cf-no { background: transparent !important; color: var(--ink) !important; box-shadow: inset 0 0 0 1px var(--line) !important; }
 @keyframes cfpop { from { transform: translateY(10px) scale(.94); opacity: 0; } }
+
+/* pictures and picture tiles: no long-press preview / magnifier, no drag, no pinch zoom on them */
+.appshell img, .appshell a, .pf-tile, .tile, .sheet img, .cf-box img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
+.appshell img { touch-action: pan-x pan-y; }

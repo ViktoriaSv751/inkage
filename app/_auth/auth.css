@@ -199,3 +199,4 @@
 .au-strength[data-s='2'] i:nth-child(-n+2) { background: var(--amber); }
 .au-strength[data-s='3'] i { background: var(--green); }
 .au-pw + .au-form { margin-top: 16px; }
+html.native .au-close { display: none !important; }

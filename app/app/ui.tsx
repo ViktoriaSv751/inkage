@@ -202,7 +202,7 @@ export function BottomNav() {
         </div>
         <Link href={`/tudastar${q}`}>{tx(ui.lang, 'Guides', 'Tudástár')}</Link>
         <Link href={`/gyik${q}`}>{tx(ui.lang, 'FAQ', 'GYIK')}</Link>
-        <Link href={`/${q}`}>{tx(ui.lang, 'Back to website', 'Vissza a weboldalra')}</Link>
+        <Link className="web-only" href={`/${q}`}>{tx(ui.lang, 'Back to website', 'Vissza a weboldalra')}</Link>
       </div>
     </nav>
   );

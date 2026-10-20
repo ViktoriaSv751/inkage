@@ -40,7 +40,10 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
 
   // in the store apps the Google / Apple sign-in comes back to this page through app.inkage://auth:
   // the listener that finishes it must be running here too, not only inside /app
+  // store apps: no way back to the website from here (no ×, the logo stays on this page)
+  const [native, setNative] = useState(false);
   useEffect(() => {
+    setNative(!!(window as any).Capacitor?.isNativePlatform?.());
     if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.initNative()).catch(() => {});
   }, []);
   useEffect(() => {
@@ -183,7 +186,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
   return (
     <div className="au">
       <header className="au-bar">
-        <Link href={`/${q}`} className="au-logo" aria-label="InkAge">
+        <Link href={native ? `/belepes${q}` : `/${q}`} className="au-logo" aria-label="InkAge">
           <LogoMark />
           InkAge
         </Link>
@@ -192,11 +195,13 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
             <LangPicker lang={lang} variant="icon" onPick={(l) => setLang(l)} />
           </span>
           <ThemeToggle lang={lang} />
-          <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </Link>
+          {!native && (
+            <Link href={`/${q}`} className="au-close" aria-label={T('Close', 'Bezárás')}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </Link>
+          )}
         </span>
       </header>
 

@@ -327,3 +327,4 @@ html.splash-leave body > *:not(.ink-splash) { animation: ink-sp-page 0.95s 0.15s
 /* no scroll bars anywhere (scrolling still works) */
 html, body, * { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display: none; width: 0 !important; height: 0 !important; background: transparent; }
+html.native .web-only { display: none !important; }
