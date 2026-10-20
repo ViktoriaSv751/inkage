@@ -50,8 +50,10 @@ async function finishAuth(url: string) {
 }
 
 /** Called once when the app starts inside the native shell. */
+let started = false;
 export async function initNative() {
-  if (!isNative()) return;
+  if (!isNative() || started) return;
+  started = true;
   document.documentElement.classList.add('native', `native-${platform()}`);
   const [{ App }, { Share }] = await Promise.all([import('@capacitor/app'), import('@capacitor/share')]);
 
@@ -71,6 +73,21 @@ export async function initNative() {
       if (/inkage/.test(u.host)) location.assign(u.pathname + u.search + u.hash);
     } catch {}
   });
+  // the app was closed while the sign-in page was open: it starts with the callback address
+  // (only once per address: after finishing, the page reloads and the launch address is still the same)
+  App.getLaunchUrl()
+    .then((l) => {
+      const url = l?.url;
+      if (!url?.startsWith(`${NATIVE_SCHEME}://auth`)) return;
+      try {
+        if (sessionStorage.getItem('ink_auth_done') === url) return;
+        sessionStorage.setItem('ink_auth_done', url);
+      } catch {
+        return;
+      }
+      finishAuth(url);
+    })
+    .catch(() => {});
   // a tapped healing-plan reminder opens the gallery
   import('@capacitor/local-notifications')
     .then(({ LocalNotifications }) =>

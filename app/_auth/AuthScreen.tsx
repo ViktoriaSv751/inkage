@@ -37,6 +37,11 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
   const [providers, setProviders] = useState<{ google?: boolean; apple?: boolean; loaded?: boolean }>({});
   const boxes = useRef<(HTMLInputElement | null)[]>([]);
 
+  // in the store apps the Google / Apple sign-in comes back to this page through app.inkage://auth:
+  // the listener that finishes it must be running here too, not only inside /app
+  useEffect(() => {
+    if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.initNative()).catch(() => {});
+  }, []);
   useEffect(() => {
     sb()
       ?.auth.getSession()
