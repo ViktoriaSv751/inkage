@@ -43,6 +43,9 @@ export default function Admin() {
     setAiReports((r) => r.filter((x) => x.id !== id));
   };
   const [feedback, setFeedback] = useState<any[]>([]);
+  // visitors from our own anonymous events (only devices that accepted usage stats)
+  type Win = { visitors: number; returning: number; new_visitors: number };
+  const [visits, setVisits] = useState<{ today: Win; d7: Win; d30: Win; daily: { day: string; visitors: number; returning: number }[] } | null>(null);
   const loadHealth = async () => {
     const { data } = (await sb()?.rpc('admin_health')) || {};
     if (Array.isArray(data)) setHealth(data);
@@ -72,6 +75,9 @@ export default function Admin() {
     sb()
       ?.rpc('admin_extra')
       .then(({ data }) => data && setExtra(data));
+    sb()
+      ?.rpc('admin_visitors')
+      .then(({ data }) => data && setVisits(data));
   }, []);
   const max = Math.max(1, ...(s?.daily || []).map((d) => d.previews));
   // Rough AI cost: ~1 fresh + 4 aging images + checks per preview.
@@ -135,6 +141,46 @@ export default function Admin() {
                   <span style={{ fontSize: 13, color: 'var(--ink-2)', fontWeight: 600 }}>{k}</span>
                 </div>
               ))}
+            </div>
+          )}
+          {visits && (
+            <div style={{ background: '#fff6f0', borderRadius: 16, padding: 14, marginTop: 14 }}>
+              <b>Látogatók (saját, névtelen statisztika – csak akik elfogadták a sütiket)</b>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10, marginTop: 10 }}>
+                {[
+                  ['Látogató ma', visits.today.visitors],
+                  ['Visszatérő ma', visits.today.returning],
+                  ['Látogató 7 nap', visits.d7.visitors],
+                  ['Visszatérő 7 nap', visits.d7.returning],
+                  ['Látogató 30 nap', visits.d30.visitors],
+                  ['Visszatérő 30 nap', visits.d30.returning],
+                ].map(([k, v]) => (
+                  <div key={k as string}>
+                    <b style={{ display: 'block', fontSize: 30, lineHeight: 1 }}>{v}</b>
+                    <span style={{ fontSize: 13, color: 'var(--ink-2)', fontWeight: 600 }}>{k}</span>
+                  </div>
+                ))}
+              </div>
+              {visits.daily.length > 0 && (
+                <table style={{ width: '100%', marginTop: 10, fontSize: 13, borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ textAlign: 'left' }}>
+                      <th>Nap</th>
+                      <th>Látogató</th>
+                      <th>Ebből visszatérő</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...visits.daily].reverse().map((d) => (
+                      <tr key={d.day}>
+                        <td>{d.day}</td>
+                        <td>{d.visitors}</td>
+                        <td>{d.returning}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           )}
           <div style={{ background: health[0] && !health[0].ok ? '#fdebeb' : '#eaf7f0', borderRadius: 16, padding: 14, marginTop: 14 }}>

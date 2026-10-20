@@ -48,6 +48,7 @@ export function middleware(req: NextRequest) {
   const lang = isLang(q) ? q : app && isLang(cookie) ? cookie : app ? fromBrowser(req.headers.get('accept-language')) : 'hu';
   const headers = new Headers(req.headers);
   headers.set('x-ink-lang', lang);
+  headers.set('x-ink-path', url.pathname);
   return NextResponse.next({ request: { headers } });
 }
 

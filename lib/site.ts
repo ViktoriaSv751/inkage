@@ -1,3 +1,4 @@
+import { LANGS, qOf, htmlLang, type Lang } from '@/lib/tr';
 /* The store apps carry their own copy of the app screens (a static build, App Store rule 4.2), so inside them
    the page lives at capacitor://localhost or https://localhost while the server, the API and every public link
    stay on the website. NEXT_PUBLIC_NATIVE_BUNDLE is set only for that build. */
@@ -15,3 +16,12 @@ export const BUNDLED_PATH = /^\/(app(\/(gallery|explore|profile|create))?|belepe
 
 /** Prefix for the website's API when the page itself is not on the website. */
 export const API_HOST = NATIVE_BUNDLE ? SITE_URL : '';
+
+/** Search-engine links for a website page: itself as the canonical address, plus every language version (hreflang). */
+export function langAlternates(path: string, lang: Lang) {
+  const url = (l: Lang) => `${SITE_URL}${path}${qOf(l)}`;
+  return {
+    canonical: url(lang),
+    languages: { ...Object.fromEntries(LANGS.map((l) => [htmlLang(l), url(l)])), 'x-default': url('hu') },
+  };
+}

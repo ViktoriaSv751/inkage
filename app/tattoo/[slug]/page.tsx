@@ -13,7 +13,6 @@ export function generateMetadata({ params, searchParams }: { params: { slug: str
   return {
     title: `${title} – InkAge`,
     description: tx(L, `How a ${p.s.en.toLowerCase()} tattoo on the ${p.a.en} ages, which size lasts, and how to see it on your own skin.`, `Hogyan öregszik egy ${p.s.hu.toLowerCase()} tetoválás (${p.a.hu}), melyik méret tart, és hogyan nézheted meg a saját bőrödön.`),
-    alternates: { canonical: `/tattoo/${params.slug}` },
   };
 }
 

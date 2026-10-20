@@ -1,27 +1,23 @@
 'use client';
-import { localeOf } from '@/lib/tr';
-
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useApp } from '../AppProvider';
-import { Icon, Sheet } from '../ui';
-import { Result } from '../Result';
-import { HealDiary, RealVsPreview } from './AfterCare';
 import { Uploads } from './Uploads';
 import { Ideas } from './Ideas';
-import { huArticle, tx } from '@/lib/i18n';
-import { cloud, haptic, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, STAGES, track } from '@/lib/store';
+import { tx } from '@/lib/i18n';
+import { cloud, haptic, local, lsGet, lsSet, Preview, revokeGuestShare, shares, StageKey, track } from '@/lib/store';
 import { placeName } from '../create/steps';
 import { PollSheet } from '../PollSheet';
-import { trErr } from '@/lib/i18n';
-
-// the card shows how it looks now (fresh); the years are one tap away in the detail view
-const thumb = (p: Preview) => p.images.fresh || p.images.y10 || p.images.y50 || p.removal?.laser10 || '';
-const PAGE = 120;
-type Sort = 'new' | 'old' | 'score' | 'place';
-type Kind = 'any' | 'new' | 'existing' | 'removal';
-const isRemoval = (p: Preview) => p.mode === 'removal' || (!!p.removal && !p.images.y10 && !p.images.y50);
+import { isRemoval, Kind, Mode, PAGE, Sort } from './_parts/shared';
+import { useTrash } from './_parts/useTrash';
+import { TrashSheet } from './_parts/TrashSheet';
+import { DeleteSheet } from './_parts/DeleteSheet';
+import { PreviewDetail } from './_parts/PreviewDetail';
+import { GalleryFilters } from './_parts/GalleryFilters';
+import { SelectionBars } from './_parts/SelectionBars';
+import { PreviewGrid } from './_parts/PreviewGrid';
+import { FoldersSheet, MoveSheet } from './_parts/FolderSheets';
+import { CompareSheet } from './_parts/CompareSheet';
 
 export default function GalleryPage() {
   const { ui, me, openAuth, toast } = useApp();
@@ -31,7 +27,7 @@ export default function GalleryPage() {
   const [more, setMore] = useState(false);
   const [filter, setFilter] = useState<'all' | 'fav'>('all');
   const [open, setOpen] = useState<Preview | null>(null);
-  const [mode, setMode] = useState<'browse' | 'compare' | 'select'>('browse');
+  const [mode, setMode] = useState<Mode>('browse');
   const [cmpOpen, setCmpOpen] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
   const [cmpStage, setCmpStage] = useState<StageKey>('y50');
@@ -143,74 +139,8 @@ export default function GalleryPage() {
     if (list.length) setDelAsk(list);
   };
   // Recently deleted: nothing is lost by accident
-  const [trash, setTrash] = useState<Preview[]>([]);
-  const [trashOpen, setTrashOpen] = useState(false);
-  const [restoring, setRestoring] = useState('');
-  const loadTrash = useCallback(() => {
-    if (me.user) cloud.trash().then(setTrash).catch(() => {});
-  }, [me.user]);
-  useEffect(() => loadTrash(), [loadTrash]);
-  const restore = async (p: Preview) => {
-    setRestoring(p.id);
-    try {
-      if (!(await cloud.restore(p.id))) throw new Error();
-      setTrash((x) => x.filter((y) => y.id !== p.id));
-      await load();
-      haptic('success');
-      toast(t('Restored to your gallery', 'Visszaállítva a galériádba'));
-    } catch {
-      toast(t('Could not restore it. Try again.', 'Nem sikerült visszaállítani. Próbáld újra.'));
-    }
-    setRestoring('');
-  };
-  // emptying it is for good, in one tap; a single design can go for good from its own row
-  const [purging, setPurging] = useState('');
-  const purge = async (ids?: string[]) => {
-    setPurging(ids ? ids[0] : 'all');
-    try {
-      await cloud.purgeTrash(ids);
-      const left = ids ? trash.filter((p) => !ids.includes(p.id)) : [];
-      setTrash(left);
-      if (!left.length) setTrashOpen(false);
-      haptic('success');
-      toast(ids ? t('Deleted for good', 'Végleg törölve') : t('Recently deleted emptied', 'A Nemrég törölt kiürítve'));
-    } catch {
-      toast(t('Could not delete it. Try again.', 'Nem sikerült törölni. Próbáld újra.'));
-    }
-    setPurging('');
-  };
-  const closeTrash = () => setTrashOpen(false);
-  const trashSheet = (
-    <Sheet open={trashOpen} onClose={closeTrash} label={t('Recently deleted', 'Nemrég törölt')}>
-      <h2>{t('Recently deleted', 'Nemrég törölt')}</h2>
-      <p className="sub">{t('Restore puts a design back in your gallery. Delete removes it for good.', 'A „Visszaállítás” visszateszi a galériádba, a „Törlés” véglegesen eltávolítja.')}</p>
-      {trash.length > 0 && (
-        <button className="btn wide danger-btn" onClick={() => purge()} disabled={!!purging}>
-          {purging === 'all' ? t('Deleting…', 'Törlés…') : t(`Empty Recently deleted (${trash.length})`, `Nemrég törölt kiürítése (${trash.length})`)}
-        </button>
-      )}
-      <div className="trash-list">
-        {trash.map((p) => (
-          <div key={p.id} className="trash-row">
-            {thumb(p) && <img src={thumb(p)} alt="" />}
-            <span>
-              <b>{placeName(p.placement, ui.lang)}</b>
-              <small>{new Date(p.created_at).toLocaleDateString(localeOf(ui.lang))}</small>
-            </span>
-            <span className="trash-acts">
-              <button className="chipbtn" disabled={restoring === p.id || !!purging} onClick={() => restore(p)}>
-                {restoring === p.id ? '…' : t('Restore', 'Visszaállítás')}
-              </button>
-              <button className="chipbtn danger" disabled={restoring === p.id || !!purging} onClick={() => purge([p.id])}>
-                {purging === p.id ? '…' : t('Delete', 'Törlés')}
-              </button>
-            </span>
-          </div>
-        ))}
-        {!trash.length && <p className="muted">{t('Nothing here.', 'Itt nincs semmi.')}</p>}
-      </div>
-    </Sheet>
-  );
+  const { trash, trashOpen, setTrashOpen, closeTrash, restoring, restore, purging, purge, loadTrash } = useTrash(load);
+  const trashSheet = <TrashSheet open={trashOpen} onClose={closeTrash} trash={trash} restoring={restoring} purging={purging} restore={restore} purge={purge} />;
   const doDelete = async () => {
     const list = delAsk || [];
     if (!list.length) return;
@@ -237,31 +167,7 @@ export default function GalleryPage() {
     haptic('success');
     toast(list.length > 1 ? t(`${ok} designs deleted`, `${ok} terv törölve`) : t('Moved to Recently deleted', 'Áthelyezve a Nemrég törölt részbe'));
   };
-  const delSheet = (
-    <Sheet open={!!delAsk} onClose={() => !delBusy && setDelAsk(null)} label={t('Delete', 'Törlés')}>
-      <div className="del-ask">
-        <div className="del-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13M10 11v6M14 11v6" /></svg>
-        </div>
-        <h2>{(delAsk?.length || 0) > 1 ? t(`Delete ${delAsk!.length} designs?`, `Biztosan törlöd a kijelölt ${delAsk!.length} tervet?`) : t('Delete this design?', 'Biztosan törlöd ezt a tervet?')}</h2>
-        <div className="del-thumbs">
-          {(delAsk || []).slice(0, 4).map((p) => (
-            <span key={p.id} className="del-thumb">
-              {thumb(p) && <img src={thumb(p)} alt="" />}
-            </span>
-          ))}
-          {(delAsk?.length || 0) > 4 && <span className="del-thumb more">+{delAsk!.length - 4}</span>}
-        </div>
-        <p className="sub">{t('It moves to Recently deleted at the bottom of your gallery – you can bring it back from there. Its vote links are closed.', 'A galériád alján lévő „Nemrég törölt” részbe kerül – onnan bármikor visszaállíthatod. A szavazós linkjei lezárulnak.')}</p>
-        <button className="btn wide danger-btn" onClick={doDelete} disabled={delBusy}>
-          {delBusy ? t('Deleting…', 'Törlés…') : t('Yes, delete', 'Igen, törlöm')}
-        </button>
-        <button className="btn wide ghost" onClick={() => setDelAsk(null)} disabled={delBusy}>
-          {t('Cancel', 'Mégse')}
-        </button>
-      </div>
-    </Sheet>
-  );
+  const delSheet = <DeleteSheet delAsk={delAsk} delBusy={delBusy} setDelAsk={setDelAsk} doDelete={doDelete} />;
 
   /** Start a new preview with the same design and body area. */
   const again = (p: Preview) => {
@@ -298,100 +204,19 @@ export default function GalleryPage() {
   if (open)
     return (
       <>
-        <div className="detail-top">
-          <button className="iconbtn" aria-label={ui.t('common.back')} onClick={() => setOpen(null)}>
-            {Icon.back}
-          </button>
-          <h1>{placeName(open.placement, ui.lang)}</h1>
-          <button className="iconbtn" aria-label={t('Delete', 'Törlés')} onClick={() => remove(open)}>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" /></svg>
-          </button>
-        </div>
-        <p className="sub small">
-          {new Date(open.created_at).toLocaleDateString(localeOf(ui.lang), { year: 'numeric', month: 'short', day: 'numeric' })} · {open.size}
-          {open.source === 'local' && ` · ${t('on this device only', 'csak ezen az eszközön')}`}
-        </p>
-        <div className="card detail-meta">
-          <div className="row" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-            <b>{open.doneAt ? t(`Got it done · ${new Date(open.doneAt).toLocaleDateString('en-GB')}`, `Megcsináltattam · ${new Date(open.doneAt).toLocaleDateString('hu-HU')}`) : t('Did you get this one?', 'Ezt csináltattad meg?')}</b>
-            <button className={`chipbtn ${open.doneAt ? 'on' : ''}`} onClick={() => update(open, { doneAt: open.doneAt ? null : new Date().toISOString() })}>
-              {open.doneAt ? t('Undo', 'Visszavon') : t('✓ I got it done', '✓ Megcsináltattam')}
-            </button>
-          </div>
-          <div className="folderbox">
-            <div className="folderbox-head">
-              <span className="folderbox-ico" aria-hidden="true">📁</span>
-              <div>
-                <b>{t('Folder', 'Mappa')}</b>
-                <small>{open.collection ? t(`In “${open.collection}”`, `Ebben a mappában: „${open.collection}”`) : t('Not in a folder yet', 'Még nincs mappában')}</small>
-              </div>
-            </div>
-            <div className="folderchips">
-              {folders.map((f) => {
-                const on = open.collection === f;
-                return (
-                  <button
-                    key={f}
-                    className={`folderchip ${on ? 'on' : ''}`}
-                    aria-pressed={on}
-                    onClick={() => {
-                      update(open, { collection: on ? null : f });
-                      haptic();
-                      toast(on ? t(`Removed from “${f}”`, `Kivéve a(z) „${f}” mappából`).replace('a(z) ', huArticle(f) + ' ') : t(`Added to “${f}” ✓`, `Hozzáadva a(z) „${f}” mappához ✓`).replace('a(z) ', huArticle(f) + ' '));
-                    }}
-                  >
-                    <span aria-hidden="true">{on ? '✓' : '📁'}</span> {f}
-                  </button>
-                );
-              })}
-              {!newOpen && (
-                <button className="folderchip add" onClick={() => setNewOpen(true)}>
-                  + {t('New folder', 'Új mappa')}
-                </button>
-              )}
-            </div>
-            {newOpen && (
-              <form
-                className="newfolder big"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const n = newFolder.trim();
-                  if (!n) return;
-                  addFolder(n, open);
-                  setNewOpen(false);
-                  haptic('success');
-                  toast(t(`Folder “${n}” created and added ✓`, `„${n}” mappa létrehozva, a terv benne van ✓`));
-                }}
-              >
-                <input className="text" id="new-folder" autoFocus placeholder={t('Folder name, e.g. Arm ideas', 'Mappa neve, pl. Kar ötletek')} maxLength={30} value={newFolder} onChange={(e) => setNewFolder(e.target.value)} />
-                <button className="btn" disabled={!newFolder.trim()}>{t('Create', 'Létrehoz')}</button>
-                <button type="button" className="chipbtn" onClick={() => (setNewOpen(false), setNewFolder(''))}>{t('Cancel', 'Mégse')}</button>
-              </form>
-            )}
-          </div>
-          <button className="chipbtn" style={{ marginTop: 10 }} onClick={() => again(open)}>
-            {Icon.rotate} {t('New preview with this design', 'Új előnézet ezzel a mintával')}
-          </button>
-        </div>
-        <HealDiary preview={open} />
-        <RealVsPreview
-          preview={open}
-          onChange={(v) => {
-            setOpen(v);
-            setItems((all) => all?.map((i) => (i.id === v.id ? v : i)) ?? null);
-          }}
-        />
-        <Result
-          preview={open}
-          onNotes={(notes) => update(open, { notes })}
-          onFavorite={() => update(open, { favorite: !open.favorite })}
-          onShared={(sid) => {
-            const v = { ...open, share_id: sid };
-            setOpen(v);
-            setItems((all) => all?.map((i) => (i.id === v.id ? v : i)) ?? null);
-          }}
-          onDone={(d) => update(open, { doneAt: d })}
-          startView={isRemoval(open) ? 'removal' : 'aging'}
+        <PreviewDetail
+          open={open}
+          setOpen={setOpen}
+          setItems={setItems}
+          folders={folders}
+          update={update}
+          remove={remove}
+          again={again}
+          addFolder={addFolder}
+          newFolder={newFolder}
+          setNewFolder={setNewFolder}
+          newOpen={newOpen}
+          setNewOpen={setNewOpen}
         />
         {delSheet}
       </>
@@ -414,7 +239,6 @@ export default function GalleryPage() {
     );
   const pair = picked.map((id) => items?.find((p) => p.id === id)).filter(Boolean) as Preview[];
   const pickedItems = (items || []).filter((p) => picked.includes(p.id));
-  const sortLabel: Record<Sort, string> = { new: t('Newest', 'Legújabb'), old: t('Oldest', 'Legrégebbi'), score: t('Best score', 'Legjobb pontszám'), place: t('Body area', 'Testrész') };
 
   return (
     <>
@@ -470,164 +294,37 @@ export default function GalleryPage() {
         </button>
       )}
 
-      {items && items.length > 0 && (
-        <div className="seg" style={{ marginTop: 14 }} role="radiogroup">
-          <button role="radio" aria-checked={filter === 'all'} className={filter === 'all' ? 'on' : ''} onClick={() => setFilter('all')}>
-            {ui.t('gallery.all')}
-          </button>
-          <button role="radio" aria-checked={filter === 'fav'} className={filter === 'fav' ? 'on' : ''} onClick={() => setFilter('fav')}>
-            ♥ {ui.t('gallery.favorites')} {items.some((p) => p.favorite) ? `(${items.filter((p) => p.favorite).length})` : ''}
-          </button>
-        </div>
-      )}
+      <GalleryFilters
+        items={items}
+        shownCount={shown.length}
+        filter={filter}
+        setFilter={setFilter}
+        q={q}
+        setQ={setQ}
+        sort={sort}
+        setSort={setSort}
+        kind={kind}
+        setKind={setKind}
+        folder={folder}
+        setFolder={setFolder}
+        folders={folders}
+        onIdeas={() => pickView('ideas')}
+        onManageFolders={() => setFoldersOpen(true)}
+      />
 
-      {items && items.length > 1 && (
-        <div className="galtools">
-          <input className="text" type="search" id="gal-search" placeholder={t('Search: body area, notes, folder…', 'Keresés: testrész, jegyzet, mappa…')} value={q} onChange={(e) => setQ(e.target.value)} />
-          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
-            <label className="sortsel">
-              <span className="sr-only">{t('Sort', 'Rendezés')}</span>
-              <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
-                {(Object.keys(sortLabel) as Sort[]).map((k) => (
-                  <option key={k} value={k}>
-                    {sortLabel[k]}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {(['any', 'new', 'existing', 'removal'] as const).map((k) => (
-              <button key={k} className={`chip ${kind === k ? 'on' : ''}`} onClick={() => setKind(k)}>
-                {k === 'any' ? t('All types', 'Mind') : k === 'new' ? t('New designs', 'Új minták') : k === 'existing' ? t('My tattoos', 'Meglévő tetoválásaim') : t('Removal', 'Eltávolítás')}
-              </button>
-            ))}
-            <button className="chip" onClick={() => pickView('ideas')}>
-              💡 {t('Ideas', 'Ötletek')}
-            </button>
-          </div>
-        </div>
-      )}
-      {items && items.length > 0 && (
-        <div className="row" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-          {folders.length > 0 && (
-            <button className={`chip ${!folder ? 'on' : ''}`} onClick={() => setFolder(null)}>
-              {t('All folders', 'Minden mappa')}
-            </button>
-          )}
-          {folders.map((f) => (
-            <button key={f} className={`chip ${folder === f ? 'on' : ''}`} onClick={() => setFolder(folder === f ? null : f)}>
-              📁 {f} <small className="muted">{(items || []).filter((p) => p.collection === f).length}</small>
-            </button>
-          ))}
-          <button className="chip ghostchip" onClick={() => setFoldersOpen(true)}>
-            {folders.length ? t('Manage folders', 'Mappák kezelése') : t('+ Folder', '+ Mappa')}
-          </button>
-        </div>
-      )}
+      <SelectionBars
+        mode={mode}
+        picked={picked}
+        setPicked={setPicked}
+        shown={shown}
+        pickedItems={pickedItems}
+        onCompare={() => setCmpOpen(true)}
+        onFavorite={() => updateMany(pickedItems, { favorite: !pickedItems.every((p) => p.favorite) })}
+        onMove={() => setMoveOpen(true)}
+        onDelete={removePicked}
+      />
 
-      {items && items.length > 0 && shown.length === 0 &&
-        (filter === 'fav' && !q && !folder && kind === 'any' ? (
-          <div className="pf-empty" style={{ marginTop: 16 }}>
-            <b>{t('No favorites yet', 'Még nincs kedvenced')}</b>
-            <p>{t('Tap the heart on any preview — here in the grid or inside it — and it shows up here.', 'Koppints a szívre bármelyik előnézeten – itt a rácsban vagy megnyitva –, és itt fog megjelenni.')}</p>
-            <button className="btn ghost" onClick={() => setFilter('all')}>
-              {t('Show all', 'Az összes mutatása')}
-            </button>
-          </div>
-        ) : (
-          <p className="sub" style={{ marginTop: 16 }}>{t('Nothing matches. Try another search or filter.', 'Nincs találat. Próbálj más keresést vagy szűrőt.')}</p>
-        ))}
-
-      {mode === 'compare' && (
-        <div className="selbar">
-          <p className="sub small" style={{ margin: 0 }}>{t('Pick 2 or 3 previews to compare.', 'Válassz ki 2 vagy 3 előnézetet az összehasonlításhoz.')}</p>
-          <button className="btn" disabled={picked.length < 2} onClick={() => setCmpOpen(true)}>
-            {t('Compare', 'Összevet')} ({picked.length})
-          </button>
-        </div>
-      )}
-      {mode === 'select' && (
-        <div className="selbar">
-          <p className="sub small" style={{ margin: 0 }}>
-            {picked.length ? t(`${picked.length} selected`, `${picked.length} kijelölve`) : t('Tap previews to select them.', 'Koppints az előnézetekre a kijelöléshez.')}
-          </p>
-          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
-            <button className="chipbtn" onClick={() => setPicked(picked.length === shown.length ? [] : shown.map((p) => p.id))}>
-              {picked.length === shown.length ? t('None', 'Egyik sem') : t('All', 'Mind')}
-            </button>
-            <button className="chipbtn" disabled={!picked.length} onClick={() => updateMany(pickedItems, { favorite: !pickedItems.every((p) => p.favorite) })}>
-              ♥ {pickedItems.length && pickedItems.every((p) => p.favorite) ? t('Unfavorite', 'Kedvenc ki') : t('Favorite', 'Kedvenc')}
-            </button>
-            <button className="chipbtn" disabled={!picked.length} onClick={() => setMoveOpen(true)}>
-              📁 {t('Move', 'Mappába')}
-            </button>
-            <button className="chipbtn danger" disabled={!picked.length} onClick={removePicked}>
-              {t('Delete', 'Törlés')}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {items === null ? (
-        <div className="galgrid">
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="tile ph" />
-          ))}
-        </div>
-      ) : items.length === 0 ? (
-        <div className="gal-empty">
-          <span className="gal-empty-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><path d="M16.5 13.5v6M13.5 16.5h6" /></svg>
-          </span>
-          <h2>{t('No previews yet', 'Még nincs előnézeted')}</h2>
-          <p className="sub">{ui.t('gallery.empty')}</p>
-          <ol className="gal-steps">
-            <li><b>1</b>{t('Take a photo of the spot', 'Fotózd le a helyet')}</li>
-            <li><b>2</b>{t('Add any design', 'Adj hozzá egy mintát')}</li>
-            <li><b>3</b>{t('See it at 10, 30 and 50 years', 'Nézd meg 10, 30 és 50 év múlva')}</li>
-          </ol>
-          <Link className="btn" href="/app">
-            {ui.t('nav.create')}
-          </Link>
-        </div>
-      ) : (
-        <div className="galgrid">
-          {shown.map((p) => {
-            const n = picked.indexOf(p.id);
-            return (
-              <div key={p.id} className={`tile ${n >= 0 ? 'pick' : ''} ${mode === 'select' ? 'selmode' : ''}`} data-n={mode === 'compare' ? n + 1 : '✓'}>
-                <button
-                  className="tile-hit"
-                  onClick={() => {
-                    if (mode === 'browse') return setOpen(p);
-                    if (n >= 0) setPicked(picked.filter((x) => x !== p.id));
-                    else if (mode === 'select' || picked.length < 3) setPicked([...picked, p.id]);
-                  }}
-                  aria-pressed={mode !== 'browse' ? n >= 0 : undefined}
-                  aria-label={`${placeName(p.placement, ui.lang)}, ${t('score', 'pontszám')} ${p.score ?? '–'}`}
-                >
-                  {thumb(p) && <img src={thumb(p)} alt="" loading="lazy" onError={onImgError} />}
-                  {p.design && <img className="tile-design" src={p.design} alt="" loading="lazy" />}
-                  {p.doneAt && <span className="donebadge">✓ {t('Done', 'Kész')}</span>}
-                  {p.source === 'local' && <span className="local">{t('Device', 'Eszköz')}</span>}
-                  {isRemoval(p) && <span className="rmbadge">{t('Laser', 'Lézer')}</span>}
-                  <span className="meta">
-                    <span>
-                      {placeName(p.placement, ui.lang)}
-                      {p.collection ? <small> · {p.collection}</small> : null}
-                    </span>
-                    {p.score !== null && <b>{p.score}</b>}
-                  </span>
-                </button>
-                {mode === 'browse' && (
-                  <button className={`tile-fav ${p.favorite ? 'on' : ''}`} aria-label={p.favorite ? t('Remove from favorites', 'Kivétel a kedvencek közül') : t('Add to favorites', 'Kedvencekhez')} aria-pressed={p.favorite} onClick={() => update(p, { favorite: !p.favorite })}>
-                    {Icon.heart}
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <PreviewGrid items={items} shown={shown} mode={mode} picked={picked} setPicked={setPicked} setOpen={setOpen} update={update} onImgError={onImgError} />
       {more && (
         <button className="btn ghost wide" style={{ marginTop: 16 }} onClick={loadMore}>
           {t('Load more', 'Továbbiak betöltése')}
@@ -636,135 +333,23 @@ export default function GalleryPage() {
       </>
       )}
 
-      <Sheet open={foldersOpen} onClose={() => (setFoldersOpen(false), setRename(null))} label={t('Folders', 'Mappák')}>
-        <h2>{t('Folders', 'Mappák')}</h2>
-        <form
-          className="newfolder"
-          onSubmit={(e) => {
-            e.preventDefault();
-            addFolder(newFolder);
-          }}
-        >
-          <input className="text" id="folder-add" placeholder={t('New folder name', 'Új mappa neve')} maxLength={30} value={newFolder} onChange={(e) => setNewFolder(e.target.value)} />
-          <button className="btn" disabled={!newFolder.trim()}>
-            {t('Create', 'Létrehozás')}
-          </button>
-        </form>
-        <div className="folderlist">
-          {folders.length === 0 && <p className="sub small">{t('No folders yet.', 'Még nincs mappa.')}</p>}
-          {folders.map((f) => (
-            <div key={f} className="folderitem">
-              {rename?.from === f ? (
-                <form
-                  className="newfolder"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    renameFolder(f, rename.to);
-                  }}
-                >
-                  <input className="text" autoFocus maxLength={30} value={rename.to} onChange={(e) => setRename({ from: f, to: e.target.value })} aria-label={t('Folder name', 'Mappa neve')} />
-                  <button className="chipbtn">{t('Save', 'Mentés')}</button>
-                </form>
-              ) : (
-                <>
-                  <span>
-                    📁 <b>{f}</b> <small className="muted">{(items || []).filter((p) => p.collection === f).length}</small>
-                  </span>
-                  <span className="row" style={{ gap: 6 }}>
-                    <button className="chipbtn" onClick={() => setRename({ from: f, to: f })}>
-                      {t('Rename', 'Átnevezés')}
-                    </button>
-                    <button className="chipbtn" onClick={() => deleteFolder(f)}>
-                      {t('Remove', 'Törlés')}
-                    </button>
-                  </span>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      </Sheet>
+      <FoldersSheet
+        open={foldersOpen}
+        onClose={() => (setFoldersOpen(false), setRename(null))}
+        items={items}
+        folders={folders}
+        newFolder={newFolder}
+        setNewFolder={setNewFolder}
+        addFolder={addFolder}
+        rename={rename}
+        setRename={setRename}
+        renameFolder={renameFolder}
+        deleteFolder={deleteFolder}
+      />
 
-      <Sheet open={moveOpen} onClose={() => setMoveOpen(false)} label={t('Move to folder', 'Mappába helyezés')}>
-        <h2>{t('Move to folder', 'Mappába helyezés')}</h2>
-        <div className="folderlist">
-          {folders.map((f) => (
-            <button
-              key={f}
-              className="list-row"
-              onClick={async () => {
-                setMoveOpen(false);
-                await updateMany(pickedItems, { collection: f });
-                toast(t(`Moved to ${f}`, `Áthelyezve: ${f}`));
-              }}
-            >
-              <span>📁 {f}</span>
-              <span aria-hidden="true">›</span>
-            </button>
-          ))}
-          <button
-            className="list-row"
-            onClick={async () => {
-              setMoveOpen(false);
-              await updateMany(pickedItems, { collection: null });
-            }}
-          >
-            <span>{t('No folder', 'Mappa nélkül')}</span>
-            <span aria-hidden="true">›</span>
-          </button>
-        </div>
-        <form
-          className="newfolder"
-          style={{ marginTop: 12 }}
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const n = newFolder.trim();
-            if (!n) return;
-            addFolder(n);
-            setMoveOpen(false);
-            await updateMany(pickedItems, { collection: n });
-          }}
-        >
-          <input className="text" placeholder={t('New folder', 'Új mappa')} maxLength={30} value={newFolder} onChange={(e) => setNewFolder(e.target.value)} />
-          <button className="btn" disabled={!newFolder.trim()}>
-            {t('Create and move', 'Létrehozás és áthelyezés')}
-          </button>
-        </form>
-      </Sheet>
+      <MoveSheet open={moveOpen} onClose={() => setMoveOpen(false)} folders={folders} pickedItems={pickedItems} updateMany={updateMany} newFolder={newFolder} setNewFolder={setNewFolder} addFolder={addFolder} />
 
-      <Sheet open={mode === 'compare' && cmpOpen && pair.length >= 2} onClose={() => setCmpOpen(false)} label={t('Compare', 'Összehasonlítás')}>
-        <h2>{t('Compare', 'Összehasonlítás')}</h2>
-        <div className="seg" role="radiogroup" style={{ justifySelf: 'start', flexWrap: 'wrap' }}>
-          {STAGES.map((k) => (
-            <button key={k} role="radio" aria-checked={cmpStage === k} className={cmpStage === k ? 'on' : ''} onClick={() => setCmpStage(k)}>
-              {ui.t(`stage.${k}` as any)}
-            </button>
-          ))}
-        </div>
-        <div className={`cmp ${pair.length === 3 ? 'three' : ''}`}>
-          {pair.map((p) => (
-            <figure key={p.id}>
-              <img src={p.images[cmpStage] || p.images.fresh} alt={placeName(p.placement, ui.lang)} />
-              <figcaption>
-                {placeName(p.placement, ui.lang)} · {p.score ?? '–'}/100
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-        {pair.length >= 2 && (
-          <button className="btn wide" style={{ marginTop: 6 }} onClick={() => setPollOpen(true)}>
-            {t('Ask friends: which one?', 'Kérdezd meg a barátaidat: melyik legyen?')}
-          </button>
-        )}
-        {pair.length >= 2 && pair.every((p) => p.score !== null) && new Set(pair.map((p) => p.score)).size > 1 && (() => {
-          const best = pair.reduce((a, b) => ((a.score || 0) >= (b.score || 0) ? a : b));
-          return (
-            <p className="sub">
-              {t(`The ${placeName(best.placement, 'en').toLowerCase()} version should age best (${best.score}/100).`, `${huArticle(placeName(best.placement, 'hu')) === 'az' ? 'Az' : 'A'} ${placeName(best.placement, 'hu').toLowerCase()} változat öregszik várhatóan a legjobban (${best.score}/100).`)}
-            </p>
-          );
-        })()}
-      </Sheet>
+      <CompareSheet open={mode === 'compare' && cmpOpen && pair.length >= 2} onClose={() => setCmpOpen(false)} pair={pair} cmpStage={cmpStage} setCmpStage={setCmpStage} onPoll={() => setPollOpen(true)} />
       <PollSheet open={pollOpen} onClose={() => setPollOpen(false)} initial={pair} />
       {delSheet}
       {trashSheet}

@@ -22,7 +22,7 @@ export function Blocks({ ps, figs, tip }: { ps: string[]; figs: Record<string, F
       }
       const L = ordered ? 'ol' : 'ul';
       out.push(
-        <L key={i} className={ordered ? 'ka-ol' : 'ka-ul'}>
+        <L key={`l${i}`} className={ordered ? 'ka-ol' : 'ka-ul'}>
           {items.map((x, j) => (
             <li key={j}>{rich(x)}</li>
           ))}

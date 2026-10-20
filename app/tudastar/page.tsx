@@ -12,7 +12,6 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
       'Long, honest articles about what really happens to ink over the years, which size and placement last, and how to keep your tattoo looking new. Read them before you book.',
       'Hosszú, őszinte cikkek arról, mi történik valójában a tintával az évek alatt, milyen méret és hely bírja a legjobban, és hogyan marad újszerű a tetoválásod. Olvasd el, mielőtt időpontot foglalsz.'
     ),
-    alternates: { canonical: '/tudastar' },
   };
 }
 

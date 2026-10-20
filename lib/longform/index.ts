@@ -14,9 +14,10 @@ import a9 from './tattoos-on-darker-skin';
 import a10 from './hand-and-finger-tattoos';
 import a11 from './first-tattoo-checklist';
 import a12 from './tattoos-weight-change-pregnancy';
+import a13 from './tattoo-pain-chart';
 
 export type { LongArticle } from './types';
-export const LONG: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12];
+export const LONG: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13];
 export const longArticle = (slug: string) => LONG.find((a) => a.slug === slug);
 
 /** Words in the body (markup stripped). */

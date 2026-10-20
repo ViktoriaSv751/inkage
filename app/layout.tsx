@@ -11,17 +11,24 @@ import { headers } from 'next/headers';
 import { isLang, tx, htmlLang } from '@/lib/tr';
 import LOCALE_VER from '@/lib/locales/manifest.json';
 import { Suspense } from 'react';
+import { SITE_URL, langAlternates } from '@/lib/site';
 import { ScrollTop } from './ScrollTop';
 import { Splash } from './Splash';
 
 export function generateMetadata(): Metadata {
   const h = headers().get('x-ink-lang');
   const L = isLang(h) ? h : 'hu';
+  const path = headers().get('x-ink-path') || '/';
   const title = `InkAge – ${tx(L, 'See your tattoo in 50 years', 'Nézd meg a tetoválásod 50 év múlva')}`;
   const description = tx(L, 'Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.');
   return {
+    metadataBase: new URL(SITE_URL),
     title,
     description,
+    // every page points Google at its own language version and lists the others (pages may override)
+    alternates: langAlternates(path, L),
+    // Google Search Console ownership check (the code from "HTML tag" verification)
+    verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
     manifest: '/manifest.webmanifest',
     appleWebApp: { capable: true, title: 'InkAge', statusBarStyle: 'default' },
     icons: { icon: '/icon.svg', apple: '/icons/apple-touch-icon.png' },

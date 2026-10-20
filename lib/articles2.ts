@@ -182,4 +182,30 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'tattoo-pain-chart',
+    tag: { en: 'Basics', hu: 'Alapok' },
+    title: { en: 'Does a tattoo hurt? A pain chart for every part of the body', hu: 'Mennyire fáj a tetoválás? Fájdalomtérkép testtájanként' },
+    desc: { en: 'Where it hurts most and least, and how to make the session easier.', hu: 'Hol fáj a legjobban és hol a legkevésbé, és hogyan lesz könnyebb az ülés.' },
+    body: {
+      en: [
+        'How much a tattoo hurts depends mostly on where it goes. Bony, thin-skinned and nerve-rich areas hurt most; fleshy areas with thicker skin are the gentlest.',
+        '## Least painful',
+        'Outer upper arm and shoulder, outer thigh, calf, outer forearm and the upper back. These are the classic spots for a first tattoo.',
+        '## Most painful',
+        'Ribs, sternum, spine, armpit, knees and elbows, feet and ankles, hands and fingers, and the face. Bone right under the skin makes the needle vibrate through it.',
+        '## Make it easier',
+        'Sleep well, eat beforehand, skip alcohol, breathe slowly and ask for breaks. Discuss numbing creams with your artist first, and split big pieces into several sessions.',
+      ],
+      hu: [
+        'Hogy mennyire fáj a tetoválás, az leginkább a helyén múlik. A csontos, vékony bőrű, idegekben gazdag területek fájnak a legjobban, a húsosabb, vastagabb bőrű helyek a legkíméletesebbek.',
+        '## A legkevésbé fájdalmas',
+        'A felkar és a váll külső oldala, a comb külső oldala, a vádli, az alkar külső oldala és a hát felső része. Ezek a klasszikus helyek egy első tetováláshoz.',
+        '## A legfájdalmasabb',
+        'A bordák, a szegycsont, a gerinc, a hónalj, a térd és a könyök, a lábfej és a boka, a kézfej és az ujjak, valamint az arc. Ahol a csont közvetlenül a bőr alatt van, ott a tű rezgése végigfut rajta.',
+        '## Így könnyebb',
+        'Aludd ki magad, egyél előtte, kerüld az alkoholt, lélegezz lassan, és kérj szünetet. A zsibbasztó krémet előbb beszéld meg a tetoválóval, a nagy mintákat pedig bontsd több ülésre.',
+      ],
+    },
+  },
 ];

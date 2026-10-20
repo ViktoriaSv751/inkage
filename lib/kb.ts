@@ -172,6 +172,15 @@ export const KB: Record<string, KbMeta> = {
       { q: { en: 'Can I get tattooed while pregnant?', hu: 'Tetováltathatok terhesen?' }, a: { en: 'Most artists and doctors advise waiting until after pregnancy and breastfeeding. Ask your doctor.', hu: 'A legtöbb tetováló és orvos azt javasolja, hogy várj a terhesség és a szoptatás utánig. Kérdezd meg az orvosodat.' } },
     ],
   },
+  'tattoo-pain-chart': {
+    img: 'hf_20261020_115959_f93a1786-77c5-4f85-94ac-2e6723a1e9f6',
+    img2: 'hf_20261020_115959_eaa4057c-5251-4cc5-9c16-06ac1ee4702d',
+    img3: 'hf_20261020_115958_7768ec4d-b30e-4b8f-8693-7ec8cf79f8a2',
+    img4: 'hf_20261020_115959_a4fd41da-6503-44e2-8f94-05f51b2a7bca',
+    cap2: { en: 'Most people find the outer upper arm one of the gentlest places for a first tattoo.', hu: 'A legtöbben a felkar külső oldalát az egyik legkíméletesebb helynek érzik egy első tetováláshoz.' },
+    date: '2026-10-20',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
