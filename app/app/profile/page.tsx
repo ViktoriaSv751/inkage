@@ -138,6 +138,16 @@ export default function ProfilePage() {
   useEffect(() => {
     (async () => {
       const c: Preview[] = [];
+      // the newest few first, so the tiles show right away; the rest (for the numbers) after
+      if (me.user) {
+        const first = await cloud.all(0, 8).catch(() => [] as Preview[]);
+        if (first.length) setMine((m) => m || first);
+        if (first.length < 8) {
+          c.push(...first);
+          const l = await local.all().catch(() => []);
+          return setMine([...c, ...l]);
+        }
+      }
       if (me.user) for (let from = 0; ; from += 120) {
         const page = await cloud.all(from, 120).catch(() => [] as Preview[]);
         c.push(...page);
@@ -377,7 +387,7 @@ export default function ProfilePage() {
               <div className="pf-grid">
                 {mine.slice(0, 8).map((p) => (
                   <Link key={p.id} href={`/app/gallery?id=${p.id}`} className="pf-tile">
-                    {(p.images.fresh || p.images.y50) && <img src={p.images.fresh || p.images.y50} alt="" loading="lazy" />}
+                    {(p.images.fresh || p.images.y50) && <img src={p.images.fresh || p.images.y50} alt="" decoding="async" />}
                     <span className="pf-tile-l">
                       <b>{placeName(p.placement, ui.lang)}</b>
                       {typeof p.score === 'number' && <small>{p.score}/100</small>}

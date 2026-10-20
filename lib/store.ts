@@ -219,6 +219,13 @@ async function upload(uid: string, id: string, k: string, src: string) {
   return error ? null : path;
 }
 
+/** Many rows at once: all their picture links are signed in one request first (then each row reads them from the cache). */
+const fromRows = async (rows: Row[]): Promise<Preview[]> => {
+  const paths = rows.flatMap((r) => Object.values(r.paths || {}).filter((p): p is string => !!p && !p.startsWith('job:')));
+  if (paths.length) await (await import('./signcache')).signPaths(paths).catch(() => []);
+  return Promise.all(rows.map(fromRow));
+};
+
 const fromRow = async (r: Row): Promise<Preview> => {
   const all = await signed(r.paths || {});
   const images: Partial<Record<StageKey, string>> = {};
@@ -259,7 +266,7 @@ export const cloud = {
   async all(from = 0, count = 120): Promise<Preview[]> {
     const { data, error } = await sb()!.from('previews').select('*').eq('hidden', false).order('created_at', { ascending: false }).range(from, from + count - 1);
     if (error) throw error;
-    return Promise.all(((data as Row[]) || []).map(fromRow));
+    return fromRows((data as Row[]) || []);
   },
   async one(id: string): Promise<Preview | null> {
     const { data } = await sb()!.from('previews').select('*').eq('id', id).maybeSingle();
@@ -337,7 +344,7 @@ export const cloud = {
   async trash(): Promise<Preview[]> {
     const { data, error } = await sb()!.from('previews').select('*').eq('hidden', true).not('deleted_at', 'is', null).order('deleted_at', { ascending: false }).limit(60);
     if (error) throw error;
-    return Promise.all(((data as Row[]) || []).filter((r) => r.paths && Object.keys(r.paths).length).map(fromRow));
+    return fromRows(((data as Row[]) || []).filter((r) => r.paths && Object.keys(r.paths).length));
   },
   async restore(id: string) {
     const { data, error } = await sb()!.rpc('restore_preview', { p_id: id });

@@ -32,7 +32,7 @@
   .ka-toc-m { display: none; }
   .ka2 .kb-sticky { display: none; }
 }
-.ka-toc-side { position: sticky; top: 100px; padding-top: 48px; max-height: calc(100vh - 110px); overflow: auto; scrollbar-width: thin; }
+.ka-toc-side { position: sticky; top: 100px; padding-top: 48px; max-height: calc(100vh - 110px); overflow: auto; scrollbar-width: none; }
 .ka-toc-h { margin: 0 0 14px; font-weight: 700; font-size: 13px; color: var(--muted); }
 .ka-toc-side ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 2px solid var(--line); }
 .ka-toc-side a { display: grid; grid-template-columns: 26px 1fr; gap: 6px; padding: 8px 0 8px 14px; margin-left: -2px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 14px; line-height: 1.35; transition: color .15s, border-color .15s; }
