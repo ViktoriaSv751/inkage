@@ -7,11 +7,14 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'app.inkage',
   appName: 'InkAge',
-  webDir: 'cap-native',
+  // CAP_BUNDLE=1 ships the bundled screens (cap-native/, experimental: not yet working on devices);
+  // the store builds load the live app, which is the tested, working setup
+  webDir: process.env.CAP_BUNDLE === '1' ? 'cap-native' : 'cap-www',
   appendUserAgent: 'InkAgeApp',
-  server: process.env.CAP_SERVER_URL
-    ? { url: process.env.CAP_SERVER_URL, cleartext: false }
-    : { androidScheme: 'https', hostname: 'localhost' },
+  server:
+    process.env.CAP_BUNDLE === '1'
+      ? { androidScheme: 'https', hostname: 'localhost' }
+      : { url: process.env.CAP_SERVER_URL || 'https://inkage.app/app', cleartext: false, errorPath: 'index.html' },
   // dark first: the native frame around the web app is black (takes effect with the next store build)
   ios: {
     contentInset: 'never',
