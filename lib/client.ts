@@ -12,7 +12,9 @@ export type StageKey = (typeof STAGE_LABELS)[number]['key'];
 export function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((res, rej) => {
     const img = new Image();
-    if (/supabase\.co\/|cloudfront\.net\//.test(src)) img.crossOrigin = 'anonymous';
+    // pictures from other origins must come with CORS, or the canvas can't read them back
+    // (in the store apps the page itself is not on inkage.app, so its photos are "other origin" too)
+    if (/supabase\.co\/|cloudfront\.net\/|^https:\/\/inkage\.app\//.test(src)) img.crossOrigin = 'anonymous';
     img.onload = () => res(img);
     img.onerror = rej;
     img.src = src;

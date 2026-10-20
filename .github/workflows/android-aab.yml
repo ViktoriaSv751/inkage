@@ -19,8 +19,6 @@ jobs:
         run: |
           if [ -n "$GS" ]; then echo "$GS" | base64 -d > android/app/google-services.json; echo "push: on";
           else echo "CAP_NO_PUSH=1" >> "$GITHUB_ENV"; echo "push: off (no secret) – push plugin left out so nothing can crash"; fi
-      - name: Build the app screens carried inside the app (static, not just a website)
-        run: node scripts/native-build.mjs
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew --no-daemon bundleRelease
       - name: Publish result to aab-out branch
