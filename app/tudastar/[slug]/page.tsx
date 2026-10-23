@@ -1,4 +1,5 @@
-import { pick, langOf, tr, qOf } from '@/lib/tr';
+import { pick, langOf, qOf, htmlLang } from '@/lib/tr';
+import { articleLangs } from '@/lib/article-langs';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { longArticle } from '@/lib/longform';
@@ -17,16 +18,14 @@ export function generateMetadata({ params, searchParams }: { params: { slug: str
     description: pick(a.desc, L),
     openGraph: { type: 'article', title: pick(a.title, L), description: pick(a.desc, L), images: img ? [{ url: IMG(img, 1200) }] : undefined },
     /* a new article shows its English text in languages it isn't translated into yet: those versions point to the
-       English one and stay out of the index until the translation lands (then they become canonical on their own) */
-    ...(L !== 'en' && L !== 'hu' && tr(L, a.title.en) === a.title.en
-      ? {
-          robots: { index: false, follow: true },
-          alternates: {
-            canonical: `${SITE_URL}/tudastar/${a.slug}${qOf('en')}`,
-            languages: { hu: `${SITE_URL}/tudastar/${a.slug}`, en: `${SITE_URL}/tudastar/${a.slug}${qOf('en')}`, 'x-default': `${SITE_URL}/tudastar/${a.slug}` },
-          },
-        }
-      : {}),
+       English one and stay out of the index; every version lists only the languages the article is written in */
+    ...(() => {
+      const langs = articleLangs(a.slug), url = (l: typeof L) => `${SITE_URL}/tudastar/${a.slug}${qOf(l)}`;
+      const languages = { ...Object.fromEntries(langs.map((l) => [htmlLang(l), url(l)])), 'x-default': url('hu') };
+      return langs.includes(L)
+        ? { alternates: { canonical: url(L), languages } }
+        : { robots: { index: false, follow: true }, alternates: { canonical: url('en'), languages } };
+    })(),
   };
 }
 

@@ -86,6 +86,8 @@ export function registerDict(lang: Lang, d: Dict) {
   cache[lang] = new Map();
 }
 export const hasDict = (lang: Lang) => lang === 'en' || lang === 'hu' || !!DICTS[lang];
+/** Whether this exact English text has its own translation in the language (no fallback, no templates). */
+export const hasExact = (lang: Lang, en: string) => lang === 'en' || lang === 'hu' || DICTS[lang]?.exact[en] !== undefined;
 
 /** English text → the given language (English when no translation is known). */
 export function tr(lang: Lang, en: string): string {
