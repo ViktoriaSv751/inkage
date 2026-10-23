@@ -8,7 +8,7 @@ import './globals.css';
 import './dark.css';
 import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
-import { isLang, tx, htmlLang } from '@/lib/tr';
+import { isLang, tx, htmlLang, type Lang } from '@/lib/tr';
 import LOCALE_VER from '@/lib/locales/manifest.json';
 import { Suspense } from 'react';
 import { SITE_URL, langAlternates } from '@/lib/site';
@@ -25,8 +25,10 @@ export function generateMetadata(): Metadata {
     metadataBase: new URL(SITE_URL),
     title,
     description,
-    // every page points Google at its own language version and lists the others (pages may override)
-    alternates: langAlternates(path, L),
+    // every page points Google at its own language version and lists the others (pages may override).
+    // Not on the home page: Next drops the ?lang query from metadata URLs whose path is "/", which made all 35
+    // home pages name the Hungarian one as canonical; RootLayout writes those <link>s itself (HomeLangLinks)
+    alternates: path === '/' ? undefined : langAlternates(path, L),
     // Google Search Console ownership check (the code from "HTML tag" verification)
     verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
     manifest: '/manifest.webmanifest',
@@ -38,13 +40,26 @@ export function generateMetadata(): Metadata {
 // dark is the default look (light only when chosen with the theme switch, for that visit)
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#000000', colorScheme: 'dark' };
 
+/** canonical and hreflang <link>s of the home page, with their ?lang query intact (see generateMetadata) */
+function HomeLangLinks({ lang }: { lang: Lang }) {
+  const { canonical, languages } = langAlternates('/', lang);
+  return (
+    <>
+      <link rel="canonical" href={canonical} />
+      {Object.entries(languages).map(([l, href]) => <link key={l} rel="alternate" hrefLang={l} href={href} />)}
+    </>
+  );
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const h = headers().get('x-ink-lang');
   const lang = isLang(h) ? h : 'hu';
+  const home = (headers().get('x-ink-path') || '/') === '/';
   const ver = (LOCALE_VER as Record<string, string>)[lang];
   return (
     <html lang={htmlLang(lang)} suppressHydrationWarning>
       <head>
+        {home && <HomeLangLinks lang={lang} />}
         {/* this language's words, before the page starts (Hungarian and English are built in) */}
         {ver && <script src={`/locales/${lang}.js?v=${ver}`} />}
         {/* theme (dark unless light was chosen this visit) + language before first paint, so there is no flash */}
