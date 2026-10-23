@@ -50,13 +50,12 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
   }
   const faqId = T('faq', 'gyik');
   const toc = [...sections.map((s) => ({ h: s.h, id: s.id })), { h: T('Frequently asked questions', 'Gyakori kérdések'), id: faqId }];
-  const figs: Record<string, Fig> = meta
-    ? {
-        img2: { src: IMG(meta.img2, 1400), set: IMGSET(meta.img2, 1400), cap: pick(a.captions.img2, L) },
-        img3: { src: IMG(meta.img3, 1400), set: IMGSET(meta.img3, 1400), cap: pick(a.captions.img3, L) },
-        img4: { src: IMG(meta.img4, 1400), set: IMGSET(meta.img4, 1400), cap: pick(a.captions.img4, L) },
-      }
-    : {};
+  const figs: Record<string, Fig> = {};
+  if (meta)
+    for (const k of ['img2', 'img3', 'img4', 'img5', 'img6', 'img7'] as const) {
+      const id = meta[k], cap = a.captions[k];
+      if (id && cap) figs[k] = { src: IMG(id, 1400), set: IMGSET(id, 1400), cap: pick(cap, L) };
+    }
   const idx = LONG.findIndex((x) => x.slug === a.slug);
   const next = LONG[(idx + 1) % LONG.length];
   const related = LONG.filter((x) => x.slug !== a.slug && x.slug !== next.slug && x.tag.en === a.tag.en)

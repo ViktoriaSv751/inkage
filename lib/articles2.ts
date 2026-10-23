@@ -208,4 +208,70 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'tattoo-before-and-after',
+    tag: { en: 'Basics', hu: 'Alapok' },
+    title: { en: 'Tattoo before and after: what 10, 20 and 30 years really look like', hu: 'Tetoválás előtte–utána: így néz ki 10, 20 és 30 év múlva' },
+    desc: { en: 'Four common tattoos followed through three decades.', hu: 'Négy gyakori tetoválás három évtizeden át.' },
+    body: {
+      en: [
+        'The photo you fall for is taken the day a tattoo is finished. The tattoo you live with is the healed one, and it keeps changing slowly for decades.',
+        '## The three milestones',
+        'At 10 years bold work looks almost new while fine detail softens. At 20 years lines are visibly wider and tight gaps close. At 30 years the tattoo speaks through its silhouette.',
+        '## Reading photos online',
+        'Compare healed with healed, in similar light and from a similar distance. Most dramatic before-and-after pictures come from a glossy day-one photo, bad light or a filter.',
+      ],
+      hu: [
+        'A fotó, amibe beleszeretsz, az elkészülés napján készül. A tetoválás, amivel élsz, a gyógyult változat, és évtizedeken át lassan tovább változik.',
+        '## A három mérföldkő',
+        '10 év után az erős minták szinte újnak tűnnek, a finom részletek puhulnak. 20 év után a vonalak láthatóan szélesebbek, a szűk rések bezáródnak. 30 év után a tetoválás a sziluettjével beszél.',
+        '## Fotók olvasása a neten',
+        'Gyógyultat gyógyulttal hasonlíts, hasonló fényben és távolságból. A drámai előtte–utána képek nagy része egy fényes első napi fotóból, rossz fényből vagy szűrőből jön.',
+      ],
+    },
+  },
+  {
+    slug: 'tattoos-that-age-well',
+    tag: { en: 'Styles', hu: 'Stílusok' },
+    title: { en: 'Tattoos that age well: the styles, designs and spots that still look good in 30 years', hu: 'Tetoválások, amik szépen öregszenek: stílusok, minták és helyek, amik 30 év múlva is jól mutatnak' },
+    desc: { en: 'Silhouette, line weight, space and contrast: what the survivors share.', hu: 'Sziluett, vonalvastagság, levegő és kontraszt: ami a túlélőkben közös.' },
+    body: {
+      en: [
+        'Tattoos that still look good after decades share four things: a clear silhouette, lines with some weight, room between details and strong contrast.',
+        '## Styles that age best',
+        'American traditional, bold blackwork, neo-traditional and larger illustrative pieces. Micro tattoos, dense dotwork, outline-free watercolour and white ink change the most.',
+        '## Two quick tests',
+        'Squint at the design until it blurs, then look at it at real size from a metre away. Whatever still reads is the part that will last.',
+      ],
+      hu: [
+        'Az évtizedek után is jól mutató tetoválásokban négy dolog közös: tiszta sziluett, súlyos vonalak, hely a részletek között és erős kontraszt.',
+        '## A legjobban öregedő stílusok',
+        'Az amerikai tradicionális, az erős blackwork, a neotradicionális és a nagyobb illusztratív munkák. A mikro tetoválás, a sűrű pontozás, a kontúr nélküli akvarell és a fehér tinta változik a legtöbbet.',
+        '## Két gyors próba',
+        'Hunyorogj rá a mintára, amíg el nem mosódik, aztán nézd meg valódi méretben egy méterről. Ami még olvasható, az marad meg.',
+      ],
+    },
+  },
+  {
+    slug: 'tattoos-when-you-get-old',
+    tag: { en: 'Skin', hu: 'Bőr' },
+    title: { en: 'What happens to tattoos when you get old? An honest look at ink on older skin', hu: 'Milyen lesz a tetoválásod idős korodban? Őszintén a tintáról és az öregedő bőrről' },
+    desc: { en: 'What time does to a tattoo at 60, 70 and 80.', hu: 'Mit kezd az idő a tetoválással 60, 70 és 80 évesen.' },
+    body: {
+      en: [
+        'Most of what happens to a tattoo in old age is about the skin: less collagen and elasticity, thinner skin, wrinkles and sun spots. The design follows every change.',
+        '## Where it shows most',
+        'Hands, neck, chest and the inner upper arm show skin ageing most. The outer upper arm, shoulder, upper back, calves and thighs age kindest.',
+        '## Plan for it now',
+        'Choose a strong silhouette, size it for its detail, keep it away from moles and out of the sun, and plan a touch-up every eight to ten years.',
+      ],
+      hu: [
+        'Ami idős korban a tetoválással történik, az nagyrészt a bőrről szól: kevesebb kollagén és rugalmasság, vékonyabb bőr, ráncok és napfoltok. A minta minden változást követ.',
+        '## Ahol a leginkább látszik',
+        'A kézen, a nyakon, a mellkason és a felkar belső oldalán látszik leginkább a bőr öregedése. A felkar külső oldala, a váll, a hát felső része, a vádli és a comb öregszik a legszelídebben.',
+        '## Tervezd meg már most',
+        'Válassz erős sziluettet, méretezd a részletekhez, tartsd távol az anyajegyektől és a naptól, és számolj nyolc-tíz évenként egy frissítéssel.',
+      ],
+    },
+  },
 ];

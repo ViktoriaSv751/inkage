@@ -22,6 +22,10 @@ export type KbMeta = {
   img2: string;
   img3: string;
   img4: string;
+  /** extra inline photos for the longer articles ([[img5]] … [[img7]]) */
+  img5?: string;
+  img6?: string;
+  img7?: string;
   cap2: L2;
   date: string; // ISO
   faq: { q: L2; a: L2 }[];
@@ -179,6 +183,42 @@ export const KB: Record<string, KbMeta> = {
     img4: 'hf_20261020_115959_a4fd41da-6503-44e2-8f94-05f51b2a7bca',
     cap2: { en: 'Most people find the outer upper arm one of the gentlest places for a first tattoo.', hu: 'A legtöbben a felkar külső oldalát az egyik legkíméletesebb helynek érzik egy első tetováláshoz.' },
     date: '2026-10-20',
+    faq: [],
+  },
+  'tattoo-before-and-after': {
+    img: 'hf_20261023_115651_30665362-3381-4165-8733-cf639fa069c4',
+    img2: 'hf_20261023_115652_120cffa0-f05f-4fc8-a14c-869f3727b2d1',
+    img3: 'hf_20261023_115651_1be791b4-bc4f-468e-838a-1aa3c4dd1bb5',
+    img4: 'hf_20261023_115927_22759cfc-9a87-4aac-8c84-d2981ee57262',
+    img5: 'hf_20261023_115926_581273ec-64e1-44ac-a617-ebecd1d61028',
+    img6: 'hf_20261023_115927_b0f24c29-c8be-49bd-b3f6-51ac8cd1a0af',
+    img7: 'hf_20261023_115651_d0d01a22-1f68-4ad2-9516-858707e2ed94',
+    cap2: { en: 'Healed lines soften first; bold shapes keep their silhouette for decades.', hu: 'A gyógyult vonalak puhulnak először; az erős formák évtizedekig megtartják a sziluettjüket.' },
+    date: '2026-10-23',
+    faq: [],
+  },
+  'tattoos-that-age-well': {
+    img: 'hf_20261023_115651_74f5540a-d732-49ce-9cfb-b8cce2ed0004',
+    img2: 'hf_20261023_115652_688de8a0-1246-4325-a2f5-63f3d6e6317e',
+    img3: 'hf_20261023_115653_2b8a9237-aea1-495e-a90c-4a4877623bc9',
+    img4: 'hf_20261023_115652_1f1e0b5a-8e8f-4d5c-bee9-e2f7b2961e24',
+    img5: 'hf_20261023_115926_b4da344f-5221-4c92-84bd-6f5b23bcfb44',
+    img6: 'hf_20261023_115946_88ed5da8-82fe-44d8-932c-2f425e3a4fa9',
+    img7: 'hf_20261023_115945_3a8246cc-8f38-4cb0-a034-f6f16514c162',
+    cap2: { en: 'Bold will hold: thick outlines and solid black are the most durable things in tattooing.', hu: 'Ami erős, megmarad: a vastag kontúr és a telt fekete a legtartósabb a tetoválásban.' },
+    date: '2026-10-23',
+    faq: [],
+  },
+  'tattoos-when-you-get-old': {
+    img: 'hf_20261023_115947_3e880baf-f428-45d4-8995-fdb1c29f163a',
+    img2: 'hf_20261023_115946_9d63ecd5-0259-4cfc-aec2-c639c0e5d82e',
+    img3: 'hf_20261023_183059_953b4efd-de4e-49d1-8c46-ff953e3196f8',
+    img4: 'hf_20261023_115945_05be4267-c30f-4021-bd8c-0560c221b0d7',
+    img5: 'hf_20261023_115946_816b9883-de16-4afe-b70f-3ae2f9bbe1f8',
+    img6: 'hf_20261023_183058_806d294c-b016-49c6-b118-924adad2c3e6',
+    img7: 'hf_20261023_183059_53a3cddb-6e4a-4790-8b7a-d0f3f71ba13c',
+    cap2: { en: 'On older skin a tattoo speaks through its silhouette, softened but still recognisably itself.', hu: 'Idős bőrön a tetoválás a sziluettjével beszél: megszelídülve, de felismerhetően önmaga.' },
+    date: '2026-10-23',
     faq: [],
   },
 };

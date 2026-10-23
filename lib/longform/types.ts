@@ -7,7 +7,7 @@
 //   '1. text'               numbered item (consecutive entries form one list)
 //   '> text'                highlighted tip / callout box
 //   '!! text'               pull quote (one strong sentence, shown large)
-//   '[[img2]]' '[[img3]]' '[[img4]]'   where the article's inline photos go (use each exactly once)
+//   '[[img2]]' … '[[img7]]'  where the article's inline photos go (each exactly once; img5–img7 optional)
 //   anything else          a normal paragraph; **double asterisks** make bold text
 export type L2 = { en: string; hu: string };
 
@@ -19,5 +19,5 @@ export type LongArticle = {
   summary: { en: string[]; hu: string[] }; // "In short": 3–4 key takeaways
   body: { en: string[]; hu: string[] };
   faq: { q: L2; a: L2 }[]; // 4–5 questions
-  captions: { img2: L2; img3: L2; img4: L2 }; // captions for the three inline photos
+  captions: { img2: L2; img3: L2; img4: L2; img5?: L2; img6?: L2; img7?: L2 }; // captions for the inline photos
 };
