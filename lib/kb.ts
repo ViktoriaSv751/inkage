@@ -221,6 +221,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-10-23',
     faq: [],
   },
+  'tattoo-blowout': {
+    img: 'hf_20261024_060504_99773259-628c-4d6b-a3ee-cab74580d3cb',
+    img2: 'hf_20261024_060504_46623306-8526-4952-9ac3-67532bb9e04b',
+    img3: 'hf_20261024_060504_34e05c93-aad9-44b6-b18f-65be93f5fa6b',
+    img4: 'hf_20261024_060504_6044e5b4-b877-46a9-b94c-24e5648a1c02',
+    img5: 'hf_20261024_060513_145f07da-723d-4c5f-85a6-bba068614c44',
+    img6: 'hf_20261024_060513_a8586ecc-0f7f-4f55-b42d-ac1edf111d03',
+    img7: 'hf_20261024_060513_38671182-f2fc-49d2-8d46-3b94e1da42d2',
+    cap2: { en: 'A blowout is ink that spread under the skin: a soft blue haze that stays after healing.', hu: 'A blowout a bőr alatt szétterült tinta: lágy, kékes pára, ami a gyógyulás után is megmarad.' },
+    date: '2026-10-24',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];

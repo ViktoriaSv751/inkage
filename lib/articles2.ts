@@ -274,4 +274,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'tattoo-blowout',
+    tag: { en: 'Care', hu: 'Ápolás' },
+    title: { en: 'Tattoo blowout: how to tell if it’s a blowout, why it happens and how to fix it', hu: 'Szétfolyt tetoválás (blowout): hogyan ismerd fel, miért történik, és mit lehet kezdeni vele' },
+    desc: { en: 'Healing or blowout? How to tell, and what actually fixes it.', hu: 'Gyógyulás vagy blowout? Így ismered fel, és ez segít valóban.' },
+    body: {
+      en: [
+        'A blowout is ink that went deeper or wider than it should and spread under the skin, leaving a soft bluish blur beside a line. It is a cosmetic issue, not a health problem.',
+        '## Healing or blowout?',
+        'Redness, swelling, bruising and the cloudy stage are normal in the first weeks. A blowout is the blue haze that is still there at four to six weeks.',
+        '## How it is fixed',
+        'Small blowouts are usually hidden with a slightly bolder line or shading; larger ones may need a cover-up, and laser can lighten the blur. Creams and home remedies don’t remove ink.',
+      ],
+      hu: [
+        'A blowout a kelleténél mélyebbre vagy szélesebbre került tinta, ami szétterült a bőr alatt, és lágy, kékes elmosódást hagy a vonal mellett. Esztétikai gond, nem egészségügyi.',
+        '## Gyógyulás vagy blowout?',
+        'Az első hetekben a pirosság, a duzzanat, a véraláfutás és a felhős szakasz normális. Blowout az a kékes pára, ami négy-hat hét után is megmarad.',
+        '## Hogyan javítják?',
+        'A kisebb blowoutot általában egy kicsit vastagabb vonallal vagy árnyékolással rejtik el, a nagyobbhoz takarás kellhet, a lézer pedig halványíthatja az elmosódást. Krémek és házi praktikák nem távolítják el a tintát.',
+      ],
+    },
+  },
 ];
