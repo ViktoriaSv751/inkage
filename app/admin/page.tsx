@@ -93,6 +93,15 @@ function AdminLogin({ cls, note, done }: { cls: string; note: string; done: () =
       <form className="gate-card login-card" onSubmit={submit}>
         <SignatureLine text="InkAge" className="login-sig" />
         <span className="eyebrow" style={{ textAlign: "center" }}>Irányítóközpont</span>
+        {/* InkAge: the owner's account signs in with Google (the same sign-in as in the app; it comes back here) */}
+        {mode === "in" && <>
+          <button type="button" className="btn" onClick={async () => {
+            const { oauthParams } = await import("@/lib/auth-help");
+            const { error } = (await sb?.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + "/admin", queryParams: oauthParams("google") } })) || {};
+            if (error) setMsg({ k: "err", t: "A Google-belépés most nem indult el. Próbáld újra, vagy lépj be az appban (inkage.app/app), és utána nyisd meg ezt az oldalt." });
+          }}>Belépés Google-lel</button>
+          <p className="note" style={{ textAlign: "center", margin: 0 }}>vagy e-mail-címmel és jelszóval:</p>
+        </>}
         {mode !== "forgot" && <div className="adm-seg" role="group">
           <button type="button" aria-pressed={mode === "in"} onClick={() => { setMode("in"); setMsg(null); }}>Belépés</button>
           <button type="button" aria-pressed={mode === "setup"} onClick={() => { setMode("setup"); setMsg(null); }}>Első belépés</button>
