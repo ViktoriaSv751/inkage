@@ -68,20 +68,21 @@ function AdminLogin({ cls, note, done }: { cls: string; note: string; done: () =
     try {
       if (mode === "forgot") {
         /* the link brings her back here (not to the app), where the new password is set */
-        await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + "/auth/callback?next=" + encodeURIComponent("/admin?pwreset=1") });
-        setMsg({ k: "ok", t: `Ha a(z) ${email.trim()} címhez tartozik fiók, küldtünk rá egy levelet. A benne lévő link ide hoz vissza, ahol megadhatod az új jelszót.` });
+        /* InkAge: the app's own new-password page (an address Supabase already accepts); a Google-only account gets a password this way too */
+        await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + "/uj-jelszo" });
+        setMsg({ k: "ok", t: `Ha a(z) ${email.trim()} címhez tartozik fiók, küldtünk rá egy levelet. A benne lévő linken megadhatod a jelszót, utána nyisd meg újra ezt az oldalt (inkage.app/admin), és ezzel a jelszóval is be tudsz lépni.` });
         return;
       }
       if (mode === "in") {
         const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password: pw });
-        if (error) return setMsg({ k: "err", t: /confirm/i.test(error.message) ? "Előbb erősítsd meg a címed: kattints a levélben kapott linkre." : "Hibás e-mail-cím vagy jelszó." });
+        if (error) return setMsg({ k: "err", t: /confirm/i.test(error.message) ? "Előbb erősítsd meg a címed: kattints a levélben kapott linkre." : "Hibás e-mail-cím vagy jelszó. Ha Google-lel regisztráltál, a „Belépés Google-lel” gombot használd, vagy állíts be jelszót az „Elfelejtett jelszó” gombbal." });
         done(); return;
       }
       if (!passwordOk(pw)) return setMsg({ k: "err", t: "A jelszó legalább 8 karakter legyen, kis- és nagybetűvel és számmal." });
       if (pw !== pw2) return setMsg({ k: "err", t: "A két jelszó nem egyezik." });
       /* the page does not tell whether an address is the admin's (anyone could test addresses with it): every address gets
          the same answer, and only the admin's opens the dashboard after confirming it (is_admin, in the database) */
-      const { data, error } = await sb.auth.signUp({ email: email.trim(), password: pw, options: { data: { display_name: "Admin" }, emailRedirectTo: location.origin + "/auth/callback?next=/admin" } });
+      const { data, error } = await sb.auth.signUp({ email: email.trim(), password: pw, options: { data: { display_name: "Admin" }, emailRedirectTo: location.origin + "/app/gallery" } });
       if (error || (data.user && !data.user.identities?.length)) return setMsg({ k: "err", t: "Ehhez a címhez már van jelszó. Lépj be vele, vagy kérj újat az „Elfelejtett jelszó” gombbal." });
       if (data.session) { done(); return; }
       setMsg({ k: "ok", t: `Ha ez a cím jogosult, küldtünk rá egy megerősítő levelet. Kattints a benne lévő linkre, és utána ezzel a jelszóval mindig be tudsz lépni.` });
