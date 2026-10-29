@@ -32,8 +32,10 @@ export function AuthSheet() {
   }, [authOpen]);
   const oauth = async (provider: 'google' | 'apple') => {
     setErr('');
+    // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser
+    if (provider === 'google' && (await import('@/lib/inapp')).escapeForGoogle(`/belepes${qOf(ui.lang)}`)) return;
     if ((window as any).Capacitor?.isNativePlatform?.()) {
-      const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider));
+      const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider, () => setErr(L('Sign-in didn’t finish. Try again, or use your e-mail.', 'A belépés nem fejeződött be. Próbáld újra, vagy lépj be e-maillel.'))));
       if (e) setErr(e);
       return;
     }
@@ -93,6 +95,12 @@ export function AuthSheet() {
               <b style={{ color: '#4285f4' }}>G</b> {L('Continue with Google', 'Folytatás Google-fiókkal')}
             </button>
           </div>
+          <p className="sub" style={{ fontSize: 12.5, textAlign: 'center', margin: '8px 0 0' }}>
+            {L('By continuing you confirm you’re 18 or older and accept the ', 'A folytatással megerősíted, hogy elmúltál 18 éves, és elfogadod az ')}
+            <a href={`/terms${qOf(ui.lang)}`}>{L('Terms', 'ÁSZF-et')}</a>
+            {L(' and the ', ' és az ')}
+            <a href={`/privacy${qOf(ui.lang)}`}>{L('Privacy policy', 'Adatvédelmi tájékoztatót')}</a>.
+          </p>
           <p className="or-mail"><span>{L('or with e-mail', 'vagy e-maillel')}</span></p>
           <form className="pw-login" onSubmit={(e) => (e.preventDefault(), loginPw())}>
             <input id="auth-email" type="email" autoComplete="username" inputMode="email" placeholder={L('E-mail address', 'E-mail-cím')} value={email} onChange={(e) => setEmail(e.target.value)} />

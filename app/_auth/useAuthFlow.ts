@@ -53,6 +53,18 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     const code = new URLSearchParams(location.search).get('err');
     if (code) setErr(authErrorText(code, lang));
   }, [router, lang]);
+  const went = useRef(false);
+  useEffect(() => {
+    if (went.current || !providers.loaded || mode === 'forgot') return;
+    if (new URLSearchParams(location.search).get('go') !== 'google') return;
+    went.current = true;
+    try {
+      const u = new URL(location.href);
+      u.searchParams.delete('go');
+      history.replaceState(null, '', u.toString());
+    } catch {}
+    oauth('google');
+  }, [providers.loaded]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (wait <= 0) return;
     const id = setTimeout(() => setWait(wait - 1), 1000);
@@ -160,12 +172,13 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
   };
 
   const oauth = async (provider: 'google' | 'apple') => {
-    if (mode === 'signup' && !agree) return setErr(T('Please tick the box below first.', 'Előbb pipáld be a lenti mezőt.'));
     if (providers.loaded && !providers[provider])
       return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
     setErr('');
+    // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser
+    if (provider === 'google' && (await import('@/lib/inapp')).escapeForGoogle()) return;
     if ((window as any).Capacitor?.isNativePlatform?.()) {
-      const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider));
+      const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider, () => setErr(T('Sign-in didn’t finish. Try again, or use your e-mail below.', 'A belépés nem fejeződött be. Próbáld újra, vagy lépj be e-maillel lent.'))));
       if (e) setErr(e);
       return;
     }

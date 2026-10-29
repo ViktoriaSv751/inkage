@@ -12,14 +12,32 @@ const cap = (): Cap | undefined => (typeof window !== 'undefined' ? (window as a
 export const isNative = () => !!cap()?.isNativePlatform?.();
 export const platform = (): 'ios' | 'android' | 'web' => (isNative() ? ((cap()?.getPlatform?.() as any) || 'web') : 'web');
 
-/** OAuth in the system browser (Google blocks sign-in inside embedded web views), back via app.inkage://auth. */
-export async function nativeOAuth(provider: 'google' | 'apple'): Promise<string | null> {
+/** OAuth in the system browser (Google blocks sign-in inside embedded web views), back via app.inkage://auth.
+ *  onCancel: the sign-in sheet was closed without coming back signed in. Almost every sign-in started in the store apps
+ *  ended this way (Supabase saw the start but never the provider's answer), and the screen just stayed as it was;
+ *  now the page says so and points to e-mail. The steps are counted (oauth_start / oauth_back / oauth_cancel). */
+let finishing = false;
+export async function nativeOAuth(provider: 'google' | 'apple', onCancel?: () => void): Promise<string | null> {
   const s = sb();
   if (!s) return 'Not available';
   (await import('./apple-token')).markOAuthStart(provider);
   const { data, error } = await s.auth.signInWithOAuth({ provider, options: { redirectTo: AUTH_CALLBACK, skipBrowserRedirect: true, queryParams: oauthParams(provider) } });
   if (error || !data?.url) return error?.message || 'Sign-in failed';
+  const { track } = await import('./store');
+  track('oauth_start', { provider, native: platform() });
   const { Browser } = await import('@capacitor/browser');
+  finishing = false;
+  const h = await Browser.addListener('browserFinished', () => {
+    h.remove().catch(() => {});
+    // the callback (app.inkage://auth) may still be on its way: give it a moment before calling it cancelled
+    setTimeout(async () => {
+      if (finishing) return;
+      const { data: d } = await s.auth.getSession();
+      if (d.session) return;
+      track('oauth_cancel', { provider, native: platform() });
+      onCancel?.();
+    }, 1500);
+  });
   await Browser.open({ url: data.url, presentationStyle: 'popover' });
   return null;
 }
@@ -27,6 +45,8 @@ export async function nativeOAuth(provider: 'google' | 'apple'): Promise<string 
 async function finishAuth(url: string) {
   const s = sb();
   if (!s) return;
+  finishing = true;
+  import('./store').then((m) => m.track('oauth_back', { native: platform() }), () => {});
   const u = new URL(url.replace(`${NATIVE_SCHEME}://`, 'https://x/'));
   const p = new URLSearchParams(u.hash.replace(/^#/, '') || u.search.replace(/^\?/, ''));
   const access_token = p.get('access_token'), refresh_token = p.get('refresh_token');

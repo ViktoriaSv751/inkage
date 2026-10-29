@@ -47,7 +47,7 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
           <ul>
             <li>{T('Your designs on every device', 'A terveid minden eszközödön')}</li>
             <li>{T('Bonus previews for inviting friends', 'Bónusz előnézetek a meghívásokért')}</li>
-            <li>{T('Free after sign-up', 'Regisztráció után ingyenes')}</li>
+            <li>{T('Try it on your own photo', 'Próbáld ki a saját fotódon')}</li>
           </ul>
         </div>
       </aside>
@@ -61,7 +61,8 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
           ) : (
             <CodeStep flow={flow} />
           )}
-          {err && (
+          {/* on the first step the error sits under the Apple / Google buttons (EmailStep), where the tap was */}
+          {err && step !== 'email' && (
             <p className="au-err" role="alert">
               {err}
             </p>
