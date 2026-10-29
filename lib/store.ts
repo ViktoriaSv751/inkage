@@ -172,7 +172,10 @@ export function track(name: string, props: Record<string, unknown> = {}) {
     const ia = inApp();
     extra = { sid: visitId(), path: (props.path as string) || location.pathname.slice(0, 200), lang: (document.documentElement.lang || '').slice(0, 8) || undefined, src: visitSource(), ...(ia ? { ia } : { pf: 'web' }) };
   } catch {}
-  s.rpc('log_event', { p_name: name, p_anon: anonId(), p_props: { ...props, ...extra } }).then(
+  // the app's own "src" (where a design came from: upload, library…) moves to dsrc; src is the visit's source
+  const own = typeof props.src === 'string' ? { dsrc: props.src } : {};
+  const { src: _drop, ...rest } = props;
+  s.rpc('log_event', { p_name: name, p_anon: anonId(), p_props: { ...rest, ...own, ...extra } }).then(
     () => {},
     () => {}
   );

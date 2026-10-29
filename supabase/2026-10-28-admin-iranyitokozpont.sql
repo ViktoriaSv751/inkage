@@ -1243,7 +1243,7 @@ CREATE OR REPLACE VIEW "public"."events_real" AS
    coalesce(e.props, '{}'::jsonb) || jsonb_build_object('ev', e.name) || case e.name
      when 'photo_pick_open' then jsonb_build_object('step', 'name')
      when 'design_pick_open' then jsonb_build_object('step', 'sign')
-     when 'design_added' then jsonb_build_object('step', 'style', 'value', coalesce(e.props->>'src', 'upload'))
+     when 'design_added' then jsonb_build_object('step', 'style', 'value', coalesce(e.props->>'dsrc', case when jsonb_typeof(e.props->'src') = 'string' then e.props->>'src' end, 'upload'))
      when 'generate_done' then jsonb_build_object('step', 'score')
      when 'nav_cta' then jsonb_build_object('cta', e.name) when 'landing_cta_app' then jsonb_build_object('cta', e.name) when 'tab_cta' then jsonb_build_object('cta', e.name)
      when 'nav_signup' then jsonb_build_object('cta', e.name) when 'nav_signin' then jsonb_build_object('cta', e.name) when 'drawer_signin' then jsonb_build_object('cta', e.name)
