@@ -34,7 +34,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(to, 308);
   }
   const cookie = req.cookies.get('ink_lang')?.value;
-  const app = /^\/(app|v|admin|offline)(\/|$)/.test(url.pathname);
+  const app = /^\/(app|v|admin|offline|go)(\/|$)/.test(url.pathname);
   const q = url.searchParams.get('lang');
   if (!app && !q) {
     const accept = req.headers.get('accept-language');
