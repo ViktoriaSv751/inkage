@@ -233,6 +233,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-10-24',
     faq: [],
   },
+  'laser-removal-how-many-sessions': {
+    img: 'hf_20261029_053106_e803d5aa-e2dc-4246-bb10-0bdf6365e12a',
+    img2: 'hf_20261029_053106_b5ea9813-b5b0-488d-8ea5-6a9a0754589a',
+    img3: 'hf_20261029_053105_65139626-c69e-4044-bc9d-2e55280b3b19',
+    img4: 'hf_20261029_053105_176e40e8-4405-4276-a347-e8ecb05d492b',
+    img5: 'hf_20261029_053114_77d35fa2-9d4b-45ff-9eea-5fbf8e324b2e',
+    img6: 'hf_20261029_053114_738e8035-5ff4-46db-a521-c16cb976d10f',
+    img7: 'hf_20261029_053114_8ba1fa63-1578-4756-8914-954e9c3c2176',
+    cap2: { en: 'Six factors, added up: the Kirby–Desai scale turns “it depends” into a session estimate.', hu: 'Hat tényező összeadva: a Kirby–Desai skála az „attól függ”-ből alkalomszám-becslést csinál.' },
+    date: '2026-10-29',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
