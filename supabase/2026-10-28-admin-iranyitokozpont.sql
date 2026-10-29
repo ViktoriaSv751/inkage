@@ -9697,7 +9697,7 @@ on conflict (k) do nothing;
 -- what the uptime monitor checks, and the two default alerts
 insert into public.uptime_targets (url, label, ok_max) values
   ('https://inkage.app/', 'Főoldal', 399), ('https://inkage.app/app', 'App', 399), ('https://inkage.app/tudastar', 'Tudástár', 399),
-  ('https://inkage.app/api/health', 'API', 399), ('https://inkage.app/admin', 'Irányítóközpont', 399),
+  ('https://inkage.app/api/config', 'API', 399), ('https://inkage.app/admin', 'Irányítóközpont', 399),
   ('https://ibfpdbbcnyoqazodkmna.supabase.co/auth/v1/health', 'Supabase', 401)
 on conflict (url) do nothing;
 insert into public.alert_rules (metric, op, threshold, window_min, on_, channels)
