@@ -39,7 +39,7 @@ export default function Landing() {
       lsSet('ink_ref', ref);
       track('ref_visit');
     }
-    track('landing_view', { ref: !!ref });
+    // page views are counted for everyone by app/PageView.tsx (no cookie needed)
     sb()?.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
     sb()
       ?.rpc('trends')

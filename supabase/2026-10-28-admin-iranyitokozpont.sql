@@ -1221,6 +1221,7 @@ ALTER TABLE "public"."admin_own_sessions" OWNER TO "postgres";
 --   preview_saved    → detail_open           (saved the preview)
 --   share_link / video_made / artist_pdf / invite_share → reveal_share / share_video / share_save / share_open
 --   auth_signup → signup, the sign-in / start buttons → cta_click, paywall → paywall_shown (hidden: the app is free)
+--   page_view (app/api/pv: every visitor, no cookie) → landing_view
 -- Tests (utm with "test"), the owner's own visits and robots are left out, as on Calligra's dashboard.
 CREATE OR REPLACE VIEW "public"."events_real" AS
  with e as (
@@ -1236,6 +1237,7 @@ CREATE OR REPLACE VIEW "public"."events_real" AS
      when 'photo_added' then 'signature_captured' when 'generate_start' then 'analysis_start' when 'onboarding_start' then 'quiz_start'
      when 'stage_y50' then 'reveal_shown' when 'preview_saved' then 'detail_open'
      when 'share_link' then 'reveal_share' when 'video_made' then 'share_video' when 'artist_pdf' then 'share_save' when 'invite_share' then 'share_open'
+     when 'page_view' then 'landing_view'
      when 'auth_signup' then 'signup' when 'paywall' then 'paywall_shown'
      when 'nav_cta' then 'cta_click' when 'landing_cta_app' then 'cta_click' when 'tab_cta' then 'cta_click' when 'nav_signup' then 'cta_click'
      when 'nav_signin' then 'cta_click' when 'drawer_signin' then 'cta_click' when 'cta_signin' then 'cta_click' when 'landing_usecase_cta' then 'cta_click'

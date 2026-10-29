@@ -170,7 +170,7 @@ export function track(name: string, props: Record<string, unknown> = {}) {
   let extra: Record<string, unknown> = {};
   try {
     const ia = inApp();
-    extra = { sid: visitId(), path: (props.path as string) || location.pathname.slice(0, 200), lang: (document.documentElement.lang || '').slice(0, 8) || undefined, src: visitSource(), ...(ia ? { ia } : { pf: 'web' }) };
+    extra = { sid: (window as any).__inkSid || visitId(), path: (props.path as string) || location.pathname.slice(0, 200), lang: (document.documentElement.lang || '').slice(0, 8) || undefined, src: visitSource(), ...(ia ? { ia } : { pf: 'web' }) };
   } catch {}
   // the app's own "src" (where a design came from: upload, library…) moves to dsrc; src is the visit's source
   const own = typeof props.src === 'string' ? { dsrc: props.src } : {};

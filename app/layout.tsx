@@ -14,6 +14,7 @@ import { Suspense } from 'react';
 import { SITE_URL, langAlternates } from '@/lib/site';
 import { ScrollTop } from './ScrollTop';
 import { Splash } from './Splash';
+import { PageView } from './PageView';
 
 export function generateMetadata(): Metadata {
   const h = headers().get('x-ink-lang');
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Splash />
+        <PageView />
         <Suspense fallback={null}>
           <ScrollTop />
         </Suspense>
