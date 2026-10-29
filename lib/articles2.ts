@@ -296,4 +296,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'laser-removal-how-many-sessions',
+    tag: { en: 'Removal', hu: 'Eltávolítás' },
+    title: { en: 'How many laser sessions does it take to remove a tattoo? The Kirby–Desai scale with worked examples', hu: 'Hány lézeres alkalom kell egy tetoválás eltávolításához? A Kirby–Desai skála példákkal' },
+    desc: { en: 'Score your tattoo on six factors and get a realistic session estimate.', hu: 'Pontozd a tetoválásod hat szempont szerint, és kapj reális becslést az alkalmakra.' },
+    body: {
+      en: [
+        'Most professional tattoos need roughly 5 to 15 laser sessions, spaced at least six to eight weeks apart. The exact number depends on the tattoo and on you.',
+        '## The Kirby–Desai scale',
+        'Published in 2009, it scores skin type (1–6), location (1–5), colours (1–4), amount of ink (1–4), scarring (0–5) and layering (0 or 2). The total is a rough estimate of the sessions needed.',
+        '## Treat it as a range',
+        'Lasers, ink and your own body move the result. Take your estimate to a qualified clinic for an in-person assessment.',
+      ],
+      hu: [
+        'A legtöbb profi tetoválásnál nagyjából 5–15 lézeres alkalom kell, legalább hat-nyolc hetes szünetekkel. A pontos szám a tetováláson és rajtad múlik.',
+        '## A Kirby–Desai skála',
+        'A 2009-ben publikált skála a bőrtípust (1–6), az elhelyezkedést (1–5), a színeket (1–4), a tintamennyiséget (1–4), a heget (0–5) és a rétegzést (0 vagy 2) pontozza. Az összeg durva becslés a szükséges alkalmakra.',
+        '## Tartományként kezeld',
+        'A lézer, a tinta és a tested is módosítja az eredményt. A becslést vidd el egy képzett klinikára személyes felmérésre.',
+      ],
+    },
+  },
 ];
