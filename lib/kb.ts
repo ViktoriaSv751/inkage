@@ -245,6 +245,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-10-29',
     faq: [],
   },
+  'laser-removal-before-after': {
+    img: 'hf_20261030_080946_8d639c84-7dda-4ea8-bfa7-84c2c6e031c8',
+    img2: 'hf_20261030_080946_95d68711-5ef7-468f-a494-c2eabb5cbce7',
+    img3: 'hf_20261030_080947_32f78483-9d82-4509-b6ee-fa2c2f14b205',
+    img4: 'hf_20261030_080947_49d68e19-ab8e-491a-a5c4-60526e7fef77',
+    img5: 'hf_20261030_080956_e1754257-2477-4e2c-adfd-7621997c14ba',
+    img6: 'hf_20261030_080956_ac687f31-206a-41e0-9860-c879c0772ed0',
+    img7: 'hf_20261030_080957_8a07c084-34b9-4419-bf9d-4a08faefc3d7',
+    cap2: { en: 'Illustration: a tattoo rarely fades evenly. Most of the change happens between sessions.', hu: 'Illusztráció: a tetoválás ritkán halványul egyenletesen. A változás nagy része a kezelések között történik.' },
+    date: '2026-10-30',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];

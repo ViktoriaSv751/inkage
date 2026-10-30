@@ -318,4 +318,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'laser-removal-before-after',
+    tag: { en: 'Removal', hu: 'Eltávolítás' },
+    title: { en: 'Laser tattoo removal before and after: what to expect by colour, body part and laser type', hu: 'Lézeres tetoválás-eltávolítás előtte–utána: mire számíthatsz szín, testrész és lézertípus szerint' },
+    desc: { en: 'Why black fades fast, why green hangs on, and how to read clinic photos.', hu: 'Miért halványul gyorsan a fekete, miért makacs a zöld, és hogyan nézd a klinikák fotóit.' },
+    body: {
+      en: [
+        'Results come gradually: a clear change in the first few sessions, a patchy middle stage, then a slow final stretch. Most of the change happens between sessions, as your body clears the ink.',
+        '## By colour and body part',
+        'Black responds best, red and dark blue usually respond well, green and light blue are harder, and yellow, white and skin tones are the hardest. Tattoos near the centre of the body tend to clear faster than those on hands and feet.',
+        '## Reading the photos',
+        'Check the number of sessions, the time since the last one, the light and angle, and whether the tattoo resembles yours.',
+      ],
+      hu: [
+        'Az eredmény fokozatosan jön: az első néhány alkalom után látványos változás, aztán egy foltos középső szakasz, végül egy lassú hajrá. A változás nagy része a kezelések között történik, ahogy a szervezeted elszállítja a tintát.',
+        '## Szín és testrész szerint',
+        'A fekete reagál a legjobban, a piros és a sötétkék általában jól, a zöld és a világoskék nehezebb, a sárga, a fehér és a bőrszínek a legnehezebbek. A test közepéhez közeli tetoválások általában gyorsabban halványulnak, mint a kézen és a lábfejen lévők.',
+        '## Hogyan nézd a fotókat?',
+        'Nézd meg a kezelések számát, az utolsó óta eltelt időt, a fényt és a szöget, és hogy hasonlít-e a tetoválás a tiédre.',
+      ],
+    },
+  },
 ];
