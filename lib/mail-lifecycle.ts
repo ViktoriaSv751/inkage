@@ -48,7 +48,7 @@ export function photoReminderEmail(lang: Lang, unsubscribe: string, origin = 'ht
   const tip = (t: string) => `<tr><td width="24" valign="top" style="padding:7px 0;font-family:${SANS};font-size:15px;color:#a896ff;">&#10003;</td><td style="padding:7px 0;font-family:${SANS};font-size:15px;line-height:22px;color:#d9d9de;">${esc(t)}</td></tr>`;
   const html = page(lang, subject, pre, `${logo(origin)}
 <tr><td style="padding:24px 0 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#141418" style="background:#141418;border-radius:20px;">
-<tr><td style="font-size:0;line-height:0;"><img src="${origin}/email/reminder.jpg" width="560" alt="${esc(T('An example: a tattoo on a forearm', 'Példa: tetoválás egy alkaron'))}" style="display:block;width:100%;height:auto;border:0;border-radius:20px 20px 0 0;"></td></tr>
+<tr><td style="font-size:0;line-height:0;"><img src="${origin}/email/reminder-v2.jpg" width="560" height="323" alt="${esc(T('An example: a tattoo on a forearm', 'Példa: tetoválás egy alkaron'))}" style="display:block;width:100%;height:auto;border:0;border-radius:20px 20px 0 0;background:#1d1d22;"></td></tr>
 <tr><td style="padding:30px 28px 0;font-family:${SANS};font-size:32px;line-height:37px;font-weight:800;letter-spacing:-.025em;color:#ffffff;">${esc(subject)}</td></tr>
 <tr><td style="padding:14px 28px 0;font-family:${SANS};font-size:16px;line-height:25px;color:#b9b9c1;">${esc(body)}</td></tr>
 <tr><td style="padding:20px 28px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0">${tip(T('In daylight', 'Nappali fényben'))}${tip(T('Sharp and close up', 'Élesen, közelről'))}${tip(T('Only the body area in the picture', 'Csak a testrész legyen a képen'))}</table></td></tr>

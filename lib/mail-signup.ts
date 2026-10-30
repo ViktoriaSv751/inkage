@@ -36,7 +36,7 @@ export function signupEmail(u: SignupInfo, origin = 'https://inkage.app') {
 <tr><td style="padding:24px 28px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="font-family:${SANS};font-size:20px;font-weight:800;letter-spacing:-.02em;color:#ffffff;"><img src="${origin}/brand/mark-white-96.png" width="28" height="26" alt="" style="vertical-align:-5px;border:0;margin-right:7px;">InkAge</td>
 <td align="right" style="font-family:${SERIF};font-style:italic;font-size:14px;color:#a9a9b3;">${esc(stamp)}</td></tr></table></td></tr>
-<tr><td style="font-size:0;line-height:0;"><a href="${people}" target="_blank" style="display:block;"><img src="${origin}/email/signup-hero.jpg" width="600" alt="Egy tetoválás közelről: ma és 50 év múlva" style="display:block;width:100%;height:auto;border:0;"></a></td></tr>
+<tr><td style="font-size:0;line-height:0;"><a href="${people}" target="_blank" style="display:block;"><img src="${origin}/email/signup-hero-v2.jpg" width="600" height="210" alt="Egy tetoválás közelről: ma és 50 év múlva" style="display:block;width:100%;height:auto;border:0;background:#141418;"></a></td></tr>
 <tr><td style="padding:40px 32px 0;">
 <div style="font-family:${SANS};font-size:12px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:#a896ff;">Új regisztráció</div>
 <h1 style="margin:16px 0 0;font-family:${SANS};font-size:52px;line-height:54px;font-weight:800;letter-spacing:-.04em;color:#ffffff;">${esc(name)}</h1>

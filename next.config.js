@@ -13,6 +13,8 @@ module.exports = {
     };
   },
   async headers() {
-    return [{ source: '/img/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] }];
+    const forever = [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }];
+    // e-mail pictures: mail apps fetch them through their own proxies, so they must be cacheable (a changed picture gets a new name)
+    return [{ source: '/img/:path*', headers: forever }, { source: '/email/:path*', headers: forever }, { source: '/brand/:path*', headers: forever }];
   },
 };
