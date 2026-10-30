@@ -2,6 +2,7 @@ import { tx, isLang, type Lang } from '@/lib/tr';
 import { appSecret, getAuthed, json, userClient } from '@/lib/server';
 import { layout, mailReady, sendMail, SITE } from '@/lib/mail';
 import { logServerError } from '@/lib/errlog';
+import { signupEmail } from '@/lib/mail-signup';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,16 @@ export async function POST(req: Request) {
   if (!email) return json({ ok: true, sent: false });
   const rl = (await req.json().catch(() => ({}))).lang;
   const lang: Lang = isLang(rl) ? rl : 'hu';
-  const name = String((a.user.user_metadata as any)?.full_name || '').split(' ')[0];
+  const md = (a.user.user_metadata || {}) as any;
+  const fullName = String(md.full_name || md.name || md.display_name || '').trim();
+  const name = String(md.full_name || '').split(' ')[0];
+  // the owner hears about every new account (the key keeps a retried welcome from sending it twice)
+  const notify = process.env.ADMIN_NOTIFY_EMAIL || process.env.ALERT_EMAIL;
+  if (notify) {
+    const n = signupEmail({ name: fullName, email: email as string, lang, country: req.headers.get('x-vercel-ip-country') || '', provider: String(a.user.app_metadata?.provider || 'email'), createdAt: a.user.created_at, userId: a.user.id });
+    const told = await sendMail(notify, n.subject, n.html, n.text, email as string, `signup-${a.user.id}`);
+    if (!told) await logServerError('signup_notice', new Error('new sign-up notice could not be sent'));
+  }
   const sent = await sendMail(
     email as string,
     tx(lang, 'Welcome to InkAge', 'Üdv az InkAge-ben'),

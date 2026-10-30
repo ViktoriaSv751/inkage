@@ -22,11 +22,11 @@ ${p}${btn}
 </td></tr></table></td></tr></table></body></html>`;
 }
 
-export async function sendMail(to: string | string[], subject: string, html: string, text: string, replyTo?: string) {
+export async function sendMail(to: string | string[], subject: string, html: string, text: string, replyTo?: string, idempotencyKey?: string) {
   if (!mailReady()) return false;
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'content-type': 'application/json' },
+    headers: { authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'content-type': 'application/json', ...(idempotencyKey ? { 'idempotency-key': idempotencyKey } : {}) },
     body: JSON.stringify({ from: FROM(), to, subject, html, text, ...(replyTo ? { reply_to: replyTo } : {}) }),
   }).catch(() => null);
   return !!r?.ok;
