@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   if (!t.email) return json({ ok: true, sent: false, pushed });
   // the picture the voters saw: the leading option of a poll, or the shared preview at 50 years
   const path = t.poll ? t.leader?.path : t.paths?.y50 || t.paths?.fresh;
-  const image = !path ? null : path.startsWith('/') ? `${SITE()}${path}` : `${SUPABASE_URL}/storage/v1/object/public/shares/${path}`;
+  const image = !path ? null : /^https?:/.test(path) ? path : path.startsWith('/') ? `${SITE()}${path}` : `${SUPABASE_URL}/storage/v1/object/public/shares/${path}`;
   const m = voteEmail(lang, { share, image, votes: v, poll: t.poll ? { total: Number(t.total) || 0, label: t.leader?.label, leaderVotes: t.leader?.votes || 0 } : null });
   const sent = await sendMail(t.email, m.subject, m.html, m.text);
   return json({ ok: true, sent, pushed });
