@@ -38,3 +38,14 @@ where e.lang is null and e.session = x.session;
 update public.events e set lang = left(p.lang, 5)
 from public.profiles p
 where e.lang is null and e.user_id = p.id and p.lang is not null;
+
+-- 5.6 an announcement for one language reaches exactly that language (left(…, 2) mixed up Filipino with Finnish)
+create or replace function public.public_announcements(p_lang text default null, p_pf text default 'web')
+ returns jsonb language sql stable security definer set search_path to ''
+as $function$
+  select coalesce(jsonb_agg(jsonb_build_object('id', a.id, 'title', a.title, 'body', a.body, 'kind', a.kind, 'link', a.link) order by a.created_at desc), '[]')
+  from public.admin_announcements a
+  where a.on_ and (a.starts_at is null or a.starts_at <= now()) and (a.ends_at is null or a.ends_at > now())
+    and (a.lang is null or a.lang = '' or a.lang = coalesce(p_lang, ''))
+    and (a.platform = 'all' or a.platform = coalesce(p_pf, 'web') or (a.platform = 'app' and coalesce(p_pf, 'web') in ('android', 'ios')))
+$function$;

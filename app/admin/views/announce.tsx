@@ -31,7 +31,7 @@ export function Announce() {
   const rows: D[] = Array.isArray(q.d) ? q.d : [];
   return (
     <div className="g">
-      <Card className="s5" icon={P.bell} title={f.id ? "Közlemény szerkesztése" : "Új közlemény"} sub="(Még nem jelenik meg az appban.) Sáv lesz az app tetején. Rövid legyen: egy cím és egy-két mondat. A nyelvet választva csak azok látják, akik azon a nyelven használják az appot.">
+      <Card className="s5" icon={P.bell} title={f.id ? "Közlemény szerkesztése" : "Új közlemény"} sub="Sáv az app tetején. Rövid legyen: egy cím és egy-két mondat. A nyelvet választva csak azok látják, akik azon a nyelven használják az appot.">
         <div className="ann-f">
           <input className="adm-in" maxLength={120} placeholder="Cím (pl. „Új: hat új nyelv”)" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} />
           <textarea className="adm-in" rows={3} maxLength={500} placeholder="Szöveg (nem kötelező)" value={f.body} onChange={(e) => setF({ ...f, body: e.target.value })} />

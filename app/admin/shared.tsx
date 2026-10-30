@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { LANG_INFO } from "@/lib/tr";
 import { createPortal } from "react-dom";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { CountUp, Delta, Empty, Info, Spark, chColor, compact, fmt, pct } from "./charts";
@@ -100,7 +101,8 @@ export const ch = (k: string) => CH[k?.toLowerCase?.()] || k;
 
 export const PROV: Record<string, string> = { email: "E-mail + jelszó", google: "Google", apple: "Apple" };
 
-export const LANGS: Record<string, string> = { hu: "Magyar", en: "Angol", de: "Német", es: "Spanyol", fr: "Francia", it: "Olasz", pt: "Portugál", nl: "Holland", pl: "Lengyel", tr: "Török", id: "Indonéz", ru: "Orosz", ja: "Japán", ko: "Koreai", zh: "Kínai", cs: "Cseh", da: "Dán", sv: "Svéd", ro: "Román", sk: "Szlovák", uk: "Ukrán", el: "Görög", fi: "Finn", no: "Norvég", nb: "Norvég", ar: "Arab", hi: "Hindi", fa: "Perzsa", "?": "Ismeretlen" };
+/* the languages InkAge really has, with their Hungarian names */
+export const LANGS: Record<string, string> = Object.fromEntries(Object.entries(LANG_INFO).map(([k, v]) => [k, v.hu]));
 
 export const lang = (k: string) => LANGS[(k || "?").slice(0, 2)] || k;
 

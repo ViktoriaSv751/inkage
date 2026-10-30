@@ -354,7 +354,7 @@ function FreeWatchers({ sync }: { sync: D }) {
       <div className="c-h"><div><div><h2>Ingyenes figyelők</h2></div></div></div>
       <ul className="watchers">{W.map(([k, l, what, key]) => { const s = sync[k];
         return <li key={k}><b>{l}</b><span>{what} <small className="mut">{key}</small></span>{s ? <span className={"chip " + (s.last_ok === false ? "bad" : "good")}>{s.last_ok === false ? "hiba " + ago(s.err_at) : "✓ " + ago(s.ok_at)}</span> : <span className="chip">még nem futott</span>}</li>; })}
-        <li><b>Külső elérhetőség-figyelő</b><span>Ha a Supabase leáll, a saját mérés is áll. Egy ingyenes UptimeRobot-figyelő a <code>https://inkage.app/api/health</code> címre e-mailt küld kiesésnél. <small className="mut">Regisztráció kell: ezt neked kell beállítanod.</small></span><a className="adm-ibtn sm" href="https://uptimerobot.com/" target="_blank" rel="noreferrer">uptimerobot.com ↗</a></li>
+        <li><b>Külső elérhetőség-figyelő</b><span>Ha a Supabase leáll, a saját mérés is áll. Egy ingyenes UptimeRobot-figyelő a <code>https://inkage.app/api/config</code> címre e-mailt küld kiesésnél. <small className="mut">Regisztráció kell: ezt neked kell beállítanod.</small></span><a className="adm-ibtn sm" href="https://uptimerobot.com/" target="_blank" rel="noreferrer">uptimerobot.com ↗</a></li>
       </ul>
     </section>
   );
