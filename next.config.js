@@ -12,6 +12,14 @@ module.exports = {
       ],
     };
   },
+  async redirects() {
+    // e-mails already sent keep showing their pictures
+    return [
+      { source: '/email/welcome/aging.gif', destination: '/email/welcome/aging-v2.gif', permanent: true },
+      { source: '/email/signup-hero.jpg', destination: '/email/signup-hero-v2.jpg', permanent: true },
+      { source: '/email/reminder.jpg', destination: '/email/reminder-v2.jpg', permanent: true },
+    ];
+  },
   async headers() {
     const forever = [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }];
     // e-mail pictures: mail apps fetch them through their own proxies, so they must be cacheable (a changed picture gets a new name)
