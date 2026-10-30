@@ -46,6 +46,8 @@ export function System({ d: dFiltered }: { d: D }) {
   const src = (k: string, l: string, set: boolean | undefined) => { const x = fresh?.src?.[k]; return { l, ok: x ? (x.error ? false : freshOf(fresh, k).ok ? true : null) : set ? null : null, note: x ? (x.error ? "az utolsó futás hibás" : `utoljára ${ago(x.at)}`) : set ? "beállítva, még nem futott" : "nincs beállítva" }; };
   return (
     <div className="g">
+      {mon.d && !((mon.d as D)?.push?.devices || []).length && (st ? !st.email : mail ? !mail.resend_api_key : false) && (
+        <div className="alert err s12"><b>Most semmilyen jelzés nem jut el hozzád.</b> Egyetlen eszköz sincs feliratkozva a telefonos értesítésekre (0 eszköz), és nincs beállítva e-mail-kulcs (<code>RESEND_API_KEY</code>). Kapcsold be az értesítést lent az „Értesítések a telefonra” kártyán ezen a telefonon, és add meg a Resend-kulcsot a <a className="lnk" href="#connect">Kapcsolatok</a> oldalon.</div>)}
       <SelfCheck />
       <Card className="s12" icon={P.check} title="Állapot" sub="Minden szolgáltatás egy sorban, a valódi működés szerint (nem csak hogy van-e kulcs). Zöld: működik; sárga: be van állítva, de még nincs friss eredmény; piros: hiba. A részletek a Monitoringban. Naponta 7 órakor (budapesti idő) egy ellenőrzés is lefut: e-mailt csak akkor küld, ha valami nem működik, hétfőn pedig akkor is, ha minden rendben."
         right={<button className="adm-ibtn sm" onClick={async () => { toast("Ellenőrzés…"); const r = await api("/api/admin/health", { method: "POST" }); toast(r.ok ? (r.json?.problems ? `${r.json.problems} probléma · e-mail: ${r.json.email}` : `Minden rendben · e-mail: ${r.json?.email}`) : r.json?.error || "Nem sikerült."); }}>Napi ellenőrzés most</button>}>
@@ -56,7 +58,7 @@ export function System({ d: dFiltered }: { d: D }) {
           { l: "Időzített feladatok", ok: mon.d ? !badJobs.length : null, note: mon.d ? (badJobs.length ? `${badJobs.length} hibás: ${badJobs.slice(0, 3).map((c) => c.jobname.replace("admin-", "")).join(", ")}` : `mind a ${cron.length} rendben`) : "ellenőrzés…" },
           { l: "Reggeli összefoglaló", ok: st?.digest_missing ? false : digest ? st2("admin-digest")!.tone !== "bad" : null, note: st?.digest_missing ? "ma nem ment ki" : digest ? `${cronHu(digest.schedule)} · ${st2("admin-digest")!.t}` : "ellenőrzés…" },
           { l: "Heti riport", ok: weekly ? st2("admin-weekly")!.tone !== "bad" : null, note: weekly ? `${cronHu(weekly.schedule)} · ${st2("admin-weekly")!.t}` : "–" },
-          { l: "E-mail-küldés", ok: mail ? !!mail.resend_key_works : null, note: mail ? (mail.resend_key_works ? "a levelek mennek" : mail.resend_api_key ? "a Resend-kulcs nem működik" : "nincs Resend-kulcs") : "ellenőrzés…" },
+          { l: "E-mail-küldés", ok: mail ? !!mail.resend_key_works : null, note: mail ? (mail.resend_key_works ? "a levelek mennek" : mail.resend_api_key ? "a Resend-kulcs nem működik" : "nincs RESEND_API_KEY: se a napi ellenőrzés, se a riasztás e-mailje nem megy ki") : "ellenőrzés…" },
           /* the lock and the second step: red until both are on (the keys and tokens are otherwise readable from a signed-in browser) */
           { l: "Kulcsok zárva a szervernek", ok: lockSt.d ? !!(lockSt.d as D).locked : null, note: lockSt.d ? ((lockSt.d as D).locked ? "bekapcsolva: a kulcsokat és a tokeneket csak a szerver olvassa" : "kikapcsolva: lent, a „Kulcsok csak a szervernek” kártyán kapcsolható be") : "ellenőrzés…" },
           { l: "Belépés (Google, Apple)", ok: sf.length ? false : true, note: sf.length ? `${fmt(sf.reduce((a, x) => a + n(x.n), 0))} sikertelen belépés` : "rendben" },
@@ -67,7 +69,7 @@ export function System({ d: dFiltered }: { d: D }) {
           { l: "Google Play", ok: fresh?.google ? freshOf(fresh, "google").ok : null, note: fresh?.google ? `utolsó lehúzás ${ago(fresh.google)}` : st?.google_play ? "kulcs megvan, még nem futott" : "nincs bekötve" },
           { l: "MI-elemzés", ok: st ? (st.ai ? true : false) : null, note: st?.ai ? `Anthropic${st.openai ? ", OpenAI" : ""}${st.perplexity ? ", Perplexity" : ""}` : "nincs MI-kulcs" },
           { l: "Telegram", ok: st ? (st.telegram ? true : null) : null, note: st?.telegram ? "beállítva" : "nincs beállítva (nem kötelező)" },
-          { l: "Push-értesítés", ok: (mon.d as D)?.push ? ((mon.d as D).push.devices || []).length ? !((mon.d as D).push.devices as D[]).some((x) => n(x.fails) >= 3) : null : null, note: (mon.d as D)?.push ? `${((mon.d as D).push.devices || []).length} eszköz` : "–" },
+          { l: "Push-értesítés", ok: (mon.d as D)?.push ? ((mon.d as D).push.devices || []).length ? !((mon.d as D).push.devices as D[]).some((x) => n(x.fails) >= 3) : false : null, note: (mon.d as D)?.push ? (((mon.d as D).push.devices || []).length ? `${((mon.d as D).push.devices || []).length} eszköz` : "0 eszköz: egyetlen eszköz sincs feliratkozva, a jelzések senkihez nem jutnak el (lent: „Értesítések a telefonra”)") : "–" },
           { l: "E-mail-események (Resend webhook)", ok: st ? (st.resend_webhook ? true : null) : null, note: st?.resend_webhook ? "beállítva" : "nincs beállítva" },
           { l: "Elérhetőség", ok: (mon.d as D)?.uptime ? !((mon.d as D).uptime as D[]).some((u) => u.on_ !== false && u.last && !u.last.ok) : null, note: (mon.d as D)?.uptime ? `${((mon.d as D).uptime as D[]).length} cím, 5 percenként` : "–" },
         ]} />
@@ -136,12 +138,12 @@ export function System({ d: dFiltered }: { d: D }) {
 function SelfCheck() {
   const q = useRpc("admin_selfcheck", undefined, []);
   const rows: D[] = Array.isArray(q.d) ? q.d : [];
-  const bad = rows.filter((r) => !r.ok).length;
+  const bad = rows.filter((r) => r.ok === false).length;
   const show = (v: any) => (v == null ? "–" : typeof v === "number" ? fmt(v) : /^\d{4}-\d\d-\d\dT/.test(String(v)) ? ago(String(v)) : String(v));
   return (
     <Card className="s12" icon={P.check} title="Önellenőrzés" sub="A számok egyeznek-e egymással: a platform szerinti posztszám a nálunk lévővel, a napi összesítő az eseményekkel, milyen frissek az adatok, lefutottak-e a lehúzások, és él-e a mérés."
       right={q.d ? <span className={"chip " + (bad ? "warn" : "good")}>{bad ? `${bad} eltérés` : "minden egyezik"}</span> : undefined}>
-      <Async q={q} h={90}>{() => <ul className="selfck">{rows.map((r) => <li key={r.k} className={r.ok ? "ok" : "bad"}><i>{r.ok ? "✓" : "!"}</i><b>{r.what}</b><span>{show(r.found)} <small>({r.note}; elvárt: {show(r.expected)})</small></span></li>)}</ul>}</Async>
+      <Async q={q} h={90}>{() => <ul className="selfck">{rows.map((r) => <li key={r.k} className={r.ok == null ? "na" : r.ok ? "ok" : "bad"}><i>{r.ok == null ? "–" : r.ok ? "✓" : "!"}</i><b>{r.what}</b><span>{show(r.found)} <small>({r.note}; elvárt: {show(r.expected)})</small></span></li>)}</ul>}</Async>
     </Card>
   );
 }

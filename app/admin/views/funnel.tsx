@@ -5,14 +5,14 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { BarList, Empty, Funnel, fmt, pct } from "../charts";
 import { Funnel3D } from "../wow";
 import { Radar, StepBars } from "../visuals";
-import { Band, Card, EV, Kpi, Layer, Lesson, Loading, P, QSTEP, QVAL, Tbl, ch, lang, n, periodName, periodWords, rpc, secs, type D, useBlockRpc, useFlt, usePeriod, useRpc , series } from "../shared";
+import { Band, Card, EV, Kpi, Layer, Lesson, Loading, P, QSTEP, QVAL, Tbl, ch, cleanAns, lang, n, periodName, periodWords, rpc, secs, type D, useBlockRpc, useFlt, usePeriod, useRpc , series } from "../shared";
 import { per } from "./traffic";
 
 /* the steps of the strict funnel: each counts the visits that reached every step before it */
 const STEP: Record<string, [string, string]> = {
   sessions: ["Látogatás", "minden munkamenet"], app: ["Megnyitotta az appot", "/app betöltve"], named: ["Elkezdte", "fotóválasztó megnyitva"],
   captured: ["Feltöltött egy bőrfotót", "kihagyás nélkül"], scored: ["Megkapta az előnézetet", "a fő élmény"], quiz: ["Bevezető kérdések", "cél, stílus, testrész"],
-  revealed: ["Megnézte 50 év múlva", "az öregedés"], detail: ["Elmentette az előnézetet", "a galériába"], shared: ["Megosztott", "az öregedés után: link, videó, PDF"],
+  revealed: ["Megnézte 50 év múlva", "az öregedés"], detail: ["Elmentette az előnézetet", "a galériába"], shared: ["Megosztott", "az öregedés után: megosztó link vagy meghívó"],
 };
 const ORDER = ["sessions", "app", "named", "captured", "scored", "quiz", "revealed", "detail"];
 /* what one more step through brings, said in the unit of the step it ends in */
@@ -40,8 +40,10 @@ export function FunnelTab({ d }: { d: D }) {
   const rate = (o: D) => (n(o.sessions) ? (n(o.scored) / n(o.sessions)) * 100 : 0);
   const quiz: Record<string, { k: string; n: number }[]> = {};
   ((F.quiz || []) as D[]).forEach((q) => { (quiz[q.step] ||= []).push({ k: q.v || "", n: n(q.n) }); });
+  /* one path, each step inside the one before: website → a button → the app after that button. Opening the app
+     without a button (a link, the menu) is its own number below, so a later step is never bigger than an earlier one. */
   const web = [{ k: "land", l: "Weboldalt látta", sub: "főoldal, tudástár, cikkek", n: val("land") }, { k: "cta", l: "Gombra kattintott", sub: "a weboldalon", n: val("cta"), prev: val("land") },
-    { k: "land_app", l: "Megnyitotta az appot", sub: "a weboldalról", n: val("land_app"), prev: val("land") }];
+    { k: "cta_app", l: "Utána megnyitotta az appot", sub: "gombnyomás után", n: val("cta_app"), prev: val("cta") }];
   return (
     <div className="g">
       {worstK && <Lesson>A legnagyobb kiesés itt van: <b>„{STEP[worstK][0]}”</b>. Az előző lépésből csak <b>{fmt(worstR * 100)}%</b> jut el idáig. Ha itt 10 ponttal többen maradnak, {periodName(d)} kb. <b>{fmt(gain)}</b> {UNIT[end] || "lépéssel"} több lett volna.</Lesson>}
@@ -67,7 +69,8 @@ export function FunnelTab({ d }: { d: D }) {
         <Funnel steps={[{ k: "skipped", l: "Kihagyta a bőrfotót", n: val("skipped") }, { k: "skip_quiz", l: "Bevezető kérdések", n: val("skip_quiz"), prev: val("skipped") }, { k: "skip_revealed", l: "Megnézte 50 év múlva", n: val("skip_revealed"), prev: val("skip_quiz") }]} accentK="skip_revealed" />
       </Card>
       <Card className="s6" icon={P.doc} title="A weboldalon át érkezők" sub={`Csak akik a weboldalon kezdtek (főoldal, tudástár, cikkek). Egyenesen az appba ${fmt(val("direct_app"))} látogatás jött.`}>
-        <Funnel steps={web} accentK="land_app" />
+        <Funnel steps={web} accentK="cta_app" />
+        <div className="mini-stats" style={{ gridTemplateColumns: "repeat(2,1fr)" }}><MiniN l="Appot nyitott a weboldalról (gombbal vagy anélkül)" v={val("land_app")} /><MiniN l="Ebből gomb nélkül" v={Math.max(0, val("land_app") - val("cta_app"))} /></div>
         <div className="mini-stats" style={{ gridTemplateColumns: "repeat(3,1fr)" }}><MiniN l="Regisztráció gomb" v={val("cta_reg")} /><MiniN l="Belépés gomb" v={val("cta_login")} /><MiniN l="Kipróbálás fiók nélkül" v={val("cta_guest")} /></div>
       </Card>
       <Kpi kind="own" to="@next" tone="peach" className="s3" icon={P.clock} l="Megnyitástól az előnézetig" v={secs(d.time_to_score?.median_sec)} sub={<span>medián, {fmt(d.time_to_score?.n)} látogatás</span>} />
@@ -78,10 +81,10 @@ export function FunnelTab({ d }: { d: D }) {
       <FunnelWeeks d={d} />
       <Card className="s12" icon={P.arrow} title="Hová lettek, akik kiestek" sub={`Akik egy lépésnél megálltak: mi volt az utolsó dolog, amit csináltak, és mennyi ideig voltak ott (${periodName(d)}, legfeljebb 365 nap; a csatorna- és nyelvszűrő itt is hat). Kattints egy sorra: a mögötte lévő látogatások.`}><Dropouts days={d.days} /></Card>
       <Card className="s6" icon={P.arrow} title="Hol lépnek vissza" sub="Visszalépések lépésenként: itt bizonytalanok."><BarList items={(d.backs || []).map((r: D) => ({ k: r.k, n: n(r.n) }))} fmtK={(k) => QSTEP[k] || k} empty="Senki nem lépett vissza." /></Card>
-      <Card className="s6" icon={P.layers} title="Bevezető kérdések válaszai" sub="Mit választanak az egyes kérdéseknél (cél, stílus, testrész; fotó nélkül). Ahol a kérdés értéket nem küld, ott a válaszadók száma látszik; a több választásosaknál minden választás külön számít.">
+      <Card className="s6" icon={P.layers} title="Bevezető kérdések válaszai" sub="Mit választanak az egyes kérdéseknél (cél, stílus, testrész). A testrésznél a testtérkép koordinátái nélkül, csak a szöveg; aki átugrotta a kérdést, „nem válaszolt”. A több választásosaknál minden választás külön számít.">
         {Object.keys(quiz).length ? (
           <div className="g">{Object.entries(quiz).map(([k, v]) => { const vals = v.filter((x) => x.k), blank = v.filter((x) => !x.k).reduce((s, x) => s + x.n, 0);
-            return <div key={k} className="mini s6" style={{ gap: 12, padding: 14 }}><h3>{QSTEP[k] || k}</h3>{vals.length ? <BarList items={vals.sort((a, b) => b.n - a.n)} fmtK={(x) => QV[x] || x} max={5} /> : null}{blank ? <span className="note">{fmt(blank)} válasz {vals.length ? "érték nélkül" : "(a kérdés nem küld értéket)"}</span> : null}</div>; })}</div>
+            return <div key={k} className="mini s6" style={{ gap: 12, padding: 14 }}><h3>{QSTEP[k] || k}</h3>{vals.length ? <BarList items={vals.sort((a, b) => b.n - a.n)} fmtK={(x) => QV[x] || cleanAns(x)} max={5} /> : null}{blank ? <span className="note">{fmt(blank)} nem válaszolt</span> : null}</div>; })}</div>
         ) : <Empty t="Még nincs válasz a bevezető kérdésekre." />}
       </Card>
     </div>

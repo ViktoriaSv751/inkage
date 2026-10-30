@@ -16,7 +16,6 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       icon: 'camera',
       ps: [
         T('Your photo and design are sent to our AI providers (Google Gemini, with OpenAI as a backup) only to check the photo and create your preview. The providers may keep data for a limited time for abuse monitoring under their own policies.', 'A fotódat és a mintádat csak a fotó ellenőrzéséhez és az előnézet elkészítéséhez küldjük el az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). A szolgáltatók saját szabályzatuk szerint korlátozott ideig megőrizhetik az adatokat visszaélések kiszűrésére.'),
-        T('- **Without an account:** previews are saved only in your browser on this device.', '- **Fiók nélkül:** az előnézeteket csak a böngésződ menti, ezen az eszközön.'),
         T('- **With an account:** previews are stored in your private account storage (hosted by Supabase). Database rules make sure only you can read them.', '- **Fiókkal:** az előnézetek a privát tárhelyeden vannak (Supabase üzemelteti). Adatbázis-szabályok biztosítják, hogy csak te olvashasd őket.'),
       ],
     },
@@ -57,7 +56,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
     { i: 'trash', h: T('Delete anytime', 'Bármikor törölhető'), p: T('One button removes everything.', 'Egy gomb mindent töröl.') },
   ]} related={[
     { href: '/privacy', t: T('Privacy policy', 'Adatvédelem'), p: T('The full privacy policy.', 'A teljes adatvédelmi tájékoztató.'), i: 'doc' },
-    { href: '/suti', t: T('Cookie notice', 'Süti tájékoztató'), p: T('One cookie, explained.', 'Egyetlen süti, elmagyarázva.'), i: 'cookie' },
+    { href: '/suti', t: T('Cookie notice', 'Süti tájékoztató'), p: T('Cookies and browser storage, explained.', 'Sütik és böngészőtároló, elmagyarázva.'), i: 'cookie' },
     { href: '/fiok-torlese', t: T('Delete account', 'Fiók törlése'), p: T('Step by step.', 'Lépésről lépésre.'), i: 'trash' },
   ]} />;
 }

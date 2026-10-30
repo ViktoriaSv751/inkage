@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { ACC, BarList, Delta, Donut, Empty, Spark, TrendChart, compact, fmt, pct, SERIES } from "../charts";
 import { KeywordRadar } from "../wow";
-import { Band, COUNTRY, Card, DEV, daysLabel, useCardDays, FreshRow, Kpi, Loading, MOCK, Mini, P, Tbl, api, lang, n, pctCell, posChip, rpc, short, type D, useRpc, Layer, ago } from "../shared";
+import { Band, COUNTRY, Card, DEV, daysLabel, useCardDays, FreshRow, Kpi, Loading, MOCK, Mini, P, Tbl, api, lang, n, pctCell, posChip, rpc, short, type D, useRpc, Layer, ago, NeedKey } from "../shared";
 import { ChartBox, More } from "../extra";
 import { toast } from "../phone";
 import { BingEmpty, Setup, SyncButton, agoDay } from "./social";
@@ -32,7 +32,7 @@ export function Search({ days }: { days: number }) {
         <ArticleMatrix days={days} />
       </Card>
       <Card className="s12" icon={P.search} title="Google Search Console" sub="Még nincs letöltött adat." right={<SyncButton done={load} />}>
-        <Empty t={d.sync?.[0] && !d.sync[0].ok ? "Az utolsó próbálkozás hibája: " + d.sync[0].message : "Ha a beállítás kész, az „Adatok lehúzása most” gomb letölti az elmúlt 16 hónapot: kattintások, megjelenések, helyezések cikkenként és kulcsszavanként."} icon={P.search} />
+        <Empty t={d.sync?.[0] && !d.sync[0].ok ? "Az utolsó próbálkozás hibája: " + d.sync[0].message : "Ha a beállítás kész, az „Adatok lehúzása most” gomb letölti az elmúlt 16 hónapot: kattintások, megjelenések, helyezések cikkenként és kulcsszavanként."} icon={P.search}><NeedKey k="GSC_SERVICE_ACCOUNT_JSON" what="Google Search Console szolgáltatásfiók" /></Empty>
       </Card>
     </div>
   );
@@ -126,7 +126,7 @@ export function Search({ days }: { days: number }) {
       </Card>
       <Card className="s6" icon={P.eye} title="Kép, videó, Discover, Hírek" sub="A Google többi keresési felülete (napi összesítő). Egy tetoválás-appnál a képkeresés különösen fontos: itt látszik, hányszor jelentünk meg képként.">
         {types.length ? <div className="mini-stats" style={{ gridTemplateColumns: "repeat(2,1fr)" }}>{types.map((x) => <Mini key={x.k} l={TYPE[x.k] || x.k} v={fmt(x.clicks)} sub={<>{compact(n(x.impressions))} megjelenés · <Delta now={n(x.impressions)} prev={n(x.prev_impressions)} /></>} />)}</div>
-          : <Empty t="A következő Google-lehúzás után jelenik meg (a kép-, videó-, Discover- és Hírek-összesítő új)." icon={P.eye} />}
+          : <Empty t="A következő Google-lehúzás után jelenik meg (a kép-, videó-, Discover- és Hírek-összesítő új)." icon={P.eye}><NeedKey k="GSC_SERVICE_ACCOUNT_JSON" /></Empty>}
         {tq.length > 0 && <Tbl name="google-kep-video" rows={tq} cols={[{ k: "type", l: "Felület", r: (r) => TYPE[r.type] || r.type }, { k: "query", l: "Keresés" }, { k: "impressions", l: "Megjelenés", num: true, r: (r) => fmt(r.impressions) }, { k: "clicks", l: "Kattintás", num: true, r: (r) => fmt(r.clicks) }, { k: "pos", l: "Helyezés", num: true, r: (r) => (r.pos ? posChip(n(r.pos)) : "–") }]} />}
       </Card>
       <Card className="s6" icon={P.search} title="Bing" sub={`A Bing Webmaster Tools adatai (${d.days} nap): a ChatGPT keresője és a Copilot is ebből dolgozik. Részletek a SEO-ellenőrzés oldalon.`}>
@@ -231,7 +231,7 @@ const idxOk = (r: D) => r.verdict === "PASS" || /^(Alternate page with proper ca
 const VER: Record<string, string> = { PASS: "indexelve", NEUTRAL: "kizárva", FAIL: "hiba", PARTIAL: "részben" };
 export function IndexCard() {
   const { d } = useRpc("admin_gsc_index", undefined, []);
-  if (!d || !n(d.all)) return <Card className="s12" icon={P.search} title="Indexelés a Google-ben" sub="Minden oldal minden nyelven: benne van-e a Google-ben, és mikor olvasta be utoljára. Minden reggel ellenőrzi."><Empty t="Az első ellenőrzés holnap reggel fut le (vagy az „Adatok lehúzása most” után)." icon={P.search} /></Card>;
+  if (!d || !n(d.all)) return <Card className="s12" icon={P.search} title="Indexelés a Google-ben" sub="Minden oldal minden nyelven: benne van-e a Google-ben, és mikor olvasta be utoljára. Minden reggel ellenőrzi."><Empty t="Az első ellenőrzés holnap reggel fut le (vagy az „Adatok lehúzása most” után)." icon={P.search}><NeedKey k="GSC_SERVICE_ACCOUNT_JSON" what="az indexelés-ellenőrzéshez" /></Empty></Card>;
   const rows: D[] = d.rows || [], bad = rows.filter((r) => !idxOk(r)), dropped: D[] = ((d.dropped || []) as D[]).filter((r) => !idxOk(r)), sms: D[] = d.sitemaps || [];
   const pass = rows.length ? rows.length - bad.length : n(d.pass), all = rows.length || n(d.all);
   /* by language, the same "in order" count (the ?lang= part of the address, none: Hungarian) */
@@ -293,7 +293,7 @@ function Cwv() {
   const [sel, setSel] = useState("");
   if (!d) return <div className="skel" style={{ height: 140 }} />;
   const rows: D[] = d.latest || [];
-  if (!rows.length) return <Empty t="Az első mérés a következő reggeli futáskor (05:40) készül el." icon={P.bolt} />;
+  if (!rows.length) return <Empty t="Az első mérés a következő reggeli futáskor (05:40) készül el." icon={P.bolt}><NeedKey k="PSI_API_KEY" what="PageSpeed Insights: kulcs nélkül a Google szinte minden mérést elutasít (429)" /></Empty>;
   const key = sel || `${rows[0].url}|${rows[0].form}`;
   const tr: D[] = ((d.trend || []) as D[]).filter((x) => `${x.url}|${x.form}` === key);
   return <>

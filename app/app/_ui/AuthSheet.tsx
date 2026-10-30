@@ -1,4 +1,5 @@
 'use client';
+import { rememberNext } from '@/lib/auth-next';
 import { siteOrigin } from '@/lib/site';
 import { qOf } from '@/lib/tr';
 import { oauthParams } from '@/lib/auth-help';
@@ -32,17 +33,19 @@ export function AuthSheet() {
   }, [authOpen]);
   const oauth = async (provider: 'google' | 'apple') => {
     setErr('');
+    // come back to this page after the round trip
+    rememberNext(location.pathname + location.search);
     // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser
     if (provider === 'google' && (await import('@/lib/inapp')).escapeForGoogle(`/belepes${qOf(ui.lang)}`)) return;
     if ((window as any).Capacitor?.isNativePlatform?.()) {
       const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider, () => setErr(L('Sign-in didn’t finish. Try again, or use your e-mail.', 'A belépés nem fejeződött be. Próbáld újra, vagy lépj be e-maillel.'))));
-      if (e) setErr(e);
+      if (e) setErr(L('Sign-in didn’t work. Try again, or use your e-mail.', 'A belépés nem sikerült. Próbáld újra, vagy lépj be e-maillel.'));
       return;
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
     (await import('@/lib/splash')).markSplash('in');
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
-    if (error) setErr(error.message);
+    if (error) setErr(L('Sign-in didn’t work. Try again, or use your e-mail.', 'A belépés nem sikerült. Próbáld újra, vagy lépj be e-maillel.'));
   };
 
   const send = async () => {
@@ -50,9 +53,10 @@ export function AuthSheet() {
     if (!s) return;
     setBusy(true);
     setErr('');
+    rememberNext(location.pathname + location.search);
     const { error } = await s.auth.signInWithOtp({ email, options: { emailRedirectTo: `${siteOrigin()}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
-    if (error) return setErr(/rate/i.test(error.message) ? L('Too many emails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
+    if (error) return setErr(/rate/i.test(error.message) ? L('Too many emails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : L('Something went wrong. Try again in a minute.', 'Valami nem sikerült. Próbáld újra egy perc múlva.'));
     setSent(true);
   };
   const loginPw = async () => {
@@ -61,7 +65,7 @@ export function AuthSheet() {
     setErr('');
     const { error } = (await sb()?.auth.signInWithPassword({ email: email.trim(), password: pw })) || { error: { message: 'unavailable' } as any };
     setBusy(false);
-    if (error) return setErr(/invalid login/i.test(error.message) ? L('Wrong e-mail or password.', 'Hibás e-mail-cím vagy jelszó.') : error.message);
+    if (error) return setErr(/invalid login/i.test(error.message) ? L('Wrong e-mail or password.', 'Hibás e-mail-cím vagy jelszó.') : L('Something went wrong. Try again in a minute.', 'Valami nem sikerült. Próbáld újra egy perc múlva.'));
     closeAuth();
     setPw('');
     (await import('@/lib/splash')).playSplash('in');

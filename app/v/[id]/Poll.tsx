@@ -297,7 +297,7 @@ export function Poll({ id, initial, inApp = false }: { id: string; initial: Poll
 
       <div className="pp-cta">
         <h2>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
-        <p>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+        <p>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('One-tap sign-up with Google or Apple.', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}</p>
         <Link className="btn wide" href={inApp ? '/app' : `/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
           {inApp ? t('Make my own', 'Elkészítem a sajátomat') : t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>

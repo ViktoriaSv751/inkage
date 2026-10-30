@@ -21,7 +21,7 @@ export function TrustStrip({ t }: { t: T }) {
     { b: '29', s: t('body areas on the body map', 'testrész a testtérképen') },
     { b: '0–100', s: t('longevity score with reasons', 'tartóssági pontszám, indoklással') },
     { b: '~1', s: t('minute from photo to preview', 'perc a fotótól az előnézetig') },
-    { b: t('Free', '0 Ft'), s: t('for everyone after sign-up', 'regisztráció után mindenkinek') },
+    { b: '30', s: t('previews a month with your account', 'előnézet havonta a fiókoddal') },
   ];
   return (
     <ul className="lm-strip" aria-label={t('InkAge in numbers', 'Az InkAge számokban')}>

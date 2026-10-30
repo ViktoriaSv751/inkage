@@ -24,7 +24,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
         { href: '/privacy', t: T('Privacy policy', 'Adatvédelem'), p: T('What we store and why.', 'Mit tárolunk és miért.'), i: 'lock' },
         { href: '/adatbiztonsag', t: T('Data security', 'Adatbiztonság'), p: T('How your photos are protected.', 'Így védjük a fotóidat.'), i: 'shield' },
         { href: '/fiok-torlese', t: T('Delete account', 'Fiók törlése'), p: T('Remove everything in a minute.', 'Mindent törölhetsz egy perc alatt.'), i: 'trash' },
-        { href: '/suti', t: T('Cookie notice', 'Süti tájékoztató'), p: T('One cookie, explained.', 'Egyetlen süti, elmagyarázva.'), i: 'cookie' },
+        { href: '/suti', t: T('Cookie notice', 'Süti tájékoztató'), p: T('Cookies and browser storage, explained.', 'Sütik és böngészőtároló, elmagyarázva.'), i: 'cookie' },
         { href: '/kapcsolat', t: T('Contact', 'Kapcsolat'), p: T('Questions about your data.', 'Kérdések az adataidról.'), i: 'mail' },
       ]}
     />

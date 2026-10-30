@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { BarList, Delta, Empty, StackedColumns, chColor, compact, fmt, pct } from "../charts";
 import { Logo } from "../wow";
-import { Band, daysLabel, COUNTRY, Card, DEV, FreshRow, Loading, P, PF, Tbl, big, n, posChip, short, type D, useRpc } from "../shared";
+import { Band, daysLabel, COUNTRY, Card, DEV, FreshRow, Loading, P, PF, Tbl, big, n, posChip, short, type D, useRpc, NeedKey } from "../shared";
 import { PostDrawer } from "./social";
 import { ReachMatrix } from "./social-wave";
 
@@ -103,7 +103,7 @@ export function Impressions({ days }: { days: number }) {
       </Card>
       <Card className="s12" icon={P.layers} title="App Store: hol láttak minket" sub="Az App Store-megjelenések forrásonként (keresés, böngészés, más app, weboldal), az App Store Connect elemzéseiből." src="apple">
         {(d.store_sources || []).length ? <BarList items={(d.store_sources as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => ASRC[k] || k} accent />
-          : <Empty t="Az App Store Connect kulcsai és az első napi jelentés után jelenik meg (az Apple 1–2 nap késéssel adja)." icon={P.layers} />}
+          : <Empty t="Az App Store Connect kulcsai és az első napi jelentés után jelenik meg (az Apple 1–2 nap késéssel adja)." icon={P.layers}><NeedKey k={["ASC_ISSUER_ID", "ASC_KEY_ID", "ASC_PRIVATE_KEY", "ASC_APP_ID"]} /></Empty>}
       </Card>
       <p className="note s12">TikTokon a nyilvános API csak megtekintést ad: ezt külön mutatjuk, és nem adjuk a megjelenésekhez; a „megjelenés a hírfolyamban” száma a TikTok Business API engedélyével jöhet. YouTube-on a bélyegkép-megjelenés a Reporting API napi jelentéséből jön (a bekötés után 1–2 nappal indul). Összesen: {compact(total)} megjelenés.</p>
       {openP && <PostDrawer p={openP} close={() => setOpenP(null)} />}

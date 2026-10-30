@@ -4,7 +4,7 @@ import { aiConfigured, editImage, friendlyAiError, improvePrompt } from '@/lib/a
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 /** "Make it last": redraws a design with bolder lines and fewer tiny details. */
 export async function POST(req: Request) {

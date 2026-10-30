@@ -8,7 +8,7 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { Delta, Empty, TrendChart, chColor, fmt, useWidth, type Mark, type Pt } from "./charts";
 import { Logo } from "./wow";
 import { toast } from "./phone";
-import { I, Layer, MOCK, P, PF, ago, api, big, ch, lang, n, rpc, type D, type Tab } from "./shared";
+import { I, Layer, MOCK, P, PF, PushNone, ago, api, big, ch, lang, n, rpc, type D, type Tab } from "./shared";
 
 /* ---------- a chart with its tools ---------- */
 /* inline the computed look of every element, then draw the SVG on a canvas: a PNG that looks like the screen */
@@ -145,13 +145,13 @@ export function PushCard() {
   const ios = typeof navigator !== "undefined" && /iPhone|iPad/.test(navigator.userAgent) && !(navigator as any).standalone;
   return (
     <div className="push-c">
-      <div className="push-h"><span className={"chip " + (p.st === "on" ? "good" : p.st === "denied" ? "bad" : "")}>{p.st === "on" ? "✓ ezen az eszközön be" : p.st === "denied" ? "a böngésző tiltja" : p.st === "na" ? "ez a böngésző nem tud értesíteni" : "ezen az eszközön ki"}</span><span className="note">{fmt(s?.devices)} eszköz kap értesítést</span></div>
+      <div className="push-h"><span className={"chip " + (p.st === "on" ? "good" : p.st === "denied" ? "bad" : "")}>{p.st === "on" ? "✓ ezen az eszközön be" : p.st === "denied" ? "a böngésző tiltja" : p.st === "na" ? "ez a böngésző nem tud értesíteni" : "ezen az eszközön ki"}</span><span className="note">{s && !n(s.devices) ? <b className="down">0 eszköz: senki nem kap értesítést</b> : `${fmt(s?.devices)} eszköz kap értesítést`}</span></div>
       <p className="note">Robbanó poszt, új komment és értékelés, rekordnap, hibahullám, hibás kapcsolat, Google-ből kiesett oldal: mindegyikről egyszer szól.{ios ? " iPhone-on előbb tedd a főképernyőre (Megosztás → Főképernyőhöz adás), és onnan nyisd meg." : ""}</p>
       <div className="adm-row">
         {p.st === "on" ? <><button className="adm-ibtn" onClick={p.test}>{I(P.bell)}Próba</button><button className="adm-ibtn" onClick={p.off}>Kikapcsolás</button></>
           : <button className="adm-ibtn gold" onClick={p.on} disabled={p.st === "na" || p.st === "busy"}>{I(P.bell)}{p.st === "busy" ? "Bekapcsolás…" : "Értesítések bekapcsolása"}</button>}
       </div>
-      {(s?.sent || []).length > 0 && <ul className="push-l">{(s!.sent as D[]).slice(0, 6).map((x, i) => <li key={i}><b>{x.title}</b><span>{x.body}</span><time>{ago(x.at)}</time></li>)}</ul>}
+      {(s?.sent || []).length > 0 && <ul className="push-l">{(s!.sent as D[]).slice(0, 6).map((x, i) => <li key={i}><b>{x.title} <PushNone x={x} /></b><span>{x.body}</span><time>{ago(x.at)}</time></li>)}</ul>}
     </div>
   );
 }

@@ -50,8 +50,10 @@ export async function POST(req: Request) {
   if (a) {
     const { data: start, error } = await a.db.rpc('start_generation', { p_placement: placement });
     if (error) return json({ error: 'Could not start your preview. Try again.' }, 500);
+    if (!start.ok && start.reason === 'busy')
+      return json({ error: 'So many people are trying InkAge today that previews are paused. Try again tomorrow.', code: 'busy' }, 429);
     if (!start.ok) {
-      return json({ error: start.plan === 'free' ? 'You used your free preview.' : 'You reached this month’s limit. It starts again on the 1st.', code: 'paywall', plan: start.plan }, 402);
+      return json({ error: 'You reached this month’s 30 previews. They start again on the 1st.', code: 'paywall', plan: start.plan }, 402);
     }
     gid = start.gid;
     canAge = start.canAge || start.plan === 'free'; // the free preview includes the aging stages too
@@ -59,7 +61,7 @@ export async function POST(req: Request) {
     plan = start.plan;
     owner = a.user.id;
   } else {
-    // an account is needed to use InkAge (free after sign-up)
+    // an account is needed to use InkAge
     if (process.env.ALLOW_GUESTS !== '1') return json({ error: 'Sign in to continue.', code: 'auth' }, 401);
     const g = guest!;
     const start = await guestStart(g.id, g.ipHash, placement).catch(() => null);
@@ -67,8 +69,8 @@ export async function POST(req: Request) {
     if (!start.ok) {
       return withCookie(
         start.reason === 'busy'
-          ? json({ error: 'So many people are trying InkAge today that free previews are paused. Try again tomorrow.', code: 'busy' }, 429)
-          : json({ error: 'You used your free preview.', code: 'paywall', plan: 'guest' }, 402),
+          ? json({ error: 'So many people are trying InkAge today that previews are paused. Try again tomorrow.', code: 'busy' }, 429)
+          : json({ error: 'Sign in to continue.', code: 'auth' }, 401),
         g.setCookie
       );
     }
@@ -113,6 +115,7 @@ export async function POST(req: Request) {
 
     // safety check of the photo and the design, alongside the generation
     const safety = inputSafety({ ...photo, name: 'photo.jpg' }, existing ? null : designImg);
+    safety.catch(() => {}); // awaited below; a failed check stops the preview there (and refunds it)
     let image: string;
     let qc: QC = { ok: true, match: 10, note: '', fix: '' };
     let analysis;

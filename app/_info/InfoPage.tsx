@@ -214,9 +214,9 @@ export function InfoPage({
         <section className="ip-cta">
           <div>
             <h2>{T('See it on your skin before it’s permanent.', 'Nézd meg a bőrödön, mielőtt végleges lesz.')}</h2>
-            <p>{T('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+            <p>{T('One-tap sign-up with Google or Apple.', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}</p>
           </div>
-          <TryLink lang={lang}>{T('Register free', 'Ingyenes regisztráció')}</TryLink>
+          <TryLink lang={lang}>{T('Create account', 'Regisztráció')}</TryLink>
         </section>
       )}
       <SiteFooter lang={lang} />

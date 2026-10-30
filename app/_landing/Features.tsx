@@ -6,9 +6,10 @@ import { IMG } from '@/lib/kb';
 import { track } from '@/lib/store';
 import { LogoMark } from '../LogoMark';
 import type { T } from './types';
+import type { Lang } from '@/lib/tr';
 
 /* ------------------------------------------------------------------ who it's for */
-export function UseCases({ t }: { t: T }) {
+export function UseCases({ t, lang }: { t: T; lang?: Lang }) {
   const cases = [
     {
       k: 'first',
@@ -69,7 +70,7 @@ export function UseCases({ t }: { t: T }) {
               <li key={p}>{p}</li>
             ))}
           </ul>
-          <TryLink className="btn" onClick={() => track('landing_usecase_cta', { k })}>
+          <TryLink lang={lang} className="btn" onClick={() => track('landing_usecase_cta', { k })}>
             {t('Register and try it', 'Regisztrálok és kipróbálom')}
           </TryLink>
         </div>
@@ -119,7 +120,7 @@ export function Precision({ t }: { t: T }) {
 }
 
 /* ------------------------------------------------------------------ compared with the usual ways */
-export function CompareTable({ t }: { t: T }) {
+export function CompareTable({ t, lang }: { t: T; lang?: Lang }) {
   const cols = [
     { k: 'imagine', t: t('Imagining it', 'Elképzelés'), s: t('Imagine', 'Fejben') },
     { k: 'sticker', t: t('Temporary sticker', 'Matrica'), s: t('Sticker', 'Matrica') },
@@ -187,7 +188,7 @@ export function CompareTable({ t }: { t: T }) {
           <span role="cell" className="cx-c" />
           <span role="cell" className="cx-c" />
           <span role="cell" className="cx-c cx-us">
-            <TryLink className="cx-try" onClick={() => track('landing_compare_cta')}>
+            <TryLink lang={lang} className="cx-try" onClick={() => track('landing_compare_cta')}>
               {t('Register', 'Regisztráció')}
             </TryLink>
           </span>

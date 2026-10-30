@@ -58,13 +58,13 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       path="/mi-az-inkage"
       kicker={T('What is InkAge?', 'Mi az InkAge?')}
       title={T('Your tattoo, fifty years from now.', 'A tetoválásod, ötven év múlva.')}
-      lede={T('A free web app that shows how a tattoo will look on your own skin over a lifetime — before it’s permanent.', 'Ingyenes webes alkalmazás, ami megmutatja, hogyan fog kinézni egy tetoválás a saját bőrödön egy életen át – mielőtt végleges lesz.')}
+      lede={T('A web app that shows how a tattoo will look on your own skin over a lifetime — before it’s permanent.', 'Webes alkalmazás, ami megmutatja, hogyan fog kinézni egy tetoválás a saját bőrödön egy életen át – mielőtt végleges lesz.')}
       img="hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b"
       sections={sections}
       highlights={[
         { i: 'clock', h: T('5 moments', '5 időpont'), p: T('Fresh, 1, 10, 30, 50 years.', 'Friss, 1, 10, 30, 50 év.') },
         { i: 'camera', h: T('Your own photo', 'A saját fotód'), p: T('Your skin tone, your light.', 'A bőrtónusod, a fényeid.') },
-        { i: 'gift', h: T('Free in beta', 'Ingyenes a béta alatt'), p: T('No card, no trial timer.', 'Kártya és próbaidő nélkül.') },
+        { i: 'gift', h: T('30 a month', 'Havi 30'), p: T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.') },
       ]}
       related={[
         { href: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), p: T('Five steps, about a minute.', 'Öt lépés, kb. egy perc.'), i: 'camera' },

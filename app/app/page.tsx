@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { qOf } from '@/lib/tr';
 import { useApp } from './AppProvider';
 import { Icon, OutOfPreviews, Waitlist } from './ui';
 import { Result } from './Result';
@@ -25,6 +27,7 @@ import { CompareCard } from './_home/CompareCard';
 
 export default function CreatePage() {
   const { ui, me, toast } = useApp();
+  const router = useRouter();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [phase, setPhase] = useState<Phase>('loading');
   const [ob, setOb] = useState<OnboardingAnswers | null>(null);
@@ -188,6 +191,8 @@ export default function CreatePage() {
           }
           // keep the answers on the account so no other device or sign-in asks again
           if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang }).then(() => {}, () => {});
+          // "just looking around": the Explore page, with a "try it on your photo" button there
+          if (a.goal === 'explore') return void router.push(`/app/explore${qOf(ui.lang)}`);
           setPhase('studio');
         }}
       />

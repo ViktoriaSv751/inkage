@@ -65,8 +65,9 @@ function polys(v: any): [number, number][][] | null {
 /** Fast pre-check of the user's photo before we spend money on image generation. */
 /** Server-side safety check of what goes into a preview, run alongside the generation (adds no waiting time).
  *  Blocks sexual content and minors in the photo, and hateful, extremist or sexual designs – Google Play requires
- *  AI apps to prevent restricted content, not only to let people report it. Fails open if the check itself fails. */
-export async function inputSafety(photo: Img | null, design: Img | null): Promise<{ block: 'photo' | 'design' | null }> {
+ *  AI apps to prevent restricted content, not only to let people report it. If the check itself fails it is tried once
+ *  more, then the preview stops (fails closed) instead of letting anything through. */
+export async function inputSafety(photo: Img | null, design: Img | null, retry = true): Promise<{ block: 'photo' | 'design' | null }> {
   if (!process.env.GEMINI_API_KEY || (!photo && !design)) return { block: null };
   try {
     const imgs = [photo, design].filter(Boolean) as Img[];
@@ -87,14 +88,16 @@ export async function inputSafety(photo: Img | null, design: Img | null): Promis
       generationConfig: { responseMimeType: 'application/json', temperature: 0 },
     });
     const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
+    if (typeof (photo ? j.photoNotAllowed : j.designNotAllowed) !== 'boolean') throw new Error('safety check: no answer');
     return { block: j.photoNotAllowed ? 'photo' : j.designNotAllowed ? 'design' : null };
   } catch (e) {
     console.warn('input safety check failed', e);
-    return { block: null };
+    if (retry) return inputSafety(photo, design, false);
+    throw new Error('The safety check could not run');
   }
 }
 
-export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCheck> {
+export async function checkPhoto(photo: Img, placement: string, retry = true): Promise<PhotoCheck> {
   if (!process.env.GEMINI_API_KEY) return { ok: true, code: 'ok', area: placement };
   try {
     const data = await geminiCall(textModels(), {
@@ -111,7 +114,7 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
  "visibleArea": string (the main body area visible, e.g. "inner left forearm"),
  "box": [ymin, xmin, ymax, xmax] integers 0-1000 tightly around the bare skin of the ${placement} where a tattoo could go (exclude clothing, background and other body parts), or null if that area is not visible,
  "angle": number (angle in degrees of the long axis of that body part relative to vertical, positive = leaning right; 0 if unclear),
- "skin": array of up to 4 polygons, each an array of 8-40 [y, x] points (integers 0-1000) tracing the outline of a visible bare-skin region of the body (arms, legs, torso, back, neck, hands); exclude clothing, hair, jewellery, watches and the background; [] if none}`,
+ "skin": array of up to 3 polygons, each an array of 6-16 [y, x] points (integers 0-1000) tracing the outline of a visible bare-skin region of the body (arms, legs, torso, back, neck, hands); exclude clothing, hair, jewellery, watches and the background; [] if none}`,
             },
           ],
         },
@@ -133,6 +136,8 @@ export async function checkPhoto(photo: Img, placement: string): Promise<PhotoCh
     return { ok: true, code: 'ok', area: String(j.visibleArea || placement).slice(0, 60), box: okBox, angle, skin };
   } catch (e) {
     console.warn('photo check failed', e);
+    // the long JSON sometimes comes back broken: one more try (not after a timeout – the user is waiting)
+    if (retry && e instanceof SyntaxError) return checkPhoto(photo, placement, false);
     return { ok: true, code: 'unknown', area: placement };
   }
 }

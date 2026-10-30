@@ -88,6 +88,16 @@ export function AgeGate({ lang, userId }: { lang: Lang; userId: string | null })
             <Link className="btn wide" href={`/tudastar${qOf(lang)}`}>
               {t('Tattoo guides', 'Útmutatók')}
             </Link>
+            <button
+              className="link"
+              style={{ marginTop: 12 }}
+              onClick={() => {
+                lsSet('ink_age_ok', null);
+                setState('ask');
+              }}
+            >
+              {t('I tapped “No” by mistake', 'Véletlenül nyomtam a „Nem”-re')}
+            </button>
           </>
         )}
       </div>

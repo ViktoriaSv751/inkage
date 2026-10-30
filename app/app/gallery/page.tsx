@@ -64,7 +64,8 @@ export default function GalleryPage() {
     setMore(c.length === PAGE);
     setItems([...l, ...c].sort((a, b) => b.created_at.localeCompare(a.created_at)));
     return [...l, ...c];
-  }, [me.user]);
+    // the account id, not the object: every profile refresh made a new me.user and loaded (and counted) the gallery again
+  }, [me.user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     load().then((all) => {
@@ -73,8 +74,8 @@ export default function GalleryPage() {
       const p = id && all.find((x) => x.id === id);
       if (p) setOpen(p);
     });
-    track('gallery_open');
   }, [load]);
+  useEffect(() => track('gallery_open'), []);
   // opening a design (or going back to the grid) starts at the top of that view
   useLayoutEffect(() => {
     // 'instant': the page has smooth scrolling on, which would stop halfway while the images load

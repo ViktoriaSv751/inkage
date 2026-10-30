@@ -2,25 +2,28 @@
 import { tx } from '@/lib/tr';
 
 import { useEffect, useRef, useState } from 'react';
-import { useLang } from '@/lib/i18n';
+import { useLang, type Lang } from '@/lib/i18n';
 
-const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
+// our own copies (made at build time by scripts/prebuild-images.mjs): no extra DNS + TLS hop to the image host on the
+// critical path, and the hero doesn't go blank if that host ever drops the files
+const OWN = (id: string) => `/img/${id}-900.webp`;
 /** Real AI results from the same pipeline the app uses (one test photo, five stages). */
 export const EXAMPLE = [
-  { years: 0, src: CDN + 'hf_20261012_125250_eb1fedf5-fe1d-4bff-b203-9f7f6e04435f_min.webp' },
-  { years: 1, src: CDN + 'hf_20261012_125519_179724fe-1d28-4c42-8531-e5e88ebca25e_min.webp' },
-  { years: 10, src: CDN + 'hf_20261012_125518_f59d80bd-88f0-4db2-9d3f-ba894916baae_min.webp' },
-  { years: 30, src: CDN + 'hf_20261012_125518_4e9ab330-d2aa-4e98-8837-c163dec3c3d3_min.webp' },
-  { years: 50, src: CDN + 'hf_20261012_125519_356de094-5fd9-4c5d-a3d4-2e41892aa5b4_min.webp' },
+  { years: 0, src: OWN('hf_20261012_125250_eb1fedf5-fe1d-4bff-b203-9f7f6e04435f') },
+  { years: 1, src: OWN('hf_20261012_125519_179724fe-1d28-4c42-8531-e5e88ebca25e') },
+  { years: 10, src: OWN('hf_20261012_125518_f59d80bd-88f0-4db2-9d3f-ba894916baae') },
+  { years: 30, src: OWN('hf_20261012_125518_4e9ab330-d2aa-4e98-8837-c163dec3c3d3') },
+  { years: 50, src: OWN('hf_20261012_125519_356de094-5fd9-4c5d-a3d4-2e41892aa5b4') },
 ];
 
 /**
  * Hero: real photos of one tattoo at 0, 1, 10, 30 and 50 years, cross-faded by a year slider.
  * Plays once on load, then the visitor can drag it.
  */
-export function HeroAging({ frames = EXAMPLE, alt }: { frames?: { years: number; src: string }[]; alt?: string } = {}) {
+export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: { years: number; src: string }[]; alt?: string; lang?: Lang } = {}) {
   const EX = frames;
-  const { lang } = useLang();
+  const { lang: detected } = useLang();
+  const lang = langProp || detected;
   const L = (en: string, hu: string) => tx(lang, en, hu);
   const [years, setYears] = useState(0);
   const touched = useRef(false);

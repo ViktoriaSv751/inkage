@@ -133,7 +133,7 @@ export function SeoView({ slug, L, inApp = false }: { slug: string; L: Lang; inA
         <section className="sp-cta">
           <div>
             <h2>{T('See it on your own skin', 'Nézd meg a saját bőrödön')}</h2>
-            <p>{T('Upload a photo of your own body and any design. Free after a one-tap sign-up.', 'Tölts fel egy fotót a saját testedről és bármilyen mintát. Egy koppintásos regisztráció után ingyenes.')}</p>
+            <p>{T('Upload a photo of your own body and any design. One-tap sign-up with Google or Apple.', 'Tölts fel egy fotót a saját testedről és bármilyen mintát. Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}</p>
           </div>
           <TryLink lang={L}>{inApp ? T('Try it on my photo', 'Kipróbálom a fotómon') : T('Register and try it', 'Regisztrálok és kipróbálom')}</TryLink>
         </section>

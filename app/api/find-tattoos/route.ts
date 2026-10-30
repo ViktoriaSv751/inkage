@@ -3,7 +3,7 @@ import { dataUrlToBuffer, json } from '@/lib/server';
 import { aiConfigured, findTattoos } from '@/lib/ai';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 40;
+export const maxDuration = 60;
 
 /** What kind of picture is this design upload, and where are the tattoos in it? (cheap text call, not metered) */
 export async function POST(req: Request) {

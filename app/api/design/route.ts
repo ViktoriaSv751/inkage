@@ -4,7 +4,7 @@ import { aiConfigured, designPrompt, editImage, friendlyAiError, makeImage } fro
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 /**
  * Text → original tattoo designs (two variants to choose from),

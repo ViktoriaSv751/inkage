@@ -16,7 +16,7 @@ Nyelvkód: `de-DE`
 
 Schau es dir an, bevor es für immer ist. InkAge zeigt dir jedes Tattoo auf deinem eigenen Foto – frisch gestochen und so, wie es nach 1, 10, 30 und 50 Jahren aussieht.
 
-- Mit einem Tipp per Apple oder Google anmelden – danach ist alles kostenlos.
+- Mit einem Tipp per Apple oder Google anmelden – und du kannst sofort loslegen.
 - Lade ein Foto der Körperstelle hoch und wähl ein Motiv – oder beschreib einfach, was du dir vorstellst.
 - Sieh das Tattoo auf deinem Hautton und in deinem Licht.
 - Schieb dich durch die Jahre und sieh, wie die Farbe verläuft und verblasst.
@@ -44,7 +44,7 @@ Nyelvkód: `es-ES / es-MX`
 
 Míralo antes de que sea para siempre. InkAge te muestra cualquier tatuaje sobre tu propia foto: recién hecho y cómo se verá dentro de 1, 10, 30 y 50 años.
 
-- Entra con un toque usando tu cuenta de Apple o Google; después, todo es gratis.
+- Entra con un toque usando tu cuenta de Apple o Google y empieza al instante.
 - Sube una foto de la zona del cuerpo y elige un diseño, o describe lo que tienes en mente.
 - Ve el tatuaje sobre tu tono de piel y con tu propia luz.
 - Desliza los años y descubre cómo la tinta se expande y se desvanece.
@@ -72,7 +72,7 @@ Nyelvkód: `pt-BR`
 
 Veja antes que seja para sempre. O InkAge mostra qualquer tatuagem na sua própria foto: recém-feita e como ela vai ficar daqui a 1, 10, 30 e 50 anos.
 
-- Entre com um toque usando sua conta Apple ou Google – depois disso, é tudo grátis.
+- Entre com um toque usando sua conta Apple ou Google e comece na hora.
 - Envie uma foto da parte do corpo e escolha um desenho, ou descreva o que você quer.
 - Veja a tatuagem no seu tom de pele e com a sua luz.
 - Deslize pelos anos e veja como a tinta se espalha e desbota.
@@ -100,7 +100,7 @@ Nyelvkód: `fr-FR`
 
 Vois-le avant qu'il soit pour la vie. InkAge affiche n'importe quel tatouage sur ta propre photo : tout juste fait, puis tel qu'il sera dans 1, 10, 30 et 50 ans.
 
-- Connecte-toi en un geste avec Apple ou Google – ensuite, tout est gratuit.
+- Connecte-toi en un geste avec Apple ou Google et commence tout de suite.
 - Importe une photo de la zone du corps et choisis un motif, ou décris ce que tu veux.
 - Vois le tatouage sur ta carnation, avec ta propre lumière.
 - Fais défiler les années et regarde l'encre s'étaler et pâlir.
@@ -128,7 +128,7 @@ Nyelvkód: `it`
 
 Guardalo prima che sia per sempre. InkAge ti mostra qualsiasi tatuaggio sulla tua foto: appena fatto e come sarà tra 1, 10, 30 e 50 anni.
 
-- Accedi con un tocco con Apple o Google: dopo, è tutto gratis.
+- Accedi con un tocco con Apple o Google e inizia subito.
 - Carica una foto della zona del corpo e scegli un disegno, oppure descrivi cosa vuoi.
 - Vedi il tatuaggio sul tuo incarnato e con la tua luce.
 - Scorri gli anni e guarda come l'inchiostro si allarga e sbiadisce.
@@ -156,7 +156,7 @@ Nyelvkód: `pl`
 
 Zobacz, zanim będzie na zawsze. InkAge pokazuje dowolny tatuaż na Twoim własnym zdjęciu – świeżo zrobiony i taki, jaki będzie po 1, 10, 30 i 50 latach.
 
-- Zaloguj się jednym dotknięciem przez Apple lub Google – potem wszystko jest za darmo.
+- Zaloguj się jednym dotknięciem przez Apple lub Google i od razu zaczynaj.
 - Wgraj zdjęcie wybranego miejsca na ciele i wybierz wzór albo opisz, czego chcesz.
 - Zobacz tatuaż na swoim odcieniu skóry i w swoim świetle.
 - Przesuwaj suwak lat i patrz, jak tusz się rozlewa i blaknie.
@@ -184,7 +184,7 @@ Nyelvkód: `tr`
 
 Kalıcı olmadan önce gör. InkAge, istediğin dövmeyi kendi fotoğrafında gösterir: yeni yapılmış haliyle ve 1, 10, 30 ve 50 yıl sonra nasıl görüneceğiyle.
 
-- Apple veya Google hesabınla tek dokunuşta giriş yap – sonrası tamamen ücretsiz.
+- Apple veya Google hesabınla tek dokunuşta giriş yap ve hemen başla.
 - Vücut bölgesinin fotoğrafını yükle, bir desen seç ya da ne istediğini anlat.
 - Dövmeyi kendi ten renginde ve kendi ışığında gör.
 - Yılları kaydır, mürekkebin nasıl yayılıp solduğunu izle.
@@ -212,7 +212,7 @@ Nyelvkód: `ro`
 
 Vezi-l înainte să fie pe viață. InkAge îți arată orice tatuaj pe propria ta poză – proaspăt făcut și cum va arăta peste 1, 10, 30 și 50 de ani.
 
-- Intră dintr-o atingere cu Apple sau Google – apoi totul e gratuit.
+- Intră dintr-o atingere cu Apple sau Google și poți începe imediat.
 - Încarcă o poză cu zona corpului și alege un model sau descrie ce vrei.
 - Vezi tatuajul pe nuanța pielii tale și în lumina ta.
 - Glisează prin ani și vezi cum se întinde și se estompează cerneala.
@@ -240,7 +240,7 @@ Nyelvkód: `nl-NL`
 
 Bekijk het voordat het voorgoed is. InkAge laat elke tattoo zien op je eigen foto: vers gezet en zoals hij eruitziet na 1, 10, 30 en 50 jaar.
 
-- Log met één tik in met Apple of Google – daarna is alles gratis.
+- Log met één tik in met Apple of Google en je kunt meteen beginnen.
 - Upload een foto van de plek op je lichaam en kies een ontwerp, of beschrijf wat je in gedachten hebt.
 - Zie de tattoo op je eigen huidskleur en in je eigen licht.
 - Schuif door de jaren en zie hoe de inkt uitloopt en vervaagt.
@@ -268,7 +268,7 @@ Nyelvkód: `sv-SE`
 
 Se den innan den blir permanent. InkAge visar vilken tatuering som helst på ditt eget foto – nygjord och hur den ser ut efter 1, 10, 30 och 50 år.
 
-- Logga in med ett tryck via Apple eller Google – sedan är allt gratis.
+- Logga in med ett tryck via Apple eller Google och kom igång direkt.
 - Ladda upp ett foto av kroppsdelen och välj ett motiv, eller beskriv vad du vill ha.
 - Se tatueringen på din egen hudton och i ditt eget ljus.
 - Dra genom åren och se hur bläcket flyter ut och bleknar.
@@ -296,7 +296,7 @@ Nyelvkód: `cs-CZ`
 
 Podívej se na něj dřív, než bude navždy. InkAge ti ukáže jakékoli tetování na tvé vlastní fotce – čerstvě udělané i to, jak bude vypadat po 1, 10, 30 a 50 letech.
 
-- Přihlas se jedním klepnutím přes Apple nebo Google – pak je všechno zdarma.
+- Přihlas se jedním klepnutím přes Apple nebo Google a můžeš hned začít.
 - Nahraj fotku části těla a vyber motiv, nebo popiš, co si představuješ.
 - Uvidíš tetování na svém odstínu pleti a ve svém světle.
 - Posouvej roky a sleduj, jak se inkoust rozpíjí a bledne.
@@ -324,7 +324,7 @@ Nyelvkód: `el-GR`
 
 Δες το πριν γίνει μόνιμο. Το InkAge σού δείχνει οποιοδήποτε τατουάζ πάνω στη δική σου φωτογραφία – μόλις φτιαγμένο και πώς θα είναι μετά από 1, 10, 30 και 50 χρόνια.
 
-- Συνδέσου με ένα άγγιγμα μέσω Apple ή Google – μετά όλα είναι δωρεάν.
+- Συνδέσου με ένα άγγιγμα μέσω Apple ή Google και ξεκίνα αμέσως.
 - Ανέβασε μια φωτογραφία του σημείου του σώματος και διάλεξε σχέδιο ή περίγραψε τι θέλεις.
 - Δες το τατουάζ στον δικό σου τόνο δέρματος και στο δικό σου φως.
 - Σύρε μέσα στα χρόνια και δες πώς το μελάνι απλώνει και ξεθωριάζει.
@@ -352,7 +352,7 @@ Nyelvkód: `uk`
 
 Подивись, перш ніж це стане назавжди. InkAge показує будь-яке тату на твоєму власному фото – щойно набите і таким, яким воно буде через 1, 10, 30 і 50 років.
 
-- Увійди одним дотиком через Apple або Google – далі все безкоштовно.
+- Увійди одним дотиком через Apple або Google – і можеш починати одразу.
 - Завантаж фото ділянки тіла й обери ескіз або опиши, що хочеш.
 - Побач тату на своєму тоні шкіри та у своєму освітленні.
 - Гортай роки й дивись, як фарба розпливається і блякне.
@@ -380,7 +380,7 @@ Nyelvkód: `ja-JP`
 
 一生ものになる前に、見ておこう。InkAgeなら、どんなタトゥーも自分の写真の上で、入れたての姿と1年・10年・30年・50年後の姿をチェックできる。
 
-- AppleまたはGoogleでワンタップでサインイン。あとはすべて無料。
+- AppleまたはGoogleでワンタップでサインインして、すぐに始められます。
 - 体の部位の写真をアップして、デザインを選ぶか、イメージを言葉で伝えよう。
 - 自分の肌の色、自分のまわりの光の中でタトゥーを確認。
 - スライダーで年月を進めて、インクのにじみや色あせをチェック。
@@ -408,7 +408,7 @@ Nyelvkód: `ko-KR`
 
 평생 남기 전에 먼저 확인해 보세요. InkAge는 어떤 타투든 내 사진 위에 보여 줘요. 갓 새긴 모습부터 1년, 10년, 30년, 50년 후의 모습까지요.
 
-- Apple 또는 Google로 한 번에 로그인하면 이후 모든 기능이 무료예요.
+- Apple 또는 Google로 한 번에 로그인하고 바로 시작하세요.
 - 타투할 부위의 사진을 올리고 도안을 고르거나, 원하는 느낌을 글로 설명해 보세요.
 - 내 피부 톤과 조명 그대로 타투를 확인할 수 있어요.
 - 슬라이더로 세월을 넘기며 잉크가 번지고 바래는 모습을 보세요.
@@ -436,7 +436,7 @@ Nyelvkód: `id`
 
 Lihat dulu sebelum permanen. InkAge menampilkan tato apa pun di fotomu sendiri – saat masih baru dan setelah 1, 10, 30, dan 50 tahun.
 
-- Masuk dengan sekali ketuk lewat Apple atau Google – setelah itu semuanya gratis.
+- Masuk dengan sekali ketuk lewat Apple atau Google dan langsung mulai.
 - Unggah foto bagian tubuh, lalu pilih desain atau ceritakan tato yang kamu mau.
 - Lihat tatonya di warna kulit dan pencahayaanmu sendiri.
 - Geser tahunnya dan lihat bagaimana tinta menyebar dan memudar.
@@ -464,7 +464,7 @@ Nyelvkód: `th`
 
 ดูให้ชัวร์ก่อนจะติดตัวไปตลอด InkAge แสดงรอยสักแบบไหนก็ได้บนรูปของตัวเอง ทั้งตอนสักใหม่ ๆ และเมื่อผ่านไป 1, 10, 30 และ 50 ปี
 
-- ล็อกอินด้วย Apple หรือ Google แค่แตะครั้งเดียว จากนั้นใช้ได้ฟรีทุกอย่าง
+- ล็อกอินด้วย Apple หรือ Google แค่แตะครั้งเดียว แล้วเริ่มใช้งานได้ทันที
 - อัปโหลดรูปส่วนของร่างกาย แล้วเลือกลาย หรือบอกว่าอยากได้แบบไหน
 - เห็นรอยสักบนสีผิวและในแสงจริงของตัวเอง
 - เลื่อนดูปีต่าง ๆ ว่าหมึกจะแตกและซีดจางแค่ไหน
@@ -492,7 +492,7 @@ Nyelvkód: `zh-TW`
 
 刺上去之前，先看清楚。InkAge 會在你自己的照片上呈現任何刺青：剛刺好的樣子，以及 1、10、30、50 年後的模樣。
 
-- 用 Apple 或 Google 帳號一鍵登入，之後所有功能都免費。
+- 用 Apple 或 Google 帳號一鍵登入，馬上就能開始。
 - 上傳身體部位的照片，挑選圖案，或直接描述你想要的樣子。
 - 在你自己的膚色和光線下看刺青效果。
 - 滑動年份，看墨水如何暈開、褪色。
@@ -520,7 +520,7 @@ Nyelvkód: `zh-CN`
 
 纹上之前，先看清楚。InkAge 在你自己的照片上展示任何纹身：刚纹好的样子，以及 1、10、30、50 年后的模样。
 
-- 用 Apple 或 Google 账号一键登录，之后全部免费。
+- 用 Apple 或 Google 账号一键登录，马上就能开始。
 - 上传身体部位的照片，选一个图案，或者描述你想要的效果。
 - 在你自己的肤色和光线下查看纹身。
 - 滑动年份，看墨水如何晕开、褪色。
@@ -548,7 +548,7 @@ Nyelvkód: `vi`
 
 Xem trước khi nó theo bạn cả đời. InkAge hiển thị bất kỳ hình xăm nào trên ảnh của chính bạn – lúc mới xăm và trông ra sao sau 1, 10, 30 và 50 năm.
 
-- Đăng nhập chỉ với một chạm bằng Apple hoặc Google – sau đó mọi thứ đều miễn phí.
+- Đăng nhập chỉ với một chạm bằng Apple hoặc Google và bắt đầu ngay.
 - Tải lên ảnh vùng cơ thể rồi chọn mẫu, hoặc mô tả điều bạn muốn.
 - Xem hình xăm trên tông da và trong ánh sáng của chính bạn.
 - Kéo qua các năm để thấy mực loang và phai như thế nào.
@@ -576,7 +576,7 @@ Nyelvkód: `fil`
 
 Tingnan mo muna bago maging permanente. Ipinapakita ng InkAge ang kahit anong tattoo sa sarili mong litrato – bagong gawa at ang magiging itsura nito makalipas ang 1, 10, 30 at 50 taon.
 
-- Mag-sign in sa isang tap gamit ang Apple o Google – pagkatapos, libre na ang lahat.
+- Mag-sign in sa isang tap gamit ang Apple o Google at makakapagsimula ka agad.
 - Mag-upload ng litrato ng bahagi ng katawan at pumili ng design, o ilarawan kung ano ang gusto mo.
 - Makita ang tattoo sa sarili mong kulay ng balat at ilaw.
 - I-slide ang mga taon at panoorin kung paano kumakalat at kumukupas ang tinta.
@@ -604,7 +604,7 @@ Nyelvkód: `ms`
 
 Lihat dulu sebelum ia kekal. InkAge menunjukkan apa-apa tatu pada foto anda sendiri – baru siap dan rupanya selepas 1, 10, 30 dan 50 tahun.
 
-- Log masuk dengan satu ketikan melalui Apple atau Google – selepas itu, semuanya percuma.
+- Log masuk dengan satu ketikan melalui Apple atau Google dan terus mula.
 - Muat naik foto bahagian badan dan pilih reka bentuk, atau terangkan apa yang anda mahu.
 - Lihat tatu pada warna kulit dan dalam cahaya anda sendiri.
 - Luncurkan tahun demi tahun dan lihat bagaimana dakwat merebak dan pudar.
@@ -632,7 +632,7 @@ Nyelvkód: `da`
 
 Se den, før den er for altid. InkAge viser enhver tatovering på dit eget foto – helt frisk og sådan, som den ser ud efter 1, 10, 30 og 50 år.
 
-- Log ind med ét tryk via Apple eller Google – derefter er alt gratis.
+- Log ind med ét tryk via Apple eller Google, og kom i gang med det samme.
 - Upload et foto af kropsdelen, og vælg et motiv, eller beskriv, hvad du har i tankerne.
 - Se tatoveringen på din egen hudtone og i dit eget lys.
 - Træk gennem årene, og se, hvordan blækket flyder ud og falmer.
@@ -660,7 +660,7 @@ Nyelvkód: `no-NO`
 
 Se den før den er for alltid. InkAge viser hvilken som helst tatovering på ditt eget bilde – nytatovert og slik den ser ut etter 1, 10, 30 og 50 år.
 
-- Logg inn med ett trykk via Apple eller Google – deretter er alt gratis.
+- Logg inn med ett trykk via Apple eller Google, og kom i gang med en gang.
 - Last opp et bilde av kroppsdelen og velg et motiv, eller beskriv hva du ser for deg.
 - Se tatoveringen på din egen hudtone og i ditt eget lys.
 - Dra deg gjennom årene og se hvordan blekket flyter ut og blekner.
@@ -688,7 +688,7 @@ Nyelvkód: `fi`
 
 Katso ennen kuin se on pysyvä. InkAge näyttää minkä tahansa tatuoinnin omassa kuvassasi – vasta otettuna ja sellaisena kuin se on 1, 10, 30 ja 50 vuoden kuluttua.
 
-- Kirjaudu yhdellä napautuksella Applella tai Googlella – sen jälkeen kaikki on ilmaista.
+- Kirjaudu yhdellä napautuksella Applella tai Googlella ja aloita heti.
 - Lataa kuva kehonkohdasta ja valitse malli tai kuvaile, mitä haluat.
 - Näe tatuointi omalla ihonsävylläsi ja omassa valossasi.
 - Liu'uta vuosien läpi ja katso, miten muste leviää ja haalistuu.
@@ -716,7 +716,7 @@ Nyelvkód: `sk`
 
 Pozri sa naň skôr, než bude navždy. InkAge ti ukáže akékoľvek tetovanie na tvojej vlastnej fotke – čerstvo urobené aj také, aké bude po 1, 10, 30 a 50 rokoch.
 
-- Prihlás sa jedným ťuknutím cez Apple alebo Google – potom je všetko zadarmo.
+- Prihlás sa jedným ťuknutím cez Apple alebo Google a môžeš hneď začať.
 - Nahraj fotku časti tela a vyber si motív, alebo opíš, čo chceš.
 - Pozri si tetovanie na svojom odtieni pleti a vo svojom svetle.
 - Posúvaj roky a sleduj, ako sa atrament rozpíja a bledne.
@@ -744,7 +744,7 @@ Nyelvkód: `hr`
 
 Pogledaj je prije nego što postane trajna. InkAge prikazuje bilo koju tetovažu na tvojoj fotografiji – svježe napravljenu i onakvu kakva će biti nakon 1, 10, 30 i 50 godina.
 
-- Prijavi se jednim dodirom putem Apple ili Google računa – nakon toga sve je besplatno.
+- Prijavi se jednim dodirom putem Apple ili Google računa i odmah kreni.
 - Učitaj fotografiju dijela tijela i odaberi motiv ili opiši što želiš.
 - Vidi tetovažu na svojoj boji kože i u svom svjetlu.
 - Pomiči godine i gledaj kako se tinta razlijeva i blijedi.
@@ -772,7 +772,7 @@ Nyelvkód: `bg`
 
 Виж я, преди да е завинаги. InkAge показва всяка татуировка върху твоя собствена снимка – току-що направена и такава, каквато ще бъде след 1, 10, 30 и 50 години.
 
-- Влез с едно докосване с Apple или Google – след това всичко е безплатно.
+- Влез с едно докосване с Apple или Google и започни веднага.
 - Качи снимка на частта от тялото и избери дизайн или опиши какво искаш.
 - Виж татуировката върху своя тен и в своята светлина.
 - Плъзгай през годините и виж как мастилото се разлива и избледнява.
@@ -800,7 +800,7 @@ Nyelvkód: `sl`
 
 Poglej, preden je za vedno. InkAge pokaže katero koli tetovažo na tvoji fotografiji – sveže narejeno in takšno, kot bo čez 1, 10, 30 in 50 let.
 
-- Prijavi se z enim dotikom prek Appla ali Googla – potem je vse brezplačno.
+- Prijavi se z enim dotikom prek Appla ali Googla in takoj začni.
 - Naloži fotografijo dela telesa in izberi motiv ali opiši, kaj si želiš.
 - Oglej si tetovažo na svojem tonu kože in v svoji svetlobi.
 - Drsi skozi leta in poglej, kako se črnilo razliva in bledi.
@@ -828,7 +828,7 @@ Nyelvkód: `lt`
 
 Pamatyk, kol tai dar ne visam laikui. InkAge parodo bet kokią tatuiruotę tavo nuotraukoje – ką tik padarytą ir tokią, kokia ji bus po 1, 10, 30 ir 50 metų.
 
-- Prisijunk vienu palietimu per Apple arba Google – po to viskas nemokama.
+- Prisijunk vienu palietimu per Apple arba Google ir iškart pradėk.
 - Įkelk kūno vietos nuotrauką ir pasirink piešinį arba aprašyk, ko nori.
 - Pamatyk tatuiruotę ant savo odos atspalvio ir savo apšvietime.
 - Slink per metus ir žiūrėk, kaip rašalas išsilieja ir blunka.
@@ -856,7 +856,7 @@ Nyelvkód: `lv`
 
 Paskaties, pirms tas ir uz mūžu. InkAge parāda jebkuru tetovējumu tavā fotoattēlā – tikko uztaisītu un tādu, kāds tas būs pēc 1, 10, 30 un 50 gadiem.
 
-- Pieslēdzies ar vienu pieskārienu, izmantojot Apple vai Google – pēc tam viss ir bez maksas.
+- Pieslēdzies ar vienu pieskārienu, izmantojot Apple vai Google, un sāc uzreiz.
 - Augšupielādē ķermeņa daļas fotoattēlu un izvēlies dizainu vai apraksti, ko vēlies.
 - Apskati tetovējumu uz sava ādas toņa un savā apgaismojumā.
 - Pārvelc gadus un vēro, kā tinte izplūst un izbalē.
@@ -884,7 +884,7 @@ Nyelvkód: `et`
 
 Vaata enne, kui see on igavene. InkAge näitab mis tahes tätoveeringut sinu enda fotol – värskelt tehtuna ja sellisena, nagu see on 1, 10, 30 ja 50 aasta pärast.
 
-- Logi ühe puudutusega sisse Apple'i või Google'iga – pärast seda on kõik tasuta.
+- Logi ühe puudutusega sisse Apple'i või Google'iga ja alusta kohe.
 - Laadi üles foto kehapiirkonnast ja vali kujundus või kirjelda, mida soovid.
 - Vaata tätoveeringut oma nahatoonil ja oma valguses.
 - Liiguta aastaid ja vaata, kuidas tint laiali valgub ja tuhmub.
@@ -912,7 +912,7 @@ Nyelvkód: `sr`
 
 Pogledaj je pre nego što postane trajna. InkAge prikazuje bilo koju tetovažu na tvojoj fotografiji – tek urađenu i onakvu kakva će biti posle 1, 10, 30 i 50 godina.
 
-- Prijavi se jednim dodirom preko Apple ili Google naloga – posle toga je sve besplatno.
+- Prijavi se jednim dodirom preko Apple ili Google naloga i odmah počni.
 - Otpremi fotografiju dela tela i izaberi motiv ili opiši šta želiš.
 - Vidi tetovažu na svom tenu i u svom svetlu.
 - Pomeraj godine i gledaj kako se mastilo razliva i bledi.
@@ -940,7 +940,7 @@ Nyelvkód: `es-419`
 
 Míralo antes de que sea para siempre. InkAge te muestra cualquier tatuaje en tu propia foto: recién hecho y cómo se verá en 1, 10, 30 y 50 años.
 
-- Inicia sesión con un toque con Apple o Google; después, todo es gratis.
+- Inicia sesión con un toque con Apple o Google y empieza al instante.
 - Sube una foto de la zona del cuerpo y elige un diseño, o describe lo que quieres.
 - Mira el tatuaje en tu tono de piel y con tu propia luz.
 - Desliza entre los años y mira cómo la tinta se corre y se desvanece.
@@ -968,7 +968,7 @@ Nyelvkód: `en-US`
 
 See it before it's permanent. InkAge shows any tattoo on your own photo—fresh and aged 1, 10, 30, and 50 years.
 
-- Sign in with one tap using Apple or Google—then everything is free.
+- Sign in with Apple or Google in one tap and you can start right away.
 - Upload a photo of the body area and pick a design, or describe what you want.
 - See it on your own skin tone and in your own lighting.
 - Slide through the years to see how ink spreads and fades.

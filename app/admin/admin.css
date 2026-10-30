@@ -1781,6 +1781,7 @@ i.info.open .pop{opacity:1;pointer-events:auto}
 .selfck li{display:grid;grid-template-columns:24px minmax(0,260px) minmax(0,1fr);gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--a-s2);font-size:13px}
 .selfck i{width:22px;height:22px;border-radius:99px;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:12px;background:var(--t-mint);color:var(--t-mint-i)}
 .selfck li.bad i{background:var(--t-pink);color:var(--t-pink-i)}
+.selfck li.na i{background:var(--a-s1);color:var(--a-dim)}
 .selfck small{color:var(--a-dim)}
 @media (max-width:980px){ .selfck li{grid-template-columns:24px minmax(0,1fr)} .selfck li span{grid-column:2} }
 

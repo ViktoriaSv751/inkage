@@ -5,7 +5,7 @@ import { aiConfigured, checkPhoto, dataUrlToImg, friendlyAiError, makeImageFast 
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 const TONES: Record<string, string> = {
   1: 'very fair, light pink skin (Fitzpatrick I-II)',

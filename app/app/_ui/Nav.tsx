@@ -42,7 +42,7 @@ export function TopBar() {
             )}
           </Link>
         ) : (
-          <span className="beta-pill">{tx(ui.lang, 'Free beta', 'Ingyenes béta')}</span>
+          <span className="beta-pill">{tx(ui.lang, 'Beta', 'Béta')}</span>
         )}
         </div>
       </div>
@@ -139,8 +139,8 @@ export function BottomNav() {
       })}
       <div className="rail-foot">
         <div className="rail-beta">
-          <b>{tx(ui.lang, 'Free beta', 'Ingyenes béta')}</b>
-          <p>{tx(ui.lang, 'Every feature is free while we test. No card needed.', 'Teszt alatt minden funkció ingyenes. Kártya nem kell.')}</p>
+          <b>{tx(ui.lang, 'Beta', 'Béta')}</b>
+          <p>{tx(ui.lang, 'You get 30 previews a month with your account.', 'A fiókoddal havonta 30 előnézet jár.')}</p>
         </div>
         <Link href={`/tudastar${q}`}>{tx(ui.lang, 'Guides', 'Tudástár')}</Link>
         <Link href={`/gyik${q}`}>{tx(ui.lang, 'FAQ', 'GYIK')}</Link>

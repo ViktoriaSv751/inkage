@@ -85,7 +85,7 @@ export function Vote({ id, initial, inApp = false }: { id: string; initial: Shar
         <p className="fine">{mine ? t(`${tot} vote${tot === 1 ? '' : 's'} so far`, `Eddig ${tot} szavazat`) : t('Tap the one you like more.', 'Koppints arra, amelyik jobban tetszik.')}</p>
         <div style={{ background: 'var(--ink)', color: '#fff', borderRadius: 24, padding: 22, marginTop: 24 }}>
           <h2 style={{ fontSize: 30, lineHeight: 1, margin: '0 0 8px' }}>{t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}</h2>
-          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+          <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('One-tap sign-up with Google or Apple.', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}</p>
           <Link className="btn wide light" href={inApp ? '/app' : `/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
             {inApp ? t('Make my own', 'Elkészítem a sajátomat') : t('Register and try it', 'Regisztrálok és kipróbálom')}
           </Link>
@@ -152,7 +152,7 @@ export function Vote({ id, initial, inApp = false }: { id: string; initial: Shar
         <h2 style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 34, lineHeight: 0.95, margin: '0 0 8px' }}>
           {t('See your own tattoo in 50 years', 'Nézd meg a saját tetoválásod 50 év múlva')}
         </h2>
-        <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}</p>
+        <p style={{ color: 'rgba(255,255,255,.8)', margin: '0 0 16px' }}>{inApp ? t('Upload a photo, add a design, see it fresh and in 50 years.', 'Tölts fel egy fotót, adj hozzá mintát, és nézd meg frissen és 50 év múlva.') : t('One-tap sign-up with Google or Apple.', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}</p>
         <Link className="btn wide" href={inApp ? '/app' : `/regisztracio${qOf(lang)}`} onClick={() => track('share_cta')}>
           {inApp ? t('Make my own', 'Elkészítem a sajátomat') : t('Register and try it', 'Regisztrálok és kipróbálom')}
         </Link>

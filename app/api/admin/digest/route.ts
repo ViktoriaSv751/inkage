@@ -44,8 +44,9 @@ async function weekPlan(x: Extra, force = false) {
 async function sendWeekly() {
   const d = await digestData(), x = await call<Extra>("admin_r_digest_extra");
   const key = env().RESEND_API_KEY;
-  /* "hiba:" makes the run a failed one, so an e-mail that can't go out raises the alarm */
-  if (!key || !d.to.length) return { email: key ? "hiba: nincs címzett" : "hiba: nincs RESEND_API_KEY" };
+  /* "hiba:" makes the run a failed one, so an e-mail that can't go out raises the alarm; no key at all is "nincs bekötve"
+     (not an error every half hour: the Rendszer page says it once, clearly) */
+  if (!key || !d.to.length) return { email: key ? "hiba: nincs címzett" : "nincs bekötve: nincs RESEND_API_KEY" };
   const m = { to: d.to, ...weeklyEmail(x, SITE) };
   const r = await fetch("https://api.resend.com/emails", { method: "POST", signal: T(), headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
     body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", ...m }) }).catch(() => null);
@@ -66,7 +67,7 @@ async function send(slot?: Slot) {
     const r = await fetch("https://api.resend.com/emails", { method: "POST", signal: T(), headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
       body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", to: d.to, ...digestEmail(d, x, SITE, slot?.tz) }) }).catch(() => null);
     out.email = r?.ok ? "elküldve" : "hiba " + (r ? r.status : "időtúllépés");
-  } else out.email = key ? "hiba: nincs címzett" : "hiba: nincs RESEND_API_KEY";
+  } else out.email = key ? "hiba: nincs címzett" : "nincs bekötve: nincs RESEND_API_KEY";
   const tg = env().TELEGRAM_BOT_TOKEN, chat = env().TELEGRAM_CHAT_ID;
   if (tg && chat) {
     const r = await fetch(`https://api.telegram.org/bot${tg}/sendMessage`, { method: "POST", signal: T(), headers: { "content-type": "application/json" }, body: JSON.stringify({ chat_id: chat, text: text(d, SITE), disable_web_page_preview: true }) }).catch(() => null);

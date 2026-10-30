@@ -5,7 +5,7 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { BarList, Delta, Empty, Spark, StackedColumns, TrendChart, fmt, pct, SERIES } from "../charts";
 import { Storefront } from "../wow";
 import { countryName, flag } from "../visuals";
-import { Band, Card, FreshRow, I, Kpi, Loading, MOCK, P, Tbl, ago, api, dt, n, rpc, type D, useRpc } from "../shared";
+import { Band, Card, FreshRow, I, Kpi, Loading, MOCK, P, Tbl, ago, api, dt, n, rpc, type D, useRpc, NeedKey } from "../shared";
 import { More } from "../extra";
 import { toast } from "../phone";
 import { SyncButton, agoDay } from "./social";
@@ -92,7 +92,7 @@ export function Stores({ days }: { days: number }) {
         {ratings.some((x) => x.store === starSt) ? <BarList items={[5, 4, 3, 2, 1].map((r) => ({ k: STARS(r), n: ratings.filter((x) => x.store === starSt && n(x.rating) === r).reduce((s, x) => s + n(x.n), 0) }))} max={5} /> : <Empty t="Ebből az áruházból még nincs értékelés." icon={P.spark} />}
       </Card>
       <Card className="s8" icon={P.layers} src={["apple", "google"]} title="Letöltések naponta" sub="App Store: első letöltés és külön az újraletöltés (a sales-jelentésből); Google Play: felhasználói telepítés (a havi jelentésből). Az első futás visszamenőleg is betölt.">
-        {daysRows.length ? <StackedColumns days={daysRows} keys={["apple", "apple_re", "google"]} label={lbl} color={col} /> : <Empty t="A kulcsok beállítása után itt jelennek meg a napi letöltések." ghost />}
+        {daysRows.length ? <StackedColumns days={daysRows} keys={["apple", "apple_re", "google"]} label={lbl} color={col} /> : <Empty t="A kulcsok beállítása után itt jelennek meg a napi letöltések." ghost><NeedKey k={["ASC_ISSUER_ID", "ASC_KEY_ID", "ASC_PRIVATE_KEY", "ASC_APP_ID", "ASC_VENDOR_NUMBER", "PLAY_SERVICE_ACCOUNT_JSON", "PLAY_REPORTS_BUCKET"]} /></Empty>}
       </Card>
       <FreshRow srcs={["apple", "google"]} />
       <Kpi kind="api" to="@next" tone="sky" className="s3" icon={P.eye} l="Megjelenés az App Store-ban" v={v0(metOn, imp)} now={imp} prev={prv("apple", "impressions")} sub="keresésben, böngészésben" />
@@ -121,7 +121,7 @@ export function Stores({ days }: { days: number }) {
           <div><h4>Eszköz</h4><BarList items={dims("apple", "sessions", "device")} max={6} /></div>
           <div><h4>iOS-verzió</h4><BarList items={dims("apple", "sessions", "os")} max={6} /></div>
           <div><h4>App-verzió</h4><BarList items={dims("apple", "sessions", "version")} max={6} /></div>
-        </div> : <Empty t="Az App Store-analitika első napi jelentése után jelenik meg." icon={P.layers} />}
+        </div> : <Empty t="Az App Store-analitika első napi jelentése után jelenik meg." icon={P.layers}><NeedKey k={["ASC_ISSUER_ID", "ASC_KEY_ID", "ASC_PRIVATE_KEY", "ASC_APP_ID"]} /></Empty>}
       </Card>
       <Card className="s12" icon={P.mail} src={["apple", "google"]} title="Vélemények" sub="Minden értékelés egy helyen, a legújabb elöl, oldalanként 20. A válaszolatlan, 3 csillag alattiak a legfontosabbak; a válasz innen is elküldhető. Az App Store nyelvet és verziót nem ad a véleményhez, csak országot."
         right={<><div className="adm-seg sm">{([["all", "Mind"], ["apple", "App Store"], ["google", "Google Play"], ["low", "1–2 ★"], ["open", "Válaszra vár"]] as const).map(([k, l]) => <button key={k} aria-pressed={f === k} onClick={() => { setF(k); setPg(0); }}>{l}</button>)}</div><SyncButton done={load} /></>}>

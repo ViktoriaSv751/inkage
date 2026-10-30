@@ -68,6 +68,8 @@ export function Monitor() {
   useEffect(() => { if (!MOCK) api("/api/admin/status?vercel=1").then((r) => setVercel(r.ok ? r.json : null)).catch(() => null); }, []);
   if (e && !d) return <div className="g"><div className="s12"><StateErr msg={e} retry={load} /></div></div>;
   if (!d) return <Loading />;
+  /* a watched address answering slower than 2 s on average (and still measured in the last hour) */
+  const slowNow = (x: D) => x.on_ !== false && n(x.avg_ms) > 2000 && !!x.last?.at && Date.now() - new Date(x.last.at).getTime() < 3600e3;
   const up: D[] = d.uptime || [], days: D[] = d.uptime_days || [], cron: D[] = d.cron || [], errs: D[] = d.errors || [];
   const totalN = up.reduce((t, x) => t + n(x.n), 0), totalUp = up.reduce((t, x) => t + n(x.up), 0);
   const avail = totalN ? (totalUp / totalN) * 100 : 0, since: string | null = d.uptime_since || null;
@@ -88,12 +90,13 @@ export function Monitor() {
       <Kpi kind="own" to="@next" tone={tone(Math.min(cd ?? 999, (dd ?? 999) - 16), 30, 14) as any} className="s3" icon={P.bolt} l="Tanúsítvány" v={cd != null ? `${fmt(cd)} nap` : "–"} sub={cert?.domain_expires ? <span className={dd != null && dd < 30 ? "down" : ""}>domain: {new Date(cert.domain_expires).toLocaleDateString("hu-HU")} ({fmt(dd)} nap)</span> : "naponta ellenőrizve"} />
       <Kpi kind="own" to="@next" tone={dbWarn ? "pink" : "lilac"} className="s3" icon={P.layers} l="Adatbázis" v={MB(n(d.db_bytes))} sub={dbWarn ? <b>400 MB fölött: az ingyenes keret 500 MB</b> : `tárhely: ${MB(n(d.storage_bytes))} · ${pct(n(d.db_bytes), 500e6)} az 500 MB-ból`} />
 
+      {up.some(slowNow) && <div className="alert err s12">Lassú válasz (2 másodperc fölött átlagosan): {up.filter(slowNow).map((x) => `${x.label || short(x.target) || "/"} ${fmt(x.avg_ms)} ms`).join(" · ")}</div>}
       <Card className="s12" icon={P.globe} title="Elérhetőség címenként" sub="Az utolsó ellenőrzés, a rendelkezésre állás a cím első sikeres válaszától (legfeljebb 30 nap), az átlagos és a lassú (95%-os) válaszidő, és mikor esett ki utoljára. A válaszidő valódi mérés: a weboldal szervere 5 percenként lekéri a címet, és méri, mennyi idő alatt jön meg a válasz (címenként külön). Az adatbázis időzítője csak azt nézi, válaszol-e: az ő ideje a saját sorban állása volt, ezért azt már nem mutatjuk.">
         <Tbl name="elerhetoseg" rows={up} empty="Az első ellenőrzés 5 percen belül lefut." cols={[
           { k: "target", l: "Cím", r: (r) => <span><b>{r.label || short(r.target) || "/"}</b>{r.on_ === false && <span className="chip" style={{ marginLeft: 6 }}>kikapcsolva</span>}<br /><span className="mut">{short(r.target)}</span></span> },
           { k: "last", l: "Most", r: (r) => (r.last ? <span className={"chip " + (r.last.ok ? "good" : "bad")}>{r.last.ok ? "✓ " + r.last.status : "✕ " + (r.last.status || "nincs válasz")}</span> : "–") },
           { k: "up", l: "Elérhető", num: true, r: (r) => <span title={r.since ? `${dt(r.since)} óta` : ""}>{pct(n(r.up), n(r.n), 2)}</span> },
-          { k: "avg_ms", l: "Átlag", num: true, r: (r) => (r.avg_ms != null ? `${fmt(r.avg_ms)} ms` : <span className="mut" title="A szerver mérése a következő telepítés után indul">még nincs mérés</span>) },
+          { k: "avg_ms", l: "Átlag", num: true, r: (r) => (r.avg_ms != null ? (n(r.avg_ms) > 2000 ? <span className="down" title="2 másodperc fölött lassú">{fmt(r.avg_ms)} ms · lassú</span> : `${fmt(r.avg_ms)} ms`) : <span className="mut" title="A szerver mérése a következő telepítés után indul">még nincs mérés</span>) },
           { k: "p95_ms", l: "Lassú (95%)", num: true, r: (r) => (r.p95_ms != null ? `${fmt(r.p95_ms)} ms` : <span className="mut">–</span>) },
           { k: "last_down", l: "Utolsó kiesés", r: (r) => (r.last_down ? ago(r.last_down) : <span className="mut">30 napja nem</span>) },
         ]} />
@@ -115,9 +118,9 @@ export function Monitor() {
       <Card className="s7" icon={P.refresh} title="Lehúzások forrásonként" sub="A napló szerint (30 nap): mikor sikerült utoljára, mikor volt hiba és mi, és hány sikeres / hibás futás volt egy hét alatt.">
         <Tbl name="lehuzasok" rows={d.syncs || []} empty="Még nincs lehúzás a naplóban." cols={[
           { k: "source", l: "Forrás", r: (r) => <b>{SRC[r.source] || r.source}</b> },
-          { k: "last_state", l: "Állapot", r: (r) => <span className={"chip " + (r.last_state ? "good" : "bad")}>{r.last_state ? "✓ rendben" : "✕ hiba"}</span> },
+          { k: "last_state", l: "Állapot", r: (r) => (!r.last_state && r.unconnected ? <span className="chip" title="Nincs fiók vagy kulcs hozzá: ez nem hiba, a forrás kimarad, amíg be nem kötöd (Kapcsolatok)">– nincs bekötve</span> : <span className={"chip " + (r.last_state ? "good" : "bad")}>{r.last_state ? "✓ rendben" : "✕ hiba"}</span>) },
           { k: "last_ok", l: "Utolsó jó", r: (r) => (r.last_ok ? ago(r.last_ok) : "–") },
-          { k: "err_msg", l: "Utolsó hiba", r: (r) => (r.last_err ? <span className="cellwrap" title={r.err_msg || ""}><span className="mut">{ago(r.last_err)}:</span> {String(r.err_msg || "").slice(0, 100)}</span> : <span className="mut">–</span>) },
+          { k: "err_msg", l: "Utolsó hiba", r: (r) => (r.last_err && !r.last_state && r.unconnected ? <span className="cellwrap" title={r.err_msg || ""}><span className="mut">nincs bekötve:</span> {String(r.err_msg || "").replace(/^nincs bekötve: /, "").slice(0, 100)} <a className="lnk" href="#connect">Kapcsolatok</a></span> : r.last_err ? <span className="cellwrap" title={r.err_msg || ""}><span className="mut">{ago(r.last_err)}:</span> {String(r.err_msg || "").slice(0, 100)}</span> : <span className="mut">–</span>) },
           { k: "ok_7d", l: "7 nap", num: true, r: (r) => <span>{fmt(r.ok_7d)}{n(r.err_7d) ? <span className="down"> / {fmt(r.err_7d)} hiba</span> : null}</span> },
         ]} />
       </Card>

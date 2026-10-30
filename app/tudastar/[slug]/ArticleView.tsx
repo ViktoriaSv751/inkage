@@ -154,7 +154,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
                     <b>{T('Wondering how yours would age?', 'Kíváncsi vagy, a tiéd hogyan öregedne?')}</b>
                     <p>{T('Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.')}</p>
                   </div>
-                  <TryLink lang={L}>{inApp ? T('Try it on my photo', 'Kipróbálom a fotómon') : T('Register free', 'Ingyenes regisztráció')}</TryLink>
+                  <TryLink lang={L}>{inApp ? T('Try it on my photo', 'Kipróbálom a fotómon') : T('Create account', 'Regisztráció')}</TryLink>
                 </aside>
               )}
             </section>
@@ -197,7 +197,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
             <img src={IMG('hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b', 600)} alt="" loading="lazy" />
             <div>
               <b>{T('See it on your skin', 'Nézd meg a bőrödön')}</b>
-              <p>{T('Fresh, then at 10, 30 and 50 years. Free, about a minute.', 'Frissen, majd 10, 30 és 50 év múlva. Ingyenes, kb. egy perc.')}</p>
+              <p>{T('Fresh, then at 10, 30 and 50 years. About a minute.', 'Frissen, majd 10, 30 és 50 év múlva. Kb. egy perc.')}</p>
               <TryLink lang={L}>{inApp ? T('Try it now', 'Kipróbálom') : T('Register and try it', 'Regisztrálok és kipróbálom')}</TryLink>
             </div>
           </div>

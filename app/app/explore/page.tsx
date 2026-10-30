@@ -22,7 +22,7 @@ export default function ExplorePage() {
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const router = useRouter();
   const [feed, setFeed] = useState<any[] | null>(null);
-  const [trends, setTrends] = useState<{ places: { placement: string; n: number }[]; designs: { id: string; n: number }[]; previews_total: number } | null>(null);
+  const [trends, setTrends] = useState<{ places: { placement: string; n: number }[]; designs: { id: string; n: number }[]; previews_total: number; previews_week?: number } | null>(null);
   useEffect(() => {
     // the feed leaves out authors this person chose to hide (falls back to the plain feed on an older database)
     sb()
@@ -119,7 +119,7 @@ export default function ExplorePage() {
         <>
           <div className="section-title">
             <h2>{t('Trending this week', 'A hét kedvencei')}</h2>
-            {trends.previews_total > 50 && <span className="small muted">{t(`${trends.previews_total} previews made`, `${trends.previews_total} előnézet készült`)}</span>}
+            {(trends.previews_week ?? 0) >= 20 && <span className="small muted">{t(`${trends.previews_week} previews this week`, `${trends.previews_week} előnézet a héten`)}</span>}
           </div>
           {trends.places.length > 0 && (
             <div className="row" style={{ gap: 6, marginBottom: 10 }}>

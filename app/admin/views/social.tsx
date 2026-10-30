@@ -5,7 +5,7 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { CountUp, Delta, Empty, Spark, StackedColumns, TrendChart, chColor, fmt, pct, SERIES } from "../charts";
 import { Logo } from "../wow";
 import { ActionCard, type Tone } from "../visuals";
-import { ALL_DAYS, Band, Card, bpParts, daysLabel, FreshRow, I, Kpi, Loading, MOCK, Mini, P, PF, PERIODS, POOL, Tbl, ago, api, big, dt, n, rpc, type D, useRpc, Layer, SOC, useFreshSocial } from "../shared";
+import { ALL_DAYS, Band, Card, bpParts, daysLabel, FreshRow, I, Kpi, Loading, MOCK, Mini, P, PF, PERIODS, POOL, Tbl, ago, api, big, dt, n, rpc, type D, useRpc, Layer, SOC, useFreshSocial, NeedKey } from "../shared";
 import { Retention } from "./youtube";
 import { ChartBox, More } from "../extra";
 import { toast } from "../phone";
@@ -45,7 +45,7 @@ export function BingEmpty() {
   const [k, setK] = useState<boolean | null>(null);
   useEffect(() => { api("/api/admin/status").then((r) => setK(r.ok ? !!r.json?.bing : null)).catch(() => {}); }, []);
   if (k) return <Empty t="Bekötve – a Bing adatai 48 órán belül érkeznek (a Bing Webmaster Tools 1–2 nap késéssel ad adatot)." icon={P.search} />;
-  return <Empty t="Kösd be a Bing Webmaster Toolst a Kapcsolatok oldalon (ingyenes, Microsoft-fiókkal)." icon={P.search}><a className="adm-ibtn gold" href="#connect">Kapcsolatok</a></Empty>;
+  return <Empty t="Kösd be a Bing Webmaster Toolst a Kapcsolatok oldalon (ingyenes, Microsoft-fiókkal)." icon={P.search}><NeedKey k="BING_WMT_KEY" /><a className="adm-ibtn gold" href="#connect">Kapcsolatok</a></Empty>;
 }
 
 /* platforms do not count on one scale (a Pinterest "view" is an impression, a TikTok view a play), so a post is ranked

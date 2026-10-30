@@ -4,7 +4,7 @@ import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
-  return { title: tx(langOf(searchParams), 'Free beta – InkAge', 'Ingyenes béta – InkAge') };
+  return { title: tx(langOf(searchParams), 'Beta: what’s included and the monthly allowance – InkAge', 'Béta: mi jár, és mi a havi keret – InkAge') };
 }
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
@@ -25,11 +25,11 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('The fair daily limit', 'A méltányos napi keret'),
+      h: T('The monthly allowance', 'A havi keret'),
       icon: 'clock',
       ps: [
-        T('Each preview uses real AI computing, so we keep a fair daily limit to keep InkAge free for everyone.', 'Minden előnézet valódi MI-számítást igényel, ezért méltányos napi keretet tartunk, hogy az InkAge mindenkinek ingyenes maradhasson.'),
-        T('If the day’s limit is reached, leave your e-mail and we’ll tell you as soon as previews are back — usually within a day.', 'Ha a napi keret betelik, add meg az e-mail-címed, és szólunk, amint újra lehet előnézetet készíteni – általában egy napon belül.'),
+        T('Each preview uses real AI computing, so every account gets 30 previews a month. The allowance restarts on the 1st of each month.', 'Minden előnézet valódi MI-számítást igényel, ezért minden fiók havonta 30 előnézetet kap. A keret minden hónap 1-jén újraindul.'),
+        T('Invite bonuses come on top of the 30. If you run out, your previews are back on the 1st of next month.', 'A meghívási bónuszok a 30 fölé jönnek. Ha elfogy a keret, a következő hónap 1-jén újra készíthetsz előnézetet.'),
       ],
     },
     {
@@ -47,14 +47,14 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
     <InfoPage
       lang={L}
       path="/ingyenes-beta"
-      kicker={T('Free beta', 'Ingyenes béta')}
+      kicker={T('Beta', 'Béta')}
       kickerIcon="gift"
-      title={T('Every feature. Free.', 'Minden funkció. Ingyen.')}
-      lede={T('No card, no trial timer, no catch — just a fair daily limit while we’re in beta.', 'Bankkártya, próbaidő és apró betű nélkül – csak egy méltányos napi keret, amíg béta vagyunk.')}
+      title={T('Beta: what’s included and the monthly allowance', 'Béta: mi jár, és mi a havi keret')}
+      lede={T('Every feature is open during the beta. Your account gets 30 previews a month, restarting on the 1st.', 'A béta alatt minden funkció elérhető. A fiókod havonta 30 előnézetet kap, a keret minden hónap 1-jén újraindul.')}
       sections={sections}
       highlights={[
-        { i: 'gift', h: T('Free', '0 Ft'), p: T('For everyone during the beta.', 'Mindenkinek a béta alatt.') },
-        { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple, then everything is free.', 'Google- vagy Apple-fiókkal, utána minden ingyenes.') },
+        { i: 'gift', h: T('30 a month', 'Havi 30'), p: T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.') },
+        { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple, or with e-mail.', 'Google- vagy Apple-fiókkal, vagy e-maillel.') },
         { i: 'heart', h: T('Invite bonus', 'Meghívási bónusz'), p: T('Extra previews for you and a friend.', 'Extra előnézet neked és a barátodnak.') },
       ]}
       related={[

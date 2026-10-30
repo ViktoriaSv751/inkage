@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApp } from '../AppProvider';
 import { tx } from '@/lib/i18n';
 import { haptic, lsSet, track } from '@/lib/store';
-import { longevity } from '@/lib/score';
 import { sb } from '@/lib/sb';
 import { BodyMap } from './BodyMap';
 
@@ -22,65 +21,34 @@ export type OnboardingAnswers = {
 
 type Q = { key: keyof OnboardingAnswers; en: string; hu: string; options: { v: string; en: string; hu: string; emoji?: string }[] };
 
+// Two questions, then straight to the photo. 18+ is asked by the age gate (and agreed at sign-up), size is set on the
+// photo itself; style and sun keep their defaults (users quit the longer version before ever adding a photo).
 const QUESTIONS: Q[] = [
-  { key: 'adult', en: 'Are you 18 or older?', hu: 'Elmúltál 18 éves?', options: [{ v: 'yes', en: 'Yes, I’m 18+', hu: 'Igen, elmúltam 18' }, { v: 'no', en: 'No', hu: 'Nem' }] },
   { key: 'goal', en: 'What would you like to see?', hu: 'Mit szeretnél megnézni?', options: [
     { v: 'new', en: 'A new tattoo idea', hu: 'Egy új tetoválás-ötletet' }, { v: 'existing', en: 'How my tattoo will age', hu: 'Hogyan öregszik a meglévő tetoválásom' },
     { v: 'removal', en: 'How laser removal would look', hu: 'Milyen lenne a lézeres eltávolítás' }, { v: 'explore', en: 'Just looking around', hu: 'Csak körülnézek' } ] },
-  { key: 'placement', en: 'Where would it go?', hu: 'Hová kerülne?', options: [
-    { v: 'Inner forearm', en: 'Forearm', hu: 'Alkar' }, { v: 'Wrist', en: 'Wrist', hu: 'Csukló' }, { v: 'Hand', en: 'Hand', hu: 'Kézfej' },
-    { v: 'Upper arm', en: 'Upper arm', hu: 'Felkar' }, { v: 'Shoulder', en: 'Shoulder', hu: 'Váll' }, { v: 'Upper back', en: 'Back', hu: 'Hát' },
-    { v: 'Ribs', en: 'Ribs', hu: 'Borda' }, { v: 'Thigh', en: 'Thigh', hu: 'Comb' }, { v: 'Ankle', en: 'Ankle', hu: 'Boka' }, { v: 'Back of neck', en: 'Neck', hu: 'Nyak' } ] },
-  { key: 'size', en: 'Roughly how big?', hu: 'Nagyjából mekkora?', options: [
-    { v: '3', en: 'Tiny · about 3 cm', hu: 'Pici · kb. 3 cm' }, { v: '5', en: 'Small · about 5 cm', hu: 'Kicsi · kb. 5 cm' }, { v: '8', en: 'Medium · about 8 cm', hu: 'Közepes · kb. 8 cm' },
-    { v: '12', en: 'Large · about 12 cm', hu: 'Nagy · kb. 12 cm' }, { v: '20', en: 'Big piece · 20 cm+', hu: 'Nagy darab · 20 cm+' } ] },
-  { key: 'style', en: 'Which style are you drawn to?', hu: 'Melyik stílus vonz?', options: [
-    { v: 'fine-line', en: 'Fine line', hu: 'Fine line (vékony vonal)' }, { v: 'blackwork', en: 'Bold blackwork', hu: 'Vastag blackwork' },
-    { v: 'color', en: 'Color', hu: 'Színes' }, { v: 'realism', en: 'Realism', hu: 'Realista' }, { v: 'other', en: 'Not sure yet', hu: 'Még nem tudom' } ] },
-  { key: 'sun', en: 'How much sun does that spot get?', hu: 'Mennyi nap éri azt a helyet?', options: [
-    { v: 'low', en: 'Little — mostly covered', hu: 'Kevés – többnyire takarva van' }, { v: 'medium', en: 'Average — summers outside', hu: 'Átlagos – nyáron kint' }, { v: 'high', en: 'A lot — outdoors often', hu: 'Sok – gyakran vagyok kint' } ] },
+  { key: 'placement', en: 'Where would it go?', hu: 'Hová kerülne?', options: [] },
 ];
 
 export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void }) {
   const { ui, me } = useApp();
   const L = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [i, setI] = useState(0);
-  const [a, setA] = useState<Partial<OnboardingAnswers>>({ has: '', goal: '', size: '8', sun: 'medium', age: '', fear: '', style: 'other' });
-  const [phase, setPhase] = useState<'q' | 'building' | 'plan' | 'blocked'>('q');
+  const [a, setA] = useState<Partial<OnboardingAnswers>>({ adult: true, has: '', goal: '', size: '8', sun: 'medium', age: '', fear: '', style: 'other' });
 
   useEffect(() => track('onboarding_start'), []);
 
   const pick = (q: Q, v: string) => {
     haptic();
-    const val: any = q.key === 'adult' ? v === 'yes' : v;
-    const next = { ...a, [q.key]: val };
+    const next = { ...a, [q.key]: v } as OnboardingAnswers;
     setA(next);
-    if (q.key === 'adult' && v === 'no') return setPhase('blocked');
+    // "just looking around": no more questions, the Explore page instead
+    if (q.key === 'goal' && v === 'explore') return finish(next);
     if (i < QUESTIONS.length - 1) setTimeout(() => setI(i + 1), 160);
-    else {
-      setPhase('building');
-      setTimeout(() => setPhase('plan'), 1300);
-    }
+    else finish(next);
   };
 
-  const plan = useMemo(() => {
-    if (phase !== 'plan') return null;
-    return longevity(
-      {
-        style: (a.style as any) || 'other',
-        hasColor: a.style === 'color',
-        sun: (a.sun as any) || 'medium',
-        placement: a.placement || '',
-        sizeCm: Number(a.size) || null,
-        detail: a.style === 'fine-line' ? 0.7 : 0.45,
-        age: parseInt(String(a.age || ''), 10) || null,
-      },
-      ui.lang
-    );
-  }, [phase, a, ui.lang]);
-
-  const finish = () => {
-    const ans = a as OnboardingAnswers;
+  const finish = (ans = a as OnboardingAnswers) => {
     lsSet('ink_onboarding', ans);
     if (me.user) sb()?.rpc('save_profile', { p_onboarding: ans, p_lang: ui.lang })?.then(() => {}, () => {});
     track('onboarding_done', { goal: ans.goal, style: ans.style, placement: ans.placement });
@@ -88,56 +56,8 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
     onDone(ans);
   };
 
-  if (phase === 'blocked')
-    return (
-      <div className="ob center">
-        <h1 className="ob-title">{L('InkAge is for adults', 'Az InkAge felnőtteknek szól')}</h1>
-        <p className="sub">{L('You need to be 18 or older to use InkAge.', 'Az InkAge használatához legalább 18 évesnek kell lenned.')}</p>
-      </div>
-    );
-
-  if (phase === 'building')
-    return (
-      <div className="ob center">
-        <div className="build-ring" />
-        <h1 className="ob-title">{L('Building your tattoo plan…', 'Összeállítjuk a tetoválás-terved…')}</h1>
-        <ul className="build-steps">
-          <li>{L('Matching your style and size', 'Stílus és méret egyeztetése')}</li>
-          <li>{L('Checking your placement', 'A testrész vizsgálata')}</li>
-          <li>{L('Estimating how it will age', 'Az öregedés becslése')}</li>
-        </ul>
-      </div>
-    );
-
-  if (phase === 'plan' && plan)
-    return (
-      <div className="ob obplan">
-        <p className="kicker">{L('Your tattoo plan', 'A tetoválás-terved')}</p>
-        <h1 className="ob-title">{L('Here’s how your idea is likely to age', 'Így fog nagy valószínűséggel öregedni az ötleted')}</h1>
-        <div className="score-ring big" style={{ ['--v' as any]: plan.score }}>
-          <span>{plan.score}</span>
-          <small>/100</small>
-        </div>
-        <p className="center sub">{L('Estimated ink longevity — before we even see your photo.', 'Becsült tartóssági pontszám – még a fotód nélkül.')}</p>
-        <ul className="factors">
-          {plan.factors.slice(0, 3).map((f) => (
-            <li key={f.label} className={f.impact < 0 ? 'neg' : 'pos'}>
-              <b>{f.impact > 0 ? `+${f.impact}` : f.impact}</b> {f.label}
-            </li>
-          ))}
-        </ul>
-        <div className="tipcard">
-          <b>{L('Our tip', 'Javaslatunk')}</b>
-          <p>{plan.suggestions[0]}</p>
-        </div>
-        <button className="btn wide" onClick={finish}>
-          {L('See it on my own photo', 'Nézzük a saját fotómon')}
-        </button>
-      </div>
-    );
-
   const q = QUESTIONS[i];
-  const cur = q.key === 'adult' ? (a.adult === undefined ? undefined : a.adult ? 'yes' : 'no') : (a[q.key] as string | undefined);
+  const cur = a[q.key] as string | undefined;
   return (
     <div className="ob">
       <div className="ob-top">
@@ -147,11 +67,9 @@ export function Onboarding({ onDone }: { onDone: (a: OnboardingAnswers) => void 
         <div className="ob-progress" aria-label={`${i + 1} / ${QUESTIONS.length}`}>
           <i style={{ width: `${((i + 1) / QUESTIONS.length) * 100}%` }} />
         </div>
-        {i > 0 && (
-          <button className="link" onClick={finish}>
-            {L('Skip', 'Kihagyom')}
-          </button>
-        )}
+        <button className="link" onClick={() => finish()}>
+          {L('Skip', 'Kihagyom')}
+        </button>
       </div>
       <h1 className="ob-title" key={q.key}>
         {L(q.en, q.hu)}

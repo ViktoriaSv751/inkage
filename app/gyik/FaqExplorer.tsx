@@ -35,7 +35,7 @@ export function FaqExplorer({ groups, lang }: { groups: G[]; lang: Lang }) {
           <circle cx="11" cy="11" r="7" />
           <path d="M20 20l-4-4" />
         </svg>
-        <input value={s} onChange={(e) => setS(e.target.value)} placeholder={T('Search: free, photo, accuracy, delete…', 'Keresés: ingyenes, fotó, pontosság, törlés…')} aria-label={T('Search questions', 'Keresés a kérdések között')} />
+        <input value={s} onChange={(e) => setS(e.target.value)} placeholder={T('Search: account, photo, accuracy, delete…', 'Keresés: fiók, fotó, pontosság, törlés…')} aria-label={T('Search questions', 'Keresés a kérdések között')} />
         {s && (
           <button onClick={() => setS('')} aria-label={T('Clear', 'Törlés')}>
             ×

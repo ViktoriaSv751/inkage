@@ -4,7 +4,7 @@ import { aiConfigured, dataUrlToImg, editImage, extractCheck, extractPrompt, fri
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 /** Cut just the tattoo design out of an uploaded photo. */
 export async function POST(req: Request) {
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   if (img.buf.length > 3_000_000) return json({ error: 'These images are too large. Use smaller photos.' }, 413);
   const u = await startUnit(req, 'extract design');
   if (!u.ok) return u.res;
+  const t0 = Date.now();
   try {
     const src = { ...img, name: 'design.jpg' };
     const color = body.color === true;
@@ -27,7 +28,8 @@ export async function POST(req: Request) {
     let check = await extractCheck(src, dataUrlToImg(image));
     // one targeted retry while something that is not the tattoo is left in, or the design drifted
     // (each retry is a paid image; a second one rarely did better)
-    for (let n = 0; n < 1 && !check.ok; n++) {
+    // (and only while there is time left for it)
+    for (let n = 0; n < 1 && !check.ok && Date.now() - t0 < 150_000; n++) {
       console.warn('extract check failed, retrying', check);
       const again = await editImage([src], extractPrompt(color, check.fix), 1024, 1024, secondaryImageModels()).catch(() => null);
       if (!again) break;

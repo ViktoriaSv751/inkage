@@ -18,8 +18,8 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
     {
       h: T('Getting started', 'Kezdés'), i: 'start',
       items: [
-        [T('Is InkAge free?', 'Ingyenes az InkAge?'), T('Yes, every feature is free during the beta. A fair daily limit keeps it free for everyone; if it is reached you can leave your e-mail and we’ll let you know when previews are back.', 'Igen, a béta alatt minden funkció ingyenes. Egy méltányos napi keret gondoskodik róla, hogy mindenkinek ingyenes maradhasson; ha betelik, megadhatod az e-mail-címed, és szólunk, amint újra lehet előnézetet készíteni.')],
-        [T('Do I need an account?', 'Kell fiók?'), T('Not for your first preview. Sign in if you want your previews on every device or want to invite friends.', 'Az első előnézethez nem. Akkor jelentkezz be, ha minden eszközödön látni szeretnéd az előnézeteidet, vagy meghívnál barátokat.')],
+        [T('How many previews can I make?', 'Hány előnézetet készíthetek?'), T('30 previews a month with your account, plus bonus previews when friends join through your invite link. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézetet, plusz bónuszt, ha a barátaid a meghívó linkeddel csatlakoznak. A keret minden hónap 1-jén újraindul.')],
+        [T('Do I need an account?', 'Kell fiók?'), T('Yes. A quick sign-up with Google or Apple (or e-mail) is needed, so your images stay private in your account.', 'Igen. Egy gyors regisztráció kell Google- vagy Apple-fiókkal (vagy e-maillel), így a képeid privátak maradnak a fiókodban.')],
         [T('Is there an app to download?', 'Van letölthető app?'), T('InkAge runs in the browser and can be added to your home screen like an app — no app store needed.', 'Az InkAge böngészőben fut, és appként kitehető a kezdőképernyőre – alkalmazásbolt nélkül.')],
         [T('How old do I need to be?', 'Hány évesnek kell lennem?'), T('You need to be at least 18 to use InkAge.', 'Az InkAge használatához legalább 18 évesnek kell lenned.')],
       ],
@@ -43,7 +43,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
     {
       h: T('Privacy and your data', 'Adatvédelem és az adataid'), i: 'privacy',
       items: [
-        [T('Who can see my photos?', 'Ki látja a fotóimat?'), T('Only you. Without an account, previews stay in your browser; with one, in your private storage. A vote link shares only the fresh and 50-year images.', 'Csak te. Fiók nélkül az előnézetek a böngésződben maradnak, fiókkal a privát tárhelyeden. A szavazós link csak a friss és az 50 éves képet osztja meg.')],
+        [T('Who can see my photos?', 'Ki látja a fotóimat?'), T('Only you. Your previews are kept in your account’s private storage. A vote link shares only the fresh and 50-year images.', 'Csak te. Az előnézeteid a fiókod privát tárhelyén vannak. A szavazós link csak a friss és az 50 éves képet osztja meg.')],
         [T('How do I delete my data?', 'Hogyan törölhetem az adataimat?'), T('In the app: Profile → Delete my account and data. It removes your account and every saved preview.', 'Az appban: Profil → Fiókom és adataim törlése. Ez törli a fiókodat és minden mentett előnézetet.')],
       ],
     },

@@ -6,7 +6,7 @@ import { BarList, Empty, fmt, pct } from "../charts";
 import { Logo } from "../wow";
 import { toast } from "../phone";
 import { MultiLine } from "../extra";
-import { Band, Card, Kpi, Loading, MOCK, P, PF, Tbl, ago, api, big, n, rpc, type D, useRpc } from "../shared";
+import { Band, Card, Kpi, Loading, MOCK, P, PF, Tbl, ago, api, big, n, rpc, type D, useRpc, NeedKey } from "../shared";
 
 /* ---------- the brand: mentions on the web, what the AI assistants recommend, the competitors' social numbers ---------- */
 const SRC: Record<string, string> = { reddit: "Reddit", hackernews: "Hacker News", news: "Hírek (Google News)", youtube: "YouTube", instagram: "Instagram #inkage", tiktok: "TikTok", pinterest: "Pinterest", linkedin: "LinkedIn", x: "X", threads: "Threads", web: "Web" };
@@ -51,7 +51,7 @@ export function Brand() {
           { k: "model", l: "MI", r: (r) => MODEL[r.model] || r.model }, { k: "question", l: "Kérdés", r: (r) => <span className="cellwrap">{r.question}</span> },
           { k: "mentioned", l: "Ajánl minket", r: (r) => (r.mentioned ? <span className="chip good">✓ {r.rank ? r.rank + ". helyen" : "igen"}</span> : <span className="chip">nem</span>) },
           { k: "competitors", l: "Kiket ajánl", r: (r) => <span className="mut cellwrap">{((r.competitors || []) as string[]).slice(0, 4).join(", ") || "–"}</span> },
-        ]} /> : <Empty t="Az első kör hétfő reggel fut (MI-kulcs kell hozzá), vagy kérdezz most fent." icon={P.spark} />}
+        ]} /> : <Empty t="Az első kör hétfő reggel fut (MI-kulcs kell hozzá), vagy kérdezz most fent." icon={P.spark}><NeedKey k="ANTHROPIC_API_KEY" what="vagy OPENAI_API_KEY / PERPLEXITY_API_KEY" /></Empty>}
       </Card>
       <Card className="s6" icon={P.traffic} src="aivis" title="Az ajánlás aránya hétről hétre" sub="A válaszok hány %-ában szerepeltünk.">
         {days.length > 1 ? <MultiLine series={Object.keys(MODEL).filter((m) => ai.some((x) => x.model === m)).map((m) => ({ k: m, l: MODEL[m], pts: days.map((dd) => ({ t: dd, v: Math.round(share(ai.filter((x) => x.day === dd && x.model === m)) * 100) })) }))} height={200} />
@@ -62,7 +62,7 @@ export function Brand() {
       <Card className="s12" icon={P.globe} src="mentions" title="Említések a weben" sub="Reddit, Hacker News, Google News, YouTube és az Instagram #inkage: ahol az inkage.app-t (vagy az InkAge-et tetoválással együtt) említik. Minden reggel; az újakról értesítés is jön."
         right={<button className="adm-ibtn sm" onClick={() => run("watch")} disabled={!!busy}>{busy === "watch" ? "Keresés…" : "Keresés most"}</button>}>
         {mentions.length ? <ul className="mentions">{mentions.map((m) => <li key={m.source + m.id} className={m.seen ? "" : "new"}><span className="chip">{SRC[m.source] || m.source}</span><div><a href={m.url} target="_blank" rel="noreferrer"><b>{m.title || "(cím nélkül)"}</b></a>{m.snippet && <span>{String(m.snippet).slice(0, 200)}</span>}<small>{m.author ? m.author + " · " : ""}{ago(m.at)}</small></div></li>)}</ul>
-          : <Empty t="Még senki nem említett minket ezeken a helyeken." icon={P.globe} />}
+          : <Empty t="Még senki nem említett minket ezeken a helyeken." icon={P.globe}><NeedKey k={["GOOGLE_CSE_KEY", "GOOGLE_CSE_ID"]} what="Programmable Search: a webes említésekhez" /></Empty>}
       </Card>
 
       <Card className="s12" icon={P.users} src="competitors" title="Versenytársak a közösségi oldalakon" sub="Követők, posztok és a posztonkénti átlagos kedvelés, naponta, a te számaid mellett. Instagramon a Facebook-kapcsolaton át (Business Discovery), YouTube-on a csatornád bekötésével vagy egy YouTube API-kulccsal. TikTokon nincs hozzá nyilvános API."

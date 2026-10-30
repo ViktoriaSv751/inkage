@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { aiPlacement } from '@/lib/placements';
 import { Area, Design, fitToArea, Photo } from '../create/steps';
-import { api } from '@/lib/sb';
+import { checkPhotoOnce } from './photoCheck';
 import { haptic } from '@/lib/store';
 import { Placement, Skin } from '@/lib/editor';
 import type { Phase } from './types';
@@ -34,7 +34,7 @@ export function useBodyArea({
   };
 
   const locate = async (ph: Photo, where: string) => {
-    const r = await api<{ box?: Area['box'] | null; angle?: number | null; skin?: Skin | null }>('/api/check-photo', { photo: ph.dataUrl, placement: aiPlacement(where) });
+    const r = await checkPhotoOnce(ph.dataUrl, aiPlacement(where));
     if (r.ok) keepSkin(ph, r.data.skin);
     if (r.ok && r.data.box) setArea({ box: r.data.box, angle: r.data.angle ?? 0, for: where, photo: ph.dataUrl.slice(-64) });
     else setArea(null);

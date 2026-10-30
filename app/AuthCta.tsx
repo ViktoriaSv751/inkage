@@ -19,7 +19,7 @@ export function useSignedIn() {
   return on;
 }
 
-/** Register / Sign in buttons for the website (the app needs an account; it's free after sign-up). */
+/** Register / Sign in buttons for the website (an account is needed to make previews). */
 export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: Lang; light?: boolean; where?: string; style?: React.CSSProperties }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const q = qOf(lang);
@@ -27,7 +27,7 @@ export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: L
   return (
     <div className="auth-cta" style={style}>
       <Link className={`btn ${light ? 'light' : ''}`} href={`/regisztracio${q}`} onClick={() => track('cta_signup', { where })}>
-        {T('Create a free account', 'Regisztráció')}
+        {T('Create account', 'Regisztráció')}
       </Link>
       <Link className={`btn ghost ${light ? 'on-dark' : ''}`} href={`/belepes${q}`} onClick={() => track('cta_signin', { where })}>
         {T('Sign in', 'Belépés')}
@@ -39,7 +39,15 @@ export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: L
 /** A single call to action: the app when signed in, otherwise registration. */
 export function TryLink({ className, children, onClick, lang }: { className?: string; children: React.ReactNode; onClick?: () => void; lang?: Lang }) {
   const signedIn = useSignedIn();
-  const l = lang || (typeof document !== 'undefined' && (isLang(document.documentElement.lang) ? document.documentElement.lang : 'hu')) || 'hu';
+  // without a lang prop the page language is read after load (the server can't know it here)
+  const [docLang, setDocLang] = useState<Lang | null>(null);
+  useEffect(() => {
+    if (lang) return;
+    const d = document.documentElement.lang;
+    const q = new URLSearchParams(location.search).get('lang');
+    setDocLang(isLang(q) ? q : isLang(d) ? d : null);
+  }, [lang]);
+  const l: Lang = lang || docLang || 'hu';
   return (
     <Link className={className} href={signedIn ? '/app' : `/regisztracio${qOf(l)}`} onClick={onClick}>
       {children}

@@ -16,7 +16,7 @@ export function StepHead({ title, sub, back, stepIdx }: { title: string; sub: st
           </button>
         ) : (
           <span className="free-pill">
-            {t('✦ Free while in beta', '✦ Ingyenes a tesztidőszakban')}
+            {t('✦ Beta', '✦ Béta')}
           </span>
         )}
         <div className="dots" aria-label={`${stepIdx + 1} / 2`}>

@@ -15,3 +15,12 @@
 @media (min-width: 1000px) { .cc { left: 24px; right: auto; bottom: 24px; width: 440px; } }
 @media (prefers-reduced-motion: reduce) { .cc { animation: none; } }
 @media (min-width: 960px) { body:has(.tabbar) .cc { left: 288px; } }
+/* phones: a compact bar, so it doesn't cover the headline and the main button on the first screen */
+@media (max-width: 600px) {
+  .cc { grid-template-columns: 1fr; gap: 0; padding: 14px 16px; border-radius: 20px; }
+  .cc-ico { display: none; }
+  .cc-body > b { font-size: 15px; }
+  .cc-body p { font-size: 13px; line-height: 1.45; }
+  .cc-act { margin-top: 10px; gap: 6px; }
+  .cc-yes, .cc-no { height: 40px; padding: 0 14px; font-size: 14px; }
+}

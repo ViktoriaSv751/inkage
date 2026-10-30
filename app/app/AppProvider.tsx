@@ -1,6 +1,7 @@
 'use client';
 import { tx, qOf } from '@/lib/tr';
 import { authErrorCode } from '@/lib/auth-help';
+import { takeNext, withLang } from '@/lib/auth-next';
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -81,8 +82,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const q = qOf(ui.lang);
     // a Google / Apple sign-in that failed comes back with #error=… – show why on the sign-in page
     const failed = authErrorCode(new URLSearchParams(location.hash.slice(1) + '&' + location.search.slice(1)));
-    location.replace(`/belepes${q}${failed ? `${q ? '&' : '?'}err=${encodeURIComponent(failed)}` : ''}`);
+    // after signing in, come back here (not to an empty gallery)
+    const here = location.pathname + location.search;
+    const extra = [failed && `err=${encodeURIComponent(failed)}`, /^\/app\/.+/.test(location.pathname) && `next=${encodeURIComponent(here)}`].filter(Boolean).join('&');
+    location.replace(`/belepes${q}${extra ? `${q ? '&' : '?'}${extra}` : ''}`);
   }, [ui.lang]);
+  const toLoginRef = useRef(toLogin);
+  toLoginRef.current = toLogin;
 
   const toast = useCallback((m: string) => {
     setMsg(m);
@@ -107,13 +113,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     else setProfileState(NO_PROFILE);
     if (data.user && !migrated.current) {
       migrated.current = true;
+      // signed in after a Google / Apple / e-mail round trip: back to the page that asked for it
+      const next = takeNext();
+      if (next && next.split('?')[0] !== location.pathname) location.replace(withLang(next, ui.lang));
       // referral captured on landing
       const ref = lsGet<string | null>('ink_ref', null);
       if (ref && ref !== data.user.id) {
         sb()?.rpc('apply_referral', { p_ref: ref }).then(({ data: ok }) => {
           lsSet('ink_ref', null);
           if (ok) {
-            toast(tx(ui.lang, 'Bonus: you got an extra free preview 🎉', 'Bónusz: kaptál egy ingyenes előnézetet 🎉'));
+            toast(tx(ui.lang, 'Bonus: you got an extra preview 🎉', 'Bónusz: kaptál egy plusz előnézetet 🎉'));
             api<Me>('/api/me').then((x) => x.ok && setMe(x.data));
           }
         });
@@ -135,6 +144,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // a guest who leaves the open pages goes to sign-in
   useEffect(() => {
     if (gate === 'in' && guest.current && !me.user && !isOpenPath(path)) {
+      // the gallery and profile live in the account: explain it in a sheet, and stay where they were
+      if (history.length > 1) {
+        history.back();
+        setAuthReason(tx(ui.lang, 'Your gallery and profile live in your account. Sign up in one tap with Google or Apple to keep your designs.', 'A galériád és a profilod a fiókodban van. Regisztrálj egy koppintással Google- vagy Apple-fiókkal, és megmaradnak a terveid.'));
+        setAuthOpen(true);
+        return;
+      }
       guest.current = false;
       toLogin();
     }
@@ -146,7 +162,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     api<Cfg>('/api/config').then((r) => setCfg(r.ok ? r.data : { ai: false, auth: false, payments: false }));
     const s0 = sb();
     // the app only shows once the account is known – never a guest screen first
-    const enter = () => refreshMe().then(() => setGate('in'), () => setGate('in'));
+    const refresh = () => refreshMeRef.current!();
+    const toLogin = () => toLoginRef.current();
+    const enter = () => refresh().then(() => setGate('in'), () => setGate('in'));
     if (!s0) enter();
     else
       s0.auth
@@ -166,9 +184,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         })
         .catch(() => enter());
     const sub = sb()?.auth.onAuthStateChange((evt, session) => {
-      if (evt === 'SIGNED_IN' && session) setTimeout(() => refreshMe().then(() => setGate('in'), () => setGate('in')), 0);
+      if (evt === 'SIGNED_IN' && session) setTimeout(() => refresh().then(() => setGate('in'), () => setGate('in')), 0);
       // a confirmed e-mail change (or a name / picture saved on another tab) arrives as USER_UPDATED
-      if (evt === 'USER_UPDATED') setTimeout(() => refreshMe(), 0);
+      if (evt === 'USER_UPDATED') setTimeout(() => refresh(), 0);
       if (evt === 'SIGNED_OUT') {
         meRef.current = { user: null };
         toLogin();
@@ -205,7 +223,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener('unhandledrejection', onRej);
       document.removeEventListener('click', fresh, true);
     };
-  }, [refreshMe]);
+    // once per visit: re-running it on every language / profile change logged app_open and hooked the watchers again
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <AppCtx.Provider

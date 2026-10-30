@@ -36,7 +36,7 @@ export function OutOfPreviews({ open, onClose }: { open: boolean; onClose: () =>
           </button>
         </>
       ) : (
-        <button className="btn wide" onClick={() => { onClose(); openAuth(tx(ui.lang, 'Sign in to get your invite link — every friend who joins gives you both a free preview.', 'Jelentkezz be a meghívó linkedért – minden csatlakozó barát után mindketten kaptok egy ingyenes előnézetet.')); }}>
+        <button className="btn wide" onClick={() => { onClose(); openAuth(tx(ui.lang, 'Sign in to get your invite link — every friend who joins gives you both an extra preview.', 'Jelentkezz be a meghívó linkedért – minden csatlakozó barát után mindketten kaptok egy plusz előnézetet.')); }}>
           {tx(ui.lang, 'Sign in to get your invite link', 'Bejelentkezés a meghívó linkért')}
         </button>
       )}
@@ -62,11 +62,11 @@ export function Waitlist({ open, onClose }: { open: boolean; onClose: () => void
   };
   return (
     <Sheet open={open} onClose={onClose} label="Waitlist">
-      <h2>{L('Today’s free previews are all used', 'Mára elfogytak az ingyenes előnézetek')}</h2>
+      <h2>{L('Previews are paused for today', 'Mára szünetelnek az előnézetek')}</h2>
       <p className="sub">
         {done
           ? L('Thanks! We’ll e-mail you as soon as you can make previews again.', 'Köszönjük! Írunk, amint újra készíthetsz előnézetet.')
-          : L('So many people tried InkAge today that we paused new previews to keep it free. Leave your e-mail and we’ll tell you when it’s back — usually within a day.', 'Ma annyian kipróbálták az InkAge-et, hogy szüneteltetjük az új előnézeteket, hogy ingyenes maradhasson. Add meg az e-mail-címed, és szólunk, amint újra megy – általában egy napon belül.')}
+          : L('So many people tried InkAge today that we paused new previews for a while. Leave your e-mail and we’ll tell you when it’s back — usually within a day.', 'Ma annyian kipróbálták az InkAge-et, hogy egy időre szüneteltetjük az új előnézeteket. Add meg az e-mail-címed, és szólunk, amint újra megy – általában egy napon belül.')}
       </p>
       {!done && (
         <>

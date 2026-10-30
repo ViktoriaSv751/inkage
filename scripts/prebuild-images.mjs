@@ -21,9 +21,9 @@ function walk(dir, acc = []) {
 }
 const designs = new Set((fs.readFileSync(path.join(ROOT, 'lib', 'designs.ts'), 'utf8').match(RX) || []));
 const ids = new Set();
-for (const f of [...walk(path.join(ROOT, 'app')), ...walk(path.join(ROOT, 'lib'))]) {
-  for (const m of fs.readFileSync(f, 'utf8').match(RX) || []) if (!designs.has(m)) ids.add(m);
-}
+// library designs are served by /api/lib-img – unless a page also shows one as a picture (/img/…), e.g. the landing page
+for (const f of walk(path.join(ROOT, 'app'))) for (const m of fs.readFileSync(f, 'utf8').match(RX) || []) ids.add(m);
+for (const f of walk(path.join(ROOT, 'lib'))) for (const m of fs.readFileSync(f, 'utf8').match(RX) || []) if (!designs.has(m)) ids.add(m);
 fs.mkdirSync(OUT, { recursive: true });
 const list = [...ids];
 let done = 0, failed = 0;

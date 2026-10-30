@@ -16,10 +16,20 @@
 @media (max-width: 520px) {
   .sn-r .theme-tg { display: none; }
 }
+/* header buttons never wrap to two lines */
+.sn-signin, .sn-cta { white-space: nowrap; flex: none; }
+.sn-logo { flex: none; }
 @media (max-width: 420px) {
-  .sn-signin, .sn-cta { padding: 0 12px; font-size: 13px; height: 36px; }
-  .sn-r { gap: 6px; }
-  .sn-logo { font-size: 18px; }
+  .sn-in { padding: 0 14px; gap: 8px; }
+  .sn-signin, .sn-cta { padding: 0 11px; font-size: 13px; height: 36px; }
+  .sn-r { gap: 5px; }
+  .sn-logo { font-size: 17px; gap: 7px; }
+  .sn-logo svg { width: 24px; height: 24px; }
+  .sn-r .tg-lang .lp-btn.icon, .sn-burger { width: 36px; height: 36px; border-radius: 12px; }
+}
+/* narrow phones: the language picker stays in the menu drawer, so Sign in + Register fit on one line */
+@media (max-width: 400px) {
+  .sn-r .tg-lang { display: none; }
 }
 @media (min-width: 1000px) {
   .sn-links { display: flex; }

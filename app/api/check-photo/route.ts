@@ -2,7 +2,7 @@ import { dataUrlToBuffer, json } from '@/lib/server';
 import { aiConfigured, checkPhoto } from '@/lib/ai';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   if (!aiConfigured()) return json({ ok: true, code: 'ok', area: '' });

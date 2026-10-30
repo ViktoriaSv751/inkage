@@ -7,7 +7,7 @@ import { MorningStory, MoreScreen, SubTabs, Toaster, usePhone, useScrolled, useS
 import { Globe, GlowRing, LANG_LAND, StepBars, flag, type Tone } from "./visuals";
 import { Logo } from "./wow";
 import { AIC, ALL, EXPIRED, FltCtx, FreshCtx, GOAL, GT, HIDDEN, I, Loading, MOCK, NAV, P, PA, PERIODS, PROV, PSUB, PeriodCtx, RefreshCtx, SHORT, SOLVED, TABBAR, THEME_L, ago, alerts, api, ch, chCol, ev, lang, makePeriod, n, periodName,
-  readFlt, readPeriod, rpc, secOf, type Alert, type D, type Flt, type PSec, type Tab, writeFlt, writePeriod, Layer, solvedAt, FUNNEL, big, useScrollLock, markOwnDevice, useFreshData, useTheme , chList, chToggle , ASKQ } from "./shared";
+  readFlt, readPeriod, rpc, secOf, type Alert, type D, type Flt, type PSec, type Tab, writeFlt, writePeriod, Layer, solvedAt, FUNNEL, big, useScrollLock, markOwnDevice, useFreshData, useTheme , chList, chToggle , ASKQ, PushNone } from "./shared";
 import { usePush } from "./extra";
 import { Alerts, signals, useSigState } from "./views/alerts";
 import { Connect } from "./views/connect";
@@ -43,7 +43,7 @@ import { Announce } from "./views/announce";
 import { Audit } from "./views/audit";
 
 /* a few words under each menu item */
-const NAVSUB: Partial<Record<Tab, string>> = { announce: "üzenet az appban", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", glossary: "minden szám jelentése", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", search: "keresések, cikkek",
+const NAVSUB: Partial<Record<Tab, string>> = { announce: "nem működik még", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", glossary: "minden szám jelentése", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", search: "keresések, cikkek",
   links: "rövid linkek", markets: "nyelvek, országok", stores: "letöltések", users: "fiókok", funnel: "lépésről lépésre", retention: "visszatérők", product: "mit használnak", inkage: "moderálás, MI, korlát",
   viral: "megosztások", connect: "bekötések", goals: "célok, jegyzetek", system: "beállítások, biztonság" };
 
@@ -548,7 +548,7 @@ export function Bell({ d, go }: { d: D; go: (t: Tab) => void }) {
             {!out.length && <li className="good"><span className="ic">{I(P.check)}</span><div><b>Minden rendben</b><span>Nincs teendő.</span></div></li>}</ul>
           <button className="lnk" onClick={() => { setOpen(false); go("alerts"); }}>Mind a {out.length} jelzés →</button>
         </> : <ul className="bell-l">{!hist ? <li><div className="skel" style={{ height: 60, width: "100%" }} /></li> : hist.length ? hist.map((x, i) => (
-          <li key={i} className="info" onClick={() => { setOpen(false); const k = String(x.url || "").split("#")[1] as Tab; go(ALL.some((a) => a.k === k) ? k : "alerts"); }}><span className="ic">{I(P.bell)}</span><div><b>{x.title}</b><span>{x.body}</span><small className="mut">{ago(x.at)}</small></div></li>))
+          <li key={i} className="info" onClick={() => { setOpen(false); const k = String(x.url || "").split("#")[1] as Tab; go(ALL.some((a) => a.k === k) ? k : "alerts"); }}><span className="ic">{I(P.bell)}</span><div><b>{x.title} <PushNone x={x} /></b><span>{x.body}</span><small className="mut">{ago(x.at)}</small></div></li>))
           : <li><div><b>Még nem ment értesítés</b><span>Kapcsold be a Rendszer oldalon.</span></div></li>}</ul>}
       </div></>}
     </div>

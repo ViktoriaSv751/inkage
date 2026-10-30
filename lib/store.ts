@@ -48,16 +48,19 @@ export type Preview = {
 
 // ---------------------------------------------------------------- tiny helpers
 
+// storage full or blocked (private mode): an id for this visit, so such visitors don't all merge into one "na"
+let tabAnon: string | null = null;
 export function anonId() {
+  let id: string | null = null;
   try {
-    let id = localStorage.getItem('ink_anon');
+    id = localStorage.getItem('ink_anon');
     if (!id) {
       id = crypto.randomUUID();
       localStorage.setItem('ink_anon', id);
     }
     return id;
   } catch {
-    return 'na';
+    return id || (tabAnon ||= typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `v${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`);
   }
 }
 

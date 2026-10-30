@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
   else props.pf = 'web';
   const country = req.headers.get('x-vercel-ip-country');
   if (country && /^[A-Z]{2}$/.test(country)) props.cc = country;
-  await userClient().rpc('log_event', { p_name: 'page_view', p_anon: null, p_props: props }).then(() => {}, () => {});
+  // _sk: sent by our server, so the visitor rate limit for anonymous callers doesn't apply
+  await userClient().rpc('log_event', { p_name: 'page_view', p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
   return NextResponse.json({ sid });
 }

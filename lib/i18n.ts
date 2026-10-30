@@ -92,7 +92,7 @@ const EN = {
   'create.place.color': 'Original colors',
   'create.place.where': 'Body area',
   'create.go': 'Show me my tattoo',
-  'create.free': 'Free with your account.',
+  'create.free': '30 previews a month with your account.',
   'gen.s1': 'Reading your skin tone and light',
   'gen.s2': 'Tattooing the design onto your photo',
   'gen.s3': 'Checking the result',
@@ -116,7 +116,7 @@ const EN = {
   'profile.title': 'Profile',
   'profile.lang': 'Language',
   'profile.invite': 'Invite a friend',
-  'profile.inviteSub': 'You both get an extra free preview when they sign up with your link.',
+  'profile.inviteSub': 'You both get an extra preview when they sign up with your link.',
   'profile.copy': 'Copy link',
   'profile.copied': 'Copied',
   'profile.install': 'Add InkAge to your home screen',
@@ -169,7 +169,7 @@ const HU: Record<Key, string> = {
   'create.place.color': 'Eredeti színek',
   'create.place.where': 'Testrész',
   'create.go': 'Mutasd a tetoválásom',
-  'create.free': 'A fiókoddal ingyenes.',
+  'create.free': 'A fiókoddal havonta 30 előnézet jár.',
   'gen.s1': 'Bőrtónus és fények elemzése',
   'gen.s2': 'A minta rátetoválása a fotódra',
   'gen.s3': 'Az eredmény ellenőrzése',
@@ -193,7 +193,7 @@ const HU: Record<Key, string> = {
   'profile.title': 'Profil',
   'profile.lang': 'Nyelv',
   'profile.invite': 'Hívj meg egy barátot',
-  'profile.inviteSub': 'Ha a linkeddel regisztrál, mindketten kaptok egy újabb ingyenes előnézetet.',
+  'profile.inviteSub': 'Ha a linkeddel regisztrál, mindketten kaptok egy plusz előnézetet.',
   'profile.copy': 'Link másolása',
   'profile.copied': 'Másolva',
   'profile.install': 'InkAge a kezdőképernyőre',
@@ -211,6 +211,7 @@ export function detectLang(): Lang {
     const q = new URLSearchParams(location.search).get('lang');
     if (isLang(q)) {
       localStorage.setItem('ink_lang', q);
+      document.cookie = `ink_lang=${q}; Path=/; Max-Age=31536000; SameSite=Lax`;
       return q;
     }
   } catch {}
@@ -280,9 +281,8 @@ const ERR_HU: [RegExp, string][] = [
   [/^You used today’s cut-outs/, 'Mára elfogytak a kivágások és MI-rajzok. Holnap újra használhatod – az előnézeteidet ez nem érinti.'],
   [/^You shared a lot today/, 'Ma már sokat osztottál meg. Próbáld újra holnap.'],
   [/^Sharing failed/, 'A megosztás nem sikerült. Próbáld újra.'],
-  [/^You used your free preview/, 'Elhasználtad az ingyenes előnézeteidet mára. Próbáld újra holnap.'],
-  [/^You reached (your plan|this month’s) limit/, 'Elérted a havi keretedet. Minden hónap 1-jén újraindul.'],
-  [/^So many people are trying InkAge today/, 'Ma nagyon sokan próbálják az InkAge-et, ezért az ingyenes előnézetek szünetelnek. Próbáld újra holnap.'],
+  [/^You reached (your plan|this month’s)/, 'Elérted a havi 30 előnézetet. Minden hónap 1-jén újraindul.'],
+  [/^So many people are trying InkAge today/, 'Ma nagyon sokan próbálják az InkAge-et, ezért az előnézetek szünetelnek. Próbáld újra holnap.'],
   [/^Previews are paused/, 'Az előnézetek rövid ideig szünetelnek. Próbáld újra később.'],
   [/^Lots of people are making previews/, 'Most nagyon sokan készítenek előnézetet. Próbáld újra egy perc múlva.'],
   [/^The AI safety filter blocked/, 'Az MI biztonsági szűrője letiltotta ezt a fotót. Olyan fotót használj, amin csak a testrész látszik, meztelenség és kiskorú nélkül.'],

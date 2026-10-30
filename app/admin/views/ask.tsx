@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { BarList, TrendChart } from "../charts";
 import { toast } from "../phone";
-import { I, MOCK, P, PF, SOC, api, ch, lang, n, rpc, type D, useFlt } from "../shared";
+import { I, MOCK, NeedKey, P, PF, SOC, api, ch, lang, n, rpc, type D, useFlt } from "../shared";
 import { vsMedian } from "./social";
 
 /* ---------- ask your numbers: Claude answers from the dashboard's anonymous aggregates ---------- */
@@ -116,7 +116,7 @@ export function Ask({ d }: { d: D }) {
       <section className="c s12 ask">
         {!ready && !msgs.length ? <div className="ask-empty"><div className="skel" style={{ height: 22, width: 220, borderRadius: 99 }} /><div className="skel" style={{ height: 120, width: "min(560px,90%)" }} /></div>
           : !msgs.length ? <div className="ask-empty"><span className="ask-ic">{I(P.spark)}</span><h2>Kérdezz a számaidtól</h2><p className="note">Az MI az irányítóközpont anonim összesítőiből válaszol (e-mail, név és élő esemény nélkül), mindenhol ugyanarra az időszakra{flt.ch || flt.lang ? ", a szűrőt is ismerve" : ""}. Pár másodperc.</p>
-          <div className="ask-sug">{SUGGEST.map((s) => <button key={s} onClick={() => ask(s)}>{s}</button>)}</div>
+          <NeedKey k="ANTHROPIC_API_KEY" what="enélkül az MI nem válaszol" /><div className="ask-sug">{SUGGEST.map((s) => <button key={s} onClick={() => ask(s)}>{s}</button>)}</div>
           {pfs.length > 0 && <div className="ask-pf"><div className="adm-seg sm" role="group">{pfs.map((k) => <button key={k} aria-pressed={pf === k} className={hasPf(k) ? undefined : "off"} title={hasPf(k) ? undefined : `${k === "google" ? "Google" : PF[k]}: még nincs bekötve, nincs miből válaszolni`} onClick={() => setPf(pf === k ? "" : k)}>{k === "google" ? "Google" : PF[k]}</button>)}</div>
             {pf && <div className="ask-sug">{PF_Q[pf].map((s) => <button key={s} onClick={() => ask(s)}>{s}</button>)}</div>}</div>}</div>
           : <div className="ask-l">{msgs.map((m, i) => <div key={i}><div className="ask-q">{m.q}</div>{m.a ? <Answer t={m.a} err={m.err} toPlan={m.err ? undefined : () => toPlan(m.a!)} /> : <div className="ask-a wait"><span className="spin" />Gondolkodom…</div>}</div>)}<div ref={end} /></div>}

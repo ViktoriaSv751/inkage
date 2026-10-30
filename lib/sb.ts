@@ -29,8 +29,10 @@ export async function api<T = any>(path: string, body?: unknown): Promise<{ ok: 
   if (typeof window !== 'undefined') {
     const m = await import('./ai-consent');
     if (m.AI_PATHS.test(path) && !(await m.askAiConsent())) {
-      const hu = document.documentElement.lang === 'hu';
-      return { ok: false, status: 0, data: { code: 'ai_consent', error: hu ? 'Az előnézethez engedélyezned kell, hogy a fotódat elküldjük az MI-szolgáltatóinknak.' : 'To make a preview, allow sending your photo to our AI providers.' } as any };
+      const { tx, isLang } = await import('./tr');
+      const l = document.documentElement.lang;
+      const error = tx(isLang(l) ? l : 'en', 'To make a preview, allow sending your photo to our AI providers.', 'Az előnézethez engedélyezned kell, hogy a fotódat elküldjük az MI-szolgáltatóinknak.');
+      return { ok: false, status: 0, data: { code: 'ai_consent', error } as any };
     }
   }
   let res: Response;

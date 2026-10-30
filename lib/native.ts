@@ -205,7 +205,8 @@ export async function nativePushSync() {
 /** Native camera / photo library picker (one sheet with both), instead of the web view's file input. */
 export async function nativePickPhoto(lang: string): Promise<Blob | null> {
   if (!isNative()) return null;
-  const hu = lang === 'hu';
+  const { tx, isLang } = await import('./tr');
+  const L = (en: string, hu: string) => tx(isLang(lang) ? lang : 'en', en, hu);
   const { Camera, CameraResultType, CameraSource } = await import('@capacitor/camera');
   try {
     const p = await Camera.getPhoto({
@@ -214,10 +215,10 @@ export async function nativePickPhoto(lang: string): Promise<Blob | null> {
       quality: 90,
       width: 2400,
       correctOrientation: true,
-      promptLabelHeader: hu ? 'Fotó' : 'Photo',
-      promptLabelPhoto: hu ? 'Választás a fotók közül' : 'Choose from photos',
-      promptLabelPicture: hu ? 'Fénykép készítése' : 'Take a photo',
-      promptLabelCancel: hu ? 'Mégse' : 'Cancel',
+      promptLabelHeader: L('Photo', 'Fotó'),
+      promptLabelPhoto: L('Choose from photos', 'Választás a fotók közül'),
+      promptLabelPicture: L('Take a photo', 'Fénykép készítése'),
+      promptLabelCancel: L('Cancel', 'Mégse'),
     });
     if (!p.dataUrl) return null;
     return await (await fetch(p.dataUrl)).blob();

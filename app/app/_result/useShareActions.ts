@@ -23,7 +23,7 @@ export function useShareActions(preview: Preview, own: boolean, onShared?: (shar
     try {
       const blob = await artistPdf(preview, ui.lang, placeName(preview.placement, ui.lang));
       track('artist_pdf');
-      await shareOrDownload(blob, 'inkage-tetovalas-terv.pdf');
+      await shareOrDownload(blob, 'inkage-artist-brief.pdf');
     } catch (e) {
       console.warn(e);
       toast(t('Could not create the PDF. Try again.', 'Nem sikerült a PDF. Próbáld újra.'));
@@ -78,7 +78,7 @@ export function useShareActions(preview: Preview, own: boolean, onShared?: (shar
         score: preview.score != null ? t(`Aging score ${preview.score}/100`, `Öregedési pontszám ${preview.score}/100`) : null,
       });
       track('card_made');
-      await shareOrDownload(blob, 'inkage-friss-vs-50-ev.jpg');
+      await shareOrDownload(blob, 'inkage-fresh-vs-50-years.jpg');
     } catch {
       toast(t('Could not make the picture. Try again.', 'Nem sikerült a kép. Próbáld újra.'));
     }

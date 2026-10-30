@@ -58,7 +58,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       sections={sections}
       related={[
         { href: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), p: T('Five steps, about a minute.', 'Öt lépés, kb. egy perc.'), i: 'camera' },
-        { href: '/ingyenes-beta', t: T('Free beta', 'Ingyenes béta'), p: T('Every feature, free.', 'Minden funkció, ingyen.'), i: 'gift' },
+        { href: '/ingyenes-beta', t: T('Beta', 'Béta'), p: T('What’s included, and the monthly allowance.', 'Mi jár, és mi a havi keret.'), i: 'gift' },
         { href: '/gyik', t: T('FAQ', 'GYIK'), p: T('Quick answers.', 'Gyors válaszok.'), i: 'doc' },
       ]}
     />

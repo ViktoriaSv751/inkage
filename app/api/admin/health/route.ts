@@ -31,7 +31,7 @@ async function check(force = false) {
   if (!problems.length && !monday && !force) return { ok: true, email: "nem kellett (minden rendben)", problems: 0 };
   const key = env().RESEND_API_KEY;
   const to = await call<string[]>("admin_r_recipients").catch(() => [] as string[]);
-  if (!key || !to.length) return { ok: true, email: key ? "hiba: nincs címzett" : "hiba: nincs RESEND_API_KEY", problems: problems.length };
+  if (!key || !to.length) return { ok: true, email: key ? "hiba: nincs címzett" : "nincs bekötve: nincs RESEND_API_KEY", problems: problems.length };
   const s = h.stats || { sessions: 0, scored: 0, signups: 0 };
   const subject = problems.length ? `InkAge · ${problems.length} dolog nem működik` : "InkAge · minden rendben (hétfői ellenőrzés)";
   const html = `<!doctype html><html><body style="margin:0;background:#060607;font-family:-apple-system,Segoe UI,Inter,Arial,sans-serif;color:#F4F2EC">

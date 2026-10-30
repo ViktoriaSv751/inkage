@@ -7,7 +7,7 @@ import { track } from '@/lib/store';
 import './consent.css';
 
 
-/** Desktop: a slim "start free" bar along the bottom of every public page. */
+/** Desktop: a slim "get started" bar along the bottom of every public page. */
 export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const [show, setShow] = useState(false);
@@ -32,7 +32,7 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
     return () => document.documentElement.classList.remove('has-ctabar');
   }, [visible]);
   return (
-    <aside className={`ctabar ${visible ? 'on' : ''}`} aria-hidden={!visible} aria-label={T('Start free', 'Kezdd el ingyen')}>
+    <aside className={`ctabar ${visible ? 'on' : ''}`} aria-hidden={!visible} aria-label={T('Get started', 'Kezdd el')}>
       <div className="ctabar-in">
         <div className="ctabar-pics" aria-hidden="true">
           <span className="a" />
@@ -40,7 +40,7 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
         </div>
         <div className="ctabar-txt">
           <b>{T('See your tattoo 50 years from now', 'Nézd meg a tetoválásod 50 év múlva')}</b>
-          <span>{T('No card · One-tap sign-up with Google or Apple · About a minute', 'Bankkártya nélkül · Egy koppintásos Google- vagy Apple-regisztráció · Kb. egy perc')}</span>
+          <span>{T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc')}</span>
         </div>
         <div className="ctabar-act">
           <Link href={`/belepes${qOf(lang)}`} className="ctabar-ghost" tabIndex={visible ? 0 : -1}>
@@ -84,7 +84,7 @@ export function CookieConsent({ lang, onChange }: { lang: Lang; onChange?: (open
       seen = localStorage.getItem('ink_consent');
     } catch {}
     if (!seen) {
-      const tm = setTimeout(() => setOpen(true), 700);
+      const tm = setTimeout(() => setOpen(true), 2500); // after the first screen has been seen
       return () => clearTimeout(tm);
     }
   }, []);

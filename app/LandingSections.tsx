@@ -103,7 +103,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
         </ol>
       </section>
 
-      <UseCases t={t} />
+      <UseCases t={t} lang={lang} />
 
       {/* ---------------------------------------------------------------- everything for the decision */}
       <section className="ls-dark">
@@ -226,9 +226,9 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
         </div>
       </section>
 
-      <CompareTable t={t} />
+      <CompareTable t={t} lang={lang} />
       <PrivacyBlock t={t} />
-      <BetaInstall t={t} />
+      <BetaInstall t={t} lang={lang} />
       <LandingFaq t={t} kbSfx={kbSfx} />
 
       {/* ---------------------------------------------------------------- final call */}
@@ -238,8 +238,8 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
           <h2>{t('See it before it’s permanent.', 'Nézd meg, mielőtt végleges lesz.')}</h2>
           <p>
             {made >= 100
-              ? t(`${made.toLocaleString('en')} previews made so far. Free after sign-up.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Regisztráció után ingyenes.`)
-              : t('Free after a one-tap sign-up with Google or Apple.', 'Egy koppintásos Google- vagy Apple-regisztráció után ingyenes.')}
+              ? t(`${made.toLocaleString('en')} previews made so far. 30 previews a month with your account.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Fiókkal havonta 30 előnézet.`)
+              : t('One-tap sign-up with Google or Apple.', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}
           </p>
           <AuthCta lang={lang} light where="final" style={{ justifyContent: 'center' }} />
         </div>

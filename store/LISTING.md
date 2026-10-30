@@ -10,7 +10,7 @@ Minden szöveg bemásolható. Ahol `[ ]` van, ott még a te adatod kell.
 | Csomagnév / Bundle ID | `app.inkage` (Android és iOS is) |
 | Apple Team ID | BVM9R6J6D3 |
 | Kategória | Életmód (Lifestyle); másodlagos: Fotó és videó |
-| Ár | Ingyenes, nincs alkalmazáson belüli vásárlás |
+| Ár | Az App Store Connect / Play Console beállítása szerint |
 | Eszközök | Csak iPhone (iPad kikapcsolva), Android telefon |
 | Adatvédelmi URL | https://inkage.app/privacy |
 | Felhasználási feltételek | https://inkage.app/terms |
@@ -29,7 +29,7 @@ Minden szöveg bemásolható. Ahol `[ ]` van, ott még a te adatod kell.
 
 Mielőtt végleges lesz, nézd meg. Az InkAge a saját fotódon mutatja meg, hogyan néz ki egy tetoválás frissen, és hogyan öregszik 1, 10, 30 és 50 év alatt.
 
-- Lépj be egy koppintással Apple- vagy Google-fiókkal – utána minden ingyenes.
+- Lépj be egy koppintással Apple- vagy Google-fiókkal, és már kezdheted is.
 - Tölts fel egy fotót a testrészről, és válassz mintát, vagy írd le, mit szeretnél.
 - Lásd a tetoválást a saját bőrtónusodon, a saját fényeiddel.
 - Csúsztasd az éveket, és nézd, hogyan terül szét és fakul a tinta.
@@ -51,7 +51,7 @@ Az eredmény MI-szimuláció inspirációnak, nem orvosi tanács. A valós eredm
 
 See it before it's permanent. InkAge shows any tattoo on your own photo, fresh and aged 1, 10, 30 and 50 years.
 
-- Sign in with one tap with Apple or Google – then everything is free.
+- Sign in with Apple or Google in one tap and you can start right away.
 - Upload a photo of the body area and pick a design, or describe what you want.
 - See it on your own skin tone and light.
 - Slide through the years to see how ink spreads and fades.

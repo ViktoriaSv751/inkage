@@ -37,7 +37,7 @@ export function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: (
             toast(t('Allow notifications in Settings to get the reminders, or use the calendar file.', 'Engedélyezd az értesítéseket a Beállításokban, vagy használd a naptárfájlt.'));
           }
           track('aftercare_ics');
-          await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-gyogyulas.ics');
+          await shareOrDownload(aftercareIcs(new Date(date + 'T09:00:00'), ui.lang), 'inkage-aftercare.ics');
           toast(t('Open the file to add the reminders to your calendar', 'Nyisd meg a fájlt, és bekerülnek az emlékeztetők a naptáradba'));
           if (me?.user) {
             // phone reminders too, after the calendar file (never blocks it)
@@ -56,7 +56,6 @@ export function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: (
         {t('Add reminders to my calendar', 'Emlékeztetők a naptáramba')}
       </button>
       <p className="fine">{t('General aftercare tips, not medical advice. Follow your tattoo artist’s instructions, and see a doctor if you notice signs of infection.', 'Általános utókezelési tippek, nem orvosi tanács. Kövesd a tetoválód utasításait, és fordulj orvoshoz, ha fertőzés jeleit látod.')}</p>
-      <p className="fine">{t('General aftercare information, not medical advice. Follow your artist’s instructions.', 'Általános ápolási tájékoztató, nem orvosi tanács. Kövesd a tetoválód utasításait.')}</p>
     </Sheet>
   );
 }

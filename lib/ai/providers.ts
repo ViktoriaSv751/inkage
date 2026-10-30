@@ -24,6 +24,9 @@ export function textModels() {
   return [process.env.GEMINI_TEXT_MODEL, 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter((m, i, arr): m is string => !!m && arr.indexOf(m) === i);
 }
 
+// a stuck call must not run until the function is killed (then nothing is refunded): give up after 90 s
+const GEMINI_TIMEOUT = 90_000;
+
 export async function geminiCall(models: string[], body: unknown) {
   let lastErr: any;
   for (const model of models) {
@@ -31,6 +34,7 @@ export async function geminiCall(models: string[], body: unknown) {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(GEMINI_TIMEOUT),
     });
     if ((res.status === 429 || res.status === 503) && !(await res.clone().text()).includes('limit: 0')) {
       // short, busy moment: wait and try once more
@@ -39,6 +43,7 @@ export async function geminiCall(models: string[], body: unknown) {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(GEMINI_TIMEOUT),
       });
     }
     const data: any = await res.json().catch(() => ({}));
@@ -157,6 +162,6 @@ export function friendlyAiError(e: any): string {
   if (/safety|moderation|policy|rejected|blocked|SAFETY|PROHIBITED|IMAGE_SAFETY/i.test(msg))
     return 'The AI safety filter blocked this photo. Use a photo that shows only the body area, with no nudity and no minors.';
   if (/limit: 0\b|billing|insufficient|prepay|credits|depleted/i.test(msg)) return 'Previews are paused for a short while. Please try again later today.';
-  if (/quota|exhausted|429|overloaded|503/i.test(msg)) return 'Lots of people are making previews right now. Try again in a minute.';
+  if (/quota|exhausted|429|overloaded|503|TimeoutError|aborted/i.test(msg)) return 'Lots of people are making previews right now. Try again in a minute.';
   return 'The preview could not be created. Try again, or use a clearer, well-lit photo.';
 }

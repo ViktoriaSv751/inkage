@@ -2,13 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState , useEffect } from "react";
 import { BarList, Donut, Empty, TrendChart, compact, fmt, pct, SERIES } from "../charts";
-import { BellCurve } from "../wow";
 import { Band, Card, FILES, Kpi, Lesson, Loading, P, QVAL, SIGN, lang, n, periodName, periodWords, type D, useBlockRpc, useFlt, useRpc , series } from "../shared";
 import { per } from "./traffic";
 import { FeatureGaps } from "./people";
 import { UserDrawer } from "./users";
+import { REDO } from "./inkage";
 
-const SHARE_EV: Record<string, string> = { share_open: "Meghívó megosztva", share_save: "PDF a tetoválóművésznek", share_video: "Öregedés-videó", reveal_share: "Megosztó link" };
+/* the PDF, the video and the saved image are downloads (Letöltött fájlok), not shares */
+const SHARE_EV: Record<string, string> = { share_open: "Meghívó megosztva", share_save: "Mentés megosztásra", share_video: "Videó megosztva", reveal_share: "Megosztó link" };
 const FMT: Record<string, string> = { story: "Story (9:16)", post: "Poszt (1:1)", square: "Négyzet", wide: "Széles", card: "Kártya", video: "Videó", "–": "nincs megadva" };
 
 /* ---------- product ---------- */
@@ -21,12 +22,11 @@ export function Product({ d }: { d: D }) {
   if (e) return <div className="g"><div className="alert err s12">{e}</div></div>;
   if (!X) return <Loading />;
   const N: D = X.now || {}, PV: D = X.prev || {}, U: D = (ub.own ? (ub.q.d as D | null)?.unlocks : X.unlocks) || {};
-  const sc = Array.from({ length: 11 }, (_, i) => ({ k: i * 10, n: n(((X.scores || []) as D[]).find((x) => n(x.k) === i * 10)?.n) }));
-  const scTotal = sc.reduce((s, x) => s + x.n, 0);
   const shares: D[] = X.share_fmt || [];
   const byFmt = Object.values(shares.reduce((m: Record<string, D>, x) => { (m[x.fmt] ||= { k: x.fmt, n: 0 }).n += n(x.n); return m; }, {})) as D[];
   const byEv = Object.values(shares.reduce((m: Record<string, D>, x) => { (m[x.ev] ||= { k: x.ev, n: 0 }).n += n(x.n); return m; }, {})) as D[];
   const decided = n(N.captured) + n(N.skipped);
+  const R: D = X.redo || {}, M: D = X.reminders || {};
   return (
     <div className="g">
       <Lesson>{n(N.revealed) ? <>Akik megnézik a tetoválásukat 50 év múlva, azoknak <b>{pct(n(N.detail), n(N.revealed))}</b>-a elmenti az előnézetet, és <b>{pct(n(N.more), n(N.revealed))}</b>-a kér újat. {n(N.detail) / n(N.revealed) < 0.3 ? "Az öregedés megnézése utáni első lépés a legnagyobb lehetőség." : "Az öregedés megnézése jól viszi tovább az embereket."}</> : <>Ebben az időszakban még senki nem nézte meg az öregedést.</>}</Lesson>
@@ -35,22 +35,24 @@ export function Product({ d }: { d: D }) {
       <Kpi kind="own" to="@next" tone="pink" className="s3" icon={P.eye} l="Elmentette az előnézetet" v={fmt(N.detail)} now={n(N.detail)} prev={n(PV.detail)} sub={`${pct(n(N.detail), n(N.revealed))} az öregedés megnézése után`} />
       <Kpi kind="own" to="@next" tone="sky" className="s3" icon={P.refresh} l="Újat kért" v={fmt(N.more)} now={n(N.more)} prev={n(PV.more)} sub={`${pct(n(N.more), n(N.revealed))} az öregedés megnézése után`} />
       <Kpi kind="own" to="@next" tone="peach" className="s3" icon={P.pen} l="Kihagyta a bőrfotót" v={pct(n(N.skipped), decided)} now={decided ? n(N.skipped) / decided : 0} prev={n(PV.skipped) + n(PV.captured) ? n(PV.skipped) / (n(PV.skipped) + n(PV.captured)) : 0} invert sub={`${fmt(N.skipped)} / ${fmt(decided)} döntésből`} />
-      {scTotal > 0 ? <Card className="s12" icon={P.target} title="Értékek eloszlása" sub={`${fmt(scTotal)} érték ${periodName(d)}, tízes sávokban 0-tól 100-ig. A függőleges vonal az átlag.`}><BellCurve bins={sc} /></Card>
-        : <Card className="s12" icon={P.target} title="Értékek eloszlása" sub="Az InkAge nem ad pontszámot."><Empty t="Az InkAge nem küld ilyen értéket, ezért ez a kártya üres. Új mérést az áruházi ellenőrzés végéig nem adunk hozzá (az adatvédelmi adatlap nem változhat)." icon={P.target} /></Card>}
       <Card className="s4" icon={P.pen} title="Honnan jön a minta" sub="Saját feltöltés, mintatár, MI-minta, fotóról kivágva vagy kihagyás."><Donut items={(d.capture || []).map((r: D) => ({ k: r.k, n: n(r.n) }))} center={fmt((d.capture || []).reduce((s: number, r: D) => s + n(r.n), 0))} sub="minta" label={(k) => SIGN[k] || k} color={(k) => ({ drawn: SERIES[0], draw: SERIES[0], photo: SERIES[2], skipped: "#6E6E73" } as D)[k] || SERIES[6]} size={150} /></Card>
       <Card className="s4" icon={P.spark} title="Melyik stílust választják" sub="A bevezető kérdéseknél választott tetoválásstílus."><BarList items={((X.styles || []) as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => QVAL[k] || k} empty="Még senki nem választott stílust." /></Card>
-      <Card className="s4" icon={P.eye} title="Melyik változatot nyitják meg" sub="Az előnézetnél választott változat."><BarList items={((X.variants || []) as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} empty="Még senki nem választott változatot." /></Card>
-      <Card className="s6" icon={P.share} title="Megosztás: forma" sub="Milyen formában osztanak meg (link, videó, PDF)."><BarList items={byFmt.map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => FMT[k] || k} empty="Még nincs megosztás." /></Card>
-      <Card className="s6" icon={P.share} title="Megosztás: hol" sub="Megosztó link, öregedés-videó, PDF vagy meghívó."><BarList items={byEv.map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => SHARE_EV[k] || k} empty="Még nincs megosztás." /></Card>
+      <Card className="s6" icon={P.share} title="Megosztás: forma" sub="Milyen formában osztanak meg."><BarList items={byFmt.map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => FMT[k] || k} empty="Még nincs megosztás." /></Card>
+      <Card className="s6" icon={P.share} title="Megosztás: hol" sub="Megosztó link vagy meghívó (a PDF, a videó és a mentett kép letöltés: a „Letöltött fájlok” kártyán)."><BarList items={byEv.map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => SHARE_EV[k] || k} empty="Még nincs megosztás." /></Card>
       <Card className="s8" icon={P.doc} title="Mentett előnézetek" right={ub.ctl} sub={`A galériába mentett előnézetek ${periodWords(ub.p)}, és hányat csináltattak meg valóban.`}>
         <div className="mini-stats" style={{ gridTemplateColumns: "repeat(4,1fr)" }}><div className="mini"><span>Mentett előnézet</span><b>{fmt(U.n)}</b><small>előtte {fmt(U.prev)}</small></div><div className="mini"><span>Fiók</span><b>{fmt(U.users)}</b></div><div className="mini"><span>Elkészíttette</span><b>{fmt(U.pro)}</b></div><div className="mini"><span>Mintával</span><b>{fmt(U.design)}</b></div></div>
         {(U.daily || []).length > 1 ? <TrendChart data={(U.daily as D[]).map((x) => ({ t: x.t, v: n(x.n) }))} label="Mentett előnézet" height={150} /> : null}
       </Card>
       <Card className="s4" icon={P.alert} title="MI-megjegyzés jelentve" sub="Hányszor jelentették az MI megjegyzését, a felület nyelve szerint."><BarList items={((X.ai_reports || []) as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={lang} empty="Senki nem jelentett." /></Card>
-      <Card className="s4" icon={P.eye} title="Csúszka" sub="Az InkAge-ben nincs ilyen csúszka (–)."><BarList items={(d.legibility || []).map((x: D) => ({ k: String(x.k), n: n(x.n) }))} fmtK={(k) => QVAL[k] || k} empty="Még senki nem állította." /></Card>
-      <Card className="s4" icon={P.refresh} title="Újrakezdések köre" sub="Hányadik körig kérnek új előnézetet."><BarList items={(d.more_rounds || []).map((x: D) => ({ k: x.k + ". kör", n: n(x.n) }))} empty="Még senki nem kért újat." /></Card>
-      <Card className="s4" icon={P.doc} title="Letöltött fájlok" sub="Kép, öregedés-videó, PDF a tetoválóművésznek."><BarList items={(d.pro_files || []).map((x: D) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => FILES[k] || k} empty="Még nincs letöltés." /></Card>
-      <Card className="s4" icon={P.clock} title="Emlékeztető" sub="Be- és kikapcsolások (csak az appban; az InkAge most nem küld ilyet)."><BarList items={(d.reminders || []).map((x: D) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => (k === "true" ? "Bekapcsolta" : k === "false" ? "Kikapcsolta" : k)} empty="Még nincs adat." /></Card>
+      <Card className="s4" icon={P.refresh} title="Újrakérések („Nem lett jó?”)" sub={`Hányszor kértek új előnézetet a „Nem lett jó?” gombbal ${periodName(d)}, és milyen okot jelöltek (egy újrakérésnél több ok is lehet).`}>
+        <div className="mini-stats" style={{ gridTemplateColumns: "1fr" }}><div className="mini"><span>Újrakérés</span><b>{fmt(R.n)}</b><small>előtte {fmt(R.prev)}</small></div></div>
+        <BarList items={((R.why || []) as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => REDO[k] || k} empty="Még senki nem kért újat." /></Card>
+      <Card className="s4" icon={P.doc} title="Letöltött fájlok" sub="PDF a tetoválóművésznek, öregedés-videó, mentett kép, ápolási naptár."><BarList items={((X.files || []) as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} fmtK={(k) => FILES[k] || k} empty="Még nincs letöltés." /></Card>
+      <Card className="s4" icon={P.clock} title="Emlékeztetők" sub={`Az app emlékeztetői (push_reminders) ${periodName(d)}: hányat állítottak be, hány ment ki, hányat mondtak le, és hány vár még kiküldésre. A saját és a tesztfiókok nélkül.`}>
+        {n(M.set) + n(M.sent) + n(M.cancelled) + n(M.waiting) ? <>
+          <div className="mini-stats" style={{ gridTemplateColumns: "repeat(2,1fr)" }}><div className="mini"><span>Beállítva</span><b>{fmt(M.set)}</b></div><div className="mini"><span>Kiment</span><b>{fmt(M.sent)}</b></div><div className="mini"><span>Lemondva</span><b>{fmt(M.cancelled)}</b></div><div className="mini"><span>Vár</span><b>{fmt(M.waiting)}</b></div></div>
+          <BarList items={((M.kinds || []) as D[]).map((x) => ({ k: x.k, n: n(x.n) }))} empty="" /></> : <Empty t="Még senki nem állított be emlékeztetőt." />}
+      </Card>
       <ProductGaps />
     </div>
   );

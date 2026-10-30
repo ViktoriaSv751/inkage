@@ -9,6 +9,7 @@ import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { track } from '@/lib/store';
 import { oauthParams, authErrorText } from '@/lib/auth-help';
+import { nextFromUrl, rememberNext, takeNext, withLang } from '@/lib/auth-next';
 
 /** State and actions of the sign-in / sign-up screen: e-mail + password, e-mail code, Google / Apple. */
 export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
@@ -41,7 +42,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
   useEffect(() => {
     sb()
       ?.auth.getSession()
-      .then(({ data }) => data.session && router.replace('/app/gallery'));
+      .then(({ data }) => data.session && router.replace(withLang(nextFromUrl() || '/app/gallery', lang)));
     const url = PUBLIC.supabaseUrl,
       key = PUBLIC.supabaseAnonKey;
     if (url && key)
@@ -85,7 +86,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
             ? T('Too many attempts. Wait a minute and try again.', 'Túl sok próbálkozás. Várj egy percet, és próbáld újra.')
             : /password/i.test(m) && /6|8|short|weak/i.test(m)
               ? T('Choose a longer password (at least 8 characters).', 'Válassz hosszabb jelszót (legalább 8 karakter).')
-              : m;
+              : T('Something went wrong. Try again in a minute, or use another way to sign in.', 'Valami nem sikerült. Próbáld újra egy perc múlva, vagy lépj be másképp.');
 
   const loginPw = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +98,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     if (error) return setErr(friendly(error.message));
     track('auth_ok', { mode: 'password' });
     playSplash('in');
-    router.replace('/app/gallery');
+    router.replace(withLang(nextFromUrl() || '/app/gallery', lang));
   };
   const signupPw = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +109,8 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_signup');
-    if (data?.session) return playSplash('in'), router.replace('/app/gallery');
+    if (data?.session) return playSplash('in'), router.replace(withLang(nextFromUrl() || '/app', lang));
+    rememberNext(nextFromUrl() || '/app'); // the confirmation link opens the gallery: go on from there
     setSentKind('confirm');
     setStep('sent');
   };
@@ -134,8 +136,9 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     setErr('');
     const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${siteOrigin()}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
-    if (error) return setErr(/rate/i.test(error.message) ? T('Too many e-mails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : error.message);
+    if (error) return setErr(/rate/i.test(error.message) ? T('Too many e-mails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : friendly(error.message));
     track(mode === 'login' ? 'auth_code_login' : 'auth_code_signup');
+    rememberNext(nextFromUrl() || (mode === 'login' ? null : '/app'));
     setStep('code');
     setWait(45);
     setTimeout(() => boxes.current[0]?.focus(), 50);
@@ -150,7 +153,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     if (error) return setErr(T('That code didn’t work. Use the newest e-mail.', 'Ez a kód nem jó. A legfrissebb e-mailt használd.'));
     track('auth_ok', { mode });
     playSplash('in');
-    router.replace('/app/gallery');
+    router.replace(withLang(takeNext() || nextFromUrl() || (mode === 'login' ? '/app/gallery' : '/app'), lang));
   };
 
   const setDigit = (i: number, v: string) => {
@@ -175,22 +178,35 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     if (providers.loaded && !providers[provider])
       return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
     setErr('');
+    rememberNext(nextFromUrl() || (mode === 'signup' ? '/app' : null));
     // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser
     if (provider === 'google' && (await import('@/lib/inapp')).escapeForGoogle()) return;
     if ((window as any).Capacitor?.isNativePlatform?.()) {
       const e = await import('@/lib/native').then((m) => m.nativeOAuth(provider, () => setErr(T('Sign-in didn’t finish. Try again, or use your e-mail below.', 'A belépés nem fejeződött be. Próbáld újra, vagy lépj be e-maillel lent.'))));
-      if (e) setErr(e);
+      if (e) setErr(T('Sign-in didn’t work. Try again, or use your e-mail below.', 'A belépés nem sikerült. Próbáld újra, vagy lépj be e-maillel lent.'));
       return;
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
     markSplash('in');
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
-    if (error) setErr(error.message);
+    if (error) setErr(friendly(error.message));
+  };
+
+  // the confirmation e-mail didn't arrive: send it again
+  const resend = async () => {
+    if (!okEmail || busy || wait > 0) return;
+    setBusy(true);
+    const { error } = (await sb()?.auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: `${siteOrigin()}/app/gallery` } })) || { error: { message: 'unavailable' } as any };
+    setBusy(false);
+    track('auth_resend', { ok: !error });
+    if (error) return setErr(friendly(error.message));
+    setErr('');
+    setWait(60);
   };
 
   return {
     T, q, native, email, setEmail, agree, setAgree, step, setStep, name, setName, pw, setPw, show, setShow, sentKind,
-    code, setCode, busy, err, setErr, wait, boxes, okEmail, pwScore, loginPw, signupPw, forgot, send, verify, setDigit, oauth,
+    code, setCode, busy, err, setErr, wait, boxes, okEmail, pwScore, loginPw, signupPw, forgot, send, verify, setDigit, oauth, resend,
   };
 }
 

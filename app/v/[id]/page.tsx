@@ -1,15 +1,15 @@
-import { fromBrowser, tx } from '@/lib/tr';
+import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { getPoll, getShare, SharedView } from './SharedView';
+import { getPoll, getShare, reqLang, SharedView } from './SharedView';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: { id: string }; searchParams?: { lang?: string } }): Promise<Metadata> {
   const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.app';
   if (params.id.startsWith('p')) {
     const p = await getPoll(params.id);
-    const lang = fromBrowser(headers().get('accept-language') || '');
+    const lang = reqLang(searchParams);
     const n = p?.options.length || 1;
     const title = `${p?.question || (n > 1 ? (tx(lang, 'Which one should I get?', 'Melyiket csináltassam meg?')) : tx(lang, 'Should I get this tattoo?', 'Csináltassam meg ezt a tetoválást?'))} 👀`;
     const description = tx(lang, 'Take a look and vote – one tap, no sign-up.', 'Nézd meg, és szavazz – egy koppintás, regisztráció nélkül.');
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const s = await getShare(params.id);
   const abs = (u?: string) => (u && u.startsWith('/') ? `https://${host}${u}` : u);
   if (s) s.paths = { fresh: abs(s.paths.fresh), y50: abs(s.paths.y50), freshB: abs(s.paths.freshB), y50B: abs(s.paths.y50B) };
-  const lang = fromBrowser(headers().get('accept-language') || '');
+  const lang = reqLang(searchParams);
   const title = tx(lang, 'Should I get this tattoo? 👀', 'Csináltassam meg ezt a tetoválást? 👀');
   const description = tx(lang, 'See how it looks fresh and after 50 years, then vote. Made with InkAge.', 'Nézd meg frissen és 50 év múlva, aztán szavazz. InkAge-dzsel készült.');
   return {
@@ -31,6 +31,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function SharePage({ params }: { params: { id: string } }) {
-  return <SharedView id={params.id} />;
+export default async function SharePage({ params, searchParams }: { params: { id: string }; searchParams?: { lang?: string } }) {
+  return <SharedView id={params.id} searchParams={searchParams} />;
 }

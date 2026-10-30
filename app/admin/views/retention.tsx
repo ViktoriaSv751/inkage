@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BarList, Empty, Spark, TrendChart, fmt, pct, SERIES } from "../charts";
 import { ActivityRings } from "../wow";
 import { CohortBars } from "../visuals";
-import { Band, Card, Lesson, Loading, P, PROV, Tbl, ago, ch, lang, n, type D, useFlt, useRpc } from "../shared";
+import { Band, Card, Lesson, Loading, P, PROV, Tbl, ago, ch, lang, n, type D, useFlt, useRpc, NeedKey } from "../shared";
 import { Logo } from "../wow";
 import { Heat } from "./users";
 
@@ -69,7 +69,7 @@ export function Retention({ days }: { days?: number } = {}) {
           {Object.keys(G).length > 0 && <>{[1, 7, 15, 30].map((k) => <div key={k} className="mini"><span>Play: megtartotta {k} nap után</span><b>{n(G.downloads_src) ? pct(n(G["retained_d" + k]), n(G.downloads_src)) : "–"}</b><small>{fmt(G["retained_d" + k])} / {fmt(G.downloads_src)} telepítő</small></div>)}</>}
           {Object.keys(A).length > 0 && <><div className="mini"><span>App Store: aktív eszköz (a legtöbb egy napon)</span><b>{fmt(A.active_devices)}</b><small>{fmt(A.sessions)} munkamenet</small></div>
             <div className="mini"><span>App Store: telepítés / törlés</span><b>{fmt(A.installs)} / {fmt(A.deletions)}</b><small>{n(A.installs) ? pct(n(A.deletions), n(A.installs)) : "–"} törlési arány</small></div></>}
-        </div> : <Empty t="Az App Store- és a Google Play-kulcsok (Kapcsolatok oldal) és az első napi jelentések után jelenik meg." icon={P.layers} />}
+        </div> : <Empty t="Az App Store- és a Google Play-kulcsok (Kapcsolatok oldal) és az első napi jelentések után jelenik meg." icon={P.layers}><NeedKey k={["ASC_ISSUER_ID", "ASC_KEY_ID", "ASC_PRIVATE_KEY", "ASC_APP_ID", "PLAY_SERVICE_ACCOUNT_JSON", "PLAY_REPORTS_BUCKET"]} /></Empty>}
       </Card>
       <Card className="s6" icon={P.moon} title={`Alvó fiókok (30+ nap): ${fmt(d.dormant)}`} sub="Akik 30 napja nem voltak aktívak (a legutóbb aktívak elöl). Nekik szólhat egy visszahívó e-mail.">
         <Tbl name="alvo-fiokok" rows={d.dormant_list || []} empty="Nincs alvó fiók." csv={false} cols={[

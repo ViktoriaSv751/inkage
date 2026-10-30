@@ -86,8 +86,8 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       toc
       highlights={[
         { i: 'clock', h: T('About a minute', 'Kb. egy perc'), p: T('From photo to five ageing stages.', 'A fotótól az öt öregedési stádiumig.') },
-        { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple – free after that.', 'Google- vagy Apple-fiókkal – utána ingyenes.') },
-        { i: 'spark', h: T('Free in beta', 'Ingyenes a béta alatt'), p: T('Every feature, no card needed.', 'Minden funkció, kártya nélkül.') },
+        { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple, or with e-mail.', 'Google- vagy Apple-fiókkal, vagy e-maillel.') },
+        { i: 'spark', h: T('30 a month', 'Havi 30'), p: T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.') },
       ]}
       related={[
         { href: '/funkciok', t: T('Features', 'Funkciók'), p: T('Everything InkAge can do.', 'Minden, amit az InkAge tud.'), i: 'spark' },

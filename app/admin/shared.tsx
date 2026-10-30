@@ -34,15 +34,30 @@ export async function api(path: string, init?: RequestInit) {
 }
 
 
+/* Which keys are set (yes / no only, from /api/admin/status "keys"), read once per page load. An empty card that needs a key
+   says which one exactly, with a link to Kapcsolatok; once every key it names is set, the note disappears. */
+let KEYS_P: Promise<Record<string, boolean> | null> | null = null;
+export function useKeys() {
+  const [k, setK] = useState<Record<string, boolean> | null>(null);
+  useEffect(() => { KEYS_P ||= api("/api/admin/status").then((r) => (r.ok && r.json?.keys ? (r.json.keys as Record<string, boolean>) : null)).catch(() => null); KEYS_P.then(setK); }, []);
+  return k;
+}
+export function NeedKey({ k, what }: { k: string | string[]; what?: string }) {
+  const keys = useKeys(); const list = Array.isArray(k) ? k : [k];
+  const missing = keys ? list.filter((x) => !keys[x]) : list;
+  if (keys && !missing.length) return null;
+  return <p className="note" style={{ marginTop: 8 }}>{keys ? "Hiányzó kulcs" : "Ehhez kell"}: {missing.map((x, i) => <span key={x}>{i ? ", " : ""}<code>{x}</code></span>)}{what ? ` (${what})` : ""} · <a className="lnk" href="#connect">Kapcsolatok →</a></p>;
+}
+
 /* ---------- labels ---------- */
 /* InkAge's events reach the dashboard under the step names it counts (public.events_real): photo_added arrives as
    signature_captured, generate_done as flow_step "score", stage_y50 as reveal_shown, preview_saved as detail_open… The
    labels say what happened in InkAge; props.ev keeps InkAge's own name. */
 export const EV: Record<string, string> = {
-  app_open: "App megnyitása", flow_step: "Lépés megtekintése", quiz_answer: "Bevezető kérdés válasza", quiz_start: "Bevezető kérdések indulnak",
+  app_open: "App-képernyő", flow_step: "Lépés megtekintése", quiz_answer: "Bevezető kérdés válasza", quiz_start: "Bevezető kérdések indulnak",
   signature_captured: "Bőrfotó feltöltve", capture_skipped: "Fotó kihagyva", analysis_start: "Előnézet készül", score_shown: "Előnézet kész",
   reveal_shown: "Megnézte 50 év múlva", reveal_share: "Megosztó link", detail_open: "Előnézet elmentve", share_open: "Meghívó megosztva",
-  share_save: "PDF a tetoválóművésznek", share_video: "Öregedés-videó", client_error: "Hiba a böngészőben", server_error: "Hiba a szerveren", storage_full: "Tárhely megtelt",
+  share_save: "Mentés megosztásra", share_video: "Videó megosztva", client_error: "Hiba a böngészőben", server_error: "Hiba a szerveren", storage_full: "Tárhely megtelt",
   landing_view: "Weboldal-megtekintés", cta_click: "Gombkattintás", signup: "Regisztráció", auth_ok: "Sikeres belépés", auth_start: "Belépés indítva", auth_error: "Belépési hiba", signin_failed: "Sikertelen belépés",
   screen_time: "Képernyőn töltött idő", screenshot_key: "Képernyőkép-gomb (gépen)",
   gallery_open: "Galéria megnyitva", photo_check: "Fotó ellenőrizve", photo_pick_open: "Fotóválasztó megnyitva", design_pick_open: "Mintaválasztó megnyitva",
@@ -54,9 +69,17 @@ export const EV: Record<string, string> = {
   uv_check: "UV-ellenőrzés", model_photo: "Modellfotó választva", ai_design: "MI-minta készült", auth_reset_request: "Jelszó-visszaállítás kérve", share_view: "Megosztott előnézet megnézve",
   landing_faq: "GYIK a főoldalon", landing_usecase: "Felhasználási példa", landing_compare: "Összehasonlítás", drawer_feature: "Menüpont", design_fav: "Kedvenc minta", save_image: "Kép mentve", upload_reuse: "Korábbi feltöltés újra",
   oauth_start: "Google/Apple-belépés indul (app)", oauth_back: "Visszaért a belépésből (app)", oauth_cancel: "Belépés félbehagyva (app)", iab_escape: "Instagram/TikTok → telefon böngészője", improve_start: "Javítás indul", resize: "Méret állítva", aftercare_ics: "Ápolási naptár", stage_y10: "Megnézte 10 év múlva", stage_y30: "Megnézte 30 év múlva",
+  pro_file: "Fájl letöltve (PDF, videó, kép)", more_designs: "Új előnézetet kért („Nem lett jó?”)", signin: "Sikeres belépés", signup_confirmed: "Regisztráció megerősítve",
+  server_error_unverified: "Szerverhiba (nem hitelesített)", artist_pdf: "PDF a tetoválóművésznek", video_made: "Öregedés-videó letöltve",
 };
 
 export const ev = (k: string) => EV[k] || k;
+
+/* a quiz / placement answer as the person saw it: the body map's "@front:101,117|" coordinates left out; empty = "nem válaszolt" */
+export const cleanAns = (v: unknown) => { const t = String(v ?? "").replace(/^@[a-z]+:[0-9.,-]*\|/i, "").trim(); return t || "nem válaszolt"; };
+
+/* a sent phone notification that no device could receive (admin_push_status: "devices" = subscriptions at that time) */
+export const PushNone = ({ x }: { x: D }) => (x && x.devices === 0 ? <em className="chip bad" style={{ fontStyle: "normal" }}>0 eszközre ment – senki nem kapta meg</em> : null);
 
 export const HIDDEN = new Set(["paywall_shown", "plan_pick", "purchase"]); /* the app is free: older test events stay hidden */
 
@@ -66,7 +89,7 @@ export const FUNNEL: Record<string, [string, string]> = {
   sessions: ["Látogatás", "minden munkamenet"], land: ["Weboldalt látta", "főoldal, cikkek"], cta: ["Gombra kattintott", "kezdés, belépés"],
   app: ["Megnyitotta az appot", "/app betöltve"], named: ["Elkezdte", "fotóválasztó megnyitva"], captured: ["Feltöltött egy bőrfotót", "kihagyás nélkül"],
   scored: ["Megkapta az előnézetet", "a fő élmény"], quiz: ["Bevezető kérdések", "cél, stílus, testrész"], revealed: ["Megnézte 50 év múlva", "az öregedés"],
-  detail: ["Elmentette az előnézetet", "a galériába"], shared: ["Megosztott", "link, videó, PDF"],
+  detail: ["Elmentette az előnézetet", "a galériába"], shared: ["Megosztott", "megosztó link, meghívó"],
 };
 
 export const PREVK: Record<string, string> = { app: "sessions", named: "app", captured: "named", scored: "captured", quiz: "scored", revealed: "quiz", detail: "revealed" };
@@ -85,13 +108,12 @@ export const QSTEP: Record<string, string> = { name: "Fotó lépés", sign: "Min
 
 export const QVAL: Record<string, string> = { new: "Új tetoválást tervez", cover: "Takarást tervez", remove: "Eltávolítást fontolgat", existing: "Meglévőt néz", check: "Meglévőt ellenőriz",
   "fine-line": "Fine line", blackwork: "Blackwork", traditional: "Tradicionális", realism: "Realisztikus", watercolor: "Akvarell", minimal: "Minimal", lettering: "Felirat", geometric: "Geometrikus", tribal: "Tribal", dotwork: "Dotwork", japanese: "Japán",
-  upload: "Saját feltöltés", library: "Mintatárból", ai: "MI-minta", photo: "Fotóról kivágva", camera: "Kamerával", file: "Fájlból", skipped: "Kihagyta" };
+  upload: "Saját feltöltés", library: "Mintatárból", ai: "MI-minta", photo: "Fotóról kivágva", camera: "Kamerával", file: "Fájlból", skipped: "Kihagyta",
+  explore: "Csak nézelődik", another: "Másik", color: "Színes", other: "Egyéb", removal: "Eltávolítás", paste: "Beillesztve", link: "Linkről", idea: "Ötletből" };
 
 /* the app's screens (screen_time.scr); InkAge does not send these yet */
 export const SCR: Record<string, string> = { home: "Főoldal", gallery: "Galéria", result: "Eredmény", editor: "Szerkesztő" };
 
-/* Calligra's celeb styles: InkAge has none (the style names come from QVAL) */
-export const CELEB: Record<string, string> = {};
 
 export const styleName = (v: unknown) => { const s = String(v || ""); if (!s) return "–"; return QVAL[s] || s; };
 
@@ -156,7 +178,7 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "users", l: "Emberek", i: P.users, d: "Kik regisztráltak, honnan, és visszajönnek-e." },
     { k: "funnel", l: "Tölcsér", i: P.funnel, d: "Az út lépésről lépésre: hol esnek ki az emberek." },
     { k: "retention", l: "Megtartás", i: P.refresh, d: "Visszajönnek-e a regisztráltak: kohorszok és aktív fiókok." },
-    { k: "announce", l: "Közlemények", i: P.bell, d: "Üzenet minden felhasználónak az app tetején: új funkció, karbantartás, nyelvre és platformra célozva, időzítve." },
+    { k: "announce", l: "Közlemények (nem működik még)", i: P.bell, d: "NEM MŰKÖDIK MÉG: az app még nem mutatja a közleményeket. Itt előre megírhatod és időzítheted őket, de senki nem látja, amíg az appba nem kerül a sáv." },
   ] },
   { g: "Növekedés", items: [
     { k: "traffic", l: "Források", i: P.traffic, d: "Honnan jönnek a látogatók, és melyik csatorna hoz felhasználót." },

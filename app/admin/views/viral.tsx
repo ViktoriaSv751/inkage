@@ -5,7 +5,7 @@ import { Gauge, ViralTree } from "../wow";
 import { Band, Card, Kpi, Lesson, Mini, P, Tbl, n, periodWords, series, type D, useBlockRpc, useRpc } from "../shared";
 
 /* ---------- viral: the share links carry utm_source=share&utm_medium=<card kind>; the old ?ref= links still count ---------- */
-const CARD: Record<string, string> = { ba: "Előtte–utána (most és 50 év múlva)", score: "Előnézet-link", sig: "Öregedés-videó", card: "Link (típus nélkül)", "?": "Egyéb" };
+const CARD: Record<string, string> = { ba: "Előtte–utána (most és 50 év múlva)", score: "Előnézet-link", sig: "Öregedés-videó", card: "Link (típus nélkül)", preview: "Megosztott előnézet megnyitva (/v/…)", "?": "Egyéb" };
 const FMT: Record<string, string> = { post: "Poszt (4:5)", story: "Story (9:16)", square: "Négyzet (1:1)", video: "Videó", "?": "Egyéb" };
 
 export function Viral({ d }: { d: D }) {
@@ -29,7 +29,7 @@ export function Viral({ d }: { d: D }) {
       <Band plain label="Megosztási arány" value={scored ? (ss / scored) * 100 : 0} d={1} fmtFn={(x) => fmt(x, 1) + "%"} now={ss} prev={d.prev_partial ? undefined : pss}
         sentence={<>Az előnézetet kapók közül <b>{fmt(ss)}</b> nyitotta meg a megosztást (minden megosztó, előnézet nélkül is: {fmt(shared)}); a megosztott linkekről (utm_source=share) <b>{fmt(back)}</b> új látogató jött, közülük <b>{fmt(backScored)}</b> kapott előnézetet. Cél: 10% fölötti megosztás.</>} />
       <Kpi kind="own" to="@next" tone="butter" className="s4" icon={P.viral} l="Megosztó látogatás" v={<CountUp v={shared} />} now={shared} prev={V.prev ? n(VP.shared) : n(d.prev?.shared)} spark={series(d, "shared")} />
-      <Kpi kind="own" to="@next" tone="pink" className="s4" icon={P.links} l="Megosztott linkről jött" v={<CountUp v={back} />} now={back} prev={n(VP.back)} sub="utm_source=share (vagy régi ?ref=) linkkel" />
+      <Kpi kind="own" to="@next" tone="pink" className="s4" icon={P.links} l="Megosztott linkről jött" v={<CountUp v={back} />} now={back} prev={n(VP.back)} sub="utm_source=share (vagy régi ?ref=) linkkel, vagy a megosztott előnézetet nyitotta meg" />
       <Kpi kind="own" to="@next" tone="sky" className="s4" icon={P.target} l="Közülük előnézet" v={<CountUp v={backScored} />} now={backScored} prev={n(VP.back_scored)} sub={back ? `${pct(backScored, back)} a visszajöttekből` : "még senki nem jött vissza"} />
       <Card className="s4" icon={P.bolt} title="Virális együttható" sub="Megosztott linkről érkező látogatások / összes látogatás az időszakban. 0,3 fölött már érezhetően magától nő.">
         <Gauge v={k} label={k >= 0.3 ? "jó: magától is nő" : `${fmt(k, 2)} · cél: 0,3 fölött`} />
@@ -37,12 +37,12 @@ export function Viral({ d }: { d: D }) {
       <Card className="s8" icon={P.viral} title="Megosztási fa" sub="Egy megosztásból hányan jöttek vissza, és közülük hányan kaptak előnézetet.">
         <ViralTree shared={shared} visits={back} scored={backScored} />
       </Card>
-      <Card className="s12" icon={P.layers} title="A megosztás lépései" right={vb.ctl} sub={`Előnézetet kapott → megnyitotta a megosztást → elmentette a videót vagy a PDF-et → valaki visszajött a linkjéről → az is előnézetet kapott (${periodWords(vb.p)}). Minden lépésnél az előzőhöz mért arány.`}>
+      <Card className="s12" icon={P.layers} title="A megosztás lépései" right={vb.ctl} sub={`Előnézetet kapott → megnyitotta a megosztást → valaki visszajött a linkjéről (vagy megnyitotta a megosztott előnézetet) → az is előnézetet kapott (${periodWords(vb.p)}). A PDF, a videó és a mentett kép letöltés, nem megosztás: a Használat oldal „Letöltött fájlok” kártyáján látszik. Minden lépésnél az előzőhöz mért arány.`}>
         {vb.own && !vb.q.d ? <div className="skel" style={{ height: 200 }} /> : (() => { const O: D = vb.own ? ((vb.q.d as D).now || {}) : VN;
-          return <Funnel steps={[{ k: "scored", l: "Előnézetet kapott", n: vb.own ? n(O.scored) : scored }, { k: "opened", l: "Megosztást nyitott", n: n(O.opened) }, { k: "saved", l: "Videót / PDF-et mentett", n: n(O.saved) },
+          return <Funnel steps={[{ k: "scored", l: "Előnézetet kapott", n: vb.own ? n(O.scored) : scored }, { k: "opened", l: "Megosztást nyitott", n: n(O.opened) },
             { k: "back", l: "Visszajött a linkről", n: vb.own ? n(O.back) : back }, { k: "back_scored", l: "Ő is előnézetet kapott", n: vb.own ? n(O.back_scored) : backScored }].map((s, i, a) => ({ ...s, prev: i ? a[i - 1].n : undefined }))} accentK="back" />; })()}
         {!vb.own && <div className="mini-stats" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", marginTop: 10 }}>
-          <Mini l="Meghívó megosztva" v={c.share_open} /><Mini l="PDF a tetoválóművésznek" v={c.share_save} /><Mini l="Öregedés-videó" v={c.share_video} /><Mini l="Megosztó link" v={c.reveal_share} />
+          <Mini l="Meghívó megosztva" v={c.share_open} /><Mini l="Megosztó link" v={c.reveal_share} /><Mini l="Megosztott előnézet megnyitva" v={c.share_view} />
         </div>}
       </Card>
       <Card className="s12" icon={P.traffic} title="Megosztás és visszaérkezés naponta" sub="Hány látogatás osztott meg valamit, és hányan jöttek vissza megosztott linkről, naponta.">

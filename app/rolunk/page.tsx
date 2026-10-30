@@ -172,11 +172,11 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
         <section className="ab-sec ab-now">
           <div>
             <p className="ab-eyebrow">{T('Where we are now', 'Hol tartunk most')}</p>
-            <h2>{T('Public beta. Everything free.', 'Nyilvános béta. Minden ingyenes.')}</h2>
+            <h2>{T('Public beta. Every feature open.', 'Nyilvános béta. Minden funkció elérhető.')}</h2>
             <p>
               {T(
-                'While we learn what helps people most, every feature is free and no card is needed. Ideas and bug reports go straight to the people building InkAge — you can write to us from the contact page or from Settings in the app.',
-                'Amíg kiderítjük, mi segít a legtöbbet, minden funkció ingyenes, és kártya sem kell. Az ötletek és hibajelentések egyenesen azokhoz jutnak, akik az InkAge-et építik – írhatsz a kapcsolat oldalon vagy az appban a Beállítások alatt.'
+                'While we learn what helps people most, every feature is open to everyone with an account. Ideas and bug reports go straight to the people building InkAge — you can write to us from the contact page or from Settings in the app.',
+                'Amíg kiderítjük, mi segít a legtöbbet, minden funkció elérhető mindenkinek, akinek van fiókja. Az ötletek és hibajelentések egyenesen azokhoz jutnak, akik az InkAge-et építik – írhatsz a kapcsolat oldalon vagy az appban a Beállítások alatt.'
               )}
             </p>
             <div className="ab-now-btns">
@@ -192,8 +192,8 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
             <li>
               <Ico k="gift" />
               <span>
-                <b>{T('Free while in beta', 'Ingyenes a béta alatt')}</b>
-                {T('All features, no card.', 'Minden funkció, kártya nélkül.')}
+                <b>{T('30 previews a month', 'Havi 30 előnézet')}</b>
+                {T('All features, with your account.', 'Minden funkció, a fiókoddal.')}
               </span>
             </li>
             <li>

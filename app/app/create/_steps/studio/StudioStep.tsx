@@ -3,7 +3,7 @@ import { qOf } from '@/lib/tr';
 
 import { useCallback, useRef, useState } from 'react';
 import { useApp } from '../../../AppProvider';
-import { api } from '@/lib/sb';
+import { checkPhotoOnce } from '../../../_home/photoCheck';
 import { haptic, track } from '@/lib/store';
 import { prepareImage } from '@/lib/client';
 import { processDesign } from '@/lib/editor';
@@ -83,7 +83,7 @@ export function StudioStep({
   const runCheck = useCallback(
     async (p: Photo, where: string) => {
       setCheck({ state: 'checking' });
-      const r = await api<{ ok: boolean; code: string; area: string; box?: Area['box'] | null; angle?: number | null; skin?: Skin | null }>('/api/check-photo', { photo: p.dataUrl, placement: aiPlacement(where) });
+      const r = await checkPhotoOnce(p.dataUrl, aiPlacement(where));
       if (!r.ok) return setCheck({ state: 'ok' }); // never block on a failed check
       onArea?.(r.data.box ? { box: r.data.box, angle: r.data.angle ?? 0 } : null, where, p, r.data.skin);
       const c = r.data.code;

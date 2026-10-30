@@ -3,8 +3,9 @@
 import ts from 'typescript';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
+const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const files = [];
 const walk = (d) => {
   for (const f of fs.readdirSync(d)) {

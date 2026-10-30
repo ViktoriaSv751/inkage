@@ -4,7 +4,7 @@ import type { AuthFlow } from './useAuthFlow';
 
 /** After sign-up or a reset request: a link is on its way. */
 export function SentStep({ flow }: { flow: AuthFlow }) {
-  const { T, q, email, sentKind } = flow;
+  const { T, q, email, sentKind, resend, busy, wait, err } = flow;
   return (
     <div className="au-done">
       <span className="au-mail" aria-hidden="true">
@@ -23,7 +23,13 @@ export function SentStep({ flow }: { flow: AuthFlow }) {
       <Link className="au-btn as-link" href={`/belepes${q}`}>
         {T('Back to sign in', 'Vissza a belépéshez')}
       </Link>
-      <p className="au-hint">{T('Didn’t get it? Check spam, or try again in a minute.', 'Nem jött meg? Nézd meg a spam mappát, vagy próbáld újra egy perc múlva.')}</p>
+      <p className="au-hint">{T('Didn’t get it? Check spam, or send it again.', 'Nem jött meg? Nézd meg a spam mappát, vagy küldd el újra.')}</p>
+      {sentKind === 'confirm' && (
+        <button type="button" className="au-resend" disabled={busy || wait > 0} onClick={resend}>
+          {wait > 0 ? T(`Sent again – you can resend in ${wait} s`, `Újraküldve – ${wait} mp múlva küldheted újra`) : T('Send the e-mail again', 'Levél újraküldése')}
+        </button>
+      )}
+      {err && <p className="au-err">{err}</p>}
     </div>
   );
 }

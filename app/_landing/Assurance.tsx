@@ -6,11 +6,11 @@ import { useEffect, useState } from 'react';
 import { track } from '@/lib/store';
 import { LogoMark } from '../LogoMark';
 import type { T } from './types';
+import type { Lang } from '@/lib/tr';
 
 /* ------------------------------------------------------------------ privacy */
 export function PrivacyBlock({ t }: { t: T }) {
   const rows = [
-    { i: 'M4 7h16v10H4zM8 21h8M12 17v4', h: t('Stored on this device', 'Ezen az eszközön tárolva'), s: t('Without an account', 'Fiók nélkül'), on: true },
     { i: 'M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4', h: t('Private cloud storage', 'Privát felhőtárhely'), s: t('Only you can open it', 'Csak te nyithatod meg'), on: true },
     { i: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1', h: t('Public vote link', 'Nyilvános szavazós link'), s: t('Off until you share', 'Kikapcsolva, amíg nem osztod meg'), on: false },
     { i: 'M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7zM12 9a3 3 0 1 0 0 6a3 3 0 0 0 0-6zM4 4l16 16', h: t('Ad trackers', 'Hirdetési követők'), s: t('None, ever', 'Egy sincs'), on: false },
@@ -75,8 +75,8 @@ export function PrivacyBlock({ t }: { t: T }) {
   );
 }
 
-/* ------------------------------------------------------------------ free beta + add to home screen */
-export function BetaInstall({ t }: { t: T }) {
+/* ------------------------------------------------------------------ beta + add to home screen */
+export function BetaInstall({ t, lang }: { t: T; lang?: Lang }) {
   const [evt, setEvt] = useState<any>(null);
   const [ios, setIos] = useState(false);
   const [installed, setInstalled] = useState(false);
@@ -93,15 +93,15 @@ export function BetaInstall({ t }: { t: T }) {
   return (
     <section className="ls-sec lm-beta" id="beta">
       <div className="lm-beta-card">
-        <h2>{t('Everything is free after sign-up.', 'Regisztráció után minden ingyenes.')}</h2>
-        <p>{t('All features, no card, no trial timer. We keep a fair daily limit so it stays free for everyone.', 'Minden funkció, kártya és próbaidő nélkül. Egy méltányos napi keretet tartunk, hogy mindenkinek ingyenes maradhasson.')}</p>
+        <h2>{t('Every feature, with your account.', 'Minden funkció, a fiókoddal.')}</h2>
+        <p>{t('30 previews a month with your account, plus invite bonuses. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézet, plusz meghívási bónuszok. A keret minden hónap 1-jén újraindul.')}</p>
         <ul>
           <li>{t('Ageing previews at 1, 10, 30 and 50 years', 'Öregedési előnézet 1, 10, 30 és 50 évre')}</li>
           <li>{t('Longevity score and “Make it last” redraw', 'Tartóssági pontszám és „Tedd tartóssá” átrajzolás')}</li>
           <li>{t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</li>
           <li>{t('Videos, vote links and the PDF for your artist', 'Videók, szavazós linkek és PDF a tetoválódnak')}</li>
         </ul>
-        <TryLink className="btn">{t('Create a free account', 'Ingyenes regisztráció')}</TryLink>
+        <TryLink lang={lang} className="btn">{t('Create account', 'Regisztráció')}</TryLink>
       </div>
       <div className="lm-install" id="telepites">
         <div className="lm-hs" aria-hidden="true">
@@ -154,9 +154,9 @@ export function BetaInstall({ t }: { t: T }) {
 /* ------------------------------------------------------------------ FAQ */
 export function LandingFaq({ t, kbSfx }: { t: T; kbSfx: string }) {
   const qs = [
-    [t('Is InkAge really free?', 'Tényleg ingyenes az InkAge?'), t('Yes. During the beta every feature is free. To keep it that way we use a fair daily limit; if it’s reached, you can leave your e-mail and we’ll tell you when previews are back.', 'Igen. A béta alatt minden funkció ingyenes. Hogy így maradhasson, méltányos napi keretet alkalmazunk; ha betelik, megadhatod az e-mail-címed, és szólunk, amint újra lehet előnézetet készíteni.')],
+    [t('How many previews can I make?', 'Hány előnézetet készíthetek?'), t('30 previews a month with your account, plus bonus previews when friends join through your invite link. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézetet, plusz bónuszt, ha a barátaid a meghívó linkeddel csatlakoznak. A keret minden hónap 1-jén újraindul.')],
     [t('How accurate is the ageing?', 'Mennyire pontos az öregítés?'), t('It is an AI estimate based on how ink, skin and sun usually behave — not a measurement of your skin. Use it to compare designs, sizes and placements, and talk details through with your artist.', 'MI-alapú becslés arról, ahogy a tinta, a bőr és a nap általában viselkedik – nem a saját bőröd mérése. Minták, méretek és helyek összehasonlítására használd, a részleteket pedig beszéld át a tetoválóddal.')],
-    [t('Do I need to sign up?', 'Kell regisztrálnom?'), t('Not for your first preview. Sign in only if you want your previews on every device.', 'Az első előnézethez nem. Csak akkor jelentkezz be, ha minden eszközödön látni szeretnéd az előnézeteidet.')],
+    [t('Do I need to sign up?', 'Kell regisztrálnom?'), t('Yes. A quick sign-up with Google or Apple (or e-mail) is needed, so your images stay private in your account.', 'Igen. Egy gyors regisztráció kell Google- vagy Apple-fiókkal (vagy e-maillel), így a képeid privátak maradnak a fiókodban.')],
     [t('What photo works best?', 'Milyen fotó működik a legjobban?'), t('Daylight, the spot in focus, filling most of the frame, without heavy filters. The app checks the light and focus for you.', 'Nappali fény, éles terület, ami kitölti a kép nagy részét, erős szűrők nélkül. Az app ellenőrzi helyetted a fényt és az élességet.')],
     [t('Can I use a design I found online?', 'Használhatok netről talált mintát?'), t('Yes — a screenshot, a sketch or even a photo of someone else’s tattoo. Remember that a design belongs to its artist: use it for inspiration and let your artist draw your own version.', 'Igen – képernyőfotót, vázlatot, vagy akár más tetoválásáról készült fotót is. Ne feledd, a minta az alkotójáé: inspirációnak használd, és a tetoválód rajzolja meg a saját változatodat.')],
     [t('Does it work on darker skin?', 'Sötétebb bőrön is működik?'), t('Yes. Every stage keeps your own skin tone. Our guide on tattoos on darker skin explains which colours and styles show best.', 'Igen. Minden stádium megtartja a saját bőrtónusodat. A sötétebb bőrről szóló útmutatónk elmagyarázza, mely színek és stílusok mutatnak a legjobban.')],

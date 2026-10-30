@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { asAdmin, asCron, call, settings, track } from "@/lib/admin/server";
+import { asAdmin, asCron, call, env, settings, track } from "@/lib/admin/server";
 import { syncSocial } from "@/lib/admin/social";
 import { syncCwv, syncGsc, syncIndex } from "@/lib/admin/gsc";
 import { syncStores } from "@/lib/admin/stores";
@@ -11,8 +11,19 @@ import { checkRules, measureUptime, runWatch, syncAiVisibility } from "@/lib/adm
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
+/* A source with no account or no key is "nincs bekötve", not an error: it must not turn the run red every hour, nor raise
+   the Monitoring / phone alerts. (The same words as public.admin_not_connected in the database.) */
+const NOT_CONNECTED = /(nincs bekötve|nincs beállítva|nincs [a-z_]*(key|json|token|secret)\b|nincs kulcs|nincs MI-kulcs|kulcs nélkül|nyilvános profil \(@\))/i;
+const unconnected = (o: Record<string, unknown>) => Object.fromEntries(Object.entries(o).map(([k, v]) => {
+  if (typeof v !== "string" || !/^hiba/i.test(v)) return [k, v];
+  if (NOT_CONNECTED.test(v)) return [k, "nincs bekötve: " + v.replace(/^hiba:?\s*/i, "")];
+  /* Pinterest without an API connection reads the public profile of PINTEREST_USERNAME; empty, it answers 404 */
+  if (k === "pinterest" && !env().PINTEREST_USERNAME && /\b404\b|API method not found/i.test(v)) return [k, "nincs bekötve: nincs összekapcsolt Pinterest-fiók és nincs PINTEREST_USERNAME"];
+  return [k, v];
+}));
 /* "ok" is false when any part says "hiba": the run's record (admin_runs) and the Monitoring page then show it red */
-const J = (o: Record<string, unknown>) => {
+const J = (o0: Record<string, unknown>) => {
+  const o = unconnected(o0);
   const bad = Object.values(o).some((v) => typeof v === "string" && /^hiba/i.test(v));
   return NextResponse.json({ ok: !bad, ...o }, { headers: { "cache-control": "no-store" } });
 };

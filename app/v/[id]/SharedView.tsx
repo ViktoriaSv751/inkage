@@ -1,10 +1,19 @@
-import { fromBrowser, qOf, tx } from '@/lib/tr';
+import { fromBrowser, isLang, qOf, tx, type Lang } from '@/lib/tr';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { PUBLIC } from '@/lib/public-config';
 import { Vote } from './Vote';
 import { Poll } from './Poll';
 import type { PollData } from '@/lib/share';
+
+/** Language of a shared-link page: ?lang= wins, then the language middleware.ts resolved (cookie), then the browser's. */
+export function reqLang(sp?: { lang?: string | string[] } | null): Lang {
+  const v = Array.isArray(sp?.lang) ? sp?.lang[0] : sp?.lang;
+  if (isLang(v)) return v;
+  const h = headers().get('x-ink-lang');
+  if (isLang(h)) return h;
+  return fromBrowser(headers().get('accept-language') || '');
+}
 
 export type Share = {
   paths: { fresh?: string; y50?: string; freshB?: string; y50B?: string };
@@ -48,12 +57,12 @@ export async function getShare(id: string): Promise<Share | null> {
 }
 
 /** A shared preview or poll. Inside the app (inApp, opened from Explore) it keeps the app's frame. */
-export async function SharedView({ id, inApp = false }: { id: string; inApp?: boolean }) {
+export async function SharedView({ id, inApp = false, searchParams }: { id: string; inApp?: boolean; searchParams?: { lang?: string | string[] } }) {
   const poll = id.startsWith('p') ? await getPoll(id) : null;
   if (poll) return <Poll id={id} initial={poll} inApp={inApp} />;
   const s = await getShare(id);
   if (!s) {
-    const lang = fromBrowser(headers().get('accept-language') || '');
+    const lang = reqLang(searchParams);
     return (
       <main className="legal" style={{ textAlign: 'center' }}>
         <h1>{tx(lang, 'This link no longer works', 'Ez a link már nem él')}</h1>

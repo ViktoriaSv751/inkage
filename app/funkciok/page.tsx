@@ -56,12 +56,12 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
     {
-      h: T('Free after sign-up', 'Regisztráció után ingyenes'),
+      h: T('With your account', 'A fiókoddal'),
       icon: 'gift',
       id: 'beta',
       ps: [
-        T('Every feature on this page is free while InkAge is in beta — no card, no trial timer. To keep it free for everyone there is a fair daily limit; if it is reached, leave your e-mail and we’ll tell you when previews are back.', 'Az oldalon szereplő minden funkció ingyenes, amíg az InkAge béta. Nincs bankkártya, nincs próbaidő. Hogy mindenkinek ingyenes maradhasson, méltányos napi keret van; ha betelik, add meg az e-mail-címed, és szólunk, amint újra lehet előnézetet készíteni.'),
-        T('Signing in is optional. It lets you keep previews on every device and earn extra previews by inviting friends.', 'A bejelentkezés nem kötelező. Azt teszi lehetővé, hogy minden eszközödön meglegyenek az előnézeteid, és barátok meghívásával extra előnézeteket szerezz.'),
+        T('Every feature on this page is open while InkAge is in beta. Your account gets 30 previews a month; the allowance restarts on the 1st of each month.', 'Az oldalon szereplő minden funkció elérhető, amíg az InkAge béta. A fiókod havonta 30 előnézetet kap; a keret minden hónap 1-jén újraindul.'),
+        T('An account is needed to make previews: one tap with Google or Apple, or e-mail and password. It keeps your images private, on every device, and lets you earn extra previews by inviting friends.', 'Az előnézetekhez fiók kell: egy koppintás Google- vagy Apple-fiókkal, vagy e-mail és jelszó. Így a képeid privátak maradnak, minden eszközödön meglesznek, és barátok meghívásával extra előnézeteket szerezhetsz.'),
       ],
     },
   ];
@@ -81,8 +81,8 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ]}
       related={[
         { href: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), p: T('Five steps from photo to preview.', 'Öt lépés a fotótól az előnézetig.'), i: 'camera' },
-        { href: '/ingyenes-beta', t: T('Free beta', 'Ingyenes béta'), p: T('What’s included, and the daily limit.', 'Mi jár, és mi a napi keret.'), i: 'gift' },
-        { href: '/tudastar', t: T('Knowledge base', 'Tudástár'), p: T('12 in-depth guides.', '12 részletes útmutató.'), i: 'doc' },
+        { href: '/ingyenes-beta', t: T('Beta', 'Béta'), p: T('What’s included, and the monthly allowance.', 'Mi jár, és mi a havi keret.'), i: 'gift' },
+        { href: '/tudastar', t: T('Knowledge base', 'Tudástár'), p: T('In-depth guides on ageing, placement and aftercare.', 'Részletes útmutatók öregedésről, helyválasztásról és utókezelésről.'), i: 'doc' },
       ]}
     />
   );

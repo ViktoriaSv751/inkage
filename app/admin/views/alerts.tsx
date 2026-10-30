@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Empty, TrendChart } from "../charts";
 import { SwipeRow, toast, usePhone } from "../phone";
-import { AIC, ALL, I, P, PF, TONE, ago, alerts, n, rpc, type Alert, type D, type Tab, usePeriod } from "../shared";
+import { AIC, ALL, I, P, PF, PushNone, TONE, ago, alerts, n, rpc, type Alert, type D, type Tab, usePeriod } from "../shared";
 
 /* ---------- alerts: an inbox, the list on the left, the chosen signal on the right ---------- */
 export const ALERT_M: Partial<Record<Tab, [string, string]>> = { traffic: ["sessions", "Látogatás"], funnel: ["scored", "Előnézet"], viral: ["shared", "Megosztás"], users: ["signups", "Regisztráció"], system: ["errors", "Hiba"], links: ["sessions", "Látogatás"], live: ["sessions", "Látogatás"], markets: ["sessions", "Látogatás"], goals: ["scored", "Előnézet"] };
@@ -158,6 +158,7 @@ function PushLog() {
   if (!s?.length) return null;
   return (
     <section className="c s12"><h2 style={{ marginBottom: 10 }}>Telefonra küldött értesítések</h2>
-      <ul className="push-l">{s.slice(0, 12).map((x, i) => <li key={i}><b>{x.title}</b><span>{x.body}</span><time>{ago(x.at)}</time></li>)}</ul></section>
+      {s.some((x) => x.devices === 0) && <p className="note" style={{ margin: "0 0 10px" }}>A „0 eszközre ment” jelölésűeket senki nem kapta meg: akkor egyetlen eszköz sem volt feliratkozva. Bekapcsolás: Rendszer → Értesítések a telefonra.</p>}
+      <ul className="push-l">{s.slice(0, 12).map((x, i) => <li key={i}><b>{x.title} <PushNone x={x} /></b><span>{x.body}</span><time>{ago(x.at)}</time></li>)}</ul></section>
   );
 }

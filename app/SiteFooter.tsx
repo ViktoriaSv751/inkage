@@ -15,7 +15,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
         { t: T('How it works', 'Hogyan működik'), href: `/hogyan-mukodik${q}` },
         { t: T('Features', 'Funkciók'), href: `/funkciok${q}` },
         { t: T('Styles', 'Stílusok'), href: `/tattoo/fine-line-forearm${qOf(lang)}` },
-        { t: T('Free beta', 'Ingyenes béta'), href: `/ingyenes-beta${q}` },
+        { t: T('Beta', 'Béta'), href: `/ingyenes-beta${q}` },
         { t: T('FAQ', 'GYIK'), href: `/gyik${q}` },
       ],
     },

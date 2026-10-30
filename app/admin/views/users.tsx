@@ -5,7 +5,7 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { BarList, Donut, Empty, Spark, fmt, pct, SERIES } from "../charts";
 import { PeopleGrid } from "../wow";
 import { LANG_LAND, flag } from "../visuals";
-import { Band, Card, EV, Kpi, LANGS, P, PF, PROV, QSTEP, QVAL, SCR, SIGN, CELEB, pageName, styleName, Tbl, ago, ch, dt, lang, n, periodName, periodWords, rpc, type D, Layer, useBlockPeriod, useFlt, useRpc } from "../shared";
+import { Band, Card, EV, Kpi, LANGS, P, PF, PROV, QSTEP, QVAL, SCR, SIGN, cleanAns, pageName, styleName, Tbl, ago, ch, dt, lang, n, periodName, periodWords, rpc, type D, Layer, useBlockPeriod, useFlt, useRpc } from "../shared";
 import { Logo, dur } from "../wow";
 import { per } from "./traffic";
 import { Activation, PeopleToday, ScoreChip, STAGE, StageChip, StageLesson, UserMore } from "./people";
@@ -48,7 +48,7 @@ export function Users({ d }: { d: D }) {
   const sources: D[] = U.sources || [], sourcesAll: D[] = U.sources_all || sources;
   /* the list's CSV without e-mail addresses or names (the table shows them, the file does not carry them) */
   const csv = () => {
-    const cols: [string, string][] = [["created_at", "Regisztrált"], ["provider", "Mód"], ["confirmed", "Megerősítve"], ["lang", "Nyelv"], ["ch", "Forrás (becslés)"], ["score", "Pontszám"], ["stage", "Életciklus"], ["churn", "Lemorzsolódhat"], ["unlocks", "Mentett előnézetek"], ["credits", "Bónusz előnézet"], ["gift_claimed", "–"], ["active_days", "Aktív napok (30)"], ["last_active", "Utoljára aktív"], ["tags", "Címkék"]];
+    const cols: [string, string][] = [["created_at", "Regisztrált"], ["provider", "Mód"], ["confirmed", "Megerősítve"], ["lang", "Nyelv"], ["ch", "Forrás (becslés)"], ["score", "Pontszám"], ["stage", "Életciklus"], ["churn", "Lemorzsolódhat"], ["unlocks", "Mentett előnézetek"], ["credits", "Bónusz előnézet"], ["active_days", "Aktív napok (30)"], ["last_active", "Utoljára aktív"], ["tags", "Címkék"]];
     const esc = (v: unknown) => { const s = v == null ? "" : String(v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
     const body = [cols.map((c) => c[1]).join(";"), ...((rows?.rows || []) as D[]).map((r) => cols.map(([k]) => esc(r[k])).join(";"))].join("\n");
     const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿" + body], { type: "text/csv;charset=utf-8" })); a.download = `fiokok-${new Date().toISOString().slice(0, 10)}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
@@ -98,7 +98,6 @@ export function Users({ d }: { d: D }) {
             { k: "ch", l: "Forrás", r: (x) => (x.ch ? <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><Logo k={x.ch} size={18} />{ch(x.ch)}</span> : <span className="mut">–</span>) },
             { k: "unlocks", l: "Mentett előnézetek", num: true, r: (x) => <>{fmt(x.unlocks)}{x.last_unlock && <small className="mut"> · {ago(x.last_unlock)}</small>}</> },
             { k: "credits", l: "Bónusz előnézet", num: true, r: (x) => fmt(x.credits) },
-            { k: "gift_claimed", l: "–", r: (x) => (x.gift_claimed ? "✓" : "–") },
             { k: "welcomed", l: "Üdvözlés", r: (x) => (x.welcomed ? <span title={dt(x.welcome_at)}>✓</span> : <span className="mut">–</span>) },
             { k: "active_days", l: "Aktív napok", num: true, r: (x) => fmt(x.active_days) },
             { k: "created_at", l: "Regisztrált", r: (x) => <span title={dt(x.created_at)}>{ago(x.created_at)}</span> },
@@ -161,7 +160,7 @@ function Journey({ u }: { u: D }) {
     if (last && last.k === k) { if (secs != null) last.secs = n(last.secs) + secs; continue; }
     pages.push({ k, at: timed && y.name === "screen_time" ? new Date(Date.parse(y.created_at) - n(y.secs) * 1000).toISOString() : y.created_at, secs });
   }
-  const answers = tl.filter((y) => y.name === "quiz_answer" && y.val && y.detail !== "style");
+  const answers = tl.filter((y) => y.name === "quiz_answer" && y.detail && y.detail !== "style");
   if (!v) return <><h3>Mit csinált</h3><Empty t="A regisztráló látogatás nem párosítható (iPhone-app, vagy a mérés nem látta)." /></>;
   return (
     <>
@@ -172,14 +171,14 @@ function Journey({ u }: { u: D }) {
         <Row ok={v.scored}>{v.scored ? "Megkapta az előnézetet" : "Nem kapta meg az előnézetet"}</Row>
         <Row ok={!!v.style} sub={v.quiz ? "a bevezető kérdéseknél" : undefined}>Választott stílus: <b>{styleName(v.style)}</b></Row>
         <Row ok={n(cu.total) > 0} warn={used >= daily} sub={n(cu.total) ? <>Napi keret: <b>{used} / {daily}</b> felhasználva az elmúlt 24 órában{used >= daily ? " · elfogyott" : ` · még ${Math.max(0, daily - used)}`}{cu.last_at ? ` · utoljára ${ago(cu.last_at)}` : ""}</> : undefined}>
-          {n(cu.total) ? <>Elkészült <b>{fmt(cu.total)} MI-képe</b>{(cu.looks || []).length ? <> ({(cu.looks as D[]).map((x) => `${CELEB[x.k] || x.k} ×${x.n}`).join(", ")})</> : null}{n(cu.ok) < n(cu.total) ? `, ebből ${fmt(cu.ok)} sikeres` : ""}</> : "Nem készített MI-képet"}
+          {n(cu.total) ? <>Elkészült <b>{fmt(cu.total)} MI-képe</b>{(cu.looks || []).length ? <> (testrész: {(cu.looks as D[]).map((x) => `${cleanAns(x.k)} ×${x.n}`).join(", ")})</> : null}{n(cu.ok) < n(cu.total) ? `, ebből ${fmt(cu.ok)} sikeres` : ""}</> : "Nem készített MI-képet"}
         </Row>
         <Row ok={v.revealed} sub={v.timed ? `Az eredményen töltött idő: ${dur(v.result_secs)}` : v.revealed ? "Az eredményen töltött időt akkor még nem mértük" : undefined}>{v.revealed ? "Megnézte 50 év múlva" : "Nem nézte meg 50 év múlva"}</Row>
         <Row ok={n(v.detail) > 0 || n(v.files) > 0}>{n(v.detail) ? `${fmt(v.detail)} előnézetet mentett el` : "Nem mentett el előnézetet"}{n(v.files) ? `, ${fmt(v.files)} fájlt letöltött` : ", nem töltött le fájlt"}</Row>
         <Row ok={v.shared}>{v.shared ? "Megosztotta" : "Nem osztotta meg"}</Row>
         {n(v.shots) > 0 && <Row warn sub={v.shot_scr ? `ezen a képernyőn: ${SCR[v.shot_scr] || v.shot_scr}` : undefined}>📸 {fmt(v.shots)} képernyőkép-gombot nyomott (számítógépen)</Row>}
         {n(v.errors) > 0 && <Row warn>{fmt(v.errors)} hiba történt nála</Row>}
-        <Row sub={ago(v.last_at)}>Itt hagyta abba: <b>{v.last_scr ? SCR[v.last_scr] || v.last_scr : v.last_step ? stepName(v.last_step) : "–"}</b>{v.left_how === "hidden" ? " · bezárta vagy elhagyta az oldalt" : ""}</Row>
+        <Row sub={<>{ago(v.last_at)}{v.last_scr ? ` · az utolsó képernyő: ${SCR[v.last_scr] || v.last_scr}` : ""}</>}>Utolsó lépés (a legtovább, ameddig eljutott): <b>{v.revealed ? "Eredmény: 50 év múlva" : v.last_step ? stepName(v.last_step) : v.opened ? "App megnyitva" : "–"}</b>{v.left_how === "hidden" ? " · bezárta vagy elhagyta az oldalt" : ""}</Row>
       </ul>
 
       <h3>Megnézett oldalak ({pages.length})</h3>
@@ -198,7 +197,7 @@ function Journey({ u }: { u: D }) {
       {answers.length > 0 && <>
         <h3>Válaszai a bevezető kérdésekre</h3>
         <dl className="kv">
-          {answers.map((y, i) => <Fragment key={i}><dt>{QSTEP[y.detail] || y.detail}</dt><dd>{String(y.val).split("+").map((w) => QVAL[w] || w).join(", ")}</dd></Fragment>)}
+          {answers.map((y, i) => <Fragment key={i}><dt>{QSTEP[y.detail] || y.detail}</dt><dd>{String(y.val ?? "").split("+").map((w) => QVAL[w] || cleanAns(w)).join(", ")}</dd></Fragment>)}
         </dl>
       </>}
     </>
@@ -234,7 +233,6 @@ export function UserDrawer({ id, close, changed }: { id: string; close: () => vo
               <dt>Nyelv</dt><dd>{lang(m.lang || mt?.lang || "?")}{!m.lang && mt?.lang ? <small className="mut"> (a regisztráló látogatásból)</small> : null}</dd>
               <dt>Forrás</dt><dd>{mt ? <><span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><Logo k={mt.ch} size={16} />{ch(mt.ch)}</span> · {PFL[mt.pf] || mt.pf}{src ? <small className="mut"> · {Object.entries(src).map(([k, v]) => `${k}: ${v}`).join(" · ")}</small> : null}<br /><small className="mut">becslés: a regisztráció idejéhez legközelebbi látogatás (…{mt.session})</small></> : <span className="mut">nem párosítható (pl. iPhone-app, vagy nem volt mérhető látogatás)</span>}</dd>
               <dt>Bónusz előnézet</dt><dd>{fmt(x.credits)}</dd>
-              <dt>–</dt><dd>{x.gift_claimed ? "✓" : "–"}</dd>
               <dt>Üdvözlő e-mail</dt><dd>{m.welcome_sent_at ? dt(m.welcome_sent_at) : "nem ment ki"}</dd>
               <dt>Azonosító</dt><dd style={{ fontSize: 12, color: "var(--a-dim)" }}>{x.id}</dd>
             </dl>
@@ -246,7 +244,7 @@ export function UserDrawer({ id, close, changed }: { id: string; close: () => vo
             {(u.timeline || []).length ? <ol className="tline">{(u.timeline as D[]).slice().reverse().map((y, i) => (
               <li key={i} className={y.name === "flow_step" ? "gold" : /error|failed/.test(y.name) ? "bad" : ""}>
                 <time>{new Date(y.created_at).toLocaleString("hu-HU", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time>
-                <span>{EV[y.name] || y.name}{y.detail ? ` · ${QSTEP[y.detail] || SCR[y.detail] || y.detail}` : ""}{y.secs ? ` · ${dur(y.secs)}` : ""}{y.val ? `: ${String(y.val).split("+").map((w) => QVAL[w] || w).join(", ")}` : ""}</span>{y.ch && y.ch !== "közvetlen" && <small><Logo k={y.ch} size={14} />{ch(y.ch)}</small>}
+                <span>{EV[y.name] || y.name}{y.detail ? ` · ${QSTEP[y.detail] || SCR[y.detail] || y.detail}` : ""}{y.secs ? ` · ${dur(y.secs)}` : ""}{y.val ? `: ${String(y.val ?? "").split("+").map((w) => QVAL[w] || cleanAns(w)).join(", ")}` : ""}</span>{y.ch && y.ch !== "közvetlen" && <small><Logo k={y.ch} size={14} />{ch(y.ch)}</small>}
               </li>))}</ol> : <Empty t="Ehhez a fiókhoz nem párosítható látogatás (iPhone-app, vagy a mérés nem látta)." />}
             {(u.days || []).length > 0 && <p className="note">Aktív napok: {(u.days as string[]).map((y) => new Date(y).toLocaleDateString("hu-HU", { month: "short", day: "numeric" })).join(" · ")}</p>}
             <p className="note">Ügyfélszolgálati nézet. Ne add ki harmadik félnek. Minden művelet (bónusz előnézet, felfüggesztés, export, törlés, e-mail) a Naplóba kerül; törölni csak a felhasználó kérésére szabad.</p>

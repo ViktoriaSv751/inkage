@@ -24,7 +24,7 @@ const I = {
 
 /**
  * Header + app-style bottom tab bar for every public page (landing, knowledge base, info pages).
- * `onLang` is given on pages that switch language in place; otherwise the URL gets ?lang=.
+ * Links keep ?lang= on every page (picking a language reloads the page in it; `onLang` is no longer needed).
  */
 export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onLang?: (l: Lang) => void; signedIn?: boolean }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
@@ -75,7 +75,8 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
     window.addEventListener('scroll', h, { passive: true });
     return () => window.removeEventListener('scroll', h);
   }, []);
-  const q = (onLang ? '' : qOf(lang));
+  // every page, the home page included, keeps ?lang= on its links
+  const q = qOf(lang);
   const pick = (l: Lang) => {
     saveLang(l);
     track('lang_pick', { l });
@@ -154,7 +155,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
           <div className="sn-dr-scroll">
             <Link href={signedIn ? '/app' : `/regisztracio${q}`} className="sn-dr-feature" onClick={() => track('drawer_feature')}>
               <div>
-                <span>{signedIn ? T('Your account', 'A fiókod') : T('Free after sign-up', 'Regisztráció után ingyenes')}</span>
+                <span>{signedIn ? T('Your account', 'A fiókod') : T('One-tap sign-up with Google or Apple', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal')}</span>
                 <b>{T('See your tattoo in 50 years', 'Nézd meg a tetoválásod 50 év múlva')}</b>
               </div>
               <i aria-hidden="true">
@@ -171,7 +172,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
                 { href: `/hogyan-mukodik${q}`, base: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), d: T('Five steps, a minute', 'Öt lépés, egy perc'), i: 'M4 8h4l2-3h4l2 3h4v11H4zM12 17a4 4 0 1 0 0-8a4 4 0 0 0 0 8z' },
                 { href: `/funkciok${q}`, base: '/funkciok', t: T('Features', 'Funkciók'), d: T('Everything it can do', 'Minden, amit tud'), i: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z' },
                 { href: `/tattoo/fine-line-forearm${qOf(lang)}`, base: '/tattoo', t: T('Styles', 'Stílusok'), d: T('Scores by body area', 'Pontszámok testrészenként'), i: 'M4 20V10M10 20V4M16 20v-7M22 20H2' },
-                { href: `/tudastar${q}`, base: '/tudastar', t: T('Guides', 'Tudástár'), d: T('12 in-depth articles', '12 részletes cikk'), i: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5' },
+                { href: `/tudastar${q}`, base: '/tudastar', t: T('Guides', 'Tudástár'), d: T('In-depth articles', 'Részletes cikkek'), i: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5' },
                 { href: `/gyik${q}`, base: '/gyik', t: T('FAQ', 'GYIK'), d: T('Quick answers', 'Gyors válaszok'), i: 'M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18zM9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.8M12 17h.01' },
               ].map((l) => (
                 <Link key={l.base} href={l.href} className={isOn(l.base) ? 'on' : ''} aria-current={isOn(l.base) ? 'page' : undefined}>
@@ -194,7 +195,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
             <p className="sn-dr-label">{T('More', 'Továbbiak')}</p>
             <nav className="sn-dr-chips">
               {[
-                { href: `/ingyenes-beta${q}`, t: T('Free beta', 'Ingyenes béta') },
+                { href: `/ingyenes-beta${q}`, t: T('Beta', 'Béta') },
                 { href: `/telepites${q}`, t: T('Install', 'Telepítés') },
                 { href: `/mi-az-inkage${q}`, t: T('What is InkAge?', 'Mi az InkAge?') },
                 { href: `/rolunk${q}`, t: T('About', 'Rólunk') },

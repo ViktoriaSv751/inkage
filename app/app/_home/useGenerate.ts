@@ -14,6 +14,19 @@ import { AGE_STAGES, PARENT } from './constants';
 import { flattenOnWhite } from './flattenOnWhite';
 import type { Job, JobMeta, Phase } from './types';
 
+/** The server keeps a running preview's result: wait for it (up to ~5 minutes). null = it failed or never arrived. */
+async function waitForJob(id: string) {
+  const until = Date.now() + 5 * 60e3;
+  while (Date.now() < until) {
+    await new Promise((res) => setTimeout(res, 5000));
+    const r = await api<{ data: Record<string, any> | null }>(`/api/job?id=${id}`);
+    const d = r.ok ? r.data.data : null;
+    if (d?.fresh) return d.fresh;
+    if (d?.error) return null;
+  }
+  return null;
+}
+
 /** Making a preview: send the photo and the placed design, then show the fresh result and run the aging stages. */
 export function useGenerate({
   design,
@@ -147,8 +160,14 @@ export function useGenerate({
     }
     const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: lsGet<any>('ink_onboarding', null)?.sun || ob?.sun, ageHint: lsGet<any>('ink_onboarding', null)?.age || ob?.age, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, ...extra };
     let r = await api<any>('/api/generate', body);
-    // a busy minute at the AI provider: wait and retry automatically (twice)
-    for (let i = 0; i < 2 && !r.ok && /Lots of people|took too long/.test(r.data?.error || ''); i++) {
+    // the connection dropped or the server ran out of time: the preview may still be finishing (and is already counted),
+    // so ask for its result instead of starting (and paying for) a new one
+    if (!r.ok && (r.status === 0 || r.status === 502 || r.status === 504) && r.data?.code !== 'ai_consent' && !/Lots of people|safety|paused/.test(r.data?.error || '')) {
+      const got = await waitForJob(jobId);
+      if (got) r = { ok: true, status: 200, data: got };
+    }
+    // a busy minute at the AI provider (the attempt was refunded): wait and retry automatically (twice)
+    for (let i = 0; i < 2 && !r.ok && /Lots of people/.test(r.data?.error || ''); i++) {
       setBusyNote(true);
       await new Promise((res) => setTimeout(res, 12000));
       r = await api<any>('/api/generate', body);
@@ -162,7 +181,7 @@ export function useGenerate({
       if (r.data?.code === 'busy') setWaitlist(true);
       if (r.data?.code === 'paywall') {
         track('paywall', { plan: r.data.plan });
-        if (!me.user) openAuth(t('You reached today’s limit on this device. Sign in (free) to keep going and keep your designs.', 'Elérted a mai keretet ezen az eszközön. Jelentkezz be (ingyenes), és folytathatod – a terveid is megmaradnak.'));
+        if (!me.user) openAuth(t('Sign in to keep going and keep your designs.', 'Jelentkezz be, és folytathatod – a terveid is megmaradnak.'));
         else setPaywall(true);
         return;
       }

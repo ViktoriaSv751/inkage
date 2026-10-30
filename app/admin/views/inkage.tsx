@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* InkAge: what only InkAge has (Calligra's dashboard has no such page). The AI previews of the day and their cost, the
+/* InkAge: what only InkAge has. The AI previews of the day and their cost, the
    daily safety cap, the AI models' check, the moderation queues (reported pictures, reported AI results, Explore posts
    waiting for approval), the users' feedback, the "not right?" reasons, the waitlist and the latest errors. Every number
    comes from InkAge's own admin functions (admin_stats, admin_extra, admin_health, admin_reports…), which let in only
@@ -9,10 +9,11 @@ import { useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Empty, fmt } from "../charts";
 import { toast } from "../phone";
-import { Async, Card, I, Kpi, Lesson, P, dt, n, rpc, type D, useRpc } from "../shared";
+import { Async, Card, I, Kpi, Lesson, P, api, dt, n, rpc, type D, useRpc } from "../shared";
 
 const CAP = 300; /* the server's limit: AI jobs in any 24 hours */
-const REDO: Record<string, string> = { place: "Rossz helyre került", size: "Rossz méret", look: "Nem úgy néz ki", color: "Rossz színek", other: "Más ok" };
+/* the app's "Nem lett jó?" reasons (app/app/_result/constants.ts REDO_REASONS) */
+export const REDO: Record<string, string> = { clothes: "Ruhára vagy a háttérre került", design: "Nem az ő mintája / változtak a részletek", place: "Rossz helyen vagy rossz méretben", anatomy: "Torz a kéz vagy a test", fake: "Nem élethű, matricának tűnik", other: "Nem jelölt okot" };
 
 export function InkAge() {
   const sb = useMemo(() => supabaseBrowser(), []);
@@ -35,8 +36,10 @@ export function InkAge() {
   };
   const checkNow = async () => {
     setBusy("health");
-    await fetch("/api/health").catch(() => null);
+    /* with the owner's sign-in: the check makes a real AI call, so /api/health answers only the owner and the cron */
+    const r = await api("/api/health").catch(() => null);
     setBusy(""); he.load();
+    if (r && !r.ok) toast(r.json?.answer || r.json?.error ? `Hiba: ${r.json.answer || r.json.error}` : "Az ellenőrzés nem futott le.");
   };
   const notifyWaitlist = async () => {
     setBusy("wait");
@@ -52,13 +55,13 @@ export function InkAge() {
   const reports: D[] = Array.isArray(rep.d) ? rep.d : [], aiReports: D[] = Array.isArray(air.d) ? air.d : [], waiting: D[] = Array.isArray(posts.d) ? posts.d : [], feedback: D[] = Array.isArray(fb.d) ? fb.d : [];
   return (
     <div className="g">
-      <div className="s12"><Lesson>Ez az oldal csak az InkAge-é: az MI-előnézetek napi száma és költsége, a biztonsági napi korlát, a moderálás (bejelentett képek, MI-eredmények, Felfedezés-posztok), a visszajelzések és a várólista. A többi oldal ugyanaz, mint a Calligráé, az InkAge adataival.</Lesson></div>
-      <Kpi className="s3" tone="peach" icon={P.spark} l="Előnézet ma" v={fmt(n(s.gen_today))} sub={`ebből vendég: ${fmt(n(s.guest_today))}`} />
+      <div className="s12"><Lesson>Ez az oldal csak az InkAge-é: az MI-előnézetek száma és költsége (az elmúlt 24 órában), a biztonsági napi korlát, a moderálás (bejelentett képek, MI-eredmények, Felfedezés-posztok), a visszajelzések és a várólista. A saját és a tesztfiókjaid nem számítanak bele, a törölt előnézetek sem.</Lesson></div>
+      <Kpi className="s3" tone="peach" icon={P.spark} l="Előnézet (24 óra)" v={fmt(n(s.gen_today))} sub={`ebből vendég: ${fmt(n(s.guest_today))}`} />
       <Kpi className="s3" tone="butter" icon={P.clock} l="Előnézet 7 nap" v={fmt(n(s.gen_7d))} />
-      <Kpi className="s3" tone="pink" icon={P.eye} l="Öregítés-kép ma" v={fmt(n(s.aging_today))} />
-      <Kpi className="s3" tone="sky" icon={P.bolt} l="Becsült MI-költség ma" v={"$" + cost.toFixed(2)} title="Durva becslés: előnézetenként kb. 1 friss és 4 öregített kép, plusz az ellenőrzések." />
+      <Kpi className="s3" tone="pink" icon={P.eye} l="Öregítés-kép (24 óra)" v={fmt(n(s.aging_today))} />
+      <Kpi className="s3" tone="sky" icon={P.bolt} l="Becsült MI-költség (24 óra)" v={"$" + cost.toFixed(2)} title="Durva becslés: előnézetenként kb. 1 friss és 4 öregített kép, plusz az ellenőrzések." />
       <Kpi className="s3" tone="lilac" icon={P.users} l="Fiókok" v={fmt(n(s.users))} />
-      <Kpi className="s3" tone="peach" icon={P.doc} l="Mentett előnézet" v={fmt(n(s.saved))} />
+      <Kpi className="s3" tone="peach" icon={P.doc} l="Mentett előnézet" v={fmt(n(s.saved))} title="A galériában lévő előnézetek, a töröltek és a saját / tesztfiókok nélkül" />
       <Kpi className="s3" tone="butter" icon={P.share} l="Megosztó link" v={fmt(n(s.shares))} />
       <Kpi className="s3" tone="pink" icon={P.check} l="Szavazat" v={fmt(n(s.votes))} />
 
@@ -90,10 +93,10 @@ export function InkAge() {
               </div>))}
           </div>)}</Async>
       </Card>
-      <Card className="s4" icon={P.alert} title="Ma a háttérben" sub="A mai nap InkAge-számai, amelyeket a többi oldal nem mutat.">
+      <Card className="s4" icon={P.alert} title="Az elmúlt 24 óra a háttérben" sub="Az elmúlt 24 óra InkAge-számai, amelyeket a többi oldal nem mutat. A saját és a tesztfiókok nem számítanak bele.">
         <Async q={ex} h={150}>{() => (
           <ul className="ann-l">
-            <li><span>Csak előnézet (fiók nélkül)</span><b>{fmt(n(x.previews_today))}</b></li>
+            <li><span title="Előnézet-generálás az elmúlt 24 órában (fiókkal és fiók nélkül)">Előnézet-generálás</span><b>{fmt(n(x.previews_today))}</b></li>
             <li><span>Kivágás / MI-rajz</span><b>{fmt(n(x.helpers_today))}</b></li>
             <li><span>Hiba</span><b>{fmt(n(x.errors_today))}</b></li>
             <li><span>Bezárás után visszatöltve</span><b>{fmt(n(x.recovered_today))}</b></li>
