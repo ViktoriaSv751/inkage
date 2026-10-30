@@ -87,6 +87,27 @@ export function useJobRecovery({
   // A preview was running when the app was closed or reloaded: pick up its result from the server.
   useEffect(() => {
     if (phase !== 'studio' || recovering.current || preview) return;
+    // opened from the "your preview is ready" e-mail: on any device, for as long as the server keeps it
+    const fromLink = new URLSearchParams(location.search).get('job');
+    if (fromLink) {
+      recovering.current = true;
+      history.replaceState(null, '', location.pathname);
+      if (lsGet<boolean>(`ink_job_done_${fromLink}`, false)) return void location.replace('/app/gallery');
+      (async () => {
+        setPhase('gen');
+        setGenStep(2);
+        const r = await api<{ data: Record<string, any> | null }>(`/api/job?id=${encodeURIComponent(fromLink)}`);
+        const d = r.ok ? r.data.data : null;
+        if (d?.fresh) {
+          track('job_from_mail');
+          lsSet(`ink_job_done_${fromLink}`, true);
+          return showResult(d.fresh, { placement: 'Inner forearm', mode: 'new', size: '', ...(d.meta || {}) } as JobMeta, fromLink, d);
+        }
+        toast(t('This preview is no longer available. Make a new one.', 'Ez az előnézet már nem érhető el. Készíts egy újat.'));
+        setPhase('studio');
+      })();
+      return;
+    }
     const pj = lsGet<{ id: string; at: number; meta: JobMeta } | null>('ink_job', null);
     if (!pj?.id || Date.now() - pj.at > 2 * 3600e3) return;
     recovering.current = true;

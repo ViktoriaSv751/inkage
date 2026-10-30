@@ -155,7 +155,7 @@ export function useGenerate({
     try {
       localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta: { ...meta, design: undefined } }));
     } catch {}
-    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: lsGet<any>('ink_onboarding', null)?.sun || ob?.sun, ageHint: lsGet<any>('ink_onboarding', null)?.age || ob?.age, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, ...extra };
+    const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: lsGet<any>('ink_onboarding', null)?.sun || ob?.sun, ageHint: lsGet<any>('ink_onboarding', null)?.age || ob?.age, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, jobMeta: { ...meta, design: undefined }, ...extra };
     let r = await api<any>('/api/generate', body);
     // the connection dropped or the server ran out of time: the preview may still be finishing (and is already counted),
     // so ask for its result instead of starting (and paying for) a new one

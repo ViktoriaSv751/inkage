@@ -84,7 +84,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const failed = authErrorCode(new URLSearchParams(location.hash.slice(1) + '&' + location.search.slice(1)));
     // after signing in, come back here (not to an empty gallery)
     const here = location.pathname + location.search;
-    const extra = [failed && `err=${encodeURIComponent(failed)}`, /^\/app\/.+/.test(location.pathname) && `next=${encodeURIComponent(here)}`].filter(Boolean).join('&');
+    const extra = [failed && `err=${encodeURIComponent(failed)}`, (/^\/app\/.+/.test(location.pathname) || location.search.includes('job=')) && `next=${encodeURIComponent(here)}`].filter(Boolean).join('&');
     location.replace(`/belepes${q}${extra ? `${q ? '&' : '?'}${extra}` : ''}`);
   }, [ui.lang]);
   const toLoginRef = useRef(toLogin);

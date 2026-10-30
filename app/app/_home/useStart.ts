@@ -60,7 +60,8 @@ export function useStart({
     if (ans && !again) {
       applyOnboarding(ans);
       setPhase('studio');
-    } else setPhase('onboarding');
+    } else if (sp.has('job')) setPhase('studio'); // opened from an e-mail: straight to the result
+    else setPhase('onboarding');
     // "New design": start with empty slots; otherwise keep work in progress when switching tabs
     let freshStart = false;
     try {

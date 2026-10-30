@@ -4173,6 +4173,13 @@
    ],
    "kind": "err"
   },
+  "no mail key": {
+   "hu": null,
+   "files": [
+    "app/api/mail-cron/route.ts"
+   ],
+   "kind": "err"
+  },
   "Could not make a suitable stand-in photo for this area. Please use your own photo.": {
    "hu": null,
    "files": [
@@ -4962,6 +4969,13 @@
     "app/app/_home/constants.ts"
    ],
    "kind": "obj"
+  },
+  "This preview is no longer available. Make a new one.": {
+   "hu": "Ez az előnézet már nem érhető el. Készíts egy újat.",
+   "files": [
+    "app/app/_home/effects.ts"
+   ],
+   "kind": "call"
   },
   "We kept your last preview for you": {
    "hu": "Megtartottuk a legutóbbi előnézetedet",
@@ -10655,6 +10669,13 @@
   },
   "- **Usage and limits:** when you created previews and how many, referral bonuses, to apply the monthly allowance of 30 previews and prevent abuse; a one-way hash of the IP address and a random device ID for the same reason.": {
    "hu": "- **Használat és keretek:** mikor és hány előnézetet készítettél, a meghívási bónuszok – a havi 30 előnézetes keret és a visszaélések kiszűrése miatt; ugyanezért az IP-cím egyirányú hash-e és egy véletlenszerű eszközazonosító.",
+   "files": [
+    "app/privacy/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "- **E-mails:** a welcome e-mail after you sign up, a note if a preview finishes after you closed the app, and one reminder a day after sign-up if you haven’t added a photo yet. You can stop the reminder with one click in the e-mail.": {
+   "hu": "- **E-mailek:** üdvözlő levél a regisztráció után, értesítés, ha az előnézet az app bezárása után készül el, és egyetlen emlékeztető a regisztráció másnapján, ha még nem töltöttél fel fotót. Az emlékeztetőt a levélben egy kattintással leállíthatod.",
    "files": [
     "app/privacy/page.tsx"
    ],
@@ -26831,6 +26852,125 @@
    ],
    "kind": "obj"
   },
+  "Your preview is ready": {
+   "hu": "Elkészült az előnézeted",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "You closed the app before it finished, but nothing is lost.": {
+   "hu": "Bezártad az appot, mielőtt elkészült, de semmi nem veszett el.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "Open my preview": {
+   "hu": "Megnyitom az előnézetet",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "We keep it for two days.": {
+   "hu": "Két napig őrizzük meg neked.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "The fresh look is done. Open it and see the years that follow, with one tap.": {
+   "hu": "A friss kép kész. Nyisd meg, és egy koppintással jönnek a következő évek.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "You’re getting this because you started a preview in InkAge.": {
+   "hu": "Azért kaptad, mert elindítottál egy előnézetet az InkAge-ben.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "One photo is missing": {
+   "hu": "Egy fotó hiányzik",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "One picture of your skin is enough. In a minute you’ll see it fresh and 50 years later.": {
+   "hu": "Elég egy kép a bőrödről. Egy perc múlva látod frissen és 50 év múlva.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "You signed up, but your photo hasn’t arrived yet. One picture of the spot where the tattoo would go is enough, and in a minute you’ll see it fresh and 50 years later.": {
+   "hu": "Regisztráltál, de a fotód még nem érkezett meg. Elég egy kép arról a helyről, ahová a tetoválás kerülne, és egy perc múlva látod frissen és 50 év múlva.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "Add my photo": {
+   "hu": "Feltöltöm a fotómat",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "Don’t send reminders": {
+   "hu": "Ne küldjetek emlékeztetőt",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "An example: a tattoo on a forearm": {
+   "hu": "Példa: tetoválás egy alkaron",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "In daylight": {
+   "hu": "Nappali fényben",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "Sharp and close up": {
+   "hu": "Élesen, közelről",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "Only the body area in the picture": {
+   "hu": "Csak a testrész legyen a képen",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "The picture is an AI example.": {
+   "hu": "A kép MI-példa.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "This is the only reminder of this kind.": {
+   "hu": "Ebből csak ez az egy emlékeztető megy ki.",
+   "files": [
+    "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
   "I’ll still be on you in fifty years.": {
    "hu": "Ötven év múlva is rajtad leszek.",
    "files": [
@@ -28597,6 +28737,13 @@
    "hu": null,
    "files": [
     "app/api/admin/ai/route.ts"
+   ],
+   "kind": "err"
+  },
+  "{0} timed e-mail(s) could not be sent": {
+   "hu": null,
+   "files": [
+    "app/api/mail-cron/route.ts"
    ],
    "kind": "err"
   },
