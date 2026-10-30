@@ -49,3 +49,14 @@ as $function$
     and (a.lang is null or a.lang = '' or a.lang = coalesce(p_lang, ''))
     and (a.platform = 'all' or a.platform = coalesce(p_pf, 'web') or (a.platform = 'app' and coalesce(p_pf, 'web') in ('android', 'ios')))
 $function$;
+
+-- the owner's new sign-up notice says how many real accounts there are now
+create or replace function public.signup_count(p_secret text) returns integer
+ language plpgsql stable security definer set search_path to 'public'
+as $function$
+begin
+  if p_secret is null or p_secret <> (select value from private.config where key = 'webhook_secret') then raise exception 'forbidden'; end if;
+  return (select count(*)::int from public.admin_real_users);
+end $function$;
+revoke all on function public.signup_count(text) from public;
+grant execute on function public.signup_count(text) to anon, authenticated;

@@ -2773,13 +2773,6 @@
    ],
    "kind": "pair"
   },
-  "Angol": {
-   "hu": "Magyar",
-   "files": [
-    "app/admin/shared.tsx"
-   ],
-   "kind": "obj"
-  },
   "API": {
    "hu": "A platform hivatalos adatai (API), automatikusan lehúzva.",
    "files": [
@@ -3856,6 +3849,13 @@
    ],
    "kind": "err"
   },
+  "no recipient": {
+   "hu": null,
+   "files": [
+    "app/api/admin/signup-mail/route.ts"
+   ],
+   "kind": "err"
+  },
   "Nem tudom, melyik Vercel-projekt ez: add meg a VERCEL_PROJECT értékét a Kapcsolatok oldalon.": {
    "hu": null,
    "files": [
@@ -4287,47 +4287,12 @@
    ],
    "kind": "call"
   },
-  "Welcome to InkAge": {
-   "hu": "Üdv az InkAge-ben",
+  "new sign-up notice could not be sent": {
+   "hu": null,
    "files": [
     "app/api/welcome/route.ts"
    ],
-   "kind": "call"
-  },
-  "Welcome!": {
-   "hu": "Üdv!",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Your designs are now on every device you use.": {
-   "hu": "A terveid most már minden eszközödön megvannak.",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Three things worth trying: two sizes on the same spot, the “Make it last” redraw, and a vote link for your friends.": {
-   "hu": "Három dolog, amit érdemes kipróbálni: két különböző méret ugyanazon a helyen, a „Tedd tartóssá” átrajzolás, és egy szavazós link a barátaidnak.",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
-  },
-  "You get 30 previews a month with your account. If something doesn’t work, just reply to this e-mail.": {
-   "hu": "A fiókoddal havonta 30 előnézet jár. Ha bármi nem működik, válaszolj erre a levélre.",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Make a preview": {
-   "hu": "Új előnézet készítése",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
+   "kind": "err"
   },
   "Are you 18 or older?": {
    "hu": "Elmúltál 18 éves?",
@@ -5645,7 +5610,8 @@
    "hu": "ma",
    "files": [
     "app/app/_result/Viewer.tsx",
-    "app/app/gallery/AfterCare.tsx"
+    "app/app/gallery/AfterCare.tsx",
+    "lib/mail-welcome.ts"
    ],
    "kind": "call"
   },
@@ -14039,6 +14005,56 @@
    ],
    "kind": "obj"
   },
+  "Laser tattoo removal before and after: what to expect by colour, body part and laser type": {
+   "hu": "Lézeres tetoválás-eltávolítás előtte–utána: mire számíthatsz szín, testrész és lézertípus szerint",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Why black fades fast, why green hangs on, and how to read clinic photos.": {
+   "hu": "Miért halványul gyorsan a fekete, miért makacs a zöld, és hogyan nézd a klinikák fotóit.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Results come gradually: a clear change in the first few sessions, a patchy middle stage, then a slow final stretch. Most of the change happens between sessions, as your body clears the ink.": {
+   "hu": "Az eredmény fokozatosan jön: az első néhány alkalom után látványos változás, aztán egy foltos középső szakasz, végül egy lassú hajrá. A változás nagy része a kezelések között történik, ahogy a szervezeted elszállítja a tintát.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## By colour and body part": {
+   "hu": "## Szín és testrész szerint",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Black responds best, red and dark blue usually respond well, green and light blue are harder, and yellow, white and skin tones are the hardest. Tattoos near the centre of the body tend to clear faster than those on hands and feet.": {
+   "hu": "A fekete reagál a legjobban, a piros és a sötétkék általában jól, a zöld és a világoskék nehezebb, a sárga, a fehér és a bőrszínek a legnehezebbek. A test közepéhez közeli tetoválások általában gyorsabban halványulnak, mint a kézen és a lábfejen lévők.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Reading the photos": {
+   "hu": "## Hogyan nézd a fotókat?",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Check the number of sessions, the time since the last one, the light and angle, and whether the tattoo resembles yours.": {
+   "hu": "Nézd meg a kezelések számát, az utolsó óta eltelt időt, a fényt és a szöget, és hogy hasonlít-e a tetoválás a tiédre.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
   "This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID to register again.": {
    "hu": "Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t az újbóli regisztrációhoz.",
    "files": [
@@ -14810,6 +14826,13 @@
   },
   "Six factors, added up: the Kirby–Desai scale turns “it depends” into a session estimate.": {
    "hu": "Hat tényező összeadva: a Kirby–Desai skála az „attól függ”-ből alkalomszám-becslést csinál.",
+   "files": [
+    "lib/kb.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a tattoo rarely fades evenly. Most of the change happens between sessions.": {
+   "hu": "Illusztráció: a tetoválás ritkán halványul egyenletesen. A változás nagy része a kezelések között történik.",
    "files": [
     "lib/kb.ts"
    ],
@@ -18757,6 +18780,553 @@
    ],
    "kind": "obj"
   },
+  "Why black fades fast and green hangs on, how Q-switched and picosecond lasers compare, and how to tell an honest before-and-after photo from a flattering one.": {
+   "hu": "Miért halványul gyorsan a fekete, miért makacs a zöld, miben más a Q-kapcsolt és a pikoszekundumos lézer, és hogyan ismerd fel az őszinte előtte–utána fotót.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Results usually come gradually: an obvious change in the first few sessions, a patchy middle stage, then a slow final stretch where the last traces clear or remain as a faint ghost.": {
+   "hu": "Az eredmény általában fokozatosan jön: az első néhány alkalom után látványos változás, aztán egy foltos középső szakasz, végül egy lassú hajrá, amikor az utolsó nyomok eltűnnek, vagy halvány árnyék marad.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Black generally responds best. Red and dark blue usually respond well with the right wavelength. Green and light blue are harder, and yellow, white and skin tones are the hardest.": {
+   "hu": "A fekete általában a legjobban reagál. A piros és a sötétkék a megfelelő hullámhosszal többnyire jól halványul. A zöld és a világoskék nehezebb, a sárga, a fehér és a bőrszínek a legnehezebbek.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Tattoos near the centre of the body tend to clear faster than those on hands, ankles and feet.": {
+   "hu": "A test közepéhez közeli tetoválások általában gyorsabban halványulnak, mint a kézen, a bokán és a lábfejen lévők.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Picosecond lasers aren’t magic: they can help, especially with stubborn ink, but the right wavelength and the operator’s skill matter just as much.": {
+   "hu": "A pikoszekundumos lézer nem csodaszer: segíthet, főleg makacs tintánál, de a megfelelő hullámhossz és a kezelő tudása ugyanennyit számít.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dóra had saved eleven before-and-after photos on her phone by the time she booked a consultation. In every one of them, a tattoo simply vanished: dark ink on the left, clean skin on the right, a clinic’s logo in the corner. Then she showed the practitioner the black and green snake on her forearm and asked which photo hers would look like. The practitioner smiled, scrolled for a moment, and said: “None of these. Yours has green in it. And nobody in these pictures tells you how many sessions it took, or how long ago the last one was.”": {
+   "hu": "Dórának tizenegy előtte–utána fotó volt elmentve a telefonján, mire időpontot foglalt konzultációra. Mindegyiken egyszerűen eltűnt egy tetoválás: bal oldalt sötét tinta, jobb oldalt tiszta bőr, a sarokban egy klinika logója. Aztán megmutatta a szakembernek a fekete-zöld kígyót az alkarján, és megkérdezte, melyik képhez fog hasonlítani az övé. A szakember elmosolyodott, lapozott egy kicsit, és azt mondta: „Egyikhez sem. A tiedben zöld is van. És ezeken a képeken senki sem írja oda, hány alkalom kellett, vagy mennyi ideje volt az utolsó.”",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Before-and-after photos are the first thing almost everyone looks for when they think about laser removal, and they are also the easiest thing to be misled by. This guide shows you what usually happens to a tattoo over a course of treatment, how the result changes with colour, placement and laser type, and how to read those photos with a clear head.": {
+   "hu": "Az előtte–utána fotók az elsők, amiket szinte mindenki keres, ha a lézeres eltávolításon gondolkodik, és egyben a legkönnyebben félrevezető dolgok is. Ez a cikk megmutatja, mi történik általában egy tetoválással a kezelések során, hogyan változik az eredmény a szín, az elhelyezés és a lézertípus szerint, és hogyan nézd ezeket a fotókat tiszta fejjel.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "> A note on the pictures: the images in this article are illustrations made to show typical patterns. They are not photos of real patients or results from any clinic. Your own result will depend on your tattoo and your skin.": {
+   "hu": "> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző folyamatokat mutatják. Nem valódi páciensekről készült fotók, és nem egy adott klinika eredményei. A saját eredményed a tetoválásodon és a bőrödön múlik.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## What the process usually looks like, session by session": {
+   "hu": "## Hogy néz ki általában a folyamat, alkalomról alkalomra?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "A tattoo doesn’t fade evenly like a photo left in the sun. The laser shatters ink particles into smaller fragments, and your body clears those fragments over the following weeks. So the change happens mostly between sessions, not during them. No two tattoos follow exactly the same path, but the general shape is familiar to most practitioners.": {
+   "hu": "A tetoválás nem egyenletesen halványul, mint egy napon felejtett fotó. A lézer apró darabokra töri a tintaszemcséket, a szervezeted pedig a következő hetekben elszállítja ezeket a darabokat. A változás tehát főleg a kezelések között történik, nem közben. Nincs két tetoválás, ami pontosan ugyanazt az utat járná be, de az általános képet a legtöbb szakember jól ismeri.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Right after a session": {
+   "hu": "### Közvetlenül a kezelés után",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "The treated area often turns chalky white for a few minutes. This is called **frosting**, and it is caused by tiny gas bubbles forming in the skin, not by the ink vanishing. Redness, swelling and sometimes blisters can follow over the next days as the skin heals. This is the stage people rarely photograph for a clinic’s website.": {
+   "hu": "A kezelt terület néhány percre gyakran krétafehér lesz. Ezt **frostingnak**, vagyis deresedésnek hívják, és a bőrben képződő apró gázbuborékok okozzák, nem a tinta eltűnése. A következő napokban pirosság, duzzanat és néha hólyagok jelenhetnek meg, ahogy a bőr gyógyul. Ezt a szakaszt ritkán fotózzák le egy klinika weboldalára.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### After the first few sessions": {
+   "hu": "### Az első néhány alkalom után",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "This is usually the most satisfying stretch. Black outlines lighten visibly, dense areas shift from black to a dark blue-grey, and many people feel the tattoo has lost its punch. It can look like a lot of progress, because the ink closest to the surface tends to respond first.": {
+   "hu": "Ez általában a legörömtelibb szakasz. A fekete kontúrok láthatóan világosodnak, a sűrű részek feketéből sötét kékesszürkévé válnak, és sokan úgy érzik, a tetoválás elvesztette az erejét. Nagy haladásnak tűnhet, mert a felszínhez legközelebbi tinta szokott először reagálni.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### In the middle": {
+   "hu": "### Középen",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Now it gets patchy, and a little discouraging. Some lines nearly disappear while others hold on, and shaded parts look uneven. This is normal. Ink sits at different depths and in different densities, so it never leaves all at once. Many people decide around here whether they want full removal, or whether fading is enough for a cover-up.": {
+   "hu": "Most foltos lesz, és kicsit elkeserítő. Egyes vonalak szinte eltűnnek, mások kitartanak, az árnyékolt részek pedig egyenetlennek látszanak. Ez normális. A tinta különböző mélységben és sűrűségben van, ezért sosem távozik egyszerre. Sokan itt döntik el, hogy teljes eltávolítást szeretnének, vagy elég a halványítás egy takaráshoz.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### The last stretch": {
+   "hu": "### Az utolsó szakasz",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "The final sessions change less and less. What remains may be a faint grey ghost, a few stubborn dots, or a slight difference in skin tone. For some tattoos and some skin, a completely clean result is realistic. For others, “barely visible” is the honest target, and it is worth asking about that at the start. If you want an estimate of how long this whole road is, our guide to the Kirby–Desai scale in this knowledge base shows how to score your own tattoo.": {
+   "hu": "Az utolsó kezelések egyre kevesebbet változtatnak. Ami megmarad, az lehet egy halvány szürke árnyék, néhány makacs pötty, vagy egy kis eltérés a bőr tónusában. Egyes tetoválásoknál és bőröknél a teljesen tiszta eredmény reális. Másoknál a „szinte láthatatlan” az őszinte cél, és erről érdemes az elején kérdezni. Ha becslést szeretnél arról, milyen hosszú ez az út, a tudástár Kirby–Desai skáláról szóló cikke megmutatja, hogyan pontozd a saját tetoválásod.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "!! Most of the change happens between sessions, not during them. The photo that matters is the one taken months later.": {
+   "hu": "!! A változás nagy része a kezelések között történik, nem közben. Az a fotó számít, ami hónapokkal később készült.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Before and after by colour": {
+   "hu": "## Előtte–utána szín szerint",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Each pigment absorbs light differently, which is why a laser’s wavelength matters so much. A wavelength only works on a colour that can absorb it, a little like how a black shirt heats up in the sun and a white one doesn’t.": {
+   "hu": "Minden pigment másképp nyeli el a fényt, ezért számít annyira a lézer hullámhossza. Egy hullámhossz csak olyan színen működik, ami el tudja nyelni, kicsit úgy, ahogy a fekete póló felmelegszik a napon, a fehér pedig nem.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Black and dark grey": {
+   "hu": "### Fekete és sötétszürke",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "The best case. Black absorbs a very wide range of wavelengths, and the long **1064 nm** wavelength of an Nd:YAG laser reaches it well while being relatively gentle on the skin’s own pigment. This is why black work makes up most of the dramatic photos online.": {
+   "hu": "Ez a legjobb eset. A fekete a hullámhosszok nagyon széles tartományát elnyeli, és az Nd:YAG lézer hosszú, **1064 nm**-es hullámhossza jól eléri, miközben viszonylag kíméletes a bőr saját pigmentjéhez. Ezért a neten látható látványos fotók többsége fekete munka.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Red and orange": {
+   "hu": "### Piros és narancs",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Red usually responds well to the shorter **532 nm** wavelength. In the before-and-after, it typically turns pinker and paler. Orange is less predictable, and some red and orange inks can react unexpectedly, so a small test area is sensible.": {
+   "hu": "A piros általában jól reagál a rövidebb, **532 nm**-es hullámhosszra. Az előtte–utána képeken jellemzően rózsaszínesebb és halványabb lesz. A narancs kevésbé kiszámítható, és egyes piros és narancs tinták váratlanul is reagálhatnak, ezért érdemes egy kis próbafelülettel kezdeni.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Blue": {
+   "hu": "### Kék",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dark blue tends to clear reasonably well, and the **694 nm** (ruby) and **755 nm** (alexandrite) wavelengths are usually the tools for it. Light blue and turquoise are harder and may need more sessions. In photos, blue often fades to a soft grey-blue before it goes.": {
+   "hu": "A sötétkék általában elég jól halványul, és többnyire a **694 nm**-es (rubin) és a **755 nm**-es (alexandrit) hullámhossz való hozzá. A világoskék és a türkiz nehezebb, több alkalmat igényelhet. A fotókon a kék gyakran lágy szürkéskékké halványul, mielőtt eltűnik.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Green": {
+   "hu": "### Zöld",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Green is the classic stubborn one, and it is what Dóra’s practitioner was warning her about. It needs red-range light such as 694 nm or 755 nm, and not every clinic has those wavelengths. A common “after” for a mixed tattoo is the black outline nearly gone while the green is still clearly there.": {
+   "hu": "A zöld a klasszikus makacs szín, és Dórát is erre figyelmeztette a szakember. A vörös tartományba eső fény kell hozzá, például 694 vagy 755 nm, és nem minden klinikán van ilyen hullámhossz. Vegyes tetoválásnál gyakori „utána” kép, hogy a fekete kontúr már szinte eltűnt, a zöld viszont még tisztán látszik.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "[[img5]]": {
+   "hu": "[[img5]]",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts",
+    "lib/longform/laser-removal-how-many-sessions.ts",
+    "lib/longform/tattoo-before-and-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Yellow, white and skin tones": {
+   "hu": "### Sárga, fehér és bőrszínek",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "These are the hardest. Yellow absorbs poorly at most wavelengths. White and flesh-toned inks often contain titanium dioxide or iron oxides, and these can actually **darken** under the laser, sometimes turning grey or black. A reputable practitioner will test a small spot first, especially on cosmetic tattoos such as lip or brow work.": {
+   "hu": "Ezek a legnehezebbek. A sárga a legtöbb hullámhosszon gyengén nyel el. A fehér és a bőrszínű tinták gyakran titán-dioxidot vagy vas-oxidokat tartalmaznak, amelyek a lézertől akár **sötétedhetnek** is, néha szürkévé vagy feketévé válnak. Egy megbízható szakember először egy kis pontot tesztel, főleg a sminktetoválásoknál, például az ajkon vagy a szemöldökön.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Before and after by body part": {
+   "hu": "## Előtte–utána testrész szerint",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "The same design can behave very differently depending on where it is. Tattoos closer to the centre of the body generally clear faster than those further out, and the usual explanation is blood and lymph supply: your body’s transport system is what carries the ink fragments away.": {
+   "hu": "Ugyanaz a minta nagyon másképp viselkedhet attól függően, hol van. A test közepéhez közelebbi tetoválások általában gyorsabban halványulnak, mint a távolabbiak, és a szokásos magyarázat a vér- és nyirokellátás: a szervezeted szállítórendszere viszi el a tintadarabokat.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Head and neck:** often among the quickest to respond.": {
+   "hu": "- **Fej és nyak:** gyakran a leggyorsabban reagálók közé tartozik.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Chest, back and shoulders:** usually steady progress.": {
+   "hu": "- **Mellkas, hát és váll:** általában egyenletes a haladás.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Stomach and lower back:** moderate progress.": {
+   "hu": "- **Has és derék:** közepes a haladás.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Upper arm and thigh:** slower.": {
+   "hu": "- **Felkar és comb:** lassabb.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Forearm, wrist, hand, ankle and foot:** typically the slowest, so expect more sessions.": {
+   "hu": "- **Alkar, csukló, kéz, boka és lábfej:** jellemzően a leglassabb, számíts több alkalomra.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "So when you look at someone’s photo of a neck tattoo that cleared quickly, don’t assume your ankle will follow the same timeline.": {
+   "hu": "Ha tehát valakinek a fotóján gyorsan eltűnt egy nyaktetoválás, ne gondold, hogy a bokád ugyanazt az időbeosztást követi.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "[[img6]]": {
+   "hu": "[[img6]]",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts",
+    "lib/longform/laser-removal-how-many-sessions.ts",
+    "lib/longform/tattoo-before-and-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Q-switched or picosecond: does the laser type show in the photos?": {
+   "hu": "## Q-kapcsolt vagy pikoszekundumos: látszik a lézertípus a fotókon?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Two main types of laser are used. **Q-switched lasers** deliver pulses measured in nanoseconds and have been the standard for decades. **Picosecond lasers** deliver much shorter pulses, which rely more on a mechanical shock than on heat to break up ink.": {
+   "hu": "Két fő lézertípust használnak. A **Q-kapcsolt lézerek** nanoszekundumokban mért impulzusokat adnak, és évtizedek óta ezek a sztenderdek. A **pikoszekundumos lézerek** sokkal rövidebb impulzusokat adnak, és a tinta széttöréséhez inkább mechanikai lökésre támaszkodnak, mint hőre.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "In theory, shorter pulses shatter ink into smaller pieces, and some studies have found good results with them, especially on stubborn colours and on tattoos that have already been treated. But the comparisons are mixed, and marketing tends to promise more than the research does. A picosecond machine with the wrong wavelength for your green won’t beat a Q-switched one with the right wavelength.": {
+   "hu": "Elméletben a rövidebb impulzus apróbb darabokra töri a tintát, és egyes vizsgálatok jó eredményeket találtak, főleg makacs színeknél és már kezelt tetoválásoknál. Az összehasonlítások azonban vegyesek, és a marketing általában többet ígér, mint amit a kutatások alátámasztanak. Egy pikoszekundumos gép rossz hullámhosszal nem fogja legyőzni a zöldet jobban, mint egy Q-kapcsolt a megfelelővel.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "So instead of asking “is it a picosecond laser?”, try asking: **which wavelengths do you have, which would you use on each colour in my tattoo, and can I see results on a similar one?** You may also see Nd:YAG mentioned as if it were a type of machine that competes with these. It is the laser medium, and many Q-switched and picosecond devices use it.": {
+   "hu": "Ezért ahelyett, hogy azt kérdeznéd, „pikoszekundumos a lézer?”, inkább ezt kérdezd: **milyen hullámhosszaik vannak, melyiket használnák a tetoválásom egyes színeire, és megnézhetek-e eredményt egy hasonló tetováláson?** Az Nd:YAG-et is láthatod úgy említve, mintha ezekkel versengő géptípus lenne. Ez a lézer közege, és sok Q-kapcsolt és pikoszekundumos készülék ezt használja.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## How to read a before-and-after photo": {
+   "hu": "## Hogyan olvass egy előtte–utána fotót?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Next time you are looking at a clinic’s gallery, check these things before you believe the picture.": {
+   "hu": "Legközelebb, amikor egy klinika galériáját nézed, ellenőrizd ezeket, mielőtt elhiszed a képet.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "1. **How many sessions?** A photo without a session count tells you very little.": {
+   "hu": "1. **Hány alkalom?** A kezelésszám nélküli fotó nagyon keveset mond.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "2. **How long after the last session?** Skin that was treated last week still looks different from skin that has healed for months. A photo taken right after frosting tells you nothing about the result.": {
+   "hu": "2. **Mennyivel az utolsó kezelés után?** A múlt héten kezelt bőr másképp néz ki, mint a hónapok óta gyógyult. A frosting után készült kép semmit nem mond az eredményről.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "3. **Same light and angle?** Strong light can wash out what is left of a tattoo. If the “after” is brighter or further away, be careful.": {
+   "hu": "3. **Ugyanaz a fény és a szög?** Az erős fény kimoshatja, ami a tetoválásból megmaradt. Ha az „utána” világosabb vagy távolabbról készült, légy óvatos.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "4. **Is it like your tattoo?** Look for the same colours, a similar density and a similar placement. An amateur black tattoo clearing fast says little about a saturated professional piece.": {
+   "hu": "4. **Hasonlít a te tetoválásodra?** Ugyanazokat a színeket, hasonló sűrűséget és elhelyezést keress. Egy gyorsan eltűnő amatőr fekete tetoválás keveset mond egy telített profi munkáról.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "5. **Close enough to see the skin?** Ask for a close-up. Good results show normal skin texture and tone, not just missing ink.": {
+   "hu": "5. **Elég közeli, hogy látszódjon a bőr?** Kérj közeli képet. A jó eredményen normális a bőr textúrája és tónusa, nem csak a tinta hiányzik.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "6. **What is missing?** Clinics show their best cases. Ask what a typical result looks like, not only the best one.": {
+   "hu": "6. **Mi hiányzik?** A klinikák a legjobb eseteiket mutatják. Kérdezd meg, milyen egy átlagos eredmény, ne csak a legjobb.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## What the skin can look like afterwards": {
+   "hu": "## Milyen lehet utána a bőr?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "An honest “after” includes the skin, not only the ink. Temporary lightening (**hypopigmentation**) or darkening (**hyperpigmentation**) of the treated area is fairly common and often improves over months, though it can last longer, particularly on darker skin tones. Some people see a faint outline of the old design in their skin’s texture, and scarring is a risk if the settings are too aggressive or if the area isn’t cared for during healing. Picking at blisters and exposing the area to sun both make things worse.": {
+   "hu": "Az őszinte „utána” a bőrről is szól, nem csak a tintáról. A kezelt terület átmeneti világosodása (**hipopigmentáció**) vagy sötétedése (**hiperpigmentáció**) elég gyakori, és hónapok alatt többnyire javul, bár tovább is tarthat, főleg sötétebb bőrtónusnál. Néhányan a régi minta halvány körvonalát látják a bőr textúrájában, heg pedig kialakulhat, ha a beállítások túl erősek, vagy ha a terület nem kap gondos ápolást a gyógyulás alatt. A hólyagok piszkálása és a napfény egyaránt ront a helyzeten.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "If you have a recent tattoo, it is also worth waiting. Clinics usually want a new tattoo to be fully healed, often for at least a couple of months, before the first session.": {
+   "hu": "Ha friss a tetoválásod, érdemes várni is. A klinikák általában azt szeretnék, hogy egy új tetoválás az első kezelés előtt teljesen gyógyult legyen, gyakran legalább néhány hónapja.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "[[img7]]": {
+   "hu": "[[img7]]",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts",
+    "lib/longform/laser-removal-how-many-sessions.ts",
+    "lib/longform/tattoo-before-and-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## See your own version first": {
+   "hu": "## Először nézd meg a saját változatod",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Other people’s photos can only tell you so much. In InkAge, the laser preview shows what your own tattoo might look like after 3, 6 and 10 sessions, so you can picture the patchy middle stage and the likely finish before you go to a consultation. And if you are still deciding on a new tattoo, the same app shows how the design is likely to age on your skin. It is a visual estimate rather than a medical assessment, and any decision about treatment belongs with a dermatologist or a qualified laser specialist.": {
+   "hu": "Mások fotói csak ennyit tudnak elmondani. Az InkAge-ben a lézeres előnézet megmutatja, hogyan nézhet ki a saját tetoválásod 3, 6 és 10 alkalom után, így még a konzultáció előtt el tudod képzelni a foltos középső szakaszt és a valószínű végeredményt. Ha pedig még új tetováláson gondolkodsz, ugyanez az app megmutatja, hogyan fog valószínűleg öregedni a minta a bőrödön. Ez vizuális becslés, nem orvosi felmérés, a kezelésről szóló döntés bőrgyógyászé vagy képzett lézeres szakemberé.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## The short version": {
+   "hu": "## Röviden",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts",
+    "lib/longform/laser-removal-how-many-sessions.ts",
+    "lib/longform/tattoo-before-and-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dóra’s forearm didn’t look like any of the eleven photos, and that was fine. After a good consultation she knew which colour would go first, which would take longest, and which wavelength the clinic would use for it. The best before-and-after photo isn’t the most dramatic one. It is the one that looks like your tattoo, states the number of sessions, and shows healed skin in honest light.": {
+   "hu": "Dóra alkarja egyik tizenegy fotóra sem hasonlított, és ez rendben is volt. Egy jó konzultáció után tudta, melyik szín megy el először, melyik tart a legtovább, és melyik hullámhosszal fog dolgozni a klinika. A legjobb előtte–utána fotó nem a leglátványosabb. Hanem az, amelyik hasonlít a te tetoválásodra, megmondja az alkalmak számát, és gyógyult bőrt mutat őszinte fényben.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "How much does a tattoo fade after one laser session?": {
+   "hu": "Mennyit halványul egy tetoválás egy lézeres alkalom után?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Usually a noticeable but partial change, and it continues for weeks as your body clears the ink. Black tattoos often show the clearest early change. Don’t judge the result right after treatment, because frosting and swelling hide it.": {
+   "hu": "Általában látható, de részleges változás, ami hetekig folytatódik, ahogy a szervezeted elszállítja a tintát. A fekete tetoválásoknál látszik a legtisztábban a korai változás. Ne közvetlenül a kezelés után ítélj, mert a frosting és a duzzanat elfedi az eredményt.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Which tattoo colours are hardest to remove?": {
+   "hu": "Melyik tetoválásszíneket a legnehezebb eltávolítani?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Yellow, white and skin tones are the hardest, followed by green and light blue. White and flesh-toned inks can even darken under the laser, so a small test spot comes first.": {
+   "hu": "A sárga, a fehér és a bőrszínek a legnehezebbek, utánuk a zöld és a világoskék. A fehér és a bőrszínű tinták a lézertől akár sötétedhetnek is, ezért először egy kis próbapontot érdemes kezelni.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Is a picosecond laser better than a Q-switched laser?": {
+   "hu": "Jobb a pikoszekundumos lézer, mint a Q-kapcsolt?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Sometimes, especially on stubborn or previously treated ink, but the research is mixed. The right wavelength for each colour and the practitioner’s experience matter at least as much as the pulse length.": {
+   "hu": "Néha igen, főleg makacs vagy már kezelt tintánál, de a kutatások vegyesek. Az egyes színekhez illő hullámhossz és a szakember tapasztalata legalább annyit számít, mint az impulzus hossza.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Will my skin look normal after laser tattoo removal?": {
+   "hu": "Normális lesz a bőröm a lézeres eltávolítás után?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Often yes, but not always right away. Lighter or darker patches are fairly common and usually improve over months, and some people keep a faint ghost image or a change in texture. Careful aftercare and sun protection help.": {
+   "hu": "Gyakran igen, de nem mindig azonnal. A világosabb vagy sötétebb foltok elég gyakoriak, és hónapok alatt általában javulnak, néhányaknál pedig halvány árnyék vagy textúrakülönbség marad. A gondos utókezelés és a fényvédelem segít.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Are the before-and-after photos on clinic websites realistic?": {
+   "hu": "Reálisak a klinikák weboldalain látható előtte–utána fotók?",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "They are usually real but selected: clinics show their best cases. Check the number of sessions, the time since the last one, the light and angle, and whether the tattoo resembles yours. Then ask what a typical result looks like.": {
+   "hu": "Általában valódiak, de válogatottak: a klinikák a legjobb eseteiket mutatják. Nézd meg a kezelések számát, az utolsó óta eltelt időt, a fényt és a szöget, és hogy hasonlít-e a tetoválás a tiédre. Aztán kérdezd meg, milyen egy átlagos eredmény.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: frosting right after a pulse. The white colour fades within minutes and says nothing about the final result.": {
+   "hu": "Illusztráció: frosting közvetlenül egy impulzus után. A fehér szín perceken belül elmúlik, és semmit nem mond a végeredményről.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: dense black ink partway through a course. Patchy, uneven fading in the middle stage is normal.": {
+   "hu": "Illusztráció: sűrű fekete tinta a kezelések közepén. A foltos, egyenetlen halványulás a középső szakaszban normális.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: red usually turns paler and pinker, and dark blue softens to grey-blue, with the right wavelengths.": {
+   "hu": "Illusztráció: a megfelelő hullámhosszal a piros általában halványabb és rózsaszínesebb lesz, a sötétkék pedig szürkéskékké lágyul.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a common pattern in mixed tattoos. The black outline is nearly gone while the green holds on.": {
+   "hu": "Illusztráció: gyakori kép vegyes tetoválásoknál. A fekete kontúr már szinte eltűnt, a zöld viszont kitart.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: the same kind of tattoo after a similar course can look different on the neck and on the foot.": {
+   "hu": "Illusztráció: ugyanolyan tetoválás hasonló kezelések után máshogy nézhet ki a nyakon és a lábfejen.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a pale patch where a tattoo used to be. Lighter skin is fairly common and often improves over months.": {
+   "hu": "Illusztráció: világos folt egy egykori tetoválás helyén. A világosabb bőr elég gyakori, és hónapok alatt gyakran javul.",
+   "files": [
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
   "The scoring system clinics use to estimate laser sessions, explained point by point, with four real-life examples you can copy for your own tattoo.": {
    "hu": "A pontrendszer, amivel a klinikák megbecsülik a lézeres alkalmak számát, pontról pontra elmagyarázva, négy hétköznapi példával, amit a saját tetoválásodra is alkalmazhatsz.",
    "files": [
@@ -18834,15 +19404,15 @@
    ],
    "kind": "obj"
   },
-  "In 2009, dermatologist **Dr William Kirby and colleagues** published a simple scoring system in the *Journal of Clinical and Aesthetic Dermatology* to help clinics and patients estimate how many laser treatments a tattoo would need. They scored six factors, added the points together, and found that the total roughly matched the number of sessions their patients needed, give or take a few.": {
-   "hu": "2009-ben **dr. William Kirby bőrgyógyász és munkatársai** a *Journal of Clinical and Aesthetic Dermatology* folyóiratban közöltek egy egyszerű pontrendszert, hogy a klinikák és a páciensek megbecsülhessék, hány lézeres kezelés kell egy tetováláshoz. Hat tényezőt pontoztak, összeadták a pontokat, és azt találták, hogy az összeg nagyjából megegyezett azzal, ahány alkalomra a pácienseiknek szüksége volt, néhány alkalom eltéréssel.",
+  "In 2009, dermatologist **Dr William Kirby and colleagues** published a simple scoring system in the Journal of Clinical and Aesthetic Dermatology to help clinics and patients estimate how many laser treatments a tattoo would need. They scored six factors, added the points together, and found that the total roughly matched the number of sessions their patients needed, give or take a few.": {
+   "hu": "2009-ben **dr. William Kirby bőrgyógyász és munkatársai** a Journal of Clinical and Aesthetic Dermatology folyóiratban közöltek egy egyszerű pontrendszert, hogy a klinikák és a páciensek megbecsülhessék, hány lézeres kezelés kell egy tetováláshoz. Hat tényezőt pontoztak, összeadták a pontokat, és azt találták, hogy az összeg nagyjából megegyezett azzal, ahány alkalomra a pácienseiknek szüksége volt, néhány alkalom eltéréssel.",
    "files": [
     "lib/longform/laser-removal-how-many-sessions.ts"
    ],
    "kind": "obj"
   },
-  "It was built in the era of Q-switched lasers, and newer picosecond lasers may change the numbers somewhat. It is also an estimate from a fairly small group of patients, not a law of physics. But it remains the most widely used way to turn “it depends” into an actual number, and it explains clearly *why* two tattoos that look similar can take very different amounts of time.": {
-   "hu": "A skála a Q-kapcsolt lézerek korában készült, és az újabb pikoszekundumos lézerek valamelyest módosíthatják a számokat. Ráadásul viszonylag kis betegcsoportból származó becslés, nem fizikai törvény. Mégis ez a legelterjedtebb módja annak, hogy az „attól függ”-ből tényleges szám legyen, és világosan megmagyarázza, *miért* tarthat nagyon eltérő ideig két hasonlónak tűnő tetoválás.",
+  "It was built in the era of Q-switched lasers, and newer picosecond lasers may change the numbers somewhat. It is also an estimate from a fairly small group of patients, not a law of physics. But it remains the most widely used way to turn “it depends” into an actual number, and it explains clearly why two tattoos that look similar can take very different amounts of time.": {
+   "hu": "A skála a Q-kapcsolt lézerek korában készült, és az újabb pikoszekundumos lézerek valamelyest módosíthatják a számokat. Ráadásul viszonylag kis betegcsoportból származó becslés, nem fizikai törvény. Mégis ez a legelterjedtebb módja annak, hogy az „attól függ”-ből tényleges szám legyen, és világosan megmagyarázza, miért tarthat nagyon eltérő ideig két hasonlónak tűnő tetoválás.",
    "files": [
     "lib/longform/laser-removal-how-many-sessions.ts"
    ],
@@ -19289,15 +19859,6 @@
    ],
    "kind": "obj"
   },
-  "[[img5]]": {
-   "hu": "[[img5]]",
-   "files": [
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts",
-    "lib/longform/tattoo-blowout.ts"
-   ],
-   "kind": "obj"
-  },
   "### Example 4: a black-and-grey cover-up on the upper arm": {
    "hu": "### 4. példa: egy fekete-szürke takarás a felkaron",
    "files": [
@@ -19389,15 +19950,6 @@
    ],
    "kind": "obj"
   },
-  "[[img6]]": {
-   "hu": "[[img6]]",
-   "files": [
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts",
-    "lib/longform/tattoo-blowout.ts"
-   ],
-   "kind": "obj"
-  },
   "## Full removal or fading?": {
    "hu": "## Teljes eltávolítás vagy halványítás?",
    "files": [
@@ -19426,15 +19978,6 @@
    ],
    "kind": "obj"
   },
-  "[[img7]]": {
-   "hu": "[[img7]]",
-   "files": [
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts",
-    "lib/longform/tattoo-blowout.ts"
-   ],
-   "kind": "obj"
-  },
   "## See it before you decide": {
    "hu": "## Nézd meg, mielőtt döntesz",
    "files": [
@@ -19446,15 +19989,6 @@
    "hu": "Ha még mintát választasz, az InkAge megmutatja, hogyan fog valószínűleg öregedni a saját bőrödön 10, 30 és 50 év múlva. Ha már megvan a tetoválás, a lézeres előnézet megmutatja, milyen lehet 3, 6 és 10 alkalom után, így még a konzultáció előtt elképzelheted a halványítást és a teljes eltávolítást. Ez vizuális becslés, nem orvosi felmérés, a kezelésről szóló döntés mindig bőrgyógyászé vagy képzett lézeres szakemberé.",
    "files": [
     "lib/longform/laser-removal-how-many-sessions.ts"
-   ],
-   "kind": "obj"
-  },
-  "## The short version": {
-   "hu": "## Röviden",
-   "files": [
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts",
-    "lib/longform/tattoo-blowout.ts"
    ],
    "kind": "obj"
   },
@@ -26297,6 +26831,104 @@
    ],
    "kind": "obj"
   },
+  "I’ll still be on you in fifty years.": {
+   "hu": "Ötven év múlva is rajtad leszek.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "A letter from your tattoo, written fifty years from now.": {
+   "hu": "Levél a tetoválásodtól, ötven évvel későbbről.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "A letter from the future": {
+   "hu": "Levél {0}-{1}",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "Hello,": {
+   "hu": "Szia,",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "I’m your tattoo.": {
+   "hu": "én vagyok a tetoválásod.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "Fifty years later.": {
+   "hu": "Ötven évvel később.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "I don’t even exist yet. And you can still decide.": {
+   "hu": "Még nem is létezem. Te pedig még dönthetsz.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "Over fifty years my lines will soften, the black will turn blue-grey, the skin around me will wrinkle. Whether I stay beautiful is being decided now: the spot, the size, the design.": {
+   "hu": "Ötven év alatt a vonalaim lágyabbak lesznek, a fekete kékesszürkébe hajlik, a bőr körülöttem ráncosodik. Hogy közben szép maradok-e, az most dől el: a helyen, a méreten, a mintán.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "Upload a photo of your skin, choose a design, and in a minute I’ll show you what I become.": {
+   "hu": "Tölts fel egy fotót a bőrödről, válassz mintát, és egy perc múlva megmutatom magam.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "Don’t ask me. See for yourself.": {
+   "hu": "Ne engem kérdezz. Nézd meg.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "See it on my own skin": {
+   "hu": "Megnézem a saját bőrömön",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "The pictures are AI examples: a simulation for inspiration. Real results also depend on your artist, your skin and aftercare.": {
+   "hu": "A képek MI-példák: szimuláció inspirációnak, a valós eredmény a tetoválótól, a bőrödtől és az ápolástól is függ.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "You’re getting this because you just signed up for InkAge.": {
+   "hu": "Azért kaptad ezt a levelet, mert most regisztráltál az InkAge-be.",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "A tattoo today, then 1, 10, 30 and 50 years later": {
+   "hu": "Egy tetoválás ma, majd 1, 10, 30 és 50 év múlva",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
   "You used today’s cut-outs and AI drawings. Try again tomorrow.": {
    "hu": null,
    "files": [
@@ -27989,20 +28621,6 @@
    ],
    "kind": "call"
   },
-  "Welcome, {0}!": {
-   "hu": "Üdv, {0}!",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Welcome to InkAge! {0}/app": {
-   "hu": "Üdv az InkAge-ben! {0}/app",
-   "files": [
-    "app/api/welcome/route.ts"
-   ],
-   "kind": "call"
-  },
   "{0} saved design{1} moved to your account": {
    "hu": "{0} terv átkerült a fiókodba",
    "files": [
@@ -28607,6 +29225,13 @@
     "lib/ai/providers.ts"
    ],
    "kind": "err"
+  },
+  "Dear {0},": {
+   "hu": "Kedves {0},",
+   "files": [
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
   },
   "Very small (≈{0} cm): details will merge": {
    "hu": "Nagyon kicsi (≈{0} cm): a részletek összefolynak",
