@@ -2,10 +2,12 @@
 import { qOf } from '@/lib/tr';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useApp } from '../../AppProvider';
 import { LangPicker } from '../../../LangPicker';
 import { tx } from '@/lib/i18n';
 import { sb } from '@/lib/sb';
+import { track } from '@/lib/store';
 import { PushRow } from '../PushRow';
 
 const ADMIN = ['vviktoriasoti@gmail.com'];
@@ -32,6 +34,12 @@ export function SettingsCard({
 }) {
   const { ui, me, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
+  const [statsOn, setStatsOn] = useState(false);
+  useEffect(() => {
+    try {
+      setStatsOn(localStorage.getItem('ink_consent') === 'all');
+    } catch {}
+  }, []);
   return (
     <div className="card" style={{ marginTop: 12 }}>
       <LangPicker
@@ -66,6 +74,26 @@ export function SettingsCard({
         </label>
       )}
       {me.user && <PushRow onInstallHelp={install} />}
+      <label className="list-row" style={{ cursor: 'pointer' }}>
+        <span>
+          {t('Anonymous usage stats', 'Névtelen használati statisztika')}
+          <small>{t('Which features get used, so we know what to improve. Never sold or shared.', 'Mely funkciókat használják, hogy tudjuk, mit fejlesszünk. Nem adjuk el és nem osztjuk meg.')}</small>
+        </span>
+        <input
+          type="checkbox"
+          className="switch"
+          checked={statsOn}
+          onChange={(e) => {
+            const on = e.target.checked;
+            setStatsOn(on);
+            try {
+              localStorage.setItem('ink_consent', on ? 'all' : 'essential');
+              localStorage.setItem('ink_consent_at', new Date().toISOString());
+            } catch {}
+            if (on) track('consent_all');
+          }}
+        />
+      </label>
       {!installed && (
         <button className="list-row" onClick={install}>
           <span>

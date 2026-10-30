@@ -9,6 +9,7 @@ import { huArticle, tx } from '@/lib/i18n';
 import { haptic, Preview } from '@/lib/store';
 import { placeName } from '../../create/steps';
 import { isRemoval } from './shared';
+import type { useSavedAging } from './useSavedAging';
 
 /** One saved preview, opened from the grid. */
 export function PreviewDetail({
@@ -24,6 +25,7 @@ export function PreviewDetail({
   setNewFolder,
   newOpen,
   setNewOpen,
+  aging,
 }: {
   open: Preview;
   setOpen: Dispatch<SetStateAction<Preview | null>>;
@@ -37,8 +39,9 @@ export function PreviewDetail({
   setNewFolder: (v: string) => void;
   newOpen: boolean;
   setNewOpen: (v: boolean) => void;
+  aging: ReturnType<typeof useSavedAging>;
 }) {
-  const { ui, toast } = useApp();
+  const { ui, me, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   return (
     <>
@@ -136,6 +139,12 @@ export function PreviewDetail({
         }}
         onDone={(d) => update(open, { doneAt: d })}
         startView={isRemoval(open) ? 'removal' : 'aging'}
+        gallery
+        onAging={open.source === 'cloud' && me.user ? () => void aging.start(open) : undefined}
+        pending={aging.pending[open.id] || []}
+        failed={aging.failed[open.id] || []}
+        onRetryStage={() => void aging.start(open)}
+        reveal={aging.wasStarted(open.id)}
       />
     </>
   );

@@ -45,9 +45,10 @@ export function Result({
   onShared,
   onDone,
   onAging,
+  gallery = false,
   onTryPlace,
 }: ResultProps) {
-  const { ui } = useApp();
+  const { ui, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const img = preview.images;
   const rem = preview.removal || {};
@@ -84,6 +85,9 @@ export function Result({
   const remLabel = (k: 'fresh' | RemovalKey) => (k === 'fresh' ? t('Today', 'Ma') : t(`${k.slice(5)} sessions`, `${k.slice(5)} kezelés`));
 
   const { pos, setPos, maxPos, p, lo, frac, active, yearsNow, step } = useTimeline(ready, reveal);
+  // in the gallery these buttons say what they are waiting for, instead of just being grey
+  const agingHere = gallery && !!onAging;
+  const needAging = () => toast(t('First make the images of the years.', 'Ehhez előbb készítsd el az évek képeit.'));
 
   useEffect(() => setNotes(preview.notes || ''), [preview.id]); // eslint-disable-line react-hooks/exhaustive-deps
   // a removal-only preview opens on the laser sessions
@@ -182,6 +186,7 @@ export function Result({
         failed={failed}
         pending={pending}
         onRetryStage={onRetryStage}
+        onMissingStage={gallery ? onAging : undefined}
         rem={rem}
         remKey={remKey}
         setRemKey={setRemKey}
@@ -198,21 +203,30 @@ export function Result({
         <p className="why" aria-live="polite">{t(...WHY[active])}</p>
       )}
       {img.fresh && <AiReport previewId={preview.id} image={img[ready[Math.round(pos)] as StageKey] || img.fresh} />}
-      {!removalOnly && onAging && view === 'aging' && ready.length <= 1 && pending.length === 0 && failed.length === 0 && img.fresh && (
+      {!removalOnly && onAging && view === 'aging' && (gallery ? ready.length < STAGES.length : ready.length <= 1) && pending.length === 0 && failed.length === 0 && img.fresh && (
         <div className="age-offer">
-          <p>{t('Saved to your gallery. Want to see how it looks over the years?', 'Elmentve a galériádba. Megnézed, hogyan néz ki az évek múlásával?')}</p>
+          <p>
+            {gallery
+              ? ready.length > 1
+                ? t('Some of the years are still missing.', 'Néhány év még hiányzik.')
+                : t('Want to see how it looks over the years?', 'Megnézed, hogyan néz ki az évek múlásával?')
+              : t('Saved to your gallery. Want to see how it looks over the years?', 'Elmentve a galériádba. Megnézed, hogyan néz ki az évek múlásával?')}
+          </p>
           <button className="btn wide" onClick={onAging}>
-            {t('Show how it ages (1–50 years)', 'Mutasd, hogyan öregszik (1–50 év)')}
+            {gallery && ready.length > 1 ? t('Finish the missing years', 'Hiányzó évek elkészítése') : t('Show how it ages (1–50 years)', 'Mutasd, hogyan öregszik (1–50 év)')}
           </button>
         </div>
       )}
+      {gallery && view === 'aging' && pending.length > 0 && (
+        <p className="why" role="status">{t('Making the years, about a minute. You can leave this page: finished images stay saved.', 'Készülnek az évek, kb. egy perc. Elhagyhatod az oldalt, a kész képek megmaradnak.')}</p>
+      )}
       {removalOnly && onAging && (
-        <button className="btn ghost wide" style={{ margin: '4px 0 12px' }} onClick={onAging} disabled={removalPending.length > 0}>
+        <button className="btn ghost wide" style={{ margin: '4px 0 12px' }} onClick={() => (setView('aging'), onAging())} disabled={removalPending.length > 0}>
           {t('Also show how it ages over 50 years', 'Az öregedését is megnézem 50 évre')}
         </button>
       )}
       <div className="actgrid">
-        <button className="act primary" onClick={() => setVideo(true)} disabled={ready.length < 2}>
+        <button className="act primary" onClick={() => (ready.length < 2 ? needAging() : setVideo(true))} disabled={ready.length < 2 && !agingHere}>
           {Icon.video}
           {t('Video', 'Videó')}
         </button>
@@ -220,7 +234,7 @@ export function Result({
           {Icon.share}
           {t('Ask friends', 'Kérdezd meg')}
         </button>
-        <button className="act" onClick={() => setMode(mode === 'split' ? 'view' : 'split')} disabled={ready.length < 2 || view === 'removal'} aria-pressed={mode === 'split'}>
+        <button className="act" onClick={() => (ready.length < 2 ? needAging() : setMode(mode === 'split' ? 'view' : 'split'))} disabled={(ready.length < 2 && !agingHere) || view === 'removal'} aria-pressed={mode === 'split'}>
           <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M12 3v18" /></svg>
           {mode === 'split' ? t('Single', 'Egy kép') : t('Compare', 'Összevet')}
         </button>

@@ -27,6 +27,8 @@ export type ResultProps = {
   onDone?: (date: string) => void;
   /** removal-only preview: also run the aging stages */
   onAging?: () => void;
+  /** opened from the gallery: the years can be made or finished here */
+  gallery?: boolean;
   /** try the same design on another body area (new photo of that spot) */
   onTryPlace?: (placement: string) => void;
 };

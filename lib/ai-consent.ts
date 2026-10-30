@@ -4,7 +4,7 @@
 const KEY = 'ink_ai_ok';
 type Ask = (ok: boolean) => void;
 
-export const AI_PATHS = /^\/api\/(check-photo|extract|generate|design|improve|find-tattoos|age|fetch-image)(\/|\?|$)/;
+export const AI_PATHS = /^\/api\/(check-photo|extract|generate|design|improve|find-tattoos|age|age-saved|fetch-image)(\/|\?|$)/;
 
 export function aiConsented() {
   try {

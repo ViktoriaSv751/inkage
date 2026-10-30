@@ -292,6 +292,7 @@ const ERR_HU: [RegExp, string][] = [
   [/^Could not start your preview/, 'Nem sikerült elindítani az előnézetet. Próbáld újra.'],
   [/^This preview expired/, 'Ez az előnézet lejárt. Kezdj egy újat.'],
   [/^Start a new preview/, 'Kezdj egy új előnézetet, és próbáld újra.'],
+  [/^Please try again in a minute/, 'Kérjük, próbáld újra egy perc múlva.'],
   [/^Limit reached for this image/, 'Ehhez a képhez elérted a keretet. Kezdj egy új előnézetet.'],
   [/^Please sign in/, 'Kérlek, jelentkezz be újra.'],
   [/^The AI is not switched on|^The app is not fully set up|^Not set up yet/, 'Az app most karbantartás alatt van. Próbáld újra pár perc múlva.'],

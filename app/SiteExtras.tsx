@@ -74,7 +74,7 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
 }
 
 /** First visit: which cookies and local storage we use, with an honest choice. */
-export function CookieConsent({ lang, onChange }: { lang: Lang; onChange?: (open: boolean) => void }) {
+export function CookieConsent({ lang, onChange, native = false }: { lang: Lang; onChange?: (open: boolean) => void; native?: boolean }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(false);
@@ -106,9 +106,12 @@ export function CookieConsent({ lang, onChange }: { lang: Lang; onChange?: (open
         </svg>
       </div>
       <div className="cc-body">
-        <b id="cc-h">{T('Cookies, the honest version', 'Sütik, őszintén')}</b>
+        <b id="cc-h">{native ? T('Help make InkAge better?', 'Segítesz jobbá tenni az InkAge-et?') : T('Cookies, the honest version', 'Sütik, őszintén')}</b>
         <p>
-          {T(
+          {native ? T(
+            'Can we count which features get used? It’s our own anonymous stats, never sold or shared. You can change this any time in Settings.',
+            'Megszámolhatjuk, mely funkciókat használod? Ez saját, névtelen statisztika, nem adjuk el és nem osztjuk meg. A Beállításokban bármikor módosíthatod.'
+          ) : T(
             'We only use what InkAge needs to work (sign-in, language, theme) and our own anonymous usage stats to make it better. No ads, no third-party trackers.',
             'Csak azt használjuk, ami az InkAge működéséhez kell (belépés, nyelv, téma), és saját, névtelen használati statisztikát a fejlesztéshez. Nincs hirdetés, nincs külső követő.'
           )}
@@ -125,17 +128,25 @@ export function CookieConsent({ lang, onChange }: { lang: Lang; onChange?: (open
         )}
         <div className="cc-act">
           <button className="cc-yes" onClick={() => choose('all')}>
-            {T('Accept', 'Elfogadom')}
+            {native ? T('Yes, count it', 'Igen, számolhatjátok') : T('Accept', 'Elfogadom')}
           </button>
           <button className="cc-no" onClick={() => choose('essential')}>
-            {T('Necessary only', 'Csak a szükségesek')}
+            {native ? T('No, thanks', 'Nem, köszönöm') : T('Necessary only', 'Csak a szükségesek')}
           </button>
-          <button className="cc-more" onClick={() => setMore(!more)} aria-expanded={more}>
-            {more ? T('Less', 'Kevesebb') : T('Details', 'Részletek')}
-          </button>
-          <Link className="cc-more" href={`/suti${qOf(lang)}`}>
-            {T('Cookie policy', 'Süti tájékoztató')}
-          </Link>
+          {!native && (
+            <button className="cc-more" onClick={() => setMore(!more)} aria-expanded={more}>
+              {more ? T('Less', 'Kevesebb') : T('Details', 'Részletek')}
+            </button>
+          )}
+          {native ? (
+            <Link className="cc-more" href={`/privacy${qOf(lang)}`}>
+              {T('Privacy', 'Adatvédelem')}
+            </Link>
+          ) : (
+            <Link className="cc-more" href={`/suti${qOf(lang)}`}>
+              {T('Cookie policy', 'Süti tájékoztató')}
+            </Link>
+          )}
         </div>
       </div>
     </div>

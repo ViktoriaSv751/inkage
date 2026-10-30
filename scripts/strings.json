@@ -411,8 +411,22 @@
    ],
    "kind": "call"
   },
+  "Help make InkAge better?": {
+   "hu": "Segítesz jobbá tenni az InkAge-et?",
+   "files": [
+    "app/SiteExtras.tsx"
+   ],
+   "kind": "call"
+  },
   "Cookies, the honest version": {
    "hu": "Sütik, őszintén",
+   "files": [
+    "app/SiteExtras.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can we count which features get used? It’s our own anonymous stats, never sold or shared. You can change this any time in Settings.": {
+   "hu": "Megszámolhatjuk, mely funkciókat használod? Ez saját, névtelen statisztika, nem adjuk el és nem osztjuk meg. A Beállításokban bármikor módosíthatod.",
    "files": [
     "app/SiteExtras.tsx"
    ],
@@ -453,8 +467,22 @@
    ],
    "kind": "call"
   },
+  "Yes, count it": {
+   "hu": "Igen, számolhatjátok",
+   "files": [
+    "app/SiteExtras.tsx"
+   ],
+   "kind": "call"
+  },
   "Accept": {
    "hu": "Elfogadom",
+   "files": [
+    "app/SiteExtras.tsx"
+   ],
+   "kind": "call"
+  },
+  "No, thanks": {
+   "hu": "Nem, köszönöm",
    "files": [
     "app/SiteExtras.tsx"
    ],
@@ -478,6 +506,15 @@
    "hu": "Részletek",
    "files": [
     "app/SiteExtras.tsx"
+   ],
+   "kind": "call"
+  },
+  "Privacy": {
+   "hu": "Adatvédelem",
+   "files": [
+    "app/SiteExtras.tsx",
+    "app/SiteFooter.tsx",
+    "app/app/create/_steps/studio/StudioStep.tsx"
    ],
    "kind": "call"
   },
@@ -687,15 +724,6 @@
     "app/SiteFooter.tsx",
     "app/_auth/EmailStep.tsx",
     "app/app/AgeGate.tsx"
-   ],
-   "kind": "call"
-  },
-  "Privacy": {
-   "hu": "Adatvédelem",
-   "files": [
-    "app/SiteFooter.tsx",
-    "app/app/create/_steps/studio/StudioStep.tsx",
-    "app/app/profile/_parts/SettingsCard.tsx"
    ],
    "kind": "call"
   },
@@ -3940,14 +3968,16 @@
   "Not set up yet.": {
    "hu": null,
    "files": [
-    "app/api/age/route.ts"
+    "app/api/age/route.ts",
+    "app/api/age-saved/route.ts"
    ],
    "kind": "err"
   },
   "Bad stage": {
    "hu": null,
    "files": [
-    "app/api/age/route.ts"
+    "app/api/age/route.ts",
+    "app/api/age-saved/route.ts"
    ],
    "kind": "err"
   },
@@ -3961,21 +3991,54 @@
   "Start a new preview and try again.": {
    "hu": null,
    "files": [
-    "app/api/age/route.ts"
+    "app/api/age/route.ts",
+    "app/api/age-saved/route.ts"
    ],
    "kind": "err"
   },
   "Please sign in again.": {
    "hu": null,
    "files": [
-    "app/api/age/route.ts"
+    "app/api/age/route.ts",
+    "app/api/age-saved/route.ts"
    ],
    "kind": "err"
   },
   "Limit reached for this image. Start a new preview.": {
    "hu": null,
    "files": [
-    "app/api/age/route.ts"
+    "app/api/age/route.ts",
+    "app/api/age-saved/route.ts"
+   ],
+   "kind": "err"
+  },
+  "Already done": {
+   "hu": null,
+   "files": [
+    "app/api/age-saved/route.ts"
+   ],
+   "kind": "err"
+  },
+  "Please try again in a minute.": {
+   "hu": null,
+   "files": [
+    "app/api/age-saved/route.ts"
+   ],
+   "kind": "err"
+  },
+  "image not found": {
+   "hu": null,
+   "files": [
+    "app/api/age-saved/route.ts"
+   ],
+   "kind": "err"
+  },
+  "Invalid image": {
+   "hu": null,
+   "files": [
+    "app/api/age-saved/route.ts",
+    "lib/ai/providers.ts",
+    "lib/server.ts"
    ],
    "kind": "err"
   },
@@ -4730,6 +4793,13 @@
    ],
    "kind": "call"
   },
+  "First make the images of the years.": {
+   "hu": "Ehhez előbb készítsd el az évek képeit.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
   "Aging": {
    "hu": "Öregedés",
    "files": [
@@ -4772,6 +4842,20 @@
    ],
    "kind": "call"
   },
+  "Some of the years are still missing.": {
+   "hu": "Néhány év még hiányzik.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
+  "Want to see how it looks over the years?": {
+   "hu": "Megnézed, hogyan néz ki az évek múlásával?",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
   "Saved to your gallery. Want to see how it looks over the years?": {
    "hu": "Elmentve a galériádba. Megnézed, hogyan néz ki az évek múlásával?",
    "files": [
@@ -4779,8 +4863,22 @@
    ],
    "kind": "call"
   },
+  "Finish the missing years": {
+   "hu": "Hiányzó évek elkészítése",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
   "Show how it ages (1–50 years)": {
    "hu": "Mutasd, hogyan öregszik (1–50 év)",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
+  "Making the years, about a minute. You can leave this page: finished images stay saved.": {
+   "hu": "Készülnek az évek, kb. egy perc. Elhagyhatod az oldalt, a kész képek megmaradnak.",
    "files": [
     "app/app/Result.tsx"
    ],
@@ -7686,6 +7784,13 @@
    ],
    "kind": "call"
   },
+  "This year isn’t made yet: this is the fresh image": {
+   "hu": "Ehhez az évhez még nincs kép: ez a friss kép",
+   "files": [
+    "app/app/gallery/_parts/CompareSheet.tsx"
+   ],
+   "kind": "call"
+  },
   "Delete this design?": {
    "hu": "Biztosan törlöd ezt a tervet?",
    "files": [
@@ -8761,6 +8866,20 @@
   },
   "Could not save. Try again.": {
    "hu": "Nem sikerült menteni. Próbáld újra.",
+   "files": [
+    "app/app/profile/_parts/SettingsCard.tsx"
+   ],
+   "kind": "call"
+  },
+  "Anonymous usage stats": {
+   "hu": "Névtelen használati statisztika",
+   "files": [
+    "app/app/profile/_parts/SettingsCard.tsx"
+   ],
+   "kind": "call"
+  },
+  "Which features get used, so we know what to improve. Never sold or shared.": {
+   "hu": "Mely funkciókat használják, hogy tudjuk, mit fejlesszünk. Nem adjuk el és nem osztjuk meg.",
    "files": [
     "app/app/profile/_parts/SettingsCard.tsx"
    ],
@@ -10632,8 +10751,8 @@
    ],
    "kind": "call"
   },
-  "- **Usage statistics:** simple, anonymous in-app events (for example “preview created”), only if you accept them in the cookie notice. No advertising trackers, no advertising ID.": {
-   "hu": "- **Használati statisztika:** egyszerű, névtelen események (például „előnézet elkészült”), csak ha a süti tájékoztatóban elfogadod. Nincs hirdetési követő, nincs hirdetési azonosító.",
+  "- **Usage statistics:** simple, anonymous in-app events (for example “preview created”), only if you agree: in the cookie notice on the website, or when the store app asks. You can change this in Settings. No advertising trackers, no advertising ID.": {
+   "hu": "- **Használati statisztika:** egyszerű, névtelen események (például „előnézet elkészült”), csak ha hozzájárulsz: a weboldalon a süti tájékoztatóban, a bolti appban pedig, amikor megkérdezi. A Beállításokban módosíthatod. Nincs hirdetési követő, nincs hirdetési azonosító.",
    "files": [
     "app/privacy/page.tsx"
    ],
@@ -12801,14 +12920,6 @@
    "hu": null,
    "files": [
     "lib/ai/photo-checks.ts"
-   ],
-   "kind": "err"
-  },
-  "Invalid image": {
-   "hu": null,
-   "files": [
-    "lib/ai/providers.ts",
-    "lib/server.ts"
    ],
    "kind": "err"
   },

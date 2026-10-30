@@ -13,6 +13,7 @@ import { useTrash } from './_parts/useTrash';
 import { TrashSheet } from './_parts/TrashSheet';
 import { DeleteSheet } from './_parts/DeleteSheet';
 import { PreviewDetail } from './_parts/PreviewDetail';
+import { useSavedAging } from './_parts/useSavedAging';
 import { GalleryFilters } from './_parts/GalleryFilters';
 import { SelectionBars } from './_parts/SelectionBars';
 import { PreviewGrid } from './_parts/PreviewGrid';
@@ -27,10 +28,11 @@ export default function GalleryPage() {
   const [more, setMore] = useState(false);
   const [filter, setFilter] = useState<'all' | 'fav'>('all');
   const [open, setOpen] = useState<Preview | null>(null);
+  const aging = useSavedAging(setOpen, setItems);
   const [mode, setMode] = useState<Mode>('browse');
   const [cmpOpen, setCmpOpen] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
-  const [cmpStage, setCmpStage] = useState<StageKey>('y50');
+  const [cmpStage, setCmpStage] = useState<StageKey>('fresh');
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<Sort>(() => lsGet<Sort>('ink_gal_sort', 'new'));
   const [kind, setKind] = useState<Kind>('any');
@@ -218,6 +220,7 @@ export default function GalleryPage() {
           setNewFolder={setNewFolder}
           newOpen={newOpen}
           setNewOpen={setNewOpen}
+          aging={aging}
         />
         {delSheet}
       </>

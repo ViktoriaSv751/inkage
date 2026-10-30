@@ -39,6 +39,7 @@ export function CompareSheet({
             <img src={p.images[cmpStage] || p.images.fresh} alt={placeName(p.placement, ui.lang)} />
             <figcaption>
               {placeName(p.placement, ui.lang)} · {p.score ?? '–'}/100
+              {!p.images[cmpStage] && <small style={{ display: 'block' }}>{t('This year isn’t made yet: this is the fresh image', 'Ehhez az évhez még nincs kép: ez a friss kép')}</small>}
             </figcaption>
           </figure>
         ))}

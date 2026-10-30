@@ -17,6 +17,7 @@ export function StageBar({
   failed,
   pending,
   onRetryStage,
+  onMissingStage,
   rem,
   remKey,
   setRemKey,
@@ -35,6 +36,7 @@ export function StageBar({
   failed: StageKey[];
   pending: StageKey[];
   onRetryStage?: (k: StageKey) => void;
+  onMissingStage?: () => void;
   rem: Partial<Record<RemovalKey, string>>;
   remKey: 'fresh' | RemovalKey;
   setRemKey: (k: 'fresh' | RemovalKey) => void;
@@ -71,9 +73,10 @@ export function StageBar({
                 role="tab"
                 aria-selected={active === k}
                 className={`${active === k ? 'on' : ''} ${pending.includes(k) ? 'loading' : ''}`}
-                disabled={idx < 0 && !fail}
+                disabled={idx < 0 && !fail && (!onMissingStage || pending.includes(k))}
                 onClick={() => {
                   if (fail && onRetryStage) return onRetryStage(k);
+                  if (idx < 0) return onMissingStage?.();
                   setPos(idx);
                   haptic();
                 }}
