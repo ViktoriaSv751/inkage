@@ -4,6 +4,8 @@ import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '
 import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, inputSafety, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
 import { pasteBack } from '@/lib/composite';
 import { jobPut, jobsTidy } from '@/lib/jobs';
+import { sendMail } from '@/lib/mail';
+import { limitEmail } from '@/lib/mail-more';
 import { longevity } from '@/lib/score';
 import { guestFrom, guestRefund, guestStart } from '@/lib/guest';
 
@@ -52,6 +54,14 @@ export async function POST(req: Request) {
     if (!start.ok && start.reason === 'busy')
       return json({ error: 'So many people are trying InkAge today that previews are paused. Try again tomorrow.', code: 'busy' }, 429);
     if (!start.ok) {
+      // once a month: an e-mail about it (never holds up the answer on failure)
+      if (a.user.email) {
+        const { data: first } = await a.db.rpc('limit_mail_once').then((r: any) => r, () => ({ data: false }));
+        if (first) {
+          const m = limitEmail(isLang(body.lang) ? body.lang : 'hu', { kind: 'reached', used: Number(start.used) || 0, limit: Number(start.limit) || 30, resetsAt: start.resetsAt });
+          await sendMail(a.user.email, m.subject, m.html, m.text, process.env.CONTACT_EMAIL || undefined).catch(() => false);
+        }
+      }
       return json({ error: 'You reached this month’s 30 previews. They start again on the 1st.', code: 'limit' }, 429);
     }
     gid = start.gid;

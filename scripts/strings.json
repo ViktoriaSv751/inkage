@@ -4201,41 +4201,6 @@
    ],
    "kind": "call"
   },
-  "Confirm your subscription – InkAge": {
-   "hu": "Erősítsd meg a feliratkozást – InkAge",
-   "files": [
-    "app/api/newsletter/route.ts"
-   ],
-   "kind": "call"
-  },
-  "One more click": {
-   "hu": "Még egy kattintás",
-   "files": [
-    "app/api/newsletter/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Once a month we send a new guide on keeping tattoos looking good. If this was you, please confirm:": {
-   "hu": "Havonta egyszer küldünk egy új útmutatót arról, hogyan marad szép a tetoválás. Ha te iratkoztál fel, erősítsd meg:",
-   "files": [
-    "app/api/newsletter/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Confirm subscription": {
-   "hu": "Feliratkozás megerősítése",
-   "files": [
-    "app/api/newsletter/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Confirm": {
-   "hu": "Megerősítés",
-   "files": [
-    "app/api/newsletter/route.ts"
-   ],
-   "kind": "call"
-  },
   "FRISS · FRESH": {
    "hu": "50 ÉV · 50 YEARS",
    "files": [
@@ -10671,6 +10636,13 @@
   },
   "- **E-mails:** a welcome e-mail after you sign up, a note if a preview finishes after you closed the app, and one reminder a day after sign-up if you haven’t added a photo yet. You can stop the reminder with one click in the e-mail.": {
    "hu": "- **E-mailek:** üdvözlő levél a regisztráció után, értesítés, ha az előnézet az app bezárása után készül el, és egyetlen emlékeztető a regisztráció másnapján, ha még nem töltöttél fel fotót. Az emlékeztetőt a levélben egy kattintással leállíthatod.",
+   "files": [
+    "app/privacy/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "- **Other reminders by e-mail:** when you reach your monthly allowance and when it restarts, and one year after you mark a tattoo as done. You can stop the reminders with one click in the e-mail. The monthly guide goes only to people who subscribed and confirmed.": {
+   "hu": "- **További e-mailes emlékeztetők:** amikor eléred a havi keretet és amikor újraindul, és egy évvel azután, hogy megjelölted, hogy elkészült a tetoválásod. Az emlékeztetőket a levélben egy kattintással leállíthatod. A havi útmutató csak azoknak megy, akik feliratkoztak és megerősítették.",
    "files": [
     "app/privacy/page.tsx"
    ],
@@ -27046,7 +27018,8 @@
   "Don’t send reminders": {
    "hu": "Ne küldjetek emlékeztetőt",
    "files": [
-    "lib/mail-lifecycle.ts"
+    "lib/mail-lifecycle.ts",
+    "lib/mail-more.ts"
    ],
    "kind": "call"
   },
@@ -27089,6 +27062,154 @@
    "hu": "Ebből csak ez az egy emlékeztető megy ki.",
    "files": [
     "lib/mail-lifecycle.ts"
+   ],
+   "kind": "call"
+  },
+  "You’ve used this month’s previews": {
+   "hu": "Elérted a havi keretedet",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Your previews are back": {
+   "hu": "Újraindult a havi kereted",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "If you don’t want to wait: invite a friend, and you both get an extra preview when they sign up.": {
+   "hu": "Ha nem akarsz várni: hívj meg egy barátot, és ha regisztrál, mindketten kaptok egy plusz előnézetet.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "A new spot, a new size, the design you’ve been thinking about: try them on your own skin.": {
+   "hu": "Új hely, új méret, vagy az a minta, amin gondolkodsz: próbáld ki a saját bőrödön.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Invite a friend": {
+   "hu": "Meghívok egy barátot",
+   "files": [
+    "lib/mail-more.ts",
+    "lib/i18n.ts"
+   ],
+   "kind": "call"
+  },
+  "Make a preview": {
+   "hu": "Új előnézet készítése",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "About your InkAge account.": {
+   "hu": "Az InkAge-fiókoddal kapcsolatban.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Your tattoo is one year old": {
+   "hu": "Egy éve készült a tetoválásod",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Take a photo and compare it with the preview.": {
+   "hu": "Fotózd le, és hasonlítsd össze az előnézettel.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Has it become what the preview showed? Take a photo in daylight, add it next to the preview, and you’ll see how your ink is really aging.": {
+   "hu": "Olyan lett, mint amit az előnézet mutatott? Fotózd le nappali fényben, tedd az előnézet mellé, és meglátod, hogyan öregszik valójában.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Compare it": {
+   "hu": "Összehasonlítom",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "You marked this preview as done in InkAge.": {
+   "hu": "Az InkAge-ben megjelölted, hogy elkészült ez a tetoválás.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Monthly guide": {
+   "hu": "Havi útmutató",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Read the guide": {
+   "hu": "Elolvasom",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Unsubscribe": {
+   "hu": "Leiratkozás",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "You’re getting this because you subscribed on inkage.app.": {
+   "hu": "Azért kapod, mert feliratkoztál az inkage.app oldalon.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Confirm your subscription – InkAge": {
+   "hu": "Erősítsd meg a feliratkozást – InkAge",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Once a month we send a new guide on keeping tattoos looking good. If this was you, please confirm:": {
+   "hu": "Havonta egyszer küldünk egy új útmutatót arról, hogyan marad szép a tetoválás. Ha te voltál, erősítsd meg:",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "Confirm subscription": {
+   "hu": "Feliratkozás megerősítése",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "One more click": {
+   "hu": "Még egy kattintás",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "If this wasn’t you, just ignore this e-mail.": {
+   "hu": "Ha nem te voltál, hagyd figyelmen kívül ezt a levelet.",
+   "files": [
+    "lib/mail-more.ts"
    ],
    "kind": "call"
   },
@@ -28276,13 +28397,6 @@
    ],
    "kind": "key"
   },
-  "Invite a friend": {
-   "hu": "Hívj meg egy barátot",
-   "files": [
-    "lib/i18n.ts"
-   ],
-   "kind": "key"
-  },
   "You both get an extra preview when they sign up with your link.": {
    "hu": "Ha a linkeddel regisztrál, mindketten kaptok egy plusz előnézetet.",
    "files": [
@@ -28867,13 +28981,6 @@
     "app/api/mail-cron/route.ts"
    ],
    "kind": "err"
-  },
-  "If this wasn’t you, just ignore this e-mail. Unsubscribe: {0}": {
-   "hu": "Ha nem te voltál, hagyd figyelmen kívül ezt a levelet. Leiratkozás: {0}",
-   "files": [
-    "app/api/newsletter/route.ts"
-   ],
-   "kind": "call"
   },
   "{0} votes so far – see which one leads": {
    "hu": "Eddig {0} szavazat – nézd meg, melyik vezet",
@@ -29499,6 +29606,20 @@
    "hu": "{0} szavazatból {1}",
    "files": [
     "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "They start again on {0}.": {
+   "hu": "{0}: újraindul.",
+   "files": [
+    "lib/mail-more.ts"
+   ],
+   "kind": "call"
+  },
+  "You have {0} previews again this month.": {
+   "hu": "Ebben a hónapban újra {0} előnézet jár.",
+   "files": [
+    "lib/mail-more.ts"
    ],
    "kind": "call"
   },

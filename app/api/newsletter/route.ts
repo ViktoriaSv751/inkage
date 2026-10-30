@@ -1,11 +1,18 @@
 import { tx, isLang, type Lang } from '@/lib/tr';
 import { appSecret, json, userClient } from '@/lib/server';
-import { layout, sendMail, SITE } from '@/lib/mail';
+import { sendMail, SITE } from '@/lib/mail';
+import { newsletterConfirmEmail } from '@/lib/mail-more';
 
 export const dynamic = 'force-dynamic';
 
 /** Sign up for the monthly guides e-mail (double opt-in). */
 export async function POST(req: Request) {
+  // the mail app's own one-click unsubscribe
+  const oneClick = new URL(req.url).searchParams.get('unsub');
+  if (oneClick) {
+    await userClient().rpc('newsletter_set', { p_secret: appSecret('db'), p_token: oneClick.slice(0, 64), p_action: 'unsub' });
+    return json({ ok: true });
+  }
   const b = await req.json().catch(() => ({}));
   const lang: Lang = isLang(b.lang) ? b.lang : 'hu';
   const { data, error } = await userClient().rpc('newsletter_subscribe', { p_secret: appSecret('db'), p_email: String(b.email || '').trim(), p_lang: lang });
@@ -15,17 +22,8 @@ export async function POST(req: Request) {
   if (!r.send) return json({ ok: true, state: 'confirm' }); // a confirmation mail just went out
   const link = `${SITE()}/api/newsletter?confirm=${r.token}`;
   const unsub = `${SITE()}/api/newsletter?unsub=${r.token}`;
-  const sent = await sendMail(
-    String(b.email).trim(),
-    tx(lang, 'Confirm your subscription – InkAge', 'Erősítsd meg a feliratkozást – InkAge'),
-    layout({
-      title: tx(lang, 'One more click', 'Még egy kattintás'),
-      lines: [tx(lang, 'Once a month we send a new guide on keeping tattoos looking good. If this was you, please confirm:', 'Havonta egyszer küldünk egy új útmutatót arról, hogyan marad szép a tetoválás. Ha te iratkoztál fel, erősítsd meg:')],
-      button: { href: link, label: tx(lang, 'Confirm subscription', 'Feliratkozás megerősítése') },
-      foot: tx(lang, `If this wasn’t you, just ignore this e-mail. Unsubscribe: ${unsub}`, `Ha nem te voltál, hagyd figyelmen kívül ezt a levelet. Leiratkozás: ${unsub}`),
-    }),
-    `${tx(lang, 'Confirm', 'Megerősítés')}: ${link}`
-  );
+  const m = newsletterConfirmEmail(lang, link, unsub);
+  const sent = await sendMail(String(b.email).trim(), m.subject, m.html, m.text);
   return json({ ok: true, state: sent ? 'confirm' : 'saved' });
 }
 
