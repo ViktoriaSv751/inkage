@@ -37,7 +37,7 @@ async function allowed(req: Request) {
 }
 
 /**
- * Daily model check (Vercel cron): are the AI models we rely on still there and answering?
+ * Daily model check (the database cron "inkage-model-check" calls it with its token): are the AI models we rely on still there and answering?
  * A retired model once silently switched off photo checks for hours; this catches it the same day.
  * Answers HTTP 503 when something is wrong, so any monitor reading the status code sees it too.
  */
@@ -55,7 +55,7 @@ export async function GET(req: Request) {
     const r = await fetch(`${GEMINI}/${activeText}:generateContent`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
-      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'Reply with the word OK.' }] }], generationConfig: { maxOutputTokens: 5 } }),
+      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'Reply with the word OK.' }] }], generationConfig: { maxOutputTokens: 256 } } /* thinking models spend tokens before answering: 5 left the answer empty */),
     }).catch(() => null);
     const d: any = await r?.json().catch(() => ({}));
     if (r?.ok) {

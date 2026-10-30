@@ -159,3 +159,6 @@ begin
      where user_id = auth.uid() and ua = left(p_ua, 200) and endpoint <> p_sub->>'endpoint' and active;
   end if;
 end $function$;
+
+-- 9. The daily AI model check (/api/health) is no longer public: the database's own cron calls it with its token
+select cron.schedule('inkage-model-check', '0 6 * * *', $$select public.admin_cron_call('/api/health')$$);
