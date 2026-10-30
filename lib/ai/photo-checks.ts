@@ -143,7 +143,8 @@ export async function checkPhoto(photo: Img, placement: string, retry = true): P
             angle: { type: 'NUMBER' },
             skin: { type: 'ARRAY', items: { type: 'ARRAY', items: { type: 'ARRAY', items: { type: 'INTEGER' } } } },
           },
-          required: ['skinVisible', 'sharp', 'wellLit', 'notAllowed'],
+          // all of them: optional fields were simply left out, and the design no longer snapped onto the body area
+          required: ['skinVisible', 'sharp', 'wellLit', 'notAllowed', 'visibleArea', 'box', 'angle', 'skin'],
         },
       },
     });
