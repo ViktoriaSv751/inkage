@@ -3,6 +3,7 @@ import { sendMail } from '@/lib/mail';
 import { signupEmail } from '@/lib/mail-signup';
 import { welcomeEmail } from '@/lib/mail-welcome';
 import { photoReminderEmail, previewReadyEmail } from '@/lib/mail-lifecycle';
+import { careEmail, launchEmail, voteEmail } from '@/lib/mail-engage';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,11 @@ const notice = () =>
 const welcome = () => welcomeEmail('Viktória', 'hu');
 const ready = () => previewReadyEmail('hu', '00000000-0000-0000-0000-000000000000');
 const photo = () => photoReminderEmail('hu', 'https://inkage.app/api/mail-off');
-const ALL = { notice, welcome, ready, photo };
+const O = 'https://inkage.app';
+const vote = () => voteEmail('hu', { share: 'minta', image: `${O}/email/reminder-v2.jpg`, votes: { yes: 7, no: 1, change: 2 } });
+const care = () => careEmail('hu', new Date().toISOString().slice(0, 10));
+const launch = () => launchEmail('hu', { ios: `${O}/telepites`, play: 'https://play.google.com/store/apps/details?id=app.inkage', unsubscribe: `${O}/api/mail-off` });
+const ALL = { notice, welcome, ready, photo, vote, care, launch };
 
 /** Owner only: how the e-mails look (GET ?k=welcome) and a real test of them (POST ?k=ready,photo). */
 export async function GET(req: Request) {

@@ -5,6 +5,7 @@ import { Sheet } from '../ui';
 import { tx } from '@/lib/i18n';
 import { track } from '@/lib/store';
 import { shareOrDownload } from '@/lib/client';
+import { api } from '@/lib/sb';
 import { aftercareIcs, CARE } from '@/lib/aftercare';
 
 export function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: () => void; onDone?: (date: string) => void }) {
@@ -27,6 +28,8 @@ export function CareSheet({ open, onClose, onDone }: { open: boolean; onClose: (
         className="btn wide"
         onClick={async () => {
           onDone?.(new Date(date + 'T12:00:00').toISOString());
+          // the plan with real dates, by e-mail too
+          if (me?.user) api('/api/care-mail', { date, lang: ui.lang }).then((r) => r.ok && r.data?.sent && toast(t('We e-mailed you the plan', 'E-mailben is elküldtük a tervet')));
           // in the store apps: native reminders on the phone itself
           if ((window as any).Capacitor?.isNativePlatform?.()) {
             track('aftercare_local');

@@ -3998,6 +3998,13 @@
    ],
    "kind": "err"
   },
+  "healing plan e-mail could not be sent": {
+   "hu": null,
+   "files": [
+    "app/api/care-mail/route.ts"
+   ],
+   "kind": "err"
+  },
   "The AI is not switched on yet.": {
    "hu": null,
    "files": [
@@ -4268,27 +4275,6 @@
   },
   "Someone voted on your tattoo idea": {
    "hu": "Szavaztak a tetoválás-tervedre",
-   "files": [
-    "app/api/vote-notify/route.ts"
-   ],
-   "kind": "call"
-  },
-  "A new vote came in": {
-   "hu": "Új szavazat érkezett",
-   "files": [
-    "app/api/vote-notify/route.ts"
-   ],
-   "kind": "call"
-  },
-  "See the results": {
-   "hu": "Eredmények megnézése",
-   "files": [
-    "app/api/vote-notify/route.ts"
-   ],
-   "kind": "call"
-  },
-  "Turn these off under Profile > Settings.": {
-   "hu": "Ezeket az értesítéseket a Profil > Beállítások alatt kapcsolhatod ki.",
    "files": [
     "app/api/vote-notify/route.ts"
    ],
@@ -5026,6 +5012,13 @@
    ],
    "kind": "call"
   },
+  "We e-mailed you the plan": {
+   "hu": "E-mailben is elküldtük a tervet",
+   "files": [
+    "app/app/_result/CareSheet.tsx"
+   ],
+   "kind": "call"
+  },
   "Allow notifications in Settings to get the reminders, or use the calendar file.": {
    "hu": "Engedélyezd az értesítéseket a Beállításokban, vagy használd a naptárfájlt.",
    "files": [
@@ -5050,7 +5043,8 @@
   "General aftercare tips, not medical advice. Follow your tattoo artist’s instructions, and see a doctor if you notice signs of infection.": {
    "hu": "Általános utókezelési tippek, nem orvosi tanács. Kövesd a tetoválód utasításait, és fordulj orvoshoz, ha fertőzés jeleit látod.",
    "files": [
-    "app/app/_result/CareSheet.tsx"
+    "app/app/_result/CareSheet.tsx",
+    "lib/mail-engage.ts"
    ],
    "kind": "call"
   },
@@ -5625,7 +5619,7 @@
    "files": [
     "app/app/_result/Viewer.tsx",
     "app/app/gallery/AfterCare.tsx",
-    "lib/mail-welcome.ts"
+    "lib/mail-engage.ts"
    ],
    "kind": "call"
   },
@@ -6959,7 +6953,8 @@
   "Your design": {
    "hu": "A mintád",
    "files": [
-    "app/app/create/_steps/studio/Slots.tsx"
+    "app/app/create/_steps/studio/Slots.tsx",
+    "lib/mail-engage.ts"
    ],
    "kind": "call"
   },
@@ -12765,63 +12760,63 @@
   "Keep the wrap on for the time your artist said. Then wash gently with lukewarm water and fragrance-free soap, pat dry.": {
    "hu": "A fóliát annyi ideig hagyd fent, amennyit a tetoválód mondott. Utána langyos vízzel, illatmentes szappannal finoman mosd le, és itasd szárazra.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Wash 2–3 times a day and apply a very thin layer of fragrance-free ointment. No soaking, no sun.": {
    "hu": "Napi 2–3-szor mosd, és kenj rá nagyon vékonyan illatmentes krémet. Ne áztasd, ne érje nap.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "It may feel tight and look shiny — normal. Keep it clean, wear loose clothes over it.": {
    "hu": "Feszülhet és fényes lehet – ez normális. Tartsd tisztán, bő ruhát viselj rajta.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Flaking starts. Don’t pick or scratch, even if it itches. Keep moisturising thinly.": {
    "hu": "Elkezd hámlani. Ne kapard és ne vakard, akkor sem, ha viszket. Továbbra is vékonyan krémezd.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Still no swimming pools, baths, sauna or tanning beds.": {
    "hu": "Még mindig nincs uszoda, kádfürdő, szauna és szolárium.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Most flakes are gone; it can look a bit cloudy. That is the new skin settling.": {
    "hu": "A hámlás nagy része elmúlt, kicsit tejszerű lehet. Ez az új bőr rétege, rendeződik.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Surface healed. Keep moisturising daily; still avoid strong sun.": {
    "hu": "A felszín begyógyult. Krémezd naponta, és még kerüld az erős napot.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Light exercise and normal showers are fine. Start SPF 50 whenever it sees the sun.": {
    "hu": "Könnyű sport és normál zuhany rendben. Ha napot kap, mostantól mindig 50-es fényvédő.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
   "Fully healed in most cases. Check for patchy spots — many artists offer a free touch-up now.": {
    "hu": "A legtöbb esetben teljesen begyógyult. Nézd meg, van-e foltos rész – sok tetováló ilyenkor ingyen javít.",
    "files": [
-    "lib/aftercare.ts"
+    "lib/aftercare-steps.ts"
    ],
    "kind": "obj"
   },
@@ -26852,6 +26847,132 @@
    ],
    "kind": "obj"
   },
+  "Your friends are voting on your tattoo": {
+   "hu": "Szavaztak a tervedre",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "See the results": {
+   "hu": "Eredmények megnézése",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Turn these off under Profile > Settings.": {
+   "hu": "Ezeket az értesítéseket a Profil > Beállítások alatt kapcsolhatod ki.",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "In the lead": {
+   "hu": "Most ez vezet",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Love it": {
+   "hu": "Tetszik",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Don’t do it": {
+   "hu": "Ne csináld",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Change something": {
+   "hu": "Változtatnék",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "See what they think before it’s permanent.": {
+   "hu": "Nézd meg, mit gondolnak, mielőtt örökre szól.",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Your healing plan": {
+   "hu": "A gyógyulási terved",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Day by day, from today until it’s fully healed.": {
+   "hu": "Napról napra, a teljes gyógyulásig.",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "After that:": {
+   "hu": "Utána:",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "SPF 50 whenever it sees the sun. Sun is the #1 reason tattoos fade.": {
+   "hu": "50-es fényvédő, ha napot kap. A nap a fakulás első számú oka.",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Open my gallery": {
+   "hu": "Megnyitom a galériámat",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "InkAge is on your phone now": {
+   "hu": "Az InkAge már a telefonodon is",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Now in the App Store and on Google Play. Same account, same designs.": {
+   "hu": "Mostantól az App Store-ban és a Google Playen is. Ugyanaz a fiók, ugyanazok a tervek.",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "Don’t send news like this": {
+   "hu": "Ne küldjetek ilyen híreket",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "50 years later": {
+   "hu": "50 év múlva",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
+  "The pictures are AI examples.": {
+   "hu": "A képek MI-példák.",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
+  },
   "Your preview is ready": {
    "hu": "Elkészült az előnézeted",
    "files": [
@@ -28807,7 +28928,8 @@
    "hu": "{0}. nap",
    "files": [
     "app/app/_result/CareSheet.tsx",
-    "app/app/gallery/AfterCare.tsx"
+    "app/app/gallery/AfterCare.tsx",
+    "lib/mail-engage.ts"
    ],
    "kind": "call"
   },
@@ -29372,6 +29494,13 @@
     "lib/ai/providers.ts"
    ],
    "kind": "err"
+  },
+  "{0} of {1} votes": {
+   "hu": "{0} szavazatból {1}",
+   "files": [
+    "lib/mail-engage.ts"
+   ],
+   "kind": "call"
   },
   "Dear {0},": {
    "hu": "Kedves {0},",
