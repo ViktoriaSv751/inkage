@@ -22,7 +22,7 @@ export function limitEmail(lang: Lang, o: { kind: 'reached'; used: number; limit
   const reached = o.kind === 'reached';
   const subject = reached ? T('You’ve used this month’s previews', 'Elérted a havi keretedet') : T('Your previews are back', 'Újraindult a havi kereted');
   const when = reached ? new Intl.DateTimeFormat(LANG_INFO[lang].locale, { month: 'long', day: 'numeric', timeZone: 'Europe/Budapest' }).format(new Date(o.resetsAt)) : '';
-  const pre = reached ? T(`They start again on ${when}.`, `${when}: újraindul.`) : T(`You have ${o.limit} previews again this month.`, `Ebben a hónapban újra ${o.limit} előnézet jár.`);
+  const pre = reached ? T(`They start again on ${when}.`, `Újraindul: ${when}.`) : T(`You have ${o.limit} previews again this month.`, `Ebben a hónapban újra ${o.limit} előnézet jár.`);
   const num = reached ? `${o.used}<span style="color:#62626c;font-weight:300;"> / ${o.limit}</span>` : `0<span style="color:#62626c;font-weight:300;"> / ${o.limit}</span>`;
   const bar = reached
     ? `<td bgcolor="#a896ff" style="height:8px;background:#a896ff;border-radius:4px;font-size:1px;line-height:1px;">&nbsp;</td>`
