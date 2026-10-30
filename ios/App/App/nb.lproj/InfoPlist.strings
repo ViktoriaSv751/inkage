@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge bruker kameraet slik at du kan fotografere kroppsdelen der du vil ha tatoveringen.";
+"NSPhotoLibraryUsageDescription" = "InkAge åpner bildene dine slik at du kan velge et kroppsbilde eller et tatoveringsmotiv.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge lagrer forhåndsvisninger av tatoveringen din i bildene dine når du ber om det.";
+"NSLocationWhenInUseUsageDescription" = "InkAge bruker din omtrentlige posisjon bare for å vise dagens UV-indeks, slik at du vet hvor mye solbeskyttelse tatoveringen din trenger.";

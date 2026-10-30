@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge dùng máy ảnh để bạn chụp vùng cơ thể muốn xăm.";
+"NSPhotoLibraryUsageDescription" = "InkAge mở ảnh của bạn để bạn chọn ảnh cơ thể hoặc mẫu hình xăm.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge lưu bản xem trước hình xăm vào ảnh của bạn khi bạn yêu cầu.";
+"NSLocationWhenInUseUsageDescription" = "InkAge chỉ dùng vị trí gần đúng của bạn để hiển thị chỉ số UV hôm nay, giúp bạn biết hình xăm cần chống nắng đến mức nào.";

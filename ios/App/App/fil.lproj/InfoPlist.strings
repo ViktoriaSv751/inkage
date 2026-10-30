@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "Ginagamit ng InkAge ang camera para makunan mo ng litrato ang bahagi ng katawan kung saan mo gustong ipalagay ang tattoo.";
+"NSPhotoLibraryUsageDescription" = "Binubuksan ng InkAge ang mga litrato mo para makapili ka ng litrato ng katawan o disenyo ng tattoo.";
+"NSPhotoLibraryAddUsageDescription" = "Sine-save ng InkAge ang mga preview ng tattoo mo sa mga litrato mo kapag hiniling mo.";
+"NSLocationWhenInUseUsageDescription" = "Ginagamit lang ng InkAge ang tinatayang lokasyon mo para ipakita ang UV index ngayon, para malaman mo kung gaano karaming proteksyon sa araw ang kailangan ng tattoo mo.";

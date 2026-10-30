@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { usePathname } from 'next/navigation';
 import { api, sb } from '@/lib/sb';
 import { useLang } from '@/lib/i18n';
-import { lsGet, lsSet, migrateLocal, track } from '@/lib/store';
+import { lsGet, lsSet, migrateLocal, track, visitSource } from '@/lib/store';
 import { AgeGate } from './AgeGate';
 import { AiConsent } from './AiConsent';
 
@@ -129,6 +129,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       // guest previews → account
       migrateLocal(data.user.id).then((n) => n && toast(tx(ui.lang, `${n} saved design${n > 1 ? 's' : ''} moved to your account`, `${n} terv átkerült a fiókodba`)));
+      // once per account: where they came from (only with the stats OK) and their language, so the people list isn't "?"
+      let statsOk = false;
+      try {
+        statsOk = localStorage.getItem('ink_consent') === 'all';
+      } catch {}
+      sb()?.rpc('save_signup', { p_src: statsOk ? visitSource() : null, p_lang: ui.lang })?.then(() => {}, () => {});
       // once per account: a welcome e-mail
       api('/api/welcome', { lang: ui.lang }).catch(() => {});
       // vote links made on this device → account (so they can be listed and closed anywhere)
@@ -246,7 +252,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         closeAuth: () => setAuthOpen(false),
       }}
     >
-      {gate === 'in' ? children : <div className="gate-wait" aria-busy="true" />}
+      {gate === 'in' ? children : <div className="gate-wait" aria-busy="true"><b>InkAge</b><i /></div>}
       {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
       <AiConsent lang={ui.lang} />
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">

@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge naudoja kamerą, kad galėtum nufotografuoti kūno vietą, kurioje nori tatuiruotės.";
+"NSPhotoLibraryUsageDescription" = "InkAge atidaro tavo nuotraukas, kad galėtum pasirinkti kūno nuotrauką ar tatuiruotės piešinį.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge išsaugo tavo tatuiruotės peržiūras tavo nuotraukose, kai paprašai.";
+"NSLocationWhenInUseUsageDescription" = "InkAge naudoja apytikslę tavo vietą tik šiandienos UV indeksui parodyti, kad žinotum, kiek apsaugos nuo saulės reikia tavo tatuiruotei.";

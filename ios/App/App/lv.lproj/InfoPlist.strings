@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge izmanto kameru, lai tu varētu nofotografēt ķermeņa vietu, kur vēlies tetovējumu.";
+"NSPhotoLibraryUsageDescription" = "InkAge atver tavas fotogrāfijas, lai tu varētu izvēlēties ķermeņa foto vai tetovējuma dizainu.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge saglabā tava tetovējuma priekšskatījumus tavās fotogrāfijās, kad to pieprasi.";
+"NSLocationWhenInUseUsageDescription" = "InkAge izmanto tavu aptuveno atrašanās vietu tikai šodienas UV indeksa parādīšanai, lai tu zinātu, cik lielu saules aizsardzību tavam tetovējumam vajag.";

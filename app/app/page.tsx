@@ -43,7 +43,7 @@ export default function CreatePage() {
   useEffect(() => setExtras([]), [design?.raw]);
   const [genStep, setGenStep] = useState(0);
   const [err, setErr] = useState('');
-  const [paywall, setPaywall] = useState(false);
+  const [outOfPreviews, setOutOfPreviews] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [pending, setPending] = useState<StageKey[]>([]);
   const [failed, setFailed] = useState<StageKey[]>([]);
@@ -117,7 +117,7 @@ export default function CreatePage() {
     setPhase,
     setGenStep,
     setErr,
-    setPaywall,
+    setOutOfPreviews,
     setWaitlist,
     setBusyNote,
     setPreview,
@@ -239,7 +239,7 @@ export default function CreatePage() {
           }}
         />
         <Waitlist open={waitlist} onClose={() => setWaitlist(false)} />
-        <OutOfPreviews open={paywall} onClose={() => setPaywall(false)} />
+        <OutOfPreviews open={outOfPreviews} onClose={() => setOutOfPreviews(false)} />
       </>
     );
 
@@ -275,7 +275,7 @@ export default function CreatePage() {
           canGo
           footer={null}
         />
-        <OutOfPreviews open={paywall} onClose={() => setPaywall(false)} />
+        <OutOfPreviews open={outOfPreviews} onClose={() => setOutOfPreviews(false)} />
         <Waitlist open={waitlist} onClose={() => setWaitlist(false)} />
       </>
     );

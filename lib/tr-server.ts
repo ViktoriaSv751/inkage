@@ -1,103 +1,41 @@
-// Server side: every language's dictionary (UI + knowledge-base articles), registered once.
-import { registerDict } from './tr';
-import deUi from './locales/de.json';
-import deContent from './locales/content-de.json';
-import esUi from './locales/es.json';
-import esContent from './locales/content-es.json';
-import ptUi from './locales/pt.json';
-import ptContent from './locales/content-pt.json';
-import frUi from './locales/fr.json';
-import frContent from './locales/content-fr.json';
-import itUi from './locales/it.json';
-import itContent from './locales/content-it.json';
-import plUi from './locales/pl.json';
-import plContent from './locales/content-pl.json';
-import trUi from './locales/tr.json';
-import trContent from './locales/content-tr.json';
-import roUi from './locales/ro.json';
-import roContent from './locales/content-ro.json';
-import nlUi from './locales/nl.json';
-import nlContent from './locales/content-nl.json';
-import svUi from './locales/sv.json';
-import svContent from './locales/content-sv.json';
-import csUi from './locales/cs.json';
-import csContent from './locales/content-cs.json';
-import elUi from './locales/el.json';
-import elContent from './locales/content-el.json';
-import ukUi from './locales/uk.json';
-import ukContent from './locales/content-uk.json';
-import jaUi from './locales/ja.json';
-import jaContent from './locales/content-ja.json';
-import koUi from './locales/ko.json';
-import koContent from './locales/content-ko.json';
-import idUi from './locales/id.json';
-import idContent from './locales/content-id.json';
-import thUi from './locales/th.json';
-import thContent from './locales/content-th.json';
-import zhUi from './locales/zh.json';
-import zhContent from './locales/content-zh.json';
-import viUi from './locales/vi.json';
-import viContent from './locales/content-vi.json';
-import filUi from './locales/fil.json';
-import filContent from './locales/content-fil.json';
-import msUi from './locales/ms.json';
-import msContent from './locales/content-ms.json';
-import zhsUi from './locales/zhs.json';
-import zhsContent from './locales/content-zhs.json';
-import daUi from './locales/da.json';
-import daContent from './locales/content-da.json';
-import no_Ui from './locales/no.json';
-import no_Content from './locales/content-no.json';
-import fiUi from './locales/fi.json';
-import fiContent from './locales/content-fi.json';
-import skUi from './locales/sk.json';
-import skContent from './locales/content-sk.json';
-import hrUi from './locales/hr.json';
-import hrContent from './locales/content-hr.json';
-import bgUi from './locales/bg.json';
-import bgContent from './locales/content-bg.json';
-import slUi from './locales/sl.json';
-import slContent from './locales/content-sl.json';
-import ltUi from './locales/lt.json';
-import ltContent from './locales/content-lt.json';
-import lvUi from './locales/lv.json';
-import lvContent from './locales/content-lv.json';
-import etUi from './locales/et.json';
-import etContent from './locales/content-et.json';
-import srUi from './locales/sr.json';
-import srContent from './locales/content-sr.json';
+// Server side: every language's dictionary (UI + knowledge-base articles), loaded when first needed.
+import { setDictLoader, type Lang } from './tr';
+
 const merge = (a: any, b: any) => ({ exact: { ...(b.exact || {}), ...(a.exact || {}) }, tpl: [...(a.tpl || []), ...(b.tpl || [])] });
-registerDict('de', merge(deUi, deContent));
-registerDict('es', merge(esUi, esContent));
-registerDict('pt', merge(ptUi, ptContent));
-registerDict('fr', merge(frUi, frContent));
-registerDict('it', merge(itUi, itContent));
-registerDict('pl', merge(plUi, plContent));
-registerDict('tr', merge(trUi, trContent));
-registerDict('ro', merge(roUi, roContent));
-registerDict('nl', merge(nlUi, nlContent));
-registerDict('sv', merge(svUi, svContent));
-registerDict('cs', merge(csUi, csContent));
-registerDict('el', merge(elUi, elContent));
-registerDict('uk', merge(ukUi, ukContent));
-registerDict('ja', merge(jaUi, jaContent));
-registerDict('ko', merge(koUi, koContent));
-registerDict('id', merge(idUi, idContent));
-registerDict('th', merge(thUi, thContent));
-registerDict('zh', merge(zhUi, zhContent));
-registerDict('vi', merge(viUi, viContent));
-registerDict('fil', merge(filUi, filContent));
-registerDict('ms', merge(msUi, msContent));
-registerDict('zhs', merge(zhsUi, zhsContent));
-registerDict('da', merge(daUi, daContent));
-registerDict('no', merge(no_Ui, no_Content));
-registerDict('fi', merge(fiUi, fiContent));
-registerDict('sk', merge(skUi, skContent));
-registerDict('hr', merge(hrUi, hrContent));
-registerDict('bg', merge(bgUi, bgContent));
-registerDict('sl', merge(slUi, slContent));
-registerDict('lt', merge(ltUi, ltContent));
-registerDict('lv', merge(lvUi, lvContent));
-registerDict('et', merge(etUi, etContent));
-registerDict('sr', merge(srUi, srContent));
+const LOAD: Partial<Record<Lang, () => any>> = {
+  de: () => merge(require('./locales/de.json'), require('./locales/content-de.json')),
+  es: () => merge(require('./locales/es.json'), require('./locales/content-es.json')),
+  pt: () => merge(require('./locales/pt.json'), require('./locales/content-pt.json')),
+  fr: () => merge(require('./locales/fr.json'), require('./locales/content-fr.json')),
+  it: () => merge(require('./locales/it.json'), require('./locales/content-it.json')),
+  pl: () => merge(require('./locales/pl.json'), require('./locales/content-pl.json')),
+  tr: () => merge(require('./locales/tr.json'), require('./locales/content-tr.json')),
+  ro: () => merge(require('./locales/ro.json'), require('./locales/content-ro.json')),
+  nl: () => merge(require('./locales/nl.json'), require('./locales/content-nl.json')),
+  sv: () => merge(require('./locales/sv.json'), require('./locales/content-sv.json')),
+  cs: () => merge(require('./locales/cs.json'), require('./locales/content-cs.json')),
+  el: () => merge(require('./locales/el.json'), require('./locales/content-el.json')),
+  uk: () => merge(require('./locales/uk.json'), require('./locales/content-uk.json')),
+  ja: () => merge(require('./locales/ja.json'), require('./locales/content-ja.json')),
+  ko: () => merge(require('./locales/ko.json'), require('./locales/content-ko.json')),
+  id: () => merge(require('./locales/id.json'), require('./locales/content-id.json')),
+  th: () => merge(require('./locales/th.json'), require('./locales/content-th.json')),
+  zh: () => merge(require('./locales/zh.json'), require('./locales/content-zh.json')),
+  vi: () => merge(require('./locales/vi.json'), require('./locales/content-vi.json')),
+  fil: () => merge(require('./locales/fil.json'), require('./locales/content-fil.json')),
+  ms: () => merge(require('./locales/ms.json'), require('./locales/content-ms.json')),
+  zhs: () => merge(require('./locales/zhs.json'), require('./locales/content-zhs.json')),
+  da: () => merge(require('./locales/da.json'), require('./locales/content-da.json')),
+  'no': () => merge(require('./locales/no.json'), require('./locales/content-no.json')),
+  fi: () => merge(require('./locales/fi.json'), require('./locales/content-fi.json')),
+  sk: () => merge(require('./locales/sk.json'), require('./locales/content-sk.json')),
+  hr: () => merge(require('./locales/hr.json'), require('./locales/content-hr.json')),
+  bg: () => merge(require('./locales/bg.json'), require('./locales/content-bg.json')),
+  sl: () => merge(require('./locales/sl.json'), require('./locales/content-sl.json')),
+  lt: () => merge(require('./locales/lt.json'), require('./locales/content-lt.json')),
+  lv: () => merge(require('./locales/lv.json'), require('./locales/content-lv.json')),
+  et: () => merge(require('./locales/et.json'), require('./locales/content-et.json')),
+  sr: () => merge(require('./locales/sr.json'), require('./locales/content-sr.json')),
+};
+setDictLoader((lang) => LOAD[lang]?.());
 export const SERVER_DICTS = true;

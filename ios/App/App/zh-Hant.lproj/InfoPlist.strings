@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge 會使用相機，讓你拍下想刺青的身體部位。";
+"NSPhotoLibraryUsageDescription" = "InkAge 會開啟你的照片，讓你選擇身體照片或刺青圖案。";
+"NSPhotoLibraryAddUsageDescription" = "InkAge 會在你要求時，將刺青預覽儲存到你的照片。";
+"NSLocationWhenInUseUsageDescription" = "InkAge 只會使用你的大概位置來顯示今日紫外線指數，讓你知道刺青需要多少防曬。";

@@ -85,7 +85,15 @@ export async function inputSafety(photo: Img | null, design: Img | null, retry =
           ],
         },
       ],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0,
+        responseSchema: {
+          type: 'OBJECT',
+          properties: { ...(photo ? { photoNotAllowed: { type: 'BOOLEAN' } } : {}), ...(design ? { designNotAllowed: { type: 'BOOLEAN' } } : {}) },
+          required: [...(photo ? ['photoNotAllowed'] : []), ...(design ? ['designNotAllowed'] : [])],
+        },
+      },
     });
     const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
     if (typeof (photo ? j.photoNotAllowed : j.designNotAllowed) !== 'boolean') throw new Error('safety check: no answer');
@@ -119,7 +127,25 @@ export async function checkPhoto(photo: Img, placement: string, retry = true): P
           ],
         },
       ],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0,
+        // a fixed shape: free-form answers sometimes came back as broken JSON, and the check was then skipped
+        responseSchema: {
+          type: 'OBJECT',
+          properties: {
+            skinVisible: { type: 'BOOLEAN' },
+            sharp: { type: 'BOOLEAN' },
+            wellLit: { type: 'BOOLEAN' },
+            notAllowed: { type: 'BOOLEAN' },
+            visibleArea: { type: 'STRING' },
+            box: { type: 'ARRAY', nullable: true, items: { type: 'INTEGER' } },
+            angle: { type: 'NUMBER' },
+            skin: { type: 'ARRAY', items: { type: 'ARRAY', items: { type: 'ARRAY', items: { type: 'INTEGER' } } } },
+          },
+          required: ['skinVisible', 'sharp', 'wellLit', 'notAllowed'],
+        },
+      },
     });
     const j = JSON.parse(data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || '{}');
     const box =

@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge memakai kamera agar kamu bisa memotret bagian tubuh tempat kamu ingin tato.";
+"NSPhotoLibraryUsageDescription" = "InkAge membuka fotomu agar kamu bisa memilih foto tubuh atau desain tato.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge menyimpan preview tatomu ke fotomu saat kamu memintanya.";
+"NSLocationWhenInUseUsageDescription" = "InkAge memakai perkiraan lokasimu hanya untuk menampilkan indeks UV hari ini, agar kamu tahu seberapa besar perlindungan matahari yang dibutuhkan tatomu.";

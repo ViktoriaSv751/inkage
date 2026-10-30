@@ -5,14 +5,16 @@ import { LANGS, qOf, htmlLang, type Lang } from '@/lib/tr';
 import { articleLangs } from '@/lib/article-langs';
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://inkage.app';
+// when the fixed pages and articles last really changed (a date that moves on every build teaches Google to ignore it)
+const CONTENT_DATE = '2026-10-30';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // every page in every language (?lang=…), each listing its translations
   // (an article only in the languages it is translated into, see lib/article-langs.ts)
   const withLangs = (list: (MetadataRoute.Sitemap[number] & { langs?: readonly Lang[] })[]): MetadataRoute.Sitemap =>
     list.flatMap(({ langs = LANGS, ...e }) => {
-      const languages = Object.fromEntries(langs.map((l) => [htmlLang(l), `${e.url}${qOf(l)}`]));
-      return langs.map((l) => ({ ...e, url: `${e.url}${qOf(l)}`, alternates: { languages } }));
+      const languages = { ...Object.fromEntries(langs.map((l) => [htmlLang(l), `${e.url}${qOf(l)}`])), 'x-default': e.url };
+      return langs.map((l) => ({ ...e, lastModified: CONTENT_DATE, url: `${e.url}${qOf(l)}`, alternates: { languages } }));
     });
   return withLangs([
     { url: `${BASE}/`, changeFrequency: 'weekly', priority: 1 },

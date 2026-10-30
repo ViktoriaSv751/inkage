@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
-import { track } from '@/lib/store';
+import { ageAgreed, track } from '@/lib/store';
 import { oauthParams, authErrorText } from '@/lib/auth-help';
 import { nextFromUrl, rememberNext, takeNext, withLang } from '@/lib/auth-next';
 
@@ -103,6 +103,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
   const signupPw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!okEmail || pw.length < 8 || !agree || busy) return;
+    ageAgreed();
     setBusy(true);
     setErr('');
     const { data, error } = (await sb()?.auth.signUp({ email: email.trim(), password: pw, options: { data: { full_name: name.trim() }, emailRedirectTo: `${siteOrigin()}/app/gallery` } })) || ({ error: { message: 'unavailable' } } as any);
@@ -134,6 +135,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     if (!s) return setErr(T('Sign-in is not available right now.', 'A belépés most nem érhető el.'));
     setBusy(true);
     setErr('');
+    if (mode === 'signup') ageAgreed();
     const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${siteOrigin()}/app/gallery`, shouldCreateUser: true } });
     setBusy(false);
     if (error) return setErr(/rate/i.test(error.message) ? T('Too many e-mails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : friendly(error.message));
@@ -178,6 +180,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     if (providers.loaded && !providers[provider])
       return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
     setErr('');
+    ageAgreed(); // tapping is the agreement, said right under the buttons
     rememberNext(nextFromUrl() || (mode === 'signup' ? '/app' : null));
     // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser
     if (provider === 'google' && (await import('@/lib/inapp')).escapeForGoogle()) return;

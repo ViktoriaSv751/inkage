@@ -1,9 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-/* The store apps carry their own copy of the app screens (cap-native/, built by scripts/native-build.mjs:
-   App Store rule 4.2), with native sign-in, camera, push, local reminders, share sheet and deep links.
-   The API, photos and website pages stay on https://inkage.app. CAP_SERVER_URL=<url> switches back to
-   loading a live site (for debugging only). */
+/* The store apps load the live app from https://inkage.app/app (server.url below), so every web release reaches them
+   at once; cap-www/ is only the "no internet" page. Native parts: sign-in sheet, camera, push, local reminders,
+   share sheet and deep links. CAP_BUNDLE=1 would ship a bundled copy instead (cap-native/, built by
+   scripts/native-build.mjs): experimental, not yet working on devices. CAP_SERVER_URL=<url> loads another site. */
 const config: CapacitorConfig = {
   appId: 'app.inkage',
   appName: 'InkAge',

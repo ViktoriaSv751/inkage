@@ -1003,7 +1003,10 @@ input.switch:checked::after { transform: translateX(18px); }
 .poll-comments li { background: var(--surface-2); border-radius: 12px; padding: 8px 12px; font-size: 14px; }
 .poll-comments li small { color: var(--ink-3); font-weight: 700; margin-right: 6px; }
 label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
-.gate-wait { position: fixed; inset: 0; background: var(--bg, #fff); z-index: 50; }
+.gate-wait { position: fixed; inset: 0; background: var(--bg, #fff); z-index: 50; display: grid; place-content: center; justify-items: center; gap: 14px; color: var(--ink, #111); }
+.gate-wait b { font-size: 28px; font-weight: 800; letter-spacing: -.02em; }
+.gate-wait i { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid currentColor; border-top-color: transparent; animation: gateSpin .8s linear infinite; opacity: .55; }
+@keyframes gateSpin { to { transform: rotate(360deg); } }
 .pf-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
 .pf-acts .pf-edit { margin-top: 0; }
 .pf-edit.danger { color: #d33a2c; box-shadow: 0 0 0 1px rgba(211, 58, 44, .35); }
@@ -1109,3 +1112,4 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 /* pictures and picture tiles: no long-press preview / magnifier, no drag, no pinch zoom on them */
 .appshell img, .appshell a, .pf-tile, .tile, .sheet img, .cf-box img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
 .appshell img { touch-action: pan-x pan-y; }
+.nextcta { margin-top: 12px; }

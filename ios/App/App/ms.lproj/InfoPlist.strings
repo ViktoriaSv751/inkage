@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge menggunakan kamera supaya anda boleh mengambil gambar bahagian badan yang anda mahu letakkan tatu.";
+"NSPhotoLibraryUsageDescription" = "InkAge membuka foto anda supaya anda boleh memilih foto badan atau reka bentuk tatu.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge menyimpan pratonton tatu anda ke dalam foto anda apabila anda memintanya.";
+"NSLocationWhenInUseUsageDescription" = "InkAge menggunakan lokasi anggaran anda hanya untuk menunjukkan indeks UV hari ini, supaya anda tahu berapa banyak perlindungan matahari yang diperlukan tatu anda.";

@@ -1,5 +1,6 @@
 'use client';
 import { rememberNext } from '@/lib/auth-next';
+import { ageAgreed } from '@/lib/store';
 import { siteOrigin } from '@/lib/site';
 import { qOf } from '@/lib/tr';
 import { oauthParams } from '@/lib/auth-help';
@@ -33,6 +34,7 @@ export function AuthSheet() {
   }, [authOpen]);
   const oauth = async (provider: 'google' | 'apple') => {
     setErr('');
+    ageAgreed(); // tapping is the agreement, said right under the buttons
     // come back to this page after the round trip
     rememberNext(location.pathname + location.search);
     // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser

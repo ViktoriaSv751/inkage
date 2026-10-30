@@ -52,7 +52,7 @@ export function useGenerate({
   setPhase,
   setGenStep,
   setErr,
-  setPaywall,
+  setOutOfPreviews,
   setWaitlist,
   setBusyNote,
   setPreview,
@@ -83,7 +83,7 @@ export function useGenerate({
   setPhase: Dispatch<SetStateAction<Phase>>;
   setGenStep: Dispatch<SetStateAction<number>>;
   setErr: Dispatch<SetStateAction<string>>;
-  setPaywall: Dispatch<SetStateAction<boolean>>;
+  setOutOfPreviews: Dispatch<SetStateAction<boolean>>;
   setWaitlist: Dispatch<SetStateAction<boolean>>;
   setBusyNote: Dispatch<SetStateAction<boolean>>;
   setPreview: Dispatch<SetStateAction<Preview | null>>;
@@ -151,13 +151,10 @@ export function useGenerate({
       focus: existing ? undefined : { x: place.x, y: place.y, w: place.w * Math.max(1, d!.ratio * (photo.w / photo.h)) },
     };
     // remember the running job, so its result can be picked up if the app gets closed
+    // (without the design image: base64 pictures filled the browser's 5 MB, and other saves then failed too)
     try {
-      localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta }));
-    } catch {
-      try {
-        localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta: { ...meta, design: undefined } }));
-      } catch {}
-    }
+      localStorage.setItem('ink_job', JSON.stringify({ id: jobId, at: Date.now(), meta: { ...meta, design: undefined } }));
+    } catch {}
     const body = { photo: photo.dataUrl, placement: aiPlacement(placement), sun: lsGet<any>('ink_onboarding', null)?.sun || ob?.sun, ageHint: lsGet<any>('ink_onboarding', null)?.age || ob?.age, lang: ui.lang, w: photo.w, h: photo.h, job: jobId, ...extra };
     let r = await api<any>('/api/generate', body);
     // the connection dropped or the server ran out of time: the preview may still be finishing (and is already counted),
@@ -179,10 +176,9 @@ export function useGenerate({
       lsSet('ink_job', null);
       setPhase(existing ? 'studio' : 'place');
       if (r.data?.code === 'busy') setWaitlist(true);
-      if (r.data?.code === 'paywall') {
-        track('paywall', { plan: r.data.plan });
-        if (!me.user) openAuth(t('Sign in to keep going and keep your designs.', 'Jelentkezz be, és folytathatod – a terveid is megmaradnak.'));
-        else setPaywall(true);
+      if (r.data?.code === 'limit') {
+        track('monthly_limit');
+        setOutOfPreviews(true);
         return;
       }
       setErr(trErr(ui.lang, r.data?.error));

@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge використовує камеру, щоб можна було сфотографувати ділянку тіла, де має бути тату.";
+"NSPhotoLibraryUsageDescription" = "InkAge відкриває твої фото, щоб можна було вибрати фото тіла або дизайн тату.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge зберігає прев’ю твого тату у твоїх фото, коли ти цього просиш.";
+"NSLocationWhenInUseUsageDescription" = "InkAge використовує твоє приблизне місцезнаходження лише для показу сьогоднішнього UV-індексу, щоб було зрозуміло, скільки сонцезахисту потребує твоє тату.";

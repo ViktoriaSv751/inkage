@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge gebruikt de camera zodat je de plek op je lichaam kunt fotograferen waar je de tattoo wilt.";
+"NSPhotoLibraryUsageDescription" = "InkAge opent je foto’s zodat je een lichaamsfoto of een tattoo-ontwerp kunt kiezen.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge bewaart je tattoo-previews in je foto’s als jij daarom vraagt.";
+"NSLocationWhenInUseUsageDescription" = "InkAge gebruikt je geschatte locatie alleen om de UV-index van vandaag te tonen, zodat je weet hoeveel zonbescherming je tattoo nodig heeft.";

@@ -54,7 +54,7 @@ export function NeedKey({ k, what }: { k: string | string[]; what?: string }) {
    signature_captured, generate_done as flow_step "score", stage_y50 as reveal_shown, preview_saved as detail_open… The
    labels say what happened in InkAge; props.ev keeps InkAge's own name. */
 export const EV: Record<string, string> = {
-  app_open: "App-képernyő", flow_step: "Lépés megtekintése", quiz_answer: "Bevezető kérdés válasza", quiz_start: "Bevezető kérdések indulnak",
+  monthly_limit: "Elérte a havi keretet", app_open: "App-képernyő", flow_step: "Lépés megtekintése", quiz_answer: "Bevezető kérdés válasza", quiz_start: "Bevezető kérdések indulnak",
   signature_captured: "Bőrfotó feltöltve", capture_skipped: "Fotó kihagyva", analysis_start: "Előnézet készül", score_shown: "Előnézet kész",
   reveal_shown: "Megnézte 50 év múlva", reveal_share: "Megosztó link", detail_open: "Előnézet elmentve", share_open: "Meghívó megosztva",
   share_save: "Mentés megosztásra", share_video: "Videó megosztva", client_error: "Hiba a böngészőben", server_error: "Hiba a szerveren", storage_full: "Tárhely megtelt",

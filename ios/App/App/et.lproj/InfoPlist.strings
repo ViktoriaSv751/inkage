@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge kasutab kaamerat, et saaksid pildistada kehaosa, kuhu tätoveeringut soovid.";
+"NSPhotoLibraryUsageDescription" = "InkAge avab sinu fotod, et saaksid valida kehafoto või tätoveeringu kavandi.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge salvestab sinu tätoveeringu eelvaated sinu fotodesse, kui seda palud.";
+"NSLocationWhenInUseUsageDescription" = "InkAge kasutab sinu ligikaudset asukohta ainult tänase UV-indeksi näitamiseks, et teaksid, kui palju päikesekaitset sinu tätoveering vajab.";

@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge, dövme yaptırmak istediğin vücut bölgesinin fotoğrafını çekebilmen için kamerayı kullanır.";
+"NSPhotoLibraryUsageDescription" = "InkAge, bir vücut fotoğrafı veya dövme tasarımı seçebilmen için fotoğraflarını açar.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge, sen istediğinde dövme önizlemelerini fotoğraflarına kaydeder.";
+"NSLocationWhenInUseUsageDescription" = "InkAge, dövmenin ne kadar güneş korumasına ihtiyaç duyduğunu bilmen için yaklaşık konumunu yalnızca bugünün UV indeksini göstermek amacıyla kullanır.";

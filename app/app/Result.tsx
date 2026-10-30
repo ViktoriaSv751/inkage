@@ -262,6 +262,21 @@ export function Result({
         initial={[preview]}
       />
 
+      {img.y50 && (
+        <div className="card nextcta">
+          <h3>{t('Happy with it?', 'Tetszik?')}</h3>
+          <p className="sub">{t('It’s saved in your gallery. Most people ask a few friends before they book.', 'A galériádba mentettük. A legtöbben megkérdeznek pár barátot, mielőtt időpontot foglalnak.')}</p>
+          <button className="btn wide" onClick={() => { track('next_vote'); setPollOpen(true); }}>
+            {t('Ask friends to vote', 'Kérd ki a barátaid véleményét')}
+          </button>
+          {onNew && (
+            <button className="btn wide ghost" style={{ marginTop: 8 }} onClick={() => { track('next_new'); onNew(); }}>
+              {t('Try another design or spot', 'Másik minta vagy hely kipróbálása')}
+            </button>
+          )}
+        </div>
+      )}
+
       <NextSteps
         img={img}
         pending={pending}
@@ -277,7 +292,7 @@ export function Result({
         setCare={setCare}
       />
 
-      {onNew && (
+      {onNew && !img.y50 && (
         <button className="btn wide dark" style={{ marginTop: 16 }} onClick={onNew}>
           {ui.t('result.new')}
         </button>

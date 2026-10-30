@@ -56,7 +56,6 @@ export type Quota = {
   limit: number;
   remaining: number;
   canAge: boolean;
-  stripe_customer_id: string | null;
 };
 
 export async function quota(db: SupabaseClient): Promise<Quota> {

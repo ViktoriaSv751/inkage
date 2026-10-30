@@ -77,6 +77,17 @@ const DICTS: Partial<Record<Lang, Dict>> = (G.__inkDicts ||= {});
 const compiled: Partial<Record<Lang, { re: RegExp; to: string }[]>> = (G.__inkTpl ||= {});
 const cache: Partial<Record<Lang, Map<string, string>>> = (G.__inkCache ||= {});
 
+/** Server only: dictionaries load the first time a language is needed (26 MB of them made every cold start slow). */
+export function setDictLoader(fn: (lang: Lang) => Dict | undefined) {
+  G.__inkDictLoader = fn;
+}
+function dictOf(lang: Lang): Dict | undefined {
+  if (DICTS[lang]) return DICTS[lang];
+  const d = G.__inkDictLoader?.(lang);
+  if (d) registerDict(lang, d);
+  return d;
+}
+
 export function registerDict(lang: Lang, d: Dict) {
   DICTS[lang] = d;
   compiled[lang] = (d.tpl || []).map(([from, to]) => ({
@@ -85,14 +96,14 @@ export function registerDict(lang: Lang, d: Dict) {
   }));
   cache[lang] = new Map();
 }
-export const hasDict = (lang: Lang) => lang === 'en' || lang === 'hu' || !!DICTS[lang];
+export const hasDict = (lang: Lang) => lang === 'en' || lang === 'hu' || !!dictOf(lang);
 /** Whether this exact English text has its own translation in the language (no fallback, no templates). */
-export const hasExact = (lang: Lang, en: string) => lang === 'en' || lang === 'hu' || DICTS[lang]?.exact[en] !== undefined;
+export const hasExact = (lang: Lang, en: string) => lang === 'en' || lang === 'hu' || dictOf(lang)?.exact[en] !== undefined;
 
 /** English text → the given language (English when no translation is known). */
 export function tr(lang: Lang, en: string): string {
   if (lang === 'en' || lang === 'hu' || !en) return en;
-  const d = DICTS[lang];
+  const d = dictOf(lang);
   if (!d) return en;
   const hit = d.exact[en];
   if (hit !== undefined) return hit;

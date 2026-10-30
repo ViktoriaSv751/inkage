@@ -3,7 +3,7 @@ import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
 import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, inputSafety, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
 import { pasteBack } from '@/lib/composite';
-import { jobPut } from '@/lib/jobs';
+import { jobPut, jobsTidy } from '@/lib/jobs';
 import { longevity } from '@/lib/score';
 import { guestFrom, guestRefund, guestStart } from '@/lib/guest';
 
@@ -53,13 +53,16 @@ export async function POST(req: Request) {
     if (!start.ok && start.reason === 'busy')
       return json({ error: 'So many people are trying InkAge today that previews are paused. Try again tomorrow.', code: 'busy' }, 429);
     if (!start.ok) {
-      return json({ error: 'You reached this month’s 30 previews. They start again on the 1st.', code: 'paywall', plan: start.plan }, 402);
+      return json({ error: 'You reached this month’s 30 previews. They start again on the 1st.', code: 'limit' }, 429);
     }
     gid = start.gid;
     canAge = start.canAge || start.plan === 'free'; // the free preview includes the aging stages too
     remaining = start.remaining - 1;
     plan = start.plan;
     owner = a.user.id;
+    // if this function gets killed before it can answer, the job row is how the preview finds its way back to the allowance
+    await jobPut(body.job, owner, 'gid', gid);
+    jobsTidy(owner, a.db).catch(() => {});
   } else {
     // an account is needed to use InkAge
     if (process.env.ALLOW_GUESTS !== '1') return json({ error: 'Sign in to continue.', code: 'auth' }, 401);
@@ -175,7 +178,15 @@ export async function POST(req: Request) {
     const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, y: 0, exp: Date.now() + 3 * 3600e3 });
     const out = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining, plan };
     // keep it for a while, in case the app was closed while we were working
-    await jobPut(body.job, owner, 'fresh', out);
+    await jobPut(body.job, owner, 'fresh', out, a?.db);
+    // one nudge a day later, for people who turned on notifications (at most once a month)
+    if (a)
+      await a.db
+        .rpc('push_comeback', {
+          p_title: tx(lang, 'Your tattoo preview is waiting', 'Vár a tetoválás-előnézeted'),
+          p_body: tx(lang, 'Look at it again at 50 years, or ask your friends before you book.', 'Nézd meg újra 50 évesen, vagy kérd ki a barátaid véleményét, mielőtt időpontot foglalsz.'),
+        })
+        .then(() => {}, () => {});
     return withCookie(json(out), guest?.setCookie ?? null);
   } catch (e) {
     console.error('generate failed', e);

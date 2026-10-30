@@ -64,6 +64,13 @@ export function anonId() {
   }
 }
 
+/** Signing up says "I'm 18 or older": the age gate doesn't ask again. A "No" given on this device stays. */
+export function ageAgreed() {
+  try {
+    if (localStorage.getItem('ink_age_ok') !== JSON.stringify('no')) localStorage.setItem('ink_age_ok', JSON.stringify('yes'));
+  } catch {}
+}
+
 export function haptic(kind: 'tap' | 'success' | 'warn' = 'tap') {
   try {
     navigator.vibrate?.(kind === 'success' ? [12, 40, 18] : kind === 'warn' ? [30, 50, 30] : 8);
@@ -88,7 +95,7 @@ function visitId() {
 }
 type Source = { us?: string; um?: string; uc?: string; ux?: string; ref?: string; from?: string; land?: string; ret?: string };
 let src: Source | null = null;
-function visitSource(): Source {
+export function visitSource(): Source {
   if (src) return src;
   try {
     const kept = sessionStorage.getItem('ink_src');

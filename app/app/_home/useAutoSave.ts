@@ -50,7 +50,6 @@ export function useAutoSave({
           toast(ui.t('result.saved'));
         } else {
           await local.put(previewRef.current && previewRef.current.id === p.id ? previewRef.current : p);
-          toast(ui.t('result.savedLocal'));
         }
         track('preview_saved', { cloud: !!me.user });
         lsSet('ink_job', null);

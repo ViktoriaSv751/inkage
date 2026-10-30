@@ -13,8 +13,8 @@ export function OutOfPreviews({ open, onClose }: { open: boolean; onClose: () =>
   const link = me.user ? `${siteOrigin()}/?ref=${me.user.id}` : '';
   return (
     <Sheet open={open} onClose={onClose} label="Out of previews">
-      <h2>{ui.t('paywall.used')}</h2>
-      <p className="sub">{ui.t('paywall.sub')}</p>
+      <h2>{ui.t('limit.used')}</h2>
+      <p className="sub">{ui.t('limit.sub')}</p>
       {me.user ? (
         <>
           <div className="copybox">

@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAgeはカメラを使って、タトゥーを入れたい部位を撮影できるようにします。";
+"NSPhotoLibraryUsageDescription" = "InkAgeは写真を開いて、体の写真やタトゥーのデザインを選べるようにします。";
+"NSPhotoLibraryAddUsageDescription" = "InkAgeは、ご希望のときにタトゥーのプレビューを写真に保存します。";
+"NSLocationWhenInUseUsageDescription" = "InkAgeは、タトゥーにどのくらい日焼け対策が必要かお知らせするため、今日のUV指数を表示する目的でのみ、おおよその位置情報を使用します。";

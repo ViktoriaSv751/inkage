@@ -104,7 +104,6 @@ const EN = {
   'result.share': 'Ask friends',
   'result.new': 'New design',
   'result.saved': 'Saved to your gallery',
-  'result.savedLocal': 'Saved on this device. Sign in to keep it everywhere.',
   'result.notes': 'Notes for your artist',
   'result.tips': 'Keep it looking fresh',
   'gallery.title': 'Your designs',
@@ -122,8 +121,8 @@ const EN = {
   'profile.install': 'Add InkAge to your home screen',
   'profile.erase': 'Delete my account and data',
   'profile.eraseConfirm': 'Type DELETE to confirm. This removes your account and every saved preview.',
-  'paywall.used': 'You reached this month’s limit',
-  'paywall.sub': 'You get 30 previews a month. They start again on the 1st — or invite a friend: you both get extra previews.',
+  'limit.used': 'You reached this month’s limit',
+  'limit.sub': 'You get 30 previews a month. They start again on the 1st — or invite a friend: you both get extra previews.',
 } as const;
 
 type Key = keyof typeof EN;
@@ -181,7 +180,6 @@ const HU: Record<Key, string> = {
   'result.share': 'Kérd ki a barátaid véleményét',
   'result.new': 'Új minta',
   'result.saved': 'Elmentve a galériádba',
-  'result.savedLocal': 'Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.',
   'result.notes': 'Jegyzet a tetoválónak',
   'result.tips': 'Így marad szép',
   'gallery.title': 'A terveid',
@@ -199,8 +197,8 @@ const HU: Record<Key, string> = {
   'profile.install': 'InkAge a kezdőképernyőre',
   'profile.erase': 'Fiókom és adataim törlése',
   'profile.eraseConfirm': 'Írd be: TÖRLÉS. Ez törli a fiókodat és minden mentett előnézetet.',
-  'paywall.used': 'Elérted a havi keretet',
-  'paywall.sub': 'Havonta 30 előnézet jár. Minden hónap 1-jén újraindul – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
+  'limit.used': 'Elérted a havi keretet',
+  'limit.sub': 'Havonta 30 előnézet jár. Minden hónap 1-jén újraindul – vagy hívj meg egy barátot, és mindketten kaptok plusz előnézeteket.',
 };
 
 const DICTS: Record<'en' | 'hu', Record<Key, string>> = { en: EN as any, hu: HU };

@@ -11,6 +11,6 @@ export async function GET(req: Request) {
   if (!/^[a-f0-9-]{36}$/.test(id)) return json({ data: null }, 400);
   const a = await getAuthed(req);
   const owner = a ? a.user.id : `guest:${guestFrom(req).id}`;
-  const data = await jobGet(id, owner).catch((e) => (console.warn('job get threw', e), null));
+  const data = await jobGet(id, owner, a?.db).catch((e) => (console.warn('job get threw', e), null));
   return json({ data });
 }

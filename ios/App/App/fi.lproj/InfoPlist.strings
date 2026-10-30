@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge käyttää kameraa, jotta voit kuvata kehon kohdan, johon haluat tatuoinnin.";
+"NSPhotoLibraryUsageDescription" = "InkAge avaa kuvasi, jotta voit valita kehokuvan tai tatuointikuvion.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge tallentaa tatuointisi esikatselut kuviisi, kun pyydät sitä.";
+"NSLocationWhenInUseUsageDescription" = "InkAge käyttää likimääräistä sijaintiasi vain tämän päivän UV-indeksin näyttämiseen, jotta tiedät, kuinka paljon aurinkosuojaa tatuointisi tarvitsee.";

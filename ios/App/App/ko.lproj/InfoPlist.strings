@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge는 타투를 새기고 싶은 신체 부위를 촬영할 수 있도록 카메라를 사용합니다.";
+"NSPhotoLibraryUsageDescription" = "InkAge는 신체 사진이나 타투 디자인을 고를 수 있도록 사진을 엽니다.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge는 요청하실 때 타투 미리보기를 사진에 저장합니다.";
+"NSLocationWhenInUseUsageDescription" = "InkAge는 타투에 어느 정도의 자외선 차단이 필요한지 알 수 있도록, 오늘의 자외선 지수를 보여주는 용도로만 대략적인 위치를 사용합니다.";

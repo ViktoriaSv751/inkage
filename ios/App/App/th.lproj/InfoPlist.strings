@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge ใช้กล้องเพื่อให้คุณถ่ายภาพส่วนของร่างกายที่ต้องการสัก";
+"NSPhotoLibraryUsageDescription" = "InkAge เปิดรูปภาพของคุณเพื่อให้คุณเลือกรูปร่างกายหรือลายสัก";
+"NSPhotoLibraryAddUsageDescription" = "InkAge บันทึกภาพตัวอย่างรอยสักลงในรูปภาพของคุณเมื่อคุณสั่ง";
+"NSLocationWhenInUseUsageDescription" = "InkAge ใช้ตำแหน่งโดยประมาณของคุณเพื่อแสดงดัชนี UV ของวันนี้เท่านั้น คุณจะได้รู้ว่ารอยสักต้องการการป้องกันแดดมากแค่ไหน";

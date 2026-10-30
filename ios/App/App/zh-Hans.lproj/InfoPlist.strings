@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge 会使用相机，让你拍下想纹身的身体部位。";
+"NSPhotoLibraryUsageDescription" = "InkAge 会打开你的照片，让你选择身体照片或纹身图案。";
+"NSPhotoLibraryAddUsageDescription" = "InkAge 会在你要求时，将纹身预览保存到你的照片。";
+"NSLocationWhenInUseUsageDescription" = "InkAge 只会使用你的大致位置来显示今日紫外线指数，让你知道纹身需要多少防晒。";

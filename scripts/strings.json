@@ -2798,7 +2798,7 @@
    "kind": "pair"
   },
   "Megosztott": {
-   "hu": "link, videó, PDF",
+   "hu": "megosztó link, meghívó",
    "files": [
     "app/admin/shared.tsx",
     "app/admin/views/funnel.tsx"
@@ -4115,6 +4115,20 @@
    ],
    "kind": "err"
   },
+  "Your tattoo preview is waiting": {
+   "hu": "Vár a tetoválás-előnézeted",
+   "files": [
+    "app/api/generate/route.ts"
+   ],
+   "kind": "call"
+  },
+  "Look at it again at 50 years, or ask your friends before you book.": {
+   "hu": "Nézd meg újra 50 évesen, vagy kérd ki a barátaid véleményét, mielőtt időpontot foglalsz.",
+   "files": [
+    "app/api/generate/route.ts"
+   ],
+   "kind": "call"
+  },
   "Sign in first.": {
    "hu": null,
    "files": [
@@ -4818,6 +4832,34 @@
    ],
    "kind": "call"
   },
+  "Happy with it?": {
+   "hu": "Tetszik?",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
+  "It’s saved in your gallery. Most people ask a few friends before they book.": {
+   "hu": "A galériádba mentettük. A legtöbben megkérdeznek pár barátot, mielőtt időpontot foglalnak.",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
+  "Ask friends to vote": {
+   "hu": "Kérd ki a barátaid véleményét",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
+  "Try another design or spot": {
+   "hu": "Másik minta vagy hely kipróbálása",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
   "AI simulation for inspiration. Real results depend on your artist, your skin and aftercare.": {
    "hu": "MI-szimuláció inspirációnak. A valós eredmény a tetoválótól, a bőrödtől és az utókezeléstől függ.",
    "files": [
@@ -4927,13 +4969,6 @@
   },
   "existing tattoo": {
    "hu": "meglévő tetoválás",
-   "files": [
-    "app/app/_home/useGenerate.ts"
-   ],
-   "kind": "call"
-  },
-  "Sign in to keep going and keep your designs.": {
-   "hu": "Jelentkezz be, és folytathatod – a terveid is megmaradnak.",
    "files": [
     "app/app/_home/useGenerate.ts"
    ],
@@ -27238,13 +27273,6 @@
    ],
    "kind": "key"
   },
-  "Saved on this device. Sign in to keep it everywhere.": {
-   "hu": "Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.",
-   "files": [
-    "lib/i18n.ts"
-   ],
-   "kind": "key"
-  },
   "Notes for your artist": {
    "hu": "Jegyzet a tetoválónak",
    "files": [
@@ -27688,13 +27716,6 @@
   },
   "Elmentve a galériádba": {
    "hu": "Elmentve a galériádba",
-   "files": [
-    "lib/i18n.ts"
-   ],
-   "kind": "key"
-  },
-  "Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.": {
-   "hu": "Elmentve ezen az eszközön. Jelentkezz be, hogy mindenhol meglegyen.",
    "files": [
     "lib/i18n.ts"
    ],

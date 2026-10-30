@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge koristi kameru kako bi se mogao snimiti deo tela na kom želiš tetovažu.";
+"NSPhotoLibraryUsageDescription" = "InkAge otvara tvoje fotografije kako bi se mogla izabrati fotografija tela ili dizajn tetovaže.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge čuva preglede tvoje tetovaže u tvojim fotografijama kada to zatražiš.";
+"NSLocationWhenInUseUsageDescription" = "InkAge koristi tvoju približnu lokaciju samo za prikaz današnjeg UV indeksa, kako bi bilo jasno koliko zaštite od sunca tvojoj tetovaži treba.";

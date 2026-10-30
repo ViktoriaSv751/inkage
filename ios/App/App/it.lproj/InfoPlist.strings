@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "InkAge";
+"NSCameraUsageDescription" = "InkAge usa la fotocamera per permetterti di fotografare la zona del corpo dove vuoi il tatuaggio.";
+"NSPhotoLibraryUsageDescription" = "InkAge apre le tue foto per permetterti di scegliere una foto del corpo o un disegno di tatuaggio.";
+"NSPhotoLibraryAddUsageDescription" = "InkAge salva le anteprime del tuo tatuaggio nelle tue foto quando lo chiedi.";
+"NSLocationWhenInUseUsageDescription" = "InkAge usa la tua posizione approssimativa solo per mostrare l'indice UV di oggi, così sai quanta protezione solare serve al tuo tatuaggio.";

@@ -6,7 +6,7 @@ import { fromBrowser, isLang } from './lib/tr';
  * A visitor who chose another language (cookie) or whose browser speaks one of ours is sent to that version.
  * Every page also gets the language in a request header, so the layout can ship that language's words.
  */
-// the store apps carry their own copy of the app screens and call the API from these origins
+// the store apps load the live site; only the experimental bundled build (CAP_BUNDLE=1) calls the API from these origins
 const APP_ORIGINS = new Set(['capacitor://localhost', 'https://localhost', 'http://localhost', 'ionic://localhost']);
 
 function cors(req: NextRequest) {
