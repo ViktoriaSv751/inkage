@@ -1,8 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* Közlemények — NOT LIVE YET: the app does not read public_announcements, so nothing written here is shown to anyone.
-   The page says so at the top (and the menu marks it "nem működik még") until the banner is built into the app.
-   Planned: a banner at the top of the app (and the website's app pages) — a new language, a fix, maintenance on
+/* Közlemények: a banner at the top of the app (app/app/_ui/AnnouncementBanner.tsx) — a new language, a fix, maintenance on
    Sunday. Switched on and off here, timed, for one language or every language, for the web, the store apps or both.
    Nothing is measured about who saw it; a closed banner is remembered only in that browser. */
 import { useMemo, useState } from "react";
@@ -26,14 +24,13 @@ export function Announce() {
     const { error } = await rpc(sb, "admin_announce_save", { p });
     setBusy(false);
     if (error) { toast(error.message); return; }
-    toast(f.id ? "Közlemény mentve (az app még nem mutatja)" : "Elmentve – az app még nem mutatja"); setF(EMPTY); q.load();
+    toast(f.id ? "Közlemény mentve" : "Elmentve"); setF(EMPTY); q.load();
   };
   const toggle = async (a: D) => { const { error } = await rpc(sb, "admin_announce_save", { p: { ...a, on_: !a.on_ } }); if (error) toast(error.message); else { toast(a.on_ ? "Kikapcsolva" : "Bekapcsolva"); q.load(); } };
   const del = async (a: D) => { if (!confirm(`Törlöd a közleményt? „${a.title}”`)) return; const { error } = await rpc(sb, "admin_announce_delete", { p_id: a.id }); if (error) toast(error.message); else { toast("Törölve"); q.load(); } };
   const rows: D[] = Array.isArray(q.d) ? q.d : [];
   return (
     <div className="g">
-      <section className="lesson s12" style={{ borderLeftColor: "#d9534f" }}><span className="ls-i">{I(P.alert)}</span><p><b>Nem működik még:</b> az app jelenleg <b>nem mutatja</b> a közleményeket, se a weboldalon, se az áruházi appokban. Amit itt közzéteszel, el van mentve, de senki nem látja, amíg a sáv be nem kerül az appba.</p></section>
       <Card className="s5" icon={P.bell} title={f.id ? "Közlemény szerkesztése" : "Új közlemény"} sub="(Még nem jelenik meg az appban.) Sáv lesz az app tetején. Rövid legyen: egy cím és egy-két mondat. A nyelvet választva csak azok látják, akik azon a nyelven használják az appot.">
         <div className="ann-f">
           <input className="adm-in" maxLength={120} placeholder="Cím (pl. „Új: hat új nyelv”)" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} />
@@ -49,20 +46,20 @@ export function Announce() {
           </div>
           <input className="adm-in" placeholder="Link (nem kötelező, pl. /tudastar/… vagy https://…)" value={f.link || ""} onChange={(e) => setF({ ...f, link: e.target.value })} />
           <div className={"ann-prev k-" + f.kind}><b>{f.title || "A közlemény címe"}</b>{f.body && <span>{f.body}</span>}</div>
-          <div className="adm-row"><button className="adm-ibtn gold" disabled={busy || !f.title.trim()} onClick={save}>{I(P.check)}{f.id ? "Mentés" : "Mentés (még nem jelenik meg)"}</button>{f.id && <button className="adm-ibtn" onClick={() => setF(EMPTY)}>Mégse</button>}</div>
+          <div className="adm-row"><button className="adm-ibtn gold" disabled={busy || !f.title.trim()} onClick={save}>{I(P.check)}{f.id ? "Mentés" : "Mentés"}</button>{f.id && <button className="adm-ibtn" onClick={() => setF(EMPTY)}>Mégse</button>}</div>
         </div>
       </Card>
-      <Card className="s7" icon={P.doc} title="Közlemények" sub={`${rows.filter((a) => a.live).length} aktív (az app még nem mutatja) · ${rows.length} összesen`}>
+      <Card className="s7" icon={P.doc} title="Közlemények" sub={`${rows.filter((a) => a.live).length} aktív · ${rows.length} összesen`}>
         <Async q={q} h={160}>{() => !rows.length ? <Empty t="Még nem volt közlemény." /> : (
           <ul className="ann-l">{rows.map((a) => (
             <li key={a.id}>
-              <div><b>{a.title}</b> <span className={"chip " + KIND[a.kind]?.[1]}>{KIND[a.kind]?.[0]}</span> {a.live ? <span className="chip warn" title="Be van kapcsolva és az időszakában van, de az app még nem mutatja">aktív (az app nem mutatja)</span> : !a.on_ ? <span className="chip">kikapcsolva</span> : a.ends_at && new Date(a.ends_at) < new Date() ? <span className="chip">lejárt</span> : <span className="chip warn">időzítve</span>}
+              <div><b>{a.title}</b> <span className={"chip " + KIND[a.kind]?.[1]}>{KIND[a.kind]?.[0]}</span> {a.live ? <span className="chip good" title="Be van kapcsolva és az időszakában van: az appban látszik">aktív</span> : !a.on_ ? <span className="chip">kikapcsolva</span> : a.ends_at && new Date(a.ends_at) < new Date() ? <span className="chip">lejárt</span> : <span className="chip warn">időzítve</span>}
                 <small className="mut" style={{ display: "block" }}>{a.lang ? lang(a.lang) : "minden nyelv"} · {PLAT[a.platform] || a.platform}{a.starts_at ? ` · ${dt(a.starts_at)}-tól` : ""}{a.ends_at ? ` · ${dt(a.ends_at)}-ig` : ""}</small>
                 {a.body && <small style={{ display: "block" }}>{a.body}</small>}</div>
               <span className="adm-row" style={{ gap: 8 }}><button className="lnk" onClick={() => toggle(a)}>{a.on_ ? "Kikapcsolás" : "Bekapcsolás"}</button><button className="lnk" onClick={() => setF({ ...a, starts_at: local(a.starts_at), ends_at: local(a.ends_at), lang: a.lang || "", link: a.link || "" })}>Szerkesztés</button><button className="lnk" onClick={() => del(a)}>Törlés</button></span>
             </li>))}</ul>)}</Async>
       </Card>
-      <div className="s12"><Lesson>Ha a sáv bekerül az appba, a közlemény a weboldalon és a két áruházi appban is megjelenik majd, mert azok a inkage.app/app élő oldalát mutatják. Egyszerre egy látszik (a legújabb). Az „aktív” jelölés csak azt jelenti, hogy be van kapcsolva és az időszakában van – az app még nem mutatja.</Lesson></div>
+      <div className="s12"><Lesson>A közlemény az app tetején jelenik meg a weboldalon és a két áruházi appban is, mert azok a inkage.app/app élő oldalát mutatják. Egyszerre egy látszik (a legújabb). Az „aktív” jelölés azt jelenti, hogy be van kapcsolva és az időszakában van.</Lesson></div>
     </div>
   );
 }

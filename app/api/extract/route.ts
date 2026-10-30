@@ -1,6 +1,6 @@
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, json } from '@/lib/server';
-import { aiConfigured, dataUrlToImg, editImage, extractCheck, extractPrompt, friendlyAiError, secondaryImageModels } from '@/lib/ai';
+import { aiConfigured, dataUrlToImg, designBlocked, DESIGN_BLOCKED, editImage, extractCheck, extractPrompt, friendlyAiError, secondaryImageModels } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
@@ -23,6 +23,10 @@ export async function POST(req: Request) {
   try {
     const src = { ...img, name: 'design.jpg' };
     const color = body.color === true;
+    if (await designBlocked(src)) {
+      await u.refund();
+      return u.withCookie(json({ error: DESIGN_BLOCKED, code: 'not_allowed' }, 422));
+    }
     // cut out, then check it against the photo: same design, nothing extra left in. One targeted retry if not.
     let image = await editImage([src], extractPrompt(color), 1024, 1024, secondaryImageModels());
     let check = await extractCheck(src, dataUrlToImg(image));

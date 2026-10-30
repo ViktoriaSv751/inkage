@@ -11,7 +11,6 @@ import { aiPlacement } from '@/lib/placements';
 import { TattooPicker } from '../../Picker';
 import { BodyMap } from '../../BodyMap';
 import type { Area, CheckState, Design, Photo, Skin } from '../types';
-import { recentAdd } from '../recent';
 import { L, withTimeout } from '../utils';
 import { CameraSheet } from '../CameraSheet';
 import { useRecentPhotos } from './useRecentPhotos';
@@ -101,7 +100,6 @@ export function StudioStep({
     try {
       const p = await withTimeout(prepareImage(file as File, 1024), 20000);
       setPhoto(p);
-      recentAdd(p);
       keep('photo', p);
       haptic();
       track('photo_added');

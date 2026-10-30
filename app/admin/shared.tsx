@@ -178,7 +178,7 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "users", l: "Emberek", i: P.users, d: "Kik regisztráltak, honnan, és visszajönnek-e." },
     { k: "funnel", l: "Tölcsér", i: P.funnel, d: "Az út lépésről lépésre: hol esnek ki az emberek." },
     { k: "retention", l: "Megtartás", i: P.refresh, d: "Visszajönnek-e a regisztráltak: kohorszok és aktív fiókok." },
-    { k: "announce", l: "Közlemények (nem működik még)", i: P.bell, d: "NEM MŰKÖDIK MÉG: az app még nem mutatja a közleményeket. Itt előre megírhatod és időzítheted őket, de senki nem látja, amíg az appba nem kerül a sáv." },
+    { k: "announce", l: "Közlemények", i: P.bell, d: "Sáv az app tetején: új nyelv, javítás, karbantartás. Időzíthető, nyelvre és platformra célozható." },
   ] },
   { g: "Növekedés", items: [
     { k: "traffic", l: "Források", i: P.traffic, d: "Honnan jönnek a látogatók, és melyik csatorna hoz felhasználót." },

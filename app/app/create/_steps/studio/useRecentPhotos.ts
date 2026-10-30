@@ -4,17 +4,18 @@ import { useApp } from '../../../AppProvider';
 import { prepareImage } from '@/lib/client';
 import { uploads } from '@/lib/uploads';
 import type { Photo } from '../types';
-import { recentGet, type Recent } from '../recent';
+import type { Recent } from '../recent';
 import { L, withTimeout } from '../utils';
 
-/** The recent-photos strip: the device's list first, then the account's uploads once they load. */
+/** The recent-photos strip: the account's uploads. */
 export function useRecentPhotos(photo: Photo | null, usePhoto: (p: Photo) => void) {
   const { ui, toast, me } = useApp();
   const t = L(ui.lang);
   const [recent, setRecent] = useState<Recent[]>([]);
   useEffect(() => {
-    const mine = recentGet();
-    setRecent(mine);
+    try {
+      localStorage.removeItem('ink_recent_photos'); // the old copies
+    } catch {}
     if (!me.user) return;
     let off = false;
     uploads

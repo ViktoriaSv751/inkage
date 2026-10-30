@@ -9,11 +9,11 @@ import { api, sb } from '@/lib/sb';
 import { useLang } from '@/lib/i18n';
 import { lsGet, lsSet, migrateLocal, track, visitSource } from '@/lib/store';
 import { AgeGate } from './AgeGate';
+import { AnnouncementBanner } from './_ui/AnnouncementBanner';
 import { AiConsent } from './AiConsent';
 
 export type Me = {
   user: { id: string; email?: string } | null;
-  plan?: string;
   remaining?: number;
   limit?: number;
   bonus?: number;
@@ -254,6 +254,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     >
       {gate === 'in' ? children : <div className="gate-wait" aria-busy="true"><b>InkAge</b><i /></div>}
       {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
+      {gate === 'in' && <AnnouncementBanner lang={ui.lang} closeLabel={ui.t('common.close')} />}
       <AiConsent lang={ui.lang} />
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}

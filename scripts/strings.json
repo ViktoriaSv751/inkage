@@ -1288,45 +1288,6 @@
    ],
    "kind": "call"
   },
-  "Back": {
-   "hu": "Vissza",
-   "files": [
-    "app/_auth/InboxSteps.tsx",
-    "app/app/create/BodyMap.tsx",
-    "lib/i18n.ts"
-   ],
-   "kind": "call"
-  },
-  "We sent a 6-digit code to ": {
-   "hu": "Küldtünk egy 6 jegyű kódot ide: ",
-   "files": [
-    "app/_auth/InboxSteps.tsx"
-   ],
-   "kind": "call"
-  },
-  "Continue": {
-   "hu": "Tovább",
-   "files": [
-    "app/_auth/InboxSteps.tsx",
-    "app/app/_ui/AuthSheet.tsx",
-    "app/app/create/_steps/studio/StudioStep.tsx"
-   ],
-   "kind": "call"
-  },
-  "Send a new code": {
-   "hu": "Új kód küldése",
-   "files": [
-    "app/_auth/InboxSteps.tsx"
-   ],
-   "kind": "call"
-  },
-  "You can also tap the link in the e-mail.": {
-   "hu": "A levélben lévő linkre is koppinthatsz.",
-   "files": [
-    "app/_auth/InboxSteps.tsx"
-   ],
-   "kind": "call"
-  },
   "Use at least 8 characters.": {
    "hu": "Legalább 8 karaktert használj.",
    "files": [
@@ -1449,27 +1410,6 @@
   },
   "Something went wrong. Try again in a minute, or use another way to sign in.": {
    "hu": "Valami nem sikerült. Próbáld újra egy perc múlva, vagy lépj be másképp.",
-   "files": [
-    "app/_auth/useAuthFlow.ts"
-   ],
-   "kind": "call"
-  },
-  "Sign-in is not available right now.": {
-   "hu": "A belépés most nem érhető el.",
-   "files": [
-    "app/_auth/useAuthFlow.ts"
-   ],
-   "kind": "call"
-  },
-  "Too many e-mails right now. Wait a minute and try again.": {
-   "hu": "Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.",
-   "files": [
-    "app/_auth/useAuthFlow.ts"
-   ],
-   "kind": "call"
-  },
-  "That code didn’t work. Use the newest e-mail.": {
-   "hu": "Ez a kód nem jó. A legfrissebb e-mailt használd.",
    "files": [
     "app/_auth/useAuthFlow.ts"
    ],
@@ -5956,6 +5896,15 @@
    ],
    "kind": "call"
   },
+  "Continue": {
+   "hu": "Tovább",
+   "files": [
+    "app/app/_ui/AuthSheet.tsx",
+    "app/app/create/_steps/studio/StudioStep.tsx",
+    "lib/i18n.ts"
+   ],
+   "kind": "call"
+  },
   "Use a different email": {
    "hu": "Másik e-mail-cím",
    "files": [
@@ -6044,6 +5993,14 @@
    "hu": "Elöl",
    "files": [
     "app/app/create/BodyMap.tsx"
+   ],
+   "kind": "call"
+  },
+  "Back": {
+   "hu": "Hátul",
+   "files": [
+    "app/app/create/BodyMap.tsx",
+    "lib/i18n.ts"
    ],
    "kind": "call"
   },
@@ -11457,8 +11414,8 @@
    ],
    "kind": "call"
   },
-  "InkAge uses only what is needed for the app to work. There are no advertising or third-party tracking cookies, so there is no cookie banner to click through.": {
-   "hu": "Az InkAge csak azt használja, ami a működéshez szükséges. Nincsenek hirdetési vagy külső követő sütik, ezért nincs mit elfogadni egy sütisávban sem.",
+  "InkAge uses only what it needs to work, and there are no advertising or third-party tracking cookies. The small window on your first visit asks one thing: may we also keep our own anonymous usage stats? You can say no, and everything still works.": {
+   "hu": "Az InkAge csak azt használja, ami a működéshez szükséges, és nincsenek hirdetési vagy külső követő sütik. Az első látogatáskor megjelenő kis ablak egy dolgot kérdez: megtarthatjuk-e a saját, névtelen használati statisztikánkat is? Nemet is mondhatsz, minden ugyanúgy működik.",
    "files": [
     "app/suti/page.tsx"
    ],
@@ -11520,8 +11477,8 @@
    ],
    "kind": "call"
   },
-  "- **App state** (ink_recent_photos, ink_shares, ink_job) — your recently used photos, the vote links you made and a preview still being made, so nothing is lost if you reload.": {
-   "hu": "- **Az app állapota** (ink_recent_photos, ink_shares, ink_job) – a nemrég használt fotóid, az általad készített szavazós linkek és egy még készülő előnézet, hogy újratöltéskor se vesszen el semmi.",
+  "- **App state** (ink_shares, ink_job) — the vote links you made and a preview still being made, so nothing is lost if you reload.": {
+   "hu": "- **Az app állapota** (ink_shares, ink_job) – a szavazós linkjeid és a még készülő előnézet, hogy újratöltéskor se vesszen el semmi.",
    "files": [
     "app/suti/page.tsx"
    ],
@@ -27976,20 +27933,6 @@
   },
   "Sent again – you can resend in {0} s": {
    "hu": "Újraküldve – {0} mp múlva küldheted újra",
-   "files": [
-    "app/_auth/InboxSteps.tsx"
-   ],
-   "kind": "call"
-  },
-  "Digit {0}": {
-   "hu": "{0}. számjegy",
-   "files": [
-    "app/_auth/InboxSteps.tsx"
-   ],
-   "kind": "call"
-  },
-  "You can request a new code in {0} s": {
-   "hu": "Új kódot {0} mp múlva kérhetsz",
    "files": [
     "app/_auth/InboxSteps.tsx"
    ],

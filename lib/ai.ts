@@ -13,5 +13,5 @@ export {
   makeImageFast,
   friendlyAiError,
 } from './ai/providers';
-export { analyse, inputSafety, checkPhoto, type PhotoCheck } from './ai/photo-checks';
+export { analyse, inputSafety, checkPhoto, designBlocked, DESIGN_BLOCKED, type PhotoCheck } from './ai/photo-checks';
 export { qualityCheck, findTattoos, extractCheck, type QC, type Found } from './ai/design-checks';

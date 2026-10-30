@@ -2,7 +2,6 @@ import './tr-server';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-export type Plan = 'free' | 'weekly' | 'lifetime';
 
 import { PUBLIC } from './public-config';
 const URL_ = () => PUBLIC.supabaseUrl;
@@ -51,7 +50,6 @@ export async function getAuthed(req: Request): Promise<Authed | null> {
 }
 
 export type Quota = {
-  plan: Plan;
   used: number;
   limit: number;
   remaining: number;

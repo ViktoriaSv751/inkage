@@ -14,7 +14,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
     {
       h: T('In short', 'Röviden'),
       icon: 'check',
-      ps: [T('InkAge uses only what is needed for the app to work. There are no advertising or third-party tracking cookies, so there is no cookie banner to click through.', 'Az InkAge csak azt használja, ami a működéshez szükséges. Nincsenek hirdetési vagy külső követő sütik, ezért nincs mit elfogadni egy sütisávban sem.')],
+      ps: [T('InkAge uses only what it needs to work, and there are no advertising or third-party tracking cookies. The small window on your first visit asks one thing: may we also keep our own anonymous usage stats? You can say no, and everything still works.', 'Az InkAge csak azt használja, ami a működéshez szükséges, és nincsenek hirdetési vagy külső követő sütik. Az első látogatáskor megjelenő kis ablak egy dolgot kérdez: megtarthatjuk-e a saját, névtelen használati statisztikánkat is? Nemet is mondhatsz, minden ugyanúgy működik.')],
     },
     {
       h: T('Cookies', 'Sütik'),
@@ -33,7 +33,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
         T('- **Your statistics choice** (ink_consent) — whether you accepted anonymous usage statistics, and when.', '- **Statisztikai döntésed** (ink_consent) – elfogadtad-e a névtelen használati statisztikát, és mikor.'),
         T('- **Anonymous IDs** (ink_anon, ink_sid, ink_seen, ink_src) — a random ID for this browser and this visit, and where the visit came from, for the statistics above. No name or e-mail.', '- **Névtelen azonosítók** (ink_anon, ink_sid, ink_seen, ink_src) – véletlenszerű azonosító ehhez a böngészőhöz és ehhez a látogatáshoz, és hogy honnan érkezett a látogatás, a fenti statisztikához. Név és e-mail nélkül.'),
         T('- **Invite code** (ink_ref) — the invite link you arrived from, until your account is created, so the bonus reaches you and your friend.', '- **Meghívókód** (ink_ref) – a meghívó link, amellyel érkeztél, amíg a fiókod létrejön, hogy a bónusz neked és a barátodnak is jóváíródjon.'),
-        T('- **App state** (ink_recent_photos, ink_shares, ink_job) — your recently used photos, the vote links you made and a preview still being made, so nothing is lost if you reload.', '- **Az app állapota** (ink_recent_photos, ink_shares, ink_job) – a nemrég használt fotóid, az általad készített szavazós linkek és egy még készülő előnézet, hogy újratöltéskor se vesszen el semmi.'),
+        T('- **App state** (ink_shares, ink_job) — the vote links you made and a preview still being made, so nothing is lost if you reload.', '- **Az app állapota** (ink_shares, ink_job) – a szavazós linkjeid és a még készülő előnézet, hogy újratöltéskor se vesszen el semmi.'),
         T('- **Drafts** (ink_draft, ink_fresh) — the photo you picked on the home page, until the app opens it (cleared when you close the tab).', '- **Piszkozatok** (ink_draft, ink_fresh) – a kezdőlapon kiválasztott fotó, amíg az app megnyitja (a lap bezárásakor törlődik).'),
       ],
     },

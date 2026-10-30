@@ -17,7 +17,7 @@ Minden szöveg bemásolható. Ahol `[ ]` van, ott még a te adatod kell.
 | Támogatás URL | https://inkage.app/kapcsolat |
 | Fióktörlés URL (Google kéri) | https://inkage.app/fiok-torlese |
 | Marketing URL | https://inkage.app |
-| Kapcsolattartó e-mail | `[ ]` |
+| Kapcsolattartó e-mail | viktoriasoti@yahoo.com |
 
 ## Szövegek (magyar)
 

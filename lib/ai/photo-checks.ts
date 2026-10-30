@@ -105,6 +105,12 @@ export async function inputSafety(photo: Img | null, design: Img | null, retry =
   }
 }
 
+/** The same check for a design that went into, or came out of, the cut-out and AI-drawing tools. */
+export async function designBlocked(design: Img) {
+  return (await inputSafety(null, design)).block === 'design';
+}
+export const DESIGN_BLOCKED = 'This design can’t be used: it looks like a hate symbol or explicit content. Try another design.';
+
 export async function checkPhoto(photo: Img, placement: string, retry = true): Promise<PhotoCheck> {
   if (!process.env.GEMINI_API_KEY) return { ok: true, code: 'ok', area: placement };
   try {

@@ -1,6 +1,6 @@
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, json } from '@/lib/server';
-import { aiConfigured, designPrompt, editImage, friendlyAiError, makeImage } from '@/lib/ai';
+import { aiConfigured, dataUrlToImg, designBlocked, DESIGN_BLOCKED, designPrompt, editImage, friendlyAiError, makeImage } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
@@ -36,6 +36,11 @@ export async function POST(req: Request) {
       const results = await Promise.allSettled([makeImage(designPrompt(text, style)), makeImage(designPrompt(`${text} (a different take on the same idea)`, style))]);
       images = results.filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled').map((r) => r.value);
       if (!images.length) throw (results[0] as PromiseRejectedResult).reason;
+    }
+    // what was asked for (or changed) is checked on the finished picture too
+    if (await designBlocked(dataUrlToImg(images[0]))) {
+      await u.refund();
+      return u.withCookie(json({ error: DESIGN_BLOCKED, code: 'not_allowed' }, 422));
     }
     return u.withCookie(json({ image: images[0], images }));
   } catch (e) {

@@ -9,27 +9,24 @@ import { sb } from '@/lib/sb';
 import { PUBLIC } from '@/lib/public-config';
 import { ageAgreed, track } from '@/lib/store';
 import { oauthParams, authErrorText } from '@/lib/auth-help';
-import { nextFromUrl, rememberNext, takeNext, withLang } from '@/lib/auth-next';
+import { nextFromUrl, rememberNext, withLang } from '@/lib/auth-next';
 
-/** State and actions of the sign-in / sign-up screen: e-mail + password, e-mail code, Google / Apple. */
+/** State and actions of the sign-in / sign-up screen: e-mail + password, Google / Apple. */
 export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const q = qOf(lang);
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [agree, setAgree] = useState(false);
-  const [step, setStep] = useState<'email' | 'code' | 'sent'>('email');
-  const [withCode, setWithCode] = useState(false);
+  const [step, setStep] = useState<'email' | 'sent'>('email');
   const [name, setName] = useState('');
   const [pw, setPw] = useState('');
   const [show, setShow] = useState(false);
   const [sentKind, setSentKind] = useState<'confirm' | 'reset'>('confirm');
-  const [code, setCode] = useState(['', '', '', '', '', '']);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [wait, setWait] = useState(0);
   const [providers, setProviders] = useState<{ google?: boolean; apple?: boolean; loaded?: boolean }>({});
-  const boxes = useRef<(HTMLInputElement | null)[]>([]);
 
   // in the store apps the Google / Apple sign-in comes back to this page through app.inkage://auth:
   // the listener that finishes it must be running here too, not only inside /app
@@ -73,7 +70,6 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
   }, [wait]);
 
   const okEmail = /\S+@\S+\.\S+/.test(email);
-  const canSend = okEmail && (mode !== 'signup' || agree) && !busy;
   const pwScore = (pw.length >= 8 ? 1 : 0) + (/[a-záéíóöőúüű]/i.test(pw) && /\d/.test(pw) ? 1 : 0) + (pw.length >= 12 || /[^\w]/.test(pw) ? 1 : 0);
   const friendly = (m: string) =>
     /invalid login/i.test(m)
@@ -128,54 +124,6 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     setStep('sent');
   };
 
-  const send = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!canSend && step === 'email') return;
-    const s = sb();
-    if (!s) return setErr(T('Sign-in is not available right now.', 'A belépés most nem érhető el.'));
-    setBusy(true);
-    setErr('');
-    if (mode === 'signup') ageAgreed();
-    const { error } = await s.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${siteOrigin()}/app/gallery`, shouldCreateUser: true } });
-    setBusy(false);
-    if (error) return setErr(/rate/i.test(error.message) ? T('Too many e-mails right now. Wait a minute and try again.', 'Most túl sok e-mail ment ki. Várj egy percet, és próbáld újra.') : friendly(error.message));
-    track(mode === 'login' ? 'auth_code_login' : 'auth_code_signup');
-    rememberNext(nextFromUrl() || (mode === 'login' ? null : '/app'));
-    setStep('code');
-    setWait(45);
-    setTimeout(() => boxes.current[0]?.focus(), 50);
-  };
-
-  const verify = async (digits = code.join('')) => {
-    if (digits.length < 6) return;
-    setBusy(true);
-    setErr('');
-    const { error } = await sb()!.auth.verifyOtp({ email: email.trim(), token: digits, type: 'email' });
-    setBusy(false);
-    if (error) return setErr(T('That code didn’t work. Use the newest e-mail.', 'Ez a kód nem jó. A legfrissebb e-mailt használd.'));
-    track('auth_ok', { mode });
-    playSplash('in');
-    router.replace(withLang(takeNext() || nextFromUrl() || (mode === 'login' ? '/app/gallery' : '/app'), lang));
-  };
-
-  const setDigit = (i: number, v: string) => {
-    const d = v.replace(/\D/g, '');
-    if (d.length > 1) {
-      const all = d.slice(0, 6).split('');
-      const next = [...code];
-      all.forEach((x, k) => (next[k] = x));
-      setCode(next);
-      boxes.current[Math.min(5, all.length)]?.focus();
-      if (next.join('').length === 6) verify(next.join(''));
-      return;
-    }
-    const next = [...code];
-    next[i] = d;
-    setCode(next);
-    if (d && i < 5) boxes.current[i + 1]?.focus();
-    if (next.join('').length === 6) verify(next.join(''));
-  };
-
   const oauth = async (provider: 'google' | 'apple') => {
     if (providers.loaded && !providers[provider])
       return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
@@ -209,7 +157,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
 
   return {
     T, q, native, email, setEmail, agree, setAgree, step, setStep, name, setName, pw, setPw, show, setShow, sentKind,
-    code, setCode, busy, err, setErr, wait, boxes, okEmail, pwScore, loginPw, signupPw, forgot, send, verify, setDigit, oauth, resend,
+    busy, err, setErr, wait, okEmail, pwScore, loginPw, signupPw, forgot, oauth, resend,
   };
 }
 

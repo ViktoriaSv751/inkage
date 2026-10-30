@@ -1,6 +1,6 @@
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, json } from '@/lib/server';
-import { aiConfigured, editImage, friendlyAiError, improvePrompt } from '@/lib/ai';
+import { aiConfigured, designBlocked, DESIGN_BLOCKED, editImage, friendlyAiError, improvePrompt } from '@/lib/ai';
 import { startUnit } from '@/lib/meter';
 
 export const dynamic = 'force-dynamic';
@@ -20,6 +20,10 @@ export async function POST(req: Request) {
   const u = await startUnit(req, 'improve design');
   if (!u.ok) return u.res;
   try {
+    if (await designBlocked({ ...design, name: 'design.png' })) {
+      await u.refund();
+      return u.withCookie(json({ error: DESIGN_BLOCKED, code: 'not_allowed' }, 422));
+    }
     const sizeCm = Number(body.sizeCm) > 0 ? Number(body.sizeCm) : null;
     const image = await editImage([{ ...design, name: 'design.png' }], improvePrompt(sizeCm), 1024, 1024);
     return u.withCookie(json({ image }));

@@ -48,7 +48,7 @@ export default function ProfilePage() {
   const exportData = async () => {
     const data = {
       exported_at: new Date().toISOString(),
-      account: me.user ? { email: me.user.email, plan: me.plan } : null,
+      account: me.user ? { email: me.user.email } : null,
       answers: ob,
       shares: shares.all(),
       previews: (mine || []).map((p) => ({ id: p.id, mode: p.mode ?? 'new', created_at: p.created_at, placement: p.placement, size: p.size, score: p.score, notes: p.notes, favorite: p.favorite, folder: p.collection, done_at: p.doneAt ?? null, source: p.source })),

@@ -43,7 +43,7 @@ import { Announce } from "./views/announce";
 import { Audit } from "./views/audit";
 
 /* a few words under each menu item */
-const NAVSUB: Partial<Record<Tab, string>> = { announce: "nem működik még", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", glossary: "minden szám jelentése", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", search: "keresések, cikkek",
+const NAVSUB: Partial<Record<Tab, string>> = { audit: "ki, mikor, mit", platforms: "melyik mennyit ér", glossary: "minden szám jelentése", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", search: "keresések, cikkek",
   links: "rövid linkek", markets: "nyelvek, országok", stores: "letöltések", users: "fiókok", funnel: "lépésről lépésre", retention: "visszatérők", product: "mit használnak", inkage: "moderálás, MI, korlát",
   viral: "megosztások", connect: "bekötések", goals: "célok, jegyzetek", system: "beállítások, biztonság" };
 

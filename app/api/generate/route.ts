@@ -44,7 +44,6 @@ export async function POST(req: Request) {
   let gid: number;
   let canAge: boolean;
   let remaining: number | null = null;
-  let plan: string = 'guest';
   let owner: string;
 
   if (a) {
@@ -56,9 +55,8 @@ export async function POST(req: Request) {
       return json({ error: 'You reached this month’s 30 previews. They start again on the 1st.', code: 'limit' }, 429);
     }
     gid = start.gid;
-    canAge = start.canAge || start.plan === 'free'; // the free preview includes the aging stages too
+    canAge = start.canAge;
     remaining = start.remaining - 1;
-    plan = start.plan;
     owner = a.user.id;
     // if this function gets killed before it can answer, the job row is how the preview finds its way back to the allowance
     await jobPut(body.job, owner, 'gid', gid);
@@ -176,7 +174,7 @@ export async function POST(req: Request) {
     // the inputs travel with the report, so the app can show the same design's score on other body areas
     const report = { ...longevity(input, lang), input };
     const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, y: 0, exp: Date.now() + 3 * 3600e3 });
-    const out = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining, plan };
+    const out = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining };
     // keep it for a while, in case the app was closed while we were working
     await jobPut(body.job, owner, 'fresh', out, a?.db);
     // one nudge a day later, for people who turned on notifications (at most once a month)

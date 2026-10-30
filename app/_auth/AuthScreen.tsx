@@ -9,7 +9,7 @@ import { AuthArt } from './AuthArt';
 import './auth.css';
 import { LogoMark } from '../LogoMark';
 import { EmailStep } from './EmailStep';
-import { CodeStep, SentStep } from './InboxSteps';
+import { SentStep } from './InboxSteps';
 import { useAuthFlow } from './useAuthFlow';
 
 
@@ -56,10 +56,8 @@ export function AuthScreen({ mode, lang }: { mode: 'login' | 'signup' | 'forgot'
         <div className="au-card">
           {step === 'sent' ? (
             <SentStep flow={flow} />
-          ) : step === 'email' ? (
-            <EmailStep mode={mode} flow={flow} />
           ) : (
-            <CodeStep flow={flow} />
+            <EmailStep mode={mode} flow={flow} />
           )}
           {/* on the first step the error sits under the Apple / Google buttons (EmailStep), where the tap was */}
           {err && step !== 'email' && (
