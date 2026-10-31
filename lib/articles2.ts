@@ -340,4 +340,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'laser-removal-healing',
+    tag: { en: 'Removal', hu: 'Eltávolítás' },
+    title: { en: 'Healing after laser tattoo removal: a day-by-day timeline, aftercare and how to avoid scars', hu: 'Gyógyulás lézeres tetoválás-eltávolítás után: napról napra, utókezelés és hogyan kerüld el a heget' },
+    desc: { en: 'What is normal, what to leave alone and when to call someone.', hu: 'Mi a normális, mihez ne nyúlj, és mikor kérj segítséget.' },
+    body: {
+      en: [
+        'Redness and swelling on day one, blisters in the first days and crusts in the first week or two are all common. The surface usually heals in about two to four weeks, while the ink keeps fading for longer.',
+        '## Aftercare',
+        'Keep the area clean, use what your clinic recommends, leave blisters and crusts alone, avoid soaking and keep it out of the sun.',
+        '## When to call someone',
+        'Spreading redness, increasing pain, pus or fever are not normal healing. Contact your clinic or a doctor.',
+      ],
+      hu: [
+        'Az első napon a pirosság és a duzzanat, az első napokban a hólyagok, az első egy-két hétben a pörkök mind gyakoriak. A felszín általában nagyjából két-négy hét alatt gyógyul, a tinta viszont tovább halványul.',
+        '## Utókezelés',
+        'Tartsd tisztán a területet, azt használd, amit a klinika javasol, hagyd békén a hólyagokat és a pörköket, kerüld az áztatást, és óvd a naptól.',
+        '## Mikor kérj segítséget?',
+        'A terjedő pirosság, az erősödő fájdalom, a genny vagy a láz nem normális gyógyulás. Keresd a klinikát vagy egy orvost.',
+      ],
+    },
+  },
 ];

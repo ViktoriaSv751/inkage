@@ -248,6 +248,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-10-30',
     faq: [],
   },
+  'laser-removal-healing': {
+    img: 'hf_20261031_154730_a3e4350e-ccbf-439d-bb08-6306cc410e30',
+    img2: 'hf_20261031_154729_1f13cdbc-d505-4cb6-9a37-0ec68e707e4f',
+    img3: 'hf_20261031_154730_187f5b1b-a8a5-49b4-bbcd-5c6eec6cc4ec',
+    img4: 'hf_20261031_154729_e4e40e8a-95f2-44f2-a2aa-ee5750d51ee9',
+    img5: 'hf_20261031_154743_6772b03f-c556-4e5e-bf62-7cc242aae259',
+    img6: 'hf_20261031_154743_128c5cf9-9991-493a-a47c-71484c99a6f3',
+    img7: 'hf_20261031_154744_c97f17e7-05fa-4492-95f3-81f33d01e98d',
+    cap2: { en: 'Illustration: most of good healing is keeping the area clean and leaving it alone.', hu: 'Illusztráció: a jó gyógyulás nagy része abból áll, hogy tisztán tartod a területet, és békén hagyod.' },
+    date: '2026-10-31',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
