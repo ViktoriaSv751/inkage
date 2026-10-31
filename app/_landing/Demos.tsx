@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { PIC } from '@/lib/kb';
-import { track } from '@/lib/store';
+import { PIC } from '@/lib/img';
+import { track } from '@/lib/track';
 import type { T } from './types';
 
 // example photos used only once on the site

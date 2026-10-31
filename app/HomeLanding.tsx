@@ -6,16 +6,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { prepareImage } from '@/lib/client';
 import { LandingSections } from './LandingSections';
+import type { LandingData } from '@/lib/landing-data';
 import { SiteFooter } from './SiteFooter';
 import { SiteNav } from './SiteNav';
 import './landing.css';
 import { HeroAging } from './visuals';
 import { loadDict, tx, type Lang } from '@/lib/i18n';
-import { lsSet, track } from '@/lib/store';
-import { sb } from '@/lib/sb';
+import { afterLoad, track } from '@/lib/track';
 
 /** The home page; `lang` comes from the server (?lang=, set by middleware.ts), so the HTML arrives in that language. */
-export function HomeLanding({ lang }: { lang: Lang }) {
+export function HomeLanding({ lang, data }: { lang: Lang; data: LandingData }) {
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const [signedIn, setSignedIn] = useState(false);
   const [made, setMade] = useState(0);
@@ -41,14 +41,18 @@ export function HomeLanding({ lang }: { lang: Lang }) {
     // referral links: /?ref=<user id>
     const ref = new URLSearchParams(location.search).get('ref');
     if (ref && /^[0-9a-f-]{36}$/i.test(ref)) {
-      lsSet('ink_ref', ref);
+      import('@/lib/store').then((m) => m.lsSet('ink_ref', ref)).catch(() => {});
       track('ref_visit');
     }
     // page views are counted for everyone by app/PageView.tsx (no cookie needed)
-    sb()?.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
-    sb()
-      ?.rpc('trends')
-      .then(({ data }) => setMade(Number((data as any)?.previews_total) || 0));
+    return afterLoad(() => {
+      import('@/lib/sb').then(({ sb }) => {
+        sb()?.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+        sb()
+          ?.rpc('trends')
+          .then(({ data }) => setMade(Number((data as any)?.previews_total) || 0));
+      }).catch(() => {});
+    });
   }, []);
 
   return (
@@ -85,7 +89,7 @@ export function HomeLanding({ lang }: { lang: Lang }) {
         <HeroAging lang={lang} />
       </section>
 
-      <LandingSections lang={lang} made={made} onUpload={() => (track('landing_cta_bottom'), fileRef.current?.click())} />
+      <LandingSections lang={lang} data={data} made={made} onUpload={() => (track('landing_cta_bottom'), fileRef.current?.click())} />
     </main>
     <SiteFooter lang={lang} />
     </>

@@ -1,13 +1,12 @@
 'use client';
-import { tx, qOf, pick, type Lang } from '@/lib/tr';
+import { tx, qOf, type Lang } from '@/lib/tr';
 
 import { AuthCta } from './AuthCta';
 import Link from 'next/link';
 import { useState } from 'react';
-import { ARTICLES } from '@/lib/articles';
-import { IMG, KB, PIC } from '@/lib/kb';
-import { SEO_AREAS, SEO_STYLES, seoPage } from '@/lib/seo';
-import { track } from '@/lib/store';
+import { IMG, PIC } from '@/lib/img';
+import type { LandingData } from '@/lib/landing-data';
+import { track } from '@/lib/track';
 import { AgingTimeline, BetaInstall, CompareSlider, CompareTable, LandingFaq, Precision, PrivacyBlock, UseCases } from './LandingMore';
 import './landing2.css';
 
@@ -27,14 +26,12 @@ const STYLE_IMG: Record<string, string> = {
   realism: 'hf_20261013_090754_884850ef-3a8a-4f13-9702-e5afbd3729d0',
 };
 
-export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: number; onUpload: () => void }) {
+export function LandingSections({ lang, data, made, onUpload }: { lang: Lang; data: LandingData; made: number; onUpload: () => void }) {
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const kbSfx = qOf(lang);
   const seoSfx = qOf(lang);
-  const [style, setStyle] = useState<(typeof SEO_STYLES)[number]['k']>('fine-line');
-  const st = SEO_STYLES.find((s) => s.k === style)!;
-  const ranked = SEO_AREAS.map((a) => ({ a, score: seoPage(`${style}-${a.k}`, lang)?.medium ?? 0 })).sort((x, y) => y.score - x.score);
-  const featured = ['how-tattoos-age', 'fine-line-tattoos-aging', 'best-placement-for-tattoo-longevity', 'tattoo-size-guide'].map((s) => ARTICLES.find((a) => a.slug === s)!).filter(Boolean);
+  const [style, setStyle] = useState('fine-line');
+  const st = data.styles.find((s) => s.k === style)!;
 
   const steps = [
     {
@@ -171,17 +168,17 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
             <h2>{t('Know before you ink.', 'Tudd, mielőtt varratsz.')}</h2>
           </div>
           <Link className="ls-link" href={`/tudastar${kbSfx}`} onClick={() => track('landing_kb')}>
-            {t(`All ${ARTICLES.length} articles`, `Mind a ${ARTICLES.length} cikk`)} <span aria-hidden="true">→</span>
+            {t(`All ${data.articleCount} articles`, `Mind a ${data.articleCount} cikk`)} <span aria-hidden="true">→</span>
           </Link>
         </div>
         <div className="ls-mag">
-          {featured.map((a, i) => (
+          {data.featured.map((a, i) => (
             <Link key={a.slug} href={`/tudastar/${a.slug}${kbSfx}`} className={`ls-art ${i === 0 ? 'big' : ''}`}>
-              <img {...PIC(KB[a.slug].img, i === 0 ? '(min-width: 900px) 640px, 100vw' : '120px', i === 0 ? 1400 : 640)} alt="" loading="lazy" />
+              <img {...PIC(a.img, i === 0 ? '(min-width: 900px) 640px, 100vw' : '120px', i === 0 ? 1400 : 640)} alt="" loading="lazy" />
               <div>
-                <span className="ls-tag">{pick(a.tag, lang)}</span>
-                <b>{pick(a.title, lang)}</b>
-                {i === 0 && <p>{pick(a.desc, lang)}</p>}
+                <span className="ls-tag">{a.tag}</span>
+                <b>{a.title}</b>
+                {i === 0 && <p>{a.desc}</p>}
               </div>
             </Link>
           ))}
@@ -195,10 +192,10 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
           <h2>{t('How each style ages, wherever you put it.', 'Hogyan öregszik egy stílus, attól függően, hová kerül.')}</h2>
         </div>
         <div className="ls-style-tabs" role="tablist">
-          {SEO_STYLES.map((s) => (
+          {data.styles.map((s) => (
             <button key={s.k} role="tab" aria-selected={style === s.k} className={style === s.k ? 'on' : ''} onClick={() => setStyle(s.k)}>
               <img src={IMG(STYLE_IMG[s.k], 200)} alt="" loading="lazy" />
-              {lang === 'hu' ? s.hu.replace(/ \(.*\)/, '') : s.en}
+              {s.tab}
             </button>
           ))}
         </div>
@@ -206,15 +203,15 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
           <figure className="ls-style-pic">
             <img {...PIC(STYLE_IMG[style], '(min-width: 900px) 440px, 100vw', 900)} alt="" loading="lazy" />
             <figcaption>
-              <b>{pick(st, lang)}</b>
+              <b>{st.name}</b>
               <span>{t('Score at 8 cm, average sun', 'Pontszám 8 cm-en, átlagos napfény mellett')}</span>
             </figcaption>
           </figure>
           <ol className="ls-bars">
-            {ranked.map(({ a, score }) => (
-              <li key={a.k}>
-                <Link href={`/tattoo/${style}-${a.k}${seoSfx}`}>
-                  <span className="ls-bar-name">{pick(a, lang)}</span>
+            {st.ranked.map(({ k, name, score }) => (
+              <li key={k}>
+                <Link href={`/tattoo/${style}-${k}${seoSfx}`}>
+                  <span className="ls-bar-name">{name}</span>
                   <span className="ls-bar">
                     <i style={{ width: `${score}%`, background: score >= 75 ? 'var(--green)' : score >= 55 ? 'var(--amber)' : 'var(--red)' }} />
                   </span>

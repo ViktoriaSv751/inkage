@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { tx, isLang, type Lang } from '@/lib/tr';
-import { track } from '@/lib/store';
+import { track } from '@/lib/track';
 
 const KEY = 'ink_err_reload';
 // a new version went live while this page was open: its old code files are gone → just load the new version

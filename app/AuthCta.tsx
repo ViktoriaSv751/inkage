@@ -3,18 +3,28 @@ import { tx, qOf, type Lang, isLang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { sb } from '@/lib/sb';
-import { track } from '@/lib/store';
+import { afterLoad, track } from '@/lib/track';
 
 /** Signed in? The app is one tap away. */
 export function useSignedIn() {
   const [on, setOn] = useState(false);
   useEffect(() => {
-    const s = sb();
-    if (!s) return;
-    s.auth.getSession().then(({ data }) => setOn(!!data.session)).catch(() => {});
-    const sub = s.auth.onAuthStateChange((_e, session) => setOn(!!session));
-    return () => sub.data.subscription.unsubscribe();
+    let off = false;
+    let stop = () => {};
+    const cancel = afterLoad(() => {
+      import('@/lib/sb').then(({ sb }) => {
+        const s = sb();
+        if (!s || off) return;
+        s.auth.getSession().then(({ data }) => setOn(!!data.session)).catch(() => {});
+        const sub = s.auth.onAuthStateChange((_e, session) => setOn(!!session));
+        stop = () => sub.data.subscription.unsubscribe();
+      }).catch(() => {});
+    });
+    return () => {
+      off = true;
+      cancel();
+      stop();
+    };
   }, []);
   return on;
 }

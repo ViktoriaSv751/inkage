@@ -7,20 +7,21 @@ import { useLang, type Lang } from '@/lib/i18n';
 // our own copies (made at build time by scripts/prebuild-images.mjs): no extra DNS + TLS hop to the image host on the
 // critical path, and the hero doesn't go blank if that host ever drops the files
 const OWN = (id: string) => `/img/${id}-900.webp`;
+const HERO_SIZES = '(min-width: 861px) 530px, (min-width: 700px) 50vw, calc(100vw - 40px)';
 /** Real AI results from the same pipeline the app uses (one test photo, five stages). */
 export const EXAMPLE = [
-  { years: 0, src: OWN('hf_20261012_125250_eb1fedf5-fe1d-4bff-b203-9f7f6e04435f') },
-  { years: 1, src: OWN('hf_20261012_125519_179724fe-1d28-4c42-8531-e5e88ebca25e') },
-  { years: 10, src: OWN('hf_20261012_125518_f59d80bd-88f0-4db2-9d3f-ba894916baae') },
-  { years: 30, src: OWN('hf_20261012_125518_4e9ab330-d2aa-4e98-8837-c163dec3c3d3') },
-  { years: 50, src: OWN('hf_20261012_125519_356de094-5fd9-4c5d-a3d4-2e41892aa5b4') },
+  { years: 0, src: OWN('hf_20261012_125250_eb1fedf5-fe1d-4bff-b203-9f7f6e04435f'), avif: true },
+  { years: 1, src: OWN('hf_20261012_125519_179724fe-1d28-4c42-8531-e5e88ebca25e'), avif: true },
+  { years: 10, src: OWN('hf_20261012_125518_f59d80bd-88f0-4db2-9d3f-ba894916baae'), avif: true },
+  { years: 30, src: OWN('hf_20261012_125518_4e9ab330-d2aa-4e98-8837-c163dec3c3d3'), avif: true },
+  { years: 50, src: OWN('hf_20261012_125519_356de094-5fd9-4c5d-a3d4-2e41892aa5b4'), avif: true },
 ];
 
 /**
  * Hero: real photos of one tattoo at 0, 1, 10, 30 and 50 years, cross-faded by a year slider.
  * Plays once on load, then the visitor can drag it.
  */
-export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: { years: number; src: string }[]; alt?: string; lang?: Lang } = {}) {
+export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: { years: number; src: string; avif?: boolean }[]; alt?: string; lang?: Lang } = {}) {
   const EX = frames;
   const { lang: detected } = useLang();
   const lang = langProp || detected;
@@ -38,10 +39,14 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
 
   useEffect(() => {
     mounted.current = performance.now();
-    if (document.readyState === 'complete') return setMore(true);
-    const go = () => setMore(true);
-    window.addEventListener('load', go, { once: true });
-    return () => window.removeEventListener('load', go);
+    let t: ReturnType<typeof setTimeout>;
+    const go = () => (t = setTimeout(() => setMore(true), 1000));
+    if (document.readyState === 'complete') go();
+    else window.addEventListener('load', go, { once: true });
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('load', go);
+    };
   }, []);
 
   useEffect(() => {
@@ -76,11 +81,12 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
     <div className="hero-demo">
       <div className="photo-stack">
         {EX.map((e, k) => (k > 0 && !more ? null : (
+          <picture key={e.years}>
+          {e.avif && <source type="image/avif" srcSet={[480, 720, 900].map((w) => `${e.src.replace('-900.webp', `-${w}.avif`)} ${w}w`).join(', ')} sizes={HERO_SIZES} />}
           <img
-            key={e.years}
             src={e.src}
             srcSet={e.src.endsWith('-900.webp') ? [480, 640, 900].map((w) => `${e.src.replace('-900.webp', `-${w}.webp`)} ${w}w`).join(', ') : undefined}
-            sizes="(min-width: 861px) 530px, (min-width: 700px) 50vw, calc(100vw - 40px)"
+            sizes={HERO_SIZES}
             alt={k === 0 ? alt || L('A fine-line moon tattoo on a forearm, fresh', 'Finom vonalas hold tetoválás alkaron, frissen') : ''}
             aria-hidden={k !== 0}
             style={{ opacity: k === i ? 1 : k === i + 1 ? f : 0 }}
@@ -88,6 +94,7 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
             onLoad={k > 0 ? arrived : undefined}
             onError={k > 0 ? arrived : undefined}
           />
+          </picture>
         )))}
         <div className="year-readout">
           <span className={`year-num ${shown === 0 ? 'word' : ''}`}>{shown === 0 ? L('Fresh', 'Friss') : shown}</span>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { setLang as saveLang } from '@/lib/i18n';
-import { track } from '@/lib/store';
+import { track } from '@/lib/track';
 import { LangPicker, type Lang } from './LangPicker';
 import { ThemeToggle } from './ThemeToggle';
 import { CookieConsent, CtaBar } from './SiteExtras';

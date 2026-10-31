@@ -9,6 +9,7 @@ const ROOT = process.cwd();
 const OUT = path.join(ROOT, 'public', 'img');
 const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
 const WIDTHS = [240, 480, 640, 900, 1400, 1800];
+const AVIF_W = [480, 720, 900];
 const RX = /hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36}/g;
 
 function walk(dir, acc = []) {
@@ -26,10 +27,13 @@ for (const f of walk(path.join(ROOT, 'app'))) for (const m of fs.readFileSync(f,
 for (const f of walk(path.join(ROOT, 'lib'))) for (const m of fs.readFileSync(f, 'utf8').match(RX) || []) if (!designs.has(m)) ids.add(m);
 fs.mkdirSync(OUT, { recursive: true });
 const list = [...ids];
+// the hero photos also come as AVIF: they are the first thing a visitor sees, so every kilobyte counts
+const avif = new Set(fs.readFileSync(path.join(ROOT, 'app', 'visuals.tsx'), 'utf8').match(RX) || []);
+const ready = (id) => WIDTHS.every((w) => fs.existsSync(path.join(OUT, `${id}-${w}.webp`))) && (!avif.has(id) || AVIF_W.every((w) => fs.existsSync(path.join(OUT, `${id}-${w}.avif`))));
 let done = 0, failed = 0;
 const t0 = Date.now();
 async function one(id) {
-  if (WIDTHS.every((w) => fs.existsSync(path.join(OUT, `${id}-${w}.webp`)))) return done++;
+  if (ready(id)) return done++;
   try {
     const ctl = AbortSignal.timeout(30000);
     const r = await fetch(CDN + id + '.png', { signal: ctl });
@@ -38,6 +42,7 @@ async function one(id) {
     for (const w of WIDTHS) {
       await sharp(buf).resize({ width: w, withoutEnlargement: true }).webp({ quality: 76, effort: 4 }).toFile(path.join(OUT, `${id}-${w}.webp`));
     }
+    if (avif.has(id)) for (const w of AVIF_W) await sharp(buf).resize({ width: w, withoutEnlargement: true }).avif({ quality: 50, effort: 6 }).toFile(path.join(OUT, `${id}-${w}.avif`));
     done++;
   } catch (e) {
     failed++;

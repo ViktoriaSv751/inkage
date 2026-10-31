@@ -255,3 +255,6 @@ main:has(.ls-final) { padding-bottom: 0; }
 /* home-screen preview shows the real app icon: black ink bottle on white */
 .lm-hs-app > span { background: #fff; color: #000; }
 .lm-hs-app svg.logo-mark { width: 72%; height: 72%; }
+
+/* sections below the hero are laid out only when they come near the screen, and their photos load then too */
+.hero ~ section { content-visibility: auto; contain-intrinsic-size: auto 800px; }

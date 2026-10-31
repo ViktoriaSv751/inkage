@@ -2,8 +2,8 @@
 
 import { TryLink } from '../AuthCta';
 import { useState } from 'react';
-import { PIC } from '@/lib/kb';
-import { track } from '@/lib/store';
+import { PIC } from '@/lib/img';
+import { track } from '@/lib/track';
 import { LogoMark } from '../LogoMark';
 import type { T } from './types';
 import type { Lang } from '@/lib/tr';

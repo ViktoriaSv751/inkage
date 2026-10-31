@@ -9,6 +9,10 @@ module.exports = {
           source: '/img/:name(hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36})-:w(\\d+).webp',
           destination: '/api/lib-img?f=:name.png&w=:w',
         },
+        {
+          source: '/img/:name(hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36})-:w(\\d+).avif',
+          destination: '/api/lib-img?f=:name.png&w=:w',
+        },
       ],
     };
   },

@@ -3,7 +3,7 @@ import { tx, qOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { track } from '@/lib/store';
+import { track } from '@/lib/track';
 import './consent.css';
 
 

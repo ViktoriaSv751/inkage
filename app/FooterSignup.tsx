@@ -2,8 +2,7 @@
 import { tx, qOf, type Lang } from '@/lib/tr';
 
 import { useState } from 'react';
-import { api } from '@/lib/sb';
-import { track } from '@/lib/store';
+import { track } from '@/lib/track';
 import { usePathname, useRouter } from 'next/navigation';
 import { setLang as saveLang } from '@/lib/i18n';
 import { LangPicker } from './LangPicker';
@@ -18,6 +17,7 @@ export function FooterSignup({ lang }: { lang: Lang }) {
     e.preventDefault();
     if (!ok) return setState('err');
     setState('busy');
+    const { api } = await import('@/lib/sb');
     const r = await api<{ ok?: boolean; state?: 'confirm' | 'saved' | 'already' }>('/api/newsletter', { email: email.trim(), lang });
     setState(r.ok && r.data.state ? r.data.state : 'err');
     if (r.ok) track('footer_signup');

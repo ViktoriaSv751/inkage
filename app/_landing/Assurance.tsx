@@ -3,7 +3,7 @@
 import { TryLink } from '../AuthCta';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { track } from '@/lib/store';
+import { track } from '@/lib/track';
 import { LogoMark } from '../LogoMark';
 import type { T } from './types';
 import type { Lang } from '@/lib/tr';
