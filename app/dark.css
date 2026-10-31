@@ -123,3 +123,4 @@
 :root[data-theme='dark'] .ip-sec-ico svg,
 :root[data-theme='dark'] .ip-upd svg,
 :root[data-theme='dark'] .fx-group h2 svg { stroke: var(--neon); }
+:root[data-theme='dark'] .lm-pv-badge { color: #3ecf8e; }

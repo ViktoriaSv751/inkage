@@ -5,7 +5,7 @@ import { AuthCta } from './AuthCta';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ARTICLES } from '@/lib/articles';
-import { IMG, KB } from '@/lib/kb';
+import { IMG, KB, PIC } from '@/lib/kb';
 import { SEO_AREAS, SEO_STYLES, seoPage } from '@/lib/seo';
 import { track } from '@/lib/store';
 import { AgingTimeline, BetaInstall, CompareSlider, CompareTable, LandingFaq, Precision, PrivacyBlock, UseCases } from './LandingMore';
@@ -38,14 +38,14 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
 
   const steps = [
     {
-      img: <img src={IMG(P.phone, 700)} alt="" loading="lazy" />,
+      img: <img {...PIC(P.phone, '(min-width: 900px) 210px, 78vw', 900)} alt="" loading="lazy" />,
       h: t('Your photo', 'A fotód'),
       p: t('Snap the spot where the tattoo will go. We check light and focus, and find the bare skin.', 'Fotózd le a helyet, ahová a tetoválás kerül. Ellenőrizzük a fényt, az élességet, és megkeressük a csupasz bőrt.'),
     },
     {
       img: (
         <div className="ls-design">
-          <img src={IMG(P.rose, 500)} alt="" loading="lazy" />
+          <img {...PIC(P.rose, '(min-width: 900px) 150px, 55vw', 640)} width={900} height={900} alt="" loading="lazy" />
           <span>Pinterest</span>
           <span>{t('Screenshot', 'Képernyőfotó')}</span>
           <span>{t('Sketch', 'Vázlat')}</span>
@@ -57,7 +57,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
     {
       img: (
         <div className="ls-place">
-          <img src={IMG('hf_20261013_200842_59e2ff0d-43b6-421c-8c81-067a029f3447', 700)} alt="" loading="lazy" />
+          <img {...PIC('hf_20261013_200842_59e2ff0d-43b6-421c-8c81-067a029f3447', '(min-width: 900px) 210px, 78vw', 900)} alt="" loading="lazy" />
           <span className="ls-cm">≈ 6 cm</span>
         </div>
       ),
@@ -67,7 +67,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
     {
       img: (
         <div className="ls-aged">
-          <img src={IMG('hf_20261013_200843_bcf96b56-c709-495d-957a-2c52717a71f3', 700)} alt="" loading="lazy" />
+          <img {...PIC('hf_20261013_200843_bcf96b56-c709-495d-957a-2c52717a71f3', '(min-width: 900px) 210px, 78vw', 900)} alt="" loading="lazy" />
           <b>50</b>
           <small>{t('years later', 'év múlva')}</small>
         </div>
@@ -76,7 +76,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
       p: t('Realistic images on your own skin at 1, 10, 30 and 50 years, with a longevity score and tips.', 'Valósághű képek a saját bőrödön 1, 10, 30 és 50 év múlva, tartóssági pontszámmal és tippekkel.'),
     },
     {
-      img: <img src={IMG(P.friends, 700)} alt="" loading="lazy" />,
+      img: <img {...PIC(P.friends, '(min-width: 900px) 210px, 78vw', 900)} alt="" loading="lazy" />,
       h: t('Ask your friends', 'Kérdezd meg a barátaidat'),
       p: t('A TikTok-ready video, or a link where friends vote: “get it”, “change it” or “which one?”.', 'TikTokra kész videó, vagy link, amin a barátaid szavaznak: „csináltasd”, „változtass” vagy „melyiket?”.'),
     },
@@ -126,7 +126,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
               </ul>
             </div>
             <Link href="/app?mode=removal" className="ls-tile pic ls-link">
-              <img src={IMG(P.laser, 900)} alt="" loading="lazy" />
+              <img {...PIC(P.laser, '(min-width: 900px) 360px, (min-width: 640px) 50vw, 100vw', 900)} alt="" loading="lazy" />
               <div>
                 <h3>{t('What if you regret it?', 'Mi van, ha megbánod?')}</h3>
                 <p>{t('A laser removal preview after 3, 6 and 10 sessions.', 'Lézeres eltávolítás előnézete 3, 6 és 10 kezelés után.')}</p>
@@ -134,14 +134,14 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
               </div>
             </Link>
             <div className="ls-tile pic">
-              <img src={IMG(P.flatlay, 900)} alt="" loading="lazy" />
+              <img {...PIC(P.flatlay, '(min-width: 900px) 360px, (min-width: 640px) 50vw, 100vw', 900)} alt="" loading="lazy" />
               <div>
                 <h3>{t('A PDF for your artist', 'PDF a tetoválódnak')}</h3>
                 <p>{t('Design, size, placement and previews on one page.', 'Minta, méret, hely és előnézetek egy oldalon.')}</p>
               </div>
             </div>
             <div className="ls-tile pic">
-              <img src={IMG('hf_20261013_094417_e49926a7-7645-464b-b21e-225756521eea', 900)} alt="" loading="lazy" />
+              <img {...PIC('hf_20261013_094417_e49926a7-7645-464b-b21e-225756521eea', '(min-width: 900px) 360px, (min-width: 640px) 50vw, 100vw', 900)} alt="" loading="lazy" />
               <div>
                 <h3>{t('Videos and vote links', 'Videó és szavazós link')}</h3>
                 <p>{t('Five ready templates for TikTok, Reels and Shorts.', 'Öt kész sablon TikTokra, Reelsre és Shortsra.')}</p>
@@ -149,9 +149,9 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
             </div>
             <div className="ls-tile redraw">
               <div className="ls-redraw">
-                <img src={IMG('hf_20261013_090712_871c7ded-ebc4-4b71-9793-726037d5c35e', 500)} alt="" loading="lazy" />
+                <img {...PIC('hf_20261013_090712_871c7ded-ebc4-4b71-9793-726037d5c35e', '(min-width: 900px) 150px, 42vw', 640)} alt="" loading="lazy" />
                 <span aria-hidden="true">→</span>
-                <img src={IMG('hf_20261013_094404_d807408e-be3b-430e-bf2b-73bd75bd0580', 500)} alt="" loading="lazy" />
+                <img {...PIC('hf_20261013_094404_d807408e-be3b-430e-bf2b-73bd75bd0580', '(min-width: 900px) 150px, 42vw', 640)} alt="" loading="lazy" />
               </div>
               <h3>{t('Make it last', 'Tedd tartóssá')}</h3>
               <p>{t('We redraw a fragile design the way an experienced artist would — and show how that version ages.', 'Egy sérülékeny mintát úgy rajzolunk át, ahogy egy tapasztalt tetováló tenné – és megmutatjuk, hogy öregszik az a változat.')}</p>
@@ -177,7 +177,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
         <div className="ls-mag">
           {featured.map((a, i) => (
             <Link key={a.slug} href={`/tudastar/${a.slug}${kbSfx}`} className={`ls-art ${i === 0 ? 'big' : ''}`}>
-              <img src={IMG(KB[a.slug].img, i === 0 ? 1400 : 700)} alt="" loading="lazy" />
+              <img {...PIC(KB[a.slug].img, i === 0 ? '(min-width: 900px) 640px, 100vw' : '120px', i === 0 ? 1400 : 640)} alt="" loading="lazy" />
               <div>
                 <span className="ls-tag">{pick(a.tag, lang)}</span>
                 <b>{pick(a.title, lang)}</b>
@@ -197,14 +197,14 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
         <div className="ls-style-tabs" role="tablist">
           {SEO_STYLES.map((s) => (
             <button key={s.k} role="tab" aria-selected={style === s.k} className={style === s.k ? 'on' : ''} onClick={() => setStyle(s.k)}>
-              <img src={IMG(STYLE_IMG[s.k], 200)} alt="" />
+              <img src={IMG(STYLE_IMG[s.k], 200)} alt="" loading="lazy" />
               {lang === 'hu' ? s.hu.replace(/ \(.*\)/, '') : s.en}
             </button>
           ))}
         </div>
         <div className="ls-style-body">
           <figure className="ls-style-pic">
-            <img src={IMG(STYLE_IMG[style], 900)} alt="" />
+            <img {...PIC(STYLE_IMG[style], '(min-width: 900px) 440px, 100vw', 900)} alt="" loading="lazy" />
             <figcaption>
               <b>{pick(st, lang)}</b>
               <span>{t('Score at 8 cm, average sun', 'Pontszám 8 cm-en, átlagos napfény mellett')}</span>
@@ -233,7 +233,7 @@ export function LandingSections({ lang, made, onUpload }: { lang: Lang; made: nu
 
       {/* ---------------------------------------------------------------- final call */}
       <section className="ls-final">
-        <img src={IMG(P.studio, 1800)} alt="" loading="lazy" />
+        <img {...PIC(P.studio, '100vw')} alt="" loading="lazy" />
         <div className="ls-final-in">
           <h2>{t('See it before it’s permanent.', 'Nézd meg, mielőtt végleges lesz.')}</h2>
           <p>

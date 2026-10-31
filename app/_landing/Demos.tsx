@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { IMG } from '@/lib/kb';
+import { PIC } from '@/lib/kb';
 import { track } from '@/lib/store';
 import type { T } from './types';
 
@@ -67,9 +67,9 @@ export function CompareSlider({ t }: { t: T }) {
         onPointerUp={() => (drag.current = false)}
         onPointerCancel={() => (drag.current = false)}
       >
-        <img src={IMG(CMP_OLD, 1600)} alt={t('The tattoo after 50 years', 'A tetoválás 50 év múlva')} draggable={false} loading="lazy" />
+        <img {...PIC(CMP_OLD, '(min-width: 1160px) 1080px, 100vw')} alt={t('The tattoo after 50 years', 'A tetoválás 50 év múlva')} draggable={false} loading="lazy" />
         <div className="lm-cmp-top" style={{ clipPath: `inset(0 ${100 - v}% 0 0)` }}>
-          <img src={IMG(CMP_NEW, 1600)} alt={t('The tattoo on day one', 'A tetoválás az első napon')} draggable={false} loading="lazy" />
+          <img {...PIC(CMP_NEW, '(min-width: 1160px) 1080px, 100vw')} alt={t('The tattoo on day one', 'A tetoválás az első napon')} draggable={false} loading="lazy" />
         </div>
         <span className="lm-cmp-lab l">{t('Fresh', 'Friss')}</span>
         <span className="lm-cmp-lab r">{t('50 years', '50 év')}</span>
@@ -100,11 +100,11 @@ export function CompareSlider({ t }: { t: T }) {
 /* ------------------------------------------------------------------ what happens at each moment */
 export function AgingTimeline({ t }: { t: T }) {
   const stops = [
-    { y: t('Day 1', '1. nap'), n: '0', img: IMG(TL0, 1000), h: t('Fresh', 'Friss'), p: t('Sharp, dark and slightly raised. This is the version most photos show — and the one that lasts the shortest.', 'Éles, sötét és kicsit kiemelkedő. A legtöbb fotó ezt mutatja – és ez tart a legrövidebb ideig.') },
-    { y: t('1 year', '1 év'), n: '1', img: IMG(TL1, 1000), h: t('Healed', 'Gyógyult'), p: t('The top layer of skin has renewed. Lines look a touch softer and lighter than on day one.', 'A bőr felső rétege megújult. A vonalak kicsit lágyabbnak és világosabbnak tűnnek, mint az első napon.') },
-    { y: t('10 years', '10 év'), n: '10', img: IMG(TL2, 1000), h: t('Settled', 'Beállt'), p: t('Fine details start to soften; light colours fade first, especially where the sun reaches.', 'A finom részletek lágyulni kezdenek; a világos színek fakulnak először, főleg ahol éri a nap.') },
-    { y: t('30 years', '30 év'), n: '30', img: IMG(TL3, 1000), h: t('Mature', 'Érett'), p: t('Lines closer than about 1 mm may have merged. Bold, spaced designs still read clearly.', 'A kb. 1 mm-nél közelebbi vonalak összefolyhattak. A vastag, levegős minták még jól olvashatók.') },
-    { y: t('50 years', '50 év'), n: '50', img: IMG(TL4, 1000), h: t('A lifetime', 'Egy élet'), p: t('Skin itself has aged and carries the ink with it. Strong outlines are what keep the shape.', 'Maga a bőr is öregedett, és viszi magával a tintát. Az erős kontúr az, ami megtartja a formát.') },
+    { y: t('Day 1', '1. nap'), n: '0', img: TL0, h: t('Fresh', 'Friss'), p: t('Sharp, dark and slightly raised. This is the version most photos show — and the one that lasts the shortest.', 'Éles, sötét és kicsit kiemelkedő. A legtöbb fotó ezt mutatja – és ez tart a legrövidebb ideig.') },
+    { y: t('1 year', '1 év'), n: '1', img: TL1, h: t('Healed', 'Gyógyult'), p: t('The top layer of skin has renewed. Lines look a touch softer and lighter than on day one.', 'A bőr felső rétege megújult. A vonalak kicsit lágyabbnak és világosabbnak tűnnek, mint az első napon.') },
+    { y: t('10 years', '10 év'), n: '10', img: TL2, h: t('Settled', 'Beállt'), p: t('Fine details start to soften; light colours fade first, especially where the sun reaches.', 'A finom részletek lágyulni kezdenek; a világos színek fakulnak először, főleg ahol éri a nap.') },
+    { y: t('30 years', '30 év'), n: '30', img: TL3, h: t('Mature', 'Érett'), p: t('Lines closer than about 1 mm may have merged. Bold, spaced designs still read clearly.', 'A kb. 1 mm-nél közelebbi vonalak összefolyhattak. A vastag, levegős minták még jól olvashatók.') },
+    { y: t('50 years', '50 év'), n: '50', img: TL4, h: t('A lifetime', 'Egy élet'), p: t('Skin itself has aged and carries the ink with it. Strong outlines are what keep the shape.', 'Maga a bőr is öregedett, és viszi magával a tintát. Az erős kontúr az, ami megtartja a formát.') },
   ];
   const [i, setI] = useState(0);
   const s = stops[i];
@@ -120,7 +120,7 @@ export function AgingTimeline({ t }: { t: T }) {
         {stops.map((x) => (
           <li key={x.y}>
             <div className="lm-tl-img">
-              <img src={x.img} alt="" loading="lazy" />
+              <img {...PIC(x.img, '72vw', 900)} alt="" loading="lazy" />
               <span>{x.y}</span>
             </div>
             <h3>{x.h}</h3>
@@ -133,7 +133,7 @@ export function AgingTimeline({ t }: { t: T }) {
       <div className="lm-tlx">
         <div className="lm-tlx-pic">
           {stops.map((x, k) => (
-            <img key={x.y} src={x.img} alt={k === i ? x.h : ''} aria-hidden={k !== i} loading="lazy" style={{ opacity: k === i ? 1 : 0 }} />
+            <img key={x.y} {...PIC(x.img, '(min-width: 900px) 580px, 50vw', 1400)} alt={k === i ? x.h : ''} aria-hidden={k !== i} loading="lazy" style={{ opacity: k === i ? 1 : 0 }} />
           ))}
           <div className="lm-tlx-badge">
             <b>{s.n === '0' ? t('Fresh', 'Friss') : s.n}</b>

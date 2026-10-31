@@ -27,14 +27,31 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
   const L = (en: string, hu: string) => tx(lang, en, hu);
   const [years, setYears] = useState(0);
   const touched = useRef(false);
+  // only the first photo is in the page's HTML; the others wait until the page has loaded, then the aging plays
+  const [more, setMore] = useState(false);
+  const waiting = useRef(EX.length - 1);
+  const [ready, setReady] = useState(false);
+  const arrived = () => {
+    if (--waiting.current <= 0) setReady(true);
+  };
+  const mounted = useRef(0);
 
   useEffect(() => {
+    mounted.current = performance.now();
+    if (document.readyState === 'complete') return setMore(true);
+    const go = () => setMore(true);
+    window.addEventListener('load', go, { once: true });
+    return () => window.removeEventListener('load', go);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setYears(30);
       return;
     }
     let raf = 0;
-    const start = performance.now() + 1200;
+    const start = Math.max(performance.now() + 300, mounted.current + 1200);
     const dur = 5200;
     const loop = (now: number) => {
       if (touched.current) return;
@@ -45,7 +62,7 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [ready]);
 
   // which two photos to blend
   let i = 0;
@@ -58,16 +75,20 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
   return (
     <div className="hero-demo">
       <div className="photo-stack">
-        {EX.map((e, k) => (
+        {EX.map((e, k) => (k > 0 && !more ? null : (
           <img
             key={e.years}
             src={e.src}
+            srcSet={e.src.endsWith('-900.webp') ? [480, 640, 900].map((w) => `${e.src.replace('-900.webp', `-${w}.webp`)} ${w}w`).join(', ') : undefined}
+            sizes="(min-width: 861px) 530px, (min-width: 700px) 50vw, calc(100vw - 40px)"
             alt={k === 0 ? alt || L('A fine-line moon tattoo on a forearm, fresh', 'Finom vonalas hold tetoválás alkaron, frissen') : ''}
             aria-hidden={k !== 0}
             style={{ opacity: k === i ? 1 : k === i + 1 ? f : 0 }}
-            loading={k === 0 ? 'eager' : 'lazy'}
+            fetchPriority={k === 0 ? 'high' : undefined}
+            onLoad={k > 0 ? arrived : undefined}
+            onError={k > 0 ? arrived : undefined}
           />
-        ))}
+        )))}
         <div className="year-readout">
           <span className={`year-num ${shown === 0 ? 'word' : ''}`}>{shown === 0 ? L('Fresh', 'Friss') : shown}</span>
           <span className="year-unit">{shown === 0 ? L('done today', 'ma készült') : L(shown === 1 ? 'year later' : 'years later', 'év múlva')}</span>
@@ -84,6 +105,7 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
           value={Math.round(years * 10)}
           onChange={(e) => {
             touched.current = true;
+            setMore(true);
             setYears(Number(e.target.value) / 10);
           }}
         />

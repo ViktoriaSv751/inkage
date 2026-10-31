@@ -2,7 +2,7 @@
 
 import { TryLink } from '../AuthCta';
 import { useState } from 'react';
-import { IMG } from '@/lib/kb';
+import { PIC } from '@/lib/kb';
 import { track } from '@/lib/store';
 import { LogoMark } from '../LogoMark';
 import type { T } from './types';
@@ -60,7 +60,7 @@ export function UseCases({ t, lang }: { t: T; lang?: Lang }) {
       </div>
       <div className="lm-use" role="tabpanel">
         <div className="lm-use-img">
-          <img key={c.img} src={IMG(c.img, 1200)} alt="" loading="lazy" />
+          <img key={c.img} {...PIC(c.img, '(min-width: 900px) 580px, (min-width: 640px) 50vw, 100vw', 1400)} alt="" loading="lazy" />
         </div>
         <div className="lm-use-txt">
           <h3>{c.h}</h3>

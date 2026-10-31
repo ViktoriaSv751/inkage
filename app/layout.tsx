@@ -1,9 +1,5 @@
 import '@/lib/tr-server';
-import '@fontsource/geist-sans/400.css';
-import '@fontsource/geist-sans/500.css';
-import '@fontsource/geist-sans/600.css';
-import '@fontsource/geist-sans/700.css';
-import '@fontsource/geist-sans/800.css';
+import './fonts.css';
 import './globals.css';
 import './dark.css';
 import type { Metadata, Viewport } from 'next';
@@ -61,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang={htmlLang(lang)} suppressHydrationWarning>
       <head>
         {home && <HomeLangLinks lang={lang} />}
+        {home && process.env.NEXT_PUBLIC_SUPABASE_URL && <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />}
         {/* this language's words, before the page starts (Hungarian and English are built in) */}
         {ver && <script src={`/locales/${lang}.js?v=${ver}`} />}
         {/* theme (dark unless light was chosen this visit) + language before first paint, so there is no flash */}

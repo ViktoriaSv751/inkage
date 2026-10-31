@@ -8,7 +8,7 @@ import sharp from 'sharp';
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, 'public', 'img');
 const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
-const WIDTHS = [480, 900, 1400, 1800];
+const WIDTHS = [240, 480, 640, 900, 1400, 1800];
 const RX = /hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36}/g;
 
 function walk(dir, acc = []) {

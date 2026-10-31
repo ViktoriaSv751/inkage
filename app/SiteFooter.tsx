@@ -68,7 +68,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
       <div className="sf-in">
         <div className="sf-top">
           <div className="sf-brand">
-            <Link href="/" className="sf-logo" aria-label="InkAge">
+            <Link href={`/${q}`} className="sf-logo" aria-label="InkAge">
               <LogoMark />
               InkAge
             </Link>

@@ -63,7 +63,7 @@ export function PrivacyBlock({ t }: { t: T }) {
                     <b>{r.h}</b>
                     <small>{r.s}</small>
                   </span>
-                  <span className={`lm-pv-sw ${r.on ? 'on' : ''}`} aria-label={r.on ? t('On', 'Be') : t('Off', 'Ki')} />
+                  <span className={`lm-pv-sw ${r.on ? 'on' : ''}`} role="img" aria-label={r.on ? t('On', 'Be') : t('Off', 'Ki')} />
                 </div>
               ))}
             </div>
