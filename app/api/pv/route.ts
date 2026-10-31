@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
    no cookie, nothing stored on the device, no IP kept. The visit is a hash of the IP, the browser and a salt that
    changes every day, so the same visitor is one visit for a day and cannot be followed from one day to the next.
    It also says where the visit came from (the first page's utm tags, ?ref, the referring site, the in-app browser).
+   A sign-up button tap (ev: 'cta') is counted the same way, in the same visit.
    Robots, link previews and the owner's own devices (inkage_own cookie) are not counted. */
 const BOT = /bot\b|bot\/|crawl|spider|slurp|preview|lighthouse|pagespeed|headless|ptst|google-inspectiontool|bingpreview|facebookexternalhit|WhatsApp|curl\/|wget|python|node-fetch|undici|axios|okhttp/i;
 const cut = (v: unknown, n: number) => (typeof v === 'string' && v ? v.slice(0, n) : undefined);
@@ -24,13 +25,16 @@ export async function POST(req: NextRequest) {
   const src = Object.fromEntries(
     Object.entries({ us: cut(b.us, 60), um: cut(b.um, 60), uc: cut(b.uc, 60), ux: cut(b.ux, 60), ref: cut(b.ref, 60), from: cut(b.from, 60), land: cut(b.land, 60), ret: b.ret === '1' ? '1' : undefined }).filter(([, v]) => v)
   );
-  const props: Record<string, unknown> = { sid, path: cut(b.path, 200) || '/', lang: cut(b.lang, 8), src, pv: 1 };
+  const isCta = b.ev === 'cta';
+  const props: Record<string, unknown> = { sid, path: cut(b.path, 200) || '/', lang: cut(b.lang, 8), src };
+  if (isCta) Object.assign(props, { cta: 'register', btn: cut(b.btn, 30), article: cut(b.article, 80) });
+  else props.pv = 1;
   const ia = cut(b.ia, 20);
   if (ia) props.ia = ia;
   else props.pf = 'web';
   const country = req.headers.get('x-vercel-ip-country');
   if (country && /^[A-Z]{2}$/.test(country)) props.cc = country;
   // _sk: sent by our server, so the visitor rate limit for anonymous callers doesn't apply
-  await userClient().rpc('log_event', { p_name: 'page_view', p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
+  await userClient().rpc('log_event', { p_name: isCta ? 'cta_click' : 'page_view', p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
   return NextResponse.json({ sid });
 }

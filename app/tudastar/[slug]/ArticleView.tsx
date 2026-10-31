@@ -1,5 +1,6 @@
 import { tx, pick, qOf, localeOf, type Lang } from '@/lib/tr';
 import { TryLink } from '../../AuthCta';
+import { ArticleCta, ArticleRailLink } from './ArticleCta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import '@fontsource/newsreader/400.css';
@@ -62,6 +63,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
     .concat(LONG.filter((x) => x.slug !== a.slug && x.slug !== next.slug && x.tag.en !== a.tag.en))
     .slice(0, 3);
   const tip = T('Tip', 'Tipp');
+  const removal = a.tag.en === 'Removal';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -118,6 +120,8 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
             </ul>
           </section>
 
+          {!inApp && <ArticleCta slug={a.slug} lang={L} where="top" removal={removal} />}
+
           <details className="ka-toc-m">
             <summary>
               {T('In this article', 'Ebben a cikkben')} <small>{toc.length}</small>
@@ -148,15 +152,18 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
                 {s.h}
               </h2>
               <Blocks ps={s.ps} figs={figs} tip={tip} />
-              {i === Math.floor(sections.length / 2) && (
-                <aside className="ka-inline-cta">
-                  <div>
-                    <b>{T('Wondering how yours would age?', 'Kíváncsi vagy, a tiéd hogyan öregedne?')}</b>
-                    <p>{T('Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.')}</p>
-                  </div>
-                  <TryLink lang={L}>{inApp ? T('Try it on my photo', 'Kipróbálom a fotómon') : T('Create account', 'Regisztráció')}</TryLink>
-                </aside>
-              )}
+              {i === Math.floor(sections.length / 2) &&
+                (inApp ? (
+                  <aside className="ka-inline-cta">
+                    <div>
+                      <b>{T('Wondering how yours would age?', 'Kíváncsi vagy, a tiéd hogyan öregedne?')}</b>
+                      <p>{T('Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.')}</p>
+                    </div>
+                    <TryLink lang={L}>{T('Try it on my photo', 'Kipróbálom a fotómon')}</TryLink>
+                  </aside>
+                ) : (
+                  <ArticleCta slug={a.slug} lang={L} where="mid" removal={removal} />
+                ))}
             </section>
           ))}
 
@@ -169,6 +176,8 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
               </details>
             ))}
           </section>
+
+          {!inApp && <ArticleCta slug={a.slug} lang={L} where="end" removal={removal} />}
 
           <section className="ka-editorial">
             <LogoMark />
@@ -198,7 +207,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
             <div>
               <b>{T('See it on your skin', 'Nézd meg a bőrödön')}</b>
               <p>{T('Fresh, then at 10, 30 and 50 years. About a minute.', 'Frissen, majd 10, 30 és 50 év múlva. Kb. egy perc.')}</p>
-              <TryLink lang={L}>{inApp ? T('Try it now', 'Kipróbálom') : T('Register and try it', 'Regisztrálok és kipróbálom')}</TryLink>
+              {inApp ? <TryLink lang={L}>{T('Try it now', 'Kipróbálom')}</TryLink> : <ArticleRailLink slug={a.slug} lang={L}>{T('Register and try it', 'Regisztrálok és kipróbálom')}</ArticleRailLink>}
             </div>
           </div>
         </aside>

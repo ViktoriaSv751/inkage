@@ -103,6 +103,21 @@ body:has(.sn-tabbar) { padding-bottom: calc(68px + env(safe-area-inset-bottom));
 
 /* ---------------------------------------------------------------- desktop "start free" bar */
 .ctabar { display: none; }
+/* phones and tablets: only the promise and the button, just above the tab bar */
+@media (max-width: 999.98px) {
+  .ctabar { display: block; position: fixed; z-index: 54; left: 8px; right: 8px; bottom: calc(76px + env(safe-area-inset-bottom)); transform: translateY(calc(100% + 90px)); opacity: 0; pointer-events: none; transition: transform .35s var(--ease), opacity .25s; font-family: 'Geist Sans', system-ui, sans-serif; }
+  .ctabar.on { transform: none; opacity: 1; pointer-events: auto; }
+  .ctabar-in { display: flex; align-items: center; gap: 8px; padding: 7px 4px 7px 14px; border-radius: 20px; background: #0d0b14; color: #fff; box-shadow: 0 14px 30px -14px rgba(0, 0, 0, .6); }
+  .ctabar-pics, .ctabar-txt span, .ctabar-ghost { display: none; }
+  .ctabar-txt { flex: 1; min-width: 0; }
+  .ctabar-txt b { display: block; font-size: 14px; line-height: 1.2; letter-spacing: -.01em; }
+  .ctabar-act { display: flex; align-items: center; flex: none; }
+  .ctabar-go { padding: 10px 15px; border-radius: 999px; background: #fff; color: #0d0b14; font-weight: 800; font-size: 14px; text-decoration: none; }
+  .ctabar-go svg { display: none; }
+  .ctabar-x { width: 30px; height: 36px; padding: 0; border: 0; background: none; color: rgba(255, 255, 255, .6); display: grid; place-items: center; }
+  .ctabar-x svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+  html.has-ctabar .sn-up { bottom: calc(136px + env(safe-area-inset-bottom)); }
+}
 @media (min-width: 1000px) {
   .ctabar { display: block; position: fixed; z-index: 58; left: 50%; bottom: 18px; width: min(1180px, calc(100% - 48px)); transform: translate(-50%, 140%); opacity: 0; pointer-events: none; transition: transform .45s var(--ease), opacity .3s; font-family: 'Geist Sans', system-ui, sans-serif; }
   .ctabar.on { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }

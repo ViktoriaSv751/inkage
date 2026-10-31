@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { setLang as saveLang } from '@/lib/i18n';
-import { track } from '@/lib/track';
+import { countCta, track } from '@/lib/track';
 import { LangPicker, type Lang } from './LangPicker';
 import { ThemeToggle } from './ThemeToggle';
 import { CookieConsent, CtaBar } from './SiteExtras';
@@ -120,7 +120,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
             <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
               {T('Sign in', 'Belépés')}
             </Link>
-            <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => track('nav_signup')}>
+            <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => countCta('nav')}>
               {T('Register', 'Regisztráció')}
             </Link>
             <button className="sn-burger" aria-label={T('Menu', 'Menü')} aria-expanded={menu} onClick={() => setMenu(true)}>
@@ -230,7 +230,7 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
         {tabs.map((t) => {
           const on = !t.cta && isOn(t.base);
           return (
-            <Link key={t.base} href={t.href} className={`${on ? 'on' : ''} ${t.cta ? 'cta' : ''}`} aria-current={on ? 'page' : undefined} onClick={() => t.cta && track('tab_cta')}>
+            <Link key={t.base} href={t.href} className={`${on ? 'on' : ''} ${t.cta ? 'cta' : ''}`} aria-current={on ? 'page' : undefined} onClick={() => t.cta && countCta('tab')}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 {t.i}
               </svg>

@@ -3,15 +3,16 @@ import { tx, qOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { track } from '@/lib/track';
+import { countCta, track } from '@/lib/track';
 import './consent.css';
 
 
-/** Desktop: a slim "get started" bar along the bottom of every public page. */
+/** A slim "get started" bar along the bottom of every public page (on phones just above the tab bar). */
 export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
   const [show, setShow] = useState(false);
   const [closed, setClosed] = useState(true);
+  const [cardOn, setCardOn] = useState(false);
   useEffect(() => {
     try {
       setClosed(sessionStorage.getItem('ink_ctabar') === '0');
@@ -24,9 +25,19 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
     };
     h();
     window.addEventListener('scroll', h, { passive: true });
-    return () => window.removeEventListener('scroll', h);
+    // no second button while a sign-up card of the article is on screen
+    const seen = new Set<Element>();
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+      setCardOn(seen.size > 0);
+    });
+    document.querySelectorAll('.ka-join').forEach((c) => io.observe(c));
+    return () => {
+      window.removeEventListener('scroll', h);
+      io.disconnect();
+    };
   }, []);
-  const visible = show && !closed && !hidden;
+  const visible = show && !closed && !hidden && !cardOn;
   useEffect(() => {
     document.documentElement.classList.toggle('has-ctabar', visible);
     return () => document.documentElement.classList.remove('has-ctabar');
@@ -46,7 +57,7 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
           <Link href={`/belepes${qOf(lang)}`} className="ctabar-ghost" tabIndex={visible ? 0 : -1}>
             {T('Sign in', 'Belépés')}
           </Link>
-          <Link href={`/regisztracio${qOf(lang)}`} className="ctabar-go" tabIndex={visible ? 0 : -1} onClick={() => track('ctabar_click')}>
+          <Link href={`/regisztracio${qOf(lang)}`} className="ctabar-go" tabIndex={visible ? 0 : -1} onClick={() => countCta('bar')}>
             {T('Register', 'Regisztráció')}
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" />

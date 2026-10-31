@@ -100,6 +100,16 @@
 .ka-inline-cta p { font-family: 'Geist Sans', sans-serif !important; margin: 4px 0 0 !important; font-size: 15px !important; color: rgba(255, 255, 255, .72) !important; line-height: 1.5 !important; }
 .ka-inline-cta a { background: var(--bg); color: var(--ink); text-decoration: none; font-weight: 700; padding: 12px 20px; border-radius: 999px; white-space: nowrap; }
 @media (min-width: 1180px) { .ka-inline-cta { display: none; } }
+/* the way in from a public article (from 1180px the side rail does this job, except at the end) */
+.ka-join { display: grid; gap: 14px; margin: 28px 0; padding: 22px; border-radius: 24px; background: #0d0b14; color: #fff; }
+.ka-join .ka-join-pics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ka-join .ka-join-pics.one { grid-template-columns: 1fr; }
+.ka-join .ka-join-pics img { width: 100%; height: 104px; max-width: none; margin: 0; object-fit: cover; border-radius: 14px; display: block; }
+.ka-join-txt b { display: block; font-size: 21px; line-height: 1.2; letter-spacing: -.02em; }
+.ka-join-txt p { font-family: 'Geist Sans', sans-serif !important; margin: 6px 0 0 !important; font-size: 15.5px !important; line-height: 1.45 !important; color: rgba(255, 255, 255, .76) !important; }
+.ka-join a.ka-join-go { display: block; text-align: center; padding: 16px 20px; border-radius: 999px; background: #fff; color: #0d0b14; font-family: 'Geist Sans', sans-serif; font-weight: 800; font-size: 16.5px; text-decoration: none; }
+.ka-join small { font-family: 'Geist Sans', sans-serif; font-size: 12.5px; line-height: 1.4; text-align: center; color: rgba(255, 255, 255, .62); }
+@media (min-width: 1180px) { .ka-join-top, .ka-join-mid { display: none; } }
 
 .ka-faq2 details { border-bottom: 1px solid var(--line); padding: 4px 0; }
 .ka-faq2 details:first-of-type { border-top: 1px solid var(--line); }
