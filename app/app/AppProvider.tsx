@@ -74,6 +74,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const isOpenPath = (p: string) => /^\/app\/(explore|tudastar|tattoo|v)(\/|$)/.test(p);
   const guest = useRef(false);
   const toLogin = useCallback(() => {
+    // the store apps start signed-out people on Explore (no sign-in wall on the first screen, App Store 5.1.1(v));
+    // creating, the gallery and the profile still ask to sign in
+    const nativeStart = (window as any).Capacitor?.isNativePlatform?.() && /^\/app\/?$/.test(location.pathname) && !location.search.includes('job=') && !location.hash.includes('error');
+    if (nativeStart) {
+      return void location.replace(`/app/explore${location.search}`);
+    }
     if (isOpenPath(location.pathname)) {
       guest.current = true;
       return void refreshMeRef.current?.().then(() => setGate('in'), () => setGate('in'));

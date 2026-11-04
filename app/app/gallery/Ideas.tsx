@@ -73,7 +73,7 @@ export function Ideas() {
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
         <span>
           <b>{t('Save a new idea', 'Új ötlet mentése')}</b>
-          <small>{t('From your photos or a link (Pinterest, Instagram…)', 'Fotótárból vagy linkről (Pinterest, Instagram…)')}</small>
+          <small>{t('From your photos or a link', 'Fotótárból vagy linkről')}</small>
         </span>
       </button>
 

@@ -70,12 +70,82 @@ async function finishAuth(url: string) {
   location.replace('/app/gallery');
 }
 
+/* ---- links inside the store apps ----
+   Capacitor hands every new-window link (target=_blank, window.open) to Safari, and before allowNavigation also
+   every page outside /app: the app opened Safari on its first start and App Review rejected it (2.1(a), 2026-11-04).
+   Now inkage.app links open inside the app (the website's guide and vote pages in their /app versions) and other
+   sites in the in-app browser sheet, so nothing leaves the app. */
+const OWN_HOST = /(^|\.)inkage\.app$/i;
+/** Pages that belong inside the app: the app itself, the home page (it forwards to /app) and the sign-in pages. */
+const STAY = /^\/(app|belepes|regisztracio|elfelejtett-jelszo|uj-jelszo|offline)?(\/|$)/;
+/** A website address → the same page inside the app, where the app has one. */
+export function inAppPath(path: string): string {
+  return path.replace(/^\/(tudastar|v|tattoo)(?=[/?#]|$)/, '/app/$1');
+}
+async function openOutside(url: string) {
+  try {
+    const { Browser } = await import('@capacitor/browser');
+    await Browser.open({ url, presentationStyle: 'popover' });
+  } catch {}
+}
+/** true when the address was handled (inside the app or in the browser sheet). */
+export function openLink(raw: string, newWindow = false): boolean {
+  let u: URL;
+  try {
+    u = new URL(raw, location.href);
+  } catch {
+    return false;
+  }
+  if (!/^https?:$/.test(u.protocol)) return false; // mailto:, tel: … go to their own apps
+  if (OWN_HOST.test(u.host) || u.host === location.host) {
+    const path = u.pathname + u.search + u.hash;
+    const to = inAppPath(u.pathname) + u.search + u.hash;
+    if (STAY.test(inAppPath(u.pathname))) {
+      if (!newWindow && to === path) return false; // an ordinary in-app link: leave it to the page
+      location.assign(to);
+      return true;
+    }
+    // website pages (terms, privacy, FAQ, guides list…) open in the in-app browser sheet with its own Done button:
+    // inside the app they would show the website's menus and have no way back
+    void openOutside(u.origin + path);
+    return true;
+  }
+  void openOutside(u.toString());
+  return true;
+}
+let guarded = false;
+export function installLinkGuard() {
+  if (!isNative() || guarded) return;
+  guarded = true;
+  document.addEventListener(
+    'click',
+    (e) => {
+      if (e.defaultPrevented || e.button !== 0) return;
+      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!a || a.hasAttribute('download')) return;
+      const href = a.getAttribute('href') || '';
+      if (!href || href.startsWith('#') || href.startsWith('blob:') || href.startsWith('data:')) return;
+      if (openLink(a.href, a.target === '_blank')) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    true
+  );
+  const open = window.open.bind(window);
+  window.open = ((url?: string | URL, target?: string, features?: string) => {
+    if (url && openLink(String(url), true)) return null;
+    return open(url as any, target, features);
+  }) as typeof window.open;
+}
+
 /** Called once when the app starts inside the native shell. */
 let started = false;
 export async function initNative() {
   if (!isNative() || started) return;
   started = true;
   document.documentElement.classList.add('native', `native-${platform()}`);
+  installLinkGuard();
   const [{ App }, { Share }] = await Promise.all([import('@capacitor/app'), import('@capacitor/share')]);
 
   // native share sheet for links (Android web views have no navigator.share)
@@ -91,7 +161,7 @@ export async function initNative() {
     if (url.startsWith(`${NATIVE_SCHEME}://auth`)) return void finishAuth(url);
     try {
       const u = new URL(url);
-      if (/inkage/.test(u.host)) location.assign(u.pathname + u.search + u.hash);
+      if (/inkage/.test(u.host)) location.assign(inAppPath(u.pathname) + u.search + u.hash);
     } catch {}
   });
   // the app was closed while the sign-in page was open: it starts with the callback address
@@ -187,7 +257,7 @@ export async function nativePushEnable(): Promise<'on' | 'off' | 'denied' | 'uns
     PushNotifications.addListener('registrationError', () => waiting.splice(0).forEach((f) => f('off')));
     PushNotifications.addListener('pushNotificationActionPerformed', (a) => {
       const url = (a.notification.data as any)?.url;
-      if (url) location.assign(String(url).replace(/^https?:\/\/[^/]+/, ''));
+      if (url) location.assign(inAppPath(String(url).replace(/^https?:\/\/[^/]+/, '')));
     });
   }
   return new Promise((resolve) => {

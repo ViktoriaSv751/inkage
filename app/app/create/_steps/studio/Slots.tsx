@@ -112,7 +112,7 @@ export function DesignSlot({
         </button>
       </div>
       <button className="linkbtn" onClick={onLink}>
-        {t('From a link (Pinterest, Instagram…)', 'Linkről (Pinterest, Instagram…)')}
+        {t('From a link', 'Linkről')}
       </button>
     </div>
   );

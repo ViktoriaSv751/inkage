@@ -135,7 +135,7 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
   return (
     <Sheet open={open} onClose={close} label={t('Save a tattoo idea', 'Tetoválás-ötlet mentése')}>
       <h2>{t('Save a tattoo idea', 'Tetoválás-ötlet mentése')}</h2>
-      <p className="sub">{t('Found something you like? Save it from your photos or a link (Pinterest, Instagram, any page). It waits in your gallery under Ideas.', 'Láttál valamit, ami tetszik? Mentsd el a fotótárból vagy linkről (Pinterest, Instagram, bármilyen oldal). A galériában, az Ötletek között vár.')}</p>
+      <p className="sub">{t('Found something you like? Save it from your photos or from a link. It waits in your gallery under Ideas.', 'Láttál valamit, ami tetszik? Mentsd el a fotótárból vagy egy linkről. A galériában, az Ötletek között vár.')}</p>
 
       {!pics.length ? (
         <div className="idea-pick">
@@ -148,7 +148,7 @@ export function IdeaSheet({ open, onClose, onTry }: { open: boolean; onClose: ()
               className="text"
               type="url"
               inputMode="url"
-              placeholder={t('Paste a link: Pinterest, Instagram…', 'Link beillesztése: Pinterest, Instagram…')}
+              placeholder={t('Paste a link…', 'Link beillesztése…')}
               value={link}
               onChange={(e) => setLink(e.target.value)}
               onPaste={(e) => {

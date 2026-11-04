@@ -328,3 +328,6 @@ html.splash-leave body > *:not(.ink-splash) { animation: ink-sp-page 0.95s 0.15s
 html, body, * { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display: none; width: 0 !important; height: 0 !important; background: transparent; }
 html.native .web-only { display: none !important; }
+/* no "Beta" in the store apps (App Store 2.2: the store holds finished apps only) */
+html.native .beta-pill, html.native .rail-beta > b { display: none !important; }
+html.native .stephead .free-pill { visibility: hidden; }

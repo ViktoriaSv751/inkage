@@ -14,7 +14,14 @@ const config: CapacitorConfig = {
   server:
     process.env.CAP_BUNDLE === '1'
       ? { androidScheme: 'https', hostname: 'localhost' }
-      : { url: process.env.CAP_SERVER_URL || 'https://inkage.app/app', cleartext: false, errorPath: 'index.html' },
+      : {
+          url: process.env.CAP_SERVER_URL || 'https://inkage.app/app',
+          cleartext: false,
+          errorPath: 'index.html',
+          // every inkage.app page stays inside the app (sign-in, terms, privacy, FAQ…): without this Capacitor hands any
+          // address outside /app to Safari, and the app opened Safari on its first start (App Review 2.1(a), 2026-11-04)
+          allowNavigation: ['inkage.app', 'www.inkage.app'],
+        },
   // dark first: the native frame around the web app is black (takes effect with the next store build)
   ios: {
     contentInset: 'never',
@@ -31,7 +38,7 @@ const config: CapacitorConfig = {
       : {}),
   },
   plugins: {
-    SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#ffffff', androidScaleType: 'CENTER_CROP', showSpinner: false },
+    SplashScreen: { launchShowDuration: 1500, launchAutoHide: true, backgroundColor: '#000000', androidScaleType: 'CENTER_CROP', showSpinner: false },
     StatusBar: { style: 'DARK', overlaysWebView: false, backgroundColor: '#000000' },
     // Android 15+ draws edge to edge: the web app pads itself with env(safe-area-inset-*) (viewport-fit=cover)
     SystemBars: { insetsHandling: 'css', initialViewportFitValueHint: 'cover' },
