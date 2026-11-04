@@ -16,8 +16,53 @@ export const platform = (): 'ios' | 'android' | 'web' => (isNative() ? ((cap()?.
  *  onCancel: the sign-in sheet was closed without coming back signed in. Almost every sign-in started in the store apps
  *  ended this way (Supabase saw the start but never the provider's answer), and the screen just stayed as it was;
  *  now the page says so and points to e-mail. The steps are counted (oauth_start / oauth_back / oauth_cancel). */
+/** Native Sign in with Apple on iOS (the system sheet). 'unavailable' when the installed app is older than build 6
+ *  (no native plugin): the web sign-in sheet is used then. null = signed in or cancelled by the person. */
+async function nativeApple(): Promise<string | null | 'unavailable'> {
+  const { Capacitor, registerPlugin } = await import('@capacitor/core');
+  if (platform() !== 'ios' || !Capacitor.isPluginAvailable('InkAppleSignIn')) return 'unavailable';
+  const s = sb();
+  if (!s) return 'Not available';
+  type Res = { identityToken: string; authorizationCode?: string; givenName?: string; familyName?: string };
+  const Apple = registerPlugin<{ authorize(o: { nonce: string }): Promise<Res> }>('InkAppleSignIn');
+  const { track } = await import('./store');
+  track('oauth_start', { provider: 'apple', native: 'ios-sheet' });
+  // Apple gets the SHA-256 of a one-time nonce, Supabase the nonce itself, so the token cannot be replayed
+  const raw = Array.from(crypto.getRandomValues(new Uint8Array(24)), (b) => b.toString(16).padStart(2, '0')).join('');
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+  const hashed = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+  let res: Res;
+  try {
+    res = await Apple.authorize({ nonce: hashed });
+  } catch (e: any) {
+    if (e?.code === 'CANCELED' || /cancel/i.test(String(e?.message || e))) {
+      track('oauth_cancel', { provider: 'apple', native: 'ios-sheet' });
+      return null;
+    }
+    return String(e?.message || 'Sign-in failed');
+  }
+  const { data, error } = await s.auth.signInWithIdToken({ provider: 'apple', token: res.identityToken, nonce: raw });
+  if (error || !data.user) return error?.message || 'Sign-in failed';
+  track('oauth_back', { provider: 'apple', native: 'ios-sheet' });
+  // Apple shares the name only on the very first sign-in
+  const name = [res.givenName, res.familyName].filter(Boolean).join(' ').trim();
+  if (name && !data.user.user_metadata?.full_name) await s.auth.updateUser({ data: { full_name: name } }).catch(() => {});
+  // keep Apple's token so deleting the account can revoke it (App Store 5.1.1(v))
+  if (res.authorizationCode) {
+    const { api } = await import('./sb');
+    await api('/api/me/apple-code', { code: res.authorizationCode }).catch(() => {});
+  }
+  (await import('./splash')).markSplash('in');
+  location.replace('/app/gallery');
+  return null;
+}
+
 let finishing = false;
 export async function nativeOAuth(provider: 'google' | 'apple', onCancel?: () => void): Promise<string | null> {
+  if (provider === 'apple') {
+    const r = await nativeApple();
+    if (r !== 'unavailable') return r;
+  }
   const s = sb();
   if (!s) return 'Not available';
   (await import('./apple-token')).markOAuthStart(provider);
