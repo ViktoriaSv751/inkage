@@ -39,10 +39,15 @@ async function nativeApple(): Promise<string | null | 'unavailable'> {
       track('oauth_cancel', { provider: 'apple', native: 'ios-sheet' });
       return null;
     }
-    return String(e?.message || 'Sign-in failed');
+    // the system sheet failed (no Apple ID on the device, a configuration problem…): fall back to the web sign-in
+    track('oauth_native_fail', { provider: 'apple', step: 'sheet', code: String(e?.code || ''), msg: String(e?.message || '').slice(0, 120) });
+    return 'unavailable';
   }
   const { data, error } = await s.auth.signInWithIdToken({ provider: 'apple', token: res.identityToken, nonce: raw });
-  if (error || !data.user) return error?.message || 'Sign-in failed';
+  if (error || !data.user) {
+    track('oauth_native_fail', { provider: 'apple', step: 'supabase', msg: String(error?.message || '').slice(0, 120) });
+    return 'unavailable';
+  }
   track('oauth_back', { provider: 'apple', native: 'ios-sheet' });
   // Apple shares the name only on the very first sign-in
   const name = [res.givenName, res.familyName].filter(Boolean).join(' ').trim();

@@ -69,7 +69,7 @@ export const EV: Record<string, string> = {
   removal_start: "Eltávolítás-szimuláció", ai_consent_yes: "MI-hozzájárulás megadva", aging_start: "Öregítés indul", card_made: "Kártya készült", redo: "Újrakezdte",
   uv_check: "UV-ellenőrzés", model_photo: "Modellfotó választva", ai_design: "MI-minta készült", auth_reset_request: "Jelszó-visszaállítás kérve", share_view: "Megosztott előnézet megnézve",
   landing_faq: "GYIK a főoldalon", landing_usecase: "Felhasználási példa", landing_compare: "Összehasonlítás", drawer_feature: "Menüpont", design_fav: "Kedvenc minta", save_image: "Kép mentve", upload_reuse: "Korábbi feltöltés újra",
-  oauth_start: "Google/Apple-belépés indul (app)", oauth_back: "Visszaért a belépésből (app)", oauth_cancel: "Belépés félbehagyva (app)", iab_escape: "Instagram/TikTok → telefon böngészője", improve_start: "Javítás indul", resize: "Méret állítva", aftercare_ics: "Ápolási naptár", stage_y10: "Megnézte 10 év múlva", stage_y30: "Megnézte 30 év múlva",
+  oauth_start: "Google/Apple-belépés indul (app)", oauth_back: "Visszaért a belépésből (app)", oauth_cancel: "Belépés félbehagyva (app)", oauth_native_fail: "Natív Apple-belépés hiba → webes belépés (app)", iab_escape: "Instagram/TikTok → telefon böngészője", improve_start: "Javítás indul", resize: "Méret állítva", aftercare_ics: "Ápolási naptár", stage_y10: "Megnézte 10 év múlva", stage_y30: "Megnézte 30 év múlva",
   pro_file: "Fájl letöltve (PDF, videó, kép)", more_designs: "Új előnézetet kért („Nem lett jó?”)", signin: "Sikeres belépés", signup_confirmed: "Regisztráció megerősítve",
   server_error_unverified: "Szerverhiba (nem hitelesített)", artist_pdf: "PDF a tetoválóművésznek", video_made: "Öregedés-videó letöltve",
 };
