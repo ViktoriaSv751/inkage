@@ -362,4 +362,70 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'tattoo-healing-stages',
+    tag: { en: 'Care', hu: 'Ápolás' },
+    title: { en: 'Tattoo healing stages day by day: what is normal, with pictures from day one to month three', hu: 'A tetoválás gyógyulása napról napra: mi a normális, képekben az első naptól a harmadik hónapig' },
+    desc: { en: 'Oozing, scabs, peeling and the cloudy stage: what is normal and when to worry.', hu: 'Szivárgás, pörk, hámlás és a tejes szakasz: mi a normális, és mikor aggódj.' },
+    body: {
+      en: [
+        'Days 1–3: red, warm and oozing. Days 4–7: tight with light scabs. Weeks 2–3: peeling, itching and a cloudy look. The surface closes in about two to four weeks; the deeper skin settles for up to around three months.',
+        '## Aftercare',
+        'Wash gently, moisturise thinly, don’t pick or soak, keep it out of the sun and follow your artist’s instructions.',
+        '## When to worry',
+        'Spreading redness, increasing pain after the first days, pus or fever are not normal healing. Contact a doctor.',
+      ],
+      hu: [
+        '1–3. nap: piros, meleg és szivárog. 4–7. nap: feszes, vékony pörkkel. 2–3. hét: hámlik, viszket, és tejesnek tűnik. A felszín nagyjából két-négy hét alatt zárul, a mélyebb bőr akár három hónapig rendeződik.',
+        '## Utókezelés',
+        'Mosd finoman, hidratáld vékonyan, ne vakard, ne áztasd, tartsd távol a naptól, és kövesd a tetoválód utasításait.',
+        '## Mikor aggódj?',
+        'A terjedő pirosság, az első napok után erősödő fájdalom, a genny vagy a láz nem normális gyógyulás. Fordulj orvoshoz.',
+      ],
+    },
+  },
+  {
+    slug: 'blackwork-tattoos-placement',
+    tag: { en: 'Styles', hu: 'Stílusok' },
+    title: { en: 'Blackwork tattoos on the neck, hand, forearm and back: how each placement heals and ages', hu: 'Blackwork tetoválás nyakon, kézen, alkaron és háton: hogyan gyógyul és öregszik az egyes helyeken' },
+    desc: { en: 'Solid black lasts, but placement still decides a lot.', hu: 'A telt fekete tartós, de az elhelyezés még így is sokat eldönt.' },
+    body: {
+      en: [
+        'Blackwork ages better than almost any other style, because black ink is stable and bold contrast survives the slow spread of pigment.',
+        '## Placement',
+        'The back, upper arm, outer forearm and calf treat it best. Hands, fingers and the front of the neck wear it faster and need touch-ups more often.',
+        '## Plan it well',
+        'Leave negative space, keep fine detail big enough, plan one touch-up after healing and protect the black from the sun.',
+      ],
+      hu: [
+        'A blackwork szinte minden más stílusnál jobban öregszik, mert a fekete tinta stabil, az erős kontraszt pedig túléli a pigment lassú szétterülését.',
+        '## Elhelyezés',
+        'A hát, a felkar, a külső alkar és a vádli bánik vele a legjobban. A kéz, az ujjak és a nyak eleje gyorsabban koptatja, és gyakrabban kell frissíteni.',
+        '## Tervezd meg jól',
+        'Hagyj negatív teret, a finom részletek legyenek elég nagyok, számolj egy gyógyulás utáni javítással, és óvd a feketét a naptól.',
+      ],
+    },
+  },
+  {
+    slug: 'sunburned-tattoo',
+    tag: { en: 'Care', hu: 'Ápolás' },
+    title: { en: 'Sunburned tattoo: what to do now, and how long a new tattoo should stay out of the sun', hu: 'Leégett a tetoválásod? Mit tegyél most, és meddig ne érje nap az új tetoválást' },
+    desc: { en: 'A burned fresh tattoo and a burned healed one need different care.', hu: 'A leégett friss és a leégett gyógyult tetoválás másféle ápolást kíván.' },
+    body: {
+      en: [
+        'A fresh tattoo is an open wound: keep it covered and out of the sun until it has healed, and don’t put sunscreen on it yet.',
+        '## If it burns',
+        'Cool it gently and keep it clean. On a fresh tattoo, use only products your artist approved; on a healed one, a fragrance-free aftersun or aloe gel is fine. See a doctor for large blisters, fever or signs of infection.',
+        '## Long-term protection',
+        'Once healed, protect tattoos with clothing and a broad-spectrum SPF 50, reapplied every two hours and after swimming.',
+      ],
+      hu: [
+        'A friss tetoválás nyílt seb: amíg meg nem gyógyult, takard, tartsd távol a naptól, és még ne kenj rá fényvédőt.',
+        '## Ha leégett',
+        'Hűtsd finoman, és tartsd tisztán. Friss tetoválásra csak a tetoválód által jóváhagyott terméket használj, gyógyultra jó egy illatmentes napozás utáni krém vagy aloe gél. Nagy hólyagok, láz vagy fertőzés jelei esetén fordulj orvoshoz.',
+        '## Hosszú távú védelem',
+        'Gyógyulás után ruhával és széles spektrumú, 50-es faktorú fényvédővel védd a tetoválást, kétóránként és fürdés után újrakenve.',
+      ],
+    },
+  },
 ];
