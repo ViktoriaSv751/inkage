@@ -8,3 +8,4 @@ public/img
 android/app/google-services.json
 .native-build/
 cap-native/
+scripts/admin-i18n/

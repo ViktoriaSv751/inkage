@@ -333,3 +333,5 @@ html:has(.adm.is-phone),html:has(.adm.is-phone) body{overflow-x:clip;overscroll-
   html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   input,select,textarea{font-size:max(16px,1em)!important}
 }
+/* the page column never grows wider than the phone (a wide sub-tab row or a big title pushed Megtartás to ~820 px) */
+.adm.is-phone .adm-main{width:100vw;max-width:100vw}

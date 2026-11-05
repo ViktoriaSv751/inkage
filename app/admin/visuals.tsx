@@ -2,6 +2,7 @@
 /* The Irányítóközpont's showpieces: a world map and a turning globe (Natural Earth borders from world-atlas, drawn here,
    no map library), the glowing goal ring, pastel stat tiles, action cards, a radar, step bars, cohort columns, the week
    strip and the live "orbs". Every one has a hover or a label; colours come from the admin.css tokens. */
+import { daysSun } from "./i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CountUp, Delta, Spark, fmt, pct, useWidth } from "./charts";
 
@@ -328,7 +329,7 @@ export function CohortBars({ cols, height = 190 }: { cols: { l: string; v: numbe
 /** The last 7 days as a strip: a check where the day had activity, a star for today. */
 export function WeekStrip({ days }: { days: { t: string; v: number }[] }) {
   const last = days.slice(-7);
-  const DN = ["V", "H", "K", "Sze", "Cs", "P", "Szo"];
+  const DN = daysSun();
   return (
     <ul className="wstrip">
       {last.map((d, i) => { const dt = new Date(d.t), today = i === last.length - 1; return (

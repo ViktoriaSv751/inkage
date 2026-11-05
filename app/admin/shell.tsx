@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { adminLang, setAdminLang } from "./i18n";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { PrevPartialCtx, fmt } from "./charts";
 import { Boundary, CloseX, Sheet, SubTabs, Toaster, cacheGet, cachePut, haptic, phoneNow, pushRecent, useLand, useLongPress, useOnline, usePhone, useScrolled, useSheetDrag, useSwipe, type MoreRow, type Recent, toast, toastText } from "./phone";
@@ -343,11 +344,12 @@ export function Dashboard({ signOut }: { signOut: (note?: string) => void }) {
     { g: "Beállítások", rows: [
       { k: "tabs", l: "Alsó menü", icon: I(P.layers), tone: "lilac", note: "te döntöd el, mi van a négy helyen", run: () => { setPal(false); setTabEdit(true); } },
       { k: "theme", l: "Téma: " + THEME_L[theme.mode], icon: I(light ? P.sun : P.moon), tone: "lilac", note: "automatikus, nappal, éjszaka", run: theme.cycle },
+      { k: "lang", l: adminLang() === "en" ? "Nyelv: English" : "Nyelv: magyar", icon: I(P.spark), tone: "lilac", note: "magyar vagy angol (English)", run: () => setAdminLang(adminLang() === "en" ? "hu" : "en") },
       { k: "push", l: "Értesítések", icon: I(P.bell), tone: "peach", note: push.st === "na" ? "ez a böngésző nem tud" : push.st === "denied" ? "a böngésző tiltja" : "robbanó poszt, új vélemény, hiba", toggle: true, on: push.st === "on", run: () => { setPal(false); setPushGuide(true); } },
       { k: "story", l: "Reggeli összefoglaló", icon: I(P.spark), tone: "butter", note: "a nap első megnyitásakor", toggle: true, on: maFx.story, run: () => setMaFx({ ...maFx, story: !maFx.story }) },
       { k: "export", l: "Teljes export (JSON)", icon: I(P.share), tone: "mint", note: "minden szám egy fájlban", run: () => exportAll(sb, data) },
-      { k: "supabase", l: "Supabase", icon: I(P.layers), tone: "mint", note: "adatbázis ↗", run: () => window.open("https://supabase.com/dashboard/project/yaimucilncjkuaxnmpbg", "_blank") },
-      { k: "vercel", l: "Vercel", icon: I(P.bolt), tone: "sky", note: "telepítések ↗", run: () => window.open("https://vercel.com/viktoriasv751s-projects/signa", "_blank") },
+      { k: "supabase", l: "Supabase", icon: I(P.layers), tone: "mint", note: "adatbázis ↗", run: () => window.open("https://supabase.com/dashboard/project/ibfpdbbcnyoqazodkmna", "_blank") },
+      { k: "vercel", l: "Vercel", icon: I(P.bolt), tone: "sky", note: "telepítések ↗", run: () => window.open("https://vercel.com/viktoriasv751s-projects/inkage", "_blank") },
       { k: "out", l: "Kilépés", icon: I(P.x), tone: "pink", run: () => signOut() },
     ] },
   ];
@@ -401,12 +403,12 @@ export function Dashboard({ signOut }: { signOut: (note?: string) => void }) {
           </div>
         ))}
         <div className="adm-side-foot">
-          <div className="adm-who"><i>{(me || "V").slice(0, 1).toUpperCase()}</i><span>Viktória<small>{me}</small></span><button onClick={theme.cycle} aria-label={"Téma: " + THEME_L[theme.mode]} title={"Téma: " + THEME_L[theme.mode] + " (d)"}>{I(theme.mode === "auto" ? P.clock : light ? P.sun : P.moon)}</button></div>
+          <div className="adm-who"><i>{(me || "V").slice(0, 1).toUpperCase()}</i><span>Viktória<small>{me}</small></span><button onClick={theme.cycle} aria-label={"Téma: " + THEME_L[theme.mode]} title={"Téma: " + THEME_L[theme.mode] + " (d)"}>{I(theme.mode === "auto" ? P.clock : light ? P.sun : P.moon)}</button><button className="adm-lang" data-noi18n onClick={() => setAdminLang(adminLang() === "en" ? "hu" : "en")} aria-label={adminLang() === "en" ? "Magyarul" : "English"} title={adminLang() === "en" ? "Magyarul" : "English"}>{adminLang() === "en" ? "HU" : "EN"}</button></div>
           <div className="adm-links">
             <button onClick={() => signOut()}>Kilépés</button>
             <button onClick={() => setHelp(true)}>Billentyűk</button>
-            <a href="https://supabase.com/dashboard/project/yaimucilncjkuaxnmpbg" target="_blank" rel="noreferrer">Supabase ↗</a>
-            <a href="https://vercel.com/viktoriasv751s-projects/signa" target="_blank" rel="noreferrer">Vercel ↗</a>
+            <a href="https://supabase.com/dashboard/project/ibfpdbbcnyoqazodkmna" target="_blank" rel="noreferrer">Supabase ↗</a>
+            <a href="https://vercel.com/viktoriasv751s-projects/inkage" target="_blank" rel="noreferrer">Vercel ↗</a>
           </div>
         </div>
       </aside>
@@ -814,7 +816,7 @@ export function Palette({ open, close, go, d, set, refresh, acts, map, settings,
       { g: "Műveletek", l: "Célok és napló", i: P.doc, run: () => go("goals") }, { g: "Műveletek", l: "Tervező", i: P.calendar, run: () => go("planner") },
       { g: "Műveletek", l: "Nyomtatás / PDF", i: P.doc, run: () => setTimeout(() => window.print(), 100) },
       { g: "Műveletek", l: "Szűrők törlése", i: P.funnel, run: () => set({ ch: undefined, lang: undefined, from: undefined, to: undefined }) });
-    if (acts) out.push({ g: "Műveletek", l: "Téma váltása", s: "automatikus, nappal, éjszaka (d)", i: P.moon, run: acts.theme }, 
+    if (acts) out.push({ g: "Műveletek", l: "Téma váltása", s: "automatikus, nappal, éjszaka (d)", i: P.moon, run: acts.theme }, { g: "Műveletek", l: adminLang() === "en" ? "Magyarul" : "English", s: "nyelv: magyar vagy angol", i: P.spark, run: () => setAdminLang(adminLang() === "en" ? "hu" : "en") }, 
       { g: "Műveletek", l: "Lehúzás most", s: "minden platform, Google, áruházak", i: P.refresh, run: acts.sync },
       { g: "Műveletek", l: "Összefoglaló-próba", s: "a reggeli összefoglaló most, e-mailben", i: P.mail, run: () => { toast("Küldés…"); api("/api/admin/digest", { method: "POST" }).then((r) => toast(r.ok && r.json?.ok !== false ? "Elküldve: " + (r.json?.email || "kész") : "Nem sikerült: " + (r.json?.error || ""))); } },
       { g: "Műveletek", l: "Teljes export (JSON)", s: "minden oldal száma egy fájlban", i: P.share, run: acts.exportAll },

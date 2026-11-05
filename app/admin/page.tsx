@@ -22,6 +22,7 @@ const Stage = ({ cls, kicker, onSubmit, children, busy }: { cls: string; kicker?
 );
 const Fld = (p: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) => { const { label, ...rest } = p; return <label className="lg-f"><span>{label}</span><input placeholder={label} {...rest} /></label>; };
 import { Dashboard } from "./shell";
+import { adminLang, setAdminLang, startAdminI18n } from "./i18n";
 import { cacheClear, phoneNow } from "./phone";
 
 /* Sign-in gate: only the e-mail listed in public.admin_emails (confirmed from its own inbox) gets in.
@@ -58,6 +59,7 @@ export default function AdminPage() {
     setState("login");
   }, [sb]);
   useEffect(() => { check(); }, [check]);
+  useEffect(() => { startAdminI18n(); }, []);
   /* signing out leaves no numbers behind in this browser: the quick-start copies and the Kérdezz conversation go too */
   const signOut = useCallback(async (msg?: string) => {
     await sb?.auth.signOut().catch(() => null);
@@ -117,6 +119,7 @@ function AdminLogin({ cls, note, done }: { cls: string; note: string; done: () =
       {msg && <p className={"lg-msg " + msg.k} role={msg.k === "err" ? "alert" : "status"}>{msg.t}</p>}
       <GoBtn busy={busy} label={mode === "forgot" ? "Link küldése" : "Belépés"} word={mode === "forgot"} />
       <button type="button" className="lg-lnk" onClick={() => { setMode(mode === "in" ? "forgot" : "in"); setMsg(null); }}>{mode === "in" ? "Elfelejtett jelszó" : "Vissza a belépéshez"}</button>
+      <button type="button" className="lg-lnk lg-lang" data-noi18n onClick={() => setAdminLang(adminLang() === "en" ? "hu" : "en")}>{adminLang() === "en" ? "Magyarul" : "English"}</button>
     </Stage>
   );
 }

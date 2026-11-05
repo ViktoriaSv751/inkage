@@ -1,6 +1,7 @@
 "use client";
 /* Charts for the admin dashboard: plain SVG, one look everywhere. Thin marks, rounded data ends, recessive grid,
    a hover tooltip on every chart, and text in text colours (the series colour only ever marks the data). */
+import { daysMon } from "./i18n";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 /* a phone turned sideways: charts take the whole screen, tables become real tables */
@@ -385,7 +386,7 @@ export function Heatmap({ cells }: { cells: { w: number; h: number; n: number }[
   const [hi, setHi] = useState<{ w: number; h: number; n: number } | null>(null);
   const m = new Map(cells.map((c) => [c.w * 100 + c.h, c.n]));
   const max = Math.max(1, ...cells.map((c) => c.n));
-  const D = ["H", "K", "Sze", "Cs", "P", "Szo", "V"], DL = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"];
+  const D = daysMon(), DL = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"];
   return (
     <div className="heat">
       <div className="heat-g">

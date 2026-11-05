@@ -1,5 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { daysMon } from "../i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { CountUp, Delta, Empty, Info, Spark, StackedColumns, TrendChart, chColor, fmt, pct, SERIES } from "../charts";
@@ -809,7 +810,7 @@ export function PostCalendar({ posts, onOpen }: { posts: D[]; onOpen: (p: D) => 
     <div className="cal">
       <div className="cal-h"><button className="adm-ibtn sm" disabled={!canBack} onClick={() => { setPick(null); setOff(off + 1); }}>←</button><b>{base.toLocaleDateString("hu-HU", { year: "numeric", month: "long" })}</b><button className="adm-ibtn sm" disabled={!off} onClick={() => { setPick(null); setOff(Math.max(0, off - 1)); }}>→</button></div>
       <div className="cal-g">
-        {["H", "K", "Sze", "Cs", "P", "Szo", "V"].map((x) => <span key={x} className="cal-d">{x}</span>)}
+        {daysMon().map((x) => <span key={x} className="cal-d">{x}</span>)}
         {Array.from({ length: first }, (_, i) => <span key={"e" + i} />)}
         {Array.from({ length: days }, (_, i) => {
           const day = i + 1, ps = [...(byDay.get(day) || [])].sort((a, b) => n(b.views) - n(a.views)), best = ps[0];

@@ -1,5 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { daysMon } from "../i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { fmt } from "../charts";
@@ -17,7 +18,7 @@ import { BestTime } from "./social-phone";
 const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 /* the stages of a content, in order (the board's columns): from an idea to evaluated */
 const STATUS: Record<string, [string, string]> = { otlet: ["Ötlet", "lilac"], forgatokonyv: ["Forgatókönyv", "lilac"], felvetel: ["Felvétel", "peach"], vagas: ["Vágás", "peach"], kesz: ["Elkészült", "butter"], terv: ["Ütemezve", "sky"], kint: ["Kint van", "mint"], kiertekelve: ["Kiértékelve", "mint"], hiba: ["Nem ment ki", "pink"] };
-const DOWS = ["H", "K", "Sze", "Cs", "P", "Szo", "V"];
+const DOWS = daysMon();
 /* what each platform takes: the text, and YouTube's title */
 const MAXC: Record<string, number> = { tiktok: 2200, instagram: 2200, pinterest: 500, youtube: 4900, linkedin: 2900, facebook: 60000 };
 const LINKLEN = "\n\ninkage.app/go/0000".length;

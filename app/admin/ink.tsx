@@ -3,6 +3,7 @@
 /* The admin's own pieces: black and white only, carried by size, contrast, pattern and movement.
    Giant: a figure as wide as its box. Ring: four patterns instead of colours. Chg: a change in a pill (full = up, outline = down).
    Hero: a page's one main figure. DayStrip: the week as rings. Mono: an account as its capital. Sig: a stored preview image. */
+import { daysSun } from "./i18n";
 import { useEffect, useState } from "react";
 import { CountUp, fmt } from "./charts";
 import { rpc, n, type D } from "./shared";
@@ -54,7 +55,7 @@ export function Trio({ items }: { items: { l: string; v: React.ReactNode; run?: 
 }
 
 /* ---------- the week as rings; a tap picks the day ---------- */
-const WD = ["V", "H", "K", "Sze", "Cs", "P", "Szo"];
+const WD = daysSun();
 export function DayStrip({ days, sel, pick, label = "Az elmúlt hét nap" }: { days: { t: string; v: number }[]; sel: string; pick: (t: string) => void; label?: string }) {
   const top = Math.max(1, ...days.map((x) => x.v));
   return <div className="ink-days" role="group" aria-label={label}>{days.map((x) => { const dt = new Date(x.t + "T12:00:00"); return (

@@ -150,7 +150,9 @@ export const CTAK: Record<string, string> = { register: "Regisztráció gomb", n
 export const PROV: Record<string, string> = { email: "E-mail + jelszó", google: "Google", apple: "Apple" };
 
 /* the languages InkAge really has, with their Hungarian names */
-export const LANGS: Record<string, string> = Object.fromEntries(Object.entries(LANG_INFO).map(([k, v]) => [k, v.hu]));
+/* language names in the admin's own language (English mode: lib/tr.ts's English names) */
+const ADMIN_EN = typeof window !== "undefined" && (() => { try { return localStorage.getItem("inkage.admin.lang") === "en"; } catch { return false; } })();
+export const LANGS: Record<string, string> = Object.fromEntries(Object.entries(LANG_INFO).map(([k, v]) => [k, ADMIN_EN ? v.en : v.hu]));
 
 export const lang = (k: string) => LANGS[(k || "?").slice(0, 2)] || k;
 
