@@ -47,9 +47,13 @@ import { Announce } from "./views/announce";
 import { Audit } from "./views/audit";
 import { Todo, TodoBadge } from "./views/todo";
 import { Payments } from "./views/payments";
+import { Customers } from "./views/customers";
+import { Finance } from "./views/finance";
+import { PayFail } from "./views/payfail";
+import { Pricing } from "./views/pricing";
 
 /* a few words under each menu item */
-const NAVSUB: Partial<Record<Tab, string>> = { payments: "még nincs fizetés", announce: "üzenet az appban", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", accounts: "minden fiók egymás mellett", feedback: "csillagok, vélemények", search: "keresések, cikkek",
+const NAVSUB: Partial<Record<Tab, string>> = { payments: "cél, ma eddig, források", customers: "érték, út, elégedettség", finance: "díjak, kifizetés, zárás", payfail: "elakadt, vitatott, hiányzó", pricing: "termékek, kódok, teszt", announce: "üzenet az appban", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", accounts: "minden fiók egymás mellett", feedback: "csillagok, vélemények", search: "keresések, cikkek",
   links: "rövid linkek", markets: "nyelvek, országok", stores: "letöltések", users: "fiókok", funnel: "lépésről lépésre", retention: "visszatérők", product: "mit használnak", inkage: "moderálás, MI, korlát",
   viral: "megosztások", connect: "bekötések", goals: "célok, jegyzetek", system: "beállítások, biztonság" };
 
@@ -57,8 +61,8 @@ const NAVSUB: Partial<Record<Tab, string>> = { payments: "még nincs fizetés", 
    range of her own; the pages with their own data count in days (a range becomes "from its first day to today");
    the rest has no period at all. The controls show only where they act, so nothing looks filtered that is not. */
 const FILTER_TABS: Tab[] = ["home", "alerts", "live", "ask", "traffic", "funnel", "users", "retention", "viral", "product"];
-const NO_PERIOD: Tab[] = ["inkage", "feedback", "todo", "goals", "announce", "audit", "live", "links", "connect", "more", "inbox", "planner", "audience", "report", "seo", "brand", "monitor", "retention"];
-const DAYS_ONLY: Tab[] = ["payments", "stores", "social", "accounts", "platforms", "search", "youtube", "impressions", "markets"];
+const NO_PERIOD: Tab[] = ["inkage", "finance", "feedback", "todo", "goals", "announce", "audit", "live", "links", "connect", "more", "inbox", "planner", "audience", "report", "seo", "brand", "monitor", "retention"];
+const DAYS_ONLY: Tab[] = ["payments", "customers", "payfail", "pricing", "stores", "social", "accounts", "platforms", "search", "youtube", "impressions", "markets"];
 /* Google, YouTube Analytics and the stores report whole days, 1–3 days late: these pages say which days they show */
 const LATE_GOOGLE: Tab[] = ["search", "impressions", "markets", "youtube", "stores"];
 
@@ -490,6 +494,10 @@ export function Dashboard({ signOut }: { signOut: (note?: string) => void }) {
               {tab === "monitor" && <Monitor />}
               {tab === "platforms" && <Platforms days={period.eff} />}
               {tab === "payments" && <Payments days={period.eff} />}
+              {tab === "customers" && <Customers days={period.eff} />}
+              {tab === "finance" && <Finance />}
+              {tab === "payfail" && <PayFail days={period.eff} />}
+              {tab === "pricing" && <Pricing days={period.eff} />}
               </Boundary></div>
             </PrevPartialCtx.Provider></FltCtx.Provider></FreshCtx.Provider></PeriodCtx.Provider></RefreshCtx.Provider>
           )}

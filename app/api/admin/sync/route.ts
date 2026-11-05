@@ -6,6 +6,7 @@ import { syncCwv, syncGsc, syncIndex } from "@/lib/admin/gsc";
 import { syncStores } from "@/lib/admin/stores";
 import { syncCompetitors } from "@/lib/admin/competitors";
 import { notifyNews, notifySystem } from "@/lib/admin/push";
+import { payRun } from "@/lib/admin/pay";
 import { syncKwIdeas, syncSeo } from "@/lib/admin/seo";
 import { checkRules, measureUptime, runWatch, syncAiVisibility } from "@/lib/admin/watch";
 
@@ -35,8 +36,10 @@ async function run(only?: string | null, force = false) {
     /* the real response time of every watched address first (the latency rule reads it) */
     const up = await measureUptime().catch((e) => "hiba: " + String((e as Error)?.message || e).slice(0, 80));
     const fired = await checkRules(); const sys = await notifySystem().catch(() => 0);
-    /* InkAge takes no payments: no web-sale invoices to retry (Calligra's Billingo step is left out) */
-    return J({ uptime: up, rules: `${fired} riasztás`, system: `${sys} jelzés` });
+    /* InkAge has no invoicing (Calligra's Billingo step is left out). Money: Stripe's fees, payouts, left checkouts and
+       disputes, Google's refunds, the rate, and the phone's money signals; with no Stripe key and no sale it does nothing */
+    const pay = await payRun().catch((e) => "hiba: " + String((e as Error)?.message || e).slice(0, 80));
+    return J({ uptime: up, rules: `${fired} riasztás`, system: `${sys} jelzés`, pay });
   }
   /* the hourly run, and every social page that opens: only the social platforms, then whatever is new goes to the phone.
      An account read in the last 10 minutes is not read again (the page opens came on top of the hourly run), unless

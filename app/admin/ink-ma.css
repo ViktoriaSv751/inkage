@@ -363,6 +363,65 @@
    preview stays a photo, in black and white like the rest of the admin, filling its frame. */
 .adm .ink-sig img,.adm .ink-flip .ink-sig img,.adm.light .ink-sig img,.adm.light .ink-flip .ink-sig img{filter:grayscale(1)!important;mix-blend-mode:normal!important;object-fit:cover;padding:0!important}
 .adm .ma-wallbg img,.adm.light .ma-wallbg img{filter:grayscale(1)!important;mix-blend-mode:normal!important;object-fit:cover;opacity:.35}
+/* ---------- Bevétel: the goal, filters, live list, heat map, timeline, forms ---------- */
+.pay-ms{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-radius:18px;border:1px solid var(--a-line);font-size:15px}
+.pay-alert{display:flex;align-items:center;gap:8px;text-decoration:none}
+.pay-goal{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border:1px solid var(--a-line);border-radius:22px}
+.pay-goal-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.pay-goal-h>span{font-size:13px;color:var(--a-dim);font-weight:650}
+.pay-goal-h b{font-size:30px;font-weight:800;letter-spacing:-.02em;flex:1}
+.pay-goal-h b small{font-size:14px;font-weight:600;color:var(--a-dim)}
+.pay-bar{position:relative;height:12px;border-radius:99px;background:var(--a-line);overflow:visible}
+.pay-bar.big{height:16px;margin:6px 0 12px}
+.pay-bar i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--a-fg);max-width:100%}
+.pay-bar u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--acc);text-decoration:none}
+.pay-pace{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--a-dim)}
+.pay-pace b{color:var(--a-fg)}
+.pay-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pay-filters label{display:flex;align-items:center;gap:6px;border:1px solid var(--a-line);border-radius:99px;padding:4px 10px;font-size:12.5px;color:var(--a-dim)}
+.pay-filters label.on{border-color:var(--a-fg);color:var(--a-fg)}
+.pay-filters select{border:0;background:none;color:inherit;font:inherit;font-weight:650;max-width:140px}
+.pay-seg{flex-wrap:wrap}
+.pay-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pay-store{font:inherit;color:inherit;text-align:left;background:none;cursor:pointer}
+.pay-store.on{border-color:var(--a-fg);box-shadow:inset 0 0 0 1px var(--a-fg)}
+.pay-live{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pay-live li{display:grid;grid-template-columns:auto auto 1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--a-line);cursor:pointer}
+.pay-live li:first-child{border-top:0}
+.pay-live li small{grid-column:1/-2;font-size:12px;color:var(--a-dim)}
+.pay-live li time{font-size:12px;color:var(--a-dim);grid-row:1;grid-column:4}
+.pay-heat{display:flex;flex-direction:column;gap:3px;overflow-x:auto}
+.pay-heat .ph-r{display:grid;grid-template-columns:28px repeat(24,minmax(8px,1fr));gap:3px;align-items:center}
+.pay-heat .ph-r span{font-size:11px;color:var(--a-dim)}
+.pay-heat .ph-r i{height:14px;border-radius:3px;background:var(--a-fg)}
+.pay-heat .ph-r i.hh{height:auto;background:none;font-size:9px;font-style:normal;color:var(--a-dim);opacity:1!important}
+.pay-conv.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pay-mail{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+.pay-act-info{display:flex;flex-direction:column;gap:6px;font-size:14px;margin-bottom:14px}
+.pay-acts button[disabled]{opacity:.45}
+.pay-form{display:flex;flex-direction:column;gap:10px}
+.pay-ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4}
+.pay-ck input{margin-top:3px}
+.pay-tl{list-style:none;margin:14px 0 0;padding:0 0 0 14px;border-left:2px solid var(--a-line);display:flex;flex-direction:column;gap:12px}
+.pay-tl li{position:relative;display:flex;flex-direction:column;gap:2px}
+.pay-tl li::before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:99px;background:var(--a-dim)}
+.pay-tl li.good::before{background:var(--a-fg)}
+.pay-tl li.bad::before{background:var(--a-bad)}
+.pay-tl li[class]:not(.bad):not(.good){cursor:default}
+.pay-tl time{font-size:11.5px;color:var(--a-dim)}
+.pay-tl small{font-size:12.5px;color:var(--a-dim)}
+.pay-checks{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:10px}
+.pay-checks li{display:grid;grid-template-columns:26px 1fr;gap:2px 10px}
+.pay-checks li i{grid-row:span 2;width:24px;height:24px;border-radius:99px;display:grid;place-items:center;font-style:normal;font-weight:800;border:1px solid var(--a-line)}
+.pay-checks li.ok i{background:var(--a-fg);color:var(--a-bg)}
+.pay-checks li.no i{border-color:var(--a-bad);color:var(--a-bad)}
+.pay-checks small{font-size:12.5px;color:var(--a-dim);overflow-wrap:anywhere}
+.pay-season{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.pay-season li{display:flex;flex-direction:column;gap:2px}
+.pay-season small{font-size:12.5px;color:var(--a-dim)}
+.pay .note.bad{color:var(--a-bad)}
+.adm-in.sm{height:34px;font-size:13px;padding:0 12px;min-width:180px}
+@media (max-width:760px){.pay-conv.four{grid-template-columns:repeat(2,minmax(0,1fr))}.pay-goal-h b{font-size:26px}.adm-in.sm{min-width:0;width:100%}}
 /* Fizetések: the three figures hold money ("64,97 USD"), too wide for the giant digits on a phone: smaller, wrapping, never overlapping */
 .pay .ink-trio b{font-size:clamp(15px,4.4vw,30px);overflow-wrap:normal;word-break:normal;line-height:1.1}
 .pay .ink-trio>*{min-width:0}

@@ -10,7 +10,7 @@ export { Layer, useScrollLock };
 
 export type D = Record<string, any>;
 
-export type Tab = "more" | "accounts" | "feedback" | "home" | "alerts" | "goals" | "connect" | "retention" | "markets" | "stores" | "traffic" | "social" | "search" | "links" | "funnel" | "users" | "viral" | "product" | "system" | "live" | "inbox" | "planner" | "audience" | "ask" | "report" | "youtube" | "impressions" | "seo" | "brand" | "monitor" | "platforms" | "announce" | "audit" | "todo" | "payments" | "inkage";
+export type Tab = "more" | "accounts" | "feedback" | "home" | "alerts" | "goals" | "connect" | "retention" | "markets" | "stores" | "traffic" | "social" | "search" | "links" | "funnel" | "users" | "viral" | "product" | "system" | "live" | "inbox" | "planner" | "audience" | "ask" | "report" | "youtube" | "impressions" | "seo" | "brand" | "monitor" | "platforms" | "announce" | "audit" | "todo" | "payments" | "customers" | "finance" | "payfail" | "pricing" | "inkage";
 
 
 export const GOAL = 1_000_000;
@@ -257,7 +257,11 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "ask", l: "Kérdezz", i: P.spark, d: "Kérdezz a számaidtól: az MI a saját adataidból válaszol." },
   ] },
   { g: "Bevétel", items: [
-    { k: "payments", l: "Fizetések", i: P.money, d: "Itt jelenik meg minden fizetés (weboldal, App Store, Google Play), amint az InkAge fizetést fogad. Még nincs fizetés." },
+    { k: "payments", l: "Fizetések", i: P.money, d: "Minden fizetés a weboldalról (Stripe), az App Store-ból és a Google Playből, amint az InkAge fizetést fogad: a napi cél, ma eddig, honnan jönnek a vevők, mikor fizetnek, minden fizetés." },
+    { k: "customers", l: "Vevők", i: P.users, d: "Minden fizető ember: mennyit hozott, honnan jött, használta-e, elégedett-e, és az útja az első látogatástól." },
+    { k: "finance", l: "Pénzügy", i: P.doc, d: "Ami valójában marad: díjak, visszatérítések, költségek, kifizetések, az éves határ, havi zárás a könyvelőnek." },
+    { k: "payfail", l: "Fizetési hibák", i: P.alert, d: "Fizetett, de nem kapta meg; kártyaviták; félbehagyott és sikertelen fizetések; az áruházak értesítései; mi kell még a fizetéshez." },
+    { k: "pricing", l: "Árak és tesztek", i: P.target, d: "Termékarány, váltások, a tetoválásstílusok, amik eladnak, partnerkódok és jutalék, teszt a vásárlási oldalon, kalkulátorok, akciós naptár." },
   ] },
   { g: "Felhasználók", items: [
     { k: "users", l: "Emberek", i: P.users, d: "Kik regisztráltak, honnan, és visszajönnek-e." },
@@ -304,7 +308,7 @@ export type PSec = "ma" | "grow" | "people" | "todo" | "ask" | "more";
 export const THEMES: { k: string; l: string; i: string; tone: Tone; pages: Tab[] }[] = [
   { k: "ma", l: "Ma", i: P.home, tone: "peach", pages: ["home", "live", "ask", "report"] },
   { k: "todo", l: "Teendők", i: P.check, tone: "pink", pages: ["todo", "alerts", "inbox"] },
-  { k: "money", l: "Bevétel", i: P.money, tone: "mint", pages: ["payments"] },
+  { k: "money", l: "Bevétel", i: P.money, tone: "mint", pages: ["payments", "customers", "finance", "payfail", "pricing"] },
   { k: "people", l: "Emberek", i: P.users, tone: "pink", pages: ["users", "funnel", "retention", "product", "viral", "feedback", "inkage"] },
   { k: "grow", l: "Növekedés", i: P.traffic, tone: "sky", pages: ["traffic", "impressions", "platforms", "markets", "links", "stores"] },
   { k: "content", l: "Tartalom", i: P.social, tone: "butter", pages: ["social", "accounts", "planner", "audience", "youtube"] },
@@ -327,9 +331,10 @@ export const ASKQ: Partial<Record<Tab, string>> = {
   youtube: "Hogyan teljesítenek a YouTube-videóim és a Shortsaim?", search: "Melyik Google-keresésekben tudnék a leggyorsabban előrébb kerülni?", seo: "Mi a három legfontosabb SEO-javítás most?",
   markets: "Melyik nyelv vagy ország a legnagyobb lehetőség most?", stores: "Hogyan állnak a letöltések és az értékelések, és mit javítsak?", users: "Kik regisztráltak, honnan jöttek, és mi különbözteti meg őket?",
   funnel: "Hol esnek ki a legtöbben az úton, és mit javítsak először?", retention: "Visszajönnek-e a regisztráltak, és mi tartja meg őket?", product: "Mit használnak a legtöbbet az appban, és mit hagynak ki?",
-  payments: "Mennyi pénz jött be, honnan fizetnek a legtöbben, és hol akad el a fizetés?",
+  payments: "Mennyi pénz jött be, honnan fizetnek a legtöbben, és hol akad el a fizetés?", customers: "Kik a legértékesebb vevőim, honnan jönnek, és kivel kell foglalkoznom?",
+  finance: "Mennyi marad nekem a díjak és költségek után, és mire figyeljek a könyvelésnél?", payfail: "Hol veszítek pénzt a fizetésnél, és mit javítsak először?", pricing: "Jól működnek-e a termékek és az árak, és melyik partnerkód hozza a legtöbbet?",
   viral: "Megosztják-e az appot, és hoz-e új embert a megosztás?", links: "Melyik rövid link hozza a legtöbb embert?", alerts: "Melyik jelzéssel foglalkozzak először, és miért?" };
-export const SHORT: Partial<Record<Tab, string>> = { home: "Áttekintés", report: "Riport", todo: "Lista", goals: "Célok", platforms: "Platformok", seo: "SEO", brand: "Márka", impressions: "Megjelenés", search: "Google", traffic: "Források", social: "Tartalom", users: "Emberek", audience: "Közönség" };
+export const SHORT: Partial<Record<Tab, string>> = { payments: "Fizetések", customers: "Vevők", finance: "Pénzügy", payfail: "Hibák", pricing: "Árak", home: "Áttekintés", report: "Riport", todo: "Lista", goals: "Célok", platforms: "Platformok", seo: "SEO", brand: "Márka", impressions: "Megjelenés", search: "Google", traffic: "Források", social: "Tartalom", users: "Emberek", audience: "Közönség" };
 
 export const ALL = [...NAV.flatMap((g) => g.items), { k: "more" as Tab, l: "Több", i: P.menu, d: "" }, { k: "todo" as Tab, l: "Teendők", i: P.check, d: "Minden, amivel dolgod van, egy listában, fontosság szerint." }];
 

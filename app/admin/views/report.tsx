@@ -76,6 +76,9 @@ function Story({ cards, when }: { cards: SC[]; when: string }) {
   </section>;
 }
 
+const STORE_W: Record<string, string> = { stripe: "web", apple: "App Store", google: "Google Play" };
+const usd = (v: unknown) => "$" + fmt(Math.round(n(v) * 100) / 100, 2);
+
 export function Report({ d: _d }: { d: D }) {
   void _d;
   const sb = useMemo(() => supabaseBrowser(), []);
@@ -85,7 +88,7 @@ export function Report({ d: _d }: { d: D }) {
   const [rawF, setRawF] = useState(cf), [rawT, setRawT] = useState(ct);
   const [from, to] = range(per, cf, ct);
   const days = Math.round((new Date(to + "T12:00").getTime() - new Date(from + "T12:00").getTime()) / 864e5) + 1;
-  const [wiz, setWiz] = useState(false); const [letter, setLetter] = useState("");
+  const [wiz, setWiz] = useState(false); const [letter, setLetter] = useState(""); const [pay, setPay] = useState<D | null>(null);
   const [w, setW] = useState<D | null>(null); const [r, setR] = useState<D | null>(null); const [seo, setSeo] = useState<D | null>(null); const [e, setE] = useState(""); const [re, setRe] = useState(""); const [rv, setRv] = useState(0);
   useEffect(() => {
     /* only the period chosen last may answer: a slower answer for the one before is dropped */
@@ -96,6 +99,8 @@ export function Report({ d: _d }: { d: D }) {
     rpc(sb, "admin_dashboard", { p_days: days, p_from: a, p_to: b }).then(({ data, error }) => { if (!live) return; if (error) setE(error.message); setW(data || null); });
     rpc(sb, "admin_report", { p_from: from, p_to: to }).then(({ data, error }) => { if (!live) return; if (error) setRe(error.message); setR(data || null); });
     rpc(sb, "admin_seo_week").then(({ data }) => { if (live) setSeo(data || null); });
+    /* money over the same number of days (the payments' own function counts back from now) */
+    rpc(sb, "admin_payments", { p_days: days }).then(({ data }) => { if (live) setPay(data || null); });
     return () => { live = false; };
   }, [sb, from, to, days, rv]);
   if (e && !w) return <PageErr e={e} retry={() => setRv((x) => x + 1)} />;
@@ -183,6 +188,12 @@ export function Report({ d: _d }: { d: D }) {
         {n(r?.yt_watch_hours) > 0 && <div className="rp-k"><span>YouTube-nézési idő</span><b>{fmt(r!.yt_watch_hours, 1)} óra</b><small>az időszakban megjelent videók</small></div>}
         {!inv && r?.inbox && <div className="rp-k"><span>Postafiók</span><b>{fmt(r.inbox.new)}</b><small>új komment és vélemény · {fmt(r.inbox.replied)} megválaszolva · {fmt(r.inbox.open)} vár most</small></div>}
       </section>
+      {pay && (pay.live || n(pay.totals?.sales) > 0) && <section className="c s12"><h2>Bevétel</h2><ul className="rp-l">
+        <li><b>Nettó bevétel</b><span>{usd(pay.totals?.net_usd)} · előtte {usd(pay.totals?.prev_usd)} · <Delta now={n(pay.totals?.net_usd)} prev={n(pay.totals?.prev_usd)} /></span></li>
+        <li><b>Fizetés és fizető</b><span>{fmt(pay.totals?.sales)} fizetés · {fmt(pay.totals?.payers)} fizető · {fmt(pay.totals?.new_payers)} új vevő{n(pay.totals?.refunds) ? ` · ${fmt(pay.totals.refunds)} visszatérítés` : ""}</span></li>
+        <li><b>Hol fizettek</b><span>{((pay.by_store || []) as D[]).map((x) => `${STORE_W[x.store] || x.store}: ${fmt(x.sales)} (${usd(x.usd)})`).join(" · ") || "–"}</span></li>
+        <li><b>Fiókokból vevő</b><span>{pct(n(pay.conv?.paid), Math.max(1, n(pay.conv?.new_accounts)))} ({fmt(pay.conv?.paid)} / {fmt(pay.conv?.new_accounts)} új fiók)</span></li>
+      </ul><p className="note">Az időszak a mai naptól visszaszámolt {days} nap (a fenti napoktól kicsit eltérhet). Részletek: Bevétel → Fizetések.</p></section>}
       <section className="c s12"><h2>Elkészült előnézetek naponta</h2><ChartBox data={(w.trend || []).map((x: D, i: number) => ({ t: x.t, v: n(x.made), p: w.prev_trend?.[i] ? n(w.prev_trend[i].made) : undefined }))} label="Elkészült előnézet" height={220} name="riport-elonezet" /></section>
       {/* growth: the running total, and the change month on month and week on week (the investor's view first) */}
       {(r?.cum || []).length > 1 && <section className="c s7"><h2>Összes elkészült előnézet, halmozva</h2><TrendChart data={((r!.cum || []) as D[]).map((x) => ({ t: String(x.dd), v: n(x.m) }))} label="Elkészült előnézet" height={200} /></section>}

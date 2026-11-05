@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { SITE, asAdmin, asCron, call, env } from "@/lib/admin/server";
-import { type Digest, type Extra, digestEmail, text, weeklyEmail } from "@/lib/email/admin-digest";
+import { type Digest, type Extra, type PayDigest, digestEmail, text, weeklyEmail } from "@/lib/email/admin-digest";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -47,7 +47,8 @@ async function sendWeekly() {
   /* "hiba:" makes the run a failed one, so an e-mail that can't go out raises the alarm; no key at all is "nincs bekötve"
      (not an error every half hour: the Rendszer page says it once, clearly) */
   if (!key || !d.to.length) return { email: key ? "hiba: nincs címzett" : "nincs bekötve: nincs RESEND_API_KEY" };
-  const m = { to: d.to, ...weeklyEmail(x, SITE) };
+  const pay = await call<PayDigest>("admin_r_pay_digest").catch(() => undefined);
+  const m = { to: d.to, ...weeklyEmail(x, SITE, pay) };
   const r = await fetch("https://api.resend.com/emails", { method: "POST", signal: T(), headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
     body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", ...m }) }).catch(() => null);
   return { email: r?.ok ? "elküldve" : "hiba " + (r ? r.status : "időtúllépés") };
@@ -62,15 +63,16 @@ async function send(slot?: Slot) {
   /* on Monday morning (the owner's Monday) the week's plan is made first, so the digest already carries it */
   if (x && (slot ? new Date(slot.local).getDay() : new Date().getUTCDay()) === 1) { await weekPlan(x).catch(() => null); x.week_plan = (await call<Extra>("admin_r_digest_extra").catch(() => x)).week_plan; }
   const out: Record<string, string> = {};
+  const pay = await call<PayDigest>("admin_r_pay_digest").catch(() => undefined);
   const key = env().RESEND_API_KEY;
   if (key && d.to.length) {
     const r = await fetch("https://api.resend.com/emails", { method: "POST", signal: T(), headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", to: d.to, ...digestEmail(d, x, SITE, slot?.tz) }) }).catch(() => null);
+      body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", to: d.to, ...digestEmail(d, x, SITE, slot?.tz, pay) }) }).catch(() => null);
     out.email = r?.ok ? "elküldve" : "hiba " + (r ? r.status : "időtúllépés");
   } else out.email = key ? "hiba: nincs címzett" : "nincs bekötve: nincs RESEND_API_KEY";
   const tg = env().TELEGRAM_BOT_TOKEN, chat = env().TELEGRAM_CHAT_ID;
   if (tg && chat) {
-    const r = await fetch(`https://api.telegram.org/bot${tg}/sendMessage`, { method: "POST", signal: T(), headers: { "content-type": "application/json" }, body: JSON.stringify({ chat_id: chat, text: text(d, SITE), disable_web_page_preview: true }) }).catch(() => null);
+    const r = await fetch(`https://api.telegram.org/bot${tg}/sendMessage`, { method: "POST", signal: T(), headers: { "content-type": "application/json" }, body: JSON.stringify({ chat_id: chat, text: text(d, SITE, pay), disable_web_page_preview: true }) }).catch(() => null);
     out.telegram = r?.ok ? "elküldve" : "hiba " + (r ? r.status : "időtúllépés");
   }
   return out;

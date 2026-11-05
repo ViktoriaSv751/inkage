@@ -185,6 +185,9 @@ export function settings() {
     vercel: !!e.VERCEL_API_TOKEN,
     server_token: !!process.env.ADMIN_SERVER_TOKEN,
     psi: !!e.PSI_API_KEY,
+    /* payments (Vercel only): taking money, the webhook, the database write (InkAge has no invoicing: no Billingo) */
+    stripe: !!(process.env.STRIPE_SECRET_KEY || e.STRIPE_SECRET_KEY), stripe_live: /^sk_live_/.test(process.env.STRIPE_SECRET_KEY || e.STRIPE_SECRET_KEY || ""),
+    stripe_webhook: !!process.env.STRIPE_WEBHOOK_SECRET, pay_service: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
     gsc_site: e.GSC_SITE_URL || "sc-domain:inkage.app",
     redirect_tiktok: `${SITE}/api/admin/callback/tiktok`,
     redirect_instagram: `${SITE}/api/admin/callback/instagram`,

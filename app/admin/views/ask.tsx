@@ -62,6 +62,11 @@ function summary(d: D, x: D, flt: D) {
       bing: x.imp.totals?.bing ?? null, videomegtekintes_nem_megjelenes: x.imp.views || {}, megjegyzes: "a TikTok-megtekintés nem megjelenés; a Google száma a google mezőben" } : null,
     aruhazak: trim(x.stores), youtube: x.yt ? { nezo_megtartas_videok: (x.yt.retention || []).length, demografia: trim(x.yt.demo) } : null,
     postafiok: x.inbox ? { valaszra_var: x.inbox.open, cimkek: ((x.inbox.items || []) as D[]).reduce((o: D, y) => { if (y.tag && !y.done) o[y.tag] = (o[y.tag] || 0) + 1; return o; }, {}), hibajelzesek: ((x.inbox.bugs || []) as D[]).length } : null,
+    /* money: totals, today's pace, where buyers come from, products, the road to paying (no e-mails, no names) */
+    bevetel: x.pay ? { fizetes_be_van_kapcsolva: x.pay.live, dollarban: { netto: x.pay.totals?.net_usd, elozo_idoszak: x.pay.totals?.prev_usd }, fizetes_db: x.pay.totals?.sales, fizeto_ember: x.pay.totals?.payers, uj_fizeto: x.pay.totals?.new_payers,
+      visszaterites: x.pay.totals?.refunds, ma: x.pay.pace?.today, tegnap_ugyanekkor: x.pay.pace?.yest, napi_cel: x.pay.cfg?.goal_day, helyenkent: ((x.pay.by_store || []) as D[]).map((y) => ({ hely: y.store, db: y.sales, usd: y.usd })),
+      csatornankent: trim(x.pay.by_ch), fiokonkent: trim(x.pay.by_account), termekenkent: trim(x.pay.by_plan), utja: x.pay.steps, fiokbol_vevo: x.pay.conv, elso_fizetesig: x.pay.to_pay,
+      hibak: x.pay.problems, megjegyzes: "az InkAge még nem fogad fizetést; ha van vásárlás, a termékek nevei az adatból jönnek; a csatorna a regisztrációt hozó látogatás becsült párosítása" } : null,
     rovid_linkek: trim(x.links), tervek: trim(((x.plans || []) as D[]).map((p) => ({ nap: p.day, cim: p.title, platformok: p.platforms, allapot: p.status }))), jegyzetek: trim(((x.notes || []) as D[]).map((y) => ({ nap: y.day, tipus: y.kind, szoveg: y.text }))),
     /* never the dormant list (it holds e-mails), and the newest days of activity: the list runs from old to new, and cutting it to 12 sent days before the first account */
     megtartas: x.ret ? { fiokok: x.ret.accounts_all, alvo_fiokok: x.ret.dormant, aktivitas_utolso_14_nap: ((x.ret.active || []) as D[]).slice(-14), visszateres: x.ret.curve, kohorszok: trim(x.ret.cohorts), bontas: trim(x.ret.by),
@@ -130,8 +135,8 @@ export function Ask({ d, conv }: { d: D; conv?: boolean }) {
     const t = new Date(), k = (o: number) => new Date(t.getTime() + o * 864e5).toISOString().slice(0, 10);
     const get = (fn: string, args?: D) => rpc(sb, fn, args).then(({ data }) => data ?? null).catch(() => null);
     Promise.all([get("admin_social", { p_days: days }), get("admin_search", { p_days: Math.min(Math.max(days, 1), 480) }) /* the same period as everything else (Google's own window ends at its last finished day) */, get("admin_impressions", { p_days: Math.min(days, 365) }), get("admin_stores", { p_days: days }),
-      get("admin_youtube"), get("admin_inbox", { p_all: false }), get("admin_links"), get("admin_plans", { p_from: k(-7), p_to: k(21) }), get("admin_notes_list", {}), get("admin_retention")])
-      .then(([soc, gsc, imp, stores, yt, inbox, links, plans, notes, ret]) => { setX({ soc, gsc, imp, stores, yt, inbox, links, plans, notes, ret }); setReady(true); });
+      get("admin_youtube"), get("admin_inbox", { p_all: false }), get("admin_links"), get("admin_plans", { p_from: k(-7), p_to: k(21) }), get("admin_notes_list", {}), get("admin_retention"), get("admin_payments", { p_days: days || 30 })])
+      .then(([soc, gsc, imp, stores, yt, inbox, links, plans, notes, ret, pay]) => { setX({ soc, gsc, imp, stores, yt, inbox, links, plans, notes, ret, pay }); setReady(true); });
   }, [sb, days]);
   useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [msgs]);
   /* a question sent from another page ("Kérdezz erről az oldalról"): asked as soon as the data is in */

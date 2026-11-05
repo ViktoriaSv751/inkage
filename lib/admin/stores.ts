@@ -90,7 +90,7 @@ async function appleDownloads(tok: string) {
 }
 
 /* ---------- Google ---------- */
-async function googleToken(scope: string) {
+export async function googleToken(scope: string) {
   const raw = (env().PLAY_SERVICE_ACCOUNT_JSON || "").trim();
   const j = JSON.parse(raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8"));
   const now = Math.floor(Date.now() / 1000);
@@ -102,7 +102,7 @@ async function googleToken(scope: string) {
   if (!r.ok) throw new Error("Google-bejelentkezés: " + JSON.stringify(t).slice(0, 160));
   return t.access_token as string;
 }
-const PKG = () => env().PLAY_PACKAGE || "app.inkage";
+export const PKG = () => env().PLAY_PACKAGE || "app.inkage";
 
 /* Play keeps the reviews with text from the last week in the API; the table keeps them for good */
 async function googleReviews() {

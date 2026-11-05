@@ -455,6 +455,7 @@ function PayOne({ children }: { children: React.ReactNode }) {
       <p className="ma-big">{fmt(today)}</p>
       <dl className="pt-dl"><div><dt>Eladás ma</dt><dd>{fmt(n(s?.today_sales))}</dd></div><div><dt>Bevétel ma</dt><dd>{Object.entries((s?.today_rev || {}) as D).map(([k, x]) => `${Math.round(Number(x) * 100) / 100} ${k}`).join(", ") || "0"}</dd></div><div><dt>7 napos átlag</dt><dd>{fmt(n(s?.avg_7), 1)}/nap</dd></div><div><dt>Összes eladás</dt><dd>{fmt(n(s?.total_sales))}</dd></div></dl>
         {((s?.by_source || []) as D[]).length > 0 && <ul className="ma-src">{((s?.by_source || []) as D[]).map((r) => <li key={r.source + r.currency}><i className="ok" aria-hidden="true" /><b>{r.source}</b><span>{fmt(n(r.people))} fizető · {fmt(n(r.sales))} eladás · {Math.round(Number(r.rev) * 100) / 100} {r.currency}</span></li>)}</ul>}
+      <button className="adm-ibtn gold ma-paylink" onClick={() => { setSheet(false); location.hash = "payments"; }}>Minden részlet: Bevétel → Fizetések</button>
     </Sheet>}
   </>;
 }

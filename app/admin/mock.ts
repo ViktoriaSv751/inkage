@@ -314,26 +314,7 @@ export function mock(fn: string, args: Record<string, unknown>): any {
   if (fn === "admin_ma_compare") { const P = (a: number) => ({ made: 3 * a, sessions: 14 * a, signups: a, shared: Math.max(0, a - 1), saved: 2 * a }); return { at: iso(Date.now()), hour: new Date().toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" }), today: P(2), yest: P(3), week: P(1), yest_all: P(9), week_all: P(7), own: { made: 2, signups: 1, sessions: 4 }, unusual: [{ k: "hour", n: 18, at: iso(Date.now() - 3 * 3600e3), usual: 1.2 }, { k: "lang:de", lang: "de", n: 9, share: 32, usual: 4 }] }; }
   if (fn === "admin_ma_feed") { const h = (o: number) => iso(Date.now() - o * 3600e3); return [{ at: h(1), kind: "made", t: "4", to: "product" }, { at: h(1.2), kind: "signup", t: "2", to: "users" }, { at: h(2), kind: "post", t: "tiktok", s: "Rate my signature: 62/100", to: "social" }, { at: h(3), kind: "push", t: "rising", s: "🔥 Most robban: TikTok", to: "social" }, { at: h(5), kind: "inbox", t: "3", to: "inbox" }, { at: h(7), kind: "release", to: "monitor" }, { at: h(8), kind: "note", t: "kampany", s: "TikTok-sorozat indul", to: "goals" }, { at: h(30), kind: "made", t: "9", to: "product" }]; }
   if (fn === "admin_ma_rows") { const m = String(args.p_metric); const rows = Array.from({ length: 6 }, (_, i) => m === "made" ? { at: iso(Date.now() - i * 40 * 60e3), style: "celeb_brush", id: "u" + i } : m === "signups" ? { at: iso(Date.now() - i * 50 * 60e3), provider: i % 2 ? "google" : "email", id: "u" + i } : { at: iso(Date.now() - i * 35 * 60e3), lang: i % 2 ? "en" : "hu", ch: i % 2 ? "tiktok" : "google", events: 3 + i, last_ev: "landing_view" }); return { metric: m, day: args.p_day, rows }; }
-  if (fn === "admin_payments") {
-    const st = ["stripe", "stripe", "stripe", "apple", "google"], pl = ["ultra", "ultra", "basic", "pro", "up_basic_ultra", "basic"];
-    const price: Record<string, number> = { basic: 8.99, pro: 24.99, ultra: 27.99, up_basic_ultra: 19 };
-    const recent = Array.from({ length: 34 }, (_, i) => { const s2 = st[i % 5], p2 = pl[i % 6], huf = s2 === "apple" && i % 2 === 0;
-      return { id: 100 - i, at: iso(Date.now() - i * 9.5 * 3600e3), store: s2, plan: p2, amount: huf ? Math.round(price[p2] * 380) : price[p2], currency: huf ? "HUF" : "USD", name: ["anna kovács", "tóth péter", "emma smith", "nagy zsófia"][i % 4], tx: "cs_test_" + (9000 + i), refunded_at: i === 7 ? iso(Date.now() - 50 * 3600e3) : null, refund_amount: i === 7 ? price[p2] : 0, user_id: "u" + (i % 9), email: `vevo${i % 9}@example.com`, signed_up: iso(Date.now() - (i + 2) * 20 * 3600e3), user_sales: 1 + (i % 3 === 0 ? 1 : 0), invoice: s2 === "stripe" ? (i === 2 ? "failed" : "done") : null, invoice_error: i === 2 ? "billingo 500" : null }; });
-    const by_day: any[] = []; recent.forEach((r) => { const day = new Date(r.at).toLocaleDateString("sv-SE", { timeZone: "Europe/Budapest" }); const x = by_day.find((y) => y.day === day && y.store === r.store && y.currency === r.currency); if (x) { x.sales++; x.gross += r.amount; } else by_day.push({ day, store: r.store, currency: r.currency, sales: 1, gross: r.amount }); });
-    const sum = (f: (r: any) => boolean) => recent.filter(f).reduce((a, r) => a + r.amount, 0);
-    return { days, live: false, first_ever: iso(Date.now() - 14 * DAY), all_time: { sales: 41, payers: 33 },
-      totals: { sales: 34, payers: 9, refunds: 1, upgrades: 6, new_payers: 8, prev_sales: 21, prev_payers: 17 },
-      rev: [{ currency: "USD", gross: sum((r) => r.currency === "USD"), refunded: 27.99, net: sum((r) => r.currency === "USD") - 27.99, sales: 30, avg: 21.4 }, { currency: "HUF", gross: sum((r) => r.currency === "HUF"), refunded: 0, net: sum((r) => r.currency === "HUF"), sales: 4, avg: 6800 }],
-      rev_prev: { USD: 402.5 }, today: { sales: 3, payers: 3, rev: { USD: 64.97 } },
-      by_store: ["stripe", "apple", "google"].flatMap((k) => ["USD", "HUF"].map((c) => { const rs = recent.filter((r) => r.store === k && r.currency === c); return rs.length ? { store: k, currency: c, sales: rs.length, payers: Math.ceil(rs.length / 2), gross: rs.reduce((a, r) => a + r.amount, 0), refunded: 0, refunds: rs.filter((r) => r.refunded_at).length, last: rs[0].at } : null; })).filter(Boolean),
-      store_prev: { stripe: 12, apple: 5, google: 4 },
-      by_plan: pl.map((p2, i) => ({ plan: p2, store: "stripe", currency: "USD", sales: 9 - i, gross: (9 - i) * price[p2] })),
-      by_day, by_hour: [9, 12, 13, 18, 19, 20, 21, 22].map((h, i) => ({ h, sales: [2, 3, 2, 5, 6, 8, 5, 3][i] })),
-      to_pay: { n: 8, median_h: 0.6, same_day: 7 }, conv: { new_accounts: 341, paid: 8 },
-      steps: { shown: 420, pick: 210, start: 64, signup: 12, bought: 31 },
-      recent, top: [{ user_id: "u0", email: "vevo0@example.com", sales: 3, gross: 64.97, currency: "USD", last: iso(Date.now() - 3 * 3600e3) }],
-      invoices: { by_status: { done: 18, failed: 1, manual: 1 }, stuck: [{ session_id: "cs_test_9002", status: "failed", attempts: 3, last_error: "billingo 500: Internal error", created_at: iso(Date.now() - 19 * 3600e3) }] } };
-  }
+  if (fn === "admin_payments" || fn.startsWith("admin_pay_")) return payMock(fn, days);
   if (fn === "admin_sales") return { live: false, today_people: 0, today_sales: 0, today_rev: {}, avg_7: 0, total_sales: 0, by_source: [] };
   if (fn === "admin_home_extra") { seed = 31; const dd = Math.min(Number(args.p_days) || 30, 60); return { days: dd, downloads: 214, downloads_prev: 170, stores_on: true, followers_gain: 96, followers_gain_prev: 71, followers_since: iso(Date.now() - 60 * DAY).slice(0, 10), followers_on: true,
     gsc: { last: iso(Date.now() - 2 * DAY).slice(0, 10), lag: 2, clicks: 410, prev: 360, countries: [{ k: "hun", clicks: 220, impressions: 5100 }, { k: "usa", clicks: 90, impressions: 4200 }] }, store_countries: [{ k: "hu", n: 120 }, { k: "us", n: 41 }],
@@ -418,4 +399,62 @@ export function mockApi(path: string) {
   if (path.includes("/api/admin/push")) return { ok: true, json: { ok: true, sent: 1, key: "x", items: [] } };
   if (path.includes("/api/admin/inbox") || path.includes("/api/admin/lock") || path.includes("/api/admin/publish")) return { ok: true, json: { ok: true, results: {} } };
   return { ok: true, json: { ok: true, tiktok: "31 poszt", instagram: "58 poszt", gsc: "nincs beállítva" } };
+}
+
+/* the Bevétel pages' sample data (development server only) */
+function payMock(fn: string, days: number): any {
+  const st = ["stripe", "stripe", "stripe", "apple", "google"], pl = ["t_c", "t_c", "t_a", "t_b", "up_t_a_t_c", "t_a"];
+  /* sample products and prices only (InkAge has no fixed packages; the real names come from the data) */
+  const price: Record<string, number> = { t_a: 4.99, t_b: 9.99, t_c: 14.99, up_t_a_t_c: 10 };
+  const pname: Record<string, string> = { t_a: "Minta termék A", t_b: "Minta termék B", t_c: "Minta termék C", up_t_a_t_c: "A → C váltás" };
+  const chs = ["tiktok", "instagram", "google", "közvetlen", "iphoneapp"], accts = ["Partner", "InkAge · tiktok", null, null, null];
+  const recent = Array.from({ length: 34 }, (_, i) => { const s2 = st[i % 5], p2 = pl[i % 6], huf = s2 === "apple" && i % 2 === 0;
+    return { id: 100 - i, at: iso(Date.now() - i * 9.5 * 3600e3), store: s2, plan: p2, plan_name: pname[p2], amount: huf ? Math.round(price[p2] * 352) : price[p2], currency: huf ? "HUF" : "USD", usd: price[p2], est: s2 === "google", name: ["anna kovács", "tóth péter", "emma smith", "nagy zsófia"][i % 4], tx: "cs_test_" + (9000 + i),
+      refunded_at: i === 7 ? iso(Date.now() - 50 * 3600e3) : null, refund_usd: i === 7 ? price[p2] : 0, user_id: "u" + (i % 9), email: `vevo${i % 9}@example.com`, signed_up: iso(Date.now() - (i + 2) * 20 * 3600e3), user_sales: 1 + (i % 3 === 0 ? 1 : 0),
+      ch: chs[i % 5], account: accts[i % 5], lang: i % 3 ? "hu" : "en", country: i % 3 ? "HU" : "US", coupon: i % 7 === 0 ? "PARTNER10" : null, first_buy: i % 3 !== 0 }; });
+  const usdAll = recent.reduce((a, r) => a + r.usd, 0);
+  if (fn === "admin_payments") {
+    const by_day: any[] = []; recent.forEach((r) => { const day = new Date(r.at).toLocaleDateString("sv-SE", { timeZone: "Europe/Budapest" }); const x = by_day.find((y) => y.day === day && y.store === r.store); if (x) { x.sales++; x.usd += r.usd; } else by_day.push({ day, store: r.store, sales: 1, usd: r.usd }); });
+    const grp = (k: string) => { const m = new Map<string, any>(); recent.forEach((r: any) => { const v = r[k] ?? "?"; const x = m.get(v) || { [k]: v, sales: 0, usd: 0, payers: 2 }; x.sales++; x.usd += r.usd; m.set(v, x); }); return [...m.values()].sort((a, b) => b.usd - a.usd); };
+    return { days, live: false, cfg: { goal_day: 10, goal_month: 300, apple_sbp: true, google_rate: 0.15, stripe_pct: 0.029, stripe_fix: 0.3 }, fx: { huf: 352.1, day: iso(Date.now()).slice(0, 10) },
+      first_ever: iso(Date.now() - 14 * DAY), all_time: { sales: 41, payers: 33, usd: usdAll + 180 },
+      totals: { sales: 34, payers: 24, usd: usdAll, refund_usd: 14.99, net_usd: usdAll - 14.99, refunds: 1, upgrades: 6, new_payers: 18, est: 7, prev_sales: 21, prev_payers: 17, prev_usd: 402.5 },
+      pace: { today: { n: 4, payers: 4, usd: 89.96 }, yest: { n: 3, usd: 61.97 }, week: { n: 2, usd: 36.98 }, month: { n: 28, usd: 612.3 }, share_by_now: 0.55 },
+      by_store: ["stripe", "apple", "google"].map((k) => { const rs = recent.filter((r) => r.store === k); return { store: k, sales: rs.length, payers: Math.ceil(rs.length / 1.4), usd: rs.reduce((a, r) => a + r.usd, 0), refunds: rs.filter((r) => r.refunded_at).length, last: rs[0]?.at, money: k === "apple" ? { HUF: 9840, USD: 52.97 } : { USD: rs.reduce((a, r) => a + r.usd, 0) } }; }),
+      store_prev: { stripe: 12, apple: 5, google: 4 }, stripe_fee: 21.4,
+      by_plan: ["t_c", "t_a", "t_b", "up_t_a_t_c"].map((p2, i) => ({ plan: p2, plan_name: pname[p2], sales: 12 - i * 3, usd: (12 - i * 3) * price[p2] })),
+      by_day, prev_by_day: [], notes: [{ day: iso(Date.now() - 3 * DAY).slice(0, 10), text: "Partner-poszt: tetoválás 50 év múlva" }], releases: [],
+      heat: Array.from({ length: 40 }, (_, i) => ({ dow: 1 + (i % 7), h: 8 + ((i * 5) % 15), n: 1 + (i % 4) })),
+      by_ch: grp("ch"), by_account: grp("account").filter((x) => x.account !== "?"), by_lang: grp("lang"), by_country: grp("country"), by_pf: [{ pf: "web", sales: 21, usd: 400 }, { pf: "ios", sales: 7, usd: 120 }, { pf: "android", sales: 6, usd: 110 }],
+      by_link: [{ code: "p1", note: "Partner · öregedés carousel", sales: 6, usd: 151.94, post_platform: "tiktok" }], by_article: [{ land: "/tudastar/tetovalas-oregedese", sales: 3, usd: 64 }],
+      to_pay: { n: 18, median_h: 0.6, same_day: 15 }, conv: { new_accounts: 341, paid: 18 }, steps: { shown: 420, pick: 210, start: 64, signup: 12, bought: 31 },
+      recent, top: [{ user_id: "u0", email: "vevo0@example.com", sales: 3, usd: 64.97, last: iso(Date.now() - 3 * 3600e3) }],
+      problems: { open: 1, expired: 9, failed: 3 } };
+  }
+  if (fn === "admin_pay_customers") return { n: 24, ltv: 23.4, repeat: 4, multi_name: 3, unused: 2, unhappy: 1,
+    ltv_by_ch: [{ ch: "tiktok", buyers: 9, ltv: 26.1, usd: 235 }, { ch: "instagram", buyers: 6, ltv: 21.3, usd: 128 }, { ch: "google", buyers: 5, ltv: 19.9, usd: 99.5 }],
+    rows: recent.slice(0, 9).map((r, i) => ({ user_id: r.user_id, email: r.email, first_at: r.at, last_at: r.at, sales: 1 + (i % 3 === 0 ? 1 : 0), usd: r.usd, refund_usd: r.refund_usd, refunds: r.refunded_at ? 1 : 0, names: i === 2 ? 2 : 1, names_list: [r.name], plans: [r.plan], stores: [r.store], ch: r.ch, account: r.account, lang: r.lang, country: r.country, claims: i === 4 ? 0 : 3 + i, stars: i === 5 ? 2 : 4.5, low_after: i === 5 ? 2 : null })) };
+  if (fn === "admin_pay_customer") return { user: { id: "u0", email: "vevo0@example.com", created_at: iso(Date.now() - 3 * DAY) }, origin: { created_at: iso(Date.now() - 3 * DAY), ch: "tiktok", lang: "hu", src: { land: "/start" } },
+    purchases: recent.slice(0, 2).map((r) => ({ ...r, created_at: r.at, name_norm: r.name })), claims: [{ at: iso(Date.now() - 2 * DAY), style: "fineline", name: "anna kovács" }], ratings: [{ at: iso(Date.now() - DAY), style: "fineline", stars: 5 }], events: [] };
+  if (fn === "admin_pay_finance") return { cfg: { goal_day: 10, goal_month: 300, apple_sbp: true, google_rate: 0.15, ai_cost: 0.2, vat_limit_huf: 20000000, commission: 0.2 }, huf: 352.1,
+    months: [0, 1, 2].map((i) => ({ mo: iso(new Date(new Date().getFullYear(), new Date().getMonth() - i, 1).getTime() + 12 * 3600e3).slice(0, 10), sales: 30 - i * 10, gross: 640 - i * 200, refunds: 28, fees: 64 - i * 20, exact: 12, costs: 45, ai_n: 120 - i * 30, ai_usd: 24 - i * 6, stripe: 400, apple: 140, google: 100, huf: 225000 })),
+    costs: [{ id: 1, month: iso(Date.now()).slice(0, 8) + "01", label: "Vercel Pro", amount: 20, currency: "USD", recurring: true }, { id: 2, month: iso(Date.now()).slice(0, 8) + "01", label: "Supabase", amount: 25, currency: "USD", recurring: true }],
+    payouts: [{ id: "po_1", arrival_date: iso(Date.now() + 2 * DAY), amount: 182.4, currency: "USD", status: "in_transit" }, { id: "po_0", arrival_date: iso(Date.now() - 5 * DAY), amount: 140.1, currency: "USD", status: "paid" }],
+    stripe_pending: { USD: 96.3 }, stripe_next: iso(Date.now() + 2 * DAY), store_due: { apple: 119, google: 85 }, synced: { tx: iso(Date.now() - 600e3), n: 52, fx: iso(Date.now()).slice(0, 10) },
+    recon: { no_package: [{ id: 9 }] }, year: { huf: 1450000, limit: 20000000, pace_huf: 9100000, days_left: 56 }, fx_diff: { usd: 322.5, huf_at_sale: 113800, huf_at_payout: 112950 } };
+  if (fn === "admin_pay_problems") return { open: [{ id: 9, kind: "paid_missing", amount: 14.99, currency: "USD", reason: "A Stripe szerint fizetett, de nálunk nincs meg a vásárlás.", email: "vevo3@example.com", user_id: "u3", at: iso(Date.now() - 2 * 3600e3), ref: "cs_x" }],
+    by_kind: { expired: 9, failed: 3 }, recovered: 2,
+    expired: Array.from({ length: 5 }, (_, i) => ({ id: 20 + i, at: iso(Date.now() - i * 7 * 3600e3), plan: pl[i], amount: price[pl[i]], currency: "USD", email: `elakadt${i}@example.com`, device: ["iPhone Safari", "Android Chrome", "iPhone appon belül"][i % 3], country: "HU" })),
+    failed: [{ id: 30, at: iso(Date.now() - 5 * 3600e3), plan: "t_c", plan_name: pname.t_c, amount: 14.99, currency: "USD", reason: "insufficient_funds", device: "Android Chrome" }], reasons: [{ reason: "insufficient_funds", n: 2 }, { reason: "authentication_required", n: 1 }],
+    disputes: [], store_notes: [{ at: iso(Date.now() - 3 * DAY), kind: "refund_apple", reason: "ok: 1", amount: 3490, currency: "HUF" }],
+    by_device: [{ dev: "web", start: 40, done: 22 }, { dev: "web · instagram", start: 12, done: 3 }], by_browser: [{ device: "iPhone appon belül", n: 4 }, { device: "Android Chrome", n: 3 }],
+    speed: { n: 22, median_s: 74, p90_s: 410 }, signup_wall: { sent: 12, signed: 8, bought: 5 }, last_notice: { apple: iso(Date.now() - 3 * DAY), stripe_sync: iso(Date.now() - 600e3) } };
+  if (fn === "admin_pay_pricing") return { cfg: { goal_day: 10, ab: { on: true, id: "t261106", a: "t_b", b: "t_c" } },
+    mix_week: [0, 1, 2, 3].flatMap((w) => ["t_a", "t_b", "t_c"].map((p2, j) => ({ wk: iso(Date.now() - (3 - w) * 7 * DAY).slice(0, 10), plan: p2, n: 2 + j * 2 + w }))),
+    upgrades: [{ plan: "up_t_a_t_c", n: 5, median_h: 3.2 }, { plan: "up_t_b_t_c", n: 1, median_h: 30 }], up_share: { basic: 12, basic_up: 5, pro: 6, pro_up: 1 },
+    styles: [["fineline", 14, 9], ["blackwork", 11, 6], ["realisztikus", 9, 4], ["tradicionális", 6, 3]].map(([style, nn, f]) => ({ style, n: nn, first_pick: f, people: f })), before: { n: 12, minutes: 6.4, paywalls: 1.7 }, try: { tried: 220, bought: 24, median_h: 1.1 },
+    by_country: [{ country: "HU", store: "stripe", currency: "USD", sales: 18, avg_local: 21.2, avg_usd: 21.2 }, { country: "HU", store: "apple", currency: "HUF", sales: 4, avg_local: 7490, avg_usd: 21.3 }],
+    codes: [{ code: "PARTNER10", partner: "Partner", percent: 10, commission: 0.2, sales: 6, usd: 150.2, discount: 16.7, owed: 30.04, active: true }], other_codes: [],
+    ab: [{ variant: "t261106-a", shown: 180, sales: 6, usd: 131 }, { variant: "t261106-b", shown: 175, sales: 7, usd: 186 }], per_paywall: { shown: 420, usd: 640, sales: 30 } };
+  return {};
 }

@@ -116,7 +116,22 @@ function hero(d: Digest) {
 </td></tr></table></td></tr></table></td></tr>`;
 }
 
-export function digestEmail(d: Digest, x: Extra | undefined, site: string, tz = "Europe/Budapest") {
+/* money (admin_r_pay_digest): yesterday's and the week's payments; shown once payments are on or anything was sold */
+export type PayDigest = { live?: boolean; yest?: { n: number; payers: number; usd: number; top_ch?: string | null }; week?: { n: number; payers: number; usd: number }; week_prev?: { n: number; usd: number }; problems?: number; failed_y?: number };
+const usd = (v?: number) => "$" + (Math.round((v || 0) * 100) / 100).toLocaleString("hu-HU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const showPay = (p?: PayDigest) => !!p && (p.live || (p.week?.n || 0) > 0 || (p.yest?.n || 0) > 0);
+function paySection(p: PayDigest | undefined, site: string, week = false) {
+  if (!showPay(p)) return "";
+  const a = week ? p!.week : p!.yest;
+  const rows = [line("Bevétel", `<b>${usd(a?.usd)}</b>`, true), line("Fizetés", nf(a?.n || 0)), line("Fizető ember", nf(a?.payers || 0))];
+  if (week) rows.push(line("Az előző 7 nap", `${usd(p!.week_prev?.usd)} · ${nf(p!.week_prev?.n || 0)} fizetés`));
+  else if (p!.yest?.top_ch) rows.push(line("A legtöbb pénz innen", esc(CH[p!.yest.top_ch] || p!.yest.top_ch)));
+  if ((p!.failed_y || 0) > 0 && !week) rows.push(line("Félbehagyott vagy sikertelen fizetés", `<span style="color:${DOWN};">${nf(p!.failed_y || 0)}</span>`));
+  if ((p!.problems || 0) > 0) rows.push(line(`<a href="${site}/admin#payfail" style="color:${DOWN};font-weight:bold;">Sürgős fizetési ügy</a>`, `<span style="color:${DOWN};">${nf(p!.problems || 0)}</span>`));
+  return label(week ? "Bevétel · a héten" : "Bevétel · tegnap") + block(card(`<table ${T}>${rows.join("")}</table>`));
+}
+
+export function digestEmail(d: Digest, x: Extra | undefined, site: string, tz = "Europe/Budapest", pay?: PayDigest) {
   const subject = `InkAge · az elmúlt 24 óra: ${nf(d.y.made)} előnézet, ${nf(d.y.sessions)} látogatás`;
   /* the window, e.g. "október 23., 9:00 – október 24., 9:00" (older data without it: the day before) */
   const at = (t: string) => new Date(t).toLocaleString("hu-HU", { timeZone: tz, month: "long", day: "numeric", hour: "numeric", minute: "2-digit" });
@@ -129,6 +144,7 @@ export function digestEmail(d: Digest, x: Extra | undefined, site: string, tz = 
     `<tr><td style="padding:0 18px;"><table ${T}><tr>${tile("Látogatás", d.y.sessions, d.p.sessions)}${tile("Regisztráció", d.y.signups, d.p.signups)}</tr>
 <tr>${tile("Előnézetet készített fiók", d.y.made_users, d.p.made_users)}${tile("Hibajelzés", d.y.errors, d.p.errors, true)}</tr>
 <tr>${tile("Megosztás", d.y.shared, d.p.shared)}${tile("Mentés", d.y.saved, d.p.saved)}</tr></table></td></tr>`,
+    paySection(pay, site),
     t.length ? label("Ma teendő") + t.map((s) => `<tr><td style="padding:0 24px 10px;"><table ${T} bgcolor="#1a150c" style="border-radius:16px;background:#1a150c;border:1px solid #4a3c20;"><tr>
 <td width="4" bgcolor="${GOLDC}" style="border-radius:16px 0 0 16px;${GOLD}">&nbsp;</td>
 <td style="padding:15px 18px;font-family:${SANS};font-size:15px;line-height:22px;color:${INK};">${esc(s)}</td></tr></table></td></tr>`).join("") : "",
@@ -144,11 +160,11 @@ export function digestEmail(d: Digest, x: Extra | undefined, site: string, tz = 
 
   const pre = `${nf(d.y.made)} előnézet (${ch(d.y.made, d.p.made)}), ${nf(d.y.sessions)} látogatás, ${nf(d.y.signups)} regisztráció. ${nf(d.users)} / 1 000 000 felhasználó.`;
   const html = page({ subject, pre, kicker: "Reggeli összefoglaló", title: "Az elmúlt 24 óra", sub: esc(span), body, foot: `Belső értesítő az InkAge csapatának · minden reggel 6-kor, ott, ahol vagy (most: ${esc(tz.replace(/_/g, " "))}). Az időzóna magától átáll, amikor máshol megnyitod az Irányítóközpontot.` });
-  return { subject, html, text: text(d, site) };
+  return { subject, html, text: text(d, site, pay) };
 }
 
 /* Sunday evening: the last 7 days on one page (its button opens the Heti riport on the week that is ending) */
-export function weeklyEmail(x: Extra, site: string) {
+export function weeklyEmail(x: Extra, site: string, pay?: PayDigest) {
   const w = x.week || {}, pw = x.prev_week || {};
   const weekAgo = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
   const hd = (day: string) => new Date(day + "T12:00:00Z").toLocaleDateString("hu-HU", { timeZone: "Europe/Budapest", month: "long", day: "numeric" });
@@ -157,6 +173,7 @@ export function weeklyEmail(x: Extra, site: string) {
     `<tr><td style="padding:24px 18px 0;"><table ${T}><tr>${tile("Elkészült előnézet", w.made, pw.made)}${tile("Előnézetet készített fiók", w.made_users, pw.made_users)}</tr>
 <tr>${tile("Látogatás", w.sessions, pw.sessions)}${tile("Megosztás", w.shared, pw.shared)}</tr>
 <tr>${tile("Regisztráció", w.signups, pw.signups)}${tile("Hibajelzés", w.errors, pw.errors, true)}</tr></table></td></tr>`,
+    paySection(pay, site, true),
     label("Google") + block(card(`<table ${T}>${line("Kattintás", nf(x.gsc_week?.clicks), true)}${line("Megjelenés", nf(x.gsc_week?.impressions))}</table>`)),
     x.followers.length ? label("Követők · a héten") + block(card(`<table ${T}>${x.followers.map((f, i) => line(`${esc(PFN[f.platform] || f.platform)}<br><span style="font-size:13px;color:${MUTED};">${nf(f.followers)} követő összesen${f.since && f.since > weekAgo ? ` · mérés ${hd(f.since)} óta` : ""}</span>`,
       `<span style="color:${(f.gained || 0) > 0 ? UP : (f.gained || 0) < 0 ? DOWN : MUTED};">${(f.gained || 0) > 0 ? "+" : ""}${nf(f.gained || 0)}</span>`, !i)).join("")}</table>`)) : "",
@@ -169,9 +186,10 @@ export function weeklyEmail(x: Extra, site: string) {
   return { subject, html: page({ subject, pre, kicker: "Heti riport", title: "Az elmúlt 7 nap", sub: "InkAge · az előző 7 naphoz mérve (a riport oldala hétfőtől számol, ezért kicsit eltérhet)", body, foot: "Belső értesítő az InkAge csapatának · minden vasárnap este" }) };
 }
 
-export function text(d: Digest, site: string) {
+export function text(d: Digest, site: string, pay?: PayDigest) {
   const t = todo(d);
+  const money = showPay(pay) ? [`Bevétel tegnap: ${usd(pay!.yest?.usd)} · ${nf(pay!.yest?.n || 0)} fizetés · ${nf(pay!.yest?.payers || 0)} fizető${(pay!.problems || 0) > 0 ? ` · ${nf(pay!.problems || 0)} sürgős fizetési ügy` : ""}`] : [];
   return [`InkAge · az elmúlt 24 óra`, `Elkészült előnézet: ${nf(d.y.made)} (${ch(d.y.made, d.p.made)}), ${nf(d.y.made_users)} fióktól`, `Látogatás: ${nf(d.y.sessions)} (${ch(d.y.sessions, d.p.sessions)}) · Regisztráció: ${nf(d.y.signups)}`,
-    `Megosztás: ${nf(d.y.shared)} · Mentés: ${nf(d.y.saved)} · Hibajelzés: ${nf(d.y.errors)}`,
+    `Megosztás: ${nf(d.y.shared)} · Mentés: ${nf(d.y.saved)} · Hibajelzés: ${nf(d.y.errors)}`, ...money,
     ...(t.length ? ["Teendő:", ...t.map((x) => "• " + x)] : []), `${site}/admin`].join("\n");
 }
