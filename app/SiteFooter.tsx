@@ -34,11 +34,12 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
         { t: T('All guides', 'Tudástár'), href: `/tudastar${q}` },
         ...(
           [
+            /* the most searched articles (Search Console 2026-11), each written in all 35 languages; see lib/kb-links.ts */
+            ['tattoo-before-and-after', T('Before and after', 'Előtte és utána')],
+            ['laser-tattoo-removal-what-to-expect', T('Laser removal', 'Lézeres eltávolítás')],
+            ['laser-removal-how-many-sessions', T('Removal sessions', 'Hány kezelés kell?')],
+            ['tattoo-pain-chart', T('Pain chart', 'Fájdalomtérkép')],
             ['how-tattoos-age', T('How tattoos age', 'Öregedés')],
-            ['fine-line-tattoos-aging', T('Fine line', 'Fine line')],
-            ['best-placement-for-tattoo-longevity', T('Best spots', 'Legjobb helyek')],
-            ['tattoo-aftercare-sun-protection', T('Aftercare', 'Utókezelés')],
-            ['first-tattoo-checklist', T('First tattoo', 'Első tetoválás')],
           ] as const
         ).map(([s, t]) => ({ t, href: `/tudastar/${s}${q}` })),
       ],

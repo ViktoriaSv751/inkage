@@ -9,6 +9,10 @@ import { KbChrome } from '../../tudastar/KbChrome';
 import { SiteFooter } from '../../SiteFooter';
 import '../../tudastar/kb.css';
 import './seo.css';
+import { ARTICLES } from '@/lib/articles';
+import { articleLangs } from '@/lib/article-langs';
+import { seoPageArticles } from '@/lib/kb-links';
+import { KB } from '@/lib/kb';
 
 const tone = (v: number) => (v >= 75 ? 'good' : v >= 55 ? 'mid' : 'low');
 
@@ -25,6 +29,11 @@ export function SeoView({ slug, L, inApp = false }: { slug: string; L: Lang; inA
   const verdict =
     report.score >= 75 ? T('This combination usually ages well.', 'Ez a kombináció általában jól öregszik.') : report.score >= 55 ? T('A good choice, with a few things to watch.', 'Jó választás, néhány dologra figyelni kell.') : T('Likely to blur or fade noticeably.', 'Valószínűleg észrevehetően elmosódik vagy fakul.');
   const areas = SEO_AREAS.map((x) => ({ x, v: seoPage(`${s.k}-${x.k}`, L)?.medium ?? 0 })).sort((m, n) => n.v - m.v);
+  /* the knowledge-base articles about this style and body area, in this language only (lib/kb-links.ts) */
+  const reads = seoPageArticles(s.k, a.k)
+    .map((k) => ARTICLES.find((x) => x.slug === k))
+    .filter((x): x is (typeof ARTICLES)[number] => !!x && articleLangs(x.slug).includes(L))
+    .slice(0, 4);
   const stages = [
     { y: T('1 year', '1 év'), h: T('Settled', 'Leülepedett'), p: T('The ink settles and lines soften very slightly.', 'A tinta leülepszik, a vonalak picit lágyulnak.') },
     { y: T('10 years', '10 év'), h: T('Softer details', 'Lágyabb részletek'), p: T(`Ink spreads roughly a tenth of a millimetre; the finest details of a ${s.en.toLowerCase()} piece lose their edge first.`, `A tinta kb. egytized millimétert terül; egy ${s.hu.toLowerCase()} minta legfinomabb részletei veszítenek először az élességükből.`) },
@@ -170,6 +179,21 @@ export function SeoView({ slug, L, inApp = false }: { slug: string; L: Lang; inA
             ))}
           </div>
         </section>
+
+        {reads.length > 0 && (
+          <section className="sp-sec">
+            <h2>{T('More from the knowledge base', 'További cikkek a Tudástárból')}</h2>
+            <div className="sp-reads">
+              {reads.map((r) => (
+                <Link key={r.slug} href={`${inApp ? '/app/tudastar' : '/tudastar'}/${r.slug}${q}`}>
+                  {KB[r.slug]?.img && <img src={IMG(KB[r.slug].img, 400)} alt="" loading="lazy" />}
+                  <span>{pick(r.tag, L)}</span>
+                  <b>{pick(r.title, L)}</b>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         <p className="sp-fine">{T('Estimates based on common tattoo-artist rules of thumb, not a medical prediction.', 'Tetoválók ökölszabályain alapuló becslés, nem orvosi előrejelzés.')}</p>
       </div>

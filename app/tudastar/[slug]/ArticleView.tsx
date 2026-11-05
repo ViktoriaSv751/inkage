@@ -17,6 +17,9 @@ import { ReadProgress, TocNav } from './Reader';
 import '../kb.css';
 import './article.css';
 import { LogoMark } from '../../LogoMark';
+import { articleLangs } from '@/lib/article-langs';
+import { ARTICLE_LINKS, ARTICLE_STYLE } from '@/lib/kb-links';
+import { SEO_AREAS, SEO_STYLES, seoPage } from '@/lib/seo';
 
 const slugify = (s: string) =>
   s
@@ -57,11 +60,21 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
       const id = meta[k], cap = a.captions[k];
       if (id && cap) figs[k] = { src: IMG(id, 1400), set: IMGSET(id, 1400), cap: pick(cap, L) };
     }
+  /* links go only to articles written in this language (others are English, noindex copies): first the hand-picked
+     ones of lib/kb-links.ts, then the same topic, then the rest */
+  const inLang = (x: (typeof LONG)[number]) => x.slug !== a.slug && articleLangs(x.slug).includes(L);
+  const picked = (ARTICLE_LINKS[a.slug] || []).map((s) => LONG.find((x) => x.slug === s)).filter((x): x is (typeof LONG)[number] => !!x && inLang(x));
+  const pool = [...picked, ...LONG.filter((x) => inLang(x) && x.tag.en === a.tag.en), ...LONG.filter(inLang)].filter((x, i, arr) => arr.indexOf(x) === i);
+  /* two "Read also" lines inside the article (the hub of the topic first), the next-article card, three related cards */
+  const readAlso = pool.slice(0, 2);
   const idx = LONG.findIndex((x) => x.slug === a.slug);
-  const next = LONG[(idx + 1) % LONG.length];
-  const related = LONG.filter((x) => x.slug !== a.slug && x.slug !== next.slug && x.tag.en === a.tag.en)
-    .concat(LONG.filter((x) => x.slug !== a.slug && x.slug !== next.slug && x.tag.en !== a.tag.en))
-    .slice(0, 3);
+  const next = pool[2] || LONG[(idx + 1) % LONG.length];
+  const related = pool.filter((x) => x !== next).slice(2, 5);
+  const midAt = Math.floor(sections.length / 2);
+  /* where the two lines go: after the first section and before the last one, never next to the mid-article sign-up box */
+  const alsoAt = [0, sections.length - 2].filter((n, i, arr) => n >= 0 && n !== midAt && n < sections.length - 1 && arr.indexOf(n) === i);
+  const styleK = ARTICLE_STYLE[a.slug];
+  const style = SEO_STYLES.find((x) => x.k === styleK);
   const tip = T('Tip', 'Tipp');
   const removal = a.tag.en === 'Removal';
 
@@ -152,7 +165,13 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
                 {s.h}
               </h2>
               <Blocks ps={s.ps} figs={figs} tip={tip} />
-              {i === Math.floor(sections.length / 2) &&
+              {alsoAt.includes(i) && readAlso[alsoAt.indexOf(i)] && (
+                <Link href={`${base}/${readAlso[alsoAt.indexOf(i)].slug}${sfx}`} className="ka-also">
+                  <span>{T('Read also', 'Olvasd el ezt is')}</span>
+                  <b>{pick(readAlso[alsoAt.indexOf(i)].title, L)}</b>
+                </Link>
+              )}
+              {i === midAt &&
                 (inApp ? (
                   <aside className="ka-inline-cta">
                     <div>
@@ -166,6 +185,26 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
                 ))}
             </section>
           ))}
+
+          {style && (
+            <section className="ka-s ka-areas">
+              <h2>
+                {pick(style, L)}: {T('every body area', 'minden testrész')}
+              </h2>
+              <ol>
+                {SEO_AREAS.map((x) => ({ x, v: seoPage(`${style.k}-${x.k}`, L)?.medium ?? 0 }))
+                  .sort((m, n) => n.v - m.v)
+                  .map(({ x, v }) => (
+                    <li key={x.k}>
+                      <Link href={`${inApp ? '/app/tattoo' : '/tattoo'}/${style.k}-${x.k}${sfx}`}>
+                        <span>{pick(x, L)}</span>
+                        <b>{v}</b>
+                      </Link>
+                    </li>
+                  ))}
+              </ol>
+            </section>
+          )}
 
           <section id={faqId} className="ka-s ka-faq2">
             <h2>{T('Frequently asked questions', 'Gyakori kérdések')}</h2>

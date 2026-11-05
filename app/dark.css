@@ -124,3 +124,7 @@
 :root[data-theme='dark'] .ip-upd svg,
 :root[data-theme='dark'] .fx-group h2 svg { stroke: var(--neon); }
 :root[data-theme='dark'] .lm-pv-badge { color: #3ecf8e; }
+/* internal-link blocks (lib/kb-links.ts) */
+:root[data-theme='dark'] .ka-also { background: #17171b; }
+:root[data-theme='dark'] .ka-also b { color: var(--ink); }
+:root[data-theme='dark'] .ka-areas a { border-color: var(--line); }
