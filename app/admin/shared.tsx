@@ -2,14 +2,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { LANG_INFO } from "@/lib/tr";
-import { createPortal } from "react-dom";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { CountUp, Delta, Empty, Info, Spark, chColor, compact, fmt, pct } from "./charts";
 import { LANG_LAND, SignatureLine, type Tone } from "./visuals";
+import { Boundary, Lazy, Layer, PhoneTbl, Skel, cacheGet, cacheMem, cachePut, phoneNow, useLand, usePhone, useScrollLock, type TblCol } from "./phone";
+export { Layer, useScrollLock };
 
 export type D = Record<string, any>;
 
-export type Tab = "more" | "home" | "alerts" | "goals" | "connect" | "retention" | "markets" | "stores" | "traffic" | "social" | "search" | "links" | "funnel" | "users" | "viral" | "product" | "system" | "live" | "inbox" | "planner" | "audience" | "ask" | "report" | "youtube" | "impressions" | "seo" | "brand" | "monitor" | "platforms" | "glossary" | "announce" | "audit" | "inkage";
+export type Tab = "more" | "accounts" | "feedback" | "home" | "alerts" | "goals" | "connect" | "retention" | "markets" | "stores" | "traffic" | "social" | "search" | "links" | "funnel" | "users" | "viral" | "product" | "system" | "live" | "inbox" | "planner" | "audience" | "ask" | "report" | "youtube" | "impressions" | "seo" | "brand" | "monitor" | "platforms" | "announce" | "audit" | "todo" | "payments" | "inkage";
 
 
 export const GOAL = 1_000_000;
@@ -20,12 +21,56 @@ export const PERIODS: { d: number; l: string }[] = [{ d: 1, l: "24 óra" }, { d:
 /* Local design preview only (npm run dev, /admin?mock): sample data instead of the database. Compiled out of production. */
 export const MOCK = process.env.NODE_ENV !== "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).has("mock");
 
-export async function rpc(sb: ReturnType<typeof supabaseBrowser>, fn: string, args?: Record<string, unknown>): Promise<{ data: any; error: { message: string; code?: string } | null }> {
-  if (process.env.NODE_ENV !== "production" && MOCK) { const m = await import("./mock"); return { data: m.mock(fn, args || {}), error: null }; }
+export async function rpcRaw(sb: ReturnType<typeof supabaseBrowser>, fn: string, args?: Record<string, unknown>): Promise<{ data: any; error: { message: string; code?: string } | null; at?: number }> {
+  if (process.env.NODE_ENV !== "production" && MOCK) { if (new URLSearchParams(location.search).has("offline")) return { data: null, error: { message: "Failed to fetch" } }; const m = await import("./mock"); return { data: m.mock(fn, args || {}), error: null }; }
   if (!sb) return { data: null, error: { message: "Nincs adatbázis-kapcsolat." } };
-  const { data, error } = await sb.rpc(fn, args);
-  return { data, error: error ? { message: error.message, code: error.code } : null };
+  /* a page asks for a dozen numbers at once; the small database answers each in a second alone but runs out of time
+     when they all run together, so at most four go at a time and a timed-out one is asked once more */
+  for (let tryN = 0; ; tryN++) {
+    await slot();
+    let res;
+    try { res = await sb.rpc(fn, args); } finally { free(); }
+    const { data, error } = res;
+    if (error?.code === "57014" && tryN === 0) continue;
+    if (!error && (WRITERS.has(fn) || NOCACHE.has(fn)) && !QUIET.has(fn) && !fn.startsWith("admin_w_")) wroteAt = Date.now();
+    return { data, error: error ? { message: error.code === "57014" ? "Túl sokáig tartott a lekérdezés. Próbáld újra egy perc múlva." : error.message, code: error.code } : null };
+  }
 }
+
+/* Reads through the server's store (admin_cached): an answer younger than maxAge seconds comes at once, an older one
+   is computed there and kept. While the admin is open the database recomputes every kept answer once a minute, so
+   the numbers are at most about a minute old and the phone no longer runs a dozen heavy queries at once (they ran
+   past the 8 s limit together and the screen kept the numbers of hours before). Right after a change made here
+   (a note, a setting) the next reads are computed fresh. at = when the server computed the answer. */
+let wroteAt = 0; const WRITERS = new Set<string>(); const NOCACHE = new Set<string>(); let writersAsked = false;
+function askWriters(sb: ReturnType<typeof supabaseBrowser>) {
+  if (writersAsked || !sb) return; writersAsked = true;
+  sb.rpc("admin_cache_writers").then(({ data }) => { if (Array.isArray(data)) data.forEach((x) => WRITERS.add(String(x))); }, () => { writersAsked = false; });
+}
+/* how old an answer may be, in seconds: the live feed and the inbox nearly at once, everything else 45 s */
+const MAX_AGE: Record<string, number> = { admin_live: 5, admin_live_posts: 10, admin_ma_feed: 10, admin_ma_feed_day: 10, admin_fresh: 15, admin_inbox: 15, admin_badges: 15, admin_push_status: 15, admin_server_lock_status: 15 };
+/* bookkeeping the pages do by themselves (seen marks, the time zone, the alert list): no reason for fresh numbers */
+const QUIET = new Set(["admin_alerts_sync", "admin_tz_set", "admin_inbox_seen", "admin_brand_seen", "admin_touch", "admin_cached", "admin_cache_writers"]);
+/* never through the store: answers meant for one moment only */
+const RAW = new Set(["admin_cached", "admin_cache_writers", "admin_server_token", "admin_user_export", "admin_error_ai", "admin_track_query", "admin_import_posts", "admin_link_for_post", "admin_mark_own_short"]);
+export async function rpc(sb: ReturnType<typeof supabaseBrowser>, fn: string, args?: Record<string, unknown>, maxAge?: number): Promise<{ data: any; error: { message: string; code?: string } | null; at?: number }> {
+  if ((process.env.NODE_ENV !== "production" && MOCK) || !sb || !fn.startsWith("admin_") || RAW.has(fn) || NOCACHE.has(fn) || WRITERS.has(fn)) return rpcRaw(sb, fn, args);
+  askWriters(sb);
+  const age = Date.now() - wroteAt < 30_000 ? 0 : maxAge ?? MAX_AGE[fn] ?? 45;
+  const r = await rpcRaw(sb, "admin_cached", { p_fn: fn, p_args: args || {}, p_max_age: age });
+  /* the store is not there (an older database): every function asked directly from now on */
+  if (r.error && /PGRST202|could not find the function/i.test(r.error.message + (r.error.code || ""))) { NOCACHE.add(fn); return rpcRaw(sb, fn, args); }
+  if (r.error) return r;
+  const v = r.data as D | null;
+  /* a function that changes something, or arguments the store cannot pass: the function itself */
+  if (!v || v.nocache) { if (!v?.err) NOCACHE.add(fn); return rpcRaw(sb, fn, args); }
+  const at = v.at ? Date.parse(v.at) : Date.now();
+  return { data: v.d, error: null, at: Number.isFinite(at) ? at : Date.now() };
+}
+export const rpcC = rpc;
+const RPC_MAX = 4; let running = 0; const waiting: (() => void)[] = [];
+const slot = () => (running < RPC_MAX ? (running++, Promise.resolve()) : new Promise<void>((r) => waiting.push(() => { running++; r(); })));
+const free = () => { running--; waiting.shift()?.(); };
 
 export async function api(path: string, init?: RequestInit) {
   if (process.env.NODE_ENV !== "production" && MOCK) { const m = await import("./mock"); return m.mockApi(path); }
@@ -71,6 +116,7 @@ export const EV: Record<string, string> = {
   landing_faq: "GYIK a főoldalon", landing_usecase: "Felhasználási példa", landing_compare: "Összehasonlítás", drawer_feature: "Menüpont", design_fav: "Kedvenc minta", save_image: "Kép mentve", upload_reuse: "Korábbi feltöltés újra",
   oauth_start: "Google/Apple-belépés indul (app)", oauth_back: "Visszaért a belépésből (app)", oauth_cancel: "Belépés félbehagyva (app)", oauth_native_fail: "Natív Apple-belépés hiba → webes belépés (app)", iab_escape: "Instagram/TikTok → telefon böngészője", improve_start: "Javítás indul", resize: "Méret állítva", aftercare_ics: "Ápolási naptár", stage_y10: "Megnézte 10 év múlva", stage_y30: "Megnézte 30 év múlva",
   pro_file: "Fájl letöltve (PDF, videó, kép)", more_designs: "Új előnézetet kért („Nem lett jó?”)", signin: "Sikeres belépés", signup_confirmed: "Regisztráció megerősítve",
+  auth_step: "Regisztrációs oldal", step_back: "Visszalépés",
   server_error_unverified: "Szerverhiba (nem hitelesített)", artist_pdf: "PDF a tetoválóművésznek", video_made: "Öregedés-videó letöltve",
 };
 
@@ -98,6 +144,8 @@ export const PREVK: Record<string, string> = { app: "sessions", named: "app", ca
 export const CH: Record<string, string> = { androidapp: "Android-app (Google Play)", tiktok: "TikTok", instagram: "Instagram", ig: "Instagram", facebook: "Facebook", fb: "Facebook", pinterest: "Pinterest", linkedin: "LinkedIn", li: "LinkedIn", google: "Google", youtube: "YouTube", snapchat: "Snapchat", email: "E-mail", ai: "MI-keresők (ChatGPT…)", közvetlen: "Közvetlen / ismeretlen", visszatérő: "Visszatérő látogató", kereső: "Más kereső", hivatkozás: "Más weboldal", link: "Rövid link", x: "X (Twitter)", threads: "Threads", reddit: "Reddit", whatsapp: "WhatsApp", messenger: "Messenger", telegram: "Telegram", bing: "Bing", play: "Google Play", ads: "Google Ads (fizetett)", ismeretlen: "Ismeretlen", iosapp: "iPhone-app (App Store)" };
 
 export const ch = (k: string) => CH[k?.toLowerCase?.()] || k;
+/* the website's buttons, by the name they are sent with */
+export const CTAK: Record<string, string> = { register: "Regisztráció gomb", nav: "Felső menü gombja", bar: "Alsó sáv gombja (telefon)", tab: "Fül gombja", article_rail: "Cikk melletti gomb", article_top: "Cikk tetején lévő gomb", article_mid: "Cikk közepén lévő gomb", article_end: "Cikk alján lévő gomb", "?": "Név nélküli gomb" };
 
 export const PROV: Record<string, string> = { email: "E-mail + jelszó", google: "Google", apple: "Apple" };
 
@@ -119,6 +167,9 @@ export const SCR: Record<string, string> = { home: "Főoldal", gallery: "Galéri
 
 export const styleName = (v: unknown) => { const s = String(v || ""); if (!s) return "–"; return QVAL[s] || s; };
 
+/* InkAge has no celeb looks: the shared names stay for the pages that read them (style-rank, people, feedback) */
+export const CELEB: Record<string, string> = {};
+/* a website page in words */
 export const pageName = (p: unknown) => { const s = String(p || "/"); return ({ "/": "Főoldal", "/app": "App", "/regisztracio": "Regisztráció", "/belepes": "Belépés", "/gyik": "GYIK", "/rolunk": "Rólunk", "/funkciok": "Funkciók", "/hogyan-mukodik": "Hogyan működik", "/mi-az-inkage": "Mi az InkAge", "/tudastar": "Tudástár", "/telepites": "Telepítés", "/kapcsolat": "Kapcsolat", "/privacy": "Adatvédelem", "/terms": "Feltételek" } as Record<string, string>)[s] || (s.startsWith("/tudastar/") ? "Cikk: " + s.slice(10) : s.startsWith("/learn/") ? "Cikk: " + s.slice(7) : s.startsWith("/tattoo/") ? "Stílusoldal: " + s.slice(8) : s.startsWith("/go/") ? "Rövid link " + s : s.startsWith("/v/") ? "Megosztott előnézet" : s.startsWith("/app") ? "App" : s); };
 
 export const SIGN: Record<string, string> = { upload: "Saját feltöltés", library: "Mintatárból", ai: "MI-minta", photo: "Fotóról kivágva", skipped: "Kihagyta" };
@@ -146,7 +197,7 @@ export const secs = (s?: number | null) => (s == null ? "–" : s < 90 ? fmt(s) 
 
 /* ---------- icons (1.7px strokes, 24px grid) ---------- */
 export const P = {
-  home: "M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-5h4v5", traffic: "M3 17l6-6 4 4 8-8M15 7h6v6", social: "M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5",
+  home: "M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-5h4v5", money: "M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", traffic: "M3 17l6-6 4 4 8-8M15 7h6v6", social: "M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5",
   search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16M21 21l-4.3-4.3", links: "M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1",
   funnel: "M3 4h18l-7 8.5V19l-4 2v-8.5z", users: "M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 19v-1a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8",
   viral: "M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6M8.6 13.5l6.8 4M15.4 6.5l-6.8 4",
@@ -160,13 +211,40 @@ export const P = {
   bolt: "M13 2 4 14h7l-1 8 9-12h-7z", mail: "M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM3 7l9 6 9-6", layers: "M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
   calendar: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z", plus: "M12 5v14M5 12h14",
   bell: "M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0", sun: "M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4",
-  moon: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z", play: "M6 4.5v15l13-7.5z", chev: "M15 18l-6-6 6-6", chevr: "M9 18l6-6-6-6", down: "M6 9l6 6 6-6", x: "M18 6 6 18M6 6l12 12",
+  mic: "M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zM19 11a7 7 0 0 1-14 0M12 18v3", moon: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z", play: "M6 4.5v15l13-7.5z", chev: "M15 18l-6-6 6-6", chevr: "M9 18l6-6-6-6", down: "M6 9l6 6 6-6", x: "M18 6 6 18M6 6l12 12",
 };
 
-export const I = (d: string) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
+/* the same names, drawn solid: f = the filled shape (even-odd, so a hole is a second outline), s = the heavy line that stays a line.
+   An icon without an entry here is a pure line (arrows, ticks), drawn heavy. */
+const SOLID: Record<string, { f: string; s?: string }> = {
+  [P.home]: { f: "M12 3.2 2.7 11a1 1 0 0 0 .6 1.8H5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-7.2h1.7a1 1 0 0 0 .6-1.8z" },
+  [P.social]: { f: "M9 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8z", s: "M13 16V4a5 5 0 0 0 5 5" },
+  [P.funnel]: { f: "M3 3h18a1 1 0 0 1 .8 1.6L15 13v6a1 1 0 0 1-.6.9l-4 2A1 1 0 0 1 9 21v-8L2.2 4.6A1 1 0 0 1 3 3z" },
+  [P.users]: { f: "M9 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM2 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2zM16 2.2a4 4 0 0 1 0 7.6 6 6 0 0 0 0-7.6zM18.2 13.4a5.5 5.5 0 0 1 3.8 5.2V20h-4v-2a7 7 0 0 0-1.8-4.6z" },
+  [P.viral]: { f: "M18 2a3.4 3.4 0 1 1 0 6.800 3.4 3.4 0 0 1 0-6.800zM6 8.600a3.4 3.4 0 1 1 0 6.800 3.4 3.4 0 0 1 0-6.800zM18 15.200a3.4 3.400 0 1 1 0 6.800 3.4 3.4 0 0 1 0-6.800z", s: "M8.600 13.500l6.800 4M15.400 6.500l-6.800 4" },
+  [P.product]: { f: "M16.500 3.500a2.100 2.100 0 0 1 3 3L7 19l-4 1 1-4z", s: "M12 20h9" },
+  [P.system]: { f: "M10.300 3.900 1.800 18a2 2 0 0 0 1.700 3h17a2 2 0 0 0 1.700-3L13.700 3.900a2 2 0 0 0-3.400 0zM11 9h2v5h-2zM11 16h2v2h-2z" },
+  [P.eye]: { f: "M1.500 12S5.200 4.500 12 4.500 22.500 12 22.500 12 18.800 19.500 12 19.500 1.500 12 1.500 12zM12 8.500a3.500 3.500 0 1 0 0 7 3.500 3.500 0 0 0 0-7z" },
+  [P.pen]: { f: "M3 21l1-4.500 11-11 3.500 3.500-11 11z", s: "M12 21h9" },
+  [P.user]: { f: "M12 3a4.500 4.500 0 1 1 0 9 4.500 4.500 0 0 1 0-9zM4 21v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2z" },
+  [P.clock]: { f: "M12 2.500a9.500 9.500 0 1 0 0 19 9.500 9.500 0 0 0 0-19zM11 6.500h2v5l3.300 2.200-1.100 1.700L11 12.600z" },
+  [P.doc]: { f: "M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 12v2h8v-2zM8 16v2h5v-2z" },
+  [P.alert]: { f: "M12 2.500a9.500 9.500 0 1 0 0 19 9.500 9.500 0 0 0 0-19zM11 7h2v6.500h-2zM11 15h2v2h-2z" },
+  [P.target]: { f: "M12 2.500a9.500 9.500 0 1 0 0 19 9.500 9.500 0 0 0 0-19zM12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM12 9.300a2.700 2.700 0 1 0 0 5.400 2.700 2.700 0 0 0 0-5.400z" },
+  [P.bolt]: { f: "M13.600 1.700a1 1 0 0 1 .4.900L13.100 10H19a1 1 0 0 1 .8 1.600l-9 12a1 1 0 0 1-1.800-.7l.9-7.900H4a1 1 0 0 1-.8-1.600l9-12a1 1 0 0 1 1.400-.2z" },
+  [P.mail]: { f: "M3 4.500h18a1 1 0 0 1 1 1v.800L12 13 2 6.300v-.8a1 1 0 0 1 1-1zM2 8.700l10 6.700 10-6.700V18.500a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" },
+  [P.layers]: { f: "M12 1.800 2 7l10 5.200L22 7z", s: "M2.500 12l9.500 5 9.500-5M2.500 17l9.500 5 9.500-5" },
+  [P.calendar]: { f: "M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v3H3V6a2 2 0 0 1 2-2h2zM3 11h18v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" },
+  [P.bell]: { f: "M6 8a6 6 0 1 1 12 0c0 7 3 9.300 3.400 9.500a.5.500 0 0 1-.4.500H3a.5.500 0 0 1-.4-.500C3 17.300 6 15 6 8z", s: "M10.300 21.500a1.940 1.940 0 0 0 3.400 0" },
+  [P.sun]: { f: "M12 6.500a5.500 5.500 0 1 0 0 11 5.500 5.500 0 0 0 0-11z", s: "M12 1.500v1.500M12 21v1.500M4.200 4.200l1.100 1.100M18.700 18.700l1.100 1.100M1.500 12H3M21 12h1.500M4.200 19.800l1.100-1.100M18.700 5.300l1.100-1.100" },
+  [P.mic]: { f: "M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z", s: "M19 11a7 7 0 0 1-14 0M12 18v3.500" },
+  [P.moon]: { f: "M21.500 13A9.500 9.500 0 1 1 11 2.500a1 1 0 0 1 .7 1.700 6.500 6.500 0 0 0 8.100 8.100 1 1 0 0 1 1.700.7z" },
+  [P.play]: { f: "M6.500 3.500 19.500 11a1.200 1.200 0 0 1 0 2L6.500 20.500A1 1 0 0 1 5 19.600V4.400a1 1 0 0 1 1.500-.9z" },
+};
+export const I = (d: string) => { const o = SOLID[d]; return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">{o ? <><path d={o.f} fill="currentColor" fillRule="evenodd" stroke="none" />{o.s && <path d={o.s} strokeWidth="2.4" />}</> : <path d={d} strokeWidth="2.5" />}</svg>; };
 
 /* each area has its pastel: the icon pebble of the open page wears it */
-export const GT: Record<string, Tone> = { Ma: "peach", "Növekedés": "sky", "Felhasználók": "pink", "Termék": "butter", "Működés": "lilac" };
+export const GT: Record<string, Tone> = { Ma: "peach", "Bevétel": "mint", "Növekedés": "sky", "Felhasználók": "pink", "Termék": "butter", "Működés": "lilac" };
 
 export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string }[] }[] = [
   { g: "Ma", items: [
@@ -175,6 +253,9 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "alerts", l: "Jelzések", i: P.alert, d: "Minden figyelmeztetés és lehetőség, fontossági sorrendben." },
     { k: "inbox", l: "Postafiók", i: P.mail, d: "Kommentek, áruházi vélemények és a weboldalról írt üzenetek, válasszal innen." },
     { k: "ask", l: "Kérdezz", i: P.spark, d: "Kérdezz a számaidtól: az MI a saját adataidból válaszol." },
+  ] },
+  { g: "Bevétel", items: [
+    { k: "payments", l: "Fizetések", i: P.money, d: "Itt jelenik meg minden fizetés (weboldal, App Store, Google Play), amint az InkAge fizetést fogad. Még nincs fizetés." },
   ] },
   { g: "Felhasználók", items: [
     { k: "users", l: "Emberek", i: P.users, d: "Kik regisztráltak, honnan, és visszajönnek-e." },
@@ -186,6 +267,7 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "traffic", l: "Források", i: P.traffic, d: "Honnan jönnek a látogatók, és melyik csatorna hoz felhasználót." },
     { k: "impressions", l: "Megjelenések", i: P.eye, d: "Hányszor láttak minket a Google-ben, a közösségi oldalakon és az App Store-ban, és mi kapcsán." },
     { k: "social", l: "Tartalom", i: P.social, d: "Minden platform: a fiókjaid, a videóid és a posztjaid valódi számai." },
+    { k: "accounts", l: "Fiókok", i: P.users, d: "Minden TikTok- és Instagram-fiók egymás mellett (InkAge és a partnerek): elérés, virális posztok, és melyik fiók hány regisztrációt hozott." },
     { k: "platforms", l: "Platformok", i: P.layers, d: "A platformok egymás mellett: melyik mennyit ér, hány látogatót és regisztrációt hoz 1000 megtekintésenként." },
     { k: "planner", l: "Tervező", i: P.calendar, d: "Tartalomnaptár: a megjelent és a tervezett posztok, ötletek, rövid linkek." },
     { k: "audience", l: "Közönség", i: P.users, d: "Követők platformonként, demográfia, aktív órák, storyk." },
@@ -201,6 +283,7 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "product", l: "Használat", i: P.product, d: "Mit csinálnak az appban, mit választanak." },
     { k: "viral", l: "Megosztás", i: P.viral, d: "Megosztják-e, és hoz-e új embert a megosztás." },
     { k: "inkage", l: "InkAge", i: P.spark, d: "Ami csak az InkAge-é: MI-előnézetek és költségük, napi korlát, MI-modellek, moderálás, visszajelzések, várólista." },
+    { k: "feedback", l: "Visszajelzések", i: P.spark, d: "Minden értékelés egy helyen: App Store, Google Play és az appon belüli csillagok (1–5) stílusonként, és hogy mi nem tetszett." },
   ] },
   { g: "Működés", items: [
     { k: "connect", l: "Kapcsolatok", i: P.bolt, d: "Minden platform, áruház, kereső és MI bekötése: a kulcsok megadása, próbája, állapota, telefonról is." },
@@ -208,24 +291,31 @@ export const NAV: { g: string; items: { k: Tab; l: string; i: string; d: string 
     { k: "system", l: "Rendszer", i: P.system, d: "Beállítások és biztonság: állapot, belépések, értesítések, kulcsok, e-mail." },
     { k: "monitor", l: "Monitoring", i: P.live, d: "A működés: elérhetőség, időzített feladatok, lehúzások, hibacsoportok, kiadások, riasztások." },
     { k: "report", l: "Heti riport", i: P.doc, d: "A hét egy oldalon, PDF-be menthető." },
-    { k: "glossary", l: "Szótár", i: P.doc, d: "Minden szám meghatározása egy helyen: mit számol, honnan jön, mennyire friss." },
     { k: "audit", l: "Napló", i: P.doc, d: "Minden admin-művelet: ki, mikor, mit csinált. Nem törölhető." },
   ] },
 ];
 
-/* the phone's bottom bar: four sections and "+"; Növekedés and Emberek hold their pages as swipeable sub-tabs,
-   everything else lives on the "Több" screen */
-export type PSec = "ma" | "grow" | "people" | "more";
-
-/* the same groups as the desktop menu: Közönség (followers on the platforms) belongs to Növekedés on both */
-export const PSUB: Record<"grow" | "people", Tab[]> = { grow: ["traffic", "impressions", "social", "platforms", "planner", "audience", "youtube", "search", "seo", "brand", "links", "markets", "stores"], people: ["users", "funnel", "retention"] };
-
-export const secOf = (t: Tab): PSec => (t === "home" ? "ma" : PSUB.grow.includes(t) ? "grow" : PSUB.people.includes(t) ? "people" : "more");
-
-export const TABBAR: { k: PSec | "plus"; l: string; i: string; to: Tab }[] = [
-  { k: "ma", l: "Ma", i: P.home, to: "home" }, { k: "grow", l: "Növekedés", i: P.traffic, to: "traffic" }, { k: "plus", l: "", i: P.plus, to: "home" },
-  { k: "people", l: "Emberek", i: P.users, to: "users" }, { k: "more", l: "Több", i: P.menu, to: "more" },
+/* The phone: five bottom tabs by the questions she has (baj van-e, kivel mi van, honnan jönnek, mi a dolgom, kérdés),
+   and every page in one of seven themes. Inside a theme the pages switch with a tab row and a sideways swipe; everything
+   else opens from the menu button's searchable map. Adding a page to the phone: put it in a theme here. */
+export type PSec = "ma" | "grow" | "people" | "todo" | "ask" | "more";
+export const THEMES: { k: string; l: string; i: string; tone: Tone; pages: Tab[] }[] = [
+  { k: "ma", l: "Ma", i: P.home, tone: "peach", pages: ["home", "live", "ask", "report"] },
+  { k: "todo", l: "Teendők", i: P.check, tone: "pink", pages: ["todo", "alerts", "inbox"] },
+  { k: "money", l: "Bevétel", i: P.money, tone: "mint", pages: ["payments"] },
+  { k: "people", l: "Emberek", i: P.users, tone: "pink", pages: ["users", "funnel", "retention", "product", "viral", "feedback", "inkage"] },
+  { k: "grow", l: "Növekedés", i: P.traffic, tone: "sky", pages: ["traffic", "impressions", "platforms", "markets", "links", "stores"] },
+  { k: "content", l: "Tartalom", i: P.social, tone: "butter", pages: ["social", "accounts", "planner", "audience", "youtube"] },
+  { k: "google", l: "Google és márka", i: P.search, tone: "mint", pages: ["search", "seo", "brand"] },
+  { k: "ops", l: "Működés", i: P.system, tone: "lilac", pages: ["connect", "goals", "monitor", "system", "announce", "audit"] },
 ];
+export const themeOf = (t: Tab) => THEMES.find((x) => x.pages.includes(t));
+/* the bottom tab a theme belongs to, when she has not put that page there herself */
+const THEME_SEC: Record<string, PSec> = { ma: "ma", money: "ma", todo: "todo", people: "people", grow: "grow", content: "grow", google: "grow", ops: "more" };
+export const secOf = (t: Tab): PSec => (t === "ask" ? "ask" : t === "more" ? "more" : THEME_SEC[themeOf(t)?.k || ""] || "more");
+export const PTABS_DEFAULT: Tab[] = ["home", "users", "traffic", "ask"];
+/* a bottom tab's own name and icon (the page's short name if she picked another page for it) */
+export const PTAB_L: Partial<Record<Tab, [string, string]>> = { home: ["Ma", P.home], users: ["Emberek", P.users], traffic: ["Növekedés", P.traffic], todo: ["Teendők", P.check], ask: ["Kérdezz", P.spark], payments: ["Bevétel", P.money] };
 
 /* "Kérdezz erről az oldalról": the question each page sends to Kérdezz */
 export const ASKQ: Partial<Record<Tab, string>> = {
@@ -235,14 +325,16 @@ export const ASKQ: Partial<Record<Tab, string>> = {
   youtube: "Hogyan teljesítenek a YouTube-videóim és a Shortsaim?", search: "Melyik Google-keresésekben tudnék a leggyorsabban előrébb kerülni?", seo: "Mi a három legfontosabb SEO-javítás most?",
   markets: "Melyik nyelv vagy ország a legnagyobb lehetőség most?", stores: "Hogyan állnak a letöltések és az értékelések, és mit javítsak?", users: "Kik regisztráltak, honnan jöttek, és mi különbözteti meg őket?",
   funnel: "Hol esnek ki a legtöbben az úton, és mit javítsak először?", retention: "Visszajönnek-e a regisztráltak, és mi tartja meg őket?", product: "Mit használnak a legtöbbet az appban, és mit hagynak ki?",
+  payments: "Mennyi pénz jött be, honnan fizetnek a legtöbben, és hol akad el a fizetés?",
   viral: "Megosztják-e az appot, és hoz-e új embert a megosztás?", links: "Melyik rövid link hozza a legtöbb embert?", alerts: "Melyik jelzéssel foglalkozzak először, és miért?" };
-export const SHORT: Partial<Record<Tab, string>> = { platforms: "Platformok", seo: "SEO", brand: "Márka", impressions: "Megjelenés", search: "Google", traffic: "Források", social: "Tartalom", users: "Emberek", audience: "Közönség" };
+export const SHORT: Partial<Record<Tab, string>> = { home: "Áttekintés", report: "Riport", todo: "Lista", goals: "Célok", platforms: "Platformok", seo: "SEO", brand: "Márka", impressions: "Megjelenés", search: "Google", traffic: "Források", social: "Tartalom", users: "Emberek", audience: "Közönség" };
 
-export const ALL = [...NAV.flatMap((g) => g.items), { k: "more" as Tab, l: "Több", i: P.menu, d: "" }];
+export const ALL = [...NAV.flatMap((g) => g.items), { k: "more" as Tab, l: "Több", i: P.menu, d: "" }, { k: "todo" as Tab, l: "Teendők", i: P.check, d: "Minden, amivel dolgod van, egy listában, fontosság szerint." }];
 
 
-/* Global filters: a channel, a language, a custom date range. Every chart on every page follows them, they live in
-   the address bar (a link brings the same view back), and clicking a slice or a row sets them (cross-filter). */
+/* Global filters: a channel, a language, a custom date range. Every chart on every page follows them, and clicking a
+   slice or a row sets them (cross-filter). The channel and the language live in the address bar too; the dates do not:
+   every entry starts on the last 24 hours. */
 export type Flt = { ch?: string; lang?: string; from?: string; to?: string };
 
 export const FltCtx = createContext<{ f: Flt; set: (p: Partial<Flt>) => void }>({ f: {}, set: () => {} });
@@ -252,13 +344,9 @@ export const useFlt = () => useContext(FltCtx);
 export const chList = (s?: string) => (s ? s.split(",").filter(Boolean) : []);
 export const chToggle = (s: string | undefined, k: string) => { const l = chList(s); const nx = l.includes(k) ? l.filter((x) => x !== k) : [...l, k]; return nx.length ? nx.join(",") : undefined; };
 
-export const readFlt = (): Flt => { try { const q = new URLSearchParams(location.search); const o: Flt = {}; (["ch", "lang", "from", "to"] as const).forEach((k) => { const v = q.get(k); if (v) o[k] = v.slice(0, 40); }); return o; } catch { return {}; } };
+export const readFlt = (): Flt => { try { const q = new URLSearchParams(location.search); const o: Flt = {}; (["ch", "lang"] as const).forEach((k) => { const v = q.get(k); if (v) o[k] = v.slice(0, 40); }); return o; } catch { return {}; } };
 
-export const writeFlt = (f: Flt) => { try { const q = new URLSearchParams(location.search); (["ch", "lang", "from", "to"] as const).forEach((k) => { if (f[k]) q.set(k, f[k]!); else q.delete(k); }); const qs = q.toString().replace(/=(&|$)/g, "$1"); history.replaceState(history.state, "", location.pathname + (qs ? "?" + qs : "") + location.hash); } catch {} };
-
-/* the period lives in the address bar too (?p=7), so a link or a reload brings the same view back */
-export const readPeriod = (): number | null => { try { const v = new URLSearchParams(location.search).get("p"); return v !== null && [0, 1, 3, 7, 30, 90].includes(Number(v)) ? Number(v) : null; } catch { return null; } };
-export const writePeriod = (d: number) => { try { const q = new URLSearchParams(location.search); if (d === 30) q.delete("p"); else q.set("p", String(d)); const qs = q.toString().replace(/=(&|$)/g, "$1"); history.replaceState(history.state, "", location.pathname + (qs ? "?" + qs : "") + location.hash); } catch {} };
+export const writeFlt = (f: Flt) => { try { const q = new URLSearchParams(location.search); (["ch", "lang"] as const).forEach((k) => { if (f[k]) q.set(k, f[k]!); else q.delete(k); }); const qs = q.toString().replace(/=(&|$)/g, "$1"); history.replaceState(history.state, "", location.pathname + (qs ? "?" + qs : "") + location.hash); } catch {} };
 
 /* ---------- one period for every page ----------
    days: the choice (1, 3, 7, 30, 90, 0 = all); from / to: a range of her own. "eff" is what a page that counts in days
@@ -270,23 +358,22 @@ export const daysLabel = (x: number) => (!x || x >= ALL_DAYS ? "összes" : x ===
 export function makePeriod(days: number, f: Flt): Period {
   const p_from = f.from ? new Date(f.from + "T00:00:00").toISOString() : null;
   /* the next midnight by the calendar (24 hours would be an hour off on a clock-change day) */
-  const p_to = f.to ? (() => { const x = new Date(f.to + "T00:00:00"); x.setDate(x.getDate() + 1); return x.toISOString(); })() : null;
+  const p_to = f.to && f.from ? (() => { const x = new Date(f.to + "T00:00:00"); x.setDate(x.getDate() + 1); return x.toISOString(); })() : null;
   const eff = f.from ? Math.max(1, Math.ceil((Date.now() - new Date(f.from + "T00:00:00").getTime()) / 864e5)) : days || ALL_DAYS;
-  const label = f.from ? `${f.from.slice(5).replace("-", ".")} – ${(f.to || "ma").slice(5).replace("-", ".")}` : days === 0 ? "a kezdetek óta" : days === 1 ? "24 óra" : `${days} nap`;
+  const label = f.from ? `${f.from.slice(5).replace("-", ".")} – ${f.to ? f.to.slice(5).replace("-", ".") : "ma"}` : days === 0 ? "a kezdetek óta" : days === 1 ? "24 óra" : `${days} nap`;
   return { days, from: f.from, to: f.to, eff, p_from, p_to, label };
 }
 export const PeriodCtx = createContext<Period>(makePeriod(30, {}));
 /* the period of the dashboard: { days, from, to, eff, p_from, p_to } for any page that wants it */
 export const usePeriod = () => useContext(PeriodCtx);
-/* a card's own period, when it should differ from the header's (kept in this browser per card): [days, the picker] */
+/* a card's own period, when it should differ from the header's (for this visit only): [days, the picker] */
 export const CARD_DAYS: [number, string][] = [[7, "7 nap"], [30, "30 nap"], [90, "90 nap"], [365, "1 év"]];
 export function useCardDays(key: string, def = 0) {
   const per = useContext(PeriodCtx);
   const [v, setV] = useState(0);
-  useEffect(() => { try { setV(Number(localStorage.getItem("inkage.admin.cd." + key) || 0)); } catch {} }, [key]);
-  const pick = (x: number) => { setV(x); try { if (x) localStorage.setItem("inkage.admin.cd." + key, String(x)); else localStorage.removeItem("inkage.admin.cd." + key); } catch {} };
+  void key;
   const days = v || def || per.eff;
-  const ctl = <select className="adm-in sm cd-pick" value={v} onChange={(e) => pick(Number(e.target.value))} aria-label="A kártya saját időszaka" title="A kártya saját időszaka (a fejléc időszakától függetlenül)">
+  const ctl = <select className="adm-in sm cd-pick" value={v} onChange={(e) => setV(Number(e.target.value))} aria-label="A kártya saját időszaka" title="A kártya saját időszaka (a fejléc időszakától függetlenül)">
     <option value={0}>{def ? `Alap: ${def} nap` : "Mint a fejléc"}</option>{CARD_DAYS.map(([d, l]) => <option key={d} value={d}>{l}</option>)}</select>;
   return [days, ctl] as const;
 }
@@ -320,33 +407,37 @@ export const RefreshCtx = createContext(0);
 export const useRefresh = () => useContext(RefreshCtx);
 
 export function Loading() {
+  /* a faint copy of what comes: one big figure, three small ones, then cards */
   return (
-    <div className="g">
+    <div className="ink-load" aria-busy="true" aria-label="Töltés">
       <div className="ph-splash" aria-hidden="true"><SignatureLine text="InkAge" /></div>
-      <div className="s12" style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 4px" }}><div className="skel" style={{ height: 12, width: 140, borderRadius: 99 }} /><div className="skel" style={{ height: 46, width: "min(520px,80%)", borderRadius: 16 }} /></div>
-      {["peach", "butter", "pink", "sky"].map((t) => <div key={t} className="skel s3" style={{ height: 156, background: `var(--t-${t})`, opacity: .55 }} />)}
-      <div className="skel s5" style={{ height: 380 }} /><div className="skel s7" style={{ height: 380 }} />
+      <div className="ink-load-h"><i className="skel" /><b className="skel" /><u className="skel" /></div>
+      <div className="ink-load-3">{[0, 1, 2].map((t) => <div key={t}><b className="skel" /><i className="skel" /></div>)}</div>
+      <div className="ink-load-c"><div className="skel" /><div className="skel" /></div>
     </div>
   );
 }
 
 /* Card v2: title with the explanation behind ⓘ (sub), an optional visible line (desc), tools on the right, a footer */
-export function Card({ title, sub, desc, icon, right, children, className = "", foot, onClick, src }: { title: string; sub?: React.ReactNode; desc?: React.ReactNode; icon?: string; right?: React.ReactNode; children: React.ReactNode; className?: string; foot?: React.ReactNode; onClick?: () => void; src?: string | string[] }) {
+export function Card({ title, sub, desc, icon, right, children, className = "", foot, onClick, src, eager, noData }: { title: string; sub?: React.ReactNode; desc?: React.ReactNode; icon?: string; right?: React.ReactNode; children?: React.ReactNode; className?: string; foot?: React.ReactNode; onClick?: () => void; src?: string | string[]; eager?: boolean; noData?: React.ReactNode }) {
   const tip = sub || desc; /* minimal text: every explanation lives behind ⓘ */
+  const phone = usePhone();
+  /* phone: a card with nothing to show is one line saying why; the others are drawn when they come near the screen */
+  if (phone && noData) return <section className={"c nodata " + className}><h2>{title}</h2><span className="nd-why">{noData}</span></section>;
   return (
     <section className={"c " + className + (onClick ? " click" : "")} onClick={onClick}>
       <div className="c-h">
         <div>{icon && <span className="c-ic">{I(icon)}</span>}<div><h2>{title}{tip && <Info>{tip}</Info>}</h2>{src && <div className="c-fresh">{(Array.isArray(src) ? src : [src]).map((x) => <Fresh key={x} src={x} />)}</div>}</div></div>
         {right && <div className="c-tools">{right}</div>}
       </div>
-      {children}
+      <Boundary>{phone ? <Lazy eager={eager}>{children}</Lazy> : children}</Boundary>
       {foot && <div className="c-foot">{foot}</div>}
     </section>
   );
 }
 
 /* KPI v2: the number counts up, ⓘ carries the definition, the tile opens its page when it has one */
-/* KPI = a pastel tile: icon pebble, LABEL, a big mono number, the change, a faint trend behind */
+/* KPI = a label, a large number, the change, a small trend under it. No colour of its own. */
 /* where a KPI leads (drill-down): a page ("users"), a card on this page by the start of its title ("@Vélemények"), or
    the next card below it ("@next") — the list behind the number */
 export function drillTo(to: string, from?: HTMLElement | null) {
@@ -360,14 +451,14 @@ export function drillTo(to: string, from?: HTMLElement | null) {
 /* where a number comes from: the platform's API, our own measuring, an estimate, a platform export, typed in by hand */
 export const SRCK: Record<string, [string, string]> = { api: ["API", "A platform hivatalos adatai (API), automatikusan lehúzva."], own: ["saját mérés", "A inkage.app és az app névtelen méréséből, valós időben."],
   est: ["becslés", "Becsült szám: a forrását utólag, valószínűség alapján kötjük hozzá (pl. a fiókot a regisztráció előtti látogatáshoz)."], export: ["export", "A platform saját exportfájljából, amit feltöltöttél."], manual: ["kézi", "Kézzel beírt szám."] };
-export function Kpi({ l, v, unit, now, prev, invert, spark, hl, sub, title, icon, className = "", onClick: oc, tone = "peach", to, kind }: { l: string; v: React.ReactNode; unit?: string; now?: number; prev?: number; invert?: boolean; spark?: number[]; hl?: boolean; sub?: React.ReactNode; title?: string; icon?: string; className?: string; color?: string; onClick?: () => void; tone?: Tone; to?: string; kind?: keyof typeof SRCK }) {
+export function Kpi({ l, v, unit, now, prev, invert, spark, hl, sub, title, icon, className = "", onClick: oc, to, kind }: { l: string; v: React.ReactNode; unit?: string; now?: number; prev?: number; invert?: boolean; spark?: number[]; hl?: boolean; sub?: React.ReactNode; title?: string; icon?: string; className?: string; color?: string; onClick?: () => void; tone?: Tone; to?: string; kind?: keyof typeof SRCK }) {
   const onClick = oc || (to ? (e?: React.MouseEvent<HTMLElement>) => drillTo(to, e?.currentTarget) : undefined);
   /* good or bad against the period before: a clear change (20 % or more) colours the tile's edge and says so */
   const ch = now != null && prev ? (now - prev) / prev : null, mood = ch == null || Math.abs(ch) < 0.2 ? "" : (ch > 0) !== !!invert ? " good" : " bad";
   return (
-    <div className={`kpi t-${tone}` + mood + (hl ? " hl" : "") + (onClick ? " click" : "") + " " + className} onClick={onClick as any} role={onClick ? "button" : undefined} tabIndex={onClick ? 0 : undefined} title={to ? (to.startsWith("@") ? "Kattints: a részletek lent" : "Kattints: a részletek a saját oldalán") : undefined}>
+    <div className={"kpi" + mood + (hl ? " hl" : "") + (onClick ? " click" : "") + " " + className} onClick={onClick as any} role={onClick ? "button" : undefined} tabIndex={onClick ? 0 : undefined} title={to ? (to.startsWith("@") ? "Kattints: a részletek lent" : "Kattints: a részletek a saját oldalán") : undefined}>
       <span className="l"><span className="ki">{icon && I(icon)}</span><span className="kl">{l}{title && <Info>{title}</Info>}{kind && <span className={"skind " + kind} title={SRCK[kind][1]}>{SRCK[kind][0]}</span>}</span></span>
-      <span className="v">{v}{unit && <small>{unit}</small>}</span>
+      <span className="v">{typeof v === "number" ? <CountUp v={v} /> : v}{unit && <small>{unit}</small>}</span>
       <span className="s">{now != null && prev != null && <Delta now={now} prev={prev} invert={invert} />}{sub}</span>
       {mood && <span className="kpi-say">{mood === " good" ? "jóval jobb, mint előtte" : "jóval gyengébb, mint előtte"}</span>}
       {spark && <Spark values={spark} h={44} color="var(--tile-ink)" />}
@@ -375,28 +466,38 @@ export function Kpi({ l, v, unit, now, prev, invert, spark, hl, sub, title, icon
   );
 }
 
+/* what a computed column shows, as plain text: its own field if it has one, otherwise what its cell draws */
+const nodeText = (x: any): string => (x == null || typeof x === "boolean" ? "" : typeof x === "string" || typeof x === "number" ? String(x) : Array.isArray(x) ? x.map(nodeText).join("") : x?.props ? (x.props.children != null ? nodeText(x.props.children) : x.props.v != null ? String(x.props.v) : "") : "");
+const cellVal = (c: TblCol, r: D): unknown => { const v = r[c.k]; if (v != null && v !== "") return v; if (!c.r) return v; try { const t = nodeText(c.r(r)).replace(/\s+/g, " ").trim(); return t === "–" || t === "—" ? null : t || null; } catch { return null; } };
+/* "1 234,5%" reads as a number, "12 perce" as text */
+const sortNum = (v: unknown) => { if (typeof v === "number") return v; const t = String(v).trim().replace(/\s/g, "").replace(",", ".").replace(/[%↑↓+]/g, ""); return /^-?\d*\.?\d+$/.test(t) ? Number(t) : null; };
 /* Table: click a header to sort (again to flip), CSV of exactly what is shown */
-export function Tbl({ cols, rows, empty = "Még nincs adat ebben az időszakban.", onRow, name = "inkage", csv = true }: { cols: { k: string; l: string; num?: boolean; r?: (row: D) => React.ReactNode }[]; rows: D[]; empty?: string; onRow?: (r: D) => void; name?: string; csv?: boolean }) {
+export function Tbl({ cols, rows, empty = "Még nincs adat ebben az időszakban.", onRow, name = "inkage", csv = true, limit, alpha }: { cols: TblCol[]; rows: D[]; empty?: string; onRow?: (r: D) => void; name?: string; csv?: boolean; limit?: number; alpha?: boolean }) {
   const [sk, setSk] = useState<string | null>(null); const [dir, setDir] = useState<1 | -1>(-1);
+  const phone = usePhone(), land = useLand();
   const sorted = useMemo(() => {
     if (!sk || !rows) return rows || [];
-    const val = (r: D) => { const v = r[sk]; const x = typeof v === "number" ? v : Number(v); return v == null || v === "" ? -Infinity : Number.isFinite(x) && String(v).trim() !== "" && !/[a-zA-Z]/.test(String(v).replace(/e[+-]?\d+$/i, "")) ? x : String(v).toLowerCase(); };
-    return [...rows].sort((a, b) => { const x = val(a), y = val(b); return (x < y ? -1 : x > y ? 1 : 0) * dir; });
-  }, [rows, sk, dir]);
+    const col = cols.find((c) => c.k === sk);
+    const val = (r: D) => { const v = col ? cellVal(col, r) : r[sk]; if (v == null || v === "") return null; const x = sortNum(v); return x != null ? x : String(v).toLowerCase(); };
+    /* what has no value goes last in either direction */
+    return [...rows].sort((a, b) => { const x = val(a), y = val(b); if (x == null || y == null) return x == null ? (y == null ? 0 : 1) : -1; if (typeof x !== typeof y) return typeof x === "number" ? -1 : 1; return (x < y ? -1 : x > y ? 1 : 0) * dir; });
+  }, [rows, sk, dir]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!rows?.length) return <Empty t={empty} />;
   const sortBy = (k: string) => { if (sk === k) setDir(dir === 1 ? -1 : 1); else { setSk(k); setDir(-1); } };
   const download = () => {
     /* text from outside (a comment, a title) that starts like a formula is kept as text in Excel, never run */
     const esc = (v: unknown) => { let t = v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v); if (typeof v === "string" && /^[=+\-@\t\r]/.test(t)) t = "'" + t; return /[";\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
     const use = cols.filter((c) => c.l && c.k !== "x" && c.k !== "thumb");
-    const body = [use.map((c) => esc(c.l)).join(";"), ...sorted.map((r) => use.map((c) => esc(r[c.k])).join(";"))].join("\n");
+    const body = [use.map((c) => esc(c.l)).join(";"), ...sorted.map((r) => use.map((c) => esc(cellVal(c, r))).join(";"))].join("\n");
     const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + body], { type: "text/csv;charset=utf-8" }));
     a.download = `${name}-${new Date().toISOString().slice(0, 10)}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   };
+  /* phone: clean cards; turned sideways: the real table with its first column standing still */
+  if (phone && !land) return <PhoneTbl cols={cols} rows={sorted} onRow={onRow} empty={empty} download={csv ? download : undefined} sk={sk} dir={dir} sortBy={sortBy} limit={limit} alpha={alpha} />;
   return (
-    <div className="tw">
+    <div className={"tw" + (land ? " tw-land" : "")}>
       {csv && <div className="tw-tools"><span>{fmt(rows.length)} sor</span><button className="lnk" onClick={download}>CSV ⤓</button></div>}
-      <table className="tb cards">
+      <table className={land ? "tb land" : "tb cards"}>
         <thead><tr>{cols.map((c) => <th key={c.k} className={(c.num ? "num " : "") + (c.l ? "sortable" : "") + (sk === c.k ? " on" : "")} onClick={c.l ? () => sortBy(c.k) : undefined} aria-sort={sk === c.k ? (dir === 1 ? "ascending" : "descending") : undefined}>{c.l}{sk === c.k ? (dir === 1 ? " ↑" : " ↓") : ""}</th>)}</tr></thead>
         <tbody>{sorted.map((r, i) => <tr key={i} className={onRow ? "click" : ""} onClick={onRow ? () => onRow(r) : undefined}>{cols.map((c) => <td key={c.k} className={c.num ? "num" : ""} data-l={c.l}>{c.r ? c.r(r) : r[c.k] ?? "–"}</td>)}</tr>)}</tbody>
       </table>
@@ -485,9 +586,12 @@ export function freshOf(f: D | null, src: string): { at: string | null; ok: bool
     note: [f.gsc?.error ? "az utolsó lehúzás hibás volt" : "", f.gsc?.day ? `adat: ${new Date(f.gsc.day).toLocaleDateString("hu-HU", { month: "short", day: "numeric" })}-ig (a Google 2–3 nap késéssel ad)` : ""].filter(Boolean).join(" · ") || undefined };
   if (src === "events") return { at: f.events || null, ok: true };
   const s = RUN_SRC[src] || src;
-  if (s === "apple" || s === "google") { const at = f[s] || null; return { at, ok: fresh(at, s) }; }
+  /* a run that only partly worked is not fresh: when the database reports it for the stores too, it counts here */
+  if (s === "apple" || s === "google") { const at = f[s] || null, x = f.src?.[s]; return { at, ok: fresh(at, s, !!x?.error || !!x?.empty), note: x?.error ? "az utolsó futás hibás volt" : x?.empty ? "lefutott, de nem jött teljes adat" : undefined }; }
   if (s === "gsc_index" && f.index) return { at: f.index, ok: fresh(f.index, "index") };
   /* a run that worked but brought nothing, skipped a part or missed a source ("üres", "kihagyva", "részben") is not fresh */
+  /* Bing with 0 rows and a verified site is an honest zero, not a stale source */
+  if (s === "bing" && f.src?.bing?.empty && /igazolva van/.test(String(f.src.bing.note || ""))) { const x = f.src.bing; return { at: x.at || null, ok: fresh(x.at || null, "bing", !!x.error), note: "bekötve és igazolva: a Bing eddig nem indexelte az oldalt, a 0 valódi szám" }; }
   if (f.src?.[s]) { const x = f.src[s]; return { at: x.at || null, ok: fresh(x.at || null, s, !!x.error || !!x.empty),
     note: x.error ? "az utolsó futás hibás volt" : x.empty ? `lefutott, de nem jött teljes adat${x.note ? ": " + String(x.note).replace(/^.*?(üres:|részben:|kihagyva:?)\s*/i, "") : ""}` : src === "mentions" && f.mentions ? `utolsó említés: ${new Date(f.mentions).toLocaleDateString("hu-HU")}` : undefined }; }
   const p = f.platforms?.[src]; return { at: p?.at || null, ok: fresh(p?.at || null, "social", !!p?.error), note: p?.error ? "az utolsó lehúzás hibás volt" : undefined };
@@ -560,13 +664,13 @@ export function alerts(d: D): Alert[] {
   if (n(N.sessions) >= 20 && direct / n(N.sessions) > 0.6) out.push({ c: "info", t: `${pct(direct, n(N.sessions))} forrás nélkül érkezik`, s: "Tegyél inkage.app/go/… rövid linket minden videóba, és látni fogod, melyik hozta.", to: "links" });
   if (n(d.users?.unconfirmed) > 0) out.push({ c: "warn", t: `${d.users.unconfirmed} fiók nem erősítette meg az e-mailjét`, s: "Nem tudnak belépni. Nézd meg a levelek kézbesítését.", to: "users" });
   const cs = d.campaigns || [];
-  if (cs.length) { const best = [...cs].sort((a: D, b: D) => n(b.scored) - n(a.scored))[0]; if (n(best.scored) > 0) out.push({ c: "good", t: `Legjobb jelölt link: ${ch(best.source)}${best.content !== "–" ? " · " + best.content : ""}`, s: `${fmt(best.sessions)} látogatás, ${fmt(best.scored)} előnézet.`, to: "traffic" }); }
+  if (cs.length) { const best = [...cs].sort((a: D, b: D) => n(b.revealed) - n(a.revealed))[0]; if (n(best.revealed) > 0) out.push({ c: "good", t: `Legjobb jelölt link: ${ch(best.source)}${best.content !== "–" ? " · " + best.content : ""}`, s: `${fmt(best.sessions)} látogatás, ${fmt(best.revealed)} jutott el az 50 év múlvai nézetig.`, to: "traffic" }); }
   const N2 = d.now || {};
-  /* the same rate as Áttekintés and Megosztás: sharers who got a preview, over those who got one */
-  const ss2 = n(N2.scored_shared ?? N2.shared);
-  if (n(N2.scored) >= 10 && ss2 / n(N2.scored) < 0.1) out.push({ c: "warn", t: "Kevesen osztják meg az eredményt", s: `${pct(ss2, n(N2.scored))} az előnézetet kapók közül; a cél 10% fölött.`, to: "viral" });
-  const langs = (d.langs || []).filter((l: D) => n(l.n) >= 10).map((l: D) => ({ k: l.k, r: n(l.scored) / n(l.n) })).sort((a: D, b: D) => b.r - a.r);
-  if (langs.length >= 2) out.push({ c: "info", t: `Legjobban konvertáló nyelv: ${lang(langs[0].k)}`, s: `${fmt(langs[0].r * 100)}% jut el az előnézetig; érdemes több videót erre a nyelvre.`, to: "markets" });
+  /* the same rate as Áttekintés and Megosztás: real sharers among those who looked at 50 years */
+  const ss2 = n(N2.revealed_shared ?? N2.shared), rv2 = n(N2.revealed ?? N2.scored);
+  if (rv2 >= 10 && ss2 / rv2 < 0.1) out.push({ c: "info", t: "Kevesen osztják meg az előnézetüket", s: `Az 50 év múlvai nézetet látók ${pct(ss2, rv2)}-a osztott meg. A mentés nem számít ide.`, to: "viral" });
+  const langs = (d.langs || []).filter((l: D) => n(l.n) >= 10).map((l: D) => ({ k: l.k, r: n(l.revealed ?? l.scored) / n(l.n) })).sort((a: D, b: D) => b.r - a.r);
+  if (langs.length >= 2) out.push({ c: "info", t: `Legjobban konvertáló nyelv: ${lang(langs[0].k)}`, s: `${fmt(langs[0].r * 100)}% jut el az 50 év múlvai nézetig; érdemes több videót erre a nyelvre.`, to: "markets" });
   /* (the iPhone app's missing usage data is a fixed fact, not a signal: it stays on the System page's "Adatok" card) */
   const order = { bad: 0, warn: 1, good: 2, info: 3 };
   /* every signal opens the page where it can be acted on: a failed sync or a scheduled job on Monitoring, a broken
@@ -606,17 +710,29 @@ export function bpParts(t: Date) {
 export function useRpc(fn: string, args: Record<string, unknown> | undefined, deps: unknown[], skip = false) {
   const sb = useMemo(() => supabaseBrowser(), []);
   const epoch = useContext(RefreshCtx);
-  const [d, setD] = useState<D | null>(null); const [e, setE] = useState(""); const [busy, setBusy] = useState(false); const [at, setAt] = useState(0);
+  /* phone: the last answer shows at once (kept in this browser), the fresh one follows; without a connection it stays */
+  const ckey = fn + ":" + JSON.stringify(args || {});
+  const first = !skip && phoneNow() ? cacheMem(ckey) : undefined;
+  const [d, setD] = useState<D | null>((first?.d as D) ?? null); const [e, setE] = useState(""); const [busy, setBusy] = useState(false); const [at, setAt] = useState(first?.at ?? 0);
   /* only the newest request's answer counts: a slower answer for the period chosen before never overwrites it */
   const seq = useRef(0);
+  const have = useRef<boolean>(!!first);
   const load = useCallback(async () => {
     const my = ++seq.current;
     setBusy(true);
-    const { data, error } = await rpc(sb, fn, args);
+    const ph = phoneNow();
+    let arrived = false;
+    if (ph) cacheGet(ckey).then((c) => { if (c && !arrived && my === seq.current) { setD(c.d as D); setAt(c.at); have.current = true; } });
+    const { data, error, at: srvAt } = await rpcC(sb, fn, args);
+    arrived = true;
     if (my !== seq.current) return;
     setBusy(false);
-    if (error) { setE(errText(error.message + " " + (error.code || ""))); if (/JWT|PGRST30[0-3]|expired/i.test(error.message + (error.code || ""))) window.dispatchEvent(new Event(EXPIRED)); }
-    else { setE(""); setD(data as D); setAt(Date.now()); }
+    if (error) {
+      /* no connection and something to show: the screen says it once, at the top, not on every card */
+      if (ph && have.current && (typeof navigator !== "undefined" && !navigator.onLine || /fetch/i.test(error.message))) return;
+      setE(errText(error.message + " " + (error.code || ""))); if (/JWT|PGRST30[0-3]|expired/i.test(error.message + (error.code || ""))) window.dispatchEvent(new Event(EXPIRED));
+    }
+    else { setE(""); setD(data as D); setAt(srvAt || Date.now()); have.current = true; if (ph) cachePut(ckey, data); }
   }, [sb, ...deps]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!skip) load(); }, [load, epoch, skip]);
   return { d, e, load, busy, at };
@@ -656,7 +772,7 @@ export const posChip = (p: number) => <span className={"chip " + (p <= 3 ? "good
 /* ---------- goals and notes ---------- */
 export const NOTE_KIND: Record<string, string> = { kiadas: "Kiadás", kampany: "Kampány", poszt: "Poszt", kulso: "Külső esemény", egyeb: "Jegyzet" };
 
-export const GOAL_M: Record<string, string> = { scored: "Kész előnézet", sessions: "Látogatás", signups: "Regisztráció", shared: "Megosztás", gsc_clicks: "Google-kattintás", followers: "Követő (összes platform)",
+export const GOAL_M: Record<string, string> = { made: "Elkészült előnézet", made_users: "Előnézetet készített fiók", paying: "Fizető ember", scored: "Kész előnézet (lépés)", sessions: "Látogatás", signups: "Regisztráció", shared: "Megosztás", saved: "Mentés", gsc_clicks: "Google-kattintás", followers: "Követő (összes platform)",
   ...Object.fromEntries(([["tiktok", "TikTok"], ["instagram", "Instagram"], ["facebook", "Facebook"], ["pinterest", "Pinterest"], ["linkedin", "LinkedIn"], ["youtube", "YouTube"]] as const).flatMap(([p, nm]) => [[`followers_${p}`, `${nm}: követő`], [`views_${p}`, `${nm}: új megtekintés`], [`visits_${p}`, `${nm}: látogató`]])) };
 
 
@@ -680,7 +796,7 @@ export function AiNote({ page, data }: { page: string; data: D }) {
       if (MOCK) { await new Promise((r) => setTimeout(r, 600)); setOut({ ok: true, t: "Mintaszöveg: a látogatás 43%-kal nőtt, főleg a TikTokról.\nAz előnézetig jutók aránya 19%, ez stabil.\nTeendők:\n1. Tegyél rövid linket a következő 3 videóba.\n2. Javítsd az Androidos Google-belépést.\n3. Írj egy magyar tudástár-cikket a tetoválás öregedéséről." }); return; }
       const r = await fetch("/api/admin/ai", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ page, data: aiSafe(data) }) });
       const j = await r.json().catch(() => ({}));
-      setOut(j.ok ? { ok: true, t: j.text } : { ok: false, t: j.error || "Nem sikerült." });
+      setOut(j.ok ? { ok: true, t: j.text } : { ok: false, t: /MI-kulcs/.test(String(j.error || "")) ? "Ehhez kell egy MI-kulcs. A lépéseket a Kérdezz oldalon találod, a kulcs helye: Kapcsolatok, MI-elemzés és Telegram." : j.error || "Nem sikerült." });
     } finally { setBusy(false); }
   };
   return (
@@ -701,26 +817,6 @@ export function chime(f: number) {
   } catch {}
 }
 
-/* Side panels, sheets and the search: drawn in a layer at the top of the dashboard (outside the animated page, so
-   they always open in view, not at the top of a long page), and the page behind them stands still while open.
-   Nothing darkens or blurs it; a click beside the panel still closes it. */
-let locks = 0;
-/* while a popup is open the page behind never scrolls (the scrollbar's width is kept, so nothing shifts) */
-export function useScrollLock(on: boolean) {
-  useEffect(() => {
-    if (!on) return;
-    const h = document.documentElement.style, gap = window.innerWidth - document.documentElement.clientWidth;
-    if (locks++ === 0) { h.overflow = "hidden"; h.overscrollBehavior = "none"; if (gap > 0) h.paddingRight = gap + "px"; }
-    return () => { if (--locks === 0) { h.overflow = ""; h.overscrollBehavior = ""; h.paddingRight = ""; } };
-  }, [on]);
-}
-export function Layer({ children }: { children: React.ReactNode }) {
-  const [host, setHost] = useState<HTMLElement | null>(null);
-  useEffect(() => { setHost(document.getElementById("adm-layer") || document.body); }, []);
-  useScrollLock(true);
-  return host ? createPortal(children, host) : null;
-}
-
 /* Fresh numbers when a social page opens: if the platforms were last read more than 10 minutes ago, read them now
    (once per 3 minutes per browser), then show the result. The hourly run keeps them fresh in between. */
 export function useFreshSocial(accounts: D[] | undefined, reload: () => void) {
@@ -737,6 +833,34 @@ export function useFreshSocial(accounts: D[] | undefined, reload: () => void) {
   return busy;
 }
 
+/* A small setting that follows her to every device: this browser's copy at once, the database's when it answers,
+   and it still works if the database refuses. The key must start with phone_ (the database accepts those). */
+export function useSaved<T>(key: string, init: T): [T, (v: T | ((o: T) => T)) => void, boolean] {
+  const sb = useMemo(() => supabaseBrowser(), []);
+  const ls = "inkage.admin." + key;
+  const [v, setV] = useState<T>(() => { try { const x = localStorage.getItem(ls); return x ? JSON.parse(x) : init; } catch { return init; } });
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    rpc(sb, "admin_setting_get", { p_k: key }).then(({ data, error }) => {
+      /* the sample data keeps nothing: there this browser's copy is the truth */
+      if (!error && data != null && !MOCK) { setV(data as T); try { localStorage.setItem(ls, JSON.stringify(data)); } catch {} }
+      setReady(true);
+    });
+  }, [sb, key]); // eslint-disable-line react-hooks/exhaustive-deps
+  /* the other screens using the same setting follow at once */
+  const evn = "inkage:saved:" + key;
+  useEffect(() => { const f = (e: Event) => setV((e as CustomEvent).detail as T); addEventListener(evn, f); return () => removeEventListener(evn, f); }, [evn]);
+  const cur = useRef(v); cur.current = v;
+  const set = useCallback((x: T | ((o: T) => T)) => {
+    const nv = typeof x === "function" ? (x as (o: T) => T)(cur.current) : x;
+    cur.current = nv;
+    try { localStorage.setItem(ls, JSON.stringify(nv)); } catch {}
+    rpc(sb, "admin_setting_save", { p_k: key, p_v: nv }).catch(() => null);
+    dispatchEvent(new CustomEvent(evn, { detail: nv }));
+  }, [sb, key, ls, evn]);
+  return [v, set, ready];
+}
+
 /* ---------- theme: auto (follows the phone or computer), day, night; kept in this browser ---------- */
 export type ThemeMode = "auto" | "light" | "dark";
 export const THEME_L: Record<ThemeMode, string> = { auto: "Automatikus", light: "Nappal", dark: "Éjszaka" };
@@ -748,7 +872,13 @@ export function useTheme() {
   useEffect(() => { setM(readTheme()); setSys(sysLight()); const m = matchMedia("(prefers-color-scheme: dark)"); const f = () => setSys(!m.matches); m.addEventListener("change", f); return () => m.removeEventListener("change", f); }, []);
   const light = mode === "light" || (mode === "auto" && sys);
   /* the page before React (layout.tsx) reads the same mark: no flash on the next load */
-  useEffect(() => { try { document.documentElement.setAttribute("data-adm-theme", light ? "light" : "dark"); } catch {} }, [light]);
+  useEffect(() => { try {
+    const el = document.documentElement; el.setAttribute("data-adm-theme", light ? "light" : "dark"); el.style.colorScheme = light ? "light" : "dark";
+    /* the phone's status bar follows the theme chosen here, not the phone's own setting */
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.removeAttribute("media"); m.setAttribute("content", light ? "#FFFFFF" : "#000000"); });
+    /* the home-screen icon opens the admin, not the site (the site's own manifest is in the head too) */
+    document.querySelectorAll('link[rel="manifest"]').forEach((m) => m.setAttribute("href", "/admin.webmanifest"));
+  } catch {} }, [light]);
   const setMode = (m: ThemeMode) => { setM(m); try { if (m === "auto") localStorage.removeItem("inkage.admin.theme"); else localStorage.setItem("inkage.admin.theme", m); } catch {} };
   const cycle = () => setMode(mode === "auto" ? (light ? "dark" : "light") : mode === "light" ? "dark" : "auto");
   return { mode, light, setMode, cycle };

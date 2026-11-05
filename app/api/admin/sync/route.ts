@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { asAdmin, asCron, call, env, settings, track } from "@/lib/admin/server";
 import { syncSocial } from "@/lib/admin/social";
+import { syncExtra } from "@/lib/admin/social-extra";
 import { syncCwv, syncGsc, syncIndex } from "@/lib/admin/gsc";
 import { syncStores } from "@/lib/admin/stores";
 import { syncCompetitors } from "@/lib/admin/competitors";
@@ -34,13 +35,17 @@ async function run(only?: string | null, force = false) {
     /* the real response time of every watched address first (the latency rule reads it) */
     const up = await measureUptime().catch((e) => "hiba: " + String((e as Error)?.message || e).slice(0, 80));
     const fired = await checkRules(); const sys = await notifySystem().catch(() => 0);
+    /* InkAge takes no payments: no web-sale invoices to retry (Calligra's Billingo step is left out) */
     return J({ uptime: up, rules: `${fired} riasztás`, system: `${sys} jelzés` });
   }
   /* the hourly run, and every social page that opens: only the social platforms, then whatever is new goes to the phone.
      An account read in the last 10 minutes is not read again (the page opens came on top of the hourly run), unless
      forced (?force=1); when nothing was read, nothing new goes to the phone either. */
   if (only === "social") {
-    const r = await syncSocial(undefined, undefined, { force, freshMs: 10 * 60_000 });
+    const r: Record<string, string> = await syncSocial(undefined, undefined, { force, freshMs: 10 * 60_000 });
+    /* the extra TikTok / Instagram accounts (the partners abroad), after the main ones */
+    const ex = await syncExtra({ force, budgetMs: 45_000 }).catch((e) => "hiba: " + String((e as Error)?.message || e).slice(0, 80));
+    if (ex) r.tovabbi_fiokok = ex;
     const parts = Object.values(r);
     if (!parts.length || parts.some((v) => v !== "friss")) await notifyNews().catch(() => 0);
     return J(r);
@@ -55,11 +60,12 @@ async function run(only?: string | null, force = false) {
   /* page speed, once a day on its own */
   if (only === "cwv") return J({ cwv: await syncCwv() });
   const s = settings();
-  const [social, gsc, stores, competitors] = await Promise.all([syncSocial(undefined, undefined, { force }), s.gsc ? syncGsc() : Promise.resolve("nincs beállítva"), syncStores(), syncCompetitors()]);
+  const [social, gsc, stores, competitors, extra] = await Promise.all([syncSocial(undefined, undefined, { force }), s.gsc ? syncGsc() : Promise.resolve("nincs beállítva"), syncStores(), syncCompetitors(),
+    syncExtra({ force, budgetMs: 60_000 }).catch((e) => "hiba: " + String((e as Error)?.message || e).slice(0, 80))]);
   /* the active days of accounts for the retention page (sign-ins and token refreshes the auth tables still keep) */
   await call("admin_collect_days_t").catch(() => null);
   await notifyNews().catch(() => 0);
-  return J({ ...social, gsc, ...stores, competitors });
+  return J({ ...social, gsc, ...stores, competitors, ...(extra ? { tovabbi_fiokok: extra } : {}) });
 }
 
 /* from pg_cron in Supabase, with the database's own token: everything every morning (admin-sync), the social

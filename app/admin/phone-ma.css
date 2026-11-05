@@ -1,0 +1,173 @@
+/* The phone's Ma tab and the number sheets. Everything under .is-phone: a computer never sees it. */
+.adm.is-phone .ma{display:flex;flex-direction:column;gap:12px}
+.adm.is-phone .ma h3{margin:0}
+
+/* the lamp and the sentence: a light tint says the state, not a wall of red */
+.adm.is-phone .ma-top{border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--a-s1);border:1px solid var(--a-line)}
+
+
+
+.adm.is-phone .ma-top-h{display:flex;align-items:center;gap:6px;min-height:36px}
+.adm.is-phone .ma-sp{flex:1}
+.adm.is-phone .ma-lamp{display:inline-flex;align-items:center;gap:7px;min-height:36px;border:0;background:none;color:var(--a-fg);font-weight:700;font-size:14px;padding:0 4px 0 0}
+.adm.is-phone .ma-lamp i{width:12px;height:12px;border-radius:99px;background:var(--a-good);box-shadow:0 0 0 3px color-mix(in srgb,var(--a-good) 25%,transparent)}
+.adm.is-phone .ma-top.warn .ma-lamp i{background:var(--a-warn);box-shadow:0 0 0 3px color-mix(in srgb,var(--a-warn) 25%,transparent)}
+.adm.is-phone .ma-top.bad .ma-lamp i{background:var(--a-bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--a-bad) 25%,transparent)}
+.adm.is-phone .ma-dq{min-height:36px;border:0;background:none;color:var(--a-mut);font-size:12.5px;padding:0 4px;text-align:left}
+.adm.is-phone .ma-dq.old{color:var(--a-bad);font-weight:650}
+.adm.is-phone .ma-ib{flex:none;width:40px;height:40px;border:0;border-radius:99px;background:color-mix(in srgb,var(--a-fg) 8%,transparent);color:var(--a-fg);display:grid;place-items:center;padding:0}
+.adm.is-phone .ma-ib svg{width:19px;height:19px}
+.adm.is-phone .ma-line{margin:0;font-size:17px;line-height:1.32;font-weight:600;color:var(--a-fg);letter-spacing:-.01em}
+.adm.is-phone .ma-live{display:flex;align-items:center;gap:8px;width:100%;min-height:34px;border:0;background:none;color:var(--a-mut);font-size:13px;padding:0;text-align:left}
+.adm.is-phone .ma-live i{flex:none;width:8px;height:8px;border-radius:99px;background:var(--a-dim)}
+.adm.is-phone .ma-live i.on{background:var(--a-good);animation:maPulse 2s infinite}
+.adm.is-phone .ma-live span{margin-left:auto}
+@keyframes maPulse{50%{opacity:.35}}
+
+/* today's numbers */
+.adm.is-phone .ma-nums h3{font-size:13px;font-weight:700;color:var(--a-mut);margin:0 2px 8px;display:flex;flex-direction:column;gap:1px}
+.adm.is-phone .ma-nums h3 small{font-weight:450;color:var(--a-dim);font-size:12px}
+.adm.is-phone .ma-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.adm.is-phone .ma-n{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;border:0;border-radius:18px;padding:11px 12px;background:var(--a-s1);color:var(--a-fg);text-align:left}
+.adm.is-phone .ma-n.wide{grid-column:1/-1}
+.adm.is-phone .ma-n-l{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;font-weight:650;width:100%}
+.adm.is-phone .ma-n .rel{font-style:normal;font-size:12px;font-weight:600;padding:1px 6px;border-radius:99px;background:color-mix(in srgb,currentColor 12%,transparent)}
+.adm.is-phone .ma-n .rel.est{border:1px dashed color-mix(in srgb,currentColor 45%,transparent);background:none}
+.adm.is-phone .ma-n>b{font-size:36px;line-height:1.02;font-weight:700;letter-spacing:-.035em;font-family:var(--a-ui)}
+.adm.is-phone .ma-n.wide>b{font-size:46px}
+.adm.is-phone .ma-n>small{display:flex;flex-direction:column;gap:1px;font-size:12px;line-height:1.3;opacity:.86}
+.adm.is-phone .ma-n em{font-style:normal;font-weight:700}
+.adm.is-phone .ma-n em.same{font-weight:500;opacity:.8}
+.adm.is-phone .ma-n em.up,.adm.is-phone .ma-tag.up{color:var(--a-good)}
+.adm.is-phone .ma-n em.down,.adm.is-phone .ma-tag.down{color:var(--a-bad)}
+
+
+
+.adm.is-phone .ma-why{margin:6px 2px 0;font-size:12px;line-height:1.35;color:var(--a-dim);font-weight:450;display:block}
+.adm.is-phone .ma-flat{margin:0 2px}
+.adm.is-phone .num-t{border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;padding:0;text-decoration:underline dotted 1.5px;text-underline-offset:4px}
+.adm.is-phone .ma-big{margin:0;font-size:56px;line-height:1;font-weight:700;letter-spacing:-.04em;color:var(--a-fg)}
+.adm.is-phone .ma-own{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;border:0;background:none;color:var(--a-fg);font-size:14px;text-align:left;padding:0}
+.adm.is-phone .ma-own .sw,.adm.is-phone .ma-sw .sw,.adm.is-phone .ma-talk .sw{flex:none}
+.adm.is-phone .ma-rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.adm.is-phone .ma-rows li>*{display:grid;grid-template-columns:50px minmax(0,1fr);column-gap:8px;width:100%;min-height:48px;align-content:center;border:0;border-bottom:1px solid var(--a-line);background:none;color:var(--a-fg);text-align:left;padding:6px 0;font-size:14px}
+.adm.is-phone .ma-rows time{grid-row:span 2;color:var(--a-mut);font-size:13px;font-variant-numeric:tabular-nums}
+.adm.is-phone .ma-rows b{font-weight:600;overflow-wrap:anywhere}
+.adm.is-phone .ma-rows small{color:var(--a-dim);font-size:12px}
+.adm.is-phone .ma-src{list-style:none;margin:0;padding:0}
+.adm.is-phone .ma-src li{display:grid;grid-template-columns:12px 96px minmax(0,1fr);gap:8px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--a-line);font-size:13.5px}
+.adm.is-phone .ma-src i{width:9px;height:9px;border-radius:99px;background:var(--a-good)}
+.adm.is-phone .ma-src i.old{background:var(--a-bad)}
+.adm.is-phone .ma-src span{color:var(--a-mut);overflow-wrap:anywhere}
+
+/* the main task */
+.adm.is-phone .ma-task{display:flex;flex-direction:column;gap:10px}
+.adm.is-phone .ma-main{border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:6px}
+
+
+.adm.is-phone .ma-main .eyebrow{color:inherit;opacity:.8}
+.adm.is-phone .ma-main>b{font-size:19px;line-height:1.22;font-weight:700;letter-spacing:-.015em;overflow-wrap:anywhere}
+.adm.is-phone .ma-main>p{margin:0;font-size:13.5px;line-height:1.35;opacity:.9;overflow-wrap:anywhere}
+.adm.is-phone .ma-acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.adm.is-phone .ma-acts .adm-ibtn{min-height:42px}
+.adm.is-phone .ma-free{display:flex;flex-direction:column;gap:4px;padding:18px;border-radius:20px;align-items:flex-start}
+.adm.is-phone .ma-free b{font-size:19px}
+.adm.is-phone .ma-tag{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-weight:800;background:var(--a-s2,var(--a-s1))}
+.adm.is-phone .ma-chg .pl-l small{white-space:normal}
+
+/* goals */
+.adm.is-phone .ma-goal{display:flex;flex-direction:column;gap:12px}
+.adm.is-phone .ma-g1{display:flex;flex-direction:column;gap:4px}
+.adm.is-phone .ma-gv{margin:0;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;color:var(--a-mut)}
+.adm.is-phone .ma-gv b{font-size:34px;font-weight:700;color:var(--a-fg);letter-spacing:-.03em}
+.adm.is-phone .ma-gv small{font-size:12.5px;width:100%}
+.adm.is-phone .ma-bar{display:block;height:8px;border-radius:99px;background:color-mix(in srgb,var(--a-fg) 10%,transparent);overflow:hidden}
+.adm.is-phone .ma-bar i{display:block;height:100%;border-radius:99px;background:var(--acc);min-width:2px}
+.adm.is-phone .ma-g2{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:center;border:0;border-top:1px solid var(--a-line);background:none;color:var(--a-fg);text-align:left;padding:12px 0 0;width:100%}
+.adm.is-phone .ma-g2>span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.adm.is-phone .ma-g2 small{font-size:12.5px;line-height:1.35;color:var(--a-mut)}
+.adm.is-phone .ma-g2 .gring{margin:0}
+.adm.is-phone .ma-g2 .gring-c b{font-size:18px}
+.adm.is-phone .ma-g2 .gring-l{font-size:8px}
+.adm.is-phone .ma-mirror{display:flex;flex-direction:column;gap:6px}
+.adm.is-phone .ma-mirror p{margin:0;font-size:14px;line-height:1.38;color:var(--a-fg)}
+.adm.is-phone .ma-letter{display:flex;flex-direction:column;gap:6px;padding-top:6px;border-top:1px solid var(--a-line)}
+
+/* the timeline */
+.adm.is-phone .ma-feed li>button{display:flex;align-items:center;gap:9px;width:100%;min-height:48px}
+.adm.is-phone .ma-feed time{flex:none;width:58px;font-size:12px;color:var(--a-mut);font-variant-numeric:tabular-nums}
+.adm.is-phone .ma-feed .pl-l{white-space:normal;overflow-wrap:anywhere;font-size:14px}
+.adm.is-phone .ma-day{margin:12px 2px 2px;font-size:12.5px;font-weight:700;color:var(--a-mut);text-transform:none}
+
+/* the chart */
+.adm.is-phone .ma-chart{display:flex;flex-direction:column;gap:6px;min-width:0}
+.adm.is-phone .ma-ranges{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.adm.is-phone .ma-ranges::-webkit-scrollbar{display:none}
+.adm.is-phone .ma-ranges button{flex:none;min-height:36px;padding:5px 12px;border-radius:10px;border:1px solid var(--a-line2);background:none;color:var(--a-fg);font-size:13px;display:inline-flex;align-items:center;gap:5px}
+.adm.is-phone .ma-ranges button[aria-pressed="true"]{background:var(--a-fg);color:var(--a-bg);border-color:var(--a-fg)}
+.adm.is-phone .ma-ranges svg{width:15px;height:15px}
+.adm.is-phone .ma-cmpb{margin-left:auto}
+.adm.is-phone .chart svg{touch-action:pan-y}
+.adm.is-phone .chart .tip{top:2px!important;transform:translateX(-50%);pointer-events:none;max-width:calc(100vw - 48px);z-index:3}
+.adm.is-phone .chart .tip .note-r span{white-space:normal}
+.adm.is-phone .ch-zoom{position:absolute;right:4px;top:-2px;z-index:2;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:99px;font-size:12px;padding:5px 10px;min-height:30px}
+.adm.is-phone .donut-bars{width:100%}
+.adm.is-phone .donut-bars .db-h{margin:0 0 8px;font-size:13.5px;color:var(--a-mut)}
+.adm.is-phone .donut-bars .db-h b{font-size:22px;color:var(--a-fg)}
+
+.adm.is-phone .cbx-t{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.adm.is-phone .cbx-t::-webkit-scrollbar{display:none}
+.adm.is-phone .cbx-t>*{flex:none}
+
+/* the week */
+.adm.is-phone .ma-game{display:flex;flex-direction:column;gap:10px}
+.adm.is-phone .ma-goals{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.adm.is-phone .ma-goals li>span:first-child{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;margin-bottom:4px}
+.adm.is-phone .ma-recs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.adm.is-phone .ma-recs>div{display:flex;flex-direction:column;gap:2px;padding:9px 10px;border-radius:14px;background:color-mix(in srgb,var(--a-fg) 5%,transparent)}
+.adm.is-phone .ma-recs b{font-size:24px;font-weight:700;letter-spacing:-.025em}
+.adm.is-phone .ma-recs small{font-size:12px;line-height:1.28;color:var(--a-mut)}
+
+/* settings */
+.adm.is-phone .ma-views{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.adm.is-phone .ma-views button{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;min-height:62px;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:14px;padding:9px 11px}
+.adm.is-phone .ma-views button[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.adm.is-phone .ma-views small{font-size:12px;line-height:1.25;color:var(--a-mut)}
+.adm.is-phone .ma-lay{list-style:none;margin:0;padding:0}
+.adm.is-phone .ma-lay li{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--a-line);box-sizing:border-box}
+.adm.is-phone .ma-h{flex:none;width:36px;height:44px;display:grid;place-items:center;font-size:20px;color:var(--a-dim);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.adm.is-phone .ma-ll{flex:1;min-width:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm.is-phone .ma-up{flex:none;width:38px;height:38px;border:0;background:none;color:var(--a-mut);font-size:16px}
+.adm.is-phone .ma-up:disabled{opacity:.25}
+.adm.is-phone .ma-sw{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:52px;border:0;border-bottom:1px solid var(--a-line);background:none;color:var(--a-fg);text-align:left;padding:6px 0}
+.adm.is-phone .ma-sw>span:first-child{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:14.5px}
+.adm.is-phone .ma-sw b{font-weight:600}
+.adm.is-phone .ma-sw small{font-size:12px;line-height:1.3;color:var(--a-mut)}
+.adm.is-phone .ma-rule{display:flex;justify-content:space-between;gap:10px;padding:8px 0;font-size:14px;border-bottom:1px solid var(--a-line)}
+.adm.is-phone .ma-newrule{display:flex;flex-direction:column;gap:7px}
+
+/* the conversation */
+.adm.is-phone .ma-used{margin-top:8px;padding-top:8px;border-top:1px solid var(--a-line);font-size:13px}
+.adm.is-phone .ma-used summary{font-weight:650;color:var(--a-mut);min-height:30px}
+.adm.is-phone .ma-used ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.adm.is-phone .ma-used li{display:grid;grid-template-columns:16px auto minmax(0,1fr);gap:6px;align-items:baseline}
+.adm.is-phone .ma-used li{display:block}
+.adm.is-phone .ma-used li span{display:inline-block;width:16px;font-weight:800;color:var(--a-good)}
+.adm.is-phone .ma-used li.no{color:var(--a-bad)}
+.adm.is-phone .ma-used li.no span{color:var(--a-bad)}
+.adm.is-phone .ma-mic{width:46px;min-width:46px;padding:0;justify-content:center}
+.adm.is-phone .ma-mic svg{width:20px;height:20px;margin:0}
+.adm.is-phone .ma-mic.on{background:var(--a-bad);color:#fff;animation:maPulse 1.4s infinite}
+.adm.is-phone .ma-talk{display:flex;align-items:center;gap:9px;min-height:44px;width:100%;border:0;background:none;color:var(--a-mut);font-size:13px;padding:0;text-align:left}
+.adm.is-phone .ma-conv .ask{padding:12px}
+
+/* text size: this phone only */
+html[data-adm-fs="s"] .adm.is-phone .adm-body{zoom:.93}
+html[data-adm-fs="l"] .adm.is-phone .adm-body{zoom:1.1}
+html[data-adm-fs="xl"] .adm.is-phone .adm-body{zoom:1.22}
+
+/* a clear focus for a keyboard or a screen reader; everything calm when she asks for less motion */
+.adm.is-phone .ma button:focus-visible,.adm.is-phone .psheet button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.adm.is-phone .ma-live i.on,.adm.is-phone .ma-mic.on{animation:none}}
+.adm.is-phone .ma-sw,.adm.is-phone .ma-lay,.adm.is-phone .ma-rule,.adm.is-phone .ma-newrule,.adm.is-phone .ma-views,.adm.is-phone .ma-own{flex:none}
+.adm.is-phone .ma-newrule .adm-ibtn{justify-content:center}

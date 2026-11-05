@@ -23,7 +23,7 @@ const plus = (sec?: number) => (sec ? new Date(Date.now() + sec * 1000).toISOStr
 const codeIn = (s?: string | null) => (s?.match(/inkage\.app\/go\/([a-z0-9-]{1,40})/i)?.[1] || null)?.toLowerCase() || null;
 /* a pin's link with utm_content (inkage.app/app?…&utm_content=P16): the measuring keeps it as the visit's "ux", the
    same key the short links' visitors are counted by, so the pin gets its visitors */
-const utmCode = (link?: string | null) => { try { return (link && new URL(link).searchParams.get("utm_content")?.slice(0, 40)) || null; } catch { return null; } };
+const utmCode = (link?: string | null) => { try { const c = link && new URL(link).searchParams.get("utm_content"); return (c && (c.match(/^[A-Z]{1,2}\d{1,3}(?=[A-Z ])/)?.[0] || c).slice(0, 40)) || null; } catch { return null; } }; /* some published pin links have the pin's title glued to the code ("N15Signature Ideas…"): the front part is the code */
 
 async function json(r: Response) {
   const t = await r.text();
@@ -197,7 +197,9 @@ async function token(a: Acc) {
    part is over 23 hours old; the database keeps the time and gives the part to one run only. */
 type Post = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 type Run = { p: Platform; t0: number; budget: number; daily: boolean; cut: boolean; limited: boolean; errs: number; why: string[]; notes: string[];
-  buf: Post[]; saved: number; state: Record<string, unknown>; next: Record<string, unknown> };
+  buf: Post[]; saved: number; state: Record<string, unknown>; next: Record<string, unknown>;
+  /* every post the platform listed in this run; full: the list was walked from its top to its very end; total: how many posts the account itself says it has */
+  seen: Set<string>; full: boolean; total: number | null };
 class Limited extends Error {}
 const over = (r: Run) => (r.cut = r.cut || Date.now() - r.t0 > r.budget);
 
@@ -212,7 +214,7 @@ export async function syncSocial(only?: Platform[], budgetMs = 240_000, opt: { f
     if (!only && a.last_sync_at && Date.now() - new Date(a.last_sync_at).getTime() < fresh) { out[a.platform] = "friss"; continue; }
     if (Date.now() - t0 > budgetMs) { await log(a.platform, false, null, "kimaradt: elfogyott a lehúzás időkerete, a következő körben jön"); out[a.platform] = "kimaradt (időkeret)"; continue; }
     const daily = !!only || (state ? await call<boolean>("admin_w_social_daily_claim", { p_platform: a.platform }).catch(() => false) : new Date().getUTCHours() === 4);
-    const r: Run = { p: a.platform, t0, budget: budgetMs, daily, cut: false, limited: false, errs: 0, why: [], notes: [], buf: [], saved: 0, state: state || {}, next: {} };
+    const r: Run = { p: a.platform, t0, budget: budgetMs, daily, cut: false, limited: false, errs: 0, why: [], notes: [], buf: [], saved: 0, state: state || {}, next: {}, seen: new Set(), full: false, total: null };
     let err: string | null = null;
     try {
       const tok = await token(a);
@@ -225,6 +227,11 @@ export async function syncSocial(only?: Platform[], budgetMs = 240_000, opt: { f
     } catch (e) { if (!(e instanceof Limited)) err = String((e as Error)?.message || e); }
     /* what was read before the time, a rate limit or an error stopped it is saved all the same */
     await flush(r).catch((e) => { err = err || "mentés: " + String((e as Error)?.message || e); });
+    /* the whole list came back and it adds up: what is missing from it does not show on the live account (deleted or private, the list cannot tell). Kept, only marked; it comes back by itself if the platform lists it again */
+    if (!err && r.full && !r.cut && !r.limited && (r.seen.size > 0 || r.total === 0) && (r.total == null || r.seen.size >= r.total)) {
+      const gone = await call<number>("admin_w_social_gone", { p_platform: a.platform, p_seen: [...r.seen] }).catch(() => 0);
+      if (gone) r.notes.push(`${gone} poszt már nem látszik az élő fiókon`);
+    }
     const set: Record<string, unknown> = { ...r.next };
     if (r.daily && !err && !r.cut && !r.limited) set[`daily_${a.platform}`] = new Date().toISOString();
     if (state && Object.keys(set).length) await call("admin_w_social_state", { p_set: set }).catch(() => null);
@@ -236,7 +243,8 @@ export async function syncSocial(only?: Platform[], budgetMs = 240_000, opt: { f
     } else {
       /* a partial or rate-limited run counts as a read too, so the page opens do not hammer it again at once */
       await patchAccount(a.platform, { last_sync_at: new Date().toISOString(), last_error: r.limited ? "a platform korlátozta a kéréseket (rate limit), a következő körben folytatja" : null }).catch(() => {});
-      await log(a.platform, !r.limited, r.saved, `${r.saved} poszt frissítve${extra ? " · " + extra : ""}`);
+      /* a platform's request limit mid-run is no failure when posts were saved: the rest comes in the next run */
+      await log(a.platform, !r.limited || r.saved > 0, r.saved, `${r.limited ? "részben: a platform korlátozta a kéréseket · " : ""}${r.saved} poszt frissítve${extra ? " · " + extra : ""}`);
       out[a.platform] = `${r.saved} poszt${r.cut ? ", részleges (időkeret)" : ""}${r.limited ? ", leállt (rate limit)" : ""}${r.errs ? `, ${r.errs} hibás kérés` : ""}`;
     }
   }
@@ -277,10 +285,11 @@ async function req(r: Run, url: string, init: RequestInit = {}): Promise<Respons
 /* strict: the answer, or an exception (the platform's run fails) */
 const jget = async (r: Run, url: string, init?: RequestInit) => json(await req(r, url, init));
 /* soft: the answer, or null with the failure counted for the run's log (Meta's code 100, "no such metric for this post", is an answer, not a failure) */
-async function soft(r: Run, url: string, init?: RequestInit): Promise<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
+async function soft(r: Run, url: string, init?: RequestInit, refused?: () => boolean): Promise<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
     const res = await req(r, url, init);
     if (res.ok) return await res.json().catch(() => null);
+    if (res.status === 403 && refused?.()) return null;
     const t = await res.text().catch(() => "");
     if (!(res.status === 400 && /"code":\s*100\b/.test(t))) fail(r, `${res.status} ${why(t)}`);
     return null;
@@ -291,7 +300,7 @@ const quiet = <T>(r: Run, x: Promise<T>) => x.catch((e) => { if (e instanceof Li
 const getJ = (r: Run, url: string, headers: Record<string, string>): Promise<any> => soft(r, url, { headers }).then((j) => j || {}); // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /* the posts read so far go to the database page by page */
-const keep = (r: Run, p: Post) => (r.buf.push(p), p);
+const keep = (r: Run, p: Post) => (r.seen.add(String(p.post_id)), r.buf.push(p), p);
 async function flush(r: Run) { if (r.buf.length) r.saved += await savePosts(r.p, r.buf.splice(0)); }
 
 /* the posts newest first: `fresh` pages every run, then `older` pages from where the previous run stopped (back to the
@@ -300,14 +309,14 @@ async function flush(r: Run) { if (r.buf.length) r.saved += await savePosts(r.p,
 async function pages(r: Run, fresh: number, older: number, page: (cur: string | null) => Promise<string | null>) {
   const k = `rot_${r.p}`;
   let cur: string | null = null;
-  for (let i = 0; i < fresh; i++) { if (over(r)) return; if (!(cur = await page(cur))) { r.next[k] = null; return; } }
-  const at = r.state[k];
+  for (let i = 0; i < fresh; i++) { if (over(r)) return; if (!(cur = await page(cur))) { r.next[k] = null; r.full = true; return; } }
+  const at = r.state[k], unbroken = !(typeof at === "string" && at); /* no saved place: the older pages go on from the newest ones, so an end reached is the end of the whole list */
   let from: string = typeof at === "string" && at ? at : cur!;
   for (let i = 0; i < older; i++) {
     if (over(r)) { r.next[k] = from; return; }
     let nx: string | null;
     try { nx = await page(from); } catch (e) { if (e instanceof Limited || from === cur) throw e; fail(r, "a régebbi posztok lapozója lejárt, elölről kezdi"); r.next[k] = null; return; }
-    if (!nx) { r.next[k] = null; return; }
+    if (!nx) { r.next[k] = null; if (unbroken) r.full = true; return; }
     from = nx;
   }
   r.next[k] = from;
@@ -328,6 +337,7 @@ async function syncTiktok(r: Run, tok: string) {
   const h = { authorization: `Bearer ${tok}` };
   const u = (await jget(r, "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username,follower_count,following_count,likes_count,video_count", { headers: h })).data.user;
   await patchAccount("tiktok", { username: u.username || null, display_name: u.display_name || null, avatar_url: u.avatar_url || null });
+  r.total = num(u.video_count);
   await upsert("social_account_daily", [{ platform: "tiktok", day: today(), followers: u.follower_count ?? null, following: u.following_count ?? null, likes: u.likes_count ?? null, posts: u.video_count ?? null }], "platform,day");
   const fields = "id,title,video_description,create_time,cover_image_url,share_url,duration,view_count,like_count,comment_count,share_count";
   /* 20 a page: the newest 200 every run, then 100 older ones in turns (300 a run, as before) */
@@ -348,6 +358,7 @@ const IG = "https://graph.instagram.com/v23.0";
 async function syncInstagram(r: Run, tok: string, base = IG, id = "me") {
   const me = await jget(r, `${base}/${id}?fields=${base === IG ? "user_id," : ""}username,name,profile_picture_url,followers_count,follows_count,media_count&access_token=${encodeURIComponent(tok)}`);
   await patchAccount("instagram", { username: me.username || null, display_name: me.name || null, avatar_url: me.profile_picture_url || null });
+  r.total = num(me.media_count);
   /* the day numbers of yesterday, a whole day (without since/until Instagram gives today's partial day), on yesterday's row */
   const d0 = new Date(); d0.setUTCHours(0, 0, 0, 0); const until = Math.floor(d0.getTime() / 1000), since = until - 86400;
   const igm = async (metric: string) => (await soft(r, `${base}/${id}/insights?metric=${metric}&period=day&metric_type=total_value&since=${since}&until=${until}&access_token=${encodeURIComponent(tok)}`))?.data?.[0]?.total_value?.value ?? null;
@@ -534,6 +545,7 @@ async function syncPinterest(r: Run, tok: string) {
   const h = { authorization: `Bearer ${tok}` };
   const u = await jget(r, "https://api.pinterest.com/v5/user_account", { headers: h });
   await patchAccount("pinterest", { account_id: u.id || u.username || null, username: u.username || null, display_name: u.business_name || u.username || null, avatar_url: u.profile_image || null });
+  r.total = num(u.pin_count);
   const end = ymdUtc(new Date()), start = ymdUtc(new Date(Date.now() - 89 * 86400_000));
   type PDay = { date: string; data_status: string; metrics?: Record<string, number> };
   const an = await soft(r, `https://api.pinterest.com/v5/user_account/analytics?start_date=${start}&end_date=${end}&metric_types=IMPRESSION,OUTBOUND_CLICK,SAVE,PIN_CLICK`, { headers: h });
@@ -544,6 +556,8 @@ async function syncPinterest(r: Run, tok: string) {
     { platform: "pinterest", day: today(), followers: u.follower_count ?? null, following: u.following_count ?? null, posts: u.pin_count ?? null, impressions_30d: ready.length ? m30 : null }], "platform,day");
   /* the pin's days: all 90 once a day, the last week every hour; only days with something in them */
   const from = r.daily ? start : ymdUtc(new Date(Date.now() - 7 * 86400_000));
+  /* a few pins may be other people's; if many are refused, the connection is at fault and it stays an error */
+  let refusedPins = 0;
   /* 100 a page: the newest 300 every run, then 200 older ones in turns (500 a run, as before) */
   await pages(r, 3, 2, async (cur) => {
     const j: any = await jget(r, `https://api.pinterest.com/v5/pins?page_size=100${cur ? "&bookmark=" + encodeURIComponent(cur) : ""}`, { headers: h }); // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -554,7 +568,13 @@ async function syncPinterest(r: Run, tok: string) {
       /* the last 90 days of the pin (the longest Pinterest gives per pin), day by day: the total is added up in the database,
          so a pin older than 90 days does not lose its earlier numbers. A pin click is not a like: it has its own field.
          Once the time is up, the rest of the page is saved without new numbers. */
-      const pa = over(r) ? null : await soft(r, `https://api.pinterest.com/v5/pins/${m.id}/analytics?start_date=${from}&end_date=${end}&metric_types=IMPRESSION,SAVE,PIN_CLICK,OUTBOUND_CLICK${vstats ? ",VIDEO_MRC_VIEW,VIDEO_AVG_WATCH_TIME,VIDEO_START,QUARTILE_95_PERCENT_VIEW" : ""}`, { headers: h });
+      let notOwn = false;
+      /* the hourly run reads only the last week's pins (a request each): reading every pin every hour hit Pinterest's limit;
+         the daily run still reads them all */
+      const recent = r.daily || (m.created_at && Date.now() - Date.parse(m.created_at) < 7 * 864e5);
+      const pa = over(r) || !recent ? null : await soft(r, `https://api.pinterest.com/v5/pins/${m.id}/analytics?start_date=${from}&end_date=${end}&metric_types=IMPRESSION,SAVE,PIN_CLICK,OUTBOUND_CLICK${vstats ? ",VIDEO_MRC_VIEW,VIDEO_AVG_WATCH_TIME,VIDEO_START,QUARTILE_95_PERCENT_VIEW" : ""}`, { headers: h }, () => { notOwn = refusedPins++ < 3; return notOwn; });
+      /* a pin saved from someone else gives no statistics: that is no error, the log only names it */
+      if (notOwn) r.notes.push(`mentett, nem saját pin, ezért nincs statisztikája: „${String(m.title || m.description || m.id).slice(0, 50)}”`);
       for (const x of (pa?.all?.daily_metrics || []) as PDay[]) {
         const mm = x.metrics || {};
         if (x.data_status === "READY" && (mm.IMPRESSION || mm.SAVE || mm.PIN_CLICK || mm.OUTBOUND_CLICK)) days.push({ platform: "pinterest", post_id: String(m.id), day: x.date, impressions: num(mm.IMPRESSION), saves: num(mm.SAVE), clicks: num(mm.OUTBOUND_CLICK), pin_clicks: num(mm.PIN_CLICK) });
@@ -607,7 +627,8 @@ async function syncPinterestPublic(state: Record<string, unknown> | null, fresh:
 
 /* who sees the pins: age, gender, country, city (shares, stored as per mille like YouTube's) */
 async function pinAudience(r: Run, h: Record<string, string>) {
-  const j = await soft(r, "https://api.pinterest.com/v5/user_account/audience_insights?audience_insight_type=YOUR_TOTAL_AUDIENCE", { headers: h });
+  const e0 = r.errs, j = await soft(r, "https://api.pinterest.com/v5/user_account/audience_insights?audience_insight_type=YOUR_TOTAL_AUDIENCE", { headers: h });
+  if (r.errs > e0) r.notes.push("a közönségadatot a Pinterest nem adta ki, ezért a Közönség oldalon nincs Pinterest-rész");
   const dem = j?.demographics || {}, rows: Record<string, unknown>[] = [];
   const add = (bd: string, list: { key?: string; ratio?: number }[] | undefined, k = (x: string) => x) => (list || []).forEach((x) => x.key && x.ratio != null && rows.push({ platform: "pinterest", breakdown: bd, k: k(x.key), n: Math.round(x.ratio * 1000) }));
   add("age", dem.ages); add("gender", dem.genders, (x) => (/^f/i.test(x) ? "F" : /^m/i.test(x) ? "M" : "U")); add("country", dem.countries, (x) => x.toUpperCase()); add("city", dem.metros);

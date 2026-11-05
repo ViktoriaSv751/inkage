@@ -5,7 +5,7 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { Delta, Empty, fmt } from "../charts";
 import { Logo } from "../wow";
 import { Card, I, Layer, MOCK, P, PF, SOC, ago, big, n, rpc, type D } from "../shared";
-import { toast } from "../phone";
+import { CloseX, toast, usePhone } from "../phone";
 
 /* Közösségi oldal, 1. hullám: which platforms send data (the coverage bar), reach by platform for today / 3 / 7 / 30 days,
    every post on one timeline, and posts added by hand for the platforms not connected yet. */
@@ -20,7 +20,7 @@ const WHY: Record<string, string> = {
   facebook: "a Meta-belépés ellenőrzése után köthető be",
   pinterest: "a Pinterest-hozzáférés jóváhagyására vár",
   linkedin: "céges LinkedIn-oldal kell hozzá",
-  youtube: "a Google-projekt kiválasztása után köthető be",
+  youtube: "még nincs YouTube-csatorna, a bekötéshez az kell",
   tiktok: "a Kapcsolatok oldalon köthető be",
 };
 
@@ -36,8 +36,8 @@ export function Coverage({ r, pick, add, err, retry }: { r: D | null; pick: (pf:
   return (
     <section className="c s12 cov">
       <div className="cov-h">
-        <span className="eyebrow">Adatforrások</span>
-        <span className="cov-sum">{on.length ? <>Bekötve: <b>{on.map((p) => PF[p.platform]).join(", ")}</b></> : "Még nincs bekötött platform"}{off.length ? <> · Nincs bekötve: {off.map((p) => PF[p.platform]).join(", ")}</> : null}</span>
+        <h3 className="ink-h">Adatforrások</h3>
+        <span className="cov-sum">{on.length ? `${fmt(on.length)} bekötve` : "Még nincs bekötött platform"}{off.length ? `, ${fmt(off.length)} nincs` : ""}</span>
       </div>
       <div className="cov-l">
         {ps.map((p) => {
@@ -45,10 +45,12 @@ export function Coverage({ r, pick, add, err, retry }: { r: D | null; pick: (pf:
           return (
             <div key={p.platform} className={"cov-i " + st}>
               <button className="cov-b" onClick={() => pick(p.platform)} title={`${PF[p.platform]} posztjai a listában`}>
-                <Logo k={p.platform} size={26} />
-                <span><b>{PF[p.platform]}</b>
+                <Logo k={p.platform} size={40} />
+                <span className="cov-t"><b>{PF[p.platform]}</b>
                   <small>{p.connected ? (p.last_error ? "hiba a lehúzáskor" : `bekötve · frissítve ${ago(p.last_sync_at)}`) : WHY[p.platform]}</small>
-                  <small>{fmt(n(p.posts))} poszt{n(p.manual) ? ` (${fmt(n(p.manual))} kézzel)` : ""}{p.last_post ? ` · utolsó ${ago(p.last_post)}` : ""}</small></span>
+                  {(n(p.manual) > 0 || p.last_post) && <small>{n(p.manual) ? `${fmt(n(p.manual))} kézzel` : ""}{n(p.manual) && p.last_post ? " · " : ""}{p.last_post ? `utolsó ${ago(p.last_post)}` : ""}</small>}
+                  {n(p.gone) > 0 && <small title="A platform a teljes listájában már nem adja vissza őket: törölve vagy privát, innen nem dönthető el. A darabszámban nem szerepelnek, a múltbeli megtekintésük igen.">+{fmt(n(p.gone))} nem látszik az élő fiókon</small>}</span>
+                <span className="ic-rv"><b>{fmt(n(p.posts))}</b><small>poszt</small></span>
               </button>
               <div className="cov-a">
                 {!p.connected && <a className="lnk" href="#connect">Bekötés</a>}
@@ -63,42 +65,68 @@ export function Coverage({ r, pick, add, err, retry }: { r: D | null; pick: (pf:
 }
 
 /* ---------- reach by platform: today, 3, 7, 30 days ---------- */
-const WIN: [number, string][] = [[1, "Ma"], [3, "3 nap"], [7, "7 nap"], [30, "30 nap"]];
+const WIN: [number, string][] = [[1, "Ma eddig"], [3, "3 nap"], [7, "7 nap"], [30, "30 nap"]];
 type M = "reach" | "visits" | "posts";
+type V = { v: number | null; part?: boolean; extra?: number | null; to?: string | null; pins?: number | null; note?: string; dnow?: number | null; dprev?: number | null };
+const shortDay = (d?: string | null) => (d ? new Date(String(d).slice(0, 10) + "T12:00:00").toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) : "");
 export function ReachMatrix({ r, pick, add, err, retry }: { r: D | null; pick: (pf: string) => void; add: (pf: string) => void; err?: string; retry?: () => void }) {
   const [m, setM] = useState<M>("reach");
+  const phone = usePhone(); const [win, setWin] = useState(7);
   const cells: D[] = r?.cells || [];
   const plats: D[] = r?.platforms || [];
   const cell = (pf: string, k: number, per: "now" | "prev") => cells.find((c) => c.platform === pf && c.k === k && c.per === per) || {};
-  /* the number a platform reports for reach: impressions where it counts those (Pinterest, LinkedIn), else views
-     (what its posts gathered; the account's own day numbers when posts give none) */
-  const val = (pf: string, k: number, per: "now" | "prev"): { v: number | null; part?: boolean; extra?: number | null } => {
-    const c = cell(pf, k, per);
-    if (m === "visits") return { v: n(c.visits) };
-    if (m === "posts") return { v: n(c.posts) };
+  /* a connected platform where no post carries a trackable link and no visit was ever tied to it: its visitors are not 0, they cannot be told */
+  const unmeasured = (pf: string) => { const p = plats.find((x) => x.platform === pf); return !!p && p.connected && !n(p.tagged) && !n(p.visits_ever); };
+  /* what the platform reports: impressions where it counts those (Pinterest, LinkedIn), else the views its posts gathered.
+     The change beside it (dnow, dprev) is taken on finished days, today being only part of a day; Pinterest's windows end on its last day with data */
+  const val = (pf: string, k: number, per: "now" | "prev"): V => {
+    const c = cell(pf, k, per), F: D = cell(pf, k, "now").full_days || {};
+    if (m === "visits") return unmeasured(pf) ? { v: null, note: "Nem mérhető: egy posztjában sincs követhető link, és az appja nem adja át, honnan jött a látogató. Nem 0, hanem ismeretlen." } : { v: n(c.visits), dnow: n(F.visits), dprev: n(F.visits_prev) };
+    if (m === "posts") return { v: n(c.posts), dnow: n(F.posts), dprev: n(F.posts_prev) };
+    if (pf === "pinterest") { const v = c.imps ?? null; return { v, to: c.imps_to, pins: c.imps_pins, dnow: v, dprev: per === "now" ? cell(pf, k, "prev").imps ?? null : null, note: k === 1 ? `A Pinterest 1–2 nap késéssel adja a számait, mára még nincs. Az utolsó nap: ${shortDay(c.imps_to)}.` : undefined }; }
     if (imp(pf)) return { v: c.imps ?? c.views ?? null };
     const v = c.views ?? c.acc_views ?? null;
-    return { v, part: c.views != null && !!c.partial, extra: c.imps };
+    return { v, part: c.views != null && !!c.partial, extra: c.imps, to: c.imps_to, dnow: F.views ?? null, dprev: F.views_prev ?? null };
   };
   const hasData = (pf: string) => { const p = plats.find((x) => x.platform === pf); return !!p && (p.connected || n(p.posts) > 0); };
-  const total = (k: number, per: "now" | "prev", kind: "view" | "imp") => {
+  const total = (k: number, per: "now" | "prev", kind: "view" | "imp"): V => {
     const list = SOC.filter((pf) => (m !== "reach" ? kind === "view" : kind === "imp" ? imp(pf) : !imp(pf)));
-    const vs = list.map((pf) => val(pf, k, per)).filter((x) => x.v != null);
-    return { v: vs.length ? vs.reduce((t, x) => t + n(x.v), 0) : null, part: vs.some((x) => x.part) };
+    const vs = list.map((pf) => val(pf, k, per)).filter((x) => x.v != null), both = vs.filter((x) => x.dnow != null && x.dprev != null);
+    return { v: vs.length ? vs.reduce((t, x) => t + n(x.v), 0) : null, part: vs.some((x) => x.part), dnow: both.length ? both.reduce((t, x) => t + n(x.dnow), 0) : null, dprev: both.length ? both.reduce((t, x) => t + n(x.dprev), 0) : null };
   };
-  const snap = plats.map((p) => p.snap_since).filter(Boolean).sort()[0];
-  const Cell = ({ now, prev }: { now: { v: number | null; part?: boolean; extra?: number | null }; prev: { v: number | null; part?: boolean } }) => (
-    <td className="num">
-      {now.v == null ? <span className="mut">–</span> : <b title={now.part ? `Legalább ennyi: a régebbi posztok napi pillanatképei ${snap ? new Date(snap + "T12:00").toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) + "-tól" : "nemrég"} vannak meg, ami előtte gyűlt, az nem számolható szét napokra.` : undefined}>{now.part ? "≥ " : ""}{big(now.v)}</b>}
-      {now.v != null && prev.v != null && !now.part && !prev.part ? <div><Delta now={n(now.v)} prev={n(prev.v)} /></div> : null}
-      {m === "reach" && now.extra != null ? <div className="mut" style={{ fontSize: 11 }}>+{big(now.extra)} megjelenés</div> : null}
-    </td>
+  const igFrom = plats.find((p) => p.platform === "instagram")?.imps_from;
+  const CellBody = ({ now, k, y }: { now: V; k: number; y: V }) => (
+    <>
+      {now.v == null ? <span className="mut" title={now.note}>{now.note && m === "visits" ? "nem mérhető" : "–"}</span> : <b title={now.part ? "Közelítő: néhány poszt első leolvasása napokkal a megjelenése után történt, addigi számuk a megjelenés napjára került, így ennek az időszaknak a pontos része nem számolható ki. A teljes összeg pontos." : now.pins != null ? `A Pinterest fiókszintű napi jelentéséből, ${shortDay(now.to)}-ig. A pinek saját számai napokkal később érnek be: ugyanerre az időszakra eddig ${big(now.pins)}.` : undefined}>{now.part ? "≈ " : ""}{big(now.v)}</b>}
+      {/* today against a whole day would say "-99%" every morning: yesterday's number stands beside it instead */}
+      {k === 1 ? (now.v != null && y.v != null ? <div className="mut" style={{ fontSize: 11 }} title="A mai nap még nem ért véget, ezért nincs változás-számítás.">tegnap: {big(y.v)}</div> : null)
+        : now.v != null && now.dnow != null && now.dprev != null && !now.part && !y.part ? <div title="Változás a lezárt napokon: a mai félkész nap nélkül."><Delta now={n(now.dnow)} prev={n(now.dprev)} /></div> : null}
+      {m === "reach" && now.pins != null && now.v != null ? <div className="mut" style={{ fontSize: 11 }}>{shortDay(now.to)}-ig</div> : null}
+      {m === "reach" && now.extra != null ? <div className="mut" style={{ fontSize: 11 }} title={`Ugyanaz a megtekintés, nem hozzáadandó: az Instagram fiókszintű napi száma (story és profil is), ${shortDay(igFrom)}-tól van meg, és nem budapesti napokra bontva.`}>fiókszinten {big(now.extra)}</div> : null}
+    </>
   );
+  const Cell = (a: { now: V; k: number; y: V }) => <td className="num"><CellBody {...a} /></td>;
+  /* a platform that cannot be measured is left out of the sum, and that is said: the total is not everything */
+  const unk = m === "visits" && SOC.some(unmeasured);
+  const Tot = ({ l, sub, kind }: { l: string; sub?: string; kind: "view" | "imp" }) => <li className="tot"><span className="ic-rt"><b>{l}</b>{sub ? <small>{sub}</small> : null}</span><span className="ic-rv"><CellBody k={win} now={total(win, "now", kind)} y={total(win, "prev", kind)} /></span></li>;
   return (
-    <Card className="s12" icon={P.eye} title="Elérés platformonként"
-      sub={<>Minden platform egy sorban, a mai napra, az utolsó 3, 7 és 30 napra (budapesti napok), mellette a változás az előző ugyanilyen hosszú időszakhoz. <b>Elérés</b>: a TikTok, Instagram, Facebook és YouTube a megtekintést adja (amit a posztjaid az időszakban gyűjtöttek), a Pinterest és a LinkedIn a megjelenést; a kettőt nem adjuk össze. A <b>≥</b> jel: legalább ennyi, mert a régebbi posztok napi pillanatképe még csak rövid ideje van meg. <b>Látogató</b>: a mi mérésünk (rövid link, bio, hivatkozó). <b>Poszt</b>: hány poszt ment ki. Ez a kártya a fejléc időszakától független.</>}
-      right={<div className="adm-seg sm" role="group">{([["reach", "Elérés"], ["visits", "Látogató"], ["posts", "Poszt"]] as [M, string][]).map(([k, l]) => <button key={k} aria-pressed={m === k} onClick={() => setM(k)}>{l}</button>)}</div>}>
-      {!r ? (err ? <div className="alert err">Nem sikerült betölteni: {err} {retry && <button className="lnk" onClick={retry}>Újra</button>}</div> : <div className="skel" style={{ height: 220 }} />) : (
+    <Card className="s12" icon={P.eye} title="Nézettség platformonként"
+      sub={<>Minden platform egy sorban, a mai napra (éjfél óta), az utolsó 3, 7 és 30 napra (budapesti napok). A változás a lezárt napokat veti össze, a mai félkész nap nélkül. <b>Nézettség</b>: a TikTok, Instagram, Facebook és YouTube a megtekintést adja (amit a posztjaid az időszakban gyűjtöttek), a Pinterest és a LinkedIn a megjelenést; a kettőt nem adjuk össze. Ez nem az egyedi elérés: az Instagram valódi elérése a fiók kártyáján látszik. A Pinterest a számait 1–2 nap késéssel adja, ezért az időszaka az utolsó adatos napján ér véget. A <b>≈</b> jel: közelítő, mert a régebbi posztok első leolvasása késett. <b>Látogató</b>: a mi mérésünk (követhető link, bio, hivatkozó). <b>Poszt</b>: hány, ma is látható poszt ment ki. Ez a kártya a fejléc időszakától független.</>}
+      right={<div className="adm-seg sm" role="group">{([["reach", "Nézettség"], ["visits", "Látogató"], ["posts", "Poszt"]] as [M, string][]).map(([k, l]) => <button key={k} aria-pressed={m === k} onClick={() => setM(k)}>{l}</button>)}</div>}>
+      {!r ? (err ? <div className="alert err">Nem sikerült betölteni: {err} {retry && <button className="lnk" onClick={retry}>Újra</button>}</div> : <div className="skel" style={{ height: 220 }} />) : phone ? (
+        <>
+          <div className="adm-seg sm ic-win" role="group" aria-label="Időszak">{WIN.map(([k, l]) => <button key={k} aria-pressed={win === k} onClick={() => setWin(k)}>{l}</button>)}</div>
+          <ul className="ic-rows">
+            {SOC.map((pf) => { const ok = hasData(pf); return (
+              <li key={pf} className={ok ? "" : "dim"}>
+                <button className="ic-rb" onClick={() => pick(pf)}><Logo k={pf} size={36} /><span className="ic-rt"><b>{PF[pf]}</b><small>{ok || m === "visits" ? (m === "reach" ? vword(pf) : m === "visits" ? "látogató" : "poszt") : `Nincs adat: ${WHY[pf]}.`}</small></span>
+                  {ok || m === "visits" ? <span className="ic-rv"><CellBody k={win} now={val(pf, win, "now")} y={val(pf, win, "prev")} /></span> : null}</button>
+                {!ok && <span className="ic-ra"><a className="lnk" href="#connect">Bekötés</a><button className="lnk" onClick={() => add(pf)}>+ kézzel</button></span>}
+              </li>); })}
+            {m === "reach" ? <><Tot l="Megtekintés összesen" kind="view" /><Tot l="Megjelenés összesen" sub="Pinterest, LinkedIn" kind="imp" /></> : <Tot l="Összesen" sub={unk ? "csak a mérhető platformok" : undefined} kind="view" />}
+          </ul>
+        </>
+      ) : (
         <div className="tw"><table className="tb reach-t">
           <thead><tr><th>Platform</th>{WIN.map(([k, l]) => <th key={k} className="num">{l}</th>)}<th /></tr></thead>
           <tbody>
@@ -107,16 +135,16 @@ export function ReachMatrix({ r, pick, add, err, retry }: { r: D | null; pick: (
               return (
                 <tr key={pf} className={ok ? "" : "dim"}>
                   <td><button className="reach-pf" onClick={() => pick(pf)}><Logo k={pf} size={22} /><span><b>{PF[pf]}</b><small>{m === "reach" ? vword(pf) : m === "visits" ? "látogató" : "poszt"}</small></span></button></td>
-                  {ok || m === "visits" ? WIN.map(([k]) => <Cell key={k} now={val(pf, k, "now")} prev={val(pf, k, "prev")} />)
+                  {ok || m === "visits" ? WIN.map(([k]) => <Cell key={k} k={k} now={val(pf, k, "now")} y={val(pf, k, "prev")} />)
                     : <td colSpan={4} className="mut reach-off">Nincs adat: {WHY[pf]}.</td>}
                   <td className="reach-a">{!ok && <><a className="lnk" href="#connect">Bekötés</a> <button className="lnk" onClick={() => add(pf)}>+ kézzel</button></>}</td>
                 </tr>
               );
             })}
             {m === "reach" ? <>
-              <tr className="tot"><td><b>Megtekintés összesen</b></td>{WIN.map(([k]) => <Cell key={k} now={total(k, "now", "view")} prev={total(k, "prev", "view")} />)}<td /></tr>
-              <tr className="tot"><td><b>Megjelenés összesen</b><br /><small className="mut">Pinterest, LinkedIn</small></td>{WIN.map(([k]) => <Cell key={k} now={total(k, "now", "imp")} prev={total(k, "prev", "imp")} />)}<td /></tr>
-            </> : <tr className="tot"><td><b>Összesen</b></td>{WIN.map(([k]) => <Cell key={k} now={total(k, "now", "view")} prev={total(k, "prev", "view")} />)}<td /></tr>}
+              <tr className="tot"><td><b>Megtekintés összesen</b></td>{WIN.map(([k]) => <Cell key={k} k={k} now={total(k, "now", "view")} y={total(k, "prev", "view")} />)}<td /></tr>
+              <tr className="tot"><td><b>Megjelenés összesen</b><br /><small className="mut">Pinterest, LinkedIn</small></td>{WIN.map(([k]) => <Cell key={k} k={k} now={total(k, "now", "imp")} y={total(k, "prev", "imp")} />)}<td /></tr>
+            </> : <tr className="tot"><td><b>Összesen</b>{unk && <><br /><small className="mut">csak a mérhető platformok</small></>}</td>{WIN.map(([k]) => <Cell key={k} k={k} now={total(k, "now", "view")} y={total(k, "prev", "view")} />)}<td /></tr>}
           </tbody>
         </table></div>
       )}
@@ -174,7 +202,8 @@ const KINDS: Record<string, [string, string][]> = {
   linkedin: [["post", "Poszt"], ["video", "Videó"], ["document", "Dokumentum"], ["image", "Kép"]], youtube: [["short", "Shorts"], ["video", "Videó"]],
 };
 const localInput = (t?: string) => { const d = t ? new Date(t) : new Date(); const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 16); };
-const num = (s: string) => (s.trim() === "" ? null : Math.max(0, Math.round(Number(s.replace(/[\s.]/g, "").replace(",", ".")) || 0)));
+/* an empty field is no number; "1200", "1 200" and "1.200" are; anything else is a mistake (NaN), never a silent 0 */
+const num = (s: string) => { const c = s.replace(/[\s\u00a0]/g, ""); if (!c) return null; return /^\d+$/.test(c) || /^\d{1,3}(\.\d{3})+$/.test(c) ? Number(c.replace(/\./g, "")) : NaN; };
 
 export function ManualPost({ init, close, saved }: { init: D; close: () => void; saved: () => void }) {
   const sb = useMemo(() => supabaseBrowser(), []);
@@ -182,17 +211,21 @@ export function ManualPost({ init, close, saved }: { init: D; close: () => void;
   const [v, setV] = useState<D>({ platform: init.platform || "", url: init.url || "", at: localInput(init.created_at), title: init.title || "", kind: init.kind || "",
     views: init.views ?? "", likes: init.likes ?? "", comments: init.comments ?? "", shares: init.shares ?? "", saves: init.saves ?? "" });
   const [busy, setBusy] = useState(false); const [err, setErr] = useState("");
-  const set = (p: D) => setV((o) => ({ ...o, ...p }));
+  const set = (p: D) => { setErr(""); setV((o) => ({ ...o, ...p })); };
   const onUrl = (u: string) => { const pf = pfOfUrl(u); set({ url: u, ...(pf && !edit ? { platform: pf, kind: v.platform === pf ? v.kind : "" } : {}) }); };
   const pf = v.platform as string;
   const save = async () => {
     setErr("");
     if (!pf) return setErr("Válaszd ki a platformot.");
     if (!/^https?:\/\//i.test(String(v.url).trim())) return setErr("Másold be a poszt teljes linkjét (https://…).");
+    if (!v.at || !Number.isFinite(new Date(v.at).getTime())) return setErr("Add meg, mikor ment ki a poszt.");
+    const L: Record<string, string> = { views: imp(pf) ? "Megjelenés" : "Megtekintés", ...(pf !== "pinterest" ? { likes: "Kedvelés" } : {}), comments: "Komment", shares: "Megosztás", saves: "Mentés" };
+    for (const k of Object.keys(L)) if (Number.isNaN(num(String(v[k] ?? "")))) return setErr(`${L[k]}: csak számot írj, például 1200.`);
+    const likes = num(String(v.likes ?? ""));
     setBusy(true);
     const views = num(String(v.views));
     const { error } = MOCK ? { error: null } : await rpc(sb, "admin_post_manual_save", { p_platform: pf, p_url: String(v.url).trim(), p_created_at: new Date(v.at).toISOString(), p_title: v.title || null, p_kind: v.kind || null,
-      p_views: views, p_likes: num(String(v.likes)), p_comments: num(String(v.comments)), p_shares: num(String(v.shares)), p_saves: num(String(v.saves)), p_impressions: imp(pf) ? views : null, p_post_id: edit ? init.post_id : null });
+      p_views: views, p_likes: Number.isNaN(likes) ? null : likes, p_comments: num(String(v.comments)), p_shares: num(String(v.shares)), p_saves: num(String(v.saves)), p_impressions: imp(pf) ? views : null, p_post_id: edit ? init.post_id : null });
     setBusy(false);
     if (error) return setErr(error.message.replace(/^.*?:\s*(?=[A-ZÁÉÍÓÖŐÚÜŰ])/, ""));
     toast(edit ? "Poszt frissítve" : "Poszt hozzáadva"); saved(); close();
@@ -206,7 +239,7 @@ export function ManualPost({ init, close, saved }: { init: D; close: () => void;
     <Layer>
       <div className="scrim" onClick={close} />
       <aside className="drawer" role="dialog" aria-label="Poszt kézzel">
-        <div className="c-h"><div><div><span className="eyebrow">{pf ? PF[pf] : "Közösségi poszt"}</span><h2 style={{ fontSize: 20, marginTop: 6 }}>{edit ? "Kézzel felvett poszt" : "Poszt hozzáadása kézzel"}</h2></div></div><button className="adm-ibtn" onClick={close}>Bezárás</button></div>
+        <div className="c-h"><div><div><span className="eyebrow">{pf ? PF[pf] : "Közösségi poszt"}</span><h2 style={{ fontSize: 20, marginTop: 6 }}>{edit ? "Kézzel felvett poszt" : "Poszt hozzáadása kézzel"}</h2></div></div><CloseX close={close} /></div>
         <p className="note">Arra az esetre, ha a platform még nincs bekötve: így is ott a poszt az idővonalon, a naptárban és a ranglistán. A számokat a platform alkalmazásából olvasd le, és bármikor frissítheted (minden mentés a napi pillanatkép is). Amikor a platformot bekötöd, a valódi poszt magától átveszi a helyét, a rövid linkjével együtt.</p>
         <label className="lf"><span>A poszt linkje</span><input className="adm-in" value={v.url} onChange={(e) => onUrl(e.target.value)} placeholder="https://www.instagram.com/reel/…" inputMode="url" autoFocus={!edit} /></label>
         <div className="lf"><span>Platform</span><div className="pf-pick">{SOC.map((s) => <button key={s} type="button" aria-pressed={pf === s} disabled={edit && s !== pf} onClick={() => set({ platform: s, kind: "" })}><Logo k={s} size={20} />{PF[s]}</button>)}</div></div>

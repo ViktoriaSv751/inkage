@@ -159,8 +159,15 @@ export async function syncBing() {
       }
     }
     const n2 = await rows("bing_links", links);
-    /* Bing answered but gave no search rows (bing_daily stays empty): "üres:" at the start, so freshness does not say fresh */
-    const msg = `${qs.length ? "" : "üres: a Bing nem adott keresési adatot · "}${n1} keresés-sor, ${n2} link`;
+    /* Bing answered but gave no search rows (bing_daily stays empty): "üres:" at the start, so freshness does not say fresh;
+       and why, as far as the key's own site list tells */
+    let why = "";
+    if (!qs.length) {
+      const sites = ((await api("GetUserSites").catch(() => ({}))).d || []) as { Url: string; IsVerified?: boolean }[];
+      const me = sites.find((s) => /inkage\.app/i.test(s.Url));
+      why = !sites.length ? "a kulcshoz tartozó fiók webhelylistája üres vagy nem olvasható" : !me ? `az inkage.app nincs a kulcshoz tartozó fiókban (${sites.length} másik webhely van benne)` : me.IsVerified === false ? "az inkage.app a fiókban van, de nincs igazolva" : "az inkage.app igazolva van, de a Bing még nem ad róla keresési adatot";
+    }
+    const msg = `${qs.length ? "" : `üres: a Bing nem adott keresési adatot (${why}) · `}${n1} keresés-sor, ${n2} link`;
     await log("bing", true, n1 + n2, msg);
     return msg;
   } catch (e) { const m = String((e as Error)?.message || e); await log("bing", false, null, m); return "hiba: " + m.slice(0, 100); }

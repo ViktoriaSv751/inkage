@@ -26,7 +26,7 @@ async function weekPlan(x: Extra, force = false) {
     /* 15 seconds at most (the whole Monday e-mail waits for it), with room for the model's own thinking */
     const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", signal: T(), headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify({ model: env().ADMIN_AI_MODEL || "claude-opus-5-5", max_tokens: 4000, output_config: { effort: "low" },
-        system: "Te az InkAge (tetoválás-előnézet app: a saját bőrfotódon mutatja meg a tetoválást, és azt is, hogyan öregszik 10, 30 és 50 év alatt) növekedési tanácsadója vagy. Csak organikus növekedés: soha ne javasolj fizetett hirdetést vagy kiemelést, és soha ne írd, hogy „ingyenes” vagy „free”. A számok jelentése: scored = kész tetoválás-előnézet (a fő élmény), revealed = megnézte 50 év múlva, shared = megosztott (link, öregedés-videó, PDF a tetoválóművésznek), captured = bőrfotót töltött fel. Csak JSON-t adj vissza: pontosan 3 elem, [{\"t\":\"lépés\",\"why\":\"miért\",\"metric\":\"sessions|scored|signups|shared\"}], magyarul, tegezve.",
+        system: "Te az InkAge (tetoválás-előnézet app: a saját bőrfotódon mutatja meg a tetoválást, és azt is, hogyan öregszik 10, 30 és 50 év alatt) növekedési tanácsadója vagy. Csak organikus növekedés: soha ne javasolj fizetett hirdetést vagy kiemelést, és soha ne írd, hogy „ingyenes” vagy „free”. A számok jelentése: made = elkészült tetoválás-előnézet (a fő eredmény), scored = az előnézet-lépés, revealed = megnézte 50 év múlva, shared = megosztott (link, öregedés-videó, PDF a tetoválóművésznek), captured = bőrfotót töltött fel. Csak JSON-t adj vissza: pontosan 3 elem, [{\"t\":\"lépés\",\"why\":\"miért\",\"metric\":\"sessions|made|signups|shared\"}], magyarul, tegezve.",
         messages: [{ role: "user", content: JSON.stringify({ het: w, elozo_het: pw, posztok: x.top_posts, google: x.gsc_week, kovetok: x.followers, valaszra_var: x.inbox_open }) }] }) }).catch(() => null);
     const j = r?.ok ? await r.json().catch(() => ({})) : {};
     const t = j.stop_reason === "end_turn" ? ((j.content || []) as { type: string; text?: string }[]).filter((b) => b.type === "text").map((b) => b.text).join("") : "";
@@ -34,7 +34,7 @@ async function weekPlan(x: Extra, force = false) {
   }
   if (!items.length) items = [
     { t: "Tegyél inkage.app/go/… rövid linket a hét minden videójába.", why: "Így látszik, melyik hozott embert.", metric: "sessions" },
-    { t: w.scored < pw.scored ? "Posztolj egy „ma vs. 50 év múlva” videót: így látszik, mit tud az app." : "Ismételd meg a múlt hét legjobb videójának formáját egy új mintával.", metric: "scored" },
+    { t: w.made < pw.made ? "Posztolj egy „ma vs. 50 év múlva” videót, hogy több előnézet készüljön." : "Ismételd meg a múlt hét legjobb videójának formáját egy új mintával.", metric: "made" },
     { t: x.inbox_open ? `Válaszolj a ${x.inbox_open} várakozó kommentre és véleményre.` : "Kérj meg 3 elégedett felhasználót, hogy értékeljen az áruházban.", metric: "signups" },
   ];
   await call("admin_w_week_plan", { p_items: items.slice(0, 3).map((i) => ({ t: String(i.t).slice(0, 200), why: i.why ? String(i.why).slice(0, 200) : undefined, metric: i.metric, done: false })), p_force: force });

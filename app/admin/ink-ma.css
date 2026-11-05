@@ -1,0 +1,369 @@
+/* Ma on the phone and the computer's Áttekintés on the ink system. Loaded after ink-ops.css. */
+
+/* ---------- the light: stronger as the day beats the last 30 days (--mood 0..1) ---------- */
+.ma-mood{position:relative;isolation:isolate}
+.ma-mood::before{content:"";position:absolute;left:0;right:0;top:0;height:460px;z-index:-1;pointer-events:none;opacity:var(--mood,.2);background:radial-gradient(closest-side,color-mix(in srgb,var(--a-fg) 26%,transparent),transparent);transition:opacity .6s var(--ink-ease)}
+.adm.light .ma-mood::before{background:radial-gradient(closest-side,color-mix(in srgb,var(--a-fg) 13%,transparent),transparent)}
+.ih-top.ma-mood::before{right:auto;width:42%;height:620px}
+
+/* ---------- the word, the chips ---------- */
+.adm .ma-word{display:inline-flex;align-items:center;gap:10px;border:0;background:none;padding:0;color:var(--a-fg);font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:32px;line-height:1.05;letter-spacing:-.04em;cursor:pointer;min-height:44px}
+.adm .ma-word i{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 7px;border-radius:99px;background:var(--a-fg);color:var(--a-bg);font-family:var(--a-ui);font-stretch:normal;font-style:normal;font-weight:800;font-size:13px;letter-spacing:0}
+.ma-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;min-width:0}
+.adm .ma-chip,.adm.is-phone .ma-chips .ma-dq,.adm .ma-chips .ma-dq{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 13px;border:0;border-radius:99px;background:var(--a-s2);color:var(--a-mut);font:inherit;font-size:13px;font-weight:600;cursor:pointer;text-align:left}
+.adm .ma-chips .ma-dq.old{background:var(--a-fg);color:var(--a-bg);font-weight:700}
+.adm .ma-chip b{color:var(--a-fg);font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:15px;letter-spacing:-.02em}
+.adm .ma-chip>i{flex:none;width:8px;height:8px;border-radius:99px;box-shadow:inset 0 0 0 1.5px var(--a-dim)}
+.adm .ma-chip.on>i{background:var(--a-fg);box-shadow:none;animation:ma-beat 1.8s infinite}
+@keyframes ma-beat{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--a-fg) 55%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+/* ---------- the day back ---------- */
+.ma-dayback{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;text-align:center}
+.ma-dayback b{font-weight:700;font-size:14px}
+.ma-dayback small{font-size:12.5px;color:var(--a-dim)}
+
+/* ---------- the wall of the day's signatures, behind the figures ---------- */
+.ma-wallbg{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(84px,1fr);gap:4px;pointer-events:none;opacity:.2;-webkit-mask-image:radial-gradient(ellipse at center,transparent 22%,#000 78%);mask-image:radial-gradient(ellipse at center,transparent 22%,#000 78%);overflow:hidden}
+.ma-wallbg img{display:block;width:100%;height:100%;object-fit:contain;filter:grayscale(1) invert(1) contrast(1.25);mix-blend-mode:screen;animation:ma-wall .8s var(--ink-ease) backwards}
+.adm.light .ma-wallbg img{filter:grayscale(1) contrast(1.25);mix-blend-mode:multiply}
+@keyframes ma-wall{from{opacity:0;transform:scale(.94)}}
+.ink-ma-top>.ma-wallbg{position:absolute}
+
+/* ---------- covers: the newest signatures in a swiping row ---------- */
+.ma-sr{display:flex;flex-direction:column;gap:10px;min-width:0}
+.ma-sr .ink-h small{display:block;font-family:var(--a-ui);font-stretch:normal;font-weight:500;font-size:12.5px;letter-spacing:0;color:var(--a-dim);margin-top:3px}
+.ma-sr-row{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;padding-bottom:2px;min-width:0}
+.ma-sr-row::-webkit-scrollbar{display:none}
+.ma-sr-row figure{margin:0;flex:0 0 min(44%,172px);scroll-snap-align:start;min-width:0}
+.ma-sr-row .ink-sig{aspect-ratio:4/3}
+.ma-sr-row figcaption{font-size:12px;color:var(--a-dim);margin-top:5px;font-variant-numeric:tabular-nums}
+
+/* ---------- the deck of tasks ---------- */
+.ma-deck{display:flex;flex-direction:column;gap:12px;min-width:0}
+.ma-deck .ink-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ma-deck .ink-h small{font-family:var(--a-ui);font-stretch:normal;font-size:14px;font-weight:600;letter-spacing:0;color:var(--a-dim);margin-left:4px}
+.ma-deck-nav{display:inline-flex;align-items:center;gap:6px;font-family:var(--a-ui);font-stretch:normal;font-weight:600;font-size:14px;letter-spacing:0}
+.ma-deck-nav button:not(.lnk){display:none;width:36px;height:36px;border:0;border-radius:99px;background:var(--a-s2);color:var(--a-fg);font-size:18px;line-height:1;cursor:pointer}
+@media (hover:hover) and (min-width:981px){.ma-deck-nav button:not(.lnk){display:inline-grid;place-items:center}}
+.ma-deck-row{display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;min-width:0;padding-bottom:2px}
+.ma-deck-row::-webkit-scrollbar{display:none}
+.adm .ma-dk{flex:0 0 min(86%,340px);scroll-snap-align:start;display:flex;flex-direction:column;gap:6px;min-height:208px;padding:22px;border-radius:var(--ink-r);background:var(--a-s1);color:var(--a-fg);min-width:0}
+.adm .ma-dk.ink-flip{background:var(--ink-flip-bg)}
+.ma-dk-n{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:64px;line-height:.95;letter-spacing:-.05em}
+.ma-dk h4{margin:0;font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:21px;line-height:1.12;letter-spacing:-.03em;overflow-wrap:anywhere}
+.ma-dk p{margin:2px 0 0;font-size:13.5px;line-height:1.4;color:var(--a-mut);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ma-dk-a{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:12px}
+.ma-dk-a .adm-ibtn.gold{flex:1 1 120px;justify-content:center;min-height:50px;font-size:15px}
+.ma-dk-a .adm-ibtn{min-height:50px;justify-content:center}
+.ma-dk-a .adm-ibtn.ic{width:50px;padding:0}
+.ma-dk-a .adm-ibtn svg{width:19px;height:19px}
+.ma-deck-0{margin:0;padding:22px;border-radius:var(--ink-r);background:var(--a-s1);color:var(--a-mut);font-size:14px}
+
+/* ---------- the big goal in contrast ---------- */
+.adm .ma-flip{display:flex;flex-direction:column;gap:8px;width:100%;border:0;border-radius:var(--ink-r);padding:22px;font:inherit;text-align:left;cursor:pointer;min-width:0}
+.ma-flip-l{font-size:13.5px;font-weight:600;opacity:.72}
+.ma-flip-v{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.ma-flip-v b{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:clamp(52px,16vw,84px);line-height:.98;letter-spacing:-.05em}
+.ma-flip-v span{font-weight:650;font-size:15px}
+.adm .ma-flip .ma-bar{display:block;height:10px;border-radius:99px;background:rgba(128,128,128,.28);overflow:hidden;margin-top:4px}
+.adm .ma-flip .ma-bar i{display:block;height:100%;background:var(--ink-flip-fg)!important;border-radius:99px}
+.adm .ma-flip small{font-size:12.5px;line-height:1.4;opacity:.74;color:inherit}
+.ma-flip-n{font-weight:600}
+.adm .ma-flip .ms-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
+.adm .ma-flip .ms-chips span{padding:4px 11px;border-radius:99px;font-size:12.5px;font-weight:700;background:none;color:inherit;border:0;box-shadow:inset 0 0 0 1.5px rgba(128,128,128,.55)}
+.adm .ma-flip .ms-chips .done{background:var(--ink-flip-fg);color:var(--ink-flip-bg);box-shadow:none}
+.adm .ma-flip .ms-chips .cur{box-shadow:inset 0 0 0 2px var(--ink-flip-fg)}
+.adm .ma-goal{gap:14px}
+.adm .ma-g1{padding:22px;border-radius:var(--ink-r);background:var(--a-s1)}
+
+/* ---------- Legutóbb: rows like a recent list ---------- */
+.adm .ma-feed ul{list-style:none;margin:0;padding:6px;border-radius:var(--ink-r);background:var(--a-s1)}
+.adm .ma-feed h3{margin:0 0 10px;font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:19px;letter-spacing:-.025em;color:var(--a-fg)}
+.adm .ma-feed li>button{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:6px 10px;border:0;border-radius:18px;background:none;color:var(--a-fg);font:inherit;text-align:left;cursor:pointer}
+.adm .ma-feed li>button:hover{background:var(--a-s2)}
+.adm .ma-feed .pl-i{order:-1;flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:99px;background:var(--a-fg);color:var(--a-bg)}
+.adm .ma-feed .pl-i svg{width:19px;height:19px}
+.adm .ma-feed .pl-l{flex:1;min-width:0;font-size:14px;font-weight:600;white-space:normal;overflow-wrap:anywhere}
+.adm .ma-feed time{order:1;flex:none;width:auto;font-size:12.5px;color:var(--a-dim);font-variant-numeric:tabular-nums}
+.adm .ma-feed .ma-why{margin:8px 4px 0}
+.adm .ma-feed .ma-day{margin:10px 10px 2px;font-size:13px;color:var(--a-dim);font-weight:600}
+.adm .ma-feed .pt-all{margin:8px 0 0;border:0;background:var(--a-s2);color:var(--a-fg);border-radius:99px;min-height:40px;padding:0 16px;font:inherit;font-weight:600;cursor:pointer}
+
+/* ---------- view: split cards ---------- */
+.ma-split{display:flex;flex-direction:column;gap:10px}
+.adm .ma-split-a{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%;border:0;border-radius:30px;padding:24px;font:inherit;text-align:left;cursor:pointer}
+.ma-split-a>span:first-child{font-size:14px;font-weight:650;opacity:.72}
+.ma-split-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ma-split-3 button{display:flex;flex-direction:column;gap:3px;border:0;border-radius:22px;background:var(--a-s1);color:var(--a-fg);padding:16px 14px;font:inherit;text-align:left;cursor:pointer;min-width:0}
+.ma-split-3 b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:clamp(24px,7.4vw,32px);line-height:1;letter-spacing:-.04em;overflow-wrap:anywhere}
+.ma-split-3 small{font-size:12.5px;color:var(--a-dim)}
+.ma-pills{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.ma-pills button{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;padding:0;color:var(--a-dim);font:inherit;cursor:pointer}
+.ma-pills button>span{display:flex;align-items:flex-end;width:100%;height:86px;border-radius:99px;background:var(--a-s2);overflow:hidden}
+.ma-pills i{display:block;width:100%;background:repeating-linear-gradient(115deg,var(--a-fg) 0 3px,transparent 3px 6px);border-radius:99px;transition:height .3s var(--ink-ease)}
+.ma-pills button[aria-pressed="true"] i{background:var(--a-fg)}
+.ma-pills button[aria-pressed="true"]>span{box-shadow:inset 0 0 0 1.5px var(--a-fg)}
+.ma-pills small{font-size:12.5px;font-weight:700}
+.ma-pills button[aria-pressed="true"] small{color:var(--a-fg)}
+.ma-split-c{padding:18px 20px;border-radius:22px;background:var(--a-s1)}
+
+/* ---------- view: the signature in the lead ---------- */
+.ma-star{display:flex;flex-direction:column;gap:12px}
+.ma-star-i{position:relative;display:block;min-height:min(62vh,500px);border-radius:30px;background:var(--a-s1);overflow:hidden}
+.ma-star-i>.ink-sig,.ma-star-i>.skel{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0;background:none}
+.ma-star-i>.ink-sig img{padding:9% 7% 34%}
+.ma-star-e{position:absolute;inset:0 0 38%;display:grid;place-items:center;font-size:15px;color:var(--a-dim)}
+.ma-star-t{position:absolute;left:20px;top:18px;right:20px;font-size:13px;font-weight:600;color:var(--a-mut);pointer-events:none}
+.ma-star-n{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:2px;border:0;background:linear-gradient(to top,var(--a-s1) 62%,transparent);padding:48px 20px 18px;color:var(--a-fg);font:inherit;text-align:left;cursor:pointer}
+.ma-star-n small{font-size:14px;font-weight:650;color:var(--a-mut)}
+.ma-star-sh{display:flex;align-items:center;gap:8px;min-height:50px;border:0;border-radius:99px;background:var(--a-s1);color:var(--a-mut);padding:0 20px;font:inherit;font-size:14px;cursor:pointer}
+.ma-star-sh b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:18px;color:var(--a-fg)}
+.ma-star-sh span{margin-left:auto}
+
+/* ---------- view: one number ---------- */
+.ma-one{display:flex;flex-direction:column;justify-content:center;gap:18px;min-height:calc(100dvh - 300px)}
+.ma-one-n{display:flex;flex-direction:column;gap:10px;width:100%;border:0;background:none;padding:0;color:var(--a-fg);font:inherit;text-align:left;cursor:pointer}
+.ma-one-n>span:first-child{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:22px;letter-spacing:-.03em}
+.ma-one-n>small{font-size:14px;line-height:1.35;color:var(--a-mut)}
+.adm .ma-one-m{display:flex;align-items:center;justify-content:center;gap:6px;min-height:50px;border:0;border-radius:99px;background:var(--a-s2);color:var(--a-fg);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.ma-one-m svg{width:18px;height:18px}
+.ma-one-m[aria-expanded="true"] svg{transform:rotate(180deg)}
+
+/* ---------- settings ---------- */
+.ma-fx{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.ma-fx li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.ma-fx li>span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.ma-fx b{font-size:14.5px;font-weight:650}
+.ma-fx small{font-size:12.5px;color:var(--a-dim)}
+.ma-fx .sw{flex:none;border:0;cursor:pointer;width:46px;height:28px;border-radius:99px;background:var(--a-s4);position:relative;padding:0}
+.ma-fx .sw i{position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:99px;background:var(--a-bg);transition:transform .15s}
+.ma-fx .sw.on{background:var(--a-fg)}
+.ma-fx .sw.on i{transform:translateX(18px)}
+.adm .ma-views button[aria-pressed="true"]{background:var(--a-fg);color:var(--a-bg);border-color:transparent;box-shadow:none}
+.adm .ma-views button[aria-pressed="true"] small{color:inherit;opacity:.74}
+
+/* ---------- story: white on black, one giant figure ---------- */
+.adm~* .story-ov,.story-ov{--tile-bg:var(--a-bg);--tile-ink:var(--a-fg)}
+.so-big{font-family:var(--a-disp)!important;font-stretch:125%;font-weight:900!important;font-style:italic;letter-spacing:-.05em!important;overflow-wrap:anywhere}
+.so-big span{font-style:normal}
+.so-cta{border-radius:99px!important;min-height:50px;background:var(--a-fg)!important;color:var(--a-bg)!important;font-weight:700}
+.so-x{width:44px!important;height:44px!important;border-radius:99px!important;background:var(--a-fg)!important;color:var(--a-bg)!important}
+.so-bars i.on b,.so-bars i.done b{background:var(--a-fg)!important}
+.so-bars i{background:var(--a-s3)!important}
+
+/* ---------- the computer: left the day, right the cards ---------- */
+.ih-top,.ih-2{min-width:0}
+.home-g>.hello{padding:0 4px;align-items:center;margin-bottom:6px}
+.home-g>.hello .eyebrow{margin:0;font-size:14px;font-weight:600;color:var(--a-mut)}
+.home-g>.fresh-row{order:40}
+.home-g>.note{order:41}
+.ih-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px;align-items:start}
+.ih-l,.ih-r{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ih-l{padding:4px 0 0}
+.ih-status{display:flex;flex-direction:column;gap:2px;position:relative;z-index:1}
+.ih-status .ma-word{font-size:44px;align-self:flex-start}
+.ih-l .ink-ma-top{padding:0;overflow:hidden;border-radius:26px}
+.ih-l .ink-ma-ring{width:min(100%,420px)}
+.ih-l .ink-ma-top .ink-ma-chg{padding-bottom:6px}
+.ih-r .ink-rings3.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ih-r .ink-rings3 button{align-items:center;text-align:center;padding:18px 14px 14px}
+.ih-r .ink-rings3 .ink-ring{max-width:112px}
+.ih-r .ink-rings3 b{font-size:26px}
+.ih-r .ink-rings3 small{font-size:13.5px}
+.ih-r .ink-rings3 button:hover,.ih-t:hover{background:var(--a-s2)}
+.ih-r .ma-sr-row figure{flex:0 0 clamp(150px,20%,200px)}
+.ih-r .ma-flip-v b{font-size:clamp(56px,6vw,92px)}
+.ih-2{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px;align-items:start}
+.ih-2 .ma-dk{flex:0 0 min(62%,330px)}
+.ih-2 .ma-feed ul{max-height:none}
+.ih-h{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+.ih-h small{font-family:var(--a-ui);font-stretch:normal;font-weight:500;font-size:14px;letter-spacing:0;color:var(--a-dim)}
+.ih-tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(204px,1fr));gap:12px}
+.adm .ih-t{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;min-height:196px;padding:18px;border:0;border-radius:var(--ink-r);background:var(--a-s1);color:var(--a-fg);font:inherit;text-align:left;cursor:pointer;overflow:hidden;transition:background .15s}
+.ih-t-h{display:flex;align-items:center;gap:9px;width:100%;font-size:13.5px;font-weight:650;color:var(--a-mut);line-height:1.2;min-width:0}
+.ih-t-h>span{min-width:0}
+.ih-t-h>i{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:99px;background:var(--a-s3);color:var(--a-fg)}
+.ih-t-h>i svg{width:16px;height:16px}
+.ih-t-h em{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:99px;background:var(--a-fg);color:var(--a-bg)}
+.ih-t-v{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:46px;line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+.ih-t small{font-size:12.5px;line-height:1.35;color:var(--a-dim);overflow-wrap:anywhere}
+.ih-t-sp{display:block;width:calc(100% + 36px);margin:auto -18px -18px;color:var(--a-fg);opacity:.85}
+.ih-t-sp svg{display:block;width:100%}
+.ih-chart{display:flex;flex-direction:column;gap:10px}
+.ih-chart .c-h{flex-wrap:wrap}
+.home-g .stories .story{min-height:190px}
+.home-g .st-big{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;letter-spacing:-.05em;font-size:52px;line-height:1}
+.home-g .st-bars i{background:var(--a-s3)}
+.home-g .st-bars i.on{background:var(--a-fg)}
+.home-g .st-nav button{background:var(--a-s2);color:var(--a-fg);border:0;border-radius:99px}
+
+/* the morning card */
+.adm .home-g .morning{padding:24px}
+.home-g .mo-h .eyebrow{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:19px;letter-spacing:-.025em;color:var(--a-fg);text-transform:none}
+.home-g .mo-n{gap:10px;border:0}
+.adm .home-g .mo-i{border:0;border-radius:22px;background:var(--a-s2);padding:18px;color:var(--a-fg)}
+.adm .home-g .mo-i:hover{background:var(--a-s3)}
+.home-g .mo-i b{font-size:44px;font-style:italic;font-weight:900!important;line-height:1}
+.home-g .mo-i small{color:var(--a-mut)!important;font-weight:600}
+.home-g .mo-i small.up,.home-g .mo-i small.down{color:var(--a-fg)!important;font-weight:700}
+.adm .home-g .mo-p{border:0;border-radius:18px;background:var(--a-s2);color:var(--a-fg);padding:12px 16px}
+.home-g .mo-p.good{box-shadow:inset 0 0 0 2px var(--a-fg)}
+.home-g .mo-g h4{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:16px;letter-spacing:-.02em;color:var(--a-fg)}
+
+/* the paying people */
+.ih-pay{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 28px;margin:0 0 14px}
+.ih-pay>b{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:84px;line-height:.95;letter-spacing:-.05em}
+.ih-pay>span{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--a-dim);padding-bottom:6px}
+.ih-pay strong{font-size:17px;font-weight:700;color:var(--a-fg)}
+
+/* the week's video keeps its colours; the old gradients go */
+.home-g .weekvid{cursor:pointer}
+.home-g .wv-n b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;letter-spacing:-.03em}
+.home-g .imp-strip b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;letter-spacing:-.03em}
+
+@media (max-width:1180px){
+  .ih-top,.ih-2{grid-template-columns:minmax(0,1fr)}
+  .ih-r .ink-rings3.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:980px){
+  .ih-r .ink-rings3.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){
+  .ma-chip.on>i,.ma-wallbg img,.ma-pills i{animation:none!important;transition:none}
+  .ma-mood::before{transition:none}
+}
+
+/* the appearances strip and the platforms: flat cards, no outlines */
+.adm .home-g .imp-strip{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:28px;text-align:left}
+.home-g .imp-strip>div:first-child{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:150px}
+.home-g .imp-strip>div:first-child>b{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:52px;line-height:1;letter-spacing:-.05em}
+.home-g .imp-strip .delta{align-self:flex-start;width:auto}
+.home-g .imp-strip-l{justify-content:flex-start;gap:12px 22px}
+.home-g .mo-h .eyebrow{font-size:19px!important}
+@media (max-width:980px){.adm .home-g .imp-strip{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the number sheets on the computer: the same as on the phone ---------- */
+.adm .psheet .ma-big{margin:0 0 12px}
+.adm .psheet .pt-dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.adm .psheet .pt-dl>div{margin:0;padding:12px 14px;border-radius:16px;background:var(--a-s1);min-width:0}
+.adm .psheet .pt-dl dt{font-size:12.5px;color:var(--a-dim)}
+.adm .psheet .pt-dl dd{margin:2px 0 0;font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:22px;letter-spacing:-.03em}
+.adm .psheet .ps-t{margin:16px 0 4px;font-size:14px;font-weight:700}
+.adm .psheet .ps-p{margin:0;font-size:13.5px;line-height:1.5;color:var(--a-mut)}
+.adm .psheet .ps-opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.adm .psheet .ps-opts button{min-height:38px;padding:0 15px;border:0;background:var(--a-s2);color:var(--a-fg);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.adm .psheet .ma-rows{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.adm .psheet .ma-rows li>*{display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 12px;border:0;border-radius:14px;background:var(--a-s1);color:var(--a-fg);font:inherit;font-size:13.5px;text-align:left}
+.adm .psheet .ma-rows li>button{cursor:pointer}
+.adm .psheet .ma-rows time,.adm .psheet .ma-rows small{font-size:12.5px;color:var(--a-dim)}
+.adm .psheet .ma-src{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.adm .psheet .ma-src li{display:grid;grid-template-columns:10px minmax(0,1fr);gap:2px 10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--a-s1);font-size:13.5px}
+.adm .psheet .ma-src li>span{grid-column:2;font-size:12.5px;color:var(--a-dim)}
+.adm .psheet .ma-src i{width:10px;height:10px;border-radius:99px;background:var(--a-fg)}
+.adm .psheet .ma-src i.old{background:none;box-shadow:inset 0 0 0 2px var(--a-fg)}
+.adm .psheet .ma-own{display:flex;align-items:center;gap:10px;width:100%;min-height:50px;padding:8px 12px;border:0;border-radius:14px;background:var(--a-s1);color:var(--a-fg);font:inherit;font-size:13.5px;text-align:left;cursor:pointer}
+.adm .psheet .ma-own .sw{flex:none;width:40px;height:24px;border-radius:99px;background:var(--a-s4);position:relative}
+.adm .psheet .ma-own .sw i{position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:99px;background:var(--a-bg)}
+.adm .psheet .ma-own .sw.on{background:var(--a-fg)}
+.adm .psheet .ma-own .sw.on i{transform:translateX(16px)}
+.adm .psheet .ma-why{margin:8px 0;color:var(--a-dim)}
+/* platforms today: flat rows, wide figures */
+.adm .home-g .pt-i{border:0;border-radius:var(--ink-r);background:var(--a-s1)!important;padding:16px 20px}
+.home-g .pt-i b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:22px;letter-spacing:-.03em}
+.home-g .pt-i small .up,.home-g .pt-i small .down{color:var(--a-fg);font-weight:700}
+
+/* Legutóbb on the phone: over the older list rules */
+.adm.is-phone .ma-feed li>button:first-child{display:flex;align-items:center;gap:12px;min-height:56px;padding:6px 10px}
+.adm.is-phone .ma-feed .pl-i{display:grid;order:-1;flex:none;width:40px;height:40px;border-radius:99px;background:var(--a-fg)!important;color:var(--a-bg)}
+.adm.is-phone .ma-feed .pl-i svg{width:19px;height:19px}
+.adm.is-phone .ma-feed .pl-l{flex:1;min-width:0;font-size:14px;font-weight:600}
+.adm.is-phone .ma-feed time{order:1;width:auto;font-size:12.5px;color:var(--a-dim)}
+.adm.is-phone .ma-feed ul{padding:6px}
+
+/* ---------- fixes ---------- */
+/* a word on a story card fits its width whole, never broken in the middle */
+.so-big{overflow-wrap:normal}
+.so-fit{display:block;white-space:nowrap;font-size:min(1em,calc((100vw - 56px) / (var(--n) * .68)));font-style:italic}
+.adm .so-big .so-fit{font-style:italic}
+/* the filter on Ma: plain to see, one tap away */
+.adm .ma-flt{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:44px;margin-top:8px;padding:0 8px 0 16px;border:0;border-radius:99px;background:var(--a-fg);color:var(--a-bg);font:inherit;font-size:14px;font-weight:700;text-align:left;cursor:pointer}
+.ma-flt>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ma-flt>b{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:99px;background:var(--a-bg);color:var(--a-fg)}
+.ma-flt svg{width:15px;height:15px}
+.ma-scope{margin:8px 2px 0;font-size:12.5px;line-height:1.35;color:var(--a-dim)}
+.adm .plist h3 .ma-per{font-family:var(--a-ui);font-stretch:normal;font-size:12.5px;font-weight:500;letter-spacing:0;color:var(--a-dim)}
+/* the deck: the main button across the card, under it "Kész" and "Holnap" of the same width */
+.ma-dk h4{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.ma-dk-a{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.adm .ma-dk-a .adm-ibtn{display:inline-flex;align-items:center;gap:6px;justify-content:center;width:100%;min-width:0}
+.ma-dk-a .adm-ibtn.gold{grid-column:1/-1}
+/* Hírfolyam: the day is a heading row, every event row the same */
+.adm .ma-feed .ma-day-li{list-style:none;padding:0}
+/* view: one screen, with no scrolling on a phone */
+.ma-1s{display:flex;flex-direction:column;gap:10px}
+.adm .ma-1s-a{display:flex;flex-direction:column;gap:2px;width:100%;padding:12px 18px;border:0;border-radius:24px;background:var(--a-s1);color:var(--a-fg);font:inherit;text-align:left;cursor:pointer}
+.ma-1s-a small{font-size:13.5px;font-weight:650;color:var(--a-mut)}
+.ma-split-3.four{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.ma-split-3.four button{padding:12px 10px;border-radius:18px}
+.ma-split-3.four b{font-size:clamp(18px,5.6vw,26px)}
+.ma-split-3.four small{font-size:11.5px}
+.ma-1s .ma-pills button>span{height:40px}
+.ma-1s{gap:8px}
+.adm .ma-1s .ph-more{margin:0;min-height:44px}
+.adm .ma-1s-t{display:flex;flex-direction:column;gap:3px;width:100%;padding:12px 16px;border:0;border-radius:18px;background:var(--a-s1);color:var(--a-fg);font:inherit;text-align:left;cursor:pointer}
+.ma-1s-t small{font-size:12.5px;color:var(--a-dim)}
+.ma-1s-t b{font-size:15px;font-weight:650;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* view: one number, while there is no number to show */
+.ma-one.off{min-height:0}
+.ma-one-t{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:clamp(30px,9vw,44px);line-height:1.05;letter-spacing:-.04em}
+/* "A heted" is a heading like the others */
+.adm.is-phone .ma-game>h2.ink-h{font-family:var(--a-disp)!important;font-stretch:125%;font-weight:800!important;font-size:19px!important;letter-spacing:-.025em!important;color:var(--a-fg)!important}
+/* the change mark hugs its figure */
+.adm .imp-strip .delta,.adm .imp-strip .ink-chg{align-self:flex-start;width:auto}
+/* the cards that are simply wrappers on the computer's page */
+.home-g>.hk-wrap{min-width:0}
+.home-g>.hk-wrap:empty{display:none}
+/* the globe: beside it the countries it shows */
+.adm .home-g .miniglobe{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:28px}
+.mg-t{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:0}
+.mg-l{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.mg-l li{display:inline-flex;align-items:baseline;gap:7px;padding:8px 14px;border-radius:99px;background:var(--a-s2);font-size:14px;font-weight:600}
+.mg-l b{font-family:var(--a-disp);font-stretch:125%;font-weight:800}
+/* the week's plan and the spikes: each its own height, none with a blank half */
+.home-g{align-items:start}
+.home-g>.hk-plan,.home-g>.hk-spikes{align-self:stretch}
+
+/* ---------- the bottom bar's fifth place: the side menu at the right thumb ---------- */
+.adm-tabbar .ph-menu{display:none}
+.adm.is-phone .adm-tabbar.ph-5,.adm.is-land .adm-tabbar.ph-5{grid-template-columns:repeat(4,minmax(0,1fr)) minmax(54px,.82fr)!important}
+.adm.is-phone .adm-tabbar .ph-menu,.adm.is-land .adm-tabbar .ph-menu{display:flex}
+.adm.is-phone .adm-tabbar .ph-menu[aria-expanded="true"]{background:var(--a-fg);color:var(--a-bg)}
+.adm.is-phone .adm-tabbar .ph-menu[aria-expanded="true"] svg{color:var(--a-bg)!important}
+
+/* ---------- Fizetések ---------- */
+.pay-stores{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pay-store{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1px solid var(--a-line);border-radius:18px;min-width:0}
+.pay-store b{font-size:24px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.pay-store small{font-size:12.5px;color:var(--a-dim)}
+.pay-store .bad,.pay .bad{color:var(--a-bad)}
+.pay-st-h{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px}
+.pay-st-h i,.pay-dot::before{width:9px;height:9px;border-radius:99px;background:var(--pc);flex:none}
+.pay-dot{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.pay-dot::before{content:""}
+.pay-conv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}
+.pay-conv div{display:flex;flex-direction:column;gap:2px}
+.pay-conv b{font-size:26px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pay-conv small{font-size:12.5px;color:var(--a-dim)}
+.pay .cap{text-transform:capitalize}
+.pay .chip.bad{border-color:var(--a-bad)}
+@media (max-width:760px){.pay-stores{grid-template-columns:1fr}.pay-store b{font-size:22px}}
+
+/* ---------- InkAge: the stored images are tattoo previews (photos of skin), not ink on paper ----------
+   Calligra turns its signature PNGs into white ink by inverting them; a photo inverted reads as a negative. Here the
+   preview stays a photo, in black and white like the rest of the admin, filling its frame. */
+.adm .ink-sig img,.adm .ink-flip .ink-sig img,.adm.light .ink-sig img,.adm.light .ink-flip .ink-sig img{filter:grayscale(1)!important;mix-blend-mode:normal!important;object-fit:cover;padding:0!important}
+.adm .ma-wallbg img,.adm.light .ma-wallbg img{filter:grayscale(1)!important;mix-blend-mode:normal!important;object-fit:cover;opacity:.35}
+/* Fizetések: the three figures hold money ("64,97 USD"), too wide for the giant digits on a phone: smaller, wrapping, never overlapping */
+.pay .ink-trio b{font-size:clamp(15px,4.4vw,30px);overflow-wrap:normal;word-break:normal;line-height:1.1}
+.pay .ink-trio>*{min-width:0}
+.pay .ink-trio{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));row-gap:14px}

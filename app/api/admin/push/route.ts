@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { asAdmin, callAdmin } from "@/lib/admin/server";
-import { notifyOne, vapid } from "@/lib/admin/push";
+import { lastCodes, notifyOne, vapid } from "@/lib/admin/push";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +26,13 @@ export async function POST(req: Request) {
     /* one test: kept once and sent once (the device shows it from the list, no second push) */
     if (new URL(req.url).searchParams.has("test")) {
       const sent = await notifyOne("test", new Date().toISOString(), "InkAge · próba", "Így jön minden fontos jelzés: robbanó poszt, új vélemény, rekordnap, hiba.", "/admin");
-      return NextResponse.json({ ok: true, sent });
+      return NextResponse.json({ ok: true, sent, codes: lastCodes });
+    }
+    /* "Kész" from a notification: the worker tells which one */
+    if (new URL(req.url).searchParams.has("ack")) {
+      const a = (await req.json().catch(() => ({}))) as { kind?: string; key?: string };
+      if (a.kind && a.key) await callAdmin("admin_push_ack", { p_kind: String(a.kind).slice(0, 40), p_key: String(a.key).slice(0, 300) }).catch(() => null);
+      return NextResponse.json({ ok: true });
     }
     const b = (await req.json().catch(() => ({}))) as { sub?: { endpoint?: string; keys?: { p256dh?: string; auth?: string } }; ua?: string };
     if (!b.sub?.endpoint || !/^https:\/\//.test(b.sub.endpoint)) return NextResponse.json({ ok: false, error: "Hiányzik a feliratkozás." }, { status: 400 });

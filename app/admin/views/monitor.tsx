@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { BarList, Empty, TrendChart, fmt, pct } from "../charts";
-import { toast } from "../phone";
-import { AI_DAILY, Band, Card, EV, I, Kpi, Layer, Loading, MOCK, P, StateErr, Tbl, ago, api, dt, human, n, rpc, short, type D, useRpc } from "../shared";
+import { BarList, Empty, Info, TrendChart, fmt, pct } from "../charts";
+import { Ring } from "../ink";
+import { CloseX, toast, usePhone } from "../phone";
+import { More } from "../extra";
+import { AI_DAILY, Card, EV, I, Layer, Loading, MOCK, P, StateErr, Tbl, ago, api, drillTo, dt, human, n, rpc, short, type D, useRpc } from "../shared";
 
 /* ---------- monitoring: is the site up, did the scheduled jobs really run, which errors are open, what is slow ---------- */
 export const JOB: Record<string, string> = { "admin-sync": "Reggeli adatlehúzás", "admin-social": "Óránkénti közösségi lehúzás", "admin-digest": "Reggeli összefoglaló", "admin-rollup": "Napi összesítő (10 perc)", "admin-rollup-week": "Hajnali újraszámolás (7 nap)", "admin-bots": "Robot- és tesztszűrés (óránként)",
@@ -14,7 +16,7 @@ const PATHN: Record<string, string> = { "/api/admin/sync": "Reggeli lehúzás", 
   "/api/admin/publish": "Publikálás", "/api/admin/sync?only=index": "Google-indexelés", "/api/admin/sync?only=cwv": "Oldalsebesség", "/api/admin/sync?only=seo": "SEO-bejárás", "/api/admin/sync?only=watch": "Napi figyelés",
   "/api/admin/sync?only=aivis": "MI-láthatóság", "/api/admin/sync?only=rules": "Riasztási szabályok" };
 const SRC: Record<string, string> = { tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook", pinterest: "Pinterest", linkedin: "LinkedIn", youtube: "YouTube", gsc: "Search Console", gsc_index: "Google-indexelés",
-  apple: "App Store", apple_analytics: "App Store analitika", google: "Google Play", google_quality: "Play minőség", competitors: "Áruházi versenytársak", seo: "SEO-bejárás", kw_ideas: "Kulcsszóötletek", bing: "Bing",
+  apple: "App Store", apple_analytics: "App Store analitika", apple_sales: "App Store: letöltések", apple_reviews: "App Store: értékelések", apple_keys: "App Store: kulcsok", google: "Google Play", google_quality: "Play minőség", google_installs: "Play: telepítések", google_reviews: "Play: értékelések", google_keys: "Play: kulcsok", gsc_appearance: "Google-találattípusok", competitors: "Áruházi versenytársak", seo: "SEO-bejárás", kw_ideas: "Kulcsszóötletek", bing: "Bing",
   cwv: "Oldalsebesség", watch: "Napi figyelés", aivis: "MI-láthatóság", cse: "Programmable Search" };
 const METRIC: Record<string, string> = { errors: "Hibák száma", sessions: "Látogatás", scored: "Előnézet", score_rate: "Előnézetig jutók %-a", down: "Kiesések száma", latency: "Válaszidő (ms)", signups: "Regisztráció",
   /* per platform: what its posts gathered in the window, visits from it, the change of its followers */
@@ -23,17 +25,17 @@ const CHN: Record<string, string> = { push: "Push", telegram: "Telegram", email:
 const ST: Record<string, [string, string]> = { open: ["Nyitott", "warn"], resolved: ["Megoldva", "good"], ignored: ["Figyelmen kívül", ""] };
 const MB = (b: number) => (b > 1e9 ? fmt(b / 1e9, 2) + " GB" : fmt(b / 1e6, 1) + " MB");
 const daysTo = (t?: string | null) => (t ? Math.round((new Date(t).getTime() - Date.now()) / 864e5) : null);
-const tone = (d: number | null, warn: number, bad: number) => (d == null ? "sky" : d < bad ? "pink" : d < warn ? "butter" : "mint");
 
 /* "0 4 * * *" in UTC → "minden nap 6:00" in Budapest (summer and winter time handled by the date itself) */
 export function cronHu(s: string) {
-  const [mi, h, , , dow] = String(s || "").split(/\s+/);
+  const [mi, h, dom, , dow] = String(s || "").split(/\s+/);
   if (/^\*\/\d+$/.test(mi) && h === "*") return `${mi.slice(2)} percenként`;
   if (/^\d+$/.test(mi) && h === "*") return `óránként, :${mi.padStart(2, "0")}-kor`;
   if (/^\d+$/.test(mi) && /^\d+$/.test(h)) {
     const d = new Date(); d.setUTCHours(Number(h), Number(mi), 0, 0);
     const t = d.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Budapest" });
     const days = ["vasárnap", "hétfőn", "kedden", "szerdán", "csütörtökön", "pénteken", "szombaton"];
+    if (dom && /^\d+$/.test(dom)) return `minden hónap ${dom}. napján ${t}`;
     return (dow && dow !== "*" && /^\d$/.test(dow) ? `${days[Number(dow) % 7]} ` : "minden nap ") + t;
   }
   return s;
@@ -41,6 +43,10 @@ export function cronHu(s: string) {
 
 /* the real state of a scheduled job: the HTTP answer of its call and the route's own record of the run */
 /* (the same rule as the database's admin_jobs_failing: the badge, the self-check and this list agree) */
+/* a run that finished "ok" but says it left something out: not "rendben" */
+const CRON_ST: Record<string, string> = { failed: "hibával futott", running: "fut…", starting: "indul…" };
+const PARTIAL = /részben|: üres|^üres|kihagyva|sikertelen|hibás kérés|nincs felvéve/;
+const okState = (hand: string, msg?: string | null) => (PARTIAL.test(String(msg || "")) ? { t: "⚠ hiányos" + hand, tone: "warn", why: String(msg) } : { t: "✓ rendben" + hand, tone: "good", why: msg || undefined });
 export function jobState(c: D): { t: string; tone: string; why?: string } {
   if (c.active === false) return { t: "ki van kapcsolva", tone: "" };
   const h = c.http, r = c.run;
@@ -50,18 +56,74 @@ export function jobState(c: D): { t: string; tone: string; why?: string } {
     /* pg_net hands over the HTTP answer only at the next 5-minute round: a run that already finished is not "fut…" */
     const runDone = !!(r?.finished_at && h && new Date(r.started_at).getTime() >= new Date(h.at).getTime() - 60e3);
     if (h && !h.done && !runDone) return { t: "fut…" + hand, tone: "gold" };
-    if (h && !h.done && runDone) return r.ok === false ? { t: "✕ hibával futott" + hand, tone: "bad", why: r.message } : { t: "✓ rendben" + hand, tone: "good", why: r.message };
+    if (h && !h.done && runDone) return r.ok === false ? { t: "✕ hibával futott" + hand, tone: "bad", why: r.message } : okState(hand, r.message);
     if (h && (h.timed_out || h.status == null || h.status < 200 || h.status > 299)) return { t: h.timed_out ? "✕ időtúllépés" : h.status ? `✕ HTTP ${h.status}` : "✕ nincs válasz", tone: "bad", why: h.error || r?.message };
     if (r && r.ok === false) return { t: "✕ hibával futott" + hand, tone: "bad", why: r.message };
-    return { t: "✓ rendben" + hand, tone: "good", why: r?.message };
+    return okState(hand, r?.message);
   }
   if (!c.last) return { t: "még nem futott", tone: "" };
-  if (c.last.status !== "succeeded" && c.done_at && new Date(c.done_at) > new Date(c.last.start)) return { t: "✓ rendben (azóta lefutott)", tone: "good", why: `A ${new Date(c.last.start).toLocaleString("hu-HU")}-i futás hibás volt (${c.last.msg || c.last.status}); ${new Date(c.done_at).toLocaleString("hu-HU")}-kor már rendben lefutott.` };
-  return c.last.status === "succeeded" ? { t: c.path ? "✓ elindult" : "✓ rendben", tone: c.path ? "gold" : "good", why: c.path ? "A hívás elindult; a válasz az első 5 perces mérés után látszik." : undefined } : { t: "✕ " + c.last.status, tone: "bad", why: c.last.msg };
+  if (c.last.status !== "succeeded" && c.done_at && new Date(c.done_at) > new Date(c.last.start)) return { t: "✓ rendben (azóta lefutott)", tone: "good", why: `A ${new Date(c.last.start).toLocaleString("hu-HU")}-i futás hibás volt (${c.last.msg || CRON_ST[c.last.status] || c.last.status}); ${new Date(c.done_at).toLocaleString("hu-HU")}-kor már rendben lefutott.` };
+  return c.last.status === "succeeded" ? { t: c.path ? "✓ elindult" : "✓ rendben", tone: c.path ? "gold" : "good", why: c.path ? "A hívás elindult; a válasz az első 5 perces mérés után látszik." : undefined } : { t: "✕ " + (CRON_ST[c.last.status] || c.last.status), tone: "bad", why: c.last.msg };
+}
+
+/* ---------- real failures and known outside limits: a part of a run counts as a limit only when the data itself says so;
+   anything not recognised stays a failure, so a new kind of trouble can never hide here ---------- */
+export type Limit = { k: string; t: string; s: string; kind: string; to?: string };
+const WAIT_MS = 48 * 36e5;
+const LIM: Record<string, Omit<Limit, "k">> = {
+  reddit: { t: "Reddit-említések", s: "A Reddit nem engedi be a szerverünket. Innen nem javítható, a többi forrás fut.", kind: "Rajtunk kívül" },
+  bing: { t: "Bing keresési adat", s: "Az inkage.app igazolva van, de a Bing még nem ad róla adatot.", kind: "Rajtunk kívül" },
+  youtube: { t: "YouTube-említések", s: "Nincs YouTube-kapcsolat és API-kulcs, ezért nem fut.", kind: "Nincs beállítva", to: "#connect" },
+  instagram: { t: "Instagram #inkage", s: "A hashtag-keresés csak Facebook-oldalon át kötött Instagrammal megy.", kind: "Nincs beállítva", to: "#connect" },
+  competitors: { t: "Közösségi versenytársak", s: "0 versenytárs jött: vagy nincs felvéve egy sem, vagy nem elérhető.", kind: "Nincs beállítva" },
+};
+export function sortOut(d: D) {
+  const cron: D[] = d.cron || [], syncs: D[] = d.syncs || [], errs: D[] = d.server_errors || [], lim = new Map<string, Limit>();
+  const add = (k: string) => { if (LIM[k]) lim.set(k, { k, ...LIM[k] }); };
+  /* the Play permission: a limit only while it can still be on its way, after that a real failure */
+  const play = errs.filter((x) => x.source === "google_installs" && /storage\.objects/.test(String(x.msg || ""))).map((x) => new Date(x.first).getTime()).sort((a, b) => a - b)[0];
+  const playWaits = play != null && Date.now() - play < WAIT_MS;
+  const addPlay = () => lim.set("play", { k: "play", t: "Google Play telepítésszámok", kind: "Várakozás", to: "#connect", s: `A jog akár 24 óra múlva él: Play Console → Users and permissions → View financial data. ${new Date(play + WAIT_MS).toLocaleString("hu-HU", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })} után hibának számít.` });
+  const ytLive = syncs.some((x) => x.source === "youtube" && x.last_ok && Date.now() - new Date(x.last_ok).getTime() < 3 * 864e5);
+  /* one part of a run's summary: what is left of it that nothing explains */
+  const part = (p: string): string | null => {
+    const left: string[] = [];
+    if (/^mentions: részben:/.test(p)) {
+      const rd = /a Reddit kimaradt \(([^)]*)\)/.exec(p)?.[1];
+      if (rd) { if (/^HTTP (403|429)$/.test(rd)) add("reddit"); else left.push(`a Reddit kimaradt (${rd})`); }
+      for (const k of (/nem fut: ([a-z, ]+)/.exec(p)?.[1] || "").split(",").map((x) => x.trim()).filter(Boolean)) { if (k === "instagram" || (k === "youtube" && !ytLive)) add(k); else left.push(`nem fut: ${k}`); }
+      return left.length ? "említések: " + left.join(", ") : null;
+    }
+    if (/^google: részben: nem jött: /.test(p)) {
+      for (const k of p.replace(/^google: részben: nem jött: /, "").split(",").map((x) => x.trim())) { if (k === "telepítés" && playWaits) addPlay(); else left.push(k); }
+      return left.length ? "Google Play, nem jött: " + left.join(", ") : null;
+    }
+    if (/^bing: üres:.*igazolva van/.test(p)) { add("bing"); return null; }
+    return p;
+  };
+  const partsOf = (m: unknown) => String(m || "").split(" · ").map((x) => x.trim());
+  const realOf = (m: unknown) => partsOf(m).filter((p) => PARTIAL.test(p)).map(part).filter(Boolean) as string[];
+  /* the state of a job: a run whose only gaps are limits did what it could */
+  const state = (c: D) => { const s = jobState(c); if (s.tone !== "warn") return { ...s, real: [] as string[] }; const real = realOf(c.run?.message); return real.length ? { ...s, why: real.join(" · "), real } : { t: "✓ lefutott, korláttal", tone: "good", why: s.why, real }; };
+  for (const c of cron) realOf(c.run?.message);
+  const watch = syncs.find((x) => x.source === "watch");
+  realOf(watch?.last_msg); /* while the morning watch runs again, its last finished summary still tells */
+  if (/competitors: (0 versenytárs|nincs felvéve)/.test(String(cron.find((c) => c.jobname === "admin-watch")?.run?.message || watch?.last_msg || ""))) add("competitors");
+  /* the sources' own list says the same things again: only what no limit explains stays a problem */
+  const named: Record<string, string> = { Reddit: "reddit", YouTube: "youtube", Instagram: "instagram" };
+  const covered = (x: D) => {
+    if (x.k === "google" && /a jog akár/.test(String(x.t))) { if (playWaits) { addPlay(); return true; } return false; }
+    if (x.k === "bing") { if (/igazolva van/.test(String(syncs.find((y) => y.source === "bing")?.last_msg || ""))) { add("bing"); return true; } return false; }
+    if (x.k === "mentions") return (/nem mérnek: ([^.]+)\./.exec(String(x.t))?.[1] || "?").split(",").every((y) => lim.has(named[y.trim()] || "?"));
+    return false;
+  };
+  const srcReal = ((d.source_problems || []) as D[]).filter((x) => !covered(x));
+  return { limits: [...lim.values()], state, srcReal, isLimit: (k: string) => k === "google" ? lim.has("play") : lim.has(k) };
 }
 
 export function Monitor() {
   const sb = useMemo(() => supabaseBrowser(), []);
+  const phone = usePhone();
   const q = useRpc("admin_monitor", undefined, []), { d, e, load } = q;
   const [open, setOpen] = useState<D | null>(null); const [ef, setEf] = useState("open");
   const [vercel, setVercel] = useState<D | null>(null);
@@ -74,21 +136,56 @@ export function Monitor() {
   const totalN = up.reduce((t, x) => t + n(x.n), 0), totalUp = up.reduce((t, x) => t + n(x.up), 0);
   const avail = totalN ? (totalUp / totalN) * 100 : 0, since: string | null = d.uptime_since || null;
   const shown = errs.filter((x) => ef === "all" || (ef === "regressed" ? x.regressed : x.state === ef));
-  const states = cron.map((c) => ({ c, s: jobState(c) })), failing = states.filter((x) => x.s.tone === "bad");
+  const sorted = sortOut(d), limits = sorted.limits;
+  const states = cron.map((c) => ({ c, s: sorted.state(c) })), failing = states.filter((x) => x.s.tone === "bad"), partial = states.filter((x) => x.s.tone === "warn");
+  const srcBad: D[] = sorted.srcReal, single: D = d.probe_single || {};
   const setState = async (fp: string, state: string, note?: string) => { const r = await rpc(sb, "admin_error_state", { p_fp: fp, p_state: state, p_note: note ?? null }); if (r.error) return toast("Nem sikerült: " + r.error.message); toast(ST[state][0]); load(); setOpen(null); };
   const cert = ((d.certs || []) as D[])[0], cd = daysTo(cert?.valid_to), dd = daysTo(cert?.domain_expires);
   const hb = d.heartbeat ? (Date.now() - new Date(d.heartbeat).getTime()) / 60e3 : null;
   const dbWarn = n(d.db_bytes) > 400e6;
+  /* the statement at the top holds only if nothing below contradicts it: every exception is listed with the way to it */
+  const down = up.filter((x) => x.on_ !== false && x.last && !x.last.ok), openG = errs.filter((x) => x.state === "open" || x.regressed), regN = errs.filter((x) => x.regressed).length;
+  const okJobs = cron.length - failing.length - partial.length;
+  type Ex = { t: string; s: string; to?: string; href?: string };
+  const exc: Ex[] = [
+    ...(hb != null && hb > 15 ? [{ t: `A mérés ${fmt(hb)} perce áll`, s: "A Supabase időzítője nem fut, ezért minden szám ezen az oldalon régi.", href: "https://status.supabase.com" }] : []),
+    ...down.map((x): Ex => ({ t: `${x.label || short(x.target) || "/"} nem válaszol`, s: x.last.status ? `HTTP ${x.last.status}` : "nincs válasz", to: "@Elérhetőség" })),
+    ...failing.map((x): Ex => ({ t: `${JOB[x.c.jobname] || x.c.jobname}: hibával futott`, s: String(x.s.why || x.s.t).slice(0, 140), to: "@Időzített" })),
+    ...partial.map((x): Ex => ({ t: `${JOB[x.c.jobname] || x.c.jobname}: lefutott, de hiányos`, s: String(x.s.why || "").slice(0, 140), to: "@Időzített" })),
+    ...srcBad.map((x): Ex => ({ t: String(x.t).split(":")[0], s: String(x.t).split(":").slice(1).join(":").trim(), to: "@Hiányos" })),
+    ...(openG.length ? [{ t: `${fmt(openG.length)} nyitott hibacsoport`, s: `${regN ? `${fmt(regN)} visszatért · ` : ""}utoljára ${ago(openG.map((x) => String(x.last)).sort().pop())}`, to: "@Hibacsoportok" }] : []),
+    ...(cd != null && cd < 14 ? [{ t: `A tanúsítvány ${fmt(cd)} nap múlva lejár`, s: cert?.host || "", to: undefined }] : []),
+    ...(dd != null && dd < 30 ? [{ t: `A domain ${fmt(dd)} nap múlva lejár`, s: new Date(cert.domain_expires).toLocaleDateString("hu-HU"), to: undefined }] : []),
+    ...(dbWarn ? [{ t: "Az adatbázis 400 MB fölött van", s: "A keret 500 MB.", to: "@A legnagyobb" }] : []),
+  ];
+  const ms = days.filter((x) => x.ms != null);
+  /* on a phone the database's tables are under the closed "Műszaki részletek": that opens first, then the jump */
+  const drillDb = (el: HTMLElement) => { const b = phone ? document.querySelector('.adm-page .more-b[aria-expanded="false"]') as HTMLElement | null : null; if (b) { b.click(); setTimeout(() => drillTo("@A legnagyobb", el), 80); } else drillTo("@A legnagyobb", el); };
   return (
-    <div className="g">
-      {hb != null && hb > 15 && <div className="alert err s12">A mérés {fmt(hb)} perce állt: a Supabase időzítője nem fut, ezért minden szám ezen az oldalon régi. Nézd meg a Supabase állapotát. <a href="https://status.supabase.com" target="_blank" rel="noreferrer">status.supabase.com ↗</a></div>}
-      {/* availability only over the time there is data (a 30-day label on a few hours was a promise it could not keep) */}
-      <Band label={`Elérhetőség · ${since && Date.now() - new Date(since).getTime() < 29 * 864e5 ? `${dt(since)} óta` : "30 nap"}`} value={Number(avail.toFixed(2))} d={2} fmtFn={(x) => fmt(x, 2) + "%"} sentence={<>5 percenként ellenőrizzük a lenti címeket; minden cím az első sikeres válaszától számít (amíg egy cím még nem létezett, nem „esett ki”). {up.some((x) => x.on_ !== false && x.last && !x.last.ok) ? <b className="down">Most van kieső cím!</b> : "Most minden válaszol."} Utolsó mérés: {d.heartbeat ? ago(d.heartbeat) : "–"}. A válaszidőt a weboldal szervere méri 5 percenként, címenként külön (az adatbázis időzítője csak azt látja, hogy válaszolt-e). Ha a Supabase áll, ez az oldal sem mér: egy ingyenes külső figyelő (pl. UptimeRobot a /api/config címre) ezt is lefedi.</>}
-        side={days.filter((x) => x.ms != null).length > 1 ? <TrendChart data={days.filter((x) => x.ms != null).map((x) => ({ t: x.day, v: n(x.ms) }))} label="Átl. válaszidő (ms, szerverről mérve)" height={110} /> : undefined} />
-      <Kpi kind="own" to="@next" tone={failing.length ? "pink" : "mint"} className="s3" icon={P.clock} l="Időzített feladatok" v={`${cron.length - failing.length} / ${cron.length}`} sub={failing.length ? `${failing.length} hibával futott: ${failing.map((x) => JOB[x.c.jobname] || x.c.jobname).slice(0, 2).join(", ")}` : "a valódi válasz szerint mind rendben"} />
-      <Kpi kind="own" tone={errs.some((x) => x.state === "open") ? "butter" : "mint"} className="s3" icon={P.alert} l="Nyitott hibacsoport" v={fmt(errs.filter((x) => x.state === "open").length)} sub={`${fmt(errs.filter((x) => x.regressed).length)} visszatért`} />
-      <Kpi kind="own" to="@next" tone={tone(Math.min(cd ?? 999, (dd ?? 999) - 16), 30, 14) as any} className="s3" icon={P.bolt} l="Tanúsítvány" v={cd != null ? `${fmt(cd)} nap` : "–"} sub={cert?.domain_expires ? <span className={dd != null && dd < 30 ? "down" : ""}>domain: {new Date(cert.domain_expires).toLocaleDateString("hu-HU")} ({fmt(dd)} nap)</span> : "naponta ellenőrizve"} />
-      <Kpi kind="own" to="@next" tone={dbWarn ? "pink" : "lilac"} className="s3" icon={P.layers} l="Adatbázis" v={MB(n(d.db_bytes))} sub={dbWarn ? <b>400 MB fölött: az ingyenes keret 500 MB</b> : `tárhely: ${MB(n(d.storage_bytes))} · ${pct(n(d.db_bytes), 500e6)} az 500 MB-ból`} />
+    <div className="g io">
+      <section className={"s12 ink-hero io-state" + (exc.length ? " ink-flip" : "")}>
+        <span className="ink-hero-l">Utolsó mérés: {d.heartbeat ? ago(d.heartbeat) : "–"}<Info>5 percenként ellenőrizzük a lenti címeket; minden cím az első sikeres válaszától számít. {n(single.pg_net) || n(single.server) ? `30 nap alatt ${fmt(n(single.pg_net) + n(single.server))} egyszeri sikertelen mérés volt, amikor a másik mérés elérte a címet: ezek nem számítanak kiesésnek. ` : ""}A válaszidőt a weboldal szervere méri, címenként külön. Ha a Supabase áll, ez az oldal sem mér: egy külső figyelő (pl. UptimeRobot a /api/config címre) ezt is lefedi.</Info></span>
+        <h2 className="io-state-t">{exc.length ? <>Nem minden működik</> : <>Minden működik</>}</h2>
+        {!exc.length && limits.length > 0 && <span className="ink-hero-s"><small>{fmt(limits.length)} korlát, lent a részletek</small></span>}
+        {exc.length > 0 && <ul className="io-rows">{exc.map((x, i) => <li key={i} className="io-row"><span className="io-ic">!</span><div className="io-t"><b>{x.t}</b>{x.s && <small>{x.s}</small>}</div>{x.href ? <a className="io-pill" href={x.href} target="_blank" rel="noreferrer">Megnézem ↗</a> : x.to ? <button className="io-pill" onClick={(e) => (x.to === "@A legnagyobb" ? drillDb(e.currentTarget) : drillTo(x.to!, e.currentTarget))}>Megnézem</button> : null}</li>)}</ul>}
+      </section>
+      {limits.length > 0 && <section className="s12 io-sec"><h3 className="ink-h">Korlátok · {fmt(limits.length)}</h3>
+        <ul className="io-rows">{limits.map((x) => <li key={x.k} className="io-row io-lim"><span className="io-ic" aria-hidden="true">–</span><div className="io-t"><b>{x.t}</b><small>{x.kind} · {x.s}</small></div>{x.to && <a className="io-pill" href={x.to}>Megnézem</a>}</li>)}</ul></section>}
+      {/* three rings, each against its real whole: the checks that answered, the jobs, the database's 500 MB */}
+      <div className="s12 ink-rings3 io-rings">
+        <button onClick={(e) => drillTo("@Elérhetőség", e.currentTarget)}><Ring p={totalN ? avail / 100 : 0} kind="tick" /><b>{totalN ? fmt(avail, 2) + "%" : "–"}</b><small>elérhető · {since && Date.now() - new Date(since).getTime() < 29 * 864e5 ? `${dt(since)} óta` : "30 nap"}</small></button>
+        <button onClick={(e) => drillTo("@Időzített", e.currentTarget)}><Ring p={okJobs / Math.max(1, cron.length)} kind="seg" /><b>{okJobs}/{cron.length}</b><small>időzített feladat rendben{states.some((x) => /korláttal/.test(x.s.t)) ? ", korláttal is" : ""}</small></button>
+        <button onClick={(e) => drillDb(e.currentTarget)}><Ring p={n(d.db_bytes) / 500e6} kind="dots" /><b>{MB(n(d.db_bytes))}</b><small>adatbázis · tárhely: {MB(n(d.storage_bytes))}</small></button>
+      </div>
+      <ul className="s12 io-rows">
+        <li className="io-row"><span className="io-ic">{I(P.alert)}</span><div className="io-t"><b>Nyitott hibacsoport</b><small>{fmt(regN)} visszatért</small></div><div className="io-v"><b>{fmt(errs.filter((x) => x.state === "open").length)}</b></div></li>
+        <li className="io-row"><span className="io-ic">{I(P.bolt)}</span><div className="io-t"><b>Tanúsítvány</b><small>{cert?.domain_expires ? `domain: ${new Date(cert.domain_expires).toLocaleDateString("hu-HU")} (${fmt(dd)} nap)` : "a domain lejárata nem ismert"}</small></div><div className="io-v"><b>{cd != null ? fmt(cd) : "–"}</b><small>nap</small></div></li>
+      </ul>
+      {ms.length > 1 && <section className="c s12"><h2 style={{ marginBottom: 10 }}>Átlagos válaszidő</h2><TrendChart data={ms.map((x) => ({ t: x.day, v: n(x.ms) }))} label="Átl. válaszidő (ms, szerverről mérve)" height={120} /></section>}
+
+      {srcBad.length > 0 && <Card className="s12" icon={P.alert} title={`Hiányos források (${fmt(srcBad.length)})`} sub="A futásuk rendben lefut, de nem hozzák, amit kellene. Ezek addig itt maradnak, amíg a forrás nem javul; a hétfői ellenőrző e-mailben is benne vannak.">
+        <ul className="srv-errs">{srcBad.map((x) => <li key={x.k} className="bad"><b>{String(x.t).split(":")[0]}</b><span>{String(x.t).split(":").slice(1).join(":").trim()}</span></li>)}</ul>
+      </Card>}
 
       {up.some(slowNow) && <div className="alert err s12">Lassú válasz (2 másodperc fölött átlagosan): {up.filter(slowNow).map((x) => `${x.label || short(x.target) || "/"} ${fmt(x.avg_ms)} ms`).join(" · ")}</div>}
       <Card className="s12" icon={P.globe} title="Elérhetőség címenként" sub="Az utolsó ellenőrzés, a rendelkezésre állás a cím első sikeres válaszától (legfeljebb 30 nap), az átlagos és a lassú (95%-os) válaszidő, és mikor esett ki utoljára. A válaszidő valódi mérés: a weboldal szervere 5 percenként lekéri a címet, és méri, mennyi idő alatt jön meg a válasz (címenként külön). Az adatbázis időzítője csak azt nézi, válaszol-e: az ő ideje a saját sorban állása volt, ezért azt már nem mutatjuk.">
@@ -118,14 +215,14 @@ export function Monitor() {
       <Card className="s7" icon={P.refresh} title="Lehúzások forrásonként" sub="A napló szerint (30 nap): mikor sikerült utoljára, mikor volt hiba és mi, és hány sikeres / hibás futás volt egy hét alatt.">
         <Tbl name="lehuzasok" rows={d.syncs || []} empty="Még nincs lehúzás a naplóban." cols={[
           { k: "source", l: "Forrás", r: (r) => <b>{SRC[r.source] || r.source}</b> },
-          { k: "last_state", l: "Állapot", r: (r) => (!r.last_state && r.unconnected ? <span className="chip" title="Nincs fiók vagy kulcs hozzá: ez nem hiba, a forrás kimarad, amíg be nem kötöd (Kapcsolatok)">– nincs bekötve</span> : <span className={"chip " + (r.last_state ? "good" : "bad")}>{r.last_state ? "✓ rendben" : "✕ hiba"}</span>) },
+          { k: "last_state", l: "Állapot", r: (r) => { if (!r.last_state && r.unconnected) return <span className="chip" title="Nincs fiók vagy kulcs hozzá: ez nem hiba, a forrás kimarad, amíg be nem kötöd (Kapcsolatok)">– nincs bekötve</span>; const part = r.last_state && (PARTIAL.test(String(r.last_msg || "")) || (r.source === "bing" && !n(r.last_rows))); return <span className={"chip " + (!r.last_state ? "bad" : part ? "warn" : "good")} title={r.last_msg || ""}>{!r.last_state ? "✕ hiba" : part ? "⚠ hiányos" : "✓ rendben"}</span>; } },
           { k: "last_ok", l: "Utolsó jó", r: (r) => (r.last_ok ? ago(r.last_ok) : "–") },
           { k: "err_msg", l: "Utolsó hiba", r: (r) => (r.last_err && !r.last_state && r.unconnected ? <span className="cellwrap" title={r.err_msg || ""}><span className="mut">nincs bekötve:</span> {String(r.err_msg || "").replace(/^nincs bekötve: /, "").slice(0, 100)} <a className="lnk" href="#connect">Kapcsolatok</a></span> : r.last_err ? <span className="cellwrap" title={r.err_msg || ""}><span className="mut">{ago(r.last_err)}:</span> {String(r.err_msg || "").slice(0, 100)}</span> : <span className="mut">–</span>) },
           { k: "ok_7d", l: "7 nap", num: true, r: (r) => <span>{fmt(r.ok_7d)}{n(r.err_7d) ? <span className="down"> / {fmt(r.err_7d)} hiba</span> : null}</span> },
         ]} />
       </Card>
-      <Card className="s5" icon={P.system} title="Szerveroldali hibák" sub="A lehúzások kivételei és a félbeszakadt vagy hibás futások (14 nap), üzenetenként összevonva.">
-        {(d.server_errors || []).length ? <ul className="srv-errs">{(d.server_errors as D[]).slice(0, 12).map((x, i) => <li key={i}><b>{SRC[x.source] || PATHN[String(x.source).replace("futás: ", "")] || x.source}</b><span>{String(x.msg || "–").slice(0, 160)}</span><small>{fmt(x.n)}× · utoljára {ago(x.last)}</small></li>)}</ul> : <Empty t="Nincs szerveroldali hiba. ✓" icon={P.check} />}
+      <Card className="s5" icon={P.system} title="Szerveroldali hibák" sub="A lehúzások kivételei, a félbeszakadt vagy hibás futások és a hibás választ adó időzített hívások (14 nap), üzenetenként összevonva.">
+        {(d.server_errors || []).length ? <ul className="srv-errs">{(d.server_errors as D[]).slice(0, 12).map((x, i) => <li key={i}><b>{SRC[x.source] || PATHN[String(x.source).replace(/^(futás|hívás): /, "")] || x.source}</b><span>{String(x.msg || "–").slice(0, 160)}</span><small>{fmt(x.n)}× · utoljára {ago(x.last)}</small></li>)}</ul> : <Empty t="Nincs szerveroldali hiba. ✓" icon={P.check} />}
       </Card>
 
       <Card className="s12" icon={P.alert} title="Hibacsoportok" sub="A felhasználóknál történt hibák összevonva (azonos üzenet és hely): hány embert érintett, mikor először és utoljára. A „Megoldva” után ha újra előjön, „Visszatért” jelzést kap. Kattints egy sorra: jegyzet, a hiba előtti lépések több látogatásból, és az MI-elemzés (megmarad)."
@@ -141,6 +238,8 @@ export function Monitor() {
       <Rules d={d} reload={load} />
       <Runs runs={d.runs || []} />
 
+      {/* phone: what she rarely needs stays one tap away */}
+      {(() => { const tail = <>
       <Card className="s6" icon={P.layers} title="Kiadások" sub="Minden új verzió a weboldalon (Vercel-telepítés): mikor ment ki (az első kérés rögzíti, percekkel a telepítés után), és hány új hibacsoport jelent meg utána egy napon belül.">
         {(d.releases || []).length ? <ul className="rels">{(d.releases as D[]).map((r) => { const nw = errs.filter((x) => new Date(x.first).getTime() > new Date(r.at).getTime() && new Date(x.first).getTime() < new Date(r.at).getTime() + 864e5).length;
           return <li key={r.sha}><code>{r.sha.slice(0, 7)}</code><span>{r.msg || "–"}</span><small>{dt(r.at)}</small>{nw ? <span className="chip bad">{nw} új hiba</span> : <span className="chip good">tiszta</span>}</li>; })}</ul> : <Empty t="Az első kiadás a következő telepítés után jelenik meg." />}
@@ -154,7 +253,8 @@ export function Monitor() {
       <Card className="s7" icon={P.system} title="A leglassabb adatbázis-lekérdezések" sub="Átlagos futásidő szerint (pg_stat_statements). Ha egy irányítóközpont-oldal lassú, általában itt látszik az oka.">
         <Tbl name="lassu-lekerdezesek" rows={d.slow || []} cols={[{ k: "q", l: "Lekérdezés", r: (r) => <code className="cellwrap" style={{ fontSize: 11 }}>{r.q}</code> }, { k: "mean_ms", l: "Átlag", num: true, r: (r) => `${fmt(r.mean_ms, 1)} ms` }, { k: "calls", l: "Hívás", num: true }]} />
       </Card>
-      <Card className="s5" icon={P.layers} title="A legnagyobb táblák" sub="A Supabase ingyenes csomagja 500 MB adatbázist ad; 400 MB fölött jelzést kapsz."><BarList items={((d.tables || []) as D[]).map((x) => ({ k: x.t, n: n(x.bytes), sub: `${fmt(x.rows)} sor` }))} fmtK={(k) => k} /><p className={"note" + (dbWarn ? " down" : "")}>Összesen: {MB(n(d.db_bytes))} ({pct(n(d.db_bytes), 500e6)} az 500 MB-ból)</p></Card>
+      <Card className="s5" icon={P.layers} title="A legnagyobb táblák" sub="A Supabase mostani csomagja 500 MB adatbázist ad; 400 MB fölött jelzést kapsz."><BarList items={((d.tables || []) as D[]).map((x) => ({ k: x.t, n: n(x.bytes), sub: `${fmt(x.rows)} sor` }))} fmtK={(k) => k} /><p className={"note" + (dbWarn ? " down" : "")}>Összesen: {MB(n(d.db_bytes))} ({pct(n(d.db_bytes), 500e6)} az 500 MB-ból)</p></Card>
+      </>; return phone ? <More label="Műszaki részletek: kiadások, kézbesítés, keretek, adatbázis">{tail}</More> : tail; })()}
       {open && <ErrorSheet x={open} close={() => setOpen(null)} setState={setState} reload={load} />}
     </div>
   );
@@ -183,7 +283,7 @@ function Targets({ d, reload }: { d: D; reload: () => void }) {
         <ul className="rules">{((d.targets || []) as D[]).map((t) => <li key={t.url}><span><b>{t.label || short(t.url)}</b> <small>{t.url}{t.ok_max > 399 ? ` · ${t.ok_max}-ig jó` : ""}</small></span>
           <span className="adm-row"><button className={"sw" + (t.on_ ? " on" : "")} role="switch" aria-checked={!!t.on_} aria-label="Ellenőrzés be/ki" onClick={() => save(t.url, !t.on_)}><i /></button>
             <button className="lnk" onClick={() => { if (confirm(`Törlöd: ${t.url}? A korábbi mérések megmaradnak.`)) save(t.url, null); }}>törlés</button></span></li>)}</ul>
-        <form className="rule-f" onSubmit={async (e) => { e.preventDefault(); if (await save(url.trim(), true, label.trim())) { setUrl("https://inkage.app/"); setLabel(""); toast("Cím hozzáadva"); } }}>
+        <form className="rule-f" onSubmit={async (e) => { e.preventDefault(); const u = (() => { try { return new URL(url.trim()); } catch { return null; } })(); if (!u || u.protocol !== "https:" || !u.hostname.includes(".")) { setMsg("Teljes, https-sel kezdődő címet adj meg, például https://inkage.app/."); return; } if (await save(url.trim(), true, label.trim())) { setUrl("https://inkage.app/"); setLabel(""); toast("Cím hozzáadva"); } }}>
           <input className="adm-in sm" value={url} onChange={(e) => setUrl(e.target.value)} aria-label="Cím" placeholder="https://inkage.app/…" />
           <input className="adm-in sm" value={label} onChange={(e) => setLabel(e.target.value)} aria-label="Név" placeholder="Név (nem kötelező)" />
           <button className="adm-ibtn gold sm">{I(P.plus)}Hozzáadás</button>
@@ -213,7 +313,7 @@ function Runs({ runs }: { runs: D[] }) {
   const [all, setAll] = useState(false);
   const rows = all ? runs : runs.slice(0, 12);
   return (
-    <Card className="s7" icon={P.doc} title="Futási napló" sub="Minden lehúzás, összefoglaló és publikálás saját bejegyzése: mikor indult, meddig tartott, mit csinált, és ha hibás volt, miért. A 5 perces szabályfutások csak hiba esetén.">
+    <Card className="s7" icon={P.doc} title="Futási napló" sub="Feladatonként az utolsó 6 futás, ami csinált is valamit: mikor indult, meddig tartott, mit csinált, és ha hibás volt, miért. Az üresjáratok (publikálás 0 poszttal, „nem most” összefoglaló) és az 5 perces szabályfutások csak hiba esetén látszanak.">
       {rows.length ? <ol className="tline runs">{rows.map((r) => {
         const sec = r.finished_at ? Math.max(0, (new Date(r.finished_at).getTime() - new Date(r.started_at).getTime()) / 1000) : null;
         return <li key={r.id} className={r.ok === false ? "bad" : r.ok ? "" : "run"}><time>{dt(r.started_at)}</time><span><b>{PATHN[r.job] || r.job}</b>{r.via === "admin" ? <span className="chip" style={{ marginLeft: 6 }}>kézi</span> : null} · {r.ok == null ? "fut…" : r.ok ? "✓" : "✕"}{sec != null ? ` · ${fmt(sec, sec < 10 ? 1 : 0)} mp` : ""}<br /><span className="mut cellwrap">{String(r.message || "").slice(0, 220)}</span></span></li>;
@@ -231,7 +331,7 @@ function Rules({ d, reload }: { d: D; reload: () => void }) {
   const save = async (ev: React.FormEvent) => {
     ev.preventDefault(); setMsg("");
     const th = Number(String(rule.threshold).replace(",", "."));
-    if (!Number.isFinite(th) || th < 0) { setMsg("A határ egy nem negatív szám legyen."); return; }
+    if (!String(rule.threshold).trim() || !Number.isFinite(th) || th < 0) { setMsg("A határ egy nem negatív szám legyen."); return; }
     if (!rule.channels.length) { setMsg("Válassz legalább egy csatornát."); return; }
     const r = await rpc(sb, "admin_rule_save", { p: { ...(rule.id ? { id: rule.id } : {}), metric: rule.metric, op: rule.op, threshold: th, window_min: Number(rule.window_min), channels: rule.channels } });
     if (r.error) { setMsg(r.error.message); return; }
@@ -281,7 +381,7 @@ function EmailCard({ rows }: { rows: D[] }) {
       right={sent ? <span className={"chip " + (bounce > 0.05 || spam > 0.003 ? "bad" : bounce > 0.02 || spam > 0.001 ? "warn" : "good")}>visszapattan {pct(v("email.bounced"), sent)} · spam {pct(v("email.complained"), sent, 2)}</span> : undefined}>
       <BarList items={rows.map((x) => ({ k: x.type, n: n(x.n) }))} fmtK={(k) => ({ "email.sent": "Elküldve", "email.delivered": "Kézbesítve", "email.bounced": "Visszapattant", "email.complained": "Spamnek jelölte", "email.opened": "Megnyitva", "email.clicked": "Kattintott", "email.delivery_delayed": "Késik" } as D)[k] || k}
         empty="Még nincs esemény: állítsd be a webhookot a Kapcsolatok oldalon." />
-      {sent > 0 && <p className="note">Megnyitási arány: {pct(v("email.opened"), v("email.delivered") || sent)}</p>}
+      {sent > 0 && <p className="note">A sávok százaléka az összes eseményhez mér. Megnyitási arány a kézbesítettekhez mérve: {pct(v("email.opened"), v("email.delivered") || sent)}.</p>}
     </Card>
   );
 }
@@ -296,9 +396,9 @@ function Quotas({ d }: { d: D }) {
   const pi = Number(price.i.replace(",", ".")), po = Number(price.o.replace(",", "."));
   const cost = pi > 0 || po > 0 ? (n(qd.ai_in_30d) / 1e6) * (pi || 0) + (n(qd.ai_tokens_30d) / 1e6) * (po || 0) : null;
   return (
-    <Card className="s6" icon={P.target} title="Keretek és MI-használat" sub="A napi ingyenes keretek közelsége, és mennyit használt az MI. A YouTube napi 10 000 egységet ad; egy lehúzás nagyjából 10–50 egység, ezért csak a lehúzások számát mutatjuk.">
+    <Card className="s6" icon={P.target} title="Keretek és MI-használat" sub="A szolgáltatók napi kereteinek közelsége, és mennyit használt az MI. A YouTube napi 10 000 egységet ad; egy lehúzás nagyjából 10–50 egység, ezért csak a lehúzások számát mutatjuk.">
       <dl className="kv">
-        <dt>Programmable Search ma</dt><dd><b className={n(qd.cse_today) >= 90 ? "down" : ""}>{fmt(qd.cse_today)}</b> / 100 keresés</dd>
+        {n(qd.cse_today) > 0 && <><dt>Programmable Search ma</dt><dd><b className={n(qd.cse_today) >= 90 ? "down" : ""}>{fmt(qd.cse_today)}</b> / 100 keresés</dd></>}
         <dt>YouTube-lehúzás ma</dt><dd>{fmt(qd.youtube_syncs_today)} (kb. {fmt(n(qd.youtube_syncs_today) * 30)} / 10 000 egység)</dd>
         <dt>MI-hívás ma</dt><dd><b className={n(qd.ai_today) >= AI_DAILY * 0.9 ? "down" : ""}>{fmt(qd.ai_today)}</b> / {AI_DAILY} (minden oldal együtt)</dd>
         <dt>MI-hívás 30 nap</dt><dd>{fmt(d.ai_calls_30d)}</dd>
@@ -351,7 +451,7 @@ function ErrorSheet({ x, close, setState, reload }: { x: D; close: () => void; s
     <Layer>
       <div className="scrim" onClick={close} />
       <aside className="drawer wide" role="dialog" aria-label="Hibacsoport">
-        <div className="c-h"><div><div><span className="eyebrow">{EV[x.name] || x.name} · {fmt(x.people)} ember · {fmt(x.n)} eset</span><h2 style={{ fontSize: 18, marginTop: 6 }}>{human(x.msg)}</h2></div></div><button className="adm-ibtn" onClick={close}>Bezárás</button></div>
+        <div className="c-h"><div><div><span className="eyebrow">{EV[x.name] || x.name} · {fmt(x.people)} ember · {fmt(x.n)} eset</span><h2 style={{ fontSize: 18, marginTop: 6 }}>{human(x.msg)}</h2></div></div><CloseX close={close} /></div>
         <dl className="kv"><dt>Eredeti üzenet</dt><dd style={{ wordBreak: "break-word" }}>{x.msg || "–"}</dd><dt>Hol</dt><dd>{x.where_ || "–"} {x.path ? "· " + x.path : ""}</dd><dt>Először</dt><dd>{dt(x.first)}</dd><dt>Utoljára</dt><dd>{dt(x.last)}</dd>
           <dt>Böngészők</dt><dd>{((x.uas || []) as string[]).filter((u) => u !== "?").slice(0, 3).join(" · ") || "nem ismert"}</dd></dl>
         <h3>Jegyzet</h3>
@@ -371,25 +471,28 @@ function ErrorSheet({ x, close, setState, reload }: { x: D; close: () => void; s
 /* ---------- Adatminőség: on which days each source was read, and what the counting leaves out ---------- */
 const SRCN: Record<string, string> = { tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook", pinterest: "Pinterest", linkedin: "LinkedIn", youtube: "YouTube", gsc: "Google Search Console", gsc_index: "Google-indexelés",
   apple: "App Store", google: "Google Play", bing: "Bing", seo: "SEO-bejárás", watch: "Napi figyelés", aivis: "MI-láthatóság", cwv: "Oldalsebesség", competitors: "Versenytársak", mentions: "Említések", kw_ideas: "Kulcsszóötletek", cse: "Programmable Search" };
-const REASON: Record<string, string> = { "crawler pair": "keresőrobot-pár", "app flash": "1 eseményes appvillanás", "automated test": "automata teszt", "owner review": "saját ellenőrzés", "scripted run": "szkriptes futás",
+const REASON: Record<string, string> = { "one hit no source": "egyetlen megnyitás tartalmi oldalon, forrás nélkül", "crawler pair": "keresőrobot-pár", "app flash": "1 eseményes appvillanás", "automated test": "automata teszt", "owner review": "saját ellenőrzés", "scripted run": "szkriptes futás",
   "pre-launch test": "indulás előtti teszt", "old /nev page": "régi /nev oldal", "old vercel address": "régi Vercel-cím" };
+/* these run once a week: the days between two runs are no gaps, only a run that really stayed away counts (over 8 days) */
+const WEEKLY = new Set(["seo", "aivis", "kw_ideas"]);
 function DataQuality() {
   const { d } = useRpc("admin_data_quality", { p_days: 30 }, []);
   const x = (d as D) || null;
-  const src: D[] = x?.sources || [];
+  const src: D[] = ((x?.sources || []) as D[]).map((s) => (WEEKLY.has(s.source) ? { ...s, schedule: "heti", gaps: [], late: !!s.last_ok && Date.now() - new Date(s.last_ok).getTime() > 8 * 864e5 } : s));
   return (
-    <Card className="s12" icon={P.check} title="Adatminőség" sub="Az utolsó 30 nap: forrásonként hány napon sikerült legalább egy lehúzás, mely napok maradtak ki (az első lehúzástól számolva), és mit hagy ki a számolás. A robotokat, a teszteket és a saját eszközeidet a rendszer óránként jelöli meg; ezek sehol nem számítanak bele a számokba.">
+    <Card className="s12" icon={P.check} title="Adatminőség" sub="Az utolsó 30 nap, forrásonként a saját ütemezése szerint: a heti feladatnál a késést nézzük, a napinál a kimaradt napokat (a mai nap még nem számít), és itt vannak azok is, amelyek még sosem hoztak adatot. A robotokat, a teszteket és a saját eszközeidet a rendszer óránként jelöli meg; ezek sehol nem számítanak bele a számokba.">
       {!x ? <div className="skel" style={{ height: 160 }} /> : <>
         <div className="mini-stats">
-          <div className="mini"><span>Valódi látogatás</span><b>{fmt(n(x.sessions_real))}</b><small>az összes {fmt(n(x.sessions_all))} munkamenetből</small></div>
-          <div className="mini"><span>Robot és teszt</span><b>{fmt(n(x.bots))}</b><small>{Object.entries((x.bot_reasons || {}) as Record<string, number>).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${REASON[k] || k}: ${fmt(v)}`).join(" · ")}</small></div>
+          <div className="mini"><span>Aktív látogatás</span><b>{fmt(n(x.sessions_engaged ?? x.sessions_real))}</b><small>{fmt(n(x.doors))} egyetlen megnyitás külön · az összes {fmt(n(x.sessions_all))} munkamenetből</small></div>
+          <div className="mini"><span>Robot és teszt</span><b>{fmt(n(x.bots) + n(x.test))}</b><small>{Object.entries((x.bot_reasons || {}) as Record<string, number>).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${REASON[k] || k}: ${fmt(v)}`).join(" · ")}</small></div>
           <div className="mini"><span>Saját eszköz</span><b>{fmt(n(x.own))}</b><small>a te látogatásaid, kizárva</small></div>
-          <div className="mini"><span>Hiányos forrás</span><b>{fmt(src.filter((s) => (s.gaps || []).length > 0).length)}</b><small>{src.length} forrásból van kimaradt nap</small></div>
+          <div className="mini"><span>Hiányos forrás</span><b>{fmt(src.filter((s) => (s.gaps || []).length > 0 || s.never || s.late || s.partial).length)}</b><small>{src.length} forrásból: kimaradt nap, késés, hiányos futás vagy még semmi adat</small></div>
         </div>
         <Tbl name="adatminoseg" rows={src.map((s) => ({ ...s, ngaps: (s.gaps || []).length }))} empty="Még nem futott lehúzás." cols={[
           { k: "source", l: "Forrás", r: (r) => <b>{SRCN[r.source] || r.source}</b> },
+          { k: "schedule", l: "Ütem", r: (r) => r.schedule || "–" },
           { k: "ok_days", l: "Sikeres nap", num: true, r: (r) => fmt(r.ok_days) },
-          { k: "ngaps", l: "Kimaradt nap", num: true, r: (r) => (r.ngaps ? <span className={"chip " + (r.ngaps > 2 ? "bad" : "warn")} title={(r.gaps as string[]).join(", ")}>{fmt(r.ngaps)}</span> : <span className="chip good">0</span>) },
+          { k: "ngaps", l: "Kimaradt nap", num: true, r: (r) => (r.never ? <span className="chip bad">nincs adat</span> : r.late ? <span className="chip bad">késik</span> : r.ngaps ? <span className={"chip " + (r.ngaps > 2 ? "bad" : "warn")} title={(r.gaps as string[]).join(", ")}>{fmt(r.ngaps)}</span> : r.partial ? <span className="chip warn">hiányos</span> : <span className="chip good">0</span>) },
           { k: "last_ok", l: "Utolsó siker", r: (r) => (r.last_ok ? ago(r.last_ok) : <span className="chip bad">még soha</span>) },
           { k: "fails", l: "Hiba (30 nap)", num: true, r: (r) => fmt(r.fails) },
           { k: "gaps", l: "Mely napok", r: (r) => <span className="cellwrap mut">{(r.gaps as string[]).slice(-6).map((g) => g.slice(5).replace("-", ".")).join(", ")}{(r.gaps as string[]).length > 6 ? " …" : ""}</span> },

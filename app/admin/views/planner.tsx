@@ -1,12 +1,17 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { fmt } from "../charts";
 import { Logo } from "../wow";
-import { toast } from "../phone";
+import { CloseX, toast, usePhone } from "../phone";
 import { Card, I, Layer, MOCK, bpParts, P, PF, SOC, api, big, n, rpc, type D } from "../shared";
-import { PfTabs, postTags, viewWord, vsMedian } from "./social";
+import { PfTabs, PostDrawer, postTags, viewWord, vsMedian } from "./social";
+import { rateLimited } from "./visual";
+import { copyText } from "./phone-security";
+import { Hero } from "../ink";
+import { IdeaBox, PhoneWeek } from "./planner-phone";
+import { BestTime } from "./social-phone";
 
 /* ---------- the planner: what went out and what is coming, on one calendar; publishing from here ---------- */
 const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -46,7 +51,9 @@ const ptShift = () => { try { const h = (tz: string) => Number(new Intl.DateTime
 
 export function Planner() {
   const sb = useMemo(() => supabaseBrowser(), []);
-  const [view, setView] = useState<"month" | "week" | "board">("month"); const [off, setOff] = useState(0); const [pfF, setPfF] = useState("all");
+  const phone = usePhone();
+  const [view, setView] = useState<"month" | "week" | "board">("month");
+  const [selDay, setSelDay] = useState(() => ymd(new Date())); const [off, setOff] = useState(0); const [pfF, setPfF] = useState("all");
   const base = new Date(); base.setHours(12, 0, 0, 0);
   let cells: (Date | null)[] = [], from = "", to = "", title = "";
   if (view === "board") {
@@ -62,10 +69,18 @@ export function Planner() {
     cells = Array.from({ length: 7 }, (_, i) => new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i));
     from = ymd(cells[0]!); to = ymd(cells[6]!); title = `${cells[0]!.toLocaleDateString("hu-HU", { month: "long", day: "numeric" })} – ${cells[6]!.toLocaleDateString("hu-HU", { month: "long", day: "numeric" })}`;
   }
+  /* the week on top: its own offset and rows, so it stays when the calendar below shows another month or the board */
+  const [wOff, setWOff] = useState(0); const [wkPlans, setWkPlans] = useState<D[]>([]); const [wkPosts, setWkPosts] = useState<D[] | null>(null); const [openP, setOpenP] = useState<D | null>(null);
+  const now0 = new Date(); now0.setHours(12, 0, 0, 0);
+  const wMon = new Date(now0.getFullYear(), now0.getMonth(), now0.getDate() - ((now0.getDay() + 6) % 7) + wOff * 7);
+  const wCells = Array.from({ length: 7 }, (_, i) => new Date(wMon.getFullYear(), wMon.getMonth(), wMon.getDate() + i));
+  const wFrom = ymd(wCells[0]), wTo = ymd(wCells[6]);
+  const loadWk = () => rpc(sb, "admin_plans", { p_from: wFrom, p_to: wTo }).then(({ data }) => setWkPlans(Array.isArray(data) ? data : []));
+  useEffect(() => { loadWk(); rpc(sb, "admin_plan_posts", { p_from: wFrom, p_to: wTo }).then(({ data }) => setWkPosts(((data as D)?.posts || []) as D[])); }, [wFrom, wTo]); // eslint-disable-line react-hooks/exhaustive-deps
   const [plans, setPlans] = useState<D[]>([]); const [soc, setSoc] = useState<D | null>(null); const [gsc, setGsc] = useState<D | null>(null); const [aud, setAud] = useState<D[]>([]);
   const [cal, setCal] = useState<D | null>(null);
   const [edit, setEdit] = useState<D | null>(null); const [drag, setDrag] = useState<number | null>(null);
-  const load = () => rpc(sb, "admin_plans", { p_from: from, p_to: to }).then(({ data }) => setPlans(Array.isArray(data) ? data : []));
+  const load = () => { loadWk(); return rpc(sb, "admin_plans", { p_from: from, p_to: to }).then(({ data }) => setPlans(Array.isArray(data) ? data : [])); };
   /* every post of the shown range (the social list stopped at 300 per platform, so older months were empty) */
   useEffect(() => { load(); rpc(sb, "admin_plan_posts", { p_from: from, p_to: to }).then(({ data }) => setCal(data || null)); }, [from, to]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -77,6 +92,9 @@ export function Planner() {
   const byDay = (k: string) => calPosts.filter((p) => p.created_at && ymd(new Date(p.created_at)) === k);
   const plansOn = (k: string) => plans.filter((p) => p.day === k && (pfF === "all" || (p.platforms || []).includes(pfF)));
   const today = ymd(new Date());
+  const wPostsOn = (k: string) => (wkPosts || posts).filter((p) => (pfF === "all" || p.platform === pfF) && p.created_at && ymd(new Date(p.created_at)) === k);
+  const wPlansOn = (k: string) => wkPlans.filter((p) => p.day === k && (pfF === "all" || (p.platforms || []).includes(pfF)));
+  const wPostN = wCells.reduce((t, c) => t + wPostsOn(ymd(c)).length, 0), wPlanN = wCells.reduce((t, c) => t + wPlansOn(ymd(c)).length, 0);
   const accs: D[] = (soc?.accounts || []) as D[];
   /* the median from every post (the calendar's list), so the ideas do not change with the period; posts under a day old get none */
   const vs = useMemo(() => vsMedian(posts, (soc?.cal || []) as D[]), [posts, soc]);
@@ -100,7 +118,7 @@ export function Planner() {
 
   /* ideas: the tags that do best against each platform's own median (one scale), searches nearly on Google's first
      page, new searches, titles that get seen but not clicked, and the competitors' new pages */
-  const IDEA: Record<string, string> = { "Előtte–utána": "Előtte–utána: a tetoválás ma és 50 év múlva", "Kérdéssel indul": "Kérdéssel induló videó: „Hogy néz ki a tetoválásod 30 év múlva?”", "Számmal / listával": "Lista: 3 stílus, ami szépen öregszik", "Pontszám a horog": "„Megéri ez a tetoválás?” videó", "15 mp alatt": "15 mp alatti gyors videó", "Van rövid link": "Videó rövid linkkel a leírásban", Reels: "Reels: a tetoválás öregedése 10, 30, 50 év", Körhinta: "Körhinta: 5 testrész, ugyanaz a minta" };
+  const IDEA: Record<string, string> = { "Előtte–utána": "Előtte–utána: a tetoválás ma és 50 év múlva", "Kérdéssel indul": "Kérdéssel induló videó: „Hogy néz ki a tetoválásod 30 év múlva?”", "Számmal / listával": "Lista: 3 stílus, ami szépen öregszik", "Pontszám a horog": "„Megéri ez a tetoválás?” videó", "15 mp alatt": "15 mp alatti gyors videó", "Van követhető link": "Videó rövid linkkel a leírásban", Reels: "Reels: a tetoválás öregedése 10, 30, 50 év", Körhinta: "Körhinta: 5 testrész, ugyanaz a minta" };
   const tagIdeas = useMemo(() => {
     const ps = posts.filter((p) => vs(p) != null); if (ps.length < 4) return [];
     const mm = new Map<string, number[]>();
@@ -113,35 +131,52 @@ export function Planner() {
     ...((gsc?.new_queries || []) as D[]).slice(0, 3).map((q) => ({ t: `Új keresés: „${q.query}”`, why: `a héten kezdték keresni (${fmt(q.impressions)} megjelenés)`, src: "Google" })),
     ...((gsc?.low_ctr || []) as D[]).slice(0, 3).map((q) => ({ t: `Jobb cím ehhez: „${q.query}”`, why: `${fmt(q.impressions)}-szor látták, alig kattintottak: a cím vagy a leírás nem hívogató`, src: "Google" })),
     ...((cal?.competitor || []) as D[]).slice(0, 4).map((c) => ({ t: `Saját szemmel: „${String(c.title).slice(0, 70)}”`, why: `${c.domain} új oldala (${new Date(c.first_seen).toLocaleDateString("hu-HU", { month: "short", day: "numeric" })})`, src: "Versenytárs" }))];
-  const save = async (p: D) => { const r = await rpc(sb, "admin_plan_save", { p }); if (r.error) { toast(r.error.message); return null; } setEdit(null); toast(p.publish ? "Mentve: a megadott időben kimegy" : "Mentve"); load(); return r.data as D; };
+  /* an idea from the idea box leaves the box only once its plan is saved: closing the sheet keeps it */
+  const ideaDone = useRef<(() => void) | null>(null);
+  const closeEdit = () => { ideaDone.current = null; setEdit(null); };
+  const save = async (p: D, said = "Mentve") => { const r = await rpc(sb, "admin_plan_save", { p }); if (r.error) { toast("Nem sikerült menteni: " + r.error.message); return null; } ideaDone.current?.(); ideaDone.current = null; setEdit(null); toast(said); load(); return r.data as D; };
   /* the plan's uploaded file goes with it */
   const del = async (p: D) => {
     if (!confirm("Törlöd a tervet?")) return;
-    await rpc(sb, "admin_plan_delete", { p_id: p.id });
-    if (p.media_path && !MOCK) await sb?.storage.from("admin-media").remove([p.media_path]);
-    setEdit(null); toast("Törölve"); load();
+    const r = await rpc(sb, "admin_plan_delete", { p_id: p.id });
+    if (r.error) { toast("Nem sikerült törölni: " + r.error.message); return; }
+    const st = p.media_path && !MOCK ? await sb?.storage.from("admin-media").remove([p.media_path]) : null;
+    setEdit(null); toast(st?.error ? "A terv törölve, de a fájlját nem sikerült törölni: " + st.error.message : "Törölve"); load();
   };
   const cleanMedia = async () => {
-    const { data } = await rpc(sb, "admin_plan_media_old"); const l = Array.isArray(data) ? (data as D[]) : [];
+    const { data, error } = await rpc(sb, "admin_plan_media_old"); if (error) { toast("Nem sikerült lekérdezni: " + error.message); return; } const l = Array.isArray(data) ? (data as D[]) : [];
     if (!l.length) { toast("Nincs régi feltöltött fájl"); return; }
     if (!confirm(`${l.length} régi fájl törlése a tárhelyről (a posztok egy hete kint vannak)?`)) return;
-    if (!MOCK) await sb?.storage.from("admin-media").remove(l.map((x) => x.path));
-    await rpc(sb, "admin_plan_media_clear", { p_ids: l.map((x) => x.id) }); toast(`${l.length} fájl törölve`); load();
+    const st = MOCK ? null : await sb?.storage.from("admin-media").remove(l.map((x) => x.path));
+    if (st?.error) { toast("Nem sikerült törölni: " + st.error.message); return; }
+    const r = await rpc(sb, "admin_plan_media_clear", { p_ids: l.map((x) => x.id) });
+    toast(r.error ? "A fájlok törölve, de a tervekről nem sikerült levenni őket: " + r.error.message : `${l.length} fájl törölve`); load();
   };
-  const move = async (id: number, day: string) => { setPlans((o) => o.map((p) => (p.id === id ? { ...p, day } : p))); const r = await rpc(sb, "admin_plan_move", { p_id: id, p_day: day }); if (r.error) toast(r.error.message); else toast("Áttéve"); load(); };
+  /* true when it goes ahead. A plan set to go out by itself goes out on its new day: moved to today or earlier it would leave within minutes, so that is asked first, on every device */
+  const move = (id: number, day: string) => {
+    const pl = [...plans, ...wkPlans].find((x) => x.id === id);
+    if (pl?.day === day) return false;
+    if (pl?.publish && !pl.published_at && day <= today && !confirm(`„${pl.title}” közzétételre van beállítva. Erre a napra téve a megadott időben, akár perceken belül kimegy. Áthelyezed?`)) return false;
+    runMove(id, day); return true;
+  };
+  const runMove = async (id: number, day: string) => { setPlans((o) => o.map((p) => (p.id === id ? { ...p, day } : p))); setWkPlans((o) => o.map((p) => (p.id === id ? { ...p, day } : p))); const r = await rpc(sb, "admin_plan_move", { p_id: id, p_day: day }); if (r.error) toast(r.error.message); else toast("Áttéve"); load(); };
   /* a new plan goes to the connected platforms (it was always TikTok and Instagram) */
   const conn = SOC.filter((k) => accs.some((a) => a.platform === k));
   const blank = (day: string, extra: D = {}) => ({ day, platforms: conn.length ? conn.slice(0, 3) : ["tiktok", "instagram"], status: "terv", title: "", autolink: true, ...extra });
   const pfsHere = SOC.filter((k) => posts.some((p) => p.platform === k) || plans.some((p) => (p.platforms || []).includes(k)));
   const maxShow = view === "week" ? 8 : 3;
+  /* the week on top: the chosen day stays inside the shown week */
+  const dayShown = wCells.some((c) => ymd(c) === selDay) ? selDay : ymd(wCells.find((c) => ymd(c) === today) || wCells[0]);
+  const wRange = `${wCells[0].toLocaleDateString("hu-HU", { month: "short", day: "numeric" })} – ${wCells[6].toLocaleDateString("hu-HU", { month: "short", day: "numeric" })}`;
   return (
     <div className="g">
-      <Card className="s12 plan-card" icon={P.calendar} title={title} sub="A megjelent posztok (a platformok adataiból, a hónap minden posztja) és a terveid egy naptárban. Kattints egy napra: új terv, vagy az aznapi posztok. Egy tervet áthúzhatsz egy másik napra. Ha egy tervnél bekapcsolod a közzétételt, a megadott időben innen megy ki."
+      <PhoneWeek cells={wCells} sel={dayShown} setSel={setSelDay} today={today} off={wOff} setOff={setWOff} byDay={wPostsOn} plansOn={wPlansOn} open={setEdit} openPost={setOpenP} move={move} add={(k) => setEdit(blank(k, { _posts: wPostsOn(k) }))} label={STATUS} range={wRange}
+        head={<Hero flip label={wOff === 0 ? "Ezen a héten" : wRange} v={wPostN + wPlanN} sub={`${fmt(wPostN)} megjelent poszt, ${fmt(wPlanN)} terv`} />} tabs={<PfTabs pfs={pfsHere} v={pfF} set={setPfF} />} />
+      <Card className="s12 plan-card" icon={P.calendar} title={title} sub={`A megjelent posztok (a platformok adataiból, a hónap minden posztja) és a terveid egy naptárban. ${phone ? "Koppints egy napra: új terv, vagy az aznapi posztok. Egy tervet fent, a heti sávban a fogantyújával húzhatsz át egy másik napra." : "Kattints egy napra: új terv, vagy az aznapi posztok. Egy tervet áthúzhatsz egy másik napra."} Ha egy tervnél bekapcsolod a közzétételt, a megadott időben innen megy ki.`}
         right={<div className="adm-row" style={{ gap: 6 }}>
-          <div className="adm-seg sm"><button aria-pressed={view === "month"} onClick={() => { setView("month"); setOff(0); }}>Hónap</button><button aria-pressed={view === "week"} onClick={() => { setView("week"); setOff(0); }}>Hét</button><button aria-pressed={view === "board"} onClick={() => { setView("board"); setOff(0); }}>Tábla</button></div>
-          <button className="adm-ibtn sm" onClick={() => setOff(off - 1)}>←</button><button className="adm-ibtn sm" onClick={() => setOff(0)}>Ma</button><button className="adm-ibtn sm" onClick={() => setOff(off + 1)}>→</button>
+          <div className="adm-seg sm"><button aria-pressed={view === "month"} onClick={() => { setView("month"); setOff(0); }}>Hónap</button>{!phone && <button aria-pressed={view === "week"} onClick={() => { setView("week"); setOff(0); }}>Hét</button>}<button aria-pressed={view === "board"} onClick={() => { setView("board"); setOff(0); }}>Tábla</button></div>
+          {view !== "board" && <><button className="adm-ibtn sm" onClick={() => setOff(off - 1)}>←</button><button className="adm-ibtn sm" onClick={() => setOff(0)}>Ma</button><button className="adm-ibtn sm" onClick={() => setOff(off + 1)}>→</button></>}
           <button className="adm-ibtn gold sm" onClick={() => setEdit(blank(today))}>{I(P.plus)}Új terv</button></div>}>
-        <PfTabs pfs={pfsHere} v={pfF} set={setPfF} />
         {view === "board" ? <Board plans={plans.filter((p) => pfF === "all" || (p.platforms || []).includes(pfF))} open={setEdit} setStatus={async (p, st) => { setPlans((o) => o.map((x) => (x.id === p.id ? { ...x, status: st } : x))); await save({ ...p, status: st }); }} add={(st) => setEdit(blank(today, { status: st }))} /> : <>
         <div className={"plan-g" + (view === "week" ? " week" : "")}>
           {DOWS.map((x) => <span key={x} className="plan-d">{x}</span>)}
@@ -154,30 +189,32 @@ export function Planner() {
                 <span className="plan-n">{c.getDate()}{view === "week" ? " " + c.toLocaleDateString("hu-HU", { month: "short" }) : ""}</span>
                 {ps.slice(0, maxShow).map((p) => <span key={p.platform + p.post_id} className="plan-post"><Logo k={p.platform} size={14} />{big(p.views)}</span>)}
                 {extra > 0 && <span className="plan-more" onClick={(e) => { e.stopPropagation(); setEdit(blank(k, { _posts: ps })); }}>+{extra} poszt</span>}
-                {pl.map((p) => <span key={p.id} className={"plan-plan t-" + (STATUS[p.status]?.[1] || "sky")} draggable={!p.published_at} onDragStart={(e) => { e.stopPropagation(); setDrag(p.id); }} onDragEnd={() => setDrag(null)}
-                  onClick={(e) => { e.stopPropagation(); setEdit(p); }} title={`${STATUS[p.status]?.[0] || p.status}: ${p.title}`}>{p.publish ? "⏱ " : ""}{p.at ? String(p.at).slice(0, 5) + " " : ""}{p.title}</span>)}
+                {pl.map((p) => <span key={p.id} className="plan-plan" draggable={!p.published_at} onDragStart={(e) => { e.stopPropagation(); setDrag(p.id); }} onDragEnd={() => setDrag(null)}
+                  onClick={(e) => { e.stopPropagation(); setEdit(p); }} title={`${STATUS[p.status]?.[0] || p.status}: ${p.title}`}>{p.publish ? "◷ " : ""}{p.at ? String(p.at).slice(0, 5) + " " : ""}{p.title}</span>)}
               </button>
             );
           })}
         </div></>}
-        <div className="plan-legend"><span><i className="pl-post" />megjelent poszt ({viewWord("tiktok")}, Pinterest/LinkedIn: megjelenés)</span>{Object.entries(STATUS).map(([k, [l, tone]]) => <span key={k}><i className={"t-" + tone} />{l}</span>)}<span>⏱ innen megy ki</span>
+        <div className="plan-legend">{view !== "board" && <><span><i className="pl-post" />megjelent poszt ({viewWord("tiktok")}, Pinterest/LinkedIn: megjelenés)</span><span>◷ innen megy ki</span></>}
           <button className="lnk" onClick={cleanMedia}>Régi feltöltött fájlok törlése</button></div>
       </Card>
-      <Card className="s6" icon={P.clock} src={["tiktok", "instagram", "facebook", "pinterest", "linkedin", "youtube"]} title="Legjobb időpont platformonként" sub="A saját posztjaidból: melyik nap és óra hozta a legtöbbet a platform szokásos posztjához képest (legalább 4 poszt platformonként, és legalább 2 ugyanabban az időpontban, hogy egy szerencsés poszt ne döntsön); Instagramon azt is, mikor vannak fent a követőid, budapesti időre átszámolva.">
+      <IdeaBox plan={(t, url, saved) => { ideaDone.current = saved; setEdit(blank(today, { status: "otlet", title: t.slice(0, 200), caption: url || "", autolink: false })); }} />
+      {phone ? <BestTime cal={((soc?.cal || []) as D[])} extra={best.filter((b) => !b.x).map((b) => `${PF[b.p]}: ${b.when}, ${b.src}.`)} /> : <Card className="s6" icon={P.clock} src={["tiktok", "instagram", "facebook", "pinterest", "linkedin", "youtube"]} title="Legjobb időpont platformonként" sub="A saját posztjaidból: melyik nap és óra hozta a legtöbbet a platform szokásos posztjához képest (legalább 4 poszt platformonként, és legalább 2 ugyanabban az időpontban, hogy egy szerencsés poszt ne döntsön); Instagramon azt is, mikor vannak fent a követőid, budapesti időre átszámolva.">
         {best.length ? <ul className="best-l">{best.map((b, i) => <li key={b.p + i}><Logo k={b.p} size={28} /><b>{PF[b.p]}</b><span>{b.when}</span><em>{b.x ? `${fmt(b.x, 1)}× a szokásos · ${b.src}` : b.src}</em></li>)}</ul>
           : <p className="note">Még kevés a poszt: platformonként 4 kell, és egy időpontban legalább 2, hogy legyen mihez mérni.</p>}
-      </Card>
+      </Card>}
       <Card className="s6" icon={P.spark} title="Ötletbank" sub="A „Mi működik?” címkéidből (a platform saját mediánjához mérve, így a platformok egy mércén vannak), a majdnem első oldalas, az új és a gyenge kattintású Google-keresésekből, és a versenytársak új oldalaiból. Kattints: tervbe veszi.">
         <AiIdeas posts={posts} gsc={gsc} add={(t) => setEdit(blank(today, { status: "otlet", title: t.slice(0, 200), autolink: false }))} />
         {ideas.length ? <ul className="idea-l">{ideas.map((x) => <li key={x.t}><div><b>{x.t}</b><small>{x.src} · {x.why}</small></div><button className="adm-ibtn sm" onClick={() => setEdit(blank(today, { status: "otlet", title: x.t.slice(0, 200), autolink: false }))}>Tervbe</button></li>)}</ul>
           : <p className="note">A posztjaid címkéiből, a Google-adatokból és a versenytársakból itt jelennek meg az ötletek.</p>}
       </Card>
-      {edit && <PlanSheet p={edit} posts={posts} accs={accs} close={() => setEdit(null)} save={save} del={del} reload={load} />}
+      {openP && <PostDrawer p={openP} close={() => setOpenP(null)} />}
+      {edit && <PlanSheet p={edit} posts={posts} accs={accs} close={closeEdit} save={save} del={del} reload={load} />}
     </div>
   );
 }
 
-function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: D[]; accs: D[]; close: () => void; save: (p: D) => Promise<D | null>; del: (p: D) => void; reload: () => void }) {
+function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: D[]; accs: D[]; close: () => void; save: (p: D, said?: string) => Promise<D | null>; del: (p: D) => void; reload: () => void }) {
   const sb = useMemo(() => supabaseBrowser(), []);
   const [v, setV] = useState<D>({ ...p, texts: { ...(p.texts || {}) }, opts: { ...(p.opts || {}) } });
   const [up, setUp] = useState(""); const [busy, setBusy] = useState(false); const [own, setOwn] = useState(Object.keys(p.texts || {}).length > 0);
@@ -204,7 +241,7 @@ function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: 
     const a = accs.find((x) => x.platform === pf);
     if (!a) return [false, "nincs bekötve"];
     if (!/publish|content_publish|manage_posts|pins:write|w_organization_social|youtube\.upload|video\.publish/.test(String(a.scopes || ""))) return [false, "kell a „Publikálás bekapcsolása” a Kapcsolatok oldalon"];
-    if (a.last_error) return [false, "a kapcsolat hibára fut: kösd be újra"];
+    if (a.last_error && !rateLimited(a.last_error)) return [false, "a kapcsolat hibára fut: kösd be újra"];
     const exp = a.refresh_expires_at || (pf === "linkedin" ? a.token_expires_at : null);
     if (exp && new Date(exp).getTime() < Date.now()) return [false, "a kapcsolat lejárt: kösd be újra"];
     return [true, "mehet"];
@@ -214,13 +251,22 @@ function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: 
     const kind = f.type.startsWith("video") ? "video" : f.type.startsWith("image") ? "image" : null;
     if (!kind) { toast("Kép vagy videó kell."); return; }
     if (MOCK) { set({ media_url: URL.createObjectURL(f), media_kind: kind, media_path: "minta/" + f.name }); return; }
-    setUp("Feltöltés…");
+    /* a phone video can be large and the upload has no progress of its own: the size is said, and it keeps going behind a lock */
+    setUp(`Feltöltés (${fmt(f.size / 1048576, f.size < 1048576 ? 1 : 0)} MB)… hagyd nyitva az appot`);
     const path = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${(f.name.split(".").pop() || (kind === "video" ? "mp4" : "jpg")).toLowerCase()}`;
     const { error } = await sb!.storage.from("admin-media").upload(path, f, { contentType: f.type, upsert: false });
-    if (error) { setUp(""); toast(error.message.includes("size") ? "A fájl túl nagy a tárhelyhez." : error.message); return; }
+    if (error) { setUp(""); toast(/size|too large|exceeded/i.test(error.message) ? `A fájl túl nagy a tárhelyhez (${fmt(f.size / 1048576)} MB).` : error.message); return; }
     /* the file it replaces is removed (it stayed in the bucket for ever) */
     if (v.media_path && v.media_path !== p.media_path && !String(v.media_path).startsWith("minta/")) await sb!.storage.from("admin-media").remove([v.media_path]);
     set({ media_url: sb!.storage.from("admin-media").getPublicUrl(path).data.publicUrl, media_kind: kind, media_path: path }); setUp("");
+  };
+  /* "kimegy" is said only with a time, and with the platforms it really goes to */
+  const saveIt = () => {
+    const names = (l: string[]) => l.map((k) => PF[k] || k).join(", ");
+    if (v.publish && !String(v.at || "").trim()) { toast("Időpont nélkül nem lehet közzétenni: add meg az időpontot."); return; }
+    const pfs = (v.platforms || []) as string[], yes = pfs.filter((k) => pubState(k)[0]), no = pfs.filter((k) => !pubState(k)[0]);
+    const said = !v.publish ? "Mentve" : !pfs.length ? "Mentve, de nem lehet kimenni: nincs platform kiválasztva." : !yes.length ? `Mentve, de innen nem lehet kimenni ide: ${names(no)}.` : no.length ? `Mentve. ${String(v.at).slice(0, 5)}-kor kimegy: ${names(yes)}. Nem lehet kimenni: ${names(no)}.` : `Mentve: ${String(v.at).slice(0, 5)}-kor kimegy.`;
+    save({ ...v, _posts: undefined, texts: own ? v.texts : {} }, said);
   };
   const textOf = (pf: string) => (own && v.texts?.[pf]?.trim() ? v.texts[pf] : v.caption || v.title || "");
   const over = (v.platforms || []).filter((pf: string) => MAXC[pf] && textOf(pf).length + (v.code || v.autolink ? LINKLEN : 0) > MAXC[pf]);
@@ -231,7 +277,9 @@ function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: 
     const pfs = (v.platforms || []) as string[];
     if (!confirm(`Most kimegy nyilvánosan ide: ${pfs.map((k) => PF[k] || k).join(", ")}\n\n${pfs.map((k) => `${PF[k] || k}: ${String(textOf(k) || "").slice(0, 160)}`).join("\n")}\n\nKözzéteszed?`)) return;
     setBusy(true);
-    const saved = await save({ ...v, _posts: undefined, publish: true, texts: own ? v.texts : {} }) || v;
+    const saved = await save({ ...v, _posts: undefined, publish: true, texts: own ? v.texts : {} });
+    /* a plan that could not be saved does not go out: what is on screen is not what is stored */
+    if (!saved) { setBusy(false); return; }
     const r = MOCK ? { ok: true, json: { results: Object.fromEntries((v.platforms || []).map((x: string) => [x, { ok: true }])), status: "kint" } } : await api("/api/admin/publish", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ plan: saved }) });
     setBusy(false);
     if (r.json?.busy) { toast(r.json.error); reload(); return; }
@@ -251,10 +299,10 @@ function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: 
     <Layer>
       <div className="scrim" onClick={close} />
       <aside className="drawer" role="dialog" aria-label="Terv">
-        <div className="c-h"><div><div><span className="eyebrow">{new Date(v.day + "T12:00").toLocaleDateString("hu-HU", { weekday: "long", month: "long", day: "numeric" })}</span><h2 style={{ fontSize: 20, marginTop: 6 }}>{v.id ? "Terv" : "Új terv"}</h2></div></div><button className="adm-ibtn" onClick={close}>Bezárás</button></div>
+        <div className="c-h"><div><div><span className="eyebrow">{v.day ? new Date(v.day + "T12:00").toLocaleDateString("hu-HU", { weekday: "long", month: "long", day: "numeric" }) : "Nincs megadva nap"}</span><h2 style={{ fontSize: 20, marginTop: 6 }}>{v.id ? "Terv" : "Új terv"}</h2></div></div><CloseX close={close} /></div>
         {dayPosts.length > 0 && <div className="plan-day">{dayPosts.map((q) => <a key={q.platform + q.post_id} href={q.url} target="_blank" rel="noreferrer"><Logo k={q.platform} size={22} /><span>{(q.title || "poszt").slice(0, 60)}</span><b>{big(q.views)}</b></a>)}</div>}
         <label className="lf"><span>Cím / téma</span><input className="adm-in" value={v.title || ""} maxLength={200} onChange={(e) => set({ title: e.target.value })} placeholder="pl. 3 fine line minta, ami szépen öregszik" /></label>
-        <div className="form-2"><label className="lf"><span>Nap</span><input className="adm-in" type="date" value={v.day} onChange={(e) => set({ day: e.target.value })} /></label>
+        <div className="form-2"><label className="lf"><span>Nap</span><input className="adm-in" type="date" value={v.day || ""} onChange={(e) => set({ day: e.target.value })} /></label>
           <label className="lf"><span>Időpont</span><input className="adm-in" type="time" value={v.at ? String(v.at).slice(0, 5) : ""} onChange={(e) => set({ at: e.target.value })} /></label></div>
         <div className="lf"><span>Platformok</span><div className="pf-pick">{SOC.map((s) => <button key={s} type="button" aria-pressed={(v.platforms || []).includes(s)} onClick={() => set({ platforms: (v.platforms || []).includes(s) ? v.platforms.filter((x: string) => x !== s) : [...(v.platforms || []), s] })}><Logo k={s} size={20} />{PF[s]}</button>)}</div></div>
         <div className="lf"><span>Állapot</span><div className="adm-seg sm">{Object.entries(STATUS).filter(([k]) => k !== "hiba" || v.status === "hiba").map(([k, [l]]) => <button key={k} aria-pressed={v.status === k} onClick={() => set({ status: k })}>{l}</button>)}</div></div>
@@ -268,19 +316,20 @@ function PlanSheet({ p, posts, accs, close, save, del, reload }: { p: D; posts: 
         <label className="lf"><span>Rövid link (inkage.app/go/…)</span><input className="adm-in" value={codes.length ? "" : v.code || ""} onChange={(e) => set({ code: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""), codes: {} })} placeholder={codes.length ? "platformonként külön link (lent)" : v.status === "otlet" ? "ötletnél még nincs link" : v.autolink ? "mentéskor platformonként a következő szabad szám" : "pl. 14"} /></label>
         {codes.length > 0 && <div className="plan-codes">{codes.map(([pf, c]) => <span key={pf} className="chip"><Logo k={pf} size={14} />inkage.app/go/{c}</span>)}</div>}
         {!v.code && !codes.length && v.status !== "otlet" && <label className="ck-row"><input type="checkbox" checked={!!v.autolink} onChange={(e) => set({ autolink: e.target.checked })} />Rövid link automatikusan, platformonként külön (így látszik, melyik platform hozta a látogatót; a szöveg végére is odakerül)</label>}
-        {fc.length > 0 && <div className="plan-fc"><span className="eyebrow">Várható a hasonló posztjaid alapján</span>{fc.map((x) => <div key={x.p}><Logo k={x.p} size={18} /><b>~{big(x.views)}</b> {viewWord(x.p)}{x.visits ? <> · <b>~{fmt(x.visits)}</b> látogató</> : null}<small>{x.n} hasonló {kindFor(x.p, v.media_kind)} mediánja</small></div>)}</div>}
+        {fc.length > 0 && !(v.published_at || v.status === "kint" || v.status === "kiertekelve") && <div className="plan-fc"><span className="eyebrow">Várható a hasonló posztjaid alapján</span>{fc.map((x) => <div key={x.p}><Logo k={x.p} size={18} /><b>~{big(x.views)}</b> {viewWord(x.p)}{x.visits ? <> · <b>~{fmt(x.visits)}</b> látogató</> : null}<small>{x.n} hasonló {kindFor(x.p, v.media_kind)} mediánja</small></div>)}</div>}
         {real.length > 0 && <div className="plan-fc real"><span className="eyebrow">Várható és valós</span>{real.map(({ pf, q, f }) => <div key={pf}><Logo k={pf} size={18} /><b>{big(q.views)}</b> {viewWord(pf)}{f ? <> · várható ~{big(f.views)} ({fmt((n(q.views) / Math.max(1, f.views)) * 100)}%)</> : null}{q.code ? <> · {fmt(q.sessions)} látogató</> : null}</div>)}</div>}
         <div className="lf"><span>Kép vagy videó a közzétételhez</span>
           <div className="adm-row"><span className="conn-file"><input type="file" accept="video/*,image/*" onChange={pick} /><span>{v.media_url ? "Csere" : "Fájl kiválasztása"}</span></span>{up && <span className="note">{up}</span>}
             {v.media_url && (v.media_kind === "video" ? <video src={v.media_url} className="plan-media" muted playsInline controls /> : <img src={v.media_url} alt="" className="plan-media" />)}</div></div>
         <label className="ck-row"><input type="checkbox" checked={!!v.publish} onChange={(e) => set({ publish: e.target.checked })} />Közzététel innen a megadott időben (10 percen belül)</label>
+        {v.publish && !String(v.at || "").trim() && <p className="note down">Add meg fent az időpontot, enélkül nem megy ki.</p>}
         {v.publish && <ul className="pub-l">{(v.platforms || []).map((pf: string) => { const [ok, why] = pubState(pf); return <li key={pf}><Logo k={pf} size={18} />{PF[pf]}: <span className={"chip " + (ok ? "good" : "warn")}>{why}</span></li>; })}</ul>}
         {results.length > 0 && <ul className="pub-l">{results.map(([pf, r]) => <li key={pf}><Logo k={pf} size={18} />{PF[pf]}: {r.ok ? <span className="chip good">✓ kint{r.error ? " · " + r.error : ""}</span> : r.pending ? <span className="chip">feldolgozás…</span> : <span className="chip bad">{r.error}</span>}</li>)}</ul>}
-        <div className="adm-row">
-          <button className="adm-ibtn gold" onClick={() => save({ ...v, _posts: undefined, texts: own ? v.texts : {} })} disabled={!String(v.title || "").trim()}>Mentés</button>
-          {v.media_url || v.caption ? <button className="adm-ibtn" onClick={publishNow} disabled={busy || !String(v.title || "").trim() || !(v.platforms || []).length || v.status === "kint"}>{busy ? "Küldés…" : v.status === "hiba" ? "Újraküldés" : "Közzététel most"}</button> : null}
+        <div className="adm-row plan-acts">
+          <button className="adm-ibtn gold" onClick={saveIt} disabled={!String(v.title || "").trim() || !v.day}>Mentés</button>
+          {v.media_url || v.caption ? <button className="adm-ibtn" onClick={publishNow} disabled={busy || !String(v.title || "").trim() || !v.day || !(v.platforms || []).length || v.status === "kint"}>{busy ? "Küldés…" : v.status === "hiba" ? "Újraküldés" : "Közzététel most"}</button> : null}
           {v.id && <button className="adm-ibtn" onClick={() => del(v)}>Törlés</button>}
-          {v.caption && <button className="adm-ibtn" onClick={() => { const c0 = (v.platforms || [])[0]; navigator.clipboard?.writeText(`${textOf(c0)}${v.codes?.[c0] || v.code ? `\ninkage.app/go/${v.codes?.[c0] || v.code}` : ""}`); toast("Szöveg másolva"); }}>Szöveg másolása</button>}
+          {v.caption && <button className="adm-ibtn" onClick={async () => { const c0 = (v.platforms || [])[0]; toast(await copyText(`${textOf(c0)}${v.codes?.[c0] || v.code ? `\ninkage.app/go/${v.codes?.[c0] || v.code}` : ""}`) ? "Szöveg másolva" : "Nem sikerült másolni: a böngésző nem engedte."); }}>Szöveg másolása</button>}
         </div>
         <p className="note">A terv a reggeli összefoglalóban is megjelenik azon a napon. Közzétételhez a platformot a Kapcsolatok oldalon „Publikálás bekapcsolása” gombbal egyszer újra kell kötni (írási engedély). TikTokon a TikTok auditjáig a videó privátként megy ki; LinkedInen szövegként; YouTube-on nyilvánosként, a borítóképet a YouTube választja.</p>
       </aside>
@@ -296,7 +345,7 @@ function Board({ plans, open, setStatus, add }: { plans: D[]; open: (p: D) => vo
       return (
         <section key={k} className={"kb-c" + (over === k ? " over" : "")} onDragOver={(e) => { e.preventDefault(); setOver(k); }} onDragLeave={() => setOver(null)}
           onDrop={() => { const p = plans.find((x) => x.id === drag); setOver(null); setDrag(null); if (p && p.status !== k) setStatus(p, k); }}>
-          <h4><span className={"kb-dot t-" + tone} />{l}<small>{col.length}</small></h4>
+          <h4><span className="kb-dot" />{l}<small>{col.length}</small></h4>
           {col.map((p) => (
             <button key={p.id} className="kb-i" draggable onDragStart={() => setDrag(p.id)} onClick={() => open(p)}>
               <b>{p.title || "(nincs cím)"}</b>

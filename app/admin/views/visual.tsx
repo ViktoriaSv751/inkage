@@ -11,6 +11,10 @@ import { PF, SOC, ago, big, n, rpc, type D } from "../shared";
 
 const imp = (pf: string) => pf === "pinterest" || pf === "linkedin";
 const vword = (pf: string) => (imp(pf) ? "megjelenés" : "megtekintés");
+/* one way to write a multiplier everywhere: a tiny one is never "0×" */
+export const fmtX = (x: number) => (x > 0 && x < 0.1 ? "<0,1" : fmt(x, 1));
+/* the platform only slowed the requests down and the sync goes on by itself: that is no broken connection */
+export const rateLimited = (m?: unknown) => /korlátozta a kéréseket|rate.?limit|\b429\b|too many requests/i.test(String(m || ""));
 const bp = (t: string) => { const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Budapest", weekday: "short", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date(t));
   const wd = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(p.find((x) => x.type === "weekday")!.value); return { dow: wd, h: Number(p.find((x) => x.type === "hour")!.value) }; };
 const DOW = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"];
@@ -26,7 +30,7 @@ export function PostHeat({ posts, vs }: { posts: D[]; vs: (p: D) => number | nul
   const vals = Object.values(cells).map((c) => c.s / c.c);
   if (!vals.length) return <Empty t="Ehhez legalább néhány, 24 óránál régebbi poszt kell: utána itt látszik, melyik nap melyik órájában ment a legjobban." />;
   const max = Math.max(...vals, 1.5);
-  const color = (v: number) => (v >= 1 ? `rgba(47,163,107,${Math.min(1, 0.2 + ((v - 1) / Math.max(0.01, max - 1)) * 0.8)})` : `rgba(217,83,79,${Math.min(0.85, 0.2 + (1 - v) * 0.8)})`);
+  const color = (v: number) => (v >= 1 ? `color-mix(in srgb, var(--a-good) ${Math.round(Math.min(1, 0.2 + ((v - 1) / Math.max(0.01, max - 1)) * 0.8) * 100)}%, transparent)` : "repeating-linear-gradient(135deg,var(--a-fg) 0 1.5px,transparent 1.5px 5px)");
   const best = Object.entries(cells).sort((a, b) => b[1].s / b[1].c - a[1].s / a[1].c)[0];
   const hv = hov ? cells[hov] : null;
   return (
@@ -37,7 +41,7 @@ export function PostHeat({ posts, vs }: { posts: D[]; vs: (p: D) => number | nul
           return <i key={d + ":" + h} className={c ? "on" : ""} style={c ? { background: color(c.s / c.c) } : undefined} onMouseEnter={() => setHov(c ? d + ":" + h : null)} title={c ? `${dl} ${h}:00 · ${c.c} poszt · átlag ${fmt(c.s / c.c, 1)}× a szokásos` : undefined} />; })])}
       </div>
       <p className="note">{hv ? <>{DOW[Number(hov!.split(":")[0])]} {hov!.split(":")[1]}:00 · {hv.c} poszt · átlag <b>{fmt(hv.s / hv.c, 1)}×</b>: {hv.ps.slice(0, 2).map((p) => `„${String(p.title || "").slice(0, 30)}”`).join(", ")}</>
-        : best ? <>Eddig a legjobb időpont: <b>{DOW[Number(best[0].split(":")[0])]} {best[0].split(":")[1]}:00</b> körül ({best[1].c} poszt, átlag {fmt(best[1].s / best[1].c, 1)}× a szokásos). Zöld: jobb, mint a platformod szokásos posztja; piros: gyengébb. Kevés posztnál ez még csak irány.</> : null}</p>
+        : best ? <>Eddig a legjobb időpont: <b>{DOW[Number(best[0].split(":")[0])]} {best[0].split(":")[1]}:00</b> körül ({best[1].c} poszt, átlag {fmt(best[1].s / best[1].c, 1)}× a szokásos). Telt: jobb, mint a platformod szokásos posztja; csíkos: gyengébb. Kevés posztnál ez még csak irány.</> : null}</p>
     </div>
   );
 }
@@ -50,10 +54,10 @@ export function VideoWall({ posts, vs, onOpen }: { posts: D[]; vs: (p: D) => num
     <>
       <div className="vwall">{list.slice(0, shown).map((p) => { const x = vs(p);
         return (
-          <button key={p.platform + p.post_id} className="vw-i" onClick={() => onOpen(p)} style={{ borderColor: x == null ? "var(--a-line)" : x >= 1.5 ? "#2FA36B" : x < 0.6 ? "#D9534F" : "var(--a-line2)" }} title={`${PF[p.platform]} · ${ago(p.created_at)} · ${String(p.title || "").slice(0, 80)}`}>
+          <button key={p.platform + p.post_id} className="vw-i" onClick={() => onOpen(p)} style={{ borderColor: x == null ? "var(--a-line)" : x >= 1.5 ? "var(--a-good)" : x < 0.6 ? "var(--a-bad)" : "var(--a-line2)" }} title={`${PF[p.platform]} · ${ago(p.created_at)} · ${String(p.title || "").slice(0, 80)}`}>
             {p.thumb ? <img src={p.thumb} alt="" referrerPolicy="no-referrer" loading="lazy" /> : <span className="vw-ph"><Logo k={p.platform} size={30} /></span>}
             <span className="vw-pf"><Logo k={p.platform} size={14} /></span>
-            <span className="vw-v"><b>{p.views == null ? "–" : big(p.views)}</b>{x != null && <small>{fmt(x, 1)}×</small>}</span>
+            <span className="vw-v"><b>{p.views == null ? "–" : big(p.views)}</b>{x != null && <small>{fmtX(x)}×</small>}</span>
           </button>); })}</div>
       {list.length > shown && <div className="adm-row" style={{ justifyContent: "center", marginTop: 12 }}><button className="adm-ibtn" onClick={() => setShown(shown + 96)}>Továbbiak ({fmt(list.length - shown)})</button></div>}
     </>
@@ -74,8 +78,8 @@ export function ContentMatrix({ groups, vs, onOpen }: { groups: D[][]; vs: (p: D
           <tr key={i}>
             <td><span className="cellwrap" style={{ display: "block", maxWidth: 320 }}><b>{String(g[0].title || "(nincs szöveg)").slice(0, 70)}</b><br /><span className="mut">{ago(g[0].created_at)}</span></span></td>
             {SOC.map((pf) => { const p = g.find((x) => x.platform === pf); const x = p ? vs(p) : null;
-              return <td key={pf} className="num">{p ? <button className="cmx-c" onClick={() => onOpen(p)} title={`${PF[pf]}: ${big(p.views)} ${vword(pf)}`}><b>{big(p.views)}</b>{x != null && <small className={x >= 1 ? "up" : "down"}>{fmt(x, 1)}×</small>}</button> : <span className="cmx-x" title={`Még nem ment ki ${PF[pf]}-ra`}>·</span>}</td>; })}
-            <td>{best >= 1.5 && miss.length ? <span className="chip warn" title={`Máshol a szokásos ${fmt(best, 1)}-szerese volt: érdemes kitenni ide is: ${miss.map((m) => PF[m]).join(", ")}`}>érdemes kitenni: {miss.slice(0, 2).map((m) => PF[m]).join(", ")}{miss.length > 2 ? "…" : ""}</span> : null}</td>
+              return <td key={pf} className="num">{p ? <button className="cmx-c" onClick={() => onOpen(p)} title={`${PF[pf]}: ${big(p.views)} ${vword(pf)}`}><b>{big(p.views)}</b>{x != null && <small className={x >= 1 ? "up" : "down"}>{fmtX(x)}×</small>}</button> : <span className="cmx-x" title={`Még nem ment ki ${PF[pf]}-ra`}>·</span>}</td>; })}
+            <td>{best >= 1.5 && miss.length ? <span className="chip warn cmx-go" title={`Máshol a szokásos ${fmt(best, 1)}-szerese volt: érdemes kitenni ide is: ${miss.map((m) => PF[m]).join(", ")}`}>érdemes kitenni: {miss.slice(0, 2).map((m) => PF[m]).join(", ")}{miss.length > 2 ? "…" : ""}</span> : null}</td>
           </tr>); })}</tbody>
     </table></div>
   );
@@ -87,7 +91,7 @@ export function ContentMatrix({ groups, vs, onOpen }: { groups: D[][]; vs: (p: D
 export function PlatformFlow({ posts, leads }: { posts: D[]; leads: D[] }) {
   const pfs = SOC.filter((pf) => n(leads.find((l) => l.k === pf)?.sessions) > 0);
   if (!pfs.length) return <Empty t="Ebben az időszakban még nem jött látogató a közösségi oldalakról: amint jön, itt látszik az útja a posztoktól a regisztrációig." />;
-  const layers: SNode[][] = [[], [], [{ id: "scored", l: "Előnézetig jutott", color: "#2FA36B" }, { id: "left", l: "Csak nézelődött", color: "#B9B2A6" }], [{ id: "signup", l: "Regisztrált", color: "#5B3DF5" }, { id: "nosign", l: "Nem regisztrált", color: "#D6D0C4" }]];
+  const layers: SNode[][] = [[], [], [{ id: "scored", l: "Előnézetig jutott", color: "var(--ser-0)" }, { id: "left", l: "Csak nézelődött", color: "var(--ser-4)" }], [{ id: "signup", l: "Regisztrált", color: "var(--ser-1)" }, { id: "nosign", l: "Nem regisztrált", color: "var(--ser-4)" }]];
   const links: SLink[] = [];
   let scoredAll = 0, signAll = 0, sessAll = 0;
   pfs.forEach((pf) => {

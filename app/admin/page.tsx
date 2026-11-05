@@ -6,8 +6,23 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { emailOk, passwordOk } from "@/lib/admin/validate";
 import { SignatureLine } from "./visuals";
+import { I, P } from "./shared";
 import { MOCK, useTheme } from "./shared";
+
+/* the one round button of every sign-in step; a word under it only where the arrow alone would not say what happens */
+const GoBtn = ({ busy, label, word }: { busy: boolean; label: string; word?: boolean }) => <button className="lg-go" disabled={busy} aria-busy={busy || undefined} aria-label={label}><i>{busy ? <span className="spin" aria-hidden="true" /> : I(P.arrow)}</i>{word && <span>{label}</span>}</button>;
+/* every sign-in screen is the same page: the signature large, a few words, the fields, the round button, one quiet way out */
+const Stage = ({ cls, kicker, onSubmit, children, busy }: { cls: string; kicker?: string; onSubmit?: (e: React.FormEvent) => void; children?: React.ReactNode; busy?: boolean }) => (
+  <div className={cls} suppressHydrationWarning>
+    <form className="lg" onSubmit={onSubmit} aria-busy={busy || undefined} noValidate>
+      <div className="lg-h"><SignatureLine text="InkAge" className="lg-sig" />{kicker && <span>{kicker}</span>}</div>
+      {children}
+    </form>
+  </div>
+);
+const Fld = (p: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) => { const { label, ...rest } = p; return <label className="lg-f"><span>{label}</span><input placeholder={label} {...rest} /></label>; };
 import { Dashboard } from "./shell";
+import { cacheClear, phoneNow } from "./phone";
 
 /* Sign-in gate: only the e-mail listed in public.admin_emails (confirmed from its own inbox) gets in.
    The check here is for the screen; every number is also refused by the database to anyone else.
@@ -19,15 +34,20 @@ export default function AdminPage() {
   const [state, setState] = useState<"check" | "login" | "mfa" | "newpw" | "ok">("check");
   const [note, setNote] = useState("");
   const check = useCallback(async () => {
-    if (MOCK) { setState("ok"); return; }
+    /* (the sample data on the development server can show each step: ?mock=1&gate=login|mfa|newpw|check) */
+    if (MOCK) { const g = new URLSearchParams(location.search).get("gate"); setState(g === "login" || g === "mfa" || g === "newpw" || g === "check" ? g : "ok"); return; }
     if (!sb) { setState("login"); return; }
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) { setState("login"); return; }
+    /* a phone without a connection: a session kept in this browser opens the last numbers, read only (signing out wipes them) */
+    const offlineOk = async () => phoneNow() && !!(await sb.auth.getSession().catch(() => null))?.data.session;
+    if (typeof navigator !== "undefined" && !navigator.onLine && await offlineOk()) { setState("ok"); return; }
+    const { data: { user }, error: ue } = await sb.auth.getUser();
+    if (!user) { if (ue && /fetch|network/i.test(ue.message) && await offlineOk()) { setState("ok"); return; } setState("login"); return; }
     /* a second step is due when an authenticator is enrolled and this session has not passed it yet */
     const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel().catch(() => ({ data: null }));
     if (aal && aal.nextLevel === "aal2" && aal.currentLevel !== "aal2") { setState("mfa"); return; }
     const { data: ok, error } = await sb.rpc("is_admin");
     /* no answer (network, a slow database) is not a "no": she stays signed in and can try again */
+    if (error && /fetch|network/i.test(error.message) && await offlineOk()) { setState("ok"); return; }
     if (error) { setNote("Most nem sikerült ellenőrizni a belépést (hálózat vagy adatbázis). Próbáld újra egy perc múlva."); setState("login"); return; }
     if (ok === true) {
       try { if (new URLSearchParams(location.search).has("pwreset")) { setState("newpw"); return; } } catch {}
@@ -42,11 +62,12 @@ export default function AdminPage() {
   const signOut = useCallback(async (msg?: string) => {
     await sb?.auth.signOut().catch(() => null);
     try { Object.keys(localStorage).filter((k) => k.startsWith("inkage.admin.cache.") || k.startsWith("inkage.admin.ask")).forEach((k) => localStorage.removeItem(k)); } catch {}
+    cacheClear();
     setNote(msg || ""); setState("login");
   }, [sb]);
   const cls = "adm gate" + (light ? " light" : "");
   /* (the server draws this first screen without knowing the theme; the inline script in layout.tsx paints it right) */
-  if (state === "check") return <div className={cls} suppressHydrationWarning><span className="adm-upd"><i className="adm-dot" />Ellenőrzés…</span></div>;
+  if (state === "check") return <Stage cls={cls} busy><span className="lg-wait" role="status">Ellenőrzés…</span></Stage>;
   if (state === "login") return <AdminLogin cls={cls} note={note} done={check} />;
   if (state === "mfa") return <MfaStep cls={cls} done={check} cancel={async () => { await sb?.auth.signOut(); setState("login"); }} />;
   if (state === "newpw") return <NewPassword cls={cls} done={() => { try { const u = new URL(location.href); u.searchParams.delete("pwreset"); history.replaceState(null, "", u.pathname + u.search + u.hash); } catch {} setState("ok"); }} />;
@@ -56,68 +77,47 @@ export default function AdminPage() {
 
 function AdminLogin({ cls, note, done }: { cls: string; note: string; done: () => void }) {
   const sb = useMemo(() => supabaseBrowser(), []);
-  const [mode, setMode] = useState<"in" | "setup" | "forgot">("in");
-  const [email, setEmail] = useState(""); const [pw, setPw] = useState(""); const [pw2, setPw2] = useState("");
+  const [mode, setMode] = useState<"in" | "forgot">("in");
+  const [email, setEmail] = useState(""); const [pw, setPw] = useState("");
   const [busy, setBusy] = useState(false); const [msg, setMsg] = useState<{ k: "err" | "ok"; t: string } | null>(note ? { k: "err", t: note } : null);
   useEffect(() => { if (note) setMsg({ k: "err", t: note }); }, [note]);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setMsg(null);
     if (!sb) return setMsg({ k: "err", t: "Nincs adatbázis-kapcsolat." });
     if (!emailOk(email)) return setMsg({ k: "err", t: "Adj meg egy érvényes e-mail-címet." });
+    if (mode === "in" && !pw) return setMsg({ k: "err", t: "Írd be a jelszót." });
     setBusy(true);
     try {
       if (mode === "forgot") {
-        /* the link brings her back here (not to the app), where the new password is set */
         /* InkAge: the app's own new-password page (an address Supabase already accepts); a Google-only account gets a password this way too */
-        await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + "/uj-jelszo" });
-        setMsg({ k: "ok", t: `Ha a(z) ${email.trim()} címhez tartozik fiók, küldtünk rá egy levelet. A benne lévő linken megadhatod a jelszót, utána nyisd meg újra ezt az oldalt (inkage.app/admin), és ezzel a jelszóval is be tudsz lépni.` });
+        const { error } = await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + "/uj-jelszo" });
+        if (error && /fetch|network/i.test(error.message)) return setMsg({ k: "err", t: "Nincs kapcsolat. Próbáld újra." });
+        setMsg({ k: "ok", t: `Ha a(z) ${email.trim()} címhez tartozik fiók, küldtünk rá egy linket. Add meg vele a jelszót, utána nyisd meg újra az inkage.app/admin oldalt.` });
         return;
       }
-      if (mode === "in") {
-        const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password: pw });
-        if (error) return setMsg({ k: "err", t: /confirm/i.test(error.message) ? "Előbb erősítsd meg a címed: kattints a levélben kapott linkre." : "Hibás e-mail-cím vagy jelszó. Ha Google-lel regisztráltál, a „Belépés Google-lel” gombot használd, vagy állíts be jelszót az „Elfelejtett jelszó” gombbal." });
-        done(); return;
-      }
-      if (!passwordOk(pw)) return setMsg({ k: "err", t: "A jelszó legalább 8 karakter legyen, kis- és nagybetűvel és számmal." });
-      if (pw !== pw2) return setMsg({ k: "err", t: "A két jelszó nem egyezik." });
-      /* the page does not tell whether an address is the admin's (anyone could test addresses with it): every address gets
-         the same answer, and only the admin's opens the dashboard after confirming it (is_admin, in the database) */
-      const { data, error } = await sb.auth.signUp({ email: email.trim(), password: pw, options: { data: { display_name: "Admin" }, emailRedirectTo: location.origin + "/app/gallery" } });
-      if (error || (data.user && !data.user.identities?.length)) return setMsg({ k: "err", t: "Ehhez a címhez már van jelszó. Lépj be vele, vagy kérj újat az „Elfelejtett jelszó” gombbal." });
-      if (data.session) { done(); return; }
-      setMsg({ k: "ok", t: `Ha ez a cím jogosult, küldtünk rá egy megerősítő levelet. Kattints a benne lévő linkre, és utána ezzel a jelszóval mindig be tudsz lépni.` });
-      setMode("in"); setPw(""); setPw2("");
-    } finally { setBusy(false); }
+      const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password: pw });
+      if (error) return setMsg({ k: "err", t: /fetch|network/i.test(error.message) ? "Nincs kapcsolat. Próbáld újra." : /confirm/i.test(error.message) ? "Előbb erősítsd meg a címed: kattints a levélben kapott linkre." : "Hibás e-mail-cím vagy jelszó. Ha Google-lel regisztráltál, a „Belépés Google-lel” gombot használd." });
+      done();
+    } catch { setMsg({ k: "err", t: "Nincs kapcsolat. Próbáld újra." }); } finally { setBusy(false); }
+  };
+  /* InkAge: the owner's account signs in with Google (the same sign-in as in the app; it comes back here) */
+  const google = async () => {
+    setMsg(null);
+    const { oauthParams } = await import("@/lib/auth-help");
+    const { error } = (await sb?.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + "/admin", queryParams: oauthParams("google") } })) || {};
+    if (error) setMsg({ k: "err", t: "A Google-belépés most nem indult el. Próbáld újra, vagy lépj be az appban (inkage.app/app), és utána nyisd meg ezt az oldalt." });
   };
   return (
-    <div className={cls}>
-      <form className="gate-card login-card" onSubmit={submit}>
-        <SignatureLine text="InkAge" className="login-sig" />
-        <span className="eyebrow" style={{ textAlign: "center" }}>Irányítóközpont</span>
-        {/* InkAge: the owner's account signs in with Google (the same sign-in as in the app; it comes back here) */}
-        {mode === "in" && <>
-          <button type="button" className="btn" onClick={async () => {
-            const { oauthParams } = await import("@/lib/auth-help");
-            const { error } = (await sb?.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + "/admin", queryParams: oauthParams("google") } })) || {};
-            if (error) setMsg({ k: "err", t: "A Google-belépés most nem indult el. Próbáld újra, vagy lépj be az appban (inkage.app/app), és utána nyisd meg ezt az oldalt." });
-          }}>Belépés Google-lel</button>
-          <p className="note" style={{ textAlign: "center", margin: 0 }}>vagy e-mail-címmel és jelszóval:</p>
-        </>}
-        {mode !== "forgot" && <div className="adm-seg" role="group">
-          <button type="button" aria-pressed={mode === "in"} onClick={() => { setMode("in"); setMsg(null); }}>Belépés</button>
-          <button type="button" aria-pressed={mode === "setup"} onClick={() => { setMode("setup"); setMsg(null); }}>Első belépés</button>
-        </div>}
-        {mode === "setup" && <p className="note">Add meg az admin e-mail-címed és a jelszót, amivel ezentúl belépsz. A megerősítő levél ebbe a postafiókba érkezik.</p>}
-        {mode === "forgot" && <p className="note">Add meg az admin e-mail-címed: küldünk egy linket, amivel új jelszót adhatsz meg.</p>}
-        <label className="lf"><span>E-mail-cím</span><input className="adm-in" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
-        {mode !== "forgot" && <label className="lf"><span>{mode === "setup" ? "Új jelszó" : "Jelszó"}</span><input className="adm-in" type="password" autoComplete={mode === "setup" ? "new-password" : "current-password"} value={pw} onChange={(e) => setPw(e.target.value)} required /></label>}
-        {mode === "setup" && <label className="lf"><span>Jelszó még egyszer</span><input className="adm-in" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} required /></label>}
-        {msg && <div className={"alert " + msg.k} role={msg.k === "err" ? "alert" : "status"}>{msg.t}</div>}
-        <button className="btn" disabled={busy} aria-busy={busy || undefined}>{busy && <span className="spin" aria-hidden="true" />}{mode === "setup" ? "Jelszó beállítása" : mode === "forgot" ? "Link küldése" : "Belépés"}</button>
-        {mode === "in" && <button type="button" className="note lnk-btn" onClick={() => { setMode("forgot"); setMsg(null); }}>Elfelejtett jelszó</button>}
-        {mode === "forgot" && <button type="button" className="note lnk-btn" onClick={() => { setMode("in"); setMsg(null); }}>← Vissza a belépéshez</button>}
-      </form>
-    </div>
+    <Stage cls={cls} kicker={mode === "forgot" ? "Új jelszó kérése" : "Irányítóközpont"} onSubmit={submit}>
+      {mode === "in" && <button type="button" className="lg-oauth" onClick={google}>Belépés Google-lel</button>}
+      <div className="lg-fs">
+        <Fld label="E-mail-cím" type="email" inputMode="email" autoCapitalize="off" autoCorrect="off" spellCheck={false} autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
+        {mode !== "forgot" && <Fld label="Jelszó" type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} />}
+      </div>
+      {msg && <p className={"lg-msg " + msg.k} role={msg.k === "err" ? "alert" : "status"}>{msg.t}</p>}
+      <GoBtn busy={busy} label={mode === "forgot" ? "Link küldése" : "Belépés"} word={mode === "forgot"} />
+      <button type="button" className="lg-lnk" onClick={() => { setMode(mode === "in" ? "forgot" : "in"); setMsg(null); }}>{mode === "in" ? "Elfelejtett jelszó" : "Vissza a belépéshez"}</button>
+    </Stage>
   );
 }
 
@@ -140,17 +140,12 @@ function MfaStep({ cls, done, cancel }: { cls: string; done: () => void; cancel:
     } finally { setBusy(false); }
   };
   return (
-    <div className={cls}>
-      <form className="gate-card login-card" onSubmit={submit}>
-        <SignatureLine text="InkAge" className="login-sig" />
-        <span className="eyebrow" style={{ textAlign: "center" }}>Második lépés</span>
-        <p className="note">Írd be a hitelesítő alkalmazásban (pl. Google Authenticator, 1Password) látható hatjegyű kódot.</p>
-        <label className="lf"><span>Kód</span><input className="adm-in" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} autoFocus required /></label>
-        {msg && <div className="alert err" role="alert">{msg}</div>}
-        <button className="btn" disabled={busy} aria-busy={busy || undefined}>{busy && <span className="spin" aria-hidden="true" />}Belépés</button>
-        <button type="button" className="note lnk-btn" onClick={cancel}>← Másik fiók / vissza</button>
-      </form>
-    </div>
+    <Stage cls={cls} kicker="A hitelesítő alkalmazás kódja" onSubmit={submit}>
+      <div className="lg-fs"><Fld label="Hatjegyű kód" className="lg-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} autoFocus /></div>
+      {msg && <p className="lg-msg err" role="alert">{msg}</p>}
+      <GoBtn busy={busy} label="Belépés" />
+      <button type="button" className="lg-lnk" onClick={cancel}>Másik fiók</button>
+    </Stage>
   );
 }
 
@@ -163,22 +158,20 @@ function NewPassword({ cls, done }: { cls: string; done: () => void }) {
     if (!passwordOk(pw)) return setMsg("A jelszó legalább 8 karakter legyen, kis- és nagybetűvel és számmal.");
     if (pw !== pw2) return setMsg("A két jelszó nem egyezik.");
     setBusy(true);
-    const { error } = (await sb?.auth.updateUser({ password: pw })) || { error: null };
+    const { error } = await (sb?.auth.updateUser({ password: pw }) ?? Promise.resolve({ error: null })).catch(() => ({ error: { message: "" } }));
     setBusy(false);
     if (error) return setMsg(/same|different/i.test(error.message) ? "Az új jelszó nem lehet ugyanaz, mint a régi." : "Nem sikerült menteni. Kérj új linket az „Elfelejtett jelszó” gombbal.");
     done();
   };
   return (
-    <div className={cls}>
-      <form className="gate-card login-card" onSubmit={submit}>
-        <SignatureLine text="InkAge" className="login-sig" />
-        <span className="eyebrow" style={{ textAlign: "center" }}>Új jelszó</span>
-        <label className="lf"><span>Új jelszó</span><input className="adm-in" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} required /></label>
-        <label className="lf"><span>Még egyszer</span><input className="adm-in" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} required /></label>
-        {msg && <div className="alert err" role="alert">{msg}</div>}
-        <button className="btn" disabled={busy} aria-busy={busy || undefined}>{busy && <span className="spin" aria-hidden="true" />}Mentés és belépés</button>
-        <button type="button" className="note lnk-btn" onClick={done}>Most nem</button>
-      </form>
-    </div>
+    <Stage cls={cls} kicker="Új jelszó" onSubmit={submit}>
+      <div className="lg-fs">
+        <Fld label="Új jelszó" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+        <Fld label="Még egyszer" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+      </div>
+      {msg && <p className="lg-msg err" role="alert">{msg}</p>}
+      <GoBtn busy={busy} label="Mentés és belépés" word />
+      <button type="button" className="lg-lnk" onClick={done}>Most nem</button>
+    </Stage>
   );
 }

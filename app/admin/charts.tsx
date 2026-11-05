@@ -3,18 +3,40 @@
    a hover tooltip on every chart, and text in text colours (the series colour only ever marks the data). */
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
+/* a phone turned sideways: charts take the whole screen, tables become real tables */
+const LAND_Q = "(max-width:980px) and (orientation:landscape) and (max-height:520px)";
+export function useLand() {
+  const [l, setL] = useState(() => typeof window !== "undefined" && matchMedia(LAND_Q).matches);
+  useEffect(() => { const m = matchMedia(LAND_Q); const f = () => setL(m.matches); f(); m.addEventListener("change", f); return () => m.removeEventListener("change", f); }, []);
+  return l;
+}
+/* the phone layout, here too (phone.tsx imports this file, not the other way round) */
+const useNarrow = () => {
+  const [p, setP] = useState(() => typeof window !== "undefined" && matchMedia("(max-width:980px)").matches);
+  useEffect(() => { const m = matchMedia("(max-width:980px)"); const f = () => setP(m.matches); m.addEventListener("change", f); return () => m.removeEventListener("change", f); }, []);
+  return p;
+};
+/* a finger: the value stays a moment after lifting (a mouse leaving clears it at once); a tap selects without moving */
+const useTouchHold = (clear: () => void) => {
+  const t = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (t.current) clearTimeout(t.current); }, []);
+  return (e: React.PointerEvent) => { if (t.current) clearTimeout(t.current); if (e.pointerType === "mouse") clear(); else t.current = setTimeout(clear, 2600); };
+};
+/* on its side a chart fits between the header and the bottom bar, with its own title above it */
+const useChartH = (h: number) => { const land = useLand(); if (!land || h < 120) return h; const bars = ((document.querySelector(".ph-top") as HTMLElement | null)?.offsetHeight || 44) + ((document.querySelector(".adm-tabbar") as HTMLElement | null)?.offsetHeight || 56); return Math.max(h, window.innerHeight - bars - 64); };
+
 export const fmt = (n: number | null | undefined, d = 0) =>
   n == null || !Number.isFinite(n) ? "–" : n.toLocaleString("hu-HU", { maximumFractionDigits: d, minimumFractionDigits: 0 });
 export const pct = (a: number, b: number, d = 1) => (b > 0 ? fmt((a / b) * 100, a / b < 0.1 ? d : 0) + "%" : "–");
 /* 1 234 → "1,2 E", 1 200 000 → "1,2 M" (axis ticks and tight spots) */
 export const compact = (n: number) => (Math.abs(n) >= 1e6 ? fmt(n / 1e6, 1) + " M" : Math.abs(n) >= 1e4 ? fmt(n / 1e3, 0) + " E" : Math.abs(n) >= 1e3 ? fmt(n / 1e3, 1) + " E" : fmt(n));
 
-/* Categorical colours (dark steps, validated in this order): a channel keeps its colour on every chart */
-export const SERIES = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767", "#0A66C2"];
-export const OTHER = "#6E6E73";
+/* Categorical steps: the accent, then a neutral ramp with two quiet bronzes; tokens in admin.css, so both themes work */
+export const SERIES = ["var(--ser-0)", "var(--ser-1)", "var(--ser-2)", "var(--ser-3)", "var(--ser-4)", "var(--ser-5)", "var(--ser-6)", "var(--ser-7)", "var(--ser-8)"];
+export const OTHER = "var(--ser-o)";
 const CH_ORDER = ["google", "instagram", "tiktok", "facebook", "pinterest", "youtube", "ai", "email", "linkedin"];
 export const chColor = (k: string) => { const i = CH_ORDER.indexOf((k || "").toLowerCase()); return i >= 0 ? SERIES[i] : OTHER; };
-export const GOLD = "#F3D58A";
+export const GOLD = "var(--acc)";
 /* the data accent (indigo in light mode, a lighter step in dark): from the admin.css tokens */
 export const ACC = "var(--acc)";
 
@@ -33,6 +55,8 @@ export function useWidth<T extends HTMLElement>() {
 /* round-number axis ticks */
 function ticks(max: number, n = 4) {
   if (max <= 0) return [0, 1];
+  /* small counts: whole steps (a max of 1 drew the axis 0, 0, 1, 1, 1) */
+  if (max <= n && Number.isInteger(max)) return Array.from({ length: max + 1 }, (_, i) => i);
   const raw = max / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
   const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) || raw;
   const top = Math.max(step, Math.ceil(max / step) * step);
@@ -63,15 +87,22 @@ export function project(data: Pt[], days: number, hourly?: boolean) {
 
 /** Area + line over time, the previous period dashed behind it, optional event marks (posts, releases) on the x-axis;
     optionally the next days projected (forecast), columns instead of a line (bars), and a click on a day (onPick). */
-export function TrendChart({ data, height = 260, label, prevLabel = "Előző időszak", hourly, unit = "", color = ACC, marks = [], goal, forecast = 0, bars, onPick }:
+export function TrendChart({ data: all, height = 260, label, prevLabel = "Előző időszak", hourly, unit = "", color = ACC, marks = [], goal, forecast = 0, bars, onPick }:
   { data: Pt[]; height?: number; label: string; prevLabel?: string; hourly?: boolean; unit?: string; color?: string; marks?: Mark[]; goal?: number; forecast?: number; bars?: boolean; onPick?: (t: string) => void }) {
+  height = useChartH(height);
   const [ref, w] = useWidth<HTMLDivElement>();
   const [hi, setHi] = useState<number | null>(null);
+  const phone = useNarrow(), lift = useTouchHold(() => setHi(null));
+  /* phone: two fingers zoom into a stretch of the days, like a stock app; the button under it brings all back */
+  const [view, setView] = useState<[number, number] | null>(null);
+  const span = useRef<{ d: number; cx: number; f: number; a: number; b: number } | null>(null);
+  useEffect(() => { setView(null); }, [all.length, all[0]?.t]);
+  const data = view ? all.slice(view[0], view[1] + 1) : all;
   const id = useRef("g" + Math.random().toString(36).slice(2, 8)).current;
   const padL = 40, padR = 10, padT = 14, padB = marks.length ? 34 : 26;
   const iw = Math.max(10, w - padL - padR), ih = height - padT - padB;
   const hasPrev = data.some((d) => d.p != null && d.p > 0);
-  const fc = forecast > 0 && data.length >= 7 ? project(data, forecast, hourly) : [];
+  const fc = forecast > 0 && !view && data.length >= 7 ? project(data, forecast, hourly) : [];
   const N = data.length + fc.length;
   const max = Math.max(1, goal || 0, ...data.map((d) => Math.max(d.v, hasPrev ? d.p || 0 : 0)), ...fc.map((f) => f.hi));
   const tk = ticks(max), top = tk[tk.length - 1];
@@ -90,12 +121,16 @@ export function TrendChart({ data, height = 260, label, prevLabel = "Előző id�
     const i = N <= 1 ? 0 : Math.round(((e.clientX - r.left - padL) / iw) * (N - 1));
     setHi(Math.max(0, Math.min(data.length - 1, i)));
   };
+  const finger = (t: React.TouchList) => ({ d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY), x: (t[0].clientX + t[1].clientX) / 2 });
+  const pinchStart = (e: React.TouchEvent<SVGSVGElement>) => { if (e.touches.length !== 2 || all.length < 8) return; const { d, x: cx } = finger(e.touches), r = e.currentTarget.getBoundingClientRect(), a = view ? view[0] : 0, b = view ? view[1] : all.length - 1; span.current = { d: Math.max(20, d), cx, f: Math.max(0, Math.min(1, (cx - r.left - padL) / iw)), a, b }; setHi(null); };
+  const pinchMove = (e: React.TouchEvent<SVGSVGElement>) => { const s = span.current; if (!s || e.touches.length !== 2) return; const { d, x: cx } = finger(e.touches), len = Math.max(4, Math.min(all.length - 1, Math.round((s.b - s.a) * (s.d / Math.max(20, d)))));
+    const mid = s.a + s.f * (s.b - s.a) - ((cx - s.cx) / iw) * len, a = Math.max(0, Math.min(all.length - 1 - len, Math.round(mid - s.f * len))); setView(len >= all.length - 1 ? null : [a, a + len]); setHi(null); };
   const last = data.length - 1;
   const peak = data.reduce((b, d, i) => (d.v > (data[b]?.v ?? -1) ? i : b), -1);
   return (
     <div className="chart" ref={ref} style={{ height }}>
       {w > 0 && (
-        <svg width={w} height={height} onPointerMove={move} onPointerLeave={() => setHi(null)} role="img" aria-label={label} onClick={onPick ? () => { if (hi != null && data[hi]) onPick(data[hi].t); } : undefined} style={onPick ? { cursor: "copy" } : undefined}>
+        <svg width={w} height={height} onPointerMove={(e) => { if (!span.current) move(e); }} onPointerDown={(e) => { if (e.pointerType !== "mouse") move(e); }} onPointerLeave={lift} onTouchStart={pinchStart} onTouchMove={pinchMove} onTouchEnd={(e) => { if (e.touches.length < 2) span.current = null; }} role="img" aria-label={phone && data.length ? `${label}: ${dayLab(data[0].t, hourly)} és ${dayLab(data[last].t, hourly)} között, legutóbb ${fmt(data[last].v)}${unit}, csúcs ${fmt(data[peak]?.v)}${unit}` : label} onClick={onPick ? () => { if (hi != null && data[hi]) onPick(data[hi].t); } : undefined} style={onPick ? { cursor: "copy" } : undefined}>
           <defs>
             <linearGradient id={id} x1="0" x2="0" y1="0" y2="1">
               <stop offset="0" stopColor={color} stopOpacity=".26" />
@@ -146,9 +181,12 @@ export function TrendChart({ data, height = 260, label, prevLabel = "Előző id�
           <b>{dayLong(data[hi].t, hourly)}</b>
           <div className="r"><span><i style={{ background: color }} />{label}</span><em>{fmt(data[hi].v)}{unit}</em></div>
           {hasPrev && <div className="r"><span><i className="dash" />{prevLabel}</span><em>{fmt(data[hi].p || 0)}{unit}</em></div>}
-          {mk.filter((m) => m.i === hi).map((m, j) => <div key={j} className="r note-r"><span>● {m.label}</span></div>)}
+          {phone && data[hi].partial && <div className="r note-r"><span>Ez a nap még nem teljes.</span></div>}
+          {mk.filter((m) => m.i === hi).slice(0, phone ? 3 : 99).map((m, j) => <div key={j} className="r note-r"><span>● {m.label}</span></div>)}
+          {phone && mk.filter((m) => m.i === hi).length > 3 && <div className="r note-r"><span>és még {mk.filter((m) => m.i === hi).length - 3} esemény</span></div>}
         </div>
       )}
+      {view && <button className="ch-zoom" onClick={() => setView(null)}>{dayLab(data[0].t, hourly)} – {dayLab(data[last].t, hourly)} · a teljes időszak</button>}
     </div>
   );
 }
@@ -156,8 +194,10 @@ export function TrendChart({ data, height = 260, label, prevLabel = "Előző id�
 /** Columns stacked per day: one colour per channel (legend + tooltip carry the names). */
 export function StackedColumns({ days, keys, height = 230, label = (k: string) => k, color = chColor }:
   { days: { t: string; v: Record<string, number> }[]; keys: string[]; height?: number; label?: (k: string) => string; color?: (k: string) => string }) {
+  height = useChartH(height);
   const [ref, w] = useWidth<HTMLDivElement>();
   const [hi, setHi] = useState<number | null>(null);
+  const lift = useTouchHold(() => setHi(null));
   const padL = 40, padB = 26, padT = 10;
   const iw = Math.max(10, w - padL), ih = height - padB - padT;
   const tot = days.map((d) => keys.reduce((s, k) => s + (d.v[k] || 0), 0));
@@ -168,7 +208,7 @@ export function StackedColumns({ days, keys, height = 230, label = (k: string) =
   return (
     <div className="chart" ref={ref} style={{ height }}>
       {w > 0 && (
-        <svg width={w} height={height} onPointerLeave={() => setHi(null)}>
+        <svg width={w} height={height} onPointerLeave={lift} onPointerMove={(e) => { if (e.pointerType !== "mouse") setHi(Math.max(0, Math.min(days.length - 1, Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().left - padL) / slot)))); }}>
           {tk.map((v) => <g key={v}><line className="gl" x1={padL} x2={w} y1={base - (v / top) * ih} y2={base - (v / top) * ih} /><text className="ax" x={padL - 10} y={base - (v / top) * ih + 4} textAnchor="end">{compact(v)}</text></g>)}
           {days.map((d, i) => {
             let acc = 0; const x0 = padL + slot * i + (slot - bw) / 2;
@@ -208,7 +248,7 @@ export function Spark({ values, h = 44, color = ACC }: { values: number[]; h?: n
     <div className="spark" ref={ref} style={{ height: h }} aria-hidden="true">
       {w > 0 && (
         <svg width={w} height={h}>
-          <defs><linearGradient id={id} x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={color} stopOpacity=".22" /><stop offset="1" stopColor={color} stopOpacity="0" /></linearGradient></defs>
+          <defs><linearGradient id={id} x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={color} stopOpacity=".4" /><stop offset="1" stopColor={color} stopOpacity="0" /></linearGradient></defs>
           <path d={`${p}L${w} ${h}L0 ${h}Z`} fill={`url(#${id})`} />
           <path d={p} fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" />
           <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="3" fill={color} />
@@ -220,8 +260,10 @@ export function Spark({ values, h = 44, color = ACC }: { values: number[]; h?: n
 
 /** Vertical columns for a small set of categories (hours of the day, score bands, weekdays). */
 export function Columns({ data, height = 180, unit = "", hiK }: { data: { k: string; v: number; tip?: string }[]; height?: number; unit?: string; hiK?: string }) {
+  height = useChartH(height);
   const [ref, w] = useWidth<HTMLDivElement>();
   const [hi, setHi] = useState<number | null>(null);
+  const lift = useTouchHold(() => setHi(null));
   const padL = 34, padB = 22, padT = 10;
   const iw = Math.max(10, w - padL), ih = height - padB - padT;
   const max = Math.max(1, ...data.map((d) => d.v));
@@ -232,7 +274,7 @@ export function Columns({ data, height = 180, unit = "", hiK }: { data: { k: str
   return (
     <div className="chart" ref={ref} style={{ height }}>
       {w > 0 && (
-        <svg width={w} height={height} onPointerLeave={() => setHi(null)}>
+        <svg width={w} height={height} onPointerLeave={lift} onPointerMove={(e) => { if (e.pointerType !== "mouse") setHi(Math.max(0, Math.min(data.length - 1, Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().left - padL) / slot)))); }}>
           {tk.map((v) => <g key={v}><line className="gl" x1={padL} x2={w} y1={y(v)} y2={y(v)} /><text className="ax" x={padL - 8} y={y(v) + 4} textAnchor="end">{compact(v)}</text></g>)}
           {data.map((d, i) => {
             const cx = padL + slot * i + slot / 2, hh = Math.max(d.v > 0 ? 3 : 0, (d.v / top) * ih);
@@ -284,7 +326,10 @@ export function BarList({ items, total, max = 8, empty = "Még nincs adat ebben 
 export function Donut({ items, size = 168, center, sub, color = chColor, label = (k: string) => k, onPick }:
   { items: { k: string; n: number }[]; size?: number; center?: React.ReactNode; sub?: React.ReactNode; color?: (k: string) => string; label?: (k: string) => string; onPick?: (k: string) => void }) {
   const [hi, setHi] = useState<string | null>(null);
+  const phone = useNarrow();
   const sorted = [...items].filter((i) => i.n > 0).sort((a, b) => b.n - a.n);
+  /* phone: more than three slices read better as bars */
+  if (phone && sorted.length > 3) return <div className="donut-bars">{(center != null || sub != null) && <p className="db-h"><b>{center}</b> {sub}</p>}<BarList items={sorted} color={color} fmtK={label} onPick={onPick} max={8} /></div>;
   const head = sorted.slice(0, 6), rest = sorted.slice(6).reduce((s, i) => s + i.n, 0);
   const parts = rest ? [...head, { k: "__other", n: rest }] : head;
   const tot = parts.reduce((s, i) => s + i.n, 0) || 1;
@@ -326,10 +371,9 @@ export function Ring({ value, size = 150, stroke = 12, children }: { value: numb
   return (
     <div className="ring" style={{ width: size, height: size }}>
       <svg width={size} height={size}>
-        <defs><linearGradient id="ringG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor="#C9A85B" /><stop offset="1" stopColor="#FBE7B0" /></linearGradient></defs>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,.07)" strokeWidth={stroke} />
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="url(#ringG)" strokeWidth={stroke} strokeLinecap="round"
-          strokeDasharray={`${shown * C} ${C}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} style={{ filter: "drop-shadow(0 0 10px rgba(243,213,138,.45))" }} />
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--a-s3)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--acc)" strokeWidth={stroke} strokeLinecap="round"
+          strokeDasharray={`${shown * C} ${C}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
       </svg>
       <div className="ring-c">{children}</div>
     </div>
@@ -351,14 +395,14 @@ export function Heatmap({ cells }: { cells: { w: number; h: number; n: number }[
             {Array.from({ length: 24 }, (_, h) => {
               const v = m.get((wi + 1) * 100 + h) || 0, a = v ? 0.12 + 0.88 * Math.sqrt(v / max) : 0;
               return <span key={h} className="heat-c" style={{ background: v ? `color-mix(in srgb, var(--acc) ${(a * 100).toFixed(0)}%, transparent)` : undefined }}
-                onPointerEnter={() => setHi({ w: wi, h, n: v })} onPointerLeave={() => setHi(null)} />;
+                onPointerEnter={() => setHi({ w: wi, h, n: v })} onPointerLeave={(e) => { if (e.pointerType === "mouse") setHi(null); }} onClick={() => setHi({ w: wi, h, n: v })} />;
             })}
           </div>
         ))}
         <div className="heat-r heat-x"><span className="heat-d" />{Array.from({ length: 24 }, (_, h) => <span key={h} className="heat-l">{h % 3 === 0 ? h : ""}</span>)}</div>
       </div>
       <div className="heat-foot">
-        <span>{hi ? <><b>{DL[hi.w]} {hi.h}:00–{hi.h}:59</b> · {fmt(hi.n)} látogatás</> : "Vidd az egeret egy cellára."}</span>
+        <span>{hi ? <><b>{DL[hi.w]} {hi.h}:00–{hi.h}:59</b> · {fmt(hi.n)} látogatás</> : (typeof window !== "undefined" && matchMedia("(hover:none)").matches ? "Koppints egy cellára." : "Vidd az egeret egy cellára.")}</span>
         <span className="heat-scale">kevés<i /><i /><i /><i /><i />sok</span>
       </div>
     </div>
@@ -371,12 +415,13 @@ export function Funnel({ steps, worst, accentK = "scored" }: { steps: { k: strin
   return (
     <div className="fnl">
       {steps.map((s, i) => {
-        const w = Math.max(1.5, (s.n / base) * 100), rate = s.prev ? s.n / s.prev : null;
+        /* one share can bring more people than the step before it: then it is not a funnel share, and is said as growth */
+        const w = Math.min(100, Math.max(1.5, (s.n / base) * 100)), rate = s.prev ? s.n / s.prev : null, over = s.n > base && i > 0;
         return (
           <div key={s.k} className={"fnl-s" + (s.k === worst ? " worst" : "") + (s.k === accentK ? " acc" : "")}>
             <div className="fnl-l"><b>{s.l}</b>{s.sub && <small>{s.sub}</small>}</div>
             <div className="fnl-b"><i style={{ width: w + "%" }} /><span style={w > 22 ? undefined : { left: `calc(${w}% + 10px)`, color: "var(--a-fg)" }}><CountUp v={s.n} /></span></div>
-            <div className="fnl-v"><b>{pct(s.n, base)}</b>{i > 0 && rate != null && <small className={rate < 0.6 && (s.prev || 0) >= 5 ? "drop" : ""}>{rate >= 1 ? "" : "−"}{fmt(Math.abs(1 - rate) * 100)}% az előzőhöz</small>}</div>
+            <div className="fnl-v"><b>{!steps[0]?.n && i > 0 ? "–" : over ? "több" : pct(s.n, base)}</b>{i > 0 && rate != null && <small className={rate < 0.6 && (s.prev || 0) >= 5 ? "drop" : ""}>{rate > 1 ? "+" : rate < 1 ? "−" : ""}{fmt(Math.abs(1 - rate) * 100)}% az előzőhöz</small>}</div>
           </div>
         );
       })}
@@ -389,20 +434,25 @@ export const PrevPartialCtx = createContext(false);
 export function Delta({ now, prev, invert }: { now: number; prev: number; invert?: boolean }) {
   const partial = useContext(PrevPartialCtx);
   if (!prev && !now) return <span className="delta flat">–</span>;
-  if (!prev) return partial ? <span className="delta flat" title="Az előző időszakban még nem volt mérés">nincs előző</span> : <span className="delta up">új</span>;
+  if (!prev) return partial ? <span className="delta flat" title="Az előző időszakban még nem volt mérés">nincs előző</span> : <span className="delta up">↑ új</span>;
   const d = ((now - prev) / prev) * 100;
-  const good = invert ? d < 0 : d > 0;
-  const cls = Math.abs(d) < 0.5 ? "flat" : good ? "up" : "down";
-  return <span className={"delta " + cls} title={`Előző időszak: ${fmt(prev)}`}>{d > 0 ? "↑" : d < 0 ? "↓" : ""} {fmt(Math.abs(d), Math.abs(d) < 10 ? 1 : 0)}%</span>;
+  /* the pill says the direction: full and ↑ when it rose, outlined and ↓ when it fell (even where less is better: the card says that) */
+  const cls = Math.abs(d) < 0.5 ? "flat" : d > 0 ? "up" : "down"; void invert;
+  const arr = cls === "up" ? "↑ " : cls === "down" ? "↓ " : "";
+  /* phone: on small counts a percent exaggerates (1 → 2 is not a "+100%" story): the numbers themselves; a rate or an average stays a percent */
+  if (typeof window !== "undefined" && matchMedia("(max-width:980px)").matches && prev < 10 && now < 100 && Number.isInteger(prev) && Number.isInteger(now)) return <span className={"delta " + cls} title={`Előző időszak: ${fmt(prev)}`}>{arr}{fmt(prev)} → {fmt(now)}</span>;
+  return <span className={"delta " + cls} title={`Előző időszak: ${fmt(prev)}`}>{arr}{fmt(Math.abs(d), Math.abs(d) < 10 ? 1 : 0)}%</span>;
 }
 
 /** Empty state: what will appear here, how to get it, and a faint sketch of the chart behind it. */
-export function Empty({ t, title, icon = "M3 12h18M12 3v18", children, ghost = true }: { t: React.ReactNode; title?: string; icon?: string; children?: React.ReactNode; ghost?: boolean }) {
+const NOICON = "M3 12h18M12 3v18";
+export function Empty({ t, title, icon = NOICON, children, ghost = true }: { t: React.ReactNode; title?: string; icon?: string; children?: React.ReactNode; ghost?: boolean }) {
   return (
     <div className="empty">
       {ghost && <div className="ghost" aria-hidden="true">{[40, 62, 48, 75, 58, 82, 66, 90, 72, 95, 80, 70, 86, 64].map((h, i) => <i key={i} style={{ height: h + "%" }} />)}</div>}
       <div className="empty-glass">
-        <span className="empty-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={icon} /></svg></span>
+        {icon === NOICON ? <svg className="empty-m" viewBox="0 0 72 40" fill="none" aria-hidden="true"><path pathLength={1} d="M4 28C9 15 15 4 19 6c4 2-5 21-7 27 6-10 11-15 14-14 3 1-2 9 1 9 5 0 8-11 12-10 3 1-1 9 2 9 5 0 9-10 13-9 3 1-1 8 2 8 3 0 7-4 12-9" /><path pathLength={1} className="b" d="M10 37c16-2 36-2 52-1" /></svg>
+          : <span className="empty-m ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d={icon} /></svg></span>}
         {title && <b className="et">{title}</b>}
         <p>{t}</p>{children}
       </div>
@@ -413,25 +463,38 @@ export function Empty({ t, title, icon = "M3 12h18M12 3v18", children, ghost = t
 /** A number that counts up from zero when it first appears (600 ms; instant with reduced motion). */
 export function CountUp({ v, d = 0, fmtFn }: { v: number; d?: number; fmtFn?: (n: number) => string }) {
   const [shown, setShown] = useState(v);
-  const from = useRef(0);
+  const from = useRef(0), first = useRef(true); const [tick, setTick] = useState(0);
   useEffect(() => {
     const target = Number(v) || 0, start = from.current;
+    if (!first.current && start !== target) setTick((x) => x + 1);
+    first.current = false;
     if (typeof window === "undefined" || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || start === target) { setShown(target); from.current = target; return; }
     let raf = 0; const t0 = performance.now();
-    const step = (t: number) => { const k = Math.min(1, (t - t0) / 600), e = 1 - Math.pow(1 - k, 3); setShown(start + (target - start) * e); if (k < 1) raf = requestAnimationFrame(step); else from.current = target; };
+    const step = (t: number) => { const k = Math.max(0, Math.min(1, (t - t0) / 600)), e = 1 - Math.pow(1 - k, 3); setShown(start + (target - start) * e); if (k < 1) raf = requestAnimationFrame(step); else from.current = target; };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [v]);
   const r = d ? shown : Math.round(shown);
-  return <>{fmtFn ? fmtFn(r) : fmt(r, d)}</>;
+  const txt = fmtFn ? fmtFn(r) : fmt(r, d);
+  return tick ? <span className="ink-tick" key={tick}>{txt}</span> : <>{txt}</>;
+}
+
+/** A rounded number that shows its exact value on a tap (1,2 E → 1 234) */
+export function Num({ v, d = 0 }: { v: number | null | undefined; d?: number }) {
+  const [ex, setEx] = useState(false);
+  if (v == null) return <>–</>;
+  if (Math.abs(v) < 1000) return <>{fmt(v, d)}</>;
+  return <button type="button" className="num-t" aria-label={`Pontosan ${fmt(v, d)}`} onClick={(e) => { e.stopPropagation(); setEx(!ex); }}>{ex ? fmt(v, d) : compact(v)}</button>;
 }
 
 /** ⓘ with the explanation on hover / focus: the card keeps only its title. */
 export function Info({ children }: { children: React.ReactNode }) {
   /* hover or focus on a computer; a tap opens it (on a phone as a small sheet from the bottom), a second tap closes */
   const [open, setOpen] = useState(false);
+  /* the explanation stays on the screen: pulled back from whichever edge it would cross */
+  const fit = (e: React.SyntheticEvent<HTMLElement>) => { const p = e.currentTarget.querySelector<HTMLElement>(".pop"); if (!p) return; p.style.setProperty("--pop-dx", "0px"); const r = p.getBoundingClientRect(), W = document.documentElement.clientWidth, dx = r.right > W - 12 ? W - 12 - r.right : r.left < 12 ? 12 - r.left : 0; p.style.setProperty("--pop-dx", dx + "px"); };
   useEffect(() => { if (!open) return; const c = () => setOpen(false); const t = setTimeout(() => addEventListener("click", c), 0); return () => { clearTimeout(t); removeEventListener("click", c); }; }, [open]);
-  return <i className={"info" + (open ? " open" : "")} tabIndex={0} aria-label="Magyarázat" aria-expanded={open} onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>i<span className="pop" role="tooltip">{children}</span></i>;
+  return <i className={"info" + (open ? " open" : "")} tabIndex={0} aria-label="Magyarázat" aria-expanded={open} onMouseEnter={fit} onFocus={fit} onClick={(e) => { fit(e); e.stopPropagation(); setOpen(!open); }}>i<span className="pop" role="tooltip">{children}</span></i>;
 }
 
 /** Milestones toward the goal: always the next step large, so there is something to reach this month. */
@@ -454,6 +517,7 @@ export function Milestones({ value, goal = 1_000_000, unit = "előnézet", perDa
 export type SNode = { id: string; l: string; color?: string };
 export type SLink = { a: string; b: string; v: number; color?: string };
 export function Sankey({ layers, links, height = 300 }: { layers: SNode[][]; links: SLink[]; height?: number }) {
+  height = useChartH(height);
   const [ref, w] = useWidth<HTMLDivElement>();
   const [hi, setHi] = useState<number | null>(null);
   const nodeW = 12, padY = 10, gap = 10, labW = 132;
@@ -497,6 +561,7 @@ export function Sankey({ layers, links, height = 300 }: { layers: SNode[][]; lin
 
 /** Bubble scatter: x = size (log scale), y = a rate; ≤ 12 labelled dots. */
 export function Scatter({ pts, xl, yl, height = 280 }: { pts: { k: string; l: string; x: number; y: number; r?: number }[]; xl: string; yl: string; height?: number }) {
+  height = useChartH(height);
   const [ref, w] = useWidth<HTMLDivElement>();
   const [hi, setHi] = useState<number | null>(null);
   const padL = 46, padB = 34, padT = 12, padR = 16;

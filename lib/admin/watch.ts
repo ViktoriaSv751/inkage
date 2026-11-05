@@ -10,33 +10,45 @@ const rows = (table: string, r: Record<string, unknown>[]) => (r.length ? call<n
 const get = (url: string, ms = 10000, headers: Record<string, string> = {}) => fetch(url, { signal: AbortSignal.timeout(ms), headers: { "user-agent": "InkAgeWatch/1.0 (+https://inkage.app)", ...headers } });
 const strip = (h: string) => h.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, " ").trim();
 /* "InkAge" alone can mean other things: only mentions of inkage.app, or InkAge together with tattoos (in the main languages) */
-const ours = (t: string) => /inkage\.app/i.test(t) || (/inkage/i.test(t) && /tattoo|tetoválás|tetov|tätowier|tatuaje|tatuagem|tatouage|tatuaggi|tatuaż|tatoeage|dövme|tatuering|tatovering|тату/i.test(t));
-/* an AI answer line naming InkAge: ours, unless it is clearly about an office suite (a name clash kept from the template) */
+/* InkAge as its own word (also with a Hungarian ending) */
+const WORD = /\binkage(?:\b|[a-zé]{0,4}\b)/i;
+const ours = (t: string) => /inkage\.app/i.test(t) || (WORD.test(t) && /tattoo|tetoválás|tetov|tätowier|tatuaje|tatuagem|tatouage|tatuaggi|tatuaż|tatoeage|dövme|tatuering|tatovering|тату/i.test(t));
+/* an AI answer line naming InkAge: ours, unless it is clearly about something else of that name */
 const SUITE = /inkage\s*(suite|office|words|sheets|stage|plan|flow|karbon|author)|\bkde\b|koffice|libreoffice|openoffice|office suite|irodai (programcsomag|csomag)/i;
-const oursAi = (line: string) => /inkage\.app/i.test(line) || (/inkage/i.test(line) && !SUITE.test(line));
+const oursAi = (line: string) => /inkage\.app/i.test(line) || (WORD.test(line) && !SUITE.test(line));
 
 export async function syncMentions() {
   const out: Record<string, unknown>[] = [];
+  /* what each place did on this run: shown on the Márka page instead of one big 0 */
+  const st: Record<string, { state: string; note: string }> = {};
   const hn = await get("https://hn.algolia.com/api/v1/search_by_date?query=inkage.app&tags=(story,comment)").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  st.hackernews = hn ? { state: "ok", note: "fut" } : { state: "error", note: "nem válaszolt" };
   for (const h of hn?.hits || []) out.push({ source: "hackernews", id: String(h.objectID), title: h.title || h.story_title || "Hacker News", url: h.url || `https://news.ycombinator.com/item?id=${h.objectID}`, author: h.author, snippet: strip(h.comment_text || h.story_text || "").slice(0, 300), at: h.created_at });
   /* Reddit often blocks server addresses (403, or an HTML page): that is a failed source, not "no mentions" */
   let rdErr = "";
   const rd = await get("https://www.reddit.com/search.json?q=%22inkage.app%22%20OR%20%22inkage%20app%22&sort=new&limit=25")
     .then(async (r) => { const j = r.ok ? await r.json().catch(() => null) : null; if (!j?.data) rdErr = r.ok ? "nem JSON-t adott" : `HTTP ${r.status}`; return j; })
     .catch((e) => { rdErr = /abort|timeout/i.test(String((e as Error)?.name || e)) ? "időtúllépés" : "nem válaszolt"; return null; });
+  st.reddit = rdErr ? { state: "blocked", note: `a Reddit nem engedi a szerverünket (${rdErr})` } : { state: "ok", note: "fut" };
   for (const c of rd?.data?.children || []) { const p = c.data || {}; out.push({ source: "reddit", id: String(p.id), title: p.title, url: `https://www.reddit.com${p.permalink}`, author: p.author, snippet: String(p.selftext || "").slice(0, 300), at: p.created_utc ? new Date(p.created_utc * 1000).toISOString() : null }); }
+  st.news = { state: "error", note: "nem válaszolt" };
   for (const hl of ["hu", "en"]) {
     const x = await get(`https://news.google.com/rss/search?q=%22inkage.app%22&hl=${hl}`).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+    if (x) st.news = { state: "ok", note: "fut" };
     for (const it of x.split("<item>").slice(1, 20)) { const t = strip(it.match(/<title>([\s\S]*?)<\/title>/)?.[1] || ""), l = strip(it.match(/<link>([\s\S]*?)<\/link>/)?.[1] || ""); out.push({ source: "news", id: l.slice(-120), title: t, url: l, author: strip(it.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1] || ""), snippet: "", at: it.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1] ? new Date(it.match(/<pubDate>([\s\S]*?)<\/pubDate>/)![1]).toISOString() : null }); }
   }
   /* YouTube: videos that mention inkage.app (with the channel's own sign-in, or a YouTube API key) */
-  const yt = await accToken("youtube").catch(() => null), ykey = env().YOUTUBE_API_KEY;
+  let ytBad = false;
+  const yt = await accToken("youtube").catch(() => { ytBad = true; return null; }), ykey = env().YOUTUBE_API_KEY;
+  st.youtube = yt || ykey ? { state: "ok", note: "fut" } : ytBad ? { state: "error", note: "a YouTube-kapcsolat nem használható: kösd be újra" } : { state: "off", note: "nem fut: nincs YouTube-kapcsolat és YouTube API-kulcs" };
   if (yt || ykey) {
     const j = await get(`${GRAPH.YT}/search?part=snippet&type=video&order=date&maxResults=20&q=%22inkage.app%22${ykey && !yt ? "&key=" + ykey : ""}`, 10000, yt ? { authorization: `Bearer ${yt.tok}` } : {}).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     for (const v of j?.items || []) out.push({ source: "youtube", id: v.id?.videoId, title: v.snippet?.title, url: `https://www.youtube.com/watch?v=${v.id?.videoId}`, author: v.snippet?.channelTitle, snippet: String(v.snippet?.description || "").slice(0, 300), at: v.snippet?.publishedAt });
   }
   /* Instagram: the newest posts of the #inkage hashtag (through the Facebook connection) */
-  const ig = await accToken("instagram").catch(() => null);
+  let igBad = false;
+  const ig = await accToken("instagram").catch(() => { igBad = true; return null; });
+  st.instagram = ig?.viaFacebook && ig.id ? { state: "ok", note: "fut" } : igBad ? { state: "error", note: "az Instagram-kapcsolat nem használható: kösd be újra" } : { state: "off", note: "nem fut: a hashtag-keresés csak a Facebook-oldalon át kötött Instagrammal megy" };
   if (ig?.viaFacebook && ig.id) {
     const h = await get(`${GRAPH.FB}/ig_hashtag_search?user_id=${ig.id}&q=inkage&access_token=${encodeURIComponent(ig.tok)}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     const hid = h?.data?.[0]?.id;
@@ -47,13 +59,18 @@ export async function syncMentions() {
   }
   const keep = out.filter((x) => x.id && (x.source === "instagram" || ours(`${x.title} ${x.snippet} ${x.url}`)));
   const n = await rows("brand_mentions", keep);
+  const at = new Date().toISOString();
+  await rows("brand_sources", Object.entries(st).map(([source, s]) => ({ source, state: s.state, note: s.note, n: s.state === "ok" ? keep.filter((x) => x.source === source).length : null, at }))).catch(() => null);
   for (const x of keep.slice(0, 3)) await notifyOne("mention", `${x.source}:${x.id}`, `Említés: ${x.source === "news" ? "hír" : x.source}`, String(x.title || x.snippet || "").slice(0, 140), "/admin#brand").catch(() => null);
   /* "részben:" keeps the daily watch green but the freshness row shows the mentions as incomplete (Reddit blocks often) */
-  return rdErr ? `részben: a Reddit kimaradt (${rdErr}); ${n} említés a többi forrásból` : `${n} említés`;
+  const off = Object.entries(st).filter(([k, s]) => k !== "reddit" && s.state === "off").map(([k]) => k), bad = Object.entries(st).filter(([k, s]) => k !== "reddit" && s.state === "error").map(([k]) => k);
+  const gaps = [rdErr ? `a Reddit kimaradt (${rdErr})` : "", off.length ? `nem fut: ${off.join(", ")}` : "", bad.length ? `hibás: ${bad.join(", ")}` : ""].filter(Boolean);
+  return gaps.length ? `részben: ${gaps.join(", ")}; ${n} említés a többi forrásból` : `${n} említés`;
 }
 
 /* competitors' public numbers: Instagram (Business Discovery, through the Facebook connection) and YouTube */
 export async function syncSocialCompetitors(list: { platform: string; handle: string }[]) {
+  if (!list.length) return "nincs felvéve versenytárs";
   const day = new Date().toISOString().slice(0, 10), out: Record<string, unknown>[] = [];
   const ig = await accToken("instagram").catch(() => null), yt = await accToken("youtube").catch(() => null), ykey = env().YOUTUBE_API_KEY;
   for (const c of list) {
@@ -126,10 +143,12 @@ export async function syncAiVisibility() {
       if (!a) { errs.push(`${model}: ${err || "üres válasz"}`); continue; }
       /* the apps it names, in its order: numbered or bulleted lines, the bold or the first words */
       const lines = a.split("\n"), named = lines.map((l) => ({ l, k: l.match(/^\s*(?:\d+[.)]|[-*•])\s*\**([^*:–—\-(]{2,40})/)?.[1]?.trim() })).filter((x): x is { l: string; k: string } => !!x.k);
-      /* the KDE office suite named "InkAge" is not us: judged by the line it stands in */
-      const rank = named.findIndex((x) => /inkage/i.test(x.k) && oursAi(x.l));
+      /* a place only from a numbered list, as the answer numbered it; counting every bullet made up places. The KDE office
+         suite named "InkAge" (or anything else of that name) is not us: judged by the line it stands in */
+      const place = lines.find((l) => /^\s*\d+[.)]/.test(l) && oursAi(l));
+      const rank = place ? Number(place.match(/^\s*(\d+)/)![1]) : null;
       try {
-        saved += await rows("ai_visibility", [{ day, model, question: q, lang, mentioned: lines.some(oursAi), rank: rank >= 0 ? rank + 1 : null, competitors: named.filter((x) => !/inkage/i.test(x.k)).map((x) => x.k).slice(0, 8), answer: a.slice(0, 1800) }]);
+        saved += await rows("ai_visibility", [{ day, model, question: q, lang, mentioned: lines.some(oursAi), rank, competitors: named.filter((x) => !WORD.test(x.k)).map((x) => x.k).slice(0, 8), answer: a.slice(0, 8000) }]);
       } catch (x) { errs.push(`${model}: mentés: ${String((x as Error)?.message || x).slice(0, 60)}`); }
     }
   }));
@@ -155,8 +174,13 @@ export async function syncCerts() {
   const out: Record<string, unknown>[] = [];
   for (const host of ["inkage.app"]) {
     const c = await cert(host);
-    const rd = await get(`https://rdap.org/domain/${host}`, 10000).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-    const exp = ((rd?.events || []) as { eventAction: string; eventDate: string }[]).find((e) => e.eventAction === "expiration")?.eventDate || null;
+    /* rdap.org has no route for .me (404, checked 2026-11-01): the registry's own public RDAP answers */
+    let exp: string | null = null;
+    for (const u of [`https://rdap.org/domain/${host}`, `https://rdap.identitydigital.services/rdap/domain/${host}`]) {
+      const rd = await get(u, 10000).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      exp = ((rd?.events || []) as { eventAction: string; eventDate: string }[]).find((e) => e.eventAction === "expiration")?.eventDate || null;
+      if (exp) break;
+    }
     /* a failed read keeps the last known dates (only the columns present are written) */
     out.push({ host, ...(c.valid_to ? { valid_to: c.valid_to, issuer: c.issuer } : {}), ...(exp ? { domain_expires: exp } : {}), checked_at: new Date().toISOString() });
     if (!c.valid_to) { await rows("cert_status", out); throw new Error(`${host}: a tanúsítvány nem olvasható`); }

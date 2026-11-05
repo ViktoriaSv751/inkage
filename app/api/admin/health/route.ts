@@ -8,7 +8,7 @@ export const maxDuration = 30;
    wrong, and on Mondays anyway ("minden rendben"), so a silent failure of the check itself gets noticed too.
    Besides the database's own checks (jobs, outages, the preview canary, errors, data sources), the app's path is
    tried from outside: the app page, its settings and the knowledge base must load. */
-type H = { problems: { k: string; t: string }[]; stats: { sessions: number; scored: number; signups: number } };
+type H = { problems: { k: string; t: string }[]; standing?: { k: string; t: string }[]; stats: { sessions: number; scored: number; signups: number } };
 const esc = (t: string) => String(t || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
 async function appPath(): Promise<string[]> {
@@ -28,23 +28,27 @@ async function check(force = false) {
   const h = await call<H>("admin_r_health");
   const problems = [...(h.problems || []).map((p) => p.t), ...(await appPath())];
   const monday = new Date().toLocaleDateString("en-US", { timeZone: "Europe/Budapest", weekday: "short" }) === "Mon";
-  if (!problems.length && !monday && !force) return { ok: true, email: "nem kellett (minden rendben)", problems: 0 };
+  /* what a source does not bring (no store keys, Bing empty, Reddit blocked…) stays until she acts or the source changes:
+     it is on Monitoring every day and in the Monday e-mail, not in a daily e-mail of its own */
+  const standing = (h.standing || []).map((p) => p.t);
+  if (!problems.length && !monday && !force) return { ok: true, email: "nem kellett (nincs új leállás)", problems: 0, tartos: standing.length };
   const key = env().RESEND_API_KEY;
   const to = await call<string[]>("admin_r_recipients").catch(() => [] as string[]);
   if (!key || !to.length) return { ok: true, email: key ? "hiba: nincs címzett" : "nincs bekötve: nincs RESEND_API_KEY", problems: problems.length };
   const s = h.stats || { sessions: 0, scored: 0, signups: 0 };
-  const subject = problems.length ? `InkAge · ${problems.length} dolog nem működik` : "InkAge · minden rendben (hétfői ellenőrzés)";
+  const subject = problems.length ? `InkAge · ${problems.length} dolog nem működik` : standing.length ? `InkAge · nincs leállás, de ${standing.length} forrás hiányos (hétfői ellenőrzés)` : "InkAge · minden rendben (hétfői ellenőrzés)";
   const html = `<!doctype html><html><body style="margin:0;background:#060607;font-family:-apple-system,Segoe UI,Inter,Arial,sans-serif;color:#F4F2EC">
 <div style="max-width:560px;margin:0 auto;padding:28px 22px">
   <div style="color:#F3D58A;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700">InkAge · napi ellenőrzés</div>
-  <h1 style="font-size:22px;margin:8px 0 14px">${problems.length ? "Ezt nézd meg" : "Minden rendben"}</h1>
+  <h1 style="font-size:22px;margin:8px 0 14px">${problems.length ? "Ezt nézd meg" : standing.length ? "Nincs leállás, de van hiányos forrás" : "Minden rendben"}</h1>
   ${problems.length ? problems.map((p) => `<div style="margin:8px 0;padding:10px 12px;border-radius:12px;background:#2A1512;color:#FFD9D2;font-size:14px">● ${esc(p)}</div>`).join("") : `<p style="color:#A3A3A8;font-size:14px">Az időzített feladatok, az elérhetőség, az előnézetek, a hibák és az adatforrások mind rendben vannak.</p>`}
+  ${standing.length ? `<div style="color:#A3A3A8;font-size:13px;margin-top:14px">Ezek a források hiányosak:</div>${standing.map((p) => `<div style="margin:6px 0;padding:8px 12px;border-radius:12px;background:#231D10;color:#F3D58A;font-size:13px">● ${esc(p)}</div>`).join("")}` : ""}
   <p style="color:#A3A3A8;font-size:13px;margin-top:16px">Az elmúlt 24 óra: ${s.sessions} látogatás · ${s.scored} kész előnézet · ${s.signups} regisztráció</p>
   <a href="${SITE}/admin#monitor" style="display:inline-block;margin-top:16px;background:#F3D58A;color:#141008;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:12px">Monitoring megnyitása</a>
 </div></body></html>`;
   const r = await fetch("https://api.resend.com/emails", { method: "POST", signal: AbortSignal.timeout(15000), headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", to, subject, html, text: [subject, ...problems.map((p) => "• " + p), `${SITE}/admin#monitor`].join("\n") }) }).catch(() => null);
-  return { ok: true, email: r?.ok ? "elküldve" : "hiba " + (r ? r.status : "időtúllépés"), problems: problems.length, ...(problems.length ? { hibak: problems.join(" · ").slice(0, 300) } : {}) };
+    body: JSON.stringify({ from: env().RESEND_FROM || "InkAge <hello@inkage.app>", to, subject, html, text: [subject, ...problems.map((p) => "• " + p), ...standing.map((p) => "• " + p), `${SITE}/admin#monitor`].join("\n") }) }).catch(() => null);
+  return { ok: true, email: r?.ok ? "elküldve" : "hiba " + (r ? r.status : "időtúllépés"), problems: problems.length, tartos: standing.length, ...(problems.length ? { hibak: problems.join(" · ").slice(0, 300) } : {}) };
 }
 
 export async function GET(req: Request) {

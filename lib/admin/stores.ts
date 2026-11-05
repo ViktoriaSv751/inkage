@@ -63,7 +63,7 @@ async function appleReviews(tok: string) {
    last 60 days (the report is kept for a year), then the last 7. */
 async function appleDownloads(tok: string) {
   const vendor = env().ASC_VENDOR_NUMBER;
-  if (!vendor) return 0;
+  if (!vendor) { await log("apple_keys", true, 0, "kihagyva: nincs vendor number, ezért nincsenek napi letöltésszámok (Kapcsolatok → App Store Connect)"); return 0; }
   const appId = String(env().ASC_APP_ID || "");
   const back0 = (await has()).apple ? 7 : 60;
   let total = 0;
@@ -138,7 +138,7 @@ async function playReport(tok: string, path: string) {
    country, and the ratings (the store's real average, not only the reviews we downloaded). The current and the last
    month every day (so the last days of a month are not lost), the last 12 months on the first run. */
 async function googleInstalls() {
-  if (!env().PLAY_REPORTS_BUCKET) return 0;
+  if (!env().PLAY_REPORTS_BUCKET) { await log("google_keys", true, 0, "kihagyva: nincs megadva a jelentések tárhelye, ezért nincsenek telepítésszámok (Kapcsolatok → Google Play)"); return 0; }
   const tok = await googleToken("https://www.googleapis.com/auth/devstorage.read_only");
   const back = (await has()).google ? 1 : 12;
   let total = 0;
@@ -301,14 +301,24 @@ export async function syncStores() {
     const a = await part("apple_reviews", () => appleReviews(tok)), b = await part("apple_sales", () => appleDownloads(tok)), c = await part("apple_analytics", () => appleAnalytics(tok));
     const ok = a >= 0 || b >= 0;
     await log("apple", ok, Math.max(0, a) + Math.max(0, b), `${a < 0 ? "értékelés: hiba" : a + " értékelés"}, ${b < 0 ? "letöltés: hiba" : b + " letöltési sor"}, ${c < 0 ? "analitika: hiba" : c + " analitikai sor"}`);
-    out.apple = ok ? `${Math.max(0, a)} értékelés` : "hiba";
+    /* a part that failed is said in the summary too: the run then reads "hiányos" on Monitoring, not "rendben" */
+    const miss = [a < 0 ? "értékelés" : "", b < 0 ? "letöltés" : "", c < 0 ? "analitika" : ""].filter(Boolean).join(", ");
+    out.apple = !ok ? "hiba" : miss ? `részben: nem jött: ${miss}` : `${a} értékelés, ${b} letöltési sor`;
+  } else if (!(e.ASC_ISSUER_ID && e.ASC_KEY_ID && e.ASC_PRIVATE_KEY && e.ASC_APP_ID)) {
+    /* no keys: written down every morning, so the page and Monitoring can say why there is no number */
+    await log("apple_keys", true, 0, "kihagyva: nincs App Store-kulcs (Kapcsolatok → App Store Connect)");
+    out.apple = "kihagyva: nincs kulcs";
   }
   if (e.PLAY_SERVICE_ACCOUNT_JSON) {
     const part = async (src: string, f: () => Promise<number>) => { try { const k = await f(); await log(src, true, k, `${k} sor`); return k; } catch (x) { await log(src, false, null, String((x as Error)?.message || x)); return -1; } };
     const a = await part("google_reviews", googleReviews), b = await part("google_installs", googleInstalls), c = await part("google_quality", googleQuality);
     const ok = a >= 0 || b >= 0;
     await log("google", ok, Math.max(0, a) + Math.max(0, b), `${a < 0 ? "értékelés: hiba" : a + " értékelés"}, ${b < 0 ? "telepítés: hiba" : b + " telepítési sor"}, ${c < 0 ? "minőség: hiba" : c + " minőségi sor"}`);
-    out.google = ok ? `${Math.max(0, a)} értékelés` : "hiba";
+    const miss = [a < 0 ? "értékelés" : "", b < 0 ? "telepítés" : "", c < 0 ? "minőség" : ""].filter(Boolean).join(", ");
+    out.google = !ok ? "hiba" : miss ? `részben: nem jött: ${miss}` : `${a} értékelés, ${b} telepítési sor`;
+  } else {
+    await log("google_keys", true, 0, "kihagyva: nincs Google Play-kulcsfájl (Kapcsolatok → Google Play)");
+    out.google = "kihagyva: nincs kulcs";
   }
   return out;
 }

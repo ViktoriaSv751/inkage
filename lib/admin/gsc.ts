@@ -87,12 +87,21 @@ export async function syncGsc() {
         if (type === "image" || type === "video") for (const x of await sa(tok, site, { ...range, type, dimensions: ["date", "query"] }, 50_000)) typed.push({ day: x.keys![0], type, query: String(x.keys![1]).slice(0, 300), clicks: Math.round(x.clicks), impressions: Math.round(x.impressions), position: x.position ?? null });
       } catch (e) { miss.push(`${type}: ${String((e as Error)?.message || e).slice(0, 80)}`); }
     }
+    /* by page, by country, by device, each asked on its own: these keep the searches Google hides from the query rows, so
+       they add up to (nearly) the real total. The first run reaches back the whole 16 months, then the last 7 days */
+    const dims: Record<string, unknown>[] = [];
+    const dimRange = (await call<boolean>("admin_r_gsc_dims_has").catch(() => false)) ? range : totRange;
+    for (const dim of ["page", "country", "device"]) {
+      try { for (const x of await sa(tok, site, { ...dimRange, type: "web", dimensions: ["date", dim] })) dims.push({ day: x.keys![0], dim, val: String(x.keys![1]).slice(0, 500), clicks: Math.round(x.clicks), impressions: Math.round(x.impressions), position: x.position ?? null }); }
+      catch (e) { miss.push(`${dim}: ${String((e as Error)?.message || e).slice(0, 80)}`); }
+    }
     /* the totals never stop the main rows (e.g. before the database update that adds their table) */
     try {
       for (let i = 0; i < tot.length; i += 500) await growthRows("gsc_totals", tot.slice(i, i + 500));
       for (let i = 0; i < typed.length; i += 500) await growthRows("gsc_search_type", typed.slice(i, i + 500));
+      for (let i = 0; i < dims.length; i += 500) await growthRows("gsc_dims", dims.slice(i, i + 500));
     } catch (e) { miss.push(`mentés: ${String((e as Error)?.message || e).slice(0, 80)}`); }
-    await log("gsc", true, total, `${total} sor, ${tot.length} napi összesítő (${day(start)} – ${day(end)})${miss.length ? " · nem jött: " + miss.join("; ") : ""}`);
+    await log("gsc", true, total, `${total} sor, ${tot.length} napi összesítő, ${dims.length} oldal/ország/eszköz-sor (${day(start)} – ${day(end)})${miss.length ? " · nem jött: " + miss.join("; ") : ""}`);
     return `${total} sor`;
   } catch (e) {
     const m = String((e as Error)?.message || e);
@@ -131,7 +140,9 @@ export async function syncIndex() {
       const x = j.inspectionResult?.indexStatusResult || {};
       rows.push({ url, verdict: x.verdict || null, coverage: x.coverageState || null, indexing: x.indexingState || null, fetch_state: x.pageFetchState || null,
         robots: x.robotsTxtState || null, last_crawl: x.lastCrawlTime || null, canonical_google: x.googleCanonical || null, canonical_user: x.userCanonical || null,
-        mobile: null, checked_at: new Date().toISOString() });
+        mobile: null, checked_at: new Date().toISOString(),
+        /* the page's own link to its inspection in Search Console: its id is Google's, it cannot be built from the address */
+        inspect_link: j.inspectionResult?.inspectionResultLink || null });
     };
     /* four at a time, until ~3 minutes have passed (the route has five; a started request can take 20 s more, then
        the writes and the sitemaps) or Google says the day's quota is used up; the rest go first next run */

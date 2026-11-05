@@ -25,7 +25,7 @@ export function Stories({ items }: { items: Story[] }) {
       <div className="st-bars">{items.map((_, k) => <i key={k} className={k <= i ? "on" : ""} onClick={() => go(k)} />)}</div>
       <div className="st-row" ref={ref}>
         {items.map((s, k) => (
-          <article key={k} className={`story t-${s.tone}`}>
+          <article key={k} className="story">
             <span className="eyebrow">{s.kicker}</span>
             <b className="st-big">{s.big}</b>
             <p>{s.line}</p>
@@ -45,7 +45,7 @@ export const streakOf = (days: { v: number }[]) => { let k = 0; for (let j = day
 const LOGO: Record<string, [string, string]> = {
   tiktok: ["T", "linear-gradient(135deg,#25F4EE,#000 48%,#FE2C55)"], instagram: ["I", "radial-gradient(circle at 30% 110%,#FFDD55 0 12%,#FF543E 35%,#C837AB 65%,#5B4FE9 100%)"],
   google: ["G", "conic-gradient(#4285F4 0 25%,#34A853 0 50%,#FBBC05 0 75%,#EA4335 0)"], facebook: ["f", "#1877F2"], pinterest: ["P", "#E60023"], linkedin: ["in", "#0A66C2"], apple: ["A", "linear-gradient(135deg,#1AC8FC,#1D6CF2)"], play: ["▶", "linear-gradient(135deg,#00C3FF,#00E676 40%,#FFC400 70%,#FF3A44)"], youtube: ["▶", "#FF0000"],
-  ai: ["✦", "linear-gradient(135deg,#D97757,#8B5CF6)"], email: ["@", "#5B5BD6"], bing: ["b", "linear-gradient(135deg,#00809D,#258FFA)"], közvetlen: ["→", "#8F887C"],
+  ai: ["✦", "#737373"], email: ["@", "#737373"], bing: ["b", "linear-gradient(135deg,#00809D,#258FFA)"], közvetlen: ["→", "#737373"],
 };
 /* the platforms' own marks, simplified to one white glyph (letters only where the letter is the mark) */
 const GLYPH: Record<string, React.ReactNode> = {
@@ -55,7 +55,7 @@ const GLYPH: Record<string, React.ReactNode> = {
   email: <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2" /><path d="m4 7 8 6 8-6" /></g>,
 };
 export const Logo = ({ k, size = 36 }: { k: string; size?: number }) => {
-  const key = (k || "").toLowerCase(), [t, bg] = LOGO[key] || [(k || "?")[0]?.toUpperCase(), "#8F887C"], g = GLYPH[key];
+  const key = (k || "").toLowerCase(), [t, bg] = LOGO[key] || [(k || "?")[0]?.toUpperCase(), "#737373"], g = GLYPH[key];
   return <span className="plogo" style={{ width: size, height: size, background: bg, fontSize: size * 0.42 }}>{g ? <svg viewBox="0 0 24 24" width={size * 0.62} height={size * 0.62} aria-hidden="true">{g}</svg> : t}</span>;
 };
 /* every channel we can tell apart is shown, also the ones that brought nobody yet (greyed): so the page always
@@ -149,26 +149,16 @@ export function QR({ text, size = 168, label }: { text: string; size?: number; l
   const eye = (r: number, c: number) => (r < 7 && c < 7) || (r < 7 && c >= k - 7) || (r >= k - 7 && c < 7);
   const svg = mods && (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} xmlns="http://www.w3.org/2000/svg">
-      <rect width={size} height={size} rx={size * 0.08} fill="#FFFDF8" />
-      {mods.flatMap((row, r) => row.map((on, c) => on && !eye(r, c) ? <circle key={r + "-" + c} cx={(c + 1.5) * cell} cy={(r + 1.5) * cell} r={cell * 0.44} fill="#17140F" /> : null))}
-      {[[0, 0], [0, k - 7], [k - 7, 0]].map(([r, c]) => <g key={r + "-" + c}><rect x={(c + 1.5) * cell} y={(r + 1.5) * cell} width={cell * 6} height={cell * 6} rx={cell * 2} fill="none" stroke="#17140F" strokeWidth={cell} /><rect x={(c + 3) * cell} y={(r + 3) * cell} width={cell * 3} height={cell * 3} rx={cell} fill="#B8892E" /></g>)}
-      <circle cx={size / 2} cy={size / 2} r={size * 0.11} fill="#FFFDF8" />
-      <text x={size / 2} y={size / 2 + size * 0.045} textAnchor="middle" fontFamily="Mr Dafoe, cursive" fontSize={size * 0.13} fill="#17140F">C</text>
+      <rect width={size} height={size} rx={size * 0.08} fill="#FFFFFF" />
+      {mods.flatMap((row, r) => row.map((on, c) => on && !eye(r, c) ? <circle key={r + "-" + c} cx={(c + 1.5) * cell} cy={(r + 1.5) * cell} r={cell * 0.44} fill="#000000" /> : null))}
+      {[[0, 0], [0, k - 7], [k - 7, 0]].map(([r, c]) => <g key={r + "-" + c}><rect x={(c + 1.5) * cell} y={(r + 1.5) * cell} width={cell * 6} height={cell * 6} rx={cell * 2} fill="none" stroke="#000000" strokeWidth={cell} /><rect x={(c + 3) * cell} y={(r + 3) * cell} width={cell * 3} height={cell * 3} rx={cell} fill="#000000" /></g>)}
+      <circle cx={size / 2} cy={size / 2} r={size * 0.11} fill="#FFFFFF" />
+      <text x={size / 2} y={size / 2 + size * 0.045} textAnchor="middle" fontFamily="Mr Dafoe, cursive" fontSize={size * 0.13} fill="#000000">I</text>
     </svg>
   );
-  const save = () => {
-    if (!mods) return;
-    const el = document.getElementById("qr-" + text.replace(/\W/g, ""))?.querySelector("svg"); if (!el) return;
-    const xml = new XMLSerializer().serializeToString(el), img = new Image();
-    img.onload = () => { const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920; const x = cv.getContext("2d")!; const g = x.createLinearGradient(0, 0, 1080, 1920); g.addColorStop(0, "#F9CBB6"); g.addColorStop(0.5, "#F5CEE2"); g.addColorStop(1, "#DAD4F8"); x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
-      x.drawImage(img, 240, 620, 600, 600); x.fillStyle = "#17140F"; x.textAlign = "center"; x.font = "600 64px 'Cormorant Garamond', Georgia, serif"; x.fillText(label || "Próbáld ki", 540, 470); x.font = "600 44px Geist, sans-serif"; x.fillText(text.replace(/^https?:\/\//, ""), 540, 1340); x.font = "90px 'Mr Dafoe', cursive"; x.fillText("InkAge", 540, 1600);
-      const a = document.createElement("a"); a.href = cv.toDataURL("image/png"); a.download = `inkage-qr-${text.split("/").pop()}.png`; a.click(); };
-    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
-  };
   return (
     <div className="qr" id={"qr-" + text.replace(/\W/g, "")}>
       {svg || <div className="skel" style={{ width: size, height: size, borderRadius: size * 0.08 }} />}
-      <button className="adm-ibtn sm" onClick={save} disabled={!mods}>Story-kép (PNG)</button>
     </div>
   );
 }
@@ -178,7 +168,7 @@ export function Storefront({ avg, count, dist, downloads }: { avg: number; count
   const max = Math.max(1, ...dist);
   return (
     <div className="shop">
-      <div className="shop-app"><img src="/brand/icon-192.png" alt="" /><div><b>InkAge</b><span>MI tetoválás-előnézet</span><span className="chip good">Tetoválás öregedése</span></div></div>
+      <div className="shop-app"><img src="/icons/icon-192.png" alt="" /><div><b>InkAge</b><span>MI tetoválás-előnézet</span></div></div>
       <div className="shop-rate"><b>{count ? fmt(avg, 1) : "–"}</b><span className="stars">{"★★★★★".slice(0, Math.round(avg))}{"☆☆☆☆☆".slice(0, 5 - Math.round(avg))}</span><small>{fmt(count)} értékelés</small></div>
       <ul className="shop-dist">{[5, 4, 3, 2, 1].map((r, i) => <li key={r}><span>{r}</span><i><em style={{ width: `${(dist[i] / max) * 100}%` }} /></i></li>)}</ul>
       <div className="shop-dl"><b><CountUp v={downloads} /></b><span>letöltés</span></div>
@@ -187,7 +177,6 @@ export function Storefront({ avg, count, dist, downloads }: { avg: number; count
 }
 
 /* ---------- people: cards ---------- */
-const AV = ["linear-gradient(135deg,#FFB38A,#FF6FA3)", "linear-gradient(135deg,#8BD3FF,#5B5BD6)", "linear-gradient(135deg,#B9F3D0,#2BA597)", "linear-gradient(135deg,#FFE29A,#F2A93B)", "linear-gradient(135deg,#E2D3FF,#8B5CF6)"];
 /* how long a visit lasted: "45 mp", "2 p 50 mp", "1 ó 5 p" */
 export const dur = (s: unknown) => { const t = Math.max(0, Math.round(Number(s) || 0)); return t < 60 ? `${t} mp` : t < 3600 ? `${Math.floor(t / 60)} p${t % 60 ? ` ${t % 60} mp` : ""}` : `${Math.floor(t / 3600)} ó ${Math.floor((t % 3600) / 60)} p`; };
 
@@ -196,11 +185,11 @@ export function PeopleGrid({ rows, onOpen, prov, langName, flag, ago }: { rows: 
     <div className="people">
       {rows.map((x, i) => (
         <button key={x.id} className="person" onClick={() => onOpen(x.id)}>
-          <span className="pav" style={{ background: AV[i % AV.length] }}>{(x.email || "?").slice(0, 1).toUpperCase()}</span>
+          <span className="pav">{(x.email || "?").slice(0, 1).toUpperCase()}</span>
           <b>{(x.email || "–").replace(/@.*/, "")}<small>@{(x.email || "").split("@")[1] || ""}</small></b>
           {/* the card stays short: what the visit and the account did is on the user's page (click) */}
-          <span className="pmeta"><span className="chip">{prov(x.provider)}</span></span>
-          {x.score != null && <span className="pmeta"><span className="chip" style={{ fontWeight: 800 }} title="Aktivitási pontszám 0–100">{n(x.score)}</span>{x.stage && <span className={"chip" + ({ aktiv: " good", probalgatja: " warn", veszelyben: " warn", alvo: " bad" } as Record<string, string>)[x.stage as string] || ""}>{({ uj: "Új", probalgatja: "Próbálgatja", aktiv: "Aktív", veszelyben: "Veszélyben", alvo: "Alvó" } as Record<string, string>)[x.stage as string] || x.stage}</span>}{x.churn && <span className="chip warn">lemorzsolódhat</span>}{x.online && <span className="chip good">● most</span>}</span>}
+          <span className="pmeta"><span className="chip">{prov(x.provider)}</span>{x.made_ok != null && <span className={"chip" + (n(x.made_ok) ? " gold" : "")}>{n(x.made_ok)} előnézet</span>}</span>
+          {x.score != null && <span className="pmeta"><span className="chip" style={{ fontWeight: 800 }} title="Aktivitási pontszám 0–100">{n(x.score)}</span>{x.stage && <span className={"chip" + ({ aktiv: " good", probalgatja: " warn", veszelyben: " warn", alvo: " bad" } as Record<string, string>)[x.stage as string] || ""}>{({ uj: "Új", probalgatja: "Nem készített", aktiv: "Friss", veszelyben: "7+ napja nem járt", alvo: "Alvó" } as Record<string, string>)[x.stage as string] || x.stage}</span>}{x.churn && <span className="chip warn">lemorzsolódhat</span>}{x.online && <span className="chip good">● most</span>}</span>}
           <span className="pwhen">regisztrált {ago(x.created_at)} · {x.last_active_at ? <>aktív {ago(x.last_active_at)}</> : <>belépett {ago(x.last_sign_in_at)}</>}</span>
         </button>
       ))}
@@ -212,7 +201,7 @@ export function PeopleGrid({ rows, onOpen, prov, langName, flag, ago }: { rows: 
 export function Funnel3D({ steps }: { steps: { l: string; n: number }[] }) {
   const [ref, w] = useWidth<HTMLDivElement>();
   const base = Math.max(1, steps[0]?.n || 1), W = Math.min(w || 600, 760), rowH = 46, H = steps.length * rowH + 20;
-  const col = ["#FFB547", "#FF8A5B", "#FF6B8B", "#F2558C", "#C85CD9", "#8B5CF6", "#6B6BF0", "#5B5BD6"];
+  const col = ["var(--acc)", "var(--ser-2)", "var(--ser-2)", "var(--ser-4)", "var(--ser-4)", "var(--ser-6)", "var(--ser-6)", "var(--ser-8)"];
   return (
     <div className="f3d" ref={ref}>
       {w > 0 && (
@@ -270,10 +259,8 @@ export function BellCurve({ bins, height = 220 }: { bins: { k: number; n: number
     <div className="bell" ref={ref} style={{ height }}>
       {w > 0 && (
         <svg width={w} height={height}>
-          <defs><linearGradient id="bellg" x1="0" x2="1"><stop offset="0" stopColor="#FF8A5B" /><stop offset=".5" stopColor="#F2558C" /><stop offset="1" stopColor="#8B5CF6" /></linearGradient>
-            <linearGradient id="bellf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#F2558C" stopOpacity=".28" /><stop offset="1" stopColor="#F2558C" stopOpacity="0" /></linearGradient></defs>
-          <path d={path + " Z"} fill="url(#bellf)" />
-          <path d={path} fill="none" stroke="url(#bellg)" strokeWidth="3" strokeLinecap="round" className="bell-l2" />
+                    <path d={path + " Z"} fill="var(--acc-soft)" />
+          <path d={path} fill="none" stroke="var(--acc)" strokeWidth="1.75" strokeLinecap="round" className="bell-l2" />
           <line x1={x(mean)} x2={x(mean)} y1={8} y2={10 + ih} className="bell-m" />
           <text x={x(mean)} y={height - 22} textAnchor="middle" className="bell-mt">átlag {fmt(mean)}</text>
           {[0, 25, 50, 75, 100].map((v) => <text key={v} x={x(v)} y={height - 6} textAnchor="middle" className="ax">{v}</text>)}
@@ -357,6 +344,6 @@ export function burst(el: HTMLElement | null) {
   if (!el || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
   const r = el.getBoundingClientRect(), box = document.createElement("div");
   box.className = "burst"; box.style.left = r.left + r.width / 2 + "px"; box.style.top = r.top + r.height / 2 + "px";
-  ["#FFB547", "#FF4FA3", "#8B5CF6", "#2BA597", "#5B5BD6"].forEach((c, i) => { for (let j = 0; j < 4; j++) { const p = document.createElement("i"); const a = ((i * 4 + j) / 20) * Math.PI * 2; p.style.background = c; p.style.setProperty("--dx", Math.cos(a) * (40 + j * 14) + "px"); p.style.setProperty("--dy", Math.sin(a) * (40 + j * 14) + "px"); box.appendChild(p); } });
+  ["var(--acc)", "var(--a-fg)", "var(--a-mut)", "var(--acc)", "var(--a-dim)"].forEach((c, i) => { for (let j = 0; j < 4; j++) { const p = document.createElement("i"); const a = ((i * 4 + j) / 20) * Math.PI * 2; p.style.background = c; p.style.setProperty("--dx", Math.cos(a) * (40 + j * 14) + "px"); p.style.setProperty("--dy", Math.sin(a) * (40 + j * 14) + "px"); box.appendChild(p); } });
   document.body.appendChild(box); setTimeout(() => box.remove(), 900);
 }

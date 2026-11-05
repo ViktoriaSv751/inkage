@@ -65,7 +65,8 @@ export async function syncCompetitors() {
     let n = 0;
     for (const c of COUNTRIES()) for (let i = 0; i < ids.length; i += 50) n += await snapshot(await lookup(ids.slice(i, i + 50), c), c);
     const aso = ids.length ? await syncAso(ids).catch(async (e) => { await log("aso", false, null, String((e as Error)?.message || e)); return 0; }) : 0;
-    if (ids.length) await log("competitors", true, n, `${n} app×ország frissítve, ${aso} ASO-helyezés`);
+    /* nothing to watch is said too: "kihagyva" keeps it from reading as a fresh run */
+    await log("competitors", true, n, ids.length ? `${n} app×ország frissítve, ${aso} ASO-helyezés` : "kihagyva: nincs figyelt app (az App Store-azonosító, ASC_APP_ID után a saját app magától bekerül)");
     return ids.length ? `${n} app×ország, ${aso} ASO` : "nincs felvéve";
   } catch (e) { const m = String((e as Error)?.message || e); await log("competitors", false, null, m); return "hiba: " + m.slice(0, 100); }
 }

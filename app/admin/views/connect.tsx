@@ -2,15 +2,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { Info, fmt } from "../charts";
+import { Ring } from "../ink";
 import { type Tone } from "../visuals";
 import { Logo } from "../wow";
 import { MOCK, ago, api, dt, rpc, type D, useRpc, Loading, StateErr } from "../shared";
-import { toast, usePhone } from "../phone";
+import { Sheet, phoneNow, toast, usePhone } from "../phone";
+import { rateLimited } from "./visual";
+import { copyText } from "./phone-security";
+import { reverify } from "../lock";
 
 /* ---------- connections: the keys, entered here (a phone works too), kept encrypted in Supabase Vault ---------- */
 export type KeyF = { k: string; l: string; ph?: string; area?: boolean; file?: boolean; opt?: boolean; hint?: string; check?: boolean };
 
 export type Plat = { id: string; name: string; tone: Tone; logo: string; what: string; keys: KeyF[]; steps: { t: React.ReactNode; link?: [string, string]; copy?: string }[]; connect?: string; later?: boolean; src?: string; test?: string; note?: React.ReactNode };
+
+/* she has no such channel yet: at the very end, no count and no alarm, until one gets connected */
+const PARKED = new Set(["youtube", "linkedin"]);
+/* not needed: at the very end too, not counted */
+const NOT_NEEDED = new Set(["cse"]);
+const WARN_ST = ["bad", "empty", "partial", "soon"], DONE_ST = ["ok", "zero", "limit"];
 
 /* the sync_log source of each card (its last run and error) */
 const SRC: Record<string, string> = { gsc: "gsc", bing: "bing", cse: "cse", apple: "apple", play: "google", ai: "aivis", psi: "cwv", comp: "competitors" };
@@ -28,6 +39,8 @@ export function Connect() {
   const accs: D[] = (cx.d as D)?.accounts || [];
   const sync: D = (cx.d as D)?.sync || {}, tests: D = (cx.d as D)?.tests || {};
   const ig = accs.find((a) => a.platform === "instagram"), igViaFb = ig?.scopes === "via_facebook";
+  /* Bing answered, the site is verified, there are simply no rows yet */
+  const bingZero = !!sync.bing && sync.bing.last_ok !== false && !Number(sync.bing.rows) && /igazolva van/.test(String(sync.bing.msg || ""));
   const P0: Plat[] = [
     { id: "tiktok", name: "TikTok", tone: "peach", logo: "tiktok", what: "Követők, minden videó megtekintése, kedvelése, és hogy melyik videó hozott látogatót.", connect: "/api/admin/connect/tiktok",
       keys: [{ k: "TIKTOK_CLIENT_KEY", l: "Client key", ph: "pl. awx1b2c3d4e5f6g7" }, { k: "TIKTOK_CLIENT_SECRET", l: "Client secret", ph: "a titkos kulcs" }],
@@ -62,7 +75,7 @@ export function Connect() {
     { id: "pinterest", name: "Pinterest", tone: "pink", logo: "pinterest", what: "Követők, havi megtekintés, és minden pin megjelenése, mentése és kattintása a weboldalra.", connect: "/api/admin/connect/pinterest",
       keys: [{ k: "PINTEREST_APP_ID", l: "Pinterest App ID", ph: "pl. 1512345" }, { k: "PINTEREST_APP_SECRET", l: "Pinterest App secret key", ph: "a titkos kulcs" }, { k: "PINTEREST_BOARD_ID", l: "Tábla azonosítója (a Tervezőből ide kerülnek a pinek)", ph: "pl. 1234567890123456789", opt: true, hint: "A tábla címe: pinterest.com/<fiók>/<tábla>/ – a táblaazonosítót a tábla „Szerkesztés” oldalán, vagy az első publikálásnál kérjük." }],
       steps: [
-        { t: <>A Pinterest-fiók legyen <b>vállalati fiók</b> (ingyenes átváltás: Beállítások → Fiókbeállítások → Fiók átalakítása).</> },
+        { t: <>A Pinterest-fiók legyen <b>vállalati fiók</b> (Beállítások → Fiókbeállítások → Fiók átalakítása).</> },
         { t: <>A Pinterest fejlesztői oldalán: <b>Connect app</b>, név: „InkAge Irányító”. Az alap (Trial) hozzáférés a saját fiókodhoz elég.</>, link: ["https://developers.pinterest.com/apps/", "developers.pinterest.com"] },
         { t: <>Az app <b>Redirect URIs</b> részébe ezt add meg:</>, copy: `${site}/api/admin/callback/pinterest` },
         { t: <>Az <b>App ID</b>-t és az <b>App secret key</b>-t (a <b>Show key</b> gombbal) másold ide, majd Mentés és <b>Összekapcsolás</b>. Ha a Tervezőből is pinelnél, add meg a tábla azonosítóját is.</> },
@@ -95,7 +108,9 @@ export function Connect() {
         { t: <>Lent a <b>Fájl kiválasztása</b> gombbal töltsd fel a letöltött fájlt (telefonon a Fájlok közül), majd Mentés.</> },
         { t: <>A Search Console-ban: <b>Beállítások → Felhasználók és engedélyek → Felhasználó hozzáadása</b>, és add meg a szolgáltatásfiók e-mail-címét (mentés után itt megjelenik, másolható). A „Kipróbálom” megmutatja, hozzáfér-e már.</>, link: ["https://search.google.com/search-console/users", "Search Console"] },
       ] },
-    { id: "bing", name: "Bing Webmaster Tools", tone: "sky", logo: "bing", src: "bing", what: "A Bing-keresés megjelenései és kattintásai (a ChatGPT keresője és a Copilot is ebből dolgozik), és a ránk mutató linkek. Ingyenes.",
+    { id: "bing", name: "Bing Webmaster Tools", tone: "sky", logo: "bing", src: "bing", what: "A Bing-keresés megjelenései és kattintásai (a ChatGPT keresője és a Copilot is ebből dolgozik), és a ránk mutató linkek.",
+      note: bingZero ? <>Bekötve, és az inkage.app igazolva van{sync.bing.ok_at ? <> (utolsó ellenőrzés: {dt(sync.bing.ok_at)})</> : null}. A Bing eddig nem indexelte az oldalt, ezért a <b>0 valódi szám</b>, nem hiba. A Bing MI-hivatkozásai (AI Performance) csak a Bing saját oldalán látszanak: <a className="lnk" href="https://www.bing.com/webmasters/" target="_blank" rel="noreferrer">Bing Webmaster Tools ↗</a></>
+        : sync.bing && !Number(sync.bing.rows) ? <>A kulcs megvan és a lehúzás lefut, de eddig <b>0 sor</b> jött: {String(sync.bing.msg || "").replace(/ · .*$/, "")}. Nézd meg a Bing Webmaster Toolsban, hogy az inkage.app igazolva van-e.</> : undefined,
       keys: [{ k: "BING_WMT_KEY", l: "API-kulcs" }],
       steps: [
         { t: <>Lépj be a Bing Webmaster Toolsba a Microsoft- vagy a Google-fiókoddal, és add hozzá a weboldalt: a legegyszerűbb az <b>Import from Google Search Console</b> (egy kattintás, mert a Google már igazolta).</>, link: ["https://www.bing.com/webmasters/", "bing.com/webmasters"] },
@@ -110,6 +125,7 @@ export function Connect() {
         { t: <>A <b>Vendor number</b>: <b>Payments and Financial Reports</b> (vagy Sales and Trends) oldal bal felső sarka, a fióknév alatt (8 számjegy). Enélkül nincsenek napi letöltésszámok.</>, link: ["https://appstoreconnect.apple.com/itc/payments_and_financial_reports", "Pénzügyi jelentések"] },
       ] },
     { id: "play", name: "Google Play", tone: "butter", logo: "play", src: "google", what: "Telepítések és minden Google Play-értékelés.",
+      note: /telepítés: hiba/.test(String(sync.google?.msg || "")) ? <>A telepítésszámok nem jönnek: a szolgáltatásfióknak nincs joga a jelentések tárhelyéhez. Play Console → <b>Users and permissions</b>: a szolgáltatásfióknak kell a <b>View financial data</b> jog. A jog érvénybe lépése akár 24 óra.</> : undefined,
       keys: [{ k: "PLAY_SERVICE_ACCOUNT_JSON", l: "Szolgáltatásfiók kulcsfájlja (.json)", area: true, file: true }, { k: "PLAY_PACKAGE", l: "Csomagnév", ph: "app.inkage", opt: true }, { k: "PLAY_REPORTS_BUCKET", l: "Jelentések tárhelye (pubsite_prod_…)", opt: true, ph: "pubsite_prod_rev_0123456789" }],
       steps: [
         { t: <>A Google Cloud <b>InkAge</b> projektben kapcsold be a <b>Google Play Android Developer API</b>-t, és hozz létre egy szolgáltatásfiókot JSON-kulccsal (lásd a Search Console lépéseit; ugyanaz a fiók is jó).</>, link: ["https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com?project=inkage", "Play Developer API"] },
@@ -134,7 +150,7 @@ export function Connect() {
         { t: <>Telegram: írj a <b>@BotFather</b>-nek „/newbot”, a kapott tokent ide. Utána írj egy üzenetet a botodnak, és a chat ID-t a <b>@userinfobot</b> mutatja meg.</> },
         { t: <>A modellek nem kötelezők: üresen az alapértelmezettet használjuk.</> },
       ] },
-    { id: "cse", name: "Google Programmable Search", tone: "butter", logo: "google", src: "cse", later: true, what: "A követett keresésekre a helyezésünk ott is, ahol a Search Console még nem mutat adatot. Napi 100 keresés ingyenes.",
+    { id: "cse", name: "Google Programmable Search", tone: "butter", logo: "google", src: "cse", later: true, what: "Nem köthető be: a Google új felhasználóknak lezárta, 2027. január 1-jén meg is szünteti. Nem hiányzik semmi: a keresések helyezését a Search Console adja.",
       keys: [{ k: "GOOGLE_CSE_KEY", l: "API-kulcs", ph: "AIza…" }, { k: "GOOGLE_CSE_ID", l: "Keresőmotor-azonosító (cx)" }],
       steps: [
         { t: <>Hozz létre egy keresőmotort: „Search the entire web” bekapcsolva. A <b>Search engine ID</b> (cx) ide.</>, link: ["https://programmablesearchengine.google.com/controlpanel/create", "programmablesearchengine.google.com"] },
@@ -157,46 +173,76 @@ export function Connect() {
   const stateOf = (p: Plat) => {
     const acc = accs.find((a) => a.platform === p.id), s = p.src ? sync[p.src] : null, t = tests[p.test || p.id];
     const exp = acc ? expiry(acc, p.id) : null;
-    if (acc?.last_error || (s && s.last_ok === false)) return "bad";
+    if (PARKED.has(p.id) && !acc) return "parked";
+    if (NOT_NEEDED.has(p.id) && !ok(p)) return "notneeded";
+    if (p.id === "bing" && bingZero) return "zero";
+    /* the platform only slowed the requests down and the sync goes on by itself: that is no broken connection */
+    const lim = rateLimited(acc?.last_error);
+    if ((acc?.last_error && !lim) || (s && s.last_ok === false)) return "bad";
+    /* a run that went through but brought nothing, or only a part, is not "működik" */
+    const msg = String(s?.msg || "");
+    if (s && (/^(üres|kihagyva)/i.test(msg) || (p.id === "bing" && !Number(s.rows)))) return "empty";
+    if (s && /: hiba|részben/i.test(msg)) return "partial";
     if (exp && exp.getTime() - Date.now() < 7 * 864e5) return "soon";
+    if (lim) return "limit";
     if (acc || (s && s.last_ok)) return "ok";
     if (t && t.ok === false) return "bad";
-    return ok(p) ? (p.connect ? "keys" : t?.ok ? "ok" : "keys") : p.later ? "later" : "missing";
+    /* a card that needs no key has nothing to connect: it waits for its first run */
+    return ok(p) ? (p.connect ? "keys" : t?.ok ? "ok" : p.keys.every((k) => k.opt) ? "idle" : "keys") : p.later ? "later" : "missing";
   };
   const states = P0.map((p) => ({ p, s: stateOf(p) }));
-  const nOk = states.filter((x) => x.s === "ok").length, nBad = states.filter((x) => x.s === "bad"), nSoon = states.filter((x) => x.s === "soon");
-  const [focus, setFocus] = useState<string | null>(null);
-  const main = P0.filter((p) => !p.later);
-  const done = main.filter((p) => ["ok", "soon"].includes(stateOf(p))).length;
+  const nBad = states.filter((x) => x.s === "bad"), nSoon = states.filter((x) => x.s === "soon");
+  const [focus, setFocus] = useState<string | null>(null); const [sheet, setSheet] = useState<string | null>(null);
+  /* the count of the main connections leaves out what she does not need now */
+  const aside = (p: Plat) => ["parked", "notneeded", "idle"].includes(stateOf(p));
+  const main = P0.filter((p) => !p.later && !aside(p));
+  const done = main.filter((p) => [...DONE_ST, "soon"].includes(stateOf(p))).length;
+  /* the one number is the ring; beside it only what is not part of it */
+  const extra = P0.filter((p) => !main.includes(p) && [...DONE_ST, "soon"].includes(stateOf(p))).length;
+  /* another page sends her to one row (Kérdezz without a key): that row opens, at its paste field */
+  useEffect(() => {
+    let id = ""; try { id = sessionStorage.getItem("inkage.admin.connfocus") || ""; } catch {}
+    if (!id) return; setFocus(id); setSheet(id);
+    /* the page draws and restores its place first: try until the field exists and the place has settled */
+    let k = 0; const t = setInterval(() => { k++; const el = document.getElementById("conn-" + id), inp = el?.querySelector("input.conn-in") as HTMLInputElement | null; if (k < 6 || (!inp && k < 16)) return; clearInterval(t); try { sessionStorage.removeItem("inkage.admin.connfocus"); } catch {} el?.scrollIntoView({ block: "start" }); inp?.focus({ preventScroll: true }); }, 250);
+    return () => clearInterval(t);
+  }, []);
   if (ks.e && !ks.d) return <div className="g"><div className="s12"><StateErr msg={ks.e} retry={ks.load} /></div></div>;
   if (!ks.d || (!cx.d && !cx.e)) return <Loading />;
-  /* one card open at a time: the first platform still to connect */
-  const firstOpen = main.find((p) => ["missing", "keys"].includes(stateOf(p)))?.id;
-  const fix = () => { const x = nBad[0] || nSoon[0]; if (!x) return; setFocus(x.p.id); setTimeout(() => document.getElementById("conn-" + x.p.id)?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+  /* what is not connected yet comes first, then what has a problem, what works last; the rest of the page below that */
+  const open0 = P0.filter((p) => !aside(p) && !WARN_ST.includes(stateOf(p)) && !DONE_ST.includes(stateOf(p))).sort((a, b) => Number(!!a.later) - Number(!!b.later));
+  const warn0 = P0.filter((p) => !aside(p) && WARN_ST.includes(stateOf(p))), done0 = P0.filter((p) => !aside(p) && DONE_ST.includes(stateOf(p))), later0 = P0.filter(aside);
+  /* a tile: filled when connected, a dashed outline when it is missing; a tap slides up the steps */
+  const tile = (p: Plat) => { const s0 = stateOf(p), acc = accs.find((a) => a.platform === p.id), exp = acc ? expiry(acc, p.id) : null, soon = exp && exp.getTime() - Date.now() < 14 * 864e5;
+    const live = !!acc || [...DONE_ST, "soon", "empty", "partial"].includes(s0);
+    return <button key={p.id} className={"io-tile " + (s0 === "bad" ? "bad" : live ? "on" : "off") + (aside(p) || p.later ? " dim" : "")} onClick={() => { setFocus(null); setSheet(p.id); }} aria-haspopup="dialog">
+      {(s0 === "bad" || soon || ["empty", "partial"].includes(s0)) && <i className="io-tile-w" aria-hidden="true">!</i>}
+      <Logo k={p.logo} size={56} /><b>{p.name}</b><small>{s0 === "bad" ? SL.bad[0] : soon ? `lejár: ${exp!.toLocaleDateString("hu-HU", { month: "short", day: "numeric" })}` : acc && s0 === "ok" ? "✓ összekapcsolva" : acc && s0 === "keys" ? "összekapcsolva" : SL[s0][0]}</small></button>; };
+  const fix = (id: string) => { setFocus(id); setSheet(id); };
   const reload = () => { ks.load(); cx.load(); loadSt(); };
+  const cur = P0.find((p) => p.id === sheet), s1 = cur?.src ? sync[cur.src] : null;
   return (
-    <div className="g">
-      <section className="hello s12">
-        <div>
-          <span className="eyebrow">Kapcsolatok</span>
-          <h1>Kösd be a fiókjaidat</h1>
-          <p>Minden lépés telefonról is megy. A kulcsokat titkosítva tároljuk (Supabase Vault); ide soha nem írjuk ki őket, és senki más nem látja. <b>{done} / {main.length}</b> fő kapcsolat működik.</p>
-        </div>
+    <div className="g io">
+      <section className="s12 ink-hero ink-flip io-conn-top">
+        <span className="ink-hero-l">Működő kapcsolat<Info>Minden lépés telefonról is megy. A kulcsokat titkosítva tároljuk (Supabase Vault); ide soha nem írjuk ki őket, és senki más nem látja.</Info></span>
+        <Ring p={done / Math.max(1, main.length)} kind="seg" label={`${done} a ${main.length} fő kapcsolatból működik`}><b>{done} / {main.length}</b><small>bekötve</small></Ring>
+        {extra > 0 && <span className="ink-hero-s"><small>és {extra} kiegészítő, ami nem számít bele</small></span>}
       </section>
-      <div className="s12 conn-prog"><i style={{ width: `${(done / Math.max(1, main.length)) * 100}%` }} /></div>
-      <div className="s12 conn-sum">
-        <span className="chip good">{nOk} működik</span>
-        {nBad.length > 0 && <span className="chip bad">{nBad.length} hibás: {nBad.map((x) => x.p.name).join(", ")}</span>}
-        {nSoon.length > 0 && <span className="chip warn">{nSoon.length} hamarosan lejár: {nSoon.map((x) => x.p.name).join(", ")}</span>}
-        {(nBad.length > 0 || nSoon.length > 0) && <button className="adm-ibtn sm gold" onClick={fix}>Javítás →</button>}
-        <SyncNow done={reload} />
-      </div>
+      {(nBad.length > 0 || nSoon.length > 0) && <ul className="s12 io-rows">
+        {nBad.map((x) => <li key={x.p.id} className="io-row bad"><span className="io-ic">!</span><div className="io-t"><b>{x.p.name}</b><small>hibás</small></div><button className="io-pill" onClick={() => fix(x.p.id)}>Javítás</button></li>)}
+        {nSoon.map((x) => { const a = accs.find((y) => y.platform === x.p.id), e0 = a ? expiry(a, x.p.id) : null; return <li key={x.p.id} className="io-row warn"><span className="io-ic">!</span><div className="io-t"><b>{x.p.name}</b><small>hamarosan lejár{e0 ? `: ${e0.toLocaleDateString("hu-HU", { month: "short", day: "numeric" })}` : ""}</small></div><button className="io-pill" onClick={() => fix(x.p.id)}>Javítás</button></li>; })}
+      </ul>}
+      <div className="s12 io-actions"><SyncNow done={reload} /></div>
       {cx.e && <div className="s12"><StateErr msg={cx.e} retry={cx.load} small /></div>}
-      {P0.map((p) => <PlatformCard key={p.id} p={p} first={p.id === firstOpen} focus={focus === p.id} set={set} st={st} ok={ok(p)} state={stateOf(p)} acc={accs.find((a) => a.platform === p.id)} sync={p.src ? sync[p.src] : null} test={tests[p.test || p.id]} igViaFb={igViaFb}
-        save={async (k, v) => { const r = await rpc(sb, "admin_key_set", { p_name: k, p_value: v }); reload(); return r.error?.message || ""; }} reload={reload} />)}
-      <FreeWatchers sync={sync} />
+      {open0.length > 0 && <section className="s12 io-sec"><h3 className="ink-h">Még nincs bekötve</h3><div className="io-tiles">{open0.map(tile)}</div></section>}
+      {warn0.length > 0 && <section className="s12 io-sec"><h3 className="ink-h">Gond van vele</h3><div className="io-tiles">{warn0.map(tile)}</div></section>}
+      {done0.length > 0 && <section className="s12 io-sec"><h3 className="ink-h">Működik</h3><div className="io-tiles">{done0.map(tile)}</div></section>}
+      <FreeWatchers sync={sync} sources={(cx.d as D)?.brand_sources || []} />
       <AndroidData />
       <Approvals accs={accs} />
+      {later0.length > 0 && <section className="s12 io-sec"><h3 className="ink-h">Most nem kell vele foglalkozni</h3><div className="io-tiles">{later0.map(tile)}</div></section>}
+      {cur && <PlatformCard key={cur.id} p={cur} close={() => { setSheet(null); setFocus(null); }} focus={focus === cur.id} set={set} st={st} ok={ok(cur)} state={stateOf(cur)} acc={accs.find((a) => a.platform === cur.id)} sync={cur.id === "bing" && bingZero ? { ...s1, msg: "0 találat, a Bing eddig nem indexelte az oldalt" } : s1} test={tests[cur.test || cur.id]} igViaFb={igViaFb}
+        save={async (k, v) => { const r = await rpc(sb, "admin_key_set", { p_name: k, p_value: v }); reload(); return r.error?.message || ""; }} reload={reload} />}
     </div>
   );
 }
@@ -213,19 +259,14 @@ function SyncNow({ done }: { done: () => void }) {
   return <button className="adm-ibtn sm" onClick={run} disabled={busy}>{busy ? "Lehúzás… (akár 1–2 perc)" : "Adatok lehúzása most"}</button>;
 }
 
-const SL: Record<string, [string, string]> = { ok: ["✓ működik", "good"], bad: ["hiba", "bad"], soon: ["hamarosan lejár", "warn"], keys: ["kulcsok megvannak", "gold"], later: ["nem kötelező", ""], missing: ["hiányzik", "warn"] };
-export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, save, reload, first, focus, igViaFb }: { p: Plat; set: Record<string, string>; st: D | null; ok: boolean; state: string; acc?: D; sync?: D | null; test?: D; save: (k: string, v: string) => Promise<string>; reload: () => void; first?: boolean; focus?: boolean; igViaFb?: boolean }) {
+const SL: Record<string, [string, string]> = { ok: ["✓ működik", "good"], empty: ["bekötve, de nem jön adat", "warn"], partial: ["részben működik", "warn"], bad: ["hiba", "bad"], soon: ["hamarosan lejár", "warn"], keys: ["kulcsok megvannak", "gold"], later: ["nem kötelező", ""], missing: ["hiányzik", "warn"], parked: ["Később, ha lesz csatornád", ""], notneeded: ["Nem kell", ""], zero: ["✓ bekötve, még 0 találat", "good"], limit: ["✓ működik, átmeneti korlát", "good"], idle: ["kulcs nem kell, még nem futott", ""] };
+export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, save, reload, close, focus, igViaFb }: { p: Plat; set: Record<string, string>; st: D | null; ok: boolean; state: string; acc?: D; sync?: D | null; test?: D; save: (k: string, v: string) => Promise<string>; reload: () => void; close: () => void; focus?: boolean; igViaFb?: boolean }) {
   const sb = useMemo(() => supabaseBrowser(), []);
-  /* only what still needs connecting stays open; a connected platform shows as one closed line */
-  const doneNow = state === "ok";
-  const [open, setOpen] = useState(false);
-  const [touched, setTouched] = useState(false);
-  useEffect(() => { if (!touched) setOpen(!!first && !doneNow); }, [doneNow, touched, first]);
-  useEffect(() => { if (focus) { setOpen(true); setTouched(true); } }, [focus]);
+  useEffect(() => { if (focus) setStep(p.steps.length - 1); }, [focus]); // eslint-disable-line react-hooks/exhaustive-deps
   const [vals, setVals] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
   const [busy, setBusy] = useState(false); const [copied, setCopied] = useState("");
-  const copy = (t: string) => navigator.clipboard?.writeText(t).then(() => { setCopied(t); setTimeout(() => setCopied(""), 1600); });
+  const copy = async (t: string) => { if (await copyText(t)) { setCopied(t); setTimeout(() => setCopied(""), 1600); } else toast("Nem sikerült másolni: a böngésző nem engedte."); };
   const email = (() => { try { return JSON.parse(vals.GSC_SERVICE_ACCOUNT_JSON || vals.PLAY_SERVICE_ACCOUNT_JSON || "").client_email as string; } catch { return ""; } })();
   const onFile = (k: string) => async (e: React.ChangeEvent<HTMLInputElement>) => { const f = e.target.files?.[0]; if (!f) return; if (f.size > 20000) { setMsg({ ok: false, t: "Ez a fájl túl nagy, nem kulcsfájl." }); return; } setVals((o) => ({ ...o, [k]: "" })); const t = (await f.text()).trim();
     /* a chosen key file is saved at once: no second step to forget */
@@ -250,6 +291,9 @@ export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, sa
       if (k === "COMPETITOR_COUNTRY" && !/^[a-z]{2}$/i.test(v.trim())) { setMsg({ ok: false, t: "Kétbetűs országkód kell, pl. hu vagy us." }); return; }
       if (k === "PLAY_PACKAGE" && !/^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/i.test(v.trim())) { setMsg({ ok: false, t: "A csomagnév pontokkal tagolt, pl. app.inkage." }); return; }
     }
+    /* replacing a key that is already set stops what runs on it if the new one is wrong: asked on a phone, with the face or finger when the lock is on */
+    const swap = todo.filter(([k]) => set[k] || srcOf(k)).map(([k]) => p.keys.find((x) => x.k === k)?.l || k);
+    if (swap.length && phoneNow() && (!confirm(`Lecseréled: ${swap.join(", ")}? A régi érték elvész.`) || !(await reverify()))) return;
     setBusy(true);
     try {
       for (const [k, v] of todo) { const err = await save(k, k === "COMPETITOR_COUNTRY" ? v.trim().toLowerCase() : v.trim()); if (err) { setMsg({ ok: false, t: err }); return; } }
@@ -260,6 +304,9 @@ export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, sa
   const shownTest = test && test !== "busy" ? test : saved ? { ok: !!saved.ok, msg: String(saved.msg || ""), at: saved.at } : null;
   /* on a phone the steps come one at a time, with Tovább / Vissza */
   const phone = usePhone(); const [step, setStep] = useState(0);
+  /* a card with its keys or connection in place: what can be done with it comes first, the steps of setting it up stay closed.
+     A card that cannot be connected at all is only its explanation */
+  const closed = state === "notneeded", top = phone && (ok || !!acc); const [showSteps, setShowSteps] = useState(!top);
   const exp = acc ? expiry(acc, p.id) : null;
   const soon = exp && exp.getTime() - Date.now() < 14 * 864e5;
   /* write permission: only what the platform really granted counts (Instagram through Facebook publishes through Facebook) */
@@ -270,36 +317,39 @@ export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, sa
   const clear = async (k: string) => {
     const s = srcOf(k);
     const q = s === "both" ? "Törlöd az itt megadott kulcsot? A Vercelben is megvan ugyanilyen nevű: utána az marad érvényben." : "Törlöd ezt a kulcsot? A kapcsolat leáll, amíg újat nem adsz meg.";
-    if (!confirm(q)) return; await save(k, "");
+    if (!confirm(q) || !(await reverify())) return; await save(k, "");
   };
   const disconnect = async () => {
-    if (!confirm(`Leválasztod: ${p.name}? A tokenek törlődnek, a lehúzás leáll; a már lehúzott posztok és számok megmaradnak.${p.id === "facebook" && igViaFb ? " Az Instagram is a Facebookon át jön: az is leáll." : ""}`)) return;
+    if (!confirm(`Leválasztod: ${p.name}? A tokenek törlődnek, a lehúzás leáll; a már lehúzott posztok és számok megmaradnak.${p.id === "facebook" && igViaFb ? " Az Instagram is a Facebookon át jön: az is leáll." : ""}`) || !(await reverify())) return;
     const r = await rpc(sb, "admin_disconnect", { p_platform: p.id });
     if (r.error) { setMsg({ ok: false, t: r.error.message }); return; }
     if (p.id === "facebook" && igViaFb) await rpc(sb, "admin_disconnect", { p_platform: "instagram" });
     toast(p.name + " leválasztva"); reload();
   };
-  const lastRun = sync ? (sync.last_ok === false ? <span className="down">utolsó lehúzás hibás ({ago(sync.err_at)}): {String(sync.err || "").slice(0, 160)}</span> : sync.ok_at ? <>utolsó sikeres lehúzás {ago(sync.ok_at)}</> : null) : null;
+  const lastRun = sync ? (sync.last_ok === false ? <span className="down">utolsó lehúzás hibás ({ago(sync.err_at)}): {String(sync.err || "").slice(0, 160)}</span> : sync.ok_at ? <>utolsó futás {ago(sync.ok_at)}{sync.msg ? `: ${String(sync.msg).slice(0, 120)}` : ""}</> : null) : null;
+  const acts = <>
+    {(ok || acc) && <button type="button" className="adm-ibtn conn-save" onClick={tryIt} disabled={test === "busy"}>{test === "busy" ? "Próba…" : "Kipróbálom"}</button>}
+    {p.connect && ok && <a className="adm-ibtn conn-save" href={MOCK ? undefined : p.connect}>{acc ? "Újrakapcsolás" : "Összekapcsolás"} →</a>}
+    {p.connect && acc && <a className="adm-ibtn conn-save" href={MOCK ? undefined : pubHref} title="Újra belépsz, és az írási engedélyt is megadod: utána a Tervezőből innen lehet posztolni">{pub ? "✓ Publikálás bekapcsolva" : p.id === "instagram" && igViaFb ? "Publikálás (a Facebookon át)" : "Publikálás bekapcsolása"}</a>}
+    {acc && <button type="button" className="adm-ibtn conn-save danger" onClick={disconnect}>Leválasztás</button>}
+  </>;
+  const testAlert = shownTest && <div className={"alert " + (shownTest.ok ? "ok" : "err")}>{shownTest.msg}{shownTest.at ? <small className="mut"> · próba: {ago(shownTest.at)}</small> : null}</div>;
   return (
-    <section className={`c s12 conn t-${p.tone}`} id={"conn-" + p.id}>
-      <button className="conn-h" onClick={() => { setTouched(true); setOpen(!open); }} aria-expanded={open}>
-        <span className={"conn-logo l-" + p.logo}>{p.name[0]}</span>
-        <span className="conn-t"><b>{p.name}</b><small>{p.what}</small>{(acc || sync) && <small className="conn-last">{acc ? (acc.last_error ? <span className="down">hiba: {String(acc.last_error).slice(0, 90)}</span> : <>utolsó lehúzás {ago(acc.last_sync_at)}</>) : lastRun}</small>}</span>
-        {soon && <span className="chip warn">lejár: {exp!.toLocaleDateString("hu-HU", { month: "short", day: "numeric" })}</span>}
-        <span className={"chip " + (acc && state === "ok" ? "good" : SL[state][1])}>{acc && state === "ok" ? "✓ összekapcsolva" : acc && state === "keys" ? "összekapcsolva" : SL[state][0]}</span>
-        <span className="conn-x">{open ? "−" : "+"}</span>
-      </button>
-      {open && (
-        <div className="conn-b">
+    <Sheet tall title={p.name} sub={acc && state === "ok" ? "✓ összekapcsolva" : acc && state === "keys" ? "összekapcsolva" : SL[state][0]} close={close}>
+        <div className="conn-b io-conn" id={"conn-" + p.id}>
+          <p className="io-what">{p.what}</p>
           {acc && <div className="conn-acc">Bekötve: <b>{acc.username ? "@" + acc.username : acc.display_name || "fiók"}</b>{acc.connected_at ? <> ({dt(acc.connected_at)})</> : null} · utolsó lehúzás {ago(acc.last_sync_at)} · {Number(acc.posts) || 0} poszt nálunk
-            {exp ? <> · a kapcsolat {soon ? <b style={{ color: "var(--a-warn)" }}>hamarosan lejár ({exp.toLocaleDateString("hu-HU", { month: "long", day: "numeric" })})</b> : <>érvényes: {exp.toLocaleDateString("hu-HU", { month: "long", day: "numeric" })}</>}</> : p.id === "instagram" && igViaFb ? <> · nem jár le (a Facebook-oldal tokenje)</> : null}
-            {acc.last_error ? <div className="alert err" style={{ marginTop: 8 }}>{String(acc.last_error).slice(0, 300)}</div> : null}
-            {p.id === "linkedin" && !acc.last_error && !Number(acc.posts) && <div className="alert" style={{ marginTop: 8 }}>A kapcsolat él, de posztadat még nem jön: a LinkedIn a <b>Community Management API</b> jóváhagyásáig nem ad posztstatisztikát (lent a Jóváhagyások blokkban a kérelem szövege).</div>}
+            {exp ? <> · a kapcsolat {soon ? <b>hamarosan lejár ({exp.toLocaleDateString("hu-HU", { month: "long", day: "numeric" })})</b> : <>érvényes: {exp.toLocaleDateString("hu-HU", { month: "long", day: "numeric" })}</>}</> : p.id === "instagram" && igViaFb ? <> · nem jár le (a Facebook-oldal tokenje)</> : null}
+            {acc.last_error ? <div className={"alert" + (rateLimited(acc.last_error) ? "" : " err")} style={{ marginTop: 8 }}>{String(acc.last_error).slice(0, 300)}</div> : null}
+            {p.id === "linkedin" && !acc.last_error && !Number(acc.posts) && <div className="alert" style={{ marginTop: 8 }}>A kapcsolat él, de posztadat még nem jön: a LinkedIn a <b>Community Management API</b> jóváhagyásáig nem ad posztstatisztikát (lent, az „Extra adat kérése” részben a kérelem szövege).</div>}
           </div>}
           {!acc && lastRun && <div className="conn-acc">{lastRun}</div>}
           {p.note && <div className="alert" style={{ margin: "0 0 10px" }}>{p.note}</div>}
-          {phone && p.steps.length > 1 && <div className="wiz-h"><span>{step + 1}. lépés / {p.steps.length}</span><i style={{ width: `${((step + 1) / p.steps.length) * 100}%` }} /></div>}
-          <ol className="conn-steps">
+          {!closed && top && <div className="conn-actions">{acts}</div>}
+          {!closed && top && testAlert}
+          {!closed && top && <button type="button" className="lnk conn-steps-t" onClick={() => setShowSteps(!showSteps)} aria-expanded={showSteps}>{showSteps ? "A bekötés lépéseinek elrejtése" : "A bekötés lépései"}</button>}
+          {!closed && showSteps && phone && p.steps.length > 1 && <div className="wiz-h"><span>{step + 1}. lépés / {p.steps.length}</span><i style={{ width: `${((step + 1) / p.steps.length) * 100}%` }} /></div>}
+          {!closed && showSteps && <ol className="conn-steps">
             {p.steps.map((x, i) => phone && i !== step ? null : (
               <li key={i}><span className="cs-n">{i + 1}</span><div>
                 <p>{x.t}</p>
@@ -307,9 +357,9 @@ export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, sa
                 {x.copy && <button type="button" className="conn-copy" onClick={() => copy(x.copy!)}><code>{x.copy}</code><span>{copied === x.copy ? "Másolva ✓" : "Másolás"}</span></button>}
               </div></li>
             ))}
-          </ol>
-          {phone && p.steps.length > 1 && <div className="wiz-nav"><button type="button" className="adm-ibtn" disabled={!step} onClick={() => setStep(step - 1)}>← Vissza</button>{step < p.steps.length - 1 ? <button type="button" className="adm-ibtn gold" onClick={() => setStep(step + 1)}>Tovább →</button> : <span className="note">Utolsó lépés: lent a kulcsok.</span>}</div>}
-          <form className="conn-f" onSubmit={submit} autoComplete="off" style={phone && p.steps.length > 1 && step < p.steps.length - 1 ? { display: "none" } : undefined}>
+          </ol>}
+          {!closed && showSteps && phone && p.steps.length > 1 && <div className="wiz-nav"><button type="button" className="adm-ibtn" disabled={!step} onClick={() => setStep(step - 1)}>← Vissza</button>{step < p.steps.length - 1 ? <button type="button" className="adm-ibtn gold" onClick={() => setStep(step + 1)}>Tovább →</button> : <span className="note">Utolsó lépés: lent a kulcsok.</span>}</div>}
+          {!closed && <form className="conn-f" onSubmit={submit} autoComplete="off" style={showSteps && phone && p.steps.length > 1 && step < p.steps.length - 1 ? { display: "none" } : undefined}>
             {p.keys.map((k) => {
               const src = srcOf(k.k), here = !!set[k.k];
               const tag = here || src ? <em className="conn-set">✓ megadva{src === "vercel" ? " a Vercelben" : src === "both" ? " itt és a Vercelben (a Vercel érvényes)" : here ? " " + ago(set[k.k]) : ""}{here && <> · <button type="button" className="lnk" onClick={() => clear(k.k)}>törlés</button></>}</em> : null;
@@ -322,6 +372,7 @@ export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, sa
                   <span>{k.l}{k.opt ? " (nem kötelező)" : ""}{tag}</span>
                   {k.area ? <textarea className="adm-in conn-in" rows={4} placeholder={here || src ? "Új érték, ha cserélnéd" : k.ph} value={vals[k.k] || ""} onChange={(e) => setVals({ ...vals, [k.k]: e.target.value })} spellCheck={false} />
                     : <input className="adm-in conn-in" type="text" inputMode="text" autoCapitalize="off" autoCorrect="off" spellCheck={false} placeholder={here || src ? "Új érték, ha cserélnéd" : k.ph} value={vals[k.k] || ""} onChange={(e) => setVals({ ...vals, [k.k]: e.target.value })} />}
+                  {phone && !k.file && <button type="button" className="adm-ibtn sm conn-paste" onClick={async (e) => { e.preventDefault(); try { const t = (await navigator.clipboard.readText()).trim(); if (t) { setVals((o) => ({ ...o, [k.k]: t })); toast("Beillesztve: ellenőrizd, majd Mentés"); } else toast("A vágólap üres"); } catch { toast("A böngésző nem engedte: tartsd az ujjad a mezőn, és válaszd a Beillesztést"); } }}>Beillesztés</button>}
                   {k.file && <span className="conn-file"><input type="file" accept=".json,.p8,application/json,text/plain" onChange={onFile(k.k)} /><span>Fájl kiválasztása</span>{vals[k.k] ? <small>betöltve ✓</small> : null}</span>}
                   {k.hint && <small className="note">{k.hint}</small>}
                 </label>
@@ -331,52 +382,50 @@ export function PlatformCard({ p, set, st, ok, state, acc, sync, test: saved, sa
             {msg && <div className={"alert " + (msg.ok ? "ok" : "err")}>{msg.t}</div>}
             <div className="conn-actions">
               <button className="adm-ibtn gold conn-save" disabled={busy}>{busy ? "Mentés…" : "Mentés"}</button>
-              {(ok || acc) && <button type="button" className="adm-ibtn conn-save" onClick={tryIt} disabled={test === "busy"}>{test === "busy" ? "Próba…" : "Kipróbálom"}</button>}
-              {p.connect && ok && <a className="adm-ibtn conn-save" href={MOCK ? undefined : p.connect}>{acc ? "Újrakapcsolás" : "Összekapcsolás"} →</a>}
-              {p.connect && acc && <a className="adm-ibtn conn-save" href={MOCK ? undefined : pubHref} title="Újra belépsz, és az írási engedélyt is megadod: utána a Tervezőből innen lehet posztolni">{pub ? "✓ Publikálás bekapcsolva" : p.id === "instagram" && igViaFb ? "Publikálás (a Facebookon át)" : "Publikálás bekapcsolása"}</a>}
-              {acc && <button type="button" className="adm-ibtn conn-save danger" onClick={disconnect}>Leválasztás</button>}
+              {!top && acts}
             </div>
-            {shownTest && <div className={"alert " + (shownTest.ok ? "ok" : "err")}>{shownTest.msg}{shownTest.at ? <small className="mut"> · próba: {ago(shownTest.at)}</small> : null}</div>}
+            {!top && testAlert}
             <p className="note">A Vercelben megadott azonos nevű kulcs elsőbbséget kap. A kulcsot itt soha nem mutatjuk meg újra; ha elírtad, add meg újra.</p>
-          </form>
+          </form>}
         </div>
-      )}
-    </section>
+    </Sheet>
   );
 }
 
 /* the free watchers that need no key (or only an optional one): each with its own state */
-function FreeWatchers({ sync }: { sync: D }) {
-  const W: [string, string, string, string][] = [["cwv", "PageSpeed", "A főbb oldalak mobil sebessége, naponta.", "Kulcs nélkül is fut."], ["watch", "Említések, tanúsítvány, Google-frissítések", "Reddit, Hacker News, Google Hírek, YouTube; a tanúsítvány és a domain lejárata; naponta.", "Kulcs nem kell."],
+function FreeWatchers({ sync, sources }: { sync: D; sources: D[] }) {
+  const L: D = { reddit: "Reddit", hackernews: "Hacker News", news: "Google Hírek", youtube: "YouTube", instagram: "Instagram #inkage" };
+  const notOk = sources.filter((s) => s.state !== "ok");
+  const W: [string, string, string, string][] = [["cwv", "PageSpeed", "A főbb oldalak mobil sebessége, naponta.", "Kulcs nélkül is fut."], ["watch", "Említések, tanúsítvány, Google-frissítések", `Mér: ${sources.filter((s) => s.state === "ok").map((s) => L[s.source] || s.source).join(", ") || "–"}. ${notOk.length ? `Nem mér: ${notOk.map((s) => `${L[s.source] || s.source} (${s.note})`).join(", ")}. ` : ""}Quora: nincs figyelve. A tanúsítvány és a domain lejárata naponta.`, "Kulcs nem kell."],
     ["competitors", "App Store-versenytársak", "A versenytárs appok értékelése, naponta.", "Kulcs nem kell."], ["seo", "SEO-bejárás", "A weboldal minden oldala, hetente.", "Kulcs nem kell."]];
   return (
-    <section className="c s12">
-      <div className="c-h"><div><div><h2>Ingyenes figyelők</h2></div></div></div>
-      <ul className="watchers">{W.map(([k, l, what, key]) => { const s = sync[k];
-        return <li key={k}><b>{l}</b><span>{what} <small className="mut">{key}</small></span>{s ? <span className={"chip " + (s.last_ok === false ? "bad" : "good")}>{s.last_ok === false ? "hiba " + ago(s.err_at) : "✓ " + ago(s.ok_at)}</span> : <span className="chip">még nem futott</span>}</li>; })}
-        <li><b>Külső elérhetőség-figyelő</b><span>Ha a Supabase leáll, a saját mérés is áll. Egy ingyenes UptimeRobot-figyelő a <code>https://inkage.app/api/config</code> címre e-mailt küld kiesésnél. <small className="mut">Regisztráció kell: ezt neked kell beállítanod.</small></span><a className="adm-ibtn sm" href="https://uptimerobot.com/" target="_blank" rel="noreferrer">uptimerobot.com ↗</a></li>
+    <section className="s12 io-sec">
+      <h3 className="ink-h">Kulcs nélküli figyelők</h3>
+      <ul className="io-rows">{W.map(([k, l, what, key]) => { const s = sync[k], part = !!s && s.last_ok !== false && /részben|^üres|kihagyva/i.test(String(s.msg || ""));
+        return <li key={k} className="io-row"><div className="io-t"><b>{l}</b><small>{what} {key}</small></div>{s ? <span className={"chip " + (s.last_ok === false ? "bad" : part ? "warn" : "good")} title={s.msg || ""}>{s.last_ok === false ? "hiba " + ago(s.err_at) : (part ? "⚠ hiányos, " : "✓ ") + ago(s.ok_at)}</span> : <span className="chip">még nem futott</span>}</li>; })}
+        <li className="io-row"><div className="io-t"><b>Külső elérhetőség-figyelő</b><small>Ha a Supabase leáll, a saját mérés is áll. Egy UptimeRobot-figyelő a https://inkage.app/api/config címre e-mailt küld kiesésnél. Regisztráció kell: ezt neked kell beállítanod.</small></div><a className="io-pill" href="https://uptimerobot.com/" target="_blank" rel="noreferrer">Megnyitás ↗</a></li>
       </ul>
     </section>
   );
 }
 
-/* The extra permissions some numbers need: the request texts, written and ready to paste into each platform's form,
-   with their state (not sent / sent / approved), kept in the database */
-const REQS: { k: string; name: string; logo: string; what: string; link: [string, string]; text: string }[] = [
-  { k: "tt-biz", name: "TikTok Business API", logo: "tiktok", what: "Nézési idő, végignézési arány, mentések, forgalomforrás (Neked oldal, Profil, Keresés), demográfia, kommentek és válasz.",
+/* The extra data the platforms give only on request: what each row is, what to do, the request text ready to paste, and
+   where it stands (she marks that herself, the platforms do not tell us); kept in the database */
+const REQS: { k: string; name: string; logo: string; what: string; link: [string, string]; text: string; rank: number; now?: boolean }[] = [
+  { k: "tt-biz", rank: 1, now: true, name: "TikTok: részletes videóadatok", logo: "tiktok", what: "Nézési idő, végignézési arány, mentések, forgalomforrás (Neked oldal, Profil, Keresés), demográfia, kommentek és válasz.",
     link: ["https://business-api.tiktok.com/portal/apply", "business-api.tiktok.com"],
     text: "InkAge (inkage.app) is a tattoo preview app: it shows a tattoo design on a photo of your own skin, and how that tattoo will age over 10, 30 and 50 years. We are requesting access to the TikTok Accounts API for our own TikTok Business account (@inkage.app) only. The data (video insights: views, average watch time, completion rate, traffic source, audience demographics; comments) is shown in our private, owner-only analytics dashboard, so we can see which videos bring people to the app and answer comments in one place. No data about other accounts is collected, nothing is shared or sold, and the dashboard has a single user (the account owner)." },
-  { k: "tt-post", name: "TikTok Content Posting (audit)", logo: "tiktok", what: "Videók nyilvános közzététele közvetlenül a Tervezőből.",
+  { k: "tt-post", rank: 2, name: "TikTok: közzététel innen", logo: "tiktok", what: "Videók nyilvános közzététele közvetlenül a Tervezőből.",
     link: ["https://developers.tiktok.com/doc/content-sharing-guidelines", "developers.tiktok.com"],
     text: "We use the Content Posting API (Direct Post) only to publish videos to our own TikTok account (@inkage.app) from our private content planner. The owner reviews every caption and privacy setting before posting; the post is created on her explicit action. No third-party accounts are connected." },
-  { k: "meta-msg", name: "Meta: Instagram-üzenetek", logo: "instagram", what: "Az Instagram DM-ek megjelenése a Postafiókban, válasszal.",
+  { k: "meta-msg", rank: 3, name: "Instagram: üzenetek a Postafiókban", logo: "instagram", what: "Az Instagram DM-ek megjelenése a Postafiókban, válasszal.",
     link: ["https://developers.facebook.com/docs/app-review", "App Review"],
     text: "instagram_business_manage_messages: our app is a private dashboard used only by the owner of the InkAge Instagram business account. It lists the direct messages the account receives next to its comments, so the owner can answer them from one inbox. Messages are never shared, analysed by third parties or used for advertising. Screencast: the owner opens the inbox, reads a message and sends a reply." },
-  { k: "li-cma", name: "LinkedIn Community Management API", logo: "linkedin", what: "A céges oldal követői és a posztok megjelenése, kattintása, reakciói.",
+  { k: "li-cma", rank: 4, name: "LinkedIn: oldal- és posztadatok", logo: "linkedin", what: "A céges oldal követői és a posztok megjelenése, kattintása, reakciói.",
     link: ["https://www.linkedin.com/developers/apps", "linkedin.com/developers"],
     text: "InkAge (inkage.app, a tattoo preview and tattoo aging app) requests the Community Management API for its own LinkedIn Page only. We read the Page's follower count and the statistics of the Page's own posts (impressions, clicks, reactions, comments, shares) to show them in our private, owner-only analytics dashboard. We do not access member data, do not post on behalf of others, and do not store data beyond these aggregate statistics." },
 ];
-const AST: Record<string, [string, string]> = { none: ["nincs beadva", ""], sent: ["beadva", "warn"], ok: ["jóváhagyva", "good"], no: ["elutasítva", "bad"] };
+const AST: Record<string, [string, string]> = { none: ["Még nem adtad be", ""], sent: ["Beadtad, várunk", "warn"], ok: ["Jóváhagyták", "good"], no: ["Elutasították", "bad"] };
 function Approvals({ accs }: { accs: D[] }) {
   const sb = useMemo(() => supabaseBrowser(), []);
   const [c, setC] = useState("");
@@ -387,26 +436,33 @@ function Approvals({ accs }: { accs: D[] }) {
   const li = accs.find((a) => a.platform === "linkedin");
   const auto = (k: string) => (k === "li-cma" && li && Number(li.posts) > 0 ? "ok" : null);
   const setS = (k: string, s: string) => { const x = { ...st, [k]: { s, at: new Date().toISOString() } }; setSt(x); rpc(sb, "admin_setting_save", { p_k: "approvals", p_v: x }).then((r) => toast(r.error ? "Nem sikerült: " + r.error.message : "Mentve")); };
+  /* no LinkedIn channel yet: its request waits too */
+  const useful = (k: string) => k !== "li-cma" || !!li;
+  const stateOf = (k: string) => auto(k) || st[k]?.s || "none";
+  const next = [...REQS].sort((a, b) => a.rank - b.rank).find((r) => r.now && useful(r.k) && stateOf(r.k) === "none");
+  const waiting = REQS.filter((r) => useful(r.k) && stateOf(r.k) === "sent").length;
   return (
-    <section className="c s12">
-      <div className="c-h"><div><div><h2>Jóváhagyások</h2></div></div></div>
-      <p className="note" style={{ marginTop: -6 }}>Néhány számhoz a platform külön engedélye kell. A kérelmek szövege kész: másold be a platform űrlapjába, és jelöld itt, hol tart. A bírálat pár nap–pár hét.</p>
-      <ul className="appr">{REQS.map((r) => { const s = auto(r.k) || st[r.k]?.s || "none";
+    <section className="c s12 io-appr">
+      <h2>Extra adat kérése a platformoktól<Info>Ezek nem hibák. Néhány adatot a platform csak külön kérésre ad, és a kérést csak te tudod beadni a saját fiókodból. A bírálat pár nap vagy pár hét. Az állapotot te jelölöd itt, a platform nem szól nekünk róla.</Info></h2>
+      <p className="appr-do">{next ? <><b>Mit csinálj először:</b> {next.name}. Ez adja a legtöbb új számot. A többi ráér.</> : waiting ? <><b>Most nincs teendőd:</b> {fmt(waiting)} kérésed van elbírálás alatt. Ha megjön a válasz, jelöld itt.</> : <><b>Most nincs teendőd.</b> A többi kérés ráér, csak akkor kell, ha szeretnéd, amit hoz.</>}</p>
+      <ul className="appr">{[...REQS].sort((a, b) => a.rank - b.rank).map((r) => { const s = stateOf(r.k);
         return (
         <li key={r.k}>
-          <div className="appr-h"><Logo k={r.logo} size={30} /><div><b>{r.name}</b><small>{r.what}</small></div><span className={"chip " + AST[s][1]}>{AST[s][0]}{st[r.k]?.at && s !== "none" ? " · " + new Date(st[r.k].at!).toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) : ""}</span><a className="adm-ibtn sm" href={r.link[0]} target="_blank" rel="noreferrer">{r.link[1]} ↗</a></div>
-          <p className="appr-t">{r.text}</p>
+          <div className="appr-h"><Logo k={r.logo} size={30} /><div><b>{r.name}</b><small>Mit kapsz érte: {r.what}{useful(r.k) ? "" : " Most nem kell: nincs LinkedIn-csatornád."}</small></div><span className={"chip " + AST[s][1]}>{AST[s][0]}{st[r.k]?.at && s !== "none" ? " · " + new Date(st[r.k].at!).toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) : ""}</span></div>
+          {s === "none" && useful(r.k) && <div className="appr-do">Mit kell tenned:<ol><li>Másold ki a kérés szövegét.</li><li>Nyisd meg a platform űrlapját, lépj be, és illeszd be.</li><li>Ha beadtad, jelöld lent: „Beadtad, várunk”.</li></ol></div>}
+          <details className="appr-more"><summary>A kérés szövege (angolul, kész)</summary><p className="appr-t">{r.text}</p></details>
           <div className="adm-row">
-            <button className="adm-ibtn sm" onClick={() => { navigator.clipboard?.writeText(r.text); setC(r.k); setTimeout(() => setC(""), 1600); }}>{c === r.k ? "Másolva ✓" : "Szöveg másolása"}</button>
-            <div className="adm-seg sm">{(["none", "sent", "ok", "no"] as const).map((k) => <button key={k} aria-pressed={s === k} onClick={() => setS(r.k, k)}>{AST[k][0]}</button>)}</div>
+            <button className="adm-ibtn sm" onClick={async () => { if (await copyText(r.text)) { setC(r.k); setTimeout(() => setC(""), 1600); } else toast("Nem sikerült másolni: a böngésző nem engedte."); }}>{c === r.k ? "Másolva ✓" : "Szöveg másolása"}</button>
+            <a className="adm-ibtn sm" href={r.link[0]} target="_blank" rel="noreferrer">Az űrlap: {r.link[1]} ↗</a>
           </div>
+          <div className="adm-row"><span className="note">Hol tart (te jelölöd):</span><div className="adm-seg sm" style={{ flexWrap: "wrap" }}>{(["none", "sent", "ok", "no"] as const).map((k) => <button key={k} aria-pressed={s === k} onClick={() => setS(r.k, k)}>{AST[k][0]}</button>)}</div></div>
         </li>); })}</ul>
     </section>
   );
 }
 
 /* ---------- the Android app's extra anonymous data: platform, app version, the sign-up event. Off until the owner has
-   added them to the Google Play data-safety form; the web sends them already, the iPhone app sends nothing ---------- */
+   added them to the Google Play data-safety form; the web sends them already (InkAge's iPhone app measures only after the cookie banner's yes, like the web) ---------- */
 function AndroidData() {
   const sb = useMemo(() => supabaseBrowser(), []);
   const [on, setOn] = useState<boolean | null>(null); const [busy, setBusy] = useState(false);
@@ -418,9 +474,8 @@ function AndroidData() {
     setOn(!!(r.data as D | null)?.android_ext); toast(!on ? "Bekapcsolva: az Android-app új munkameneteitől" : "Kikapcsolva");
   };
   return (
-    <section className="c s12">
-      <div className="c-h"><div><div><h2>Android-app: platform és regisztráció mérése</h2><p className="sub">A weboldal már küldi, honnan nézik (web), melyik beépített böngészőből (TikTok, Instagram…), és ha valaki regisztrál. Az Android-app ezt csak bekapcsolás után küldi (platform, appverzió, regisztráció), mert előbb a Google Play adatbiztonsági űrlapjára fel kell venni. Az iPhone-app semmit nem küld.</p></div></div>
-        <button className={"adm-ibtn" + (on ? " gold" : "")} disabled={on === null || busy} onClick={flip}>{on === null ? "…" : on ? "✓ Bekapcsolva" : "Kikapcsolva · bekapcsolom"}</button></div>
+    <section className="s12 io-row"><Logo k="play" size={44} /><div className="io-t"><b>Android-app: platform és regisztráció mérése<Info>A weboldal már küldi, honnan nézik (web), melyik beépített böngészőből (TikTok, Instagram…), és ha valaki regisztrál. Az Android-app ezt csak bekapcsolás után küldi (platform, appverzió, regisztráció), mert előbb a Google Play adatbiztonsági űrlapjára fel kell venni.</Info></b><small>{on === null ? "…" : on ? "Bekapcsolva" : "Kikapcsolva"}</small></div>
+      <button className="io-pill" disabled={on === null || busy} onClick={flip}>{on ? "Kikapcsolom" : "Bekapcsolom"}</button>
     </section>
   );
 }

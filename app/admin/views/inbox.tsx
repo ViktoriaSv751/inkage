@@ -2,15 +2,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { Empty, TrendChart, fmt } from "../charts";
+import { Empty, Info, TrendChart, fmt } from "../charts";
+import { Hero, Mono } from "../ink";
 import { Logo } from "../wow";
-import { toast } from "../phone";
+import { Sheet, SwipeRow, toast, usePhone } from "../phone";
 import { Card, I, MOCK, P, ago, api, lang, n, rpc, type D, useRpc } from "../shared";
+import { changed, useInboxLater } from "./todo";
 
 /* ---------- the inbox: every comment and store review in one list, answered from here ---------- */
 const SRC: Record<string, string> = { support: "Weboldal (Írj nekünk)", instagram: "Instagram", facebook: "Facebook", youtube: "YouTube", tiktok: "TikTok", pinterest: "Pinterest", linkedin: "LinkedIn", apple: "App Store", google: "Google Play" };
+/* no language on a comment: read it from the text. Only what is clear counts; otherwise it asks */
+const HU_RE = /[őűŐŰ]|\b(és|hogy|nem|köszön\w*|szia|szép|nagyon|igen|miért|hol|mikor|lehet|tetszik|tetoválás\w*|jó|kérem|kérdés\w*)\b/i;
+const EN_RE = /\b(the|and|you|this|that|how|what|why|thanks?|please|love|nice|great|can|does|is|my|signature)\b/i;
+const guessLang = (t: unknown): "hu" | "en" | null => { const s = String(t || ""); const h = HU_RE.test(s), e = EN_RE.test(s); return h && !e ? "hu" : e && !h ? "en" : h && e ? (/[áéíóöúüőű]/i.test(s) ? "hu" : "en") : /[áéíóöúüőű]/i.test(s) ? "hu" : null; };
 const STARS = (r: number) => "★★★★★".slice(0, r) + "☆☆☆☆☆".slice(0, 5 - r);
-const TAG: Record<string, [string, string]> = { "kérdés": ["Kérdés", "sky"], "ötlet": ["Ötlet", "lilac"], "dicséret": ["Dicséret", "mint"], "panasz": ["Panasz", "butter"], "hiba": ["Hiba", "pink"] };
+const TAG: Record<string, [string, string]> = { "kérdés": ["Kérdés", "sky"], "ötlet": ["Ötlet", "lilac"], "dicséret": ["Dicséret", "mint"], "panasz": ["Panasz", "butter"], "hiba": ["Hiba", "pink"], "adat": ["Adatkérés", "pink"] };
 /* what each place accepts (Google Play cut a longer answer silently at 350) */
 const LIMIT: Record<string, number> = { support: 20000, google: 350, apple: 5970, instagram: 2200, facebook: 8000, youtube: 10000 };
 /* only these platforms let a comment be hidden from here */
@@ -30,6 +36,10 @@ const TPL_MAIL: { l: string; hu: string; en: string }[] = [
   { l: "Több infó kell", hu: "Szia! Köszönöm az üzenetet. Hogy segíteni tudjak: milyen telefonon vagy gépen, melyik böngészőben vagy appban történt, melyik lépésnél (fotófeltöltés, minta, előnézet, öregítés), és pontosan mit láttál? Egy képernyőkép is sokat segít.\n\nViktória, InkAge", en: "Hi! Thanks for your message. To help: which phone or computer, which browser or app, at which step (photo upload, design, preview, aging), and what exactly did you see? A screenshot helps a lot.\n\nViktória, InkAge" },
 ];
 
+/* an account as its capital, the place it wrote from in the corner, like a messenger */
+const logoK = (s: string) => (s === "apple" ? "apple" : s === "google" ? "play" : s === "support" ? "email" : s);
+const Av = ({ x, size = 48 }: { x: D; size?: number }) => <span className="io-av"><Mono name={x.author || x.email || SRC[x.source] || "?"} size={size} /><i><Logo k={logoK(x.source)} size={20} /></i></span>;
+
 export function Inbox() {
   const sb = useMemo(() => supabaseBrowser(), []);
   const [all, setAll] = useState(false);
@@ -38,11 +48,17 @@ export function Inbox() {
   const [closed, setClosed] = useState(false); const [src, setSrc] = useState(""); const [tag, setTag] = useState("");
   const [q, setQ] = useState(""); const [since, setSince] = useState(0); const [sort, setSort] = useState<"prio" | "new" | "old" | "low">("prio");
   const [hide, setHide] = useState<string[]>([]); const [sel, setSel] = useState<string[]>([]); const [undo, setUndo] = useState<D[] | null>(null);
+  /* the phone: rows that slide (Holnap, Kész), a tap opens the answer on a sheet. "Holnap" is only a mark of hers: nobody sees it */
+  const phone = usePhone(); const [openI, setOpenI] = useState<string | null>(null); const [tools, setTools] = useState(false);
+  const later = useInboxLater();
   if (e) return <div className="g"><div className="alert err s12">{e}</div></div>;
   const key = (x: D) => x.source + "|" + x.item_id;
+  /* "Holnap" means the same everywhere: gone from here on every device and from Teendők, back tomorrow */
+  const asleep = (x: D) => !x.done && !!later.until(key(x));
+  const snooze = (x: D) => { later.put(key(x), true); toast("Holnap újra itt lesz"); };
   const items: D[] = ((d?.items || []) as D[]).filter((x) => !hide.includes(key(x)));
   const ql = q.trim().toLowerCase();
-  const shown = items.filter((x) => (closed || !x.done) && (!src || x.source === src) && (!tag || x.tag === tag)
+  const shown = items.filter((x) => !asleep(x) && (closed || !x.done) && (!src || x.source === src) && (!tag || x.tag === tag)
     && (!ql || [x.body, x.author, x.post_title].some((t) => String(t || "").toLowerCase().includes(ql)))
     && (!since || (x.created_at && Date.now() - new Date(x.created_at).getTime() < since * 864e5)))
     .sort((a, b) => sort === "new" ? String(b.created_at || "").localeCompare(String(a.created_at || "")) : sort === "old" ? String(a.created_at || "").localeCompare(String(b.created_at || "")) : sort === "low" ? n(a.rating || 6) - n(b.rating || 6) : 0);
@@ -55,7 +71,7 @@ export function Inbox() {
     if (on) setHide((h) => [...h, ...xs.map(key)]); else setHide((h) => h.filter((k) => !xs.some((x) => key(x) === k)));
     const r = MOCK ? { error: null } : xs.length === 1 ? await rpc(sb, "admin_inbox_done", { p_source: xs[0].source, p_item: xs[0].item_id, p_done: on }) : await rpc(sb, "admin_inbox_done_many", { p_items: xs.map((x) => ({ source: x.source, item_id: x.item_id })), p_done: on });
     if (r.error) { toast(r.error.message); setHide((h) => h.filter((k) => !xs.some((x) => key(x) === k))); return; }
-    setSel([]); setUndo(on ? xs : null); if (!on) toast("Visszanyitva");
+    setSel([]); setUndo(on ? xs : null); if (!on) toast("Visszanyitva"); changed();
     /* the counter follows at once (it stayed where it was) */
     load().then(() => setHide([]));
   };
@@ -63,31 +79,36 @@ export function Inbox() {
   const stars: D[] = (d?.stars || []) as D[];
   const starPts = Object.values(stars.reduce((m: Record<string, D>, x) => { const k = String(x.t); const o = m[k] || { t: k, s: 0, c: 0 }; o.s += n(x.avg) * n(x.n); o.c += n(x.n); m[k] = o; return m; }, {})).sort((a: D, b: D) => a.t.localeCompare(b.t)).map((x: D) => ({ t: x.t, v: x.c ? Math.round((x.s / x.c) * 100) / 100 : 0 }));
   const bugs: D[] = (d?.bugs || []) as D[], authors: D[] = (d?.authors || []) as D[];
+  const asleepL = items.filter(asleep), nAsleep = asleepL.length, wake = () => asleepL.forEach((x) => later.put(key(x), false)), openX = items.find((x) => key(x) === openI);
   return (
-    <div className="g">
-      <section className="c s12 inbox-top">
-        <div><span className="eyebrow">Postafiók</span><h2 className="ib-n">{fmt(d?.open ?? 0)} válaszra vár</h2></div>
-        <div className="adm-seg sm" role="group">
-          <button aria-pressed={!src} onClick={() => setSrc("")}>Minden forrás</button>
-          {srcList.map((s) => <button key={s.k} aria-pressed={src === s.k} onClick={() => setSrc(src === s.k ? "" : s.k)}>{SRC[s.k] || s.k} · {fmt(s.open)}</button>)}
+    <div className="g io">
+      <div className="s12 io-hero-wide"><Hero flip max={120} label={<>Válaszra vár<Info>Elöl a 3 csillag alatti vélemények és a hibajelzések. A „Hiba” címkéjű kommentek a Rendszer oldalon is megjelennek. A TikTok-, Pinterest- és LinkedIn-kommenteket, az Instagram-említéseket és -üzeneteket a mostani bekötés nem hozza be.</Info></>} v={Math.max(0, n(d?.open) - nAsleep)} sub={[nAsleep ? `${fmt(nAsleep)} holnapra téve.` : "", n(d?.not_fetched?.tiktok) > 0 ? `Ebben nincs benne ${fmt(d?.not_fetched?.tiktok)} TikTok-komment: a jelenlegi bekötés nem hozza be, a TikTokon látod.` : ""].filter(Boolean).join(" ") || undefined} /></div>
+      <section className="s12 io-sec inbox-top">
+        <div className="io-scroll" role="group" aria-label="Forrás">
+          <button className="io-src" aria-pressed={!src} onClick={() => setSrc("")}>Mind</button>
+          {srcList.map((s) => <button key={s.k} className="io-src" aria-pressed={src === s.k} onClick={() => setSrc(src === s.k ? "" : s.k)}><Logo k={s.k === "apple" ? "apple" : s.k === "google" ? "play" : s.k === "support" ? "email" : s.k} size={24} />{SRC[s.k] || s.k}<b>{fmt(s.open)}</b></button>)}
         </div>
-        <div className="ib-tags">{Object.entries(TAG).map(([k, [l, tone]]) => <button key={k} className={"chip t-" + tone} aria-pressed={tag === k} onClick={() => setTag(tag === k ? "" : k)}>{l} · {tagN(k)}</button>)}</div>
-        <div className="ib-tools">
+        <div className="ib-tags">{Object.entries(TAG).map(([k, [l, tone]]) => <button key={k} className="chip" aria-pressed={tag === k} onClick={() => setTag(tag === k ? "" : k)}>{l} · {tagN(k)}</button>)}</div>
+        {phone && <button className="io-pill" onClick={() => setTools(!tools)} aria-expanded={tools}>Keresés, szűrés{q || since || closed || sort !== "prio" ? " •" : ""}</button>}
+        {(!phone || tools) && <div className="ib-tools">
           <input className="adm-in sm" placeholder="Keresés a szövegben, névben, posztban" value={q} onChange={(x) => setQ(x.target.value)} />
           <select className="adm-in sm" value={since} onChange={(x) => setSince(Number(x.target.value))} aria-label="Időszak"><option value={0}>Bármikor</option><option value={1}>24 óra</option><option value={7}>7 nap</option><option value={30}>30 nap</option><option value={90}>90 nap</option></select>
           <select className="adm-in sm" value={sort} onChange={(x) => setSort(x.target.value as typeof sort)} aria-label="Rendezés"><option value="prio">Fontossági sorrend</option><option value="new">Legújabb elöl</option><option value="old">Legrégebbi elöl</option><option value="low">Legrosszabb értékelés elöl</option></select>
           <label className="ck-row"><input type="checkbox" checked={closed} onChange={(x) => { setClosed(x.target.checked); if (x.target.checked) setAll(true); }} />Lezártak is</label>
-        </div>
-        {(selected.length > 0 || shown.some((x) => !x.done)) && <div className="ib-bulk">
+        </div>}
+        {(!phone || tools) && (selected.length > 0 || shown.some((x) => !x.done)) && <div className="ib-bulk">
           <label className="ck-row"><input type="checkbox" checked={selected.length > 0 && selected.length === shown.filter((x) => !x.done).length} onChange={(x) => setSel(x.target.checked ? shown.filter((y) => !y.done).map(key) : [])} />{selected.length ? `${selected.length} kijelölve` : "Mind kijelölése"}</label>
           {selected.length > 0 && <button className="adm-ibtn sm" onClick={() => doneMany(selected)}>{I(P.check)}Kijelöltek kész</button>}
         </div>}
       </section>
       {undo && <div className="s12 ib-undo"><span>{undo.length > 1 ? `${undo.length} elem kész` : "Kész"}</span><button className="lnk" onClick={() => { const u = undo; setUndo(null); doneMany(u, false); }}>Visszavonás</button><button className="lnk" onClick={() => setUndo(null)}>✕</button></div>}
       <section className="s8">
-        {!d ? <div className="skel" style={{ height: 300 }} /> : !shown.length ? <div className="c"><Empty t={items.length ? (q || src || tag || since ? "Nincs ilyen elem a szűrésben." : "Minden megválaszolva. ✓") : "Ha bekötöd az Instagramot, a Facebookot, a YouTube-ot vagy az áruházakat, itt jelenik meg minden új komment és vélemény, és innen válaszolhatsz."} icon={P.mail} /></div>
+        {nAsleep > 0 && <p className="ib-hint ib-asleep"><span>{fmt(nAsleep)} üzenet holnapra vár.</span><button className="lnk" onClick={wake}>Mutasd most</button></p>}
+        {!d ? <div className="skel" style={{ height: 300 }} /> : !shown.length ? <div className="c"><Empty t={items.length ? (q || src || tag || since ? "Nincs ilyen elem a szűrésben." : nAsleep ? "Ma nincs több válaszra váró üzenet." : "Minden megválaszolva. ✓") : (d?.connected || []).includes("instagram") ? "Még nincs behozott komment vagy vélemény: az Instagram-posztjaid alatt nincs komment, az áruházakból nem jött vélemény, és a weboldalról sem írt senki." : "Ha bekötöd az Instagramot, a Facebookot, a YouTube-ot vagy az áruházakat, itt jelenik meg minden új komment és vélemény, és innen válaszolhatsz."} icon={P.mail} /></div>
+          : phone ? <>
+            <ul className="ib-sw">{shown.map((x) => { const row = <div className={"ib-row" + (x.done || x.reply ? " done" : "") + (x.source === "support" && !x.seen_at && !x.done ? " unread" : "")} onClick={x.done || x.reply ? () => setOpenI(key(x)) : undefined}><Av x={x} /><div><span className="ib-row-h"><b>{x.author || (x.source === "support" ? x.email : "Névtelen")}</b>{x.rating ? <span className="ib-stars">{STARS(Number(x.rating))}</span> : null}<time>{x.created_at ? ago(x.created_at) : ""}</time></span><p>{x.body || "(szöveg nélkül)"}</p><small>{SRC[x.source] || x.source}{x.tag && TAG[x.tag] ? " · " + TAG[x.tag][0] : ""}{x.reply ? " · megválaszolva" : ""}</small></div></div>;
+              return <li key={key(x)}>{x.done || x.reply ? row : <SwipeRow done={() => doneMany([x])} later={() => snooze(x)} open={() => setOpenI(key(x))}>{row}</SwipeRow>}</li>; })}</ul></>
           : <ul className="inbox">{shown.map((x) => <InboxItem key={key(x)} x={x} sel={sel.includes(key(x))} onSel={(on) => setSel((s) => (on ? [...s, key(x)] : s.filter((k) => k !== key(x))))} onDone={() => doneMany([x])} onReopen={() => doneMany([x], false)} onSent={load} />)}</ul>}
-        <p className="note" style={{ marginTop: 10 }}>Elöl a 3 csillag alatti vélemények és a hibajelzések. A „Hiba” címkéjű kommentek a Rendszer oldalon is megjelennek. A TikTok-, Pinterest- és LinkedIn-kommenteket, az Instagram-említéseket és -üzeneteket a mostani bekötés nem hozza be.</p>
       </section>
       <aside className="s4 ib-side">
         {starPts.length > 1 && <Card icon={P.layers} title="Áruházi csillagok hetente" sub="A vélemények átlaga hetente, az App Store és a Google Play együtt (az utolsó 120 nap)."><TrendChart data={starPts} label="Átlag" height={140} /></Card>}
@@ -96,6 +117,7 @@ export function Inbox() {
         {authors.length > 0 && <Card icon={P.users} title="Leggyakoribb kommentelők" sub="Akik a legtöbbször írnak: érdemes nekik külön figyelmet adni.">
           <ul className="ib-auth">{authors.slice(0, 8).map((a) => <li key={a.source + a.author}><Logo k={a.source} size={18} /><b>{a.author}</b><span>{fmt(a.n)} komment · {ago(a.last)}</span></li>)}</ul></Card>}
       </aside>
+      {phone && openX && <Sheet tall title={openX.author || SRC[openX.source] || "Üzenet"} sub={SRC[openX.source] || openX.source} close={() => setOpenI(null)}><ul className="inbox"><InboxItem key={key(openX)} x={openX} onDone={() => { setOpenI(null); doneMany([openX]); }} onReopen={() => { setOpenI(null); doneMany([openX], false); }} onSent={() => { setOpenI(null); load(); }} /></ul></Sheet>}
     </div>
   );
 }
@@ -119,11 +141,19 @@ export function InboxItem({ x, onDone, onSent, onReopen, sel, onSel, startOpen }
   const [seen, setSeen] = useState<boolean>(!mail || !!x.seen_at); const [tagM, setTagM] = useState<string>(x.tag || "");
   const markSeen = () => { if (!seen && !MOCK) { setSeen(true); rpc(sb, "admin_inbox_seen", { p_source: x.source, p_item: x.item_id }); } };
   const setTag = async (t: string) => { setTagM(t === "nincs" ? "" : t); const { error } = await rpc(sb, "admin_inbox_tag_set", { p_source: x.source, p_item: x.item_id, p_tag: t || null }); if (error) toast(error.message); else toast("Címke frissítve"); };
-  const hu = lng === "hu" || (lng === "auto" && String(x.lang || "").startsWith("hu"));
+  /* "Auto": the comment's language; when that is unknown, read from its text; when even that is unclear, she picks */
+  const auto: "hu" | "en" | null = x.lang ? (String(x.lang).startsWith("hu") ? "hu" : "en") : guessLang(x.body);
+  const unsure = lng === "auto" && !auto;
+  const hu = lng === "hu" || (lng === "auto" && auto === "hu");
+  /* a button never writes over what she typed without asking */
+  const keepsTyped = () => !text.trim() || confirm("Felülírod a beírt szöveget?");
+  const useTpl = (t: { hu: string; en: string }) => { if (unsure) { toast("Melyik nyelven? Válaszd ki: HU vagy EN"); return; } if (!keepsTyped()) return; setText((hu ? t.hu : t.en).slice(0, lim || 99999)); };
+  const thanks = () => { if (unsure) { setOpen(true); toast("Melyik nyelven? Válaszd ki: HU vagy EN"); return; } send(hu ? TPL[0].hu : TPL[0].en); };
   /* the suggestion knows the post, the language, the stars, and for Apple the country and the app version */
   const suggest = async () => {
+    if (!keepsTyped()) return;
     setBusy("ai");
-    const r = await api("/api/admin/ai", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ mode: "reply", lang: lng === "auto" ? (x.lang ? (String(x.lang).startsWith("hu") ? "hu" : "en") : undefined) : lng,
+    const r = await api("/api/admin/ai", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ mode: "reply", lang: lng === "auto" ? auto || undefined : lng,
       data: { source: SRC[x.source] || x.source, kind: review ? "áruházi vélemény" : "komment", rating: x.rating, text: x.body, post: x.post_title, author: x.author, nyelv: x.lang, orszag: x.territory, verzio: x.version, hossz_max: lim, tag: x.tag } }) });
     setBusy(""); if (r.ok && r.json?.text) setText(lim ? String(r.json.text).slice(0, lim) : r.json.text); else toast(r.json?.error || "Az MI most nem válaszolt.");
   };
@@ -131,7 +161,7 @@ export function InboxItem({ x, onDone, onSent, onReopen, sel, onSel, startOpen }
     const t = (t0 ?? text).trim(); if (!t) return;
     if (lim && t.length > lim) { toast(`Legfeljebb ${lim} karakter mehet ide.`); return; }
     /* a public answer (or an e-mail), which can't be taken back from here: asked first, with the exact text */
-    if (!confirm(mail ? `E-mail megy ki ide: ${x.email}\n\n„${t}”\n\nElküldöd, és lezárod az üzenetet?` : `Nyilvános válasz megy ki ide: ${SRC[x.source] || x.source}\n\n„${t}”\n\nElküldöd?`)) return;
+    if (!confirm(mail ? `E-mail megy ki ide: ${x.author ? x.author + ", " : ""}${x.email}\n\n„${t}”\n\nElküldöd, és lezárod az üzenetet?` : `Nyilvános válasz megy ki ide: ${x.author || "Névtelen"}, ${SRC[x.source] || x.source}\n\n„${t}”\n\nElküldöd?`)) return;
     setBusy("send");
     const r = MOCK ? { ok: true, json: { ok: true } } : await api("/api/admin/reply", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ source: x.source, id: x.item_id, text: t }) });
     setBusy("");
@@ -147,11 +177,11 @@ export function InboxItem({ x, onDone, onSent, onReopen, sel, onSel, startOpen }
     <li className={"ib-i" + (x.done || reply ? " done" : "") + (!seen ? " unread" : "")} onClick={markSeen}>
       <div className="ib-h">
         {onSel && !x.done && !reply && <input type="checkbox" className="ib-ck" checked={!!sel} onChange={(e) => onSel(e.target.checked)} aria-label="Kijelölés" />}
-        {mail ? <span className="ib-mail" aria-hidden>{I(P.mail)}</span> : <Logo k={x.source === "apple" ? "apple" : x.source === "google" ? "play" : x.source} size={30} />}
+        <Av x={x} size={44} />
         <b>{x.author || (mail ? x.email : "Névtelen")}</b>{mail && x.author && <small className="mut">{x.email}</small>}
         {!seen && <span className="chip gold">új</span>}
         {review && x.rating ? <span className="ib-stars">{STARS(Number(x.rating))}</span> : null}
-        {tagM && TAG[tagM] && <span className={"chip t-" + TAG[tagM][1]}>{TAG[tagM][0]}</span>}
+        {review && tagM && TAG[tagM] && <span className="chip">{TAG[tagM][0]}</span>}
         {!review && <select className="ib-tagsel" value={tagM} onChange={(e) => setTag(e.target.value || "nincs")} aria-label="Címke" onClick={(e) => e.stopPropagation()}><option value="">címke…</option>{Object.entries(TAG).map(([k, [l]]) => <option key={k} value={k}>{l}</option>)}</select>}
         {hidden && <span className="chip">elrejtve</span>}{liked && <span className="chip">♥ kedvelve</span>}
         <span className="ib-src">{SRC[x.source] || x.source}{x.created_at ? " · " + ago(x.created_at) : ""}{meta ? " · " + meta : ""}</span>
@@ -164,18 +194,19 @@ export function InboxItem({ x, onDone, onSent, onReopen, sel, onSel, startOpen }
       {!reply && !x.done && !open && <div className="ib-act">
         {/* LinkedIn's comments can't be answered from here (its API does not allow it): no button that would only fail */}
         {x.source !== "linkedin" && <button className="adm-ibtn gold sm" onClick={() => setOpen(true)}>{I(P.pen)}Válasz</button>}
-        {x.source !== "linkedin" && !mail && <button className="adm-ibtn sm" disabled={busy !== ""} onClick={() => send(hu ? TPL[0].hu : TPL[0].en)} title="Rövid köszönő válasz (előtte megkérdezi)">♥ Köszönöm</button>}
+        {x.source !== "linkedin" && !mail && <button className="adm-ibtn sm" disabled={busy !== ""} onClick={thanks} title="Rövid köszönő válasz (előtte megkérdezi)">♥ Köszönöm</button>}
         {mail && <button className="adm-ibtn sm" onClick={() => { navigator.clipboard?.writeText(x.body || ""); toast("Az üzenet a vágólapon"); }}>Másolás</button>}
         <button className="adm-ibtn sm" onClick={onDone}>Kész, nem kell válasz</button>
         {!review && CAN_HIDE.has(x.source) && <button className="adm-ibtn sm" disabled={busy !== ""} onClick={() => mod(hidden ? "unhide" : "hide")}>{hidden ? "Megjelenítés" : "Elrejtés"}</button>}
         {x.source === "facebook" && !liked && <button className="adm-ibtn sm" disabled={busy !== ""} onClick={() => mod("like")}>♥ Kedvelés</button>}
       </div>}
       {open && <div className="ib-form">
-        <div className="ib-tpl">{(mail ? TPL_MAIL : TPL).map((t) => <button key={t.l} className="chip" onClick={() => setText((hu ? t.hu : t.en).slice(0, lim || 99999))}>{t.l}</button>)}</div>
+        <p className="ib-to">Válasz neki: <b>{x.author || x.email || "Névtelen"}</b></p>
+        <div className="ib-tpl">{(mail ? TPL_MAIL : TPL).map((t) => <button key={t.l} className="chip" onClick={() => useTpl(t)}>{t.l}</button>)}</div>
         <textarea className="adm-in" rows={3} value={text} maxLength={lim} onChange={(e) => setText(e.target.value)} placeholder="A válaszod…" autoFocus />
         <div className="ib-act">
           <button className="adm-ibtn sm" onClick={suggest} disabled={busy !== ""}>{busy === "ai" ? "Írom…" : "✦ MI-javaslat"}</button>
-          <div className="adm-seg sm" title="A javaslat nyelve"><button aria-pressed={lng === "auto"} onClick={() => setLng("auto")}>Auto</button><button aria-pressed={lng === "hu"} onClick={() => setLng("hu")}>HU</button><button aria-pressed={lng === "en"} onClick={() => setLng("en")}>EN</button></div>
+          <div className="adm-seg sm" title="A javaslat nyelve"><button aria-pressed={lng === "auto"} onClick={() => setLng("auto")}>{auto ? `Auto · ${auto.toUpperCase()}` : "Auto"}</button><button aria-pressed={lng === "hu"} onClick={() => setLng("hu")}>HU</button><button aria-pressed={lng === "en"} onClick={() => setLng("en")}>EN</button></div>
           {lim && <span className={"ib-cnt" + (text.length > lim * 0.9 ? " warn" : "")}>{text.length} / {lim}</span>}
           <span style={{ flex: 1 }} />
           <button className="adm-ibtn sm" onClick={() => setOpen(false)}>Mégse</button>

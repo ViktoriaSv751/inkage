@@ -3,7 +3,7 @@
    so Gmail and iOS Mail keep the dark background instead of putting light text on white. Pure HTML, in Hungarian. */
 
 type P = Record<string, number>;
-export type Digest = { day: string; win_from?: string; win_to?: string; y: P; p: P; w: P; pw: P; all_scored: number; users: number; channels: { k: string; n: number }[]; signin_fail: number;
+export type Digest = { day: string; win_from?: string; win_to?: string; y: P; p: P; w: P; pw: P; all_scored: number; all_made: number; all_made_users: number; users: number; channels: { k: string; n: number }[]; signin_fail: number;
   best_post: { platform: string; title: string; url: string; views: number; gained: number } | null; gsc: { clicks: number; impressions: number; day: string | null };
   goals: { metric: string; period: string; target: number; value: number }[]; to: string[] };
 export type Extra = { inbox_open: number; plans: { title: string; at: string | null; platforms: string[] }[]; week_plan: { t: string; done?: boolean }[] | null; week: P; prev_week: P;
@@ -14,7 +14,7 @@ type Err = { name: string; provider: string | null; why: string; n: number; last
 
 export const nf = (x: number) => (Number(x) || 0).toLocaleString("hu-HU");
 export const ch = (a: number, b: number) => (!b ? (a ? "új" : "–") : `${a >= b ? "▲" : "▼"} ${Math.abs(Math.round(((a - b) / b) * 100))}%`);
-const CH: Record<string, string> = { androidapp: "Android-app", tiktok: "TikTok", instagram: "Instagram", google: "Google", facebook: "Facebook", pinterest: "Pinterest", youtube: "YouTube", ai: "MI-keresők", közvetlen: "Közvetlen / ismeretlen", hivatkozás: "Más weboldal", email: "E-mail" };
+const CH: Record<string, string> = { androidapp: "Android-app", iosapp: "iPhone-app", tiktok: "TikTok", instagram: "Instagram", google: "Google", facebook: "Facebook", pinterest: "Pinterest", youtube: "YouTube", ai: "MI-keresők", közvetlen: "Közvetlen / ismeretlen", hivatkozás: "Más weboldal", email: "E-mail" };
 const PFN: Record<string, string> = { tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook", pinterest: "Pinterest", linkedin: "LinkedIn", youtube: "YouTube" };
 const esc = (t: string) => String(t || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 /* a post's address in a link: only https, escaped (it comes from the platforms) */
@@ -96,27 +96,28 @@ ${o.body}
 
 /* a card listing the errors (kind, provider, message, count); nothing when there were none */
 function errors(list: Err[] | undefined, when: string) {
-  if (!list?.length) return label(`Hibák · ${when}`) + block(card(`<div style="font-family:${SANS};font-size:15px;color:${UP};font-weight:bold;">✓&nbsp; Nem volt hiba.</div>`, "18px 22px"));
-  return label(`Hibák · ${when}`) + block(card(`<table ${T}>${list.map((e, i) => line(`<span style="color:${DOWN};font-weight:bold;">${esc(ERR[e.name] || e.name)}${e.provider ? ` · ${esc(PROV[e.provider] || e.provider)}` : ""}</span>${e.why ? `<br><span style="font-size:13px;line-height:19px;color:${SOFT};">${esc(why(e.why))}</span>` : ""}`, `${nf(e.n)}×`, !i)).join("")}</table>`));
+  /* there is no error reporting for most of the app (and the iPhone app sends nothing): no report is not "no error" */
+  if (!list?.length) return label(`Hibajelzések · ${when}`) + block(card(`<div style="font-family:${SANS};font-size:15px;line-height:22px;color:${SOFT};">Nem érkezett hibajelzés. Ez nem azt jelenti, hogy nem volt hiba: csak a belépési hibákat és néhány app-hibát látjuk, az iPhone-appból semmit.</div>`, "18px 22px"));
+  return label(`Hibajelzések · ${when}`) + block(card(`<table ${T}>${list.map((e, i) => line(`<span style="color:${DOWN};font-weight:bold;">${esc(ERR[e.name] || e.name)}${e.provider ? ` · ${esc(PROV[e.provider] || e.provider)}` : ""}</span>${e.why ? `<br><span style="font-size:13px;line-height:19px;color:${SOFT};">${esc(why(e.why))}</span>` : ""}`, `${nf(e.n)}×`, !i)).join("")}</table>`));
 }
 
-/* the hero: yesterday's finished tattoo previews, gold-framed, with the road to a million */
+/* the hero: the tattoo previews made in the last 24 hours, gold-framed, with the road to a million users */
 function hero(d: Digest) {
   const MIL = 1_000_000;
   return `<tr><td style="padding:30px 24px 0;"><table ${T} style="border-radius:26px;${GOLD}"><tr><td style="padding:1.5px;">
 <table ${T} bgcolor="#0d0b07" style="border-radius:25px;background:#0d0b07;background-image:radial-gradient(120% 90% at 50% 0%,#2a2212 0%,#0d0b07 60%);"><tr><td align="center" style="padding:32px 28px 30px;">
-<div style="font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;color:${GOLDC};">Kész előnézet · 24 óra</div>
-<div style="padding-top:8px;font-family:${SERIF};font-size:88px;line-height:96px;font-style:italic;font-weight:bold;color:#f3d896;">${nf(d.y.scored)}</div>
-<div style="padding-top:2px;">${chip(d.y.scored, d.p.scored)} <span style="font-family:${SANS};font-size:13px;color:${MUTED};">&nbsp;előtte 24 óra: ${nf(d.p.scored)}</span></div>
-<table ${T} style="margin-top:26px;"><tr><td style="padding-bottom:8px;font-family:${SANS};font-size:13px;color:${SOFT};">Úton az egymillióhoz</td>
-<td align="right" style="padding-bottom:8px;font-family:${SANS};font-size:13px;font-weight:bold;color:${INK};white-space:nowrap;">${nf(d.all_scored)} <span style="font-weight:normal;color:${MUTED};">/ 1 000 000</span></td></tr>
-<tr><td colspan="2">${bar(d.all_scored, MIL)}</td></tr>
-<tr><td colspan="2" style="padding-top:10px;font-family:${SANS};font-size:12px;color:${MUTED};">${nf(d.users)} fiók összesen</td></tr></table>
+<div style="font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;color:${GOLDC};">Elkészült előnézet · 24 óra</div>
+<div style="padding-top:8px;font-family:${SERIF};font-size:88px;line-height:96px;font-style:italic;font-weight:bold;color:#f3d896;">${nf(d.y.made)}</div>
+<div style="padding-top:2px;">${chip(d.y.made, d.p.made)} <span style="font-family:${SANS};font-size:13px;color:${MUTED};">&nbsp;előtte 24 óra: ${nf(d.p.made)}</span></div>
+<table ${T} style="margin-top:26px;"><tr><td style="padding-bottom:8px;font-family:${SANS};font-size:13px;color:${SOFT};">Úton az egymillió felhasználóhoz</td>
+<td align="right" style="padding-bottom:8px;font-family:${SANS};font-size:13px;font-weight:bold;color:${INK};white-space:nowrap;">${nf(d.users)} <span style="font-weight:normal;color:${MUTED};">/ 1 000 000</span></td></tr>
+<tr><td colspan="2">${bar(d.users, MIL)}</td></tr>
+<tr><td colspan="2" style="padding-top:10px;font-family:${SANS};font-size:12px;color:${MUTED};">${nf(d.all_made)} előnézet készült eddig, ${nf(d.all_made_users)} fióktól</td></tr></table>
 </td></tr></table></td></tr></table></td></tr>`;
 }
 
 export function digestEmail(d: Digest, x: Extra | undefined, site: string, tz = "Europe/Budapest") {
-  const subject = `InkAge · az elmúlt 24 óra: ${nf(d.y.scored)} előnézet, ${nf(d.y.sessions)} látogatás`;
+  const subject = `InkAge · az elmúlt 24 óra: ${nf(d.y.made)} előnézet, ${nf(d.y.sessions)} látogatás`;
   /* the window, e.g. "október 23., 9:00 – október 24., 9:00" (older data without it: the day before) */
   const at = (t: string) => new Date(t).toLocaleString("hu-HU", { timeZone: tz, month: "long", day: "numeric", hour: "numeric", minute: "2-digit" });
   const span = d.win_from && d.win_to ? `${at(d.win_from)} – ${at(d.win_to)}` : d.day;
@@ -126,21 +127,22 @@ export function digestEmail(d: Digest, x: Extra | undefined, site: string, tz = 
     hero(d),
     label("Az előtte lévő 24 órához mérve"),
     `<tr><td style="padding:0 18px;"><table ${T}><tr>${tile("Látogatás", d.y.sessions, d.p.sessions)}${tile("Regisztráció", d.y.signups, d.p.signups)}</tr>
-<tr>${tile("Megosztás", d.y.shared, d.p.shared)}${tile("Hibák", d.y.errors, d.p.errors, true)}</tr></table></td></tr>`,
+<tr>${tile("Előnézetet készített fiók", d.y.made_users, d.p.made_users)}${tile("Hibajelzés", d.y.errors, d.p.errors, true)}</tr>
+<tr>${tile("Megosztás", d.y.shared, d.p.shared)}${tile("Mentés", d.y.saved, d.p.saved)}</tr></table></td></tr>`,
     t.length ? label("Ma teendő") + t.map((s) => `<tr><td style="padding:0 24px 10px;"><table ${T} bgcolor="#1a150c" style="border-radius:16px;background:#1a150c;border:1px solid #4a3c20;"><tr>
 <td width="4" bgcolor="${GOLDC}" style="border-radius:16px 0 0 16px;${GOLD}">&nbsp;</td>
 <td style="padding:15px 18px;font-family:${SANS};font-size:15px;line-height:22px;color:${INK};">${esc(s)}</td></tr></table></td></tr>`).join("") : "",
     chans.length ? label("Honnan jöttek") + block(card(`<table ${T}>${chans.map((c, i) => `<tr><td style="padding:${i ? "14px" : "0"} 0 0;"><table ${T}><tr>
 <td style="padding-bottom:7px;font-family:${SANS};font-size:15px;color:${INK};">${esc(CH[c.k] || c.k)}</td><td align="right" style="padding-bottom:7px;font-family:${SANS};font-size:15px;font-weight:bold;color:${INK};">${nf(c.n)}</td></tr>
 <tr><td colspan="2">${bar(c.n, top)}</td></tr></table></td></tr>`).join("")}</table>`)) : "",
-    d.best_post ? label("Legjobb poszt") + block(card(`<div style="font-family:${SANS};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${MUTED};">${esc(PFN[d.best_post.platform] || d.best_post.platform)}</div>
+    d.best_post ? label("Legjobb poszt · tegnap") + block(card(`<div style="font-family:${SANS};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${MUTED};">${esc(PFN[d.best_post.platform] || d.best_post.platform)}</div>
 <div style="padding-top:8px;font-family:${SANS};font-size:17px;line-height:24px;font-weight:bold;"><a href="${url(d.best_post.url, site)}" style="color:${INK};text-decoration:none;">${esc((d.best_post.title || "poszt").slice(0, 90))}</a></div>
-<div style="padding-top:12px;font-family:${SANS};font-size:14px;color:${SOFT};"><b style="color:${UP};">+${nf(d.best_post.gained)}</b> új megtekintés · ${nf(d.best_post.views)} összesen &nbsp;<a href="${url(d.best_post.url, site)}" style="color:${GOLDC};font-weight:bold;">Megnyitom &rarr;</a></div>`)) : "",
+<div style="padding-top:12px;font-family:${SANS};font-size:14px;color:${SOFT};"><b style="color:${UP};">+${nf(d.best_post.gained)}</b> új megtekintés tegnap · ${nf(d.best_post.views)} összesen &nbsp;<a href="${url(d.best_post.url, site)}" style="color:${GOLDC};font-weight:bold;">Megnyitom &rarr;</a></div>`)) : "",
     errors(x?.errors_day, "az elmúlt 24 óra"),
     button(`${site}/admin`, "Irányítóközpont"),
   ].join("\n");
 
-  const pre = `${nf(d.y.scored)} előnézet (${ch(d.y.scored, d.p.scored)}), ${nf(d.y.sessions)} látogatás, ${nf(d.y.signups)} regisztráció. Összesen ${nf(d.all_scored)} / 1 000 000.`;
+  const pre = `${nf(d.y.made)} előnézet (${ch(d.y.made, d.p.made)}), ${nf(d.y.sessions)} látogatás, ${nf(d.y.signups)} regisztráció. ${nf(d.users)} / 1 000 000 felhasználó.`;
   const html = page({ subject, pre, kicker: "Reggeli összefoglaló", title: "Az elmúlt 24 óra", sub: esc(span), body, foot: `Belső értesítő az InkAge csapatának · minden reggel 6-kor, ott, ahol vagy (most: ${esc(tz.replace(/_/g, " "))}). Az időzóna magától átáll, amikor máshol megnyitod az Irányítóközpontot.` });
   return { subject, html, text: text(d, site) };
 }
@@ -150,10 +152,11 @@ export function weeklyEmail(x: Extra, site: string) {
   const w = x.week || {}, pw = x.prev_week || {};
   const weekAgo = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
   const hd = (day: string) => new Date(day + "T12:00:00Z").toLocaleDateString("hu-HU", { timeZone: "Europe/Budapest", month: "long", day: "numeric" });
-  const subject = `InkAge · a hét: ${nf(w.scored)} előnézet, ${nf(w.sessions)} látogatás`;
+  const subject = `InkAge · a hét: ${nf(w.made)} előnézet, ${nf(w.sessions)} látogatás`;
   const body = [
-    `<tr><td style="padding:24px 18px 0;"><table ${T}><tr>${tile("Látogatás", w.sessions, pw.sessions)}${tile("Előnézet", w.scored, pw.scored)}</tr>
-<tr>${tile("Regisztráció", w.signups, pw.signups)}${tile("Hibák", w.errors, pw.errors, true)}</tr></table></td></tr>`,
+    `<tr><td style="padding:24px 18px 0;"><table ${T}><tr>${tile("Elkészült előnézet", w.made, pw.made)}${tile("Előnézetet készített fiók", w.made_users, pw.made_users)}</tr>
+<tr>${tile("Látogatás", w.sessions, pw.sessions)}${tile("Megosztás", w.shared, pw.shared)}</tr>
+<tr>${tile("Regisztráció", w.signups, pw.signups)}${tile("Hibajelzés", w.errors, pw.errors, true)}</tr></table></td></tr>`,
     label("Google") + block(card(`<table ${T}>${line("Kattintás", nf(x.gsc_week?.clicks), true)}${line("Megjelenés", nf(x.gsc_week?.impressions))}</table>`)),
     x.followers.length ? label("Követők · a héten") + block(card(`<table ${T}>${x.followers.map((f, i) => line(`${esc(PFN[f.platform] || f.platform)}<br><span style="font-size:13px;color:${MUTED};">${nf(f.followers)} követő összesen${f.since && f.since > weekAgo ? ` · mérés ${hd(f.since)} óta` : ""}</span>`,
       `<span style="color:${(f.gained || 0) > 0 ? UP : (f.gained || 0) < 0 ? DOWN : MUTED};">${(f.gained || 0) > 0 ? "+" : ""}${nf(f.gained || 0)}</span>`, !i)).join("")}</table>`)) : "",
@@ -162,13 +165,13 @@ export function weeklyEmail(x: Extra, site: string) {
     x.week_plan?.length ? label("A heti terv") + block(card(`<table ${T}>${x.week_plan.map((s, i) => line(`<span style="color:${s.done ? UP : GOLDC};font-weight:bold;">${s.done ? "✓" : "○"}</span>&nbsp; <span style="color:${s.done ? MUTED : INK};">${esc(s.t)}</span>`, "", !i)).join("")}</table>`)) : "",
     button(`${site}/admin#report`, "A teljes riport"),
   ].join("\n");
-  const pre = `${nf(w.scored)} előnézet (${ch(w.scored, pw.scored)}), ${nf(w.sessions)} látogatás (${ch(w.sessions, pw.sessions)}), ${nf(w.signups)} regisztráció az elmúlt 7 napban.`;
-  return { subject, html: page({ subject, pre, kicker: "Heti riport", title: "Az elmúlt 7 nap", sub: "InkAge · az előző héthez mérve", body, foot: "Belső értesítő az InkAge csapatának · minden vasárnap este" }) };
+  const pre = `${nf(w.made)} előnézet (${ch(w.made, pw.made)}), ${nf(w.sessions)} látogatás (${ch(w.sessions, pw.sessions)}), ${nf(w.signups)} regisztráció az elmúlt 7 napban.`;
+  return { subject, html: page({ subject, pre, kicker: "Heti riport", title: "Az elmúlt 7 nap", sub: "InkAge · az előző 7 naphoz mérve (a riport oldala hétfőtől számol, ezért kicsit eltérhet)", body, foot: "Belső értesítő az InkAge csapatának · minden vasárnap este" }) };
 }
 
 export function text(d: Digest, site: string) {
   const t = todo(d);
-  return [`InkAge · az elmúlt 24 óra`, `Kész előnézet: ${nf(d.y.scored)} (${ch(d.y.scored, d.p.scored)})`, `Látogatás: ${nf(d.y.sessions)} (${ch(d.y.sessions, d.p.sessions)}) · Regisztráció: ${nf(d.y.signups)}`,
-    `Megosztás: ${nf(d.y.shared)} · Hibák: ${nf(d.y.errors)}`,
+  return [`InkAge · az elmúlt 24 óra`, `Elkészült előnézet: ${nf(d.y.made)} (${ch(d.y.made, d.p.made)}), ${nf(d.y.made_users)} fióktól`, `Látogatás: ${nf(d.y.sessions)} (${ch(d.y.sessions, d.p.sessions)}) · Regisztráció: ${nf(d.y.signups)}`,
+    `Megosztás: ${nf(d.y.shared)} · Mentés: ${nf(d.y.saved)} · Hibajelzés: ${nf(d.y.errors)}`,
     ...(t.length ? ["Teendő:", ...t.map((x) => "• " + x)] : []), `${site}/admin`].join("\n");
 }

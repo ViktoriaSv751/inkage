@@ -122,6 +122,18 @@ export async function upsert(table: string, rows: Record<string, unknown>[], _on
   return rows.length;
 }
 
+/* a database function anyone may call (no p_token argument): the partner's invite link, which carries no admin session */
+export async function rpcPublic<T = unknown>(fn: string, args: Record<string, unknown> = {}): Promise<T> {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: SUPABASE_KEY, "content-type": "application/json" }, body: JSON.stringify(args), cache: "no-store" });
+  const t = await r.text();
+  if (!r.ok) { let m = t; try { m = JSON.parse(t).message || t; } catch {} throw new Error(String(m).slice(0, 200)); }
+  return (t ? JSON.parse(t) : null) as T;
+}
+/* runs fn with these platform keys as env() (an invite's sign-in: no admin, only the one platform's app keys) */
+export function withKeys<T>(keys: Record<string, string>, fn: () => Promise<T>): Promise<T> {
+  return als.run({ sb: null, token: "", keys }, fn);
+}
+
 /* change some columns of one connected TikTok / Instagram account */
 export const patchAccount = (platform: string, set: Record<string, unknown>) => call("admin_w_social_account_patch", { p_platform: platform, p_set: set });
 

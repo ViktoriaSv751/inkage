@@ -1,0 +1,541 @@
+/* Ops pages on the ink system: Teendők, Jelzések, Postafiók, Kérdezz, Közlemények, Kapcsolatok, Monitoring, Rendszer, Célok, Napló, Élő.
+   Everything hangs on .io, so no other page changes. Loaded after ink.css. */
+
+/* a page root; an inverted card also turns the page colour its buttons read */
+.io{min-width:0;max-width:100%}
+.io:not(.g){display:flex;flex-direction:column;gap:18px}
+.adm .io .ink-flip{--a-bg:var(--ink-flip-bg)}
+.adm .io .ink-hero{overflow:visible}
+.adm .io .ink-flip .ink-mono,.adm .io .ink-flip .plogo{background:var(--ink-flip-fg)!important;color:var(--ink-flip-bg)!important}
+.io .ink-hero-l{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.io .ink-hero-side .adm-ibtn{display:inline-flex;align-items:center;gap:6px}
+.io .ink-hero-s small{font-size:14px;line-height:1.35}
+.io .ink-hero .adm-dot{display:inline-block;width:9px;height:9px;border-radius:99px;background:currentColor;flex:none}
+.io .info{flex:none}
+.io-sec{display:flex;flex-direction:column;gap:12px;min-width:0}
+.io-sec-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.io-kick{display:block;font-size:13.5px;font-weight:650;color:var(--a-mut)}
+.io-actions{display:flex;flex-wrap:wrap;gap:8px}
+.io-time{flex:none;font-size:12.5px;color:var(--a-dim);white-space:nowrap}
+
+/* rows: an icon or a logo, two lines, the value or a pill on the right */
+.io-rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.io-rows>li{min-width:0}
+.io-row{display:flex;align-items:center;gap:12px;width:100%;min-width:0;min-height:68px;padding:12px 14px;border:0;border-radius:22px;background:var(--a-s1);color:var(--a-fg);text-align:left;font:inherit;text-decoration:none}
+a.io-row:hover,.io-row.go:hover{background:var(--a-s2)}
+.c .io-row,.drawer .io-row,.ink-flip .io-row{background:var(--a-s2)}
+.ink-flip .io-row{color:var(--ink-flip-fg)}
+.io-ic{flex:none;width:44px;height:44px;border-radius:99px;display:grid;place-items:center;background:var(--a-s2);color:var(--a-fg);font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-size:20px}
+.c .io-ic,.drawer .io-ic,.ink-flip .io-ic{background:var(--a-s3)}
+.io-ic svg{width:20px;height:20px}
+.io-row.bad .io-ic,.ink-flip .io-row .io-ic{background:var(--a-fg);color:var(--a-bg)}
+.io-row.warn .io-ic{box-shadow:inset 0 0 0 2px var(--a-fg);background:none}
+.io-t{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px;background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit}
+button.io-t{cursor:pointer}
+.io-t b{font-size:15.5px;font-weight:650;line-height:1.25;overflow-wrap:anywhere}
+.io-t small{font-size:13px;line-height:1.35;color:var(--a-dim);overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.io-v{flex:none;display:flex;flex-direction:column;align-items:flex-end;text-align:right}
+.io-v b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:24px;line-height:1.05;letter-spacing:-.035em}
+.io-v small{font-size:12.5px;color:var(--a-dim)}
+.io-pill{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 16px;border:0;border-radius:99px;background:var(--a-s3);color:var(--a-fg);font:inherit;font-size:14px;font-weight:700;white-space:nowrap;cursor:pointer;text-decoration:none}
+.io-pill:hover{background:var(--a-s4)}
+.io-pill:disabled{opacity:.5}
+.io-pill.wide{width:100%;min-height:50px;background:var(--a-s1)}
+.io-row .chip{flex:none}
+/* a sliding row keeps its round corners; a computer has no slide actions behind it */
+.io .swrow{position:relative;overflow:hidden;border-radius:22px}
+.io .sw-f{background:none;border-radius:inherit}
+@media (min-width:981px){.io .sw-acts{display:none}.io .sw-f{cursor:pointer}}
+
+/* rows that swipe sideways inside the page */
+.io-scroll{display:flex;gap:6px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;min-width:0;max-width:100%;padding:1px}
+.io-scroll::-webkit-scrollbar{display:none}
+.io-src{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;border-radius:99px;background:var(--a-s1);color:var(--a-fg);font:inherit;font-size:14px;font-weight:650;white-space:nowrap;cursor:pointer}
+span.io-src{cursor:default}
+.io-src.off{opacity:.5}
+.io-src b{font-family:var(--a-disp);font-stretch:125%;font-weight:800}
+.io-src[aria-pressed="true"]{background:var(--a-fg);color:var(--a-bg)}
+.io-src[aria-pressed="true"] .plogo{background:var(--a-bg)!important;color:var(--a-fg)!important}
+.adm .io-seg{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;max-width:100%;justify-self:start}
+.io-seg::-webkit-scrollbar{display:none}
+.io-seg button{flex:none;white-space:nowrap}
+.io .ink-rings3 button{font:inherit}
+
+/* the big inverted card */
+.io-card{display:flex;flex-direction:column;gap:12px;width:100%;min-width:0;padding:24px;border-radius:var(--ink-r);background:var(--a-s1);color:var(--a-fg);text-align:left}
+.io-card-m{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;font-weight:650;opacity:.72}
+.io-card-t{display:block;font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:clamp(27px,7.6vw,40px);line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere}
+.io-card-s{margin:0;font-size:15px;line-height:1.45;opacity:.76;overflow-wrap:anywhere}
+.io-card-a{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.adm .ink-flip .adm-ibtn:not(.gold){background:var(--a-s2);color:var(--ink-flip-fg)}
+.adm .ink-flip .adm-ibtn.gold{background:var(--ink-flip-fg)!important;color:var(--ink-flip-bg)!important}
+.io-card-a .adm-ibtn{display:inline-flex;align-items:center;gap:6px;min-height:48px;font-size:15px}
+.io-card-a .adm-ibtn svg{width:16px;height:16px}
+
+/* here the deck is the star: the number stays smaller, so the card is on the first screen */
+.io-small{--max:88px}
+.adm .io-small .ink-hero{padding:18px 22px;flex-direction:row;flex-wrap:wrap;align-items:flex-end;gap:6px 16px}
+.io-small .ink-hero-l{flex:1 0 100%}
+.io-small .ink-giant{width:auto;flex:0 0 42%}
+.io-small .ink-hero-side{flex:1;min-width:0;margin:0}
+
+/* Teendők: a deck; what comes next shows as edges under the card */
+.io-deck{position:relative;min-width:0}
+.io-deck.n1{padding-bottom:10px}
+.io-deck.n2{padding-bottom:20px}
+.io-deck.n1::after,.io-deck.n2::after{content:"";position:absolute;left:16px;right:16px;bottom:10px;height:40px;border-radius:0 0 var(--ink-r) var(--ink-r);background:var(--a-s3)}
+.io-deck.n2::before{content:"";position:absolute;left:30px;right:30px;bottom:0;height:40px;border-radius:0 0 var(--ink-r) var(--ink-r);background:var(--a-s2)}
+.io-deck.n1::after{bottom:0}
+.io-deck .swrow{z-index:1;border-radius:var(--ink-r)}
+.io-deck .io-card{min-height:280px;justify-content:space-between}
+.io-done{align-items:flex-start;padding:26px}
+.io-done>span{width:68px;height:68px;border-radius:99px;display:grid;place-items:center;background:var(--ink-flip-fg);color:var(--ink-flip-bg)}
+.io-done>span svg{width:34px;height:34px}
+.io-new{display:flex;gap:8px;min-width:0}
+.io-new .adm-in{flex:1 1 auto;min-width:0;height:54px;border-radius:99px;padding:0 20px;font-size:16px;background:var(--a-s1)}
+.io-new .adm-ibtn{flex:none;min-height:54px}
+.io-rt{display:flex;flex-direction:column;gap:14px}
+.io-rt-h{display:flex;align-items:center;gap:14px}
+.io-rt-h h2{flex:1;margin:0}
+.io-rt-h .ink-ring-c b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:18px;letter-spacing:-.03em}
+.io-ck{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:12px;min-height:44px;border:0;padding:0;background:none;color:inherit;font:inherit;font-size:15px;font-weight:600;text-align:left;cursor:pointer}
+.io-ck i{flex:none;width:30px;height:30px;border-radius:99px;box-shadow:inset 0 0 0 2px var(--a-line2);display:grid;place-items:center}
+.io-ck i svg{width:17px;height:17px}
+.io-row.on .io-ck i{background:var(--a-fg);color:var(--a-bg);box-shadow:none}
+.io-row.on .io-ck span{color:var(--a-dim);text-decoration:line-through}
+.io-undo{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:47;display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(92vw,420px);padding:14px 20px;border-radius:99px;background:var(--a-fg);color:var(--a-bg);font-weight:650}
+.io-undo button{border:0;background:none;color:inherit;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer}
+@media (min-width:981px){.io-undo{bottom:24px}.io-deck .io-card{min-height:260px;padding:32px}.io-card-t{font-size:44px}}
+
+/* Jelzések */
+.io .alist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.adm .io .alist>li:not(.ph-hint){display:flex;align-items:center;gap:12px;padding:0;border:0;border-radius:22px;background:none;box-shadow:none;cursor:pointer}
+.adm .io .alist>li.go{padding:12px 14px;background:var(--a-s1)}
+.adm .io .alist>li.go.sel{box-shadow:inset 0 0 0 2px var(--a-fg)}
+.adm .io .al-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--a-s1);border-radius:22px;min-height:68px}
+.adm .io .alist .ic,.adm .io .al-row .ic{flex:none;width:44px;height:44px;border-radius:99px;display:grid;place-items:center;background:var(--a-s2)!important;color:var(--a-fg)!important}
+.adm .io .alist li.bad .ic,.adm .io .al-row.bad .ic{background:var(--a-fg)!important;color:var(--a-bg)!important}
+.adm .io .alist .ic svg,.adm .io .al-row .ic svg{width:20px;height:20px}
+.adm .io .alist b,.adm .io .al-row b{display:block;font-size:15.5px;font-weight:650;line-height:1.25}
+.adm .io .alist .t,.adm .io .al-row .t{display:block;font-size:13px;line-height:1.35;color:var(--a-dim)}
+.adm .io .al-since{display:block;font-size:12.5px;color:var(--a-dim)}
+.adm .io .inbox-d{background:var(--a-s1)!important;color:var(--a-fg);border:0;border-radius:var(--ink-r);display:flex;flex-direction:column;gap:12px}
+.adm .io .inbox-d h1{margin:0;font-size:clamp(26px,7vw,34px)!important;line-height:1.1;color:var(--a-fg)}
+.adm .io .inbox-d .ib-s{margin:0;color:var(--a-mut);font-size:15px;line-height:1.45}
+.adm .io .inbox-d .adm-ibtn.gold{background:var(--a-fg);color:var(--a-bg)}
+.adm .io .inbox-d .note{color:var(--a-dim);opacity:1}
+.adm .io .inbox-d .adm-ibtn{display:inline-flex;align-items:center;gap:6px}
+.adm .io .inbox-d .adm-ibtn svg{width:16px;height:16px}
+
+/* Postafiók */
+.adm .io .inbox-top{gap:10px}
+.adm .io .ib-tags{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:1px}
+.adm .io .ib-tags::-webkit-scrollbar{display:none}
+.adm .io .ib-tags .chip{flex:none;min-height:38px;padding:0 14px;background:var(--a-s1);border:0;color:var(--a-fg);font-weight:650}
+.adm .io .ib-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.adm .io .ib-tools .adm-in{flex:1 1 160px;min-width:0;height:44px;background:var(--a-s1)}
+.adm .io .ib-tools input.adm-in{flex-basis:100%}
+@media (min-width:981px){.adm .io .ib-tools input.adm-in{flex-basis:280px}}
+.adm .io .ib-bulk{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px}
+.adm .io .ib-undo{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:99px;background:var(--a-s1);border:0;font-weight:650}
+.adm .io .ib-sw,.adm .io .inbox{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.adm .io .ib-sw .swrow{border-radius:22px}
+.adm .io .ib-row{display:flex;gap:12px;padding:14px;background:var(--a-s1);border-radius:22px}
+.adm .io .ib-row>div{flex:1;min-width:0}
+.adm .io .ib-row-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.adm .io .ib-row-h b{font-weight:700;font-size:15px}
+.adm .io .ib-row-h time{margin-left:auto;font-size:12.5px;color:var(--a-dim)}
+.adm .io .ib-row p{margin:3px 0;font-size:15px;line-height:1.4}
+.adm .io .ib-row small{font-size:12.5px;color:var(--a-dim)}
+.adm .ib-row.done{opacity:.6}
+.adm .io .ib-i{background:var(--a-s1);border:0!important;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:none}
+.adm .io .ib-i.unread{box-shadow:inset 0 0 0 2px var(--a-fg)}
+.adm .io .ib-body{font-size:15.5px;line-height:1.45;margin:0}
+.adm .io .ib-act{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.adm .io .ib-reply{background:var(--a-s2);border:0;border-radius:16px;padding:12px 14px}
+.adm .io .ib-stars,.adm .ib-stars{color:var(--a-fg)}
+.adm .io .ib-side{display:flex;flex-direction:column;gap:20px;min-width:0}
+.adm .io .ib-bugs,.adm .io .ib-auth{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.adm .io .ib-bugs li,.adm .io .ib-auth li{display:flex;align-items:center;gap:10px;padding:10px 12px;border:0;border-radius:18px;background:var(--a-s2)}
+.adm .io .ib-bugs div{flex:1;min-width:0;display:flex;flex-direction:column}
+.adm .io .ib-bugs span,.adm .io .ib-auth span{font-size:13px;color:var(--a-dim)}
+.adm .io .ib-bugs time{flex:none;font-size:12px;color:var(--a-dim)}
+.adm .io .ib-auth span{margin-left:auto}
+
+/* (.io-state-t is the big statement of Monitoring and Kérdezz) */
+.adm .io .ma-talk{align-self:flex-start}
+/* Kérdezz: the whole screen is the conversation; the question field stays in reach */
+.io-ask{min-height:calc(100dvh - 190px);align-content:space-between}
+.io-ask-s{display:flex;flex-direction:column;gap:18px;min-width:0}
+.io-ask-e{display:flex;flex-direction:column;gap:18px;min-width:0}
+.adm .io-ask-hero.ink-hero{background:none;padding:6px 2px 2px}
+.adm .io .io-ask-hero .io-state-t{font-size:clamp(38px,11vw,96px)!important}
+.io-sugs{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
+.io-sug{display:inline-block;max-width:100%;padding:13px 18px;border:0;border-radius:24px;background:var(--a-s1);color:var(--a-fg);font:inherit;font-size:15px;font-weight:600;line-height:1.3;text-align:left;cursor:pointer}
+button.io-sug:hover{background:var(--a-s2)}
+.io-sug.off{cursor:default;color:var(--a-dim);box-shadow:inset 0 0 0 1px var(--a-line2);background:none}
+.io-ask-pf{display:flex;flex-direction:column;gap:10px;min-width:0}
+.io-ask-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.io-ask-nokey ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.45}
+.io-ask-nokey a{color:inherit;font-weight:700}
+.io-ask-bar{position:sticky;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;flex-direction:column;gap:8px;min-width:0}
+.io-ask-f{display:flex;align-items:center;gap:6px;min-width:0;padding:7px;border-radius:99px;background:color-mix(in srgb,var(--a-s2) 94%,transparent);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);box-shadow:inset 0 0 0 1px var(--a-line)}
+.io-ask-f input{flex:1 1 auto;min-width:0;height:52px;padding:0 14px;border:0;background:none;color:var(--a-fg);font:inherit;font-size:17px;font-weight:550;outline-offset:-2px;border-radius:99px}
+.io-ask-f input::placeholder{color:var(--a-dim)}
+.io-ask-go{flex:none;height:52px;padding:0 20px;border:0;border-radius:99px;background:var(--a-fg);color:var(--a-bg)!important;font:inherit;font-size:15px;font-weight:750;cursor:pointer}
+.io-ask-go:disabled{opacity:.42;cursor:default}
+.io-ask-mic{flex:none;width:52px;height:52px;border:0;border-radius:99px;display:grid;place-items:center;background:var(--a-s3);color:var(--a-fg)}
+.io-ask-mic svg{width:22px;height:22px}
+.io-ask-mic.on{background:var(--a-fg);color:var(--a-bg)}
+.adm .io-ask .ask-l{display:flex;flex-direction:column;gap:18px;min-width:0}
+.adm .io-ask .ask-q{border-radius:26px 26px 6px 26px;padding:14px 18px;font-size:16px;font-weight:600;max-width:88%}
+.adm .io-ask .ask-a{border-radius:26px 26px 26px 6px;padding:16px 18px;font-size:15.5px;background:var(--a-s1);max-width:100%}
+.adm .io-ask .ask-a p{margin:0 0 6px}
+.adm .io-ask .ask-plan{display:inline-flex;align-items:center;gap:6px;margin:8px 8px 0 0;min-height:38px;padding:0 14px;border-radius:99px;background:var(--a-s3);color:var(--a-fg);text-decoration:none;font-weight:700;font-size:14px}
+.adm .io-ask .ask-plan svg{width:15px;height:15px}
+.adm.is-phone .io-ask{min-height:calc(100dvh - 170px - env(safe-area-inset-top,0px))}
+.ma-conv.io-ask{min-height:0}
+@media (min-width:981px){.io-ask-bar{bottom:16px}.io-ask-s,.io-ask-bar{width:100%;max-width:900px;justify-self:center}.io-ask{min-height:calc(100dvh - 150px)}}
+
+/* Közlemények: the active one, big, next to a phone */
+.io-ann-star{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:center}
+.io-ann-star-t{display:flex;flex-direction:column;gap:12px;min-width:0}
+@media (min-width:681px){.io-ann-star{grid-template-columns:minmax(0,1fr) 280px}}
+.io-phone{position:relative;display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:280px;margin:0 auto;aspect-ratio:9/16;max-height:440px;padding:44px 10px 16px;border-radius:38px;background:#000;color:#fff;box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 7px #000,inset 0 0 0 8px #444;overflow:hidden}
+.io-phone-notch{position:absolute;top:15px;left:50%;width:76px;height:20px;transform:translateX(-50%);border-radius:99px;background:#fff}
+.io-phone-ban{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:18px;background:#1C1C1C;color:#fff;font-size:13px;line-height:1.35}
+.io-phone-ban>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.io-phone-ban b{font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.io-phone-ban span{color:#C4C4C4;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;overflow:hidden}
+.io-phone-ban em{font-style:normal;font-size:18px;line-height:1;color:#C4C4C4}
+.io-phone>i{margin:auto 0;text-align:center;font-family:"Mr Dafoe",cursive;font-style:normal;font-size:38px;color:#fff;opacity:.9}
+.adm .ann-pv .io-phone{max-height:340px}
+.io .sw,.io-row .sw{flex:none}
+.io-open{cursor:pointer}
+.io-empty{align-items:flex-start}
+.adm .ann-form .ann-pv{align-items:stretch}
+
+/* Kapcsolatok: tiles. Connected: filled. Missing: a dashed outline. Trouble: a thick line and a mark */
+.io-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:681px){.io-tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:1280px){.io-tiles{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.io-tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;min-height:158px;padding:16px;border:0;border-radius:var(--ink-r);background:none;color:var(--a-fg);font:inherit;text-align:left;cursor:pointer;transition:transform .2s var(--ink-ease)}
+.io-tile:active{transform:scale(.97)}
+.io-tile .plogo{margin-bottom:auto}
+.io-tile b{margin-top:10px;font-size:15px;font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.io-tile small{font-size:12.5px;line-height:1.25;opacity:.72}
+.io-tile.on{background:var(--a-fg);color:var(--a-bg)}
+.adm .io-tile.on .plogo{background:var(--a-bg)!important;color:var(--a-fg)!important}
+.io-tile.off{border:2px dashed var(--a-line2)}
+.io-tile.bad{box-shadow:inset 0 0 0 3px var(--a-fg)}
+.io-tile.dim{opacity:.62}
+.io-tile-w{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:99px;display:grid;place-items:center;background:var(--a-fg);color:var(--a-bg);font-style:normal;font-weight:900;font-size:16px}
+.io-tile.on .io-tile-w{background:var(--a-bg);color:var(--a-fg)}
+.io-pips{display:flex;gap:4px}
+.io-pips i{flex:1;height:12px;border-radius:99px;background:var(--a-s3)}
+.io-pips i.on{background:var(--a-fg)}
+.io-what{margin:0 0 4px;font-size:15px;line-height:1.45;color:var(--a-mut)}
+.adm .io-conn{display:flex;flex-direction:column;gap:14px;padding:0;border:0}
+.adm .io-conn .conn-steps{margin:0}
+.adm .io-conn .conn-acc{background:var(--a-s1);border:0;border-radius:18px;padding:12px 14px;font-size:14px}
+.adm .io-conn .alert{font-size:14px}
+.adm .io-conn .conn-actions{display:flex;flex-wrap:wrap;gap:8px}
+.adm .io-conn .conn-save{display:inline-flex;align-items:center;justify-content:center;height:auto;min-height:46px}
+.adm .io-conn .conn-in{background:var(--a-s2);border:0;border-radius:18px}
+.adm .io-conn .conn-copy{border:0;border-radius:18px;background:var(--a-s2);max-width:100%}
+.adm .io-conn .conn-copy code{overflow-wrap:anywhere;white-space:normal}
+.adm .io-appr{display:flex;flex-direction:column;gap:12px}
+.adm .io-appr h2{margin:0}
+.adm .io-appr .appr{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.adm .io-appr .appr>li{display:flex;flex-direction:column;gap:10px;padding:14px;border:0;border-radius:22px;background:var(--a-s2)}
+.adm .io-appr .appr-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.adm .io-appr .appr-h>div{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.adm .io-appr .appr-h small{font-size:13px;color:var(--a-dim);line-height:1.35}
+.adm .io-appr .adm-seg{max-width:100%}
+
+/* Monitoring: one statement, and when it is not true, the card turns over and says what is not */
+.adm .io-state{display:flex;flex-direction:column;gap:14px;padding:24px}
+.adm .io .io-state-t{margin:0;font-size:clamp(44px,14vw,120px)!important;line-height:.94!important;font-weight:900!important;font-style:italic;letter-spacing:-.05em!important;overflow-wrap:break-word;hyphens:manual;color:inherit}
+.adm .io-rings .ink-ring{max-width:96px}
+.adm .io-rings b{font-size:clamp(16px,4.6vw,24px);white-space:nowrap;letter-spacing:-.04em}
+.adm .io-rings small{line-height:1.25;overflow-wrap:anywhere}
+.adm .io .tb{max-width:100%}
+
+/* Rendszer: rows with a pattern instead of a traffic light */
+.adm .io .srows{gap:6px}
+.adm .io .srows li{border:0;border-radius:18px;background:var(--a-s2);padding:12px 14px;align-items:center}
+.adm .io .sr-d{width:14px;height:14px;background:none;box-shadow:inset 0 0 0 1.5px var(--a-line2)}
+.adm .io .sr-d.ok{background:var(--a-fg);box-shadow:none}
+.adm .io .sr-d.bad{position:relative;width:20px;height:20px;background:var(--a-fg);box-shadow:none}
+.adm .io .sr-d.bad::after{content:"!";position:absolute;inset:0;display:grid;place-items:center;color:var(--a-bg);font-weight:900;font-size:13px}
+.adm .io .sr-strip i{background:var(--a-s4)}
+.adm .io .sr-strip i.bad{background:var(--a-fg)}
+.adm .io .selfck li,.adm .io .srv-errs li,.adm .io .signins li,.adm .io .sec-row{border:0;border-radius:18px;background:var(--a-s2);padding:12px 14px}
+.adm .io .srv-errs,.adm .io .signins{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.adm .io .sec h4,.adm .io .push-prefs h4{margin:16px 0 8px;font-size:15px;font-weight:700;color:var(--a-fg)}
+.adm .io .sec-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.adm .io .sec-row b{display:block;font-size:15px}
+.adm .io .sec-row small{display:block;font-size:13px;line-height:1.35;color:var(--a-dim)}
+.adm .io .sec-qr{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.adm .io .sec-qr canvas,.adm .io .sec-qr img,.adm .io .sec-qr svg{border-radius:18px;background:#fff;padding:8px}
+.adm .io .sec-qr code{overflow-wrap:anywhere}
+
+/* Célok */
+.adm .io .goals{grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr))}
+.adm .io .goal-c.on{background:var(--a-s2)!important;border-radius:22px!important;gap:12px;padding:16px;min-width:0}
+.adm .io .goal-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.adm .io .goal-h b{font-size:15.5px;font-weight:700}
+.io-goal{display:flex;align-items:center;gap:14px;min-width:0}
+.io-goal>div{flex:1;min-width:0}
+.io-goal .ink-ring-c b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:16px;letter-spacing:-.03em}
+.adm .io .goal-v{font-size:34px;line-height:1.05}
+.adm .io .goal-v small{font-size:15px;color:var(--a-dim);font-weight:600;letter-spacing:0}
+.adm .io .goal-s{font-size:13px;line-height:1.35;color:var(--a-mut)}
+.adm .io .goal-s b{color:var(--a-fg);font-weight:700}
+.adm .io .goal-hist span.ok i{background:var(--a-fg)}
+.adm .io .goal-hist span:not(.ok) i{background:var(--a-dim)}
+.adm .io .goal-new{background:var(--a-s2);border-radius:22px;padding:14px}
+.adm .io .ms-card{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.adm .io .ms-card h2{font-size:clamp(26px,7vw,38px)!important;margin:4px 0}
+.adm .io .ms-card .adm-ibtn{display:inline-flex;align-items:center;gap:6px}
+
+/* Élő: the counter, the black map (black by day too), a glass strip */
+.io-live{gap:0}
+.io-live>.g{min-width:0}
+.io-map{position:relative;width:100%;aspect-ratio:2/1.02;border-radius:var(--ink-r);background:#000;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.io-map>.skel{width:100%;height:100%}
+.io-map svg{display:block;width:100%;height:100%}
+.io-map path{fill:#2A2A2A;stroke:#000;stroke-width:.6}
+.io-map .p{fill:#fff}
+.io-map .h{fill:#fff;opacity:.35;transform-box:fill-box;transform-origin:center;animation:io-ping 2.2s ease-out infinite}
+.io-map-e{position:absolute;left:14px;right:14px;bottom:12px;text-align:center;font-size:13px;font-weight:600;color:#C4C4C4}
+@keyframes io-ping{from{transform:scale(1);opacity:.45}to{transform:scale(3.6);opacity:0}}
+.io-full{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 14px calc(14px + env(safe-area-inset-bottom,0px));background:#000;color:#fff;--a-fg:#fff;--a-bg:#000}
+.io-full-h{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.io-full-h h2{margin:0;color:#fff}
+.adm .io-full-h button{background:#fff!important;color:#000!important}
+.io-full small{color:#C4C4C4;font-size:13px;line-height:1.35}
+.io-full .io-map{box-shadow:none;flex:0 1 auto;max-height:80dvh;aspect-ratio:2/1.02}
+.io-now{display:flex;flex-direction:column;gap:14px}
+.io-now h2{margin:0}
+.io-spark{height:70px}
+.adm .io-glass{position:sticky;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:6;display:grid;grid-template-columns:1fr 1fr;width:100%;margin-top:18px;padding:12px 8px;border-radius:var(--ink-r);background:color-mix(in srgb,var(--a-s2) 88%,transparent);-webkit-backdrop-filter:blur(26px) saturate(1.4);backdrop-filter:blur(26px) saturate(1.4);box-shadow:inset 0 0 0 1px var(--a-line),0 14px 34px rgba(0,0,0,.4)}
+.io-glass>div{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
+.io-glass>div+div{box-shadow:inset 1px 0 0 var(--a-line)}
+.io-glass small{font-size:13px;font-weight:600;color:var(--a-mut)}
+.io-glass b{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:36px;line-height:1.02;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+@media (min-width:981px){.io-sec>.io-map{aspect-ratio:auto;height:min(62vh,520px)}.adm .io-glass{bottom:16px;width:420px;align-self:center}}
+.adm .io .pp-now{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.adm .io .pp-now li{border:0;border-radius:18px;background:var(--a-s2);padding:10px 14px}
+.adm .io .lc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.adm .io .lc>li{display:flex;align-items:center;gap:10px;padding:10px 12px;border:0;border-radius:18px;background:var(--a-s2)}
+.adm .io .lc>li>div{flex:1;min-width:0;display:flex;flex-direction:column}
+.adm .io .lc span{font-size:13px;color:var(--a-dim)}
+.adm .io .lc time{flex:none;font-size:12px;color:var(--a-dim)}
+.adm .io .lp-i{border-radius:18px;border:0;background:var(--a-s2)}
+.adm .io .lp-i em{color:var(--a-fg);font-style:normal;font-weight:800}
+.adm .io .lp-i.hot{box-shadow:inset 0 0 0 2px var(--a-fg)}
+.adm .io .visits li{border:0!important;border-radius:18px;background:var(--a-s2)}
+.adm .io .visits li.good{box-shadow:inset 0 0 0 2px var(--a-fg);background:var(--a-s2)}
+.adm .io .visits li.bad{box-shadow:inset 0 0 0 2px var(--a-fg)}
+.adm .io .vp span{background:var(--a-s3);color:var(--a-fg);border:0}
+.adm .io .vp span.good,.adm .io .vp span.bad{background:var(--a-fg);color:var(--a-bg)}
+.adm .io .vl{font-size:12px;font-weight:700;color:var(--a-dim)}
+.adm .io .fi,.adm .io .fi.bad,.adm .io .fi.good,.adm .io .fi.gold{background:var(--a-s2);color:var(--a-fg)}
+.adm .io .nsteps i,.adm .io .nowsteps i{background:var(--a-fg)}
+.adm .io .pp-seg{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;flex-wrap:nowrap;scrollbar-width:none}
+.adm .io .pp-seg button{flex:none;white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){.io-map .h{animation:none;opacity:.2}.io-tile{transition:none}}
+
+/* ---------- the ideas built on top of the pages ---------- */
+/* a ring on an inverted card: its off segments must read on white too */
+.adm .io .ink-flip .ink-ring{--a-s4:color-mix(in srgb,var(--ink-flip-fg) 16%,var(--ink-flip-bg))}
+/* Teendők: today's ring and the run of zero days */
+.io-day{display:flex;align-items:center;gap:14px;min-width:0;padding:12px 16px;border-radius:22px;background:var(--a-s1)}
+.io-day .ink-ring-c b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;font-size:17px;letter-spacing:-.03em}
+.adm .io .io-done{align-items:center;text-align:center;padding:40px 24px}
+.adm .io .io-done>span{width:120px;height:120px;background:var(--a-fg);color:var(--a-bg)}
+.adm .io .io-done>span svg{width:60px;height:60px}
+/* Jelzések */
+.io-al-top .ib-chart{min-width:0;width:100%}
+.adm .io .io-rows .ph-hint{font-size:13px;color:var(--a-dim);text-align:center;padding:4px 0;list-style:none}
+.io-rows .go{cursor:pointer}
+/* Postafiók: an avatar with the place in its corner */
+.io-av{position:relative;flex:none;display:inline-grid}
+.io-av>i{position:absolute;right:-3px;bottom:-3px;display:grid;place-items:center;border-radius:30%;box-shadow:0 0 0 2px var(--a-s1);font-style:normal;line-height:0}
+.adm .io .ib-row{align-items:flex-start}
+.adm .io .ib-row p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere}
+.adm .io .ib-row.unread .ib-row-h b{font-weight:800}
+.adm .io .ib-row.unread .ib-row-h b::after{content:"";display:inline-block;width:9px;height:9px;margin-left:7px;border-radius:99px;background:var(--a-fg);vertical-align:middle}
+/* Kérdezz: the figures of an answer as cards */
+.io-nums{list-style:none;margin:0 0 12px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,140px),1fr));gap:6px}
+.io-nums li{display:flex;flex-direction:column;gap:3px;min-width:0;padding:14px;border-radius:18px;background:var(--a-s2)}
+.io-nums small{font-size:12.5px;line-height:1.3;color:var(--a-dim);overflow-wrap:anywhere}
+.io-nums em{font-style:normal;font-size:12px;font-weight:700}
+.io-nums li.no{background:none;box-shadow:inset 0 0 0 1.5px var(--a-line2);border-radius:18px}
+.adm .io-ask .ask-ch{margin-bottom:12px}
+/* Közlemények: state pills. Filled, outlined, dashed, plain */
+.io-st{align-self:flex-start;display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:99px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.io-st.run{background:var(--a-fg);color:var(--a-bg)}
+.io-st.sched{box-shadow:inset 0 0 0 1.5px var(--a-fg)}
+.io-st.draft{border:1.5px dashed var(--a-line2)}
+.io-st.ended{padding:0;color:var(--a-dim)}
+/* Kapcsolatok: the ring is the page's figure */
+.adm .io .io-conn-top{align-items:center;text-align:center}
+.io-conn-top .ink-ring{width:min(62vw,240px)}
+.io-conn-top .ink-ring-c b{font-family:var(--a-disp);font-stretch:125%;font-weight:900;font-style:italic;font-size:clamp(34px,11vw,56px);line-height:1;letter-spacing:-.05em;white-space:nowrap}
+.io-conn-top .ink-ring-c small{font-size:14px;font-weight:600;opacity:.72}
+.io-conn-top .ink-hero-s{justify-content:center}
+/* Monitoring: limits are calm: an outlined mark, no inverted card */
+.adm .io .io-lim .io-ic{background:none;box-shadow:inset 0 0 0 1.5px var(--a-line2);color:var(--a-dim)}
+/* Rendszer: settings groups, one rounded block with hairlines inside */
+.io-set+.io-set{margin-top:18px}
+.io-set h4{margin:0 0 6px 4px;font-size:13px;font-weight:600;color:var(--a-dim)}
+.adm .io .io-set .srows{gap:0;border-radius:20px;background:var(--a-s2);overflow:hidden}
+.adm .io .io-set .srows li{border-radius:0;background:none;box-shadow:inset 0 -1px 0 var(--a-line)}
+.adm .io .io-set .srows li:last-child{box-shadow:none}
+.adm .io-sys .selfck,.adm .io-sys .signins,.adm .io-sys .srv-errs{gap:0;border-radius:20px;background:var(--a-s2);overflow:hidden}
+.adm .io-sys .selfck li,.adm .io-sys .signins li,.adm .io-sys .srv-errs li{border-radius:0;background:none;box-shadow:inset 0 -1px 0 var(--a-line)}
+.adm .io-sys .selfck li:last-child,.adm .io-sys .signins li:last-child,.adm .io-sys .srv-errs li:last-child{box-shadow:none}
+/* Célok: big rings */
+.adm .io .io-pv{margin-bottom:14px}
+.adm .io .goal-c .io-goal{flex-direction:column;align-items:stretch;text-align:center}
+.adm .io .goal-c .io-goal .ink-ring{width:min(100%,190px);align-self:center}
+.adm .io .goal-c .io-goal .ink-ring-c b{font-size:32px}
+/* mérföldkövek: reached filled, the next dashed with its ring, the rest an outline */
+.adm .io .io-ms{display:flex;flex-direction:column;gap:14px}
+.io-badges{list-style:none;margin:0}
+.io-badges li{flex:none;display:grid;place-items:center;width:68px;height:68px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--a-line2);color:var(--a-dim);font-size:13px}
+.io-badges b{font-family:var(--a-disp);font-stretch:125%;font-weight:800;letter-spacing:-.03em;white-space:nowrap}
+.io-badges li.on{background:var(--a-fg);color:var(--a-bg);box-shadow:none}
+.io-badges li.next{box-shadow:none;color:var(--a-fg)}
+/* Napló: a timeline in typewriter letters */
+.io-tl{list-style:none;margin:0;padding:0 0 0 18px;position:relative;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;letter-spacing:-.03em;font-size:13px;line-height:1.45}
+.io-tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1.5px;background:var(--a-line2)}
+.io-tl li{position:relative;display:flex;flex-direction:column;gap:1px;padding:0 0 16px;min-width:0}
+.io-tl li>*{overflow-wrap:anywhere}
+.io-tl time{position:relative;color:var(--a-dim);font-size:12.5px}
+.io-tl time::before{content:"";position:absolute;left:-18px;top:5px;width:10px;height:10px;border-radius:99px;background:var(--a-fg)}
+.io-tl b{font-weight:700;font-size:14px}
+.io-tl span{color:var(--a-mut)}
+.io-tl small{color:var(--a-dim);font-size:12.5px}
+.io-tl h4{margin:6px 0 10px;font-family:var(--a-ui);letter-spacing:0;font-size:14px;font-weight:700;color:var(--a-fg)}
+/* Élő: the switch, the bubbles, the ribbon */
+.adm .io-map-sw{align-self:flex-start;max-width:100%}
+.io-bub{position:absolute;left:10px;top:10px;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:calc(100% - 20px);pointer-events:none}
+.io-bub li{padding:5px 11px;border-radius:99px;background:#fff;color:#000;font-size:12.5px;line-height:1.3;animation:io-pop .35s var(--ink-ease) backwards;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.io-bub b{font-weight:750}
+@keyframes io-pop{from{opacity:0;transform:translateY(6px) scale(.94)}}
+.adm .io .io-ribbon{gap:6px}
+.io-ribbon .ink-sig{flex:none;width:168px}
+@media (prefers-reduced-motion:reduce){.io-bub li{animation:none}}
+.adm .io .io-lim .io-t small{-webkit-line-clamp:unset;display:block}
+.adm .io .io-state .io-t small{-webkit-line-clamp:unset;display:block}
+
+/* ---------- audit fixes ---------- */
+/* a note on a connection card is one running sentence, its bold words stay in the line */
+.adm .io-conn .alert{display:block}
+.adm .io-conn .conn-steps-t{align-self:flex-start;margin:4px 0 10px;min-height:44px}
+.adm .io-conn>.conn-actions{margin-bottom:10px}
+
+/* ---------- fixes: Jelzések, Postafiók, Élő, Kérdezz ---------- */
+/* the question bar is solid: nothing shows through it */
+.io-ask-f{background:var(--a-s2);-webkit-backdrop-filter:none;backdrop-filter:none}
+/* one scroll on the page: the conversation has no scrollbar of its own; a new answer's buttons stop above the bar */
+.adm .io-ask .ask-l{max-height:none;overflow:visible;padding:0}
+.io-ask .ask-l>div:last-child{scroll-margin-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
+.ma-conv .io-ask-s{padding-bottom:12px}
+/* the strip stands only when the big number has scrolled away, solid, and it never takes a tap in vain */
+.adm .io-glass{background:var(--a-s2);-webkit-backdrop-filter:none;backdrop-filter:none;transition:opacity .2s var(--ink-ease)}
+.adm .io-glass.off{opacity:0;visibility:hidden;pointer-events:none}
+.adm.is-phone .io-glass{width:calc(100% - 64px);padding:8px}
+.adm.is-phone .io-glass b{font-size:26px}
+.adm.is-phone .io-glass small{font-size:12px}
+.adm .io-live .ink-hero .ink-trio{grid-template-columns:repeat(auto-fit,minmax(84px,1fr))}
+.adm .io .lc>li.on{box-shadow:inset 0 0 0 2px var(--a-fg)}
+.adm .io .lc .lnk[aria-pressed="true"]{font-weight:800}
+.adm .io .lc-reply{margin:8px 0}
+/* Postafiók: who the answer goes to, and what waits for tomorrow */
+.adm .io .ib-to{margin:0 0 8px;font-size:14px;color:var(--a-mut)}
+.adm .io .ib-to b{color:var(--a-fg);font-weight:700}
+.adm .io .ib-asleep{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px;padding:12px 16px;border-radius:18px;background:var(--a-s1);font-size:14px;font-weight:600;color:var(--a-fg)}
+/* the big number on a computer: a low card, the number beside its text, not a screen of black */
+@media (min-width:981px){
+  .adm .io .io-hero-wide .ink-hero{display:grid;grid-template-columns:minmax(120px,240px) minmax(0,1fr);grid-template-areas:"l l" "g s";align-items:center;gap:6px 28px;padding:18px 26px}
+  .io-hero-wide .ink-hero-l{grid-area:l}
+  .io-hero-wide .ink-giant{grid-area:g}
+  .io-hero-wide .ink-hero-s{grid-area:s}
+  .io-hero-wide .ink-hero-side{grid-area:s;margin:0}
+  .io-hero-wide .ink-hero-s:has(+.ink-hero-side){align-self:start;grid-row:2}
+  .io-hero-wide .ink-hero-s:has(+.ink-hero-side)+.ink-hero-side{align-self:end}
+}
+/* Rendszer on a phone: the page's own tabs scroll away under the top bar, so one clean bar is ever on screen */
+.adm.is-phone .io-sys>.s12>.subtabs{position:static;box-shadow:none}
+/* the way back from the desktop layout: black and white, and its corner kept free so it covers neither the logo nor the title */
+button.adm-desk-back{background:#000;color:#fff;box-shadow:0 0 0 1px #fff}
+body:has(.adm-desk-back) .adm-top{padding-top:190px}
+body:has(.adm-desk-back) .adm-side{padding-top:190px}
+
+/* ---------- Fiókok: every TikTok / Instagram account side by side ---------- */
+.acc-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.acc-form .pfield { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.acc-form .pfield > span, .acc-links .pfield > span { font-size: 12px; opacity: .7; }
+.acc-links { display: grid; gap: 12px; margin-bottom: 8px; }
+.acc-links code { font-size: 13px; padding: 6px 8px; border-radius: 8px; background: color-mix(in srgb, currentColor 7%, transparent); }
+.acc-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.acc-h { font-size: 14px; margin: 18px 0 8px; }
+.acc-posts { display: grid; gap: 10px; }
+.acc-post { display: grid; grid-template-columns: 56px 1fr; gap: 10px; align-items: start; text-decoration: none; color: inherit; padding: 6px; border-radius: 10px; }
+.acc-post:hover { background: color-mix(in srgb, currentColor 5%, transparent); }
+.acc-post img, .acc-nothumb { width: 56px; height: 74px; object-fit: cover; border-radius: 8px; background: color-mix(in srgb, currentColor 8%, transparent); display: block; }
+.acc-post small { line-height: 1.35; }
+.acc-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
+.acc-actions a.btn { text-decoration: none; }
+.acc-pick { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; }
+.acc-pick::-webkit-scrollbar { display: none; }
+.acc-pick button { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.acc-pick button[aria-selected="true"] { background: var(--a-fg); color: var(--a-bg); border-color: transparent; }
+.acc-rows { display: grid; gap: 10px; }
+.acc-row { display: grid; gap: 10px; width: 100%; text-align: left; padding: 12px; border-radius: 14px; border: 1px solid color-mix(in srgb, currentColor 12%, transparent); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.acc-row:active { background: color-mix(in srgb, currentColor 6%, transparent); }
+.acc-row-h { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; }
+.acc-chev { font-size: 22px; opacity: .5; }
+.acc-row-n { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 8px; }
+.acc-row-n > span { display: flex; flex-direction: column; }
+.acc-row-n b { font-size: 17px; }
+.acc-row-n small { font-size: 12px; opacity: .65; }
+
+/* ---------- Visszajelzések ---------- */
+.fb-dist { display: grid; gap: 8px; }
+.fb-dist-r { display: grid; grid-template-columns: 38px 1fr auto; gap: 10px; align-items: center; }
+.fb-dist-k { font-weight: 700; font-size: 13px; }
+.fb-dist-bar { height: 12px; border-radius: 6px; background: color-mix(in srgb, currentColor 9%, transparent); overflow: hidden; }
+.fb-dist-bar i { display: block; height: 100%; border-radius: 6px; background: color-mix(in srgb, currentColor 55%, transparent); }
+.fb-dist-bar i.low { background: #d9534f; } .fb-dist-bar i.high { background: #2e9e5b; }
+.fb-dist-v { font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+.fb-dist-v small { opacity: .6; }
+.fb-src { display: grid; gap: 10px; margin-bottom: 8px; }
+.fb-src-r { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.fb-src-n { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; align-items: center; }
+.fb-src-n small { grid-column: 2; opacity: .65; }
+.fb-ic { width: 18px; text-align: center; }
+.fb-src-v b { font-size: 18px; }
+.fb-styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.fb-style { display: grid; gap: 2px; padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.fb-stars { color: #e0a800; letter-spacing: 1px; }
+.fb-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.fb-kv { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid color-mix(in srgb, currentColor 9%, transparent); }
+.fb-list { display: grid; gap: 10px; margin-top: 8px; }
+.fb-item { padding: 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, currentColor 12%, transparent); display: grid; gap: 6px; }
+.fb-item.low { border-color: color-mix(in srgb, #d9534f 55%, transparent); }
+.fb-item-h { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.fb-item-b p { margin: 4px 0; }
+.fb-reply { opacity: .8; font-style: italic; }
+.fb-range { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.fb-range label { display: flex; flex-direction: column; gap: 4px; min-width: 150px; flex: 1; }
+.fb-range label > span { font-size: 12px; opacity: .7; }
+.fb-range small { flex-basis: 100%; }
+.fb-more { justify-self: start; margin-top: 4px; }
+.fb-times { display: grid; gap: 6px; margin-top: 6px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, currentColor 10%, transparent); font-size: 13px; }
+.fb-times > div { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }

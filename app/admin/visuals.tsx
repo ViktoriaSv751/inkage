@@ -52,7 +52,7 @@ const ne = (lon: number, lat: number): [number, number] => {
   return [l * (0.8707 - 0.131979 * p2 + p4 * (-0.013791 + p4 * (0.003971 * p2 - 0.001529 * p4))), p * (1.007226 + p2 * (0.015085 + p4 * (-0.044475 + 0.028874 * p2 - 0.005916 * p4)))];
 };
 
-export const flag = (a2?: string) => (a2 && /^[A-Z]{2}$/.test(a2) ? String.fromCodePoint(...[...a2].map((c) => 0x1f1a5 + c.charCodeAt(0))) : "🌐");
+export const flag = (a2?: string) => (a2 && /^[A-Z]{2}$/.test(a2) ? a2 : ""); /* two letters: emoji flags would bring colour */
 export const countryName = (a2: string) => { try { return new Intl.DisplayNames(["hu"], { type: "region" }).of(a2) || a2; } catch { return a2; } };
 
 /* the countries where a language is an official / main language: for the "language regions" map (an estimate) */
@@ -63,35 +63,59 @@ export const LANG_LAND: Record<string, string[]> = {
   el: ["GR", "CY"], fi: ["FI"], no: ["NO"], nb: ["NO"], ar: ["SA", "EG", "AE", "MA", "DZ", "IQ", "JO", "TN", "LY", "SY", "YE", "OM", "KW", "QA", "LB", "SD", "MR"], hi: ["IN"], fa: ["IR", "AF"], vi: ["VN"],
 };
 
-/** Choropleth world map: one hue, light → deep by value; hover a country for its number. */
-export function WorldMap({ values, label = "látogatás", height, onPick, note }: { values: Record<string, number>; label?: string; height?: number; onPick?: (a2: string) => void; note?: React.ReactNode }) {
+/** Choropleth world map: one hue, light → deep by value; hover a country for its number. With `fill` it covers its stage, turned to the biggest number, and can be dragged sideways. */
+export function WorldMap({ values, label = "látogatás", height, onPick, note, fill, viewTop = 0 }: { values: Record<string, number>; label?: string; height?: number; onPick?: (a2: string) => void; note?: React.ReactNode; fill?: boolean; viewTop?: number }) {
   const geo = useWorld();
   const [ref, w] = useWidth<HTMLDivElement>();
   const [hi, setHi] = useState<{ c: Country; x: number; y: number } | null>(null);
+  const [panX, setPanX] = useState(0);
+  const drag = useRef<{ x: number; p: number } | null>(null);
   const max = Math.max(1, ...Object.values(values));
   const H = height || Math.max(200, Math.round(w * 0.46));
+  const ranked = Object.entries(values).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+  const topK = ranked[0]?.[0] || "";
+  const scale = useMemo(() => { const vis = H - viewTop; return fill ? Math.max(w / 5.45, vis / 2.15) : Math.min(w / 5.45, H / 2.4); }, [fill, w, H, viewTop]);
+  /* how far the map can move sideways, and where it starts: the biggest number in the middle */
+  const room = Math.max(0, (scale * 5.45 - w) / 2);
+  const start = useMemo(() => {
+    if (!fill || !geo || !room) return 0;
+    const c = geo.find((g) => g.a2 === topK); if (!c) return 0;
+    const [x] = ne((c.box[0] + c.box[2]) / 2, (c.box[1] + c.box[3]) / 2);
+    return Math.max(-room, Math.min(room, -x * scale));
+  }, [fill, geo, room, topK, scale]);
+  useEffect(() => { setPanX(start); }, [start]);
   const paths = useMemo(() => {
     if (!geo || !w) return [];
     /* Antarctica is left out, so the map's centre sits a little north of the equator */
-    const sc = Math.min(w / 5.45, H / 2.4), cx = w / 2, cy = H / 2 + sc * 0.17;
+    const sc = scale, cx = w / 2, cy = fill ? (H - viewTop) / 2 + sc * 0.17 : H / 2 + sc * 0.17;
     return geo.map((c) => ({ c, d: c.rings.map((r) => r.map(([lo, la], i) => { const [x, y] = ne(lo, la); return `${i ? "L" : "M"}${(cx + x * sc).toFixed(1)} ${(cy - y * sc).toFixed(1)}`; }).join("") + "Z").join("") }));
-  }, [geo, w, H]);
-  const fill = (a2: string) => { const v = values[a2]; if (!v) return "var(--map-0)"; const k = 0.18 + 0.82 * Math.sqrt(v / max); return `color-mix(in oklab, var(--map-1) ${Math.round(k * 100)}%, var(--map-0))`; };
-  const ranked = Object.entries(values).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+  }, [geo, w, H, scale, fill, viewTop]);
+  const tone = (a2: string) => { const v = values[a2]; if (!v) return "var(--map-0)"; const k = 0.18 + 0.82 * Math.sqrt(v / max); return `color-mix(in oklab, var(--map-1) ${Math.round(k * 100)}%, var(--map-0))`; };
+  /* the drag holds the pointer: leaving the map or crossing a country on the way never drops it */
+  const dn = (e: React.PointerEvent<SVGSVGElement>) => { if (fill && room) { drag.current = { x: e.clientX, p: panX }; try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* it still works inside the map */ } } };
+  const mv = (e: React.PointerEvent) => { const g = drag.current; if (g) { setPanX(Math.max(-room, Math.min(room, g.p + e.clientX - g.x))); if (Math.abs(e.clientX - g.x) > 6) setHi(null); } };
+  const up = () => { drag.current = null; };
+  /* the label: as wide as it really is, never over the edge; by finger it stays until the next tap anywhere */
+  const tipRef = useRef<HTMLDivElement>(null); const [tipW, setTipW] = useState(180);
+  useEffect(() => { const x = tipRef.current?.offsetWidth; if (x && x !== tipW) setTipW(x); }, [hi]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!hi) return; const f = (e: PointerEvent) => { if (e.pointerType !== "mouse" && !(e.target as Element)?.closest?.(".wm-c")) setHi(null); }; addEventListener("pointerdown", f); return () => removeEventListener("pointerdown", f); }, [hi]);
   return (
-    <div className="wmap" ref={ref}>
+    <div className={"wmap" + (fill ? " fill" : "")} ref={ref}>
       {!geo ? <div className="skel" style={{ height: H }} /> : (
-        <svg width={w} height={H} role="img" aria-label="Világtérkép" onPointerLeave={() => setHi(null)}>
+        <svg width={w} height={H} role="img" aria-label="Világtérkép" onPointerLeave={(e) => { if (e.pointerType === "mouse") setHi(null); up(); }} onPointerDown={dn} onPointerMove={mv} onPointerUp={up} onPointerCancel={up}>
+          <g transform={panX ? `translate(${panX.toFixed(1)} 0)` : undefined}>
           {paths.map(({ c, d }) => (
-            <path key={c.id} d={d} style={{ fill: fill(c.a2) }} className={"wm-c" + (values[c.a2] ? " has" : "") + (hi?.c.id === c.id ? " on" : "")}
-              onPointerMove={(e) => { const r = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect(); setHi({ c, x: e.clientX - r.left, y: e.clientY - r.top }); }}
+            <path key={c.id} d={d} style={{ fill: tone(c.a2) }} className={"wm-c" + (values[c.a2] ? " has" : "") + (hi?.c.id === c.id ? " on" : "")}
+              onPointerDown={(e) => { const r = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect(); setHi({ c, x: e.clientX - r.left, y: e.clientY - r.top }); }}
+              onPointerMove={(e) => { if (e.pointerType !== "mouse") return; const r = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect(); setHi({ c, x: e.clientX - r.left, y: e.clientY - r.top }); }}
               onClick={onPick && values[c.a2] ? () => onPick(c.a2) : undefined} />
           ))}
+          </g>
         </svg>
       )}
       {hi && (
-        <div className="tip" style={{ left: Math.min(Math.max(hi.x, 90), w - 90), top: hi.y }}>
-          <b>{flag(hi.c.a2)} {hi.c.a2 ? countryName(hi.c.a2) : hi.c.name}</b>
+        <div className="tip" ref={tipRef} style={{ left: Math.max(tipW / 2 + 6, Math.min(hi.x, w - tipW / 2 - 6)), top: hi.y }}>
+          <b>{hi.c.a2 ? countryName(hi.c.a2) : hi.c.name}</b>
           <div className="r"><span>{label}</span><em>{fmt(values[hi.c.a2] || 0)}</em></div>
           {values[hi.c.a2] ? <div className="r"><span>helyezés</span><em>{ranked.findIndex(([k]) => k === hi.c.a2) + 1}.</em></div> : null}
         </div>
@@ -101,19 +125,18 @@ export function WorldMap({ values, label = "látogatás", height, onPick, note }
   );
 }
 
-/** Country list with flags, bars and share (beside the map). */
+/** Country ranking as rounded rows: the two letters instead of a coloured flag, a bar, the number and its share. */
 export function CountryList({ values, max = 8, label = "látogatás", onPick }: { values: Record<string, number>; max?: number; label?: string; onPick?: (a2: string) => void }) {
   const rows = Object.entries(values).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
   const tot = rows.reduce((s, [, v]) => s + v, 0) || 1, top = rows[0]?.[1] || 1;
   if (!rows.length) return null;
   return (
     <ul className="clist">
-      {rows.slice(0, max).map(([k, v], i) => (
+      {rows.slice(0, max).map(([k, v]) => (
         <li key={k} onClick={onPick ? () => onPick(k) : undefined} className={onPick ? "pick" : ""}>
-          <span className="cl-f">{flag(k)}</span>
-          <span className="cl-n"><b>{countryName(k)}</b><small>{fmt(v)} {label}</small></span>
-          <span className="cl-b"><i style={{ width: `${(v / top) * 100}%` }} /></span>
-          <span className="cl-p">{i === 0 ? <em>#1</em> : null}{pct(v, tot)}</span>
+          <span className="cl-f">{k}</span>
+          <span className="cl-n"><b>{countryName(k)}</b><span className="cl-b"><i style={{ width: `${(v / top) * 100}%` }} /></span></span>
+          <span className="cl-p"><b>{fmt(v)}</b><small>{pct(v, tot)}</small></span>
         </li>
       ))}
     </ul>
@@ -220,23 +243,23 @@ export function GlowRing({ value, label, sub, share, size = 300, children }: { v
 
 /** Pastel stat tile: icon, LABEL, a big number, one line, the change, a faint trend. */
 export type Tone = "peach" | "butter" | "pink" | "sky" | "lilac" | "mint";
-export function Tile({ tone, icon, label, v, cap, now, prev, invert, spark, onClick, className = "" }: { tone: Tone; icon?: React.ReactNode; label: string; v: React.ReactNode; cap?: React.ReactNode; now?: number; prev?: number; invert?: boolean; spark?: number[]; onClick?: () => void; className?: string }) {
+export function Tile({ icon, label, v, cap, now, prev, invert, spark, onClick, className = "" }: { tone: Tone; icon?: React.ReactNode; label: string; v: React.ReactNode; cap?: React.ReactNode; now?: number; prev?: number; invert?: boolean; spark?: number[]; onClick?: () => void; className?: string }) {
   return (
-    <div className={`tile t-${tone} ${onClick ? "click" : ""} ${className}`} onClick={onClick} role={onClick ? "button" : undefined} tabIndex={onClick ? 0 : undefined}
+    <div className={`tile ${onClick ? "click" : ""} ${className}`} onClick={onClick} role={onClick ? "button" : undefined} tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (e) => { if (e.key === "Enter") onClick(); } : undefined}>
       <div className="tile-h"><span className="tile-i">{icon}</span><span className="tile-l">{label}</span></div>
-      <div className="tile-v">{v}</div>
+      <div className="tile-v">{typeof v === "number" ? <CountUp v={v} /> : v}</div>
       <div className="tile-c">{now != null && prev != null && <Delta now={now} prev={prev} invert={invert} />}<span>{cap}</span></div>
       {spark && spark.length > 1 && <div className="tile-sp"><Spark values={spark} h={40} color="var(--tile-ink)" /></div>}
     </div>
   );
 }
 
-/** Action card: a pastel panel with one clear next step. */
-export function ActionCard({ tone, title, text, cta, onClick, href, done }: { tone: Tone; title: string; text: React.ReactNode; cta: string; onClick?: () => void; href?: string; done?: boolean }) {
+/** Action card: one clear next step. */
+export function ActionCard({ title, text, cta, onClick, href, done }: { tone: Tone; title: string; text: React.ReactNode; cta: string; onClick?: () => void; href?: string; done?: boolean }) {
   const btn = href ? <a className="act-b" href={href}>{cta}</a> : <button className="act-b" onClick={onClick}>{cta}</button>;
   return (
-    <div className={`act t-${tone}${done ? " done" : ""}`}>
+    <div className={`act${done ? " done" : ""}`}>
       <div><b>{done ? "✓ " : ""}{title}</b><p>{text}</p></div>
       {done ? <span className="act-ok">Kész</span> : btn}
     </div>
@@ -291,7 +314,9 @@ export function CohortBars({ cols, height = 190 }: { cols: { l: string; v: numbe
         return (
           <div key={i} className={"cb" + (hi === i ? " on" : "")} onPointerEnter={() => setHi(i)} onPointerLeave={() => setHi(null)}>
             <div className="cb-st">{Array.from({ length: cells }, (_, k) => <i key={k} className={cells - k <= on ? "f" : ""} />)}</div>
+            <b className="cb-v">{fmt(c.v)}%</b>
             <span className="cb-l">{c.l}</span>
+            {c.tip && <small className="cb-n">{c.tip}</small>}
             {hi === i && <div className="tip" style={{ left: "50%", top: 0 }}><b>{c.l}</b><div className="r"><span>aktív maradt</span><em>{fmt(c.v)}%</em></div>{c.tip && <div className="r"><span>{c.tip}</span></div>}</div>}
           </div>
         );

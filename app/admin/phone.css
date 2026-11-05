@@ -1,0 +1,335 @@
+/* The phone view's foundation. Everything is under .is-phone (below 980 px), so a computer never sees it.
+   Page-specific phone rules go in their own files. */
+.adm.is-phone{--ph-top:calc(50px + env(safe-area-inset-top,0px));-webkit-tap-highlight-color:transparent}
+.adm.is-phone button,.adm.is-phone .adm-tabbar{-webkit-touch-callout:none}
+.adm.is-phone .kpi,.adm.is-phone .tile{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+
+/* ---------- header: menu, where she is, one pill ---------- */
+.adm.is-phone .ph-top{display:flex!important;align-items:center;gap:8px;min-height:50px;padding:calc(5px + env(safe-area-inset-top,0px)) 12px 5px;background:var(--a-bg)!important}
+.adm.is-phone .ph-btn{flex:none;width:38px;height:38px;border:0;border-radius:99px;background:var(--a-s1);color:var(--a-fg);display:grid;place-items:center;padding:0}
+.adm.is-phone .ph-btn svg{width:20px;height:20px}
+.adm.is-phone .ph-btn.bk{background:none;width:26px;margin-left:-4px;margin-right:-6px;color:var(--acc)}
+.adm.is-phone .ph-tt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;line-height:1.12}
+.adm.is-phone .ph-tt small{font-size:12px;font-weight:600;color:var(--a-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm.is-phone .ph-tt small:empty{display:none}
+.adm.is-phone .ph-tt h1{margin:0;font-size:17px!important;font-weight:700!important;font-family:var(--a-ui)!important;letter-spacing:-.015em!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:1;transform:none}
+.adm.is-phone.scrolled .ph-tt small{display:none}
+.adm.is-phone .ph-pill{flex:0 1 auto;max-width:48%;min-height:34px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:17px;padding:4px 11px 4px 9px;font-size:12.5px;font-weight:650;line-height:1.15;text-align:left}
+.adm.is-phone .ph-pill svg{flex:none;width:15px;height:15px;color:var(--a-dim)}
+.adm.is-phone .ph-pill span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.adm.is-phone .ph-pill.on{border-color:var(--acc);color:var(--acc)}
+.adm.is-phone .ph-pill.on svg{color:var(--acc)}
+/* the tab row stays under the header */
+.adm.is-phone .subtabs{top:var(--ph-top)!important;margin:0 -16px;padding:4px 16px 8px;background:var(--a-bg);backdrop-filter:none}
+.adm.is-phone .subtabs button{padding:7px 13px;font-size:13.5px}
+.adm.is-phone .adm-body{padding:0 16px calc(96px + env(safe-area-inset-bottom,0px));gap:12px}
+.adm.is-phone .ph-fresh{align-self:flex-start;border:0;background:none;padding:0 2px;font-size:12px;color:var(--a-dim);margin:-6px 0 -2px}
+.adm.is-phone .ph-fresh.off{color:var(--a-bad);font-weight:650;font-size:12.5px;margin:0}
+.adm.is-phone .ph-fresh.busy{opacity:.55}
+.adm.is-phone .ph-pins{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.adm.is-phone .ph-pins::-webkit-scrollbar{display:none}
+.adm.is-phone .ph-pins button{flex:none;display:inline-flex;align-items:center;gap:6px;max-width:220px;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:12px;padding:8px 11px;font-size:13px;font-weight:600}
+.adm.is-phone .ph-pins svg{width:15px;height:15px;color:var(--acc);flex:none}
+.adm.is-phone .ph-pins span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- five bottom tabs, each within the thumb's reach ---------- */
+.adm.is-phone .adm-tabbar.ph-5{grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;left:8px;right:8px;padding:2px}
+.adm.is-phone .ph-5 button{min-height:50px;justify-content:center;padding:6px 1px;font-size:12px;min-width:0}
+.adm.is-phone .ph-5 button span:not(.cnt){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm.is-phone .ph-5 button svg{width:22px;height:22px}
+.adm.is-phone .ph-5 .cnt{right:calc(50% - 22px)}
+
+/* ---------- sheets ---------- */
+.adm.is-phone .psheet{display:flex;flex-direction:column;max-height:88dvh;padding:10px 0 0!important;overflow:hidden;gap:0}
+.adm.is-phone .psheet.tall{height:88dvh}
+.adm.is-phone .psheet::before{margin:0 auto 8px}
+.adm.is-phone .ps-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:0 18px 10px}
+.adm.is-phone .ps-h h2{margin:0;font-size:19px;font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.adm.is-phone .ps-h small{display:block;margin-top:2px;font-size:12.5px;color:var(--a-dim)}
+.adm.is-phone .ps-x{flex:none;width:32px;height:32px;border:0;border-radius:99px;background:var(--a-s2);color:var(--a-mut);font-size:13px}
+.adm.is-phone .ps-b{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 18px 16px;display:flex;flex-direction:column;gap:12px}
+.adm.is-phone .ps-f{flex:none;display:flex;gap:8px;padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--a-line)}
+.adm.is-phone .ps-f .adm-ibtn{flex:1 1 auto;height:46px;justify-content:center;font-size:15px}
+.adm.is-phone .ps-f .ps-row{flex:1 1 auto;flex-wrap:wrap}
+.adm.is-phone .ps-b:last-child{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.adm.is-phone .ps-p{margin:0;font-size:15px;line-height:1.45;color:var(--a-fg)}
+.adm.is-phone .ps-p.mut{color:var(--a-mut);font-size:13.5px}
+.adm.is-phone .ps-t{margin:6px 0 -4px;font-size:12px;font-weight:650;color:var(--a-dim)}
+.adm.is-phone .ps-opts{display:flex;flex-wrap:wrap;gap:7px}
+.adm.is-phone .ps-opts button{min-height:40px;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:12px;padding:8px 13px;font-size:14px;font-weight:600}
+.adm.is-phone .ps-opts button[aria-pressed="true"]{background:var(--a-fg);color:var(--a-bg);border-color:var(--a-fg)}
+.adm.is-phone .ps-row{display:flex;gap:8px;align-items:center}
+.adm.is-phone .ps-row .adm-in{flex:1 1 auto;min-width:0}
+.adm.is-phone .ps-row .adm-ibtn{flex:1 1 auto;justify-content:center;min-height:44px}
+.adm.is-phone .ps-range{display:flex;gap:6px;align-items:center}
+.adm.is-phone .ps-range .adm-in{flex:1 1 0;min-width:0}
+.adm.is-phone .ps-acts{display:flex;flex-direction:column;gap:2px;margin:0 -6px}
+.adm.is-phone .ps-acts button{display:flex;align-items:center;gap:13px;min-height:52px;width:100%;border:0;background:none;color:var(--a-fg);font-size:15.5px;font-weight:600;text-align:left;padding:6px;border-radius:12px}
+.adm.is-phone .ps-acts svg{flex:none;width:22px;height:22px;color:var(--acc)}
+.adm.is-phone .ps-acts small{display:block;font-size:12.5px;font-weight:450;color:var(--a-dim)}
+.adm.is-phone .ps-views{display:flex;flex-direction:column;gap:6px}
+.adm.is-phone .ps-views>div{display:flex;align-items:center;gap:6px;background:var(--a-s2);border-radius:12px;padding-right:10px}
+.adm.is-phone .ps-views>div>button:first-child{flex:1 1 auto;min-width:0;border:0;background:none;color:var(--a-fg);text-align:left;padding:9px 12px;font-size:14.5px}
+.adm.is-phone .ps-views small{display:block;color:var(--a-dim);font-size:12px;font-weight:450}
+.adm.is-phone .ps-csv{align-self:flex-start;font-size:14px}
+
+/* ---------- forms: big fields, no zoom when tapping one ---------- */
+.adm.is-phone input.adm-in,.adm.is-phone select.adm-in,.adm.is-phone textarea.adm-in,.adm.is-phone .adm-in{font-size:16px!important;min-height:46px;border-radius:12px;width:100%;max-width:100%}
+.adm.is-phone textarea.adm-in{min-height:88px}
+.adm.is-phone .form-g,.adm.is-phone .goal-new{grid-template-columns:minmax(0,1fr)!important}
+.adm.is-phone .pfield{display:flex;flex-direction:column;gap:5px}
+.adm.is-phone .pfield>span{font-size:13px;font-weight:650;color:var(--a-mut)}
+.adm.is-phone .pfield>small{font-size:12.5px;color:var(--a-dim)}
+.adm.is-phone .adm-ibtn{min-height:40px}
+.adm.is-phone .adm-ibtn.sm{min-height:34px}
+
+/* ---------- a table as a list of cards ---------- */
+.adm.is-phone .pt{position:relative;min-width:0}
+.adm.is-phone .pt-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;font-size:12px;color:var(--a-dim)}
+.adm.is-phone .pt-tool{border:1px solid var(--a-line2);background:none;color:var(--a-mut);border-radius:99px;padding:5px 11px;font-size:12.5px;font-weight:600}
+.adm.is-phone .pt-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.adm.is-phone .pt-l>li{display:flex;align-items:center;gap:10px;min-height:52px;padding:9px 0;border-top:1px solid var(--a-line);cursor:pointer;min-width:0}
+.adm.is-phone .pt-l>li:first-child{border-top:0}
+.adm.is-phone .pt-lead{flex:none;max-width:48px;overflow:hidden;border-radius:8px}
+.adm.is-phone .pt-lead img{display:block;width:44px;height:44px;object-fit:cover;border-radius:8px}
+.adm.is-phone .pt-m{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.adm.is-phone .pt-name{font-size:14.5px;font-weight:650;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow-wrap:anywhere}
+.adm.is-phone .pt-name *{max-width:100%!important;white-space:normal!important}
+.adm.is-phone .pt-sub{display:flex;flex-wrap:wrap;gap:0 10px;font-size:12px;color:var(--a-mut);line-height:1.3;max-height:32px;overflow:hidden}
+.adm.is-phone .pt-sub>span{display:inline-flex;gap:4px;align-items:baseline;min-width:0;white-space:nowrap}
+.adm.is-phone .pt-sub>span *{font-size:inherit!important;white-space:nowrap}
+.adm.is-phone .pt-sub i{font-style:normal;color:var(--a-dim)}
+.adm.is-phone .pt-sub .bar-c i{display:none}
+.adm.is-phone .pt-sp{flex:none;width:52px}
+.adm.is-phone .pt-n{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:1px;max-width:42%;text-align:right}
+.adm.is-phone .pt-n b{font-size:16px;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.adm.is-phone .pt-n b .bar-c{display:inline}
+.adm.is-phone .pt-n b .bar-c i{display:none}
+.adm.is-phone .pt-n small{font-size:12px}
+.adm.is-phone .pt-c{flex:none;color:var(--a-dim);font-size:17px;margin-left:-4px}
+.adm.is-phone .pt-more{flex:none;width:28px;height:36px;border:0;background:none;color:var(--a-dim);font-size:18px;margin:-6px -6px -6px -4px}
+.adm.is-phone .pt-all{width:100%;min-height:42px;margin-top:6px;border:1px solid var(--a-line2);background:none;color:var(--a-fg);border-radius:12px;font-size:14px;font-weight:650}
+.adm.is-phone .pt-az{position:fixed;right:1px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;background:var(--a-s2);border-radius:10px;padding:3px 0}
+.adm.is-phone .pt-az button{border:0;background:none;color:var(--acc);font-size:10.5px;font-weight:700;padding:1px 5px;line-height:1.2}
+.adm.is-phone .pt-dl{margin:0;display:flex;flex-direction:column}
+.adm.is-phone .pt-dl>div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--a-line);align-items:baseline}
+.adm.is-phone .pt-dl>div:first-child{border-top:0}
+.adm.is-phone .pt-dl dt{flex:none;max-width:45%;font-size:13px;color:var(--a-mut);font-weight:550}
+.adm.is-phone .pt-dl dd{margin:0;min-width:0;text-align:right;font-size:14.5px;font-weight:600;overflow-wrap:anywhere}
+.adm.is-phone .pt-dl dd *{white-space:normal}
+
+/* sideways: the real table, its first column stands still; charts take the screen, the bars step aside */
+.adm.is-land .tw-land{overflow-x:auto;margin:0;padding:0;-webkit-overflow-scrolling:touch}
+.adm.is-land .tb.land{min-width:100%;width:max-content;border-collapse:separate;border-spacing:0}
+.adm.is-land .tb.land th:first-child,.adm.is-land .tb.land td:first-child{position:sticky;left:0;z-index:2;background:var(--a-s1);max-width:38vw}
+.adm.is-land .ph-top{min-height:40px;padding:2px 12px}
+.adm.is-land .ph-tt small,.adm.is-land .ph-fresh,.adm.is-land .mock-bar{display:none}
+.adm.is-land .adm-tabbar{display:none}
+.adm.is-land .adm-body{padding-bottom:20px}
+.adm.is-land .c:has(>.chart),.adm.is-land .c:has(.chart){scroll-snap-align:start}
+.adm.is-land .kpi.s3,.adm.is-land .kpi.s4,.adm.is-land .tile.s3,.adm.is-land .tile.s4{grid-column:span 3!important}
+
+/* ---------- less on the first level ---------- */
+/* a long explanation waits behind one tap */
+.adm.is-phone .note-tap:not(.open){visibility:hidden;height:20px;overflow:hidden;position:relative;margin:0}
+.adm.is-phone .note-tap:not(.open)::before{content:"ⓘ Mi ez?";visibility:visible;position:absolute;left:0;top:0;font-size:12px;font-weight:600;color:var(--a-dim);line-height:20px}
+/* nothing to show: one line that says why */
+.adm.is-phone section.c.nodata{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:12px 16px;min-height:0}
+.adm.is-phone section.c.nodata .c-h{flex:0 1 auto;margin:0;min-width:0}
+.adm.is-phone section.c.nodata h2{font-size:14.5px!important;margin:0}
+.adm.is-phone section.c.nodata .c-tools,.adm.is-phone section.c.nodata .c-fresh,.adm.is-phone section.c.nodata .c-foot{display:none}
+.adm.is-phone section.c.nodata .empty{flex:1 1 100%;min-height:0;padding:0;display:block;text-align:left;background:none;border:0}
+.adm.is-phone section.c.nodata .ghost,.adm.is-phone section.c.nodata .empty-i{display:none}
+.adm.is-phone section.c.nodata .empty-glass{display:block;padding:0;background:none;box-shadow:none;border:0;font-size:12.5px;color:var(--a-dim)}
+.adm.is-phone section.c.nodata .empty p{margin:0;font-size:12.5px}
+.adm.is-phone section.c.nodata .et{font-size:12.5px;font-family:inherit;font-weight:500}
+.adm.is-phone section.c.nodata .nd-why{flex:1 1 100%;font-size:12.5px;color:var(--a-dim)}
+.adm.is-phone .empty{min-height:110px;padding:16px}
+.adm.is-phone .empty .ghost{display:none}
+.adm.is-phone .kpi.kpi-none,.adm.is-phone .tile.kpi-none{min-height:0;opacity:.75}
+.adm.is-phone .kpi.kpi-none .v,.adm.is-phone .tile.kpi-none .tile-v{font-size:18px!important;margin-top:2px}
+.adm.is-phone .kpi.kpi-none .spark,.adm.is-phone .tile.kpi-none .tile-sp{display:none}
+/* big decoration out of the way */
+.adm.is-phone .band{min-height:0!important;padding:16px 18px}
+.adm.is-phone .band-stroke,.adm.is-phone .ph-splash,.adm.is-phone .ph-quill,.adm.is-phone .ph-word,.adm.is-phone .ghost{display:none!important}
+.adm.is-phone .skind{display:none}
+.adm.is-phone .c{padding:15px 16px 16px;gap:12px;border-radius:18px}
+/* a label that explains itself */
+.adm.is-phone .has-term{text-decoration:underline dotted color-mix(in srgb,currentColor 45%,transparent);text-underline-offset:3px;text-decoration-thickness:1px;cursor:help}
+/* the ⋯ of a card, in the corner away from its numbers */
+.adm.is-phone section.c:has(>.c-more){padding-bottom:30px}
+.adm.is-phone .c-more{position:absolute;right:5px;bottom:2px;width:38px;height:28px;border:0;background:none;color:var(--a-dim);font-size:17px;line-height:1;padding:0}
+
+/* ---------- waiting shapes ---------- */
+.adm.is-phone .sk-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.adm.is-phone .sk-kpis .skel{height:104px;border-radius:18px}
+.adm.is-phone .sk-list{display:flex;flex-direction:column;gap:8px}
+.adm.is-phone .sk-list .skel{height:52px;border-radius:12px}
+.adm.is-phone .sk-chart{height:210px;border-radius:18px}
+.adm.is-phone .sk-card{height:150px;border-radius:18px}
+
+/* ---------- the map under the search field ---------- */
+.adm.is-phone .pal{display:flex;flex-direction:column}
+.adm.is-phone .pal-in{flex:none}
+.adm.is-phone .pal-l{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.adm.is-phone .pmap{display:flex;flex-direction:column;gap:14px;padding:0 6px}
+.adm.is-phone .pm-sec h3,.adm.is-phone .pmap .plist h3{margin:0 0 6px;font-size:12px;font-weight:650;color:var(--a-dim);letter-spacing:0;text-transform:none}
+.adm.is-phone .pm-chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.adm.is-phone .pm-chips::-webkit-scrollbar{display:none}
+.adm.is-phone .pm-chips button{flex:none;display:inline-flex;align-items:center;gap:6px;max-width:210px;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:12px;padding:8px 11px;font-size:13.5px;font-weight:600}
+.adm.is-phone .pm-chips svg{flex:none;width:15px;height:15px;color:var(--acc)}
+.adm.is-phone .pm-chips span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm.is-phone .pm-quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.adm.is-phone .pm-quick button{display:flex;align-items:center;gap:8px;min-height:44px;border:1px solid var(--a-line2);background:var(--a-s1);color:var(--a-fg);border-radius:12px;padding:7px 11px;font-size:13.5px;font-weight:600;text-align:left}
+.adm.is-phone .pm-quick svg{flex:none;width:17px;height:17px;color:var(--acc)}
+.adm.is-phone .pmap .plist{margin:0;padding:0}
+.adm.is-phone .pmap .plist li{display:flex;align-items:stretch;position:relative}
+.adm.is-phone .pmap .plist li>button:first-child{flex:1 1 auto;min-width:0}
+.adm.is-phone .pmap .plist li.cur .pl-l{color:var(--acc)}
+.adm.is-phone .pm-d{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.adm.is-phone .pm-pin{flex:none;width:42px;border:0;background:none;color:var(--a-dim);font-size:18px}
+.adm.is-phone .pm-pin.on{color:var(--acc)}
+
+/* ---------- Teendők ---------- */
+.adm.is-phone .td{gap:12px}
+.adm.is-phone .td-new{display:flex;gap:8px}
+.adm.is-phone .td-new .adm-in{flex:1 1 auto;min-width:0}
+.adm.is-phone .td-new .adm-ibtn{flex:none;min-height:46px}
+.adm.is-phone .td-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.adm.is-phone .td-l .swrow{border-radius:16px}
+.adm.is-phone .td-i{display:flex;align-items:center;gap:10px;min-height:62px;padding:10px 12px;background:var(--a-s1);border-radius:16px}
+.adm.is-phone .td-i .ic{flex:none;width:30px;height:30px;border-radius:99px;display:grid;place-items:center;background:var(--a-s2);color:var(--a-mut)}
+.adm.is-phone .td-i .ic svg{width:16px;height:16px}
+.adm.is-phone .td-i.bad .ic{background:color-mix(in srgb,var(--a-bad) 18%,transparent);color:var(--a-bad)}
+.adm.is-phone .td-i.warn .ic{color:var(--a-warn)}
+.adm.is-phone .td-i.good .ic{color:var(--a-good)}
+.adm.is-phone .td-t{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.adm.is-phone .td-t small{font-size:12px;color:var(--a-dim);font-weight:600}
+.adm.is-phone .td-t b{font-size:14.5px;font-weight:650;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow-wrap:anywhere}
+.adm.is-phone .td-t span{font-size:12.5px;color:var(--a-mut);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.adm.is-phone .td-go{flex:none;min-height:36px;padding:0 11px;font-size:13px}
+.adm.is-phone .td-hint{margin:8px 2px 0;font-size:12px;color:var(--a-dim);text-align:center}
+.adm.is-phone .td-away{justify-self:start;font-size:13px}
+.adm.is-phone .td-empty{align-items:center;text-align:center;padding:34px 20px;gap:6px}
+.adm.is-phone .td-empty>span{width:52px;height:52px;border-radius:99px;display:grid;place-items:center;color:var(--a-good)}
+.adm.is-phone .td-empty svg{width:26px;height:26px}
+.adm.is-phone .td-empty h2{margin:6px 0 0;font-size:21px}
+.adm.is-phone .td-empty p{margin:0;font-size:14px;color:var(--a-mut)}
+.adm.is-phone .td-undo{position:fixed;left:14px;right:14px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:47;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--a-fg);color:var(--a-bg);border-radius:14px;padding:12px 15px;font-size:14.5px;font-weight:600}
+.adm.is-phone .td-undo button{border:0;background:none;color:inherit;font-weight:750;text-decoration:underline;font-size:14.5px;padding:0}
+.adm.is-phone .td-rt ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.adm.is-phone .td-rt li{display:flex;align-items:center;gap:6px;border-top:1px solid var(--a-line)}
+.adm.is-phone .td-rt li:first-child{border-top:0}
+.adm.is-phone .td-rt-n{font-size:13px;font-weight:700;color:var(--a-mut)}
+.adm.is-phone .td-ck{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:11px;min-height:46px;border:0;background:none;color:var(--a-fg);font-size:14.5px;font-weight:550;text-align:left;padding:4px 0}
+.adm.is-phone .td-ck i{flex:none;width:24px;height:24px;border-radius:8px;border:1.5px solid var(--a-line2);display:grid;place-items:center;color:var(--a-good)}
+.adm.is-phone .td-ck i svg{width:15px;height:15px}
+.adm.is-phone .td-rt li.on .td-ck i{border-color:var(--a-good)}
+.adm.is-phone .td-rt li.on .td-ck span{color:var(--a-dim);text-decoration:line-through}
+.adm.is-phone .td-al{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.adm.is-phone .td-al li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--a-line)}
+.adm.is-phone .td-al li:first-child{border-top:0}
+.adm.is-phone .td-al b{display:block;font-size:14.5px;font-weight:600;overflow-wrap:anywhere}
+.adm.is-phone .td-al small{font-size:12px;color:var(--a-dim)}
+
+/* the third action of a sliding row */
+.adm.is-phone .sw-hide{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:700;color:var(--a-mut)}
+.adm.is-phone .sw-hide.on{color:var(--a-fg)}
+
+/* rows of buttons wrap instead of running off the screen */
+.adm.is-phone .adm-page .adm-row{flex-wrap:wrap;min-width:0}
+
+/* each card has its real height from the start, so Back can return to the exact place (Lazy saves the work instead) */
+.adm.is-phone .adm-page>.g>*{content-visibility:visible;contain-intrinsic-size:none}
+/* the site-wide "up" button: above the tabs, and out of the way of a sheet */
+body:has(.adm.is-phone) .btt{bottom:calc(78px + env(safe-area-inset-bottom,0px));width:40px;height:40px}
+body:has(.adm #adm-layer>*,.adm .popv) .btt{display:none!important}
+.adm.is-phone .band .side:has(>.spark:empty){display:none}
+.adm.is-phone .psheet{box-sizing:border-box}
+/* what would run off the screen on some pages */
+.adm.is-phone .ask-pf{align-self:stretch;width:100%;max-width:100%;min-width:0}
+.adm.is-phone .ask-pf *{max-width:100%;min-width:0;white-space:normal}
+.adm.is-phone .appr .adm-row{margin-left:0;max-width:100%}
+.adm.is-phone .appr li{grid-template-columns:minmax(0,1fr)}
+.adm.is-phone .chip{white-space:normal;max-width:100%;height:auto;overflow-wrap:anywhere}
+.adm.is-phone .f3d svg{max-width:100%;overflow:hidden}
+.adm.is-phone section.c{overflow-wrap:anywhere}
+
+/* computer: the page title keeps its room next to the search and the tools */
+@media (min-width:1101px){ .adm-top{grid-template-columns:minmax(170px,auto) minmax(200px,420px) auto} }
+
+/* behind every popup: plain white by day, plain black at night, nothing of the page shows through */
+/* phone: the page stays faintly visible behind a sheet, so she keeps her place; on a computer nothing covers it at all */
+.adm.is-phone .scrim,.adm.is-phone .scrim-t{background:rgba(0,0,0,.76)!important;opacity:1!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.adm.light.is-phone .scrim,.adm.light.is-phone .scrim-t{background:rgba(255,255,255,.76)!important}
+.cel{background:#000!important}.adm.light .cel{background:#fff!important}
+/* the text size reaches the header, the bottom bar and every popup too (their frames keep the screen's height, what is inside grows) */
+html[data-adm-fs="s"] .adm.is-phone :is(.ph-top,.adm-tabbar,#adm-layer .drawer>*,#adm-layer .pal>*){zoom:.93}
+html[data-adm-fs="l"] .adm.is-phone :is(.ph-top,.adm-tabbar,#adm-layer .drawer>*,#adm-layer .pal>*){zoom:1.1}
+html[data-adm-fs="xl"] .adm.is-phone :is(.ph-top,.adm-tabbar,#adm-layer .drawer>*,#adm-layer .pal>*){zoom:1.22}
+.adm.nav-open::after{background:#000!important}
+.adm.light.nav-open::after{background:#fff!important}
+@media (max-width:980px){ .adm i.info.open::before{background:#000!important} .adm.light i.info.open::before{background:#fff!important} }
+/* on white the sheet keeps a visible edge */
+.adm.is-phone :is(.drawer,.psheet,.pal,.plus-sheet){box-shadow:0 -1px 0 rgba(0,0,0,.08),0 -12px 40px rgba(0,0,0,.12)!important}
+
+/* night: every page on plain black, and what could not be read on it */
+.adm:not(.light){background:#000}
+.adm:not(.light) .adm-top{background:#000}
+.adm:not(.light) i.info{color:var(--a-mut)}
+.adm:not(.light) .conn-logo{color:var(--a-bg)}
+.adm:not(.light) .conn-logo:is(.l-tiktok,.l-instagram,.l-google,.l-apple,.l-play,.l-ai){color:#fff}
+.adm .plogo{color:#fff!important}
+.adm:not(.light) .adm-tabbar .cnt,.adm:not(.light) .ph-5 .cnt{color:#1A0E0A}
+.adm:not(.light) .sw-later,.adm:not(.light) .sw-done{color:#000}
+.adm:not(.light) .wp-ck{color:#000}
+.adm:not(.light) .badge{color:#1A0E0A}
+.adm:not(.light) .fnl-s.acc .fnl-b span{color:#fff;text-shadow:0 1px 3px #000}
+button.rate-i{background:none;border:0;padding:0;color:inherit;font:inherit;width:100%}
+
+/* ---------- a fixed screen, like an app: nothing moves sideways on a phone, only up and down ---------- */
+html:has(.adm.is-phone),html:has(.adm.is-phone) body{overflow-x:clip;overscroll-behavior-x:none;max-width:100%}
+.adm.is-phone,.adm.is-phone #adm-layer{overflow-x:clip;max-width:100vw}
+.adm.is-phone :is(.drawer,.psheet,.ps-b,.pal,.pal-l,.cbx-full,.pp-full){overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y}
+.adm.is-phone :is(.ph-pins,.pm-chips,.pp-chips,.tw-land,.td-chips){touch-action:pan-x pan-y}
+.adm.is-phone input[type=range]{touch-action:none}
+
+/* ---------- every popup closes the same way: a small round x in its own corner, never over the content ---------- */
+.pop-x{flex:none;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:0;border-radius:99px;background:var(--a-s2);color:var(--a-mut);font-size:13px;line-height:1;display:grid;place-items:center;cursor:pointer}
+:is(.drawer,.cbx-full,.keyhelp)>.c-h:has(>.pop-x){flex-wrap:nowrap;align-items:flex-start}
+:is(.drawer,.cbx-full,.keyhelp)>.c-h:has(>.pop-x)>div:first-child{flex:1 1 auto;min-width:0}
+:is(.drawer,.cbx-full,.keyhelp)>.c-h:has(>.pop-x) h2{display:block;overflow-wrap:anywhere}
+.ps-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.ps-h>div:first-child{flex:1 1 auto;min-width:0}
+.popv>.pop-x{position:absolute;top:8px;right:8px;z-index:2;width:28px;height:28px;min-width:28px;min-height:28px}
+.popv:has(>.pop-x)>:nth-child(2){padding-right:34px}
+/* a long sheet keeps its header (and its x) in reach */
+.adm.is-phone .drawer:not(.psheet)>.c-h:has(>.pop-x){position:sticky;top:-22px;z-index:3;background:inherit;margin:-8px -20px 0;padding:8px 20px}
+/* the search and the map leave a strip of the backdrop to tap */
+.adm.is-phone .pal{top:calc(env(safe-area-inset-top,0px) + 22px);border-radius:22px 22px 0 0;padding-top:0}
+.adm.is-phone .pal-x{flex:none;width:32px;height:32px;border-radius:99px;background:var(--a-s2);display:grid;place-items:center;padding:0}
+.adm.is-phone .pal-x span{color:var(--a-mut);font-size:13px;font-weight:400}
+.adm.is-phone .cbx-full{z-index:50}
+
+/* where someone came from, and the reason on a tap */
+.src-tag{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px 6px;cursor:pointer;min-width:0}
+.src-tag.dim{color:var(--a-dim)}
+.src-why{flex:1 0 100%;font-size:12px;font-weight:450;line-height:1.35;color:var(--a-mut);white-space:normal}
+.adm.is-phone .pt-sub:has(.src-why){max-height:none}
+.adm.is-phone .pt-sub>span:has(.src-why){white-space:normal}
+.ai-sites{display:block;font-size:12px;color:var(--a-mut);margin-top:2px;cursor:pointer;font-weight:450;white-space:normal}
+.conn-gh{margin:6px 0 -6px;font-size:13px;font-weight:650;color:var(--a-dim)}
+.appr-do{margin:0;font-size:13.5px;line-height:1.45;color:var(--a-fg)}
+.appr-do ol{margin:4px 0 0;padding-left:20px}
+.appr-more{font-size:12.5px;color:var(--a-mut)}
+.ask-nokey{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:6px 2px}
+.ask-nokey ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.45}
+.ask-nokey h2{margin:0}
+.ask-nokey-t{margin:0;font-size:14px;line-height:1.45;color:var(--a-mut)}
+
+/* no zoom anywhere on a touch screen: a field under 16px made iOS zoom in on a tap and stay there, and the sheets and
+   layers outside .adm still took a double tap as zoom */
+@media (pointer:coarse){
+  html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  input,select,textarea{font-size:max(16px,1em)!important}
+}

@@ -1,4 +1,5 @@
 "use client";
+import { huOn } from "./views/alerts";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* Building blocks the all-in-one round added: how fresh each source is, the chart toolbar (line / columns, forecast,
    table, PNG, full screen, a note on a day), several lines on one chart, the collapsible "Részletek", phone
@@ -7,8 +8,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Delta, Empty, TrendChart, chColor, fmt, useWidth, type Mark, type Pt } from "./charts";
 import { Logo } from "./wow";
-import { toast } from "./phone";
-import { I, Layer, MOCK, P, PF, PushNone, ago, api, big, ch, lang, n, rpc, type D, type Tab } from "./shared";
+import { CloseX, Sheet, toast } from "./phone";
+import { I, Layer, MOCK, P, PF, PushNone, ago, api, big, ch, lang, n, rpc, type D, type Tab, useRpc, useSaved } from "./shared";
 
 /* ---------- a chart with its tools ---------- */
 /* inline the computed look of every element, then draw the SVG on a canvas: a PNG that looks like the screen */
@@ -57,7 +58,7 @@ export function ChartBox({ data, label, height = 260, hourly, marks, goal, unit,
       {tbl ? <div className="tw cbx-tbl"><table className="tb"><thead><tr><th>Nap</th><th className="num">{label}</th>{data.some((d) => d.p != null) && <th className="num">Előző időszak</th>}</tr></thead>
         <tbody>{[...data].reverse().map((d) => <tr key={d.t}><td>{new Date(d.t).toLocaleString("hu-HU", hourly ? { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" } : { year: "numeric", month: "short", day: "numeric", weekday: "short" })}</td><td className="num"><b>{fmt(d.v)}</b></td>{data.some((x) => x.p != null) && <td className="num">{fmt(d.p)}</td>}</tr>)}</tbody></table></div> : chart(height)}
       {full && <Layer><div className="scrim" onClick={() => setFull(false)} /><div className="cbx-full" role="dialog" aria-label={label}>
-        <div className="c-h"><div><div><h2>{label}</h2></div></div><button className="adm-ibtn" onClick={() => setFull(false)}>Bezárás</button></div>
+        <div className="c-h"><div><div><h2>{label}</h2></div></div><CloseX close={() => setFull(false)} /></div>
         {tools}{chart(Math.max(320, Math.round((typeof window !== "undefined" ? window.innerHeight : 800) * 0.62)))}
       </div></Layer>}
     </div>
@@ -134,8 +135,24 @@ export function usePush() {
     if (sub) { await api("/api/admin/push", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ endpoint: sub.endpoint }) }); await sub.unsubscribe(); }
     setSt("off"); toast("Értesítések kikapcsolva ezen az eszközön");
   };
-  const test = async () => { const r = await api("/api/admin/push?test=1", { method: "POST" }); toast(r.ok ? `Próba elküldve (${r.json?.sent ?? 0} eszköz)` : "Nem sikerült."); };
+  const test = async () => { const r = await api("/api/admin/push?test=1", { method: "POST" }); const codes: number[] = r.json?.codes || []; toast(!r.ok ? "Nem sikerült." : r.json?.sent ? `Próba elküldve (${r.json.sent} eszköz)` : codes.length ? `Az értesítési szolgáltatás nem fogadta el (${codes.join(", ")}). Kapcsold ki, majd be újra.` : "Nincs feliratkozott eszköz. Kapcsold be az értesítéseket."); };
   return { st, on, off, test };
+}
+/* what stands between this phone and a notification, in plain steps; an iPhone gets them only from the home-screen app */
+const isIOS = () => typeof navigator !== "undefined" && (/iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+const isHomeApp = () => typeof window !== "undefined" && (matchMedia("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone === true);
+export function PushSteps({ p }: { p: ReturnType<typeof usePush> }) {
+  if (p.st === "on") return <div className="ink-psh"><b>Az értesítések be vannak kapcsolva ezen a telefonon.</b><div className="ink-psh-b"><button className="adm-ibtn gold" onClick={p.test}>Próba küldése</button><button className="adm-ibtn" onClick={p.off}>Kikapcsolás</button></div></div>;
+  if (isIOS() && !isHomeApp()) return <div className="ink-psh"><b>iPhone-on az értesítés csak a főképernyőre tett adminból működik.</b><ol><li>Ha már van Irányító ikon a főképernyőn, töröld: a régi a sima Calligrát nyitja.</li><li>Nyomd meg a Safari <b>Megosztás</b> gombját, alul a … menüben.</li><li>Válaszd a <b>Főképernyőhöz adás</b> pontot.</li><li>Nyisd meg az új <b>Irányító</b> ikont, és lépj be.</li><li>Ott nyomd meg az <b>Értesítések bekapcsolása</b> gombot, és engedélyezd.</li></ol></div>;
+  if (p.st === "denied") return <div className="ink-psh"><b>Ezen a telefonon le vannak tiltva az értesítések.</b><ol><li>Nyisd meg a telefon <b>Beállítások</b> alkalmazását.</li><li><b>Értesítések → Irányító</b>: kapcsold be.</li><li>Gyere vissza ide, és nyomd meg újra a bekapcsolást.</li></ol></div>;
+  if (p.st === "na") return <div className="ink-psh"><b>Ez a böngésző nem tud értesítést fogadni.</b></div>;
+  return <div className="ink-psh"><b>Kapcsold be, hogy a fontos jelzések megérkezzenek a telefonra.</b><div className="ink-psh-b"><button className="adm-ibtn gold" onClick={p.on} disabled={p.st === "busy"}>{p.st === "busy" ? "Bekapcsolás…" : "Értesítések bekapcsolása"}</button></div></div>;
+}
+/* on the Ma page until notifications are on; "Most nem" hides it for a week on this device */
+export function PushPrompt() {
+  const p = usePush(); const [hide, setHide] = useState(() => { try { return Date.now() - Number(localStorage.getItem("inkage.admin.pushhide") || 0) < 7 * 864e5; } catch { return false; } });
+  if (hide || p.st === "on" || MOCK) return null;
+  return <section className="ink-psh-c"><h3 className="ink-h">Értesítések a telefonra</h3><PushSteps p={p} /><button className="lnk" onClick={() => { try { localStorage.setItem("inkage.admin.pushhide", String(Date.now())); } catch {} setHide(true); }}>Most nem</button></section>;
 }
 export function PushCard() {
   const p = usePush();
@@ -156,8 +173,49 @@ export function PushCard() {
   );
 }
 
+/* ---------- the phone's notification settings: topics, quiet hours, a calm day, faults at night, her own rules ---------- */
+const PUSH_TOPICS: [string, string, string[]][] = [["Napi", "reggeli mondat, esti összefoglaló, heti összefoglaló", ["morning", "evening", "weekly"]], ["Jó hírek", "új fiók, rekordnap, mérföldkő, első fizető", ["signup", "record", "milestone"]], ["Posztok", "robbanó és gyorsan terjedő poszt", ["rising", "viral", "publish"]],
+  ["Vélemények", "új komment, értékelés, említés (szöveg és név nélkül)", ["inbox", "mention"]], ["Hibák", "hibahullám, nem készülő előnézet, leállt mérés", ["errors", "sigfail", "heartbeat"]], ["Működés", "hibás futás, lehúzás, kapcsolat, lejáró kulcs, Google-ből kiesett oldal", ["run", "sync", "account", "expiry", "cert", "digest", "index", "rule"]]];
+const RM: Record<string, string> = { made: "elkészült előnézet", signups: "új fiók", sessions: "látogatás", paying: "fizető ember" };
+export function PushSheet({ close }: { close: () => void }) {
+  const sb = useMemo(() => supabaseBrowser(), []);
+  const p = usePush();
+  const q = useRpc("admin_push_prefs", undefined, []);
+  const [pf, setPf] = useState<D | null>(null);
+  useEffect(() => { if (q.d) setPf(q.d as D); else if (q.e) setPf({}); }, [q.d, q.e]);
+  const save = async (x: D) => { setPf(x); const r = await rpc(sb, "admin_push_prefs_save", { p: x }); if (r.error) toast("Nem sikerült menteni"); };
+  const [cfg, setCfg] = useSaved<{ calm?: boolean; night?: boolean }>("phone_push", {});
+  const [rules, setRules] = useSaved<{ id: string; m: string; op: string; v: number }[]>("phone_push_rules", []);
+  const [nr, setNr] = useState({ m: "paying", op: ">", v: "5" });
+  const off: string[] = Array.isArray(pf?.off) ? pf!.off : [];
+  const list = Array.isArray(rules) ? rules : [];
+  const Sw = ({ on, l, s, run }: { on: boolean; l: string; s?: string; run: () => void }) => <button className="ma-sw" role="switch" aria-checked={on} onClick={run}><span><b>{l}</b>{s && <small>{s}</small>}</span><span className={"sw" + (on ? " on" : "")}><i /></span></button>;
+  return <Sheet title="Értesítések" sub="Csak ami számít. Név és e-mail nem jelenik meg a zárolt képernyőn." close={close} tall>
+    <PushSteps p={p} />
+    <Sw on={p.st === "on"} l="Ezen a telefonon" s={p.st === "na" ? "ez a böngésző nem tud értesíteni; iPhone-on a főképernyőre tett appból működik" : p.st === "denied" ? "a telefon beállításaiban tiltva van" : p.st === "busy" ? "bekapcsolás…" : undefined} run={() => { if (p.st === "on") p.off(); else if (p.st !== "busy") p.on(); }} />
+    <h4 className="ps-t">Miről szóljon</h4>
+    {!pf ? <div className="skel" style={{ height: 180 }} /> : PUSH_TOPICS.map(([l, s, ks]) => { const on = ks.some((k) => !off.includes(k)); return <Sw key={l} on={on} l={l} s={s} run={() => save({ ...pf, off: on ? [...new Set([...off, ...ks])] : off.filter((k) => !ks.includes(k)) })} />; })}
+    <h4 className="ps-t">Mikor</h4>
+    <Sw on={!!cfg.calm} l="Nyugalmi nap" s="Ha nincs baj, csak este 9-kor szól, mindent egyben. A hibák akkor is azonnal jönnek." run={() => setCfg({ ...cfg, calm: !cfg.calm })} />
+    <Sw on={cfg.night !== false} l="Hiba éjjel is" s="Leállás és hibahullám a csendes órákban is felébreszt." run={() => setCfg({ ...cfg, night: cfg.night === false })} />
+    {pf && <><Sw on={!!pf.quiet} l="Csendes órák" s="Ekkor a jelzések megmaradnak, és a végén együtt érkeznek." run={() => save({ ...pf, quiet: pf.quiet ? null : { from: "22:00", to: "07:00" } })} />
+      {pf.quiet && <div className="ps-row"><input className="adm-in" type="time" aria-label="Kezdete" value={pf.quiet.from} onChange={(e) => save({ ...pf, quiet: { ...pf.quiet, from: e.target.value } })} /><input className="adm-in" type="time" aria-label="Vége" value={pf.quiet.to} onChange={(e) => save({ ...pf, quiet: { ...pf.quiet, to: e.target.value } })} /></div>}
+      <h4 className="ps-t">Összevonás</h4>
+      <div className="ps-opts">{[[0, "Azonnal"], [15, "15 percenként"], [60, "Óránként"]].map(([m, l]) => <button key={m} aria-pressed={n(pf.batch) === m} onClick={() => save({ ...pf, batch: m })}>{l}</button>)}</div>
+      <p className="ps-p mut">Háromnál több hasonló jelzés egy sorba kerül: „5 új: komment, vélemény”.</p></>}
+    <h4 className="ps-t">Saját szabály, naponta egyszer szól</h4>
+    {list.map((r) => <div key={r.id} className="ma-rule"><span>Ma {r.op === ">" ? "több" : "kevesebb"}, mint {fmt(r.v)} {RM[r.m] || r.m}</span><button className="lnk" onClick={() => setRules(list.filter((x) => x.id !== r.id))}>törlés</button></div>)}
+    <div className="ma-newrule"><select className="adm-in" aria-label="Mi" value={nr.m} onChange={(e) => setNr({ ...nr, m: e.target.value })}>{Object.entries(RM).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
+      <select className="adm-in" aria-label="Feltétel" value={nr.op} onChange={(e) => setNr({ ...nr, op: e.target.value })}><option value=">">több, mint</option><option value="<">kevesebb, mint (este 8-kor nézi)</option></select>
+      <input className="adm-in" type="number" inputMode="numeric" min={0} aria-label="Határ" value={nr.v} onChange={(e) => setNr({ ...nr, v: e.target.value })} />
+      <button className="adm-ibtn gold" disabled={!nr.v || list.length >= 10} onClick={() => { setRules([...list, { id: String(Date.now()), m: nr.m, op: nr.op, v: Number(nr.v) }]); toast("Szabály mentve"); }}>Hozzáadás</button></div>
+    {nr.m === "paying" && <p className="ps-p mut">A fizetők szabálya csak akkor szól, ha a fizetés be van kapcsolva.</p>}
+    {p.st === "on" && <button className="lnk" onClick={p.test}>Próbaértesítés küldése ide</button>}
+  </Sheet>;
+}
+
 /* ---------- the week's plan: three steps, ticked off, measured against the same days of last week ---------- */
-const WM: Record<string, string> = { sessions: "látogatás", scored: "előnézet", signups: "regisztráció", shared: "megosztás" };
+const WM: Record<string, string> = { sessions: "látogatás", made: "elkészült előnézet", scored: "előnézet", signups: "regisztráció", shared: "megosztás" };
 export function WeekPlan({ go }: { go?: (t: Tab) => void }) {
   const sb = useMemo(() => supabaseBrowser(), []);
   const [d, setD] = useState<D | null>(null); const [busy, setBusy] = useState(false); const [ed, setEd] = useState<D[] | null>(null);
@@ -232,7 +290,7 @@ export function Spikes({ days = 90, onMarks }: { days?: number; onMarks?: (m: Ma
 export const explain = (x: D) => {
   const c = (x.chans || []) as D[], l = (x.langs || []) as D[], p = (x.posts || []) as D[], nt = (x.notes || []) as string[], down = x.kind === "down";
   const parts = [c.length ? `${down ? "kevesebb" : "főleg"} ${c.map((y) => `${ch(y.k)} (${n(y.extra) > 0 ? "+" : ""}${fmt(y.extra)})`).join(", ")}` : "", l.length ? `${l.map((y) => lang(y.k).toLowerCase()).join(" és ")} nyelven` : "",
-    p.length ? `előtte: ${PF[p[0].platform] || p[0].platform} „${String(p[0].title || "").slice(0, 40)}”` : "", nt.length ? `jegyzet: ${nt[0]}` : ""].filter(Boolean);
+    p.length ? `előtte: ${PF[p[0].platform] || p[0].platform} „${String(p[0].title || "").length > 40 ? String(p[0].title).slice(0, 39).trimEnd() + "…" : String(p[0].title || "")}”` : "", nt.length ? `jegyzet: ${nt[0]}` : ""].filter(Boolean);
   return parts.join(" · ") || (down ? "egyik csatorna sem tűnik ki: általános csendes nap" : "a forrás ismeretlen (nincs rövid link vagy hivatkozó)");
 };
 
@@ -240,9 +298,11 @@ export const explain = (x: D) => {
 export function PlatformToday() {
   const sb = useMemo(() => supabaseBrowser(), []);
   const [d, setD] = useState<D[] | null>(null); const [m, setM] = useState<D | null>(null);
-  useEffect(() => { rpc(sb, "admin_platform_today").then(({ data }) => setD(Array.isArray(data) ? data : [])); rpc(sb, "admin_today_more").then(({ data }) => setM(data || null)); }, [sb]);
+  /* Google Play counts only once a row of it exists; "0" would be a measured zero, and there is none */
+  const [playKnown, setPlayKnown] = useState<boolean | null>(null);
+  useEffect(() => { rpc(sb, "admin_platform_today").then(({ data }) => setD(Array.isArray(data) ? data : [])); rpc(sb, "admin_today_more").then(({ data }) => setM(data || null)); rpc(sb, "admin_stores", { p_days: 90 }).then(({ data }) => setPlayKnown(data ? !!(data as D).last?.google : null)); }, [sb]);
   const t = new Date(), today = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
-  const dayL = (k?: string | null) => (!k ? "" : String(k).slice(0, 10) === today ? "ma" : new Date(k).toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) + "-n");
+  const dayL = (k?: string | null) => (!k ? "" : String(k).slice(0, 10) === today ? "ma" : huOn(String(k).slice(0, 10)));
   const dl = m?.downloads, g = m?.gsc;
   if (!d?.length && !dl && !g) return null;
   return <section className="s12 ptoday">{(d || []).map((x) => { const df = n(x.followers) - n(x.followers_prev);
@@ -250,10 +310,10 @@ export function PlatformToday() {
       <div key={x.platform} className="pt-i"><Logo k={x.platform} size={30} />
         {/* the follower change belongs to the day of the last count: "ma" only when today's count is in */}
         <div><b>{big(x.followers)}</b><small>követő {x.followers_prev != null && <span className={df >= 0 ? "up" : "down"}>{df >= 0 ? "+" : ""}{fmt(df)} {dayL(x.followers_day)}</span>}</small></div>
-        {x.platform === "pinterest" ? <div><b>{x.impressions_today == null ? "–" : big(x.impressions_today)}</b><small>megjelenés ma</small></div>
+        {x.platform === "pinterest" ? <div><b>{x.impressions_last == null ? "–" : big(x.impressions_last)}</b><small title="A Pinterest 1–2 nap késéssel adja a napi számát: ez az utolsó nap, amit már kiadott.">megjelenés {x.impressions_last_day ? new Date(String(x.impressions_last_day).slice(0, 10) + "T12:00:00").toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) + "-n (késve jön)" : "(még nincs adat)"}</small></div>
           : <div><b>{x.synced_today === false ? "–" : big(x.views_today)}</b><small>{x.synced_today === false ? "ma még nem frissült" : "új megtekintés ma"}</small></div>}
         <div><b>{fmt(x.visits_today)}</b><small>látogató ma</small></div></div>); })}
-    {dl && <div className="pt-i"><Logo k="apple" size={30} /><div><b>{fmt(n(dl.apple) + n(dl.google))}</b><small>letöltés {dayL(dl.day)}</small></div><div><b>{fmt(dl.apple)}</b><small>App Store</small></div><div><b>{fmt(dl.google)}</b><small>Google Play · előző nap {fmt(dl.prev)}</small></div></div>}
+    {dl && <div className="pt-i"><Logo k="apple" size={30} /><div><b>{fmt(n(dl.apple) + (playKnown ? n(dl.google) : 0))}</b><small>letöltés {dayL(dl.day)}{playKnown ? "" : " · csak App Store"}</small></div><div><b>{fmt(dl.apple)}</b><small>App Store</small></div><div><b>{playKnown ? fmt(dl.google) : "–"}</b><small>{playKnown ? `Google Play · előző nap ${fmt(dl.prev)}` : playKnown === false ? "Google Play: nem mérhető" : "Google Play"}</small></div></div>}
     {g && <div className="pt-i"><Logo k="google" size={30} /><div><b>{fmt(g.clicks)}</b><small>Google-kattintás {dayL(g.day)}</small></div><div><b>{big(g.impressions)}</b><small>megjelenés</small></div><div><b>{fmt(g.prev)}</b><small title="A Google 2–3 nap késéssel adja az adatot">előtte való nap</small></div></div>}
   </section>;
 }
@@ -262,10 +322,10 @@ export function PlatformToday() {
 export function storyImage(code: string, note: string) {
   const qr = document.querySelector(`[data-qr="${code}"] svg`) as SVGSVGElement | null;
   const c = document.createElement("canvas"); c.width = 1080; c.height = 1920; const x = c.getContext("2d")!;
-  const g = x.createLinearGradient(0, 0, 0, 1920); g.addColorStop(0, "#F7F3EA"); g.addColorStop(1, "#EDE4D3"); x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
-  x.fillStyle = "#1A1714"; x.textAlign = "center"; x.font = "italic 600 120px 'Cormorant Garamond', serif"; x.fillText("InkAge", 540, 330);
+  x.fillStyle = "#000"; x.fillRect(0, 0, 1080, 1920);
+  x.fillStyle = "#fff"; x.textAlign = "center"; x.font = "800 150px Geist, sans-serif"; x.fillText("InkAge", 540, 330);
   x.font = "500 52px Geist, sans-serif"; x.fillText(note || "Próbáld ki", 540, 470);
-  const done = () => { x.font = "700 72px Geist, sans-serif"; x.fillText(`inkage.app/go/${code}`, 540, 1520); x.font = "400 40px Geist, sans-serif"; x.fillStyle = "#6E655A"; x.fillText("Így néz ki a tetoválásod 50 év múlva", 540, 1610);
+  const done = () => { x.font = "700 72px Geist, sans-serif"; x.fillText(`inkage.app/go/${code}`, 540, 1520); x.font = "400 40px Geist, sans-serif"; x.fillStyle = "#C4C4C4"; x.fillText("Így néz ki a tetoválásod 50 év múlva", 540, 1610);
     const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = `inkage-story-${code}.png`; a.click(); };
   if (!qr) return done();
   const img = new Image(), url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(qr)], { type: "image/svg+xml" }));
