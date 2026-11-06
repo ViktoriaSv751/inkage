@@ -392,6 +392,7 @@
    "hu": "Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc",
    "files": [
     "app/SiteExtras.tsx",
+    "app/_tool/ToolPage.tsx",
     "app/tudastar/[slug]/ArticleCta.tsx"
    ],
    "kind": "call"
@@ -543,6 +544,22 @@
    ],
    "kind": "call"
   },
+  "Tattoo simulator": {
+   "hu": "Tetoválás szimulátor",
+   "files": [
+    "app/SiteFooter.tsx",
+    "app/tattoo-aging-simulator/page.tsx",
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Aging simulator": {
+   "hu": "Öregedés szimulátor",
+   "files": [
+    "app/SiteFooter.tsx"
+   ],
+   "kind": "call"
+  },
   "Styles": {
    "hu": "Stílusok",
    "files": [
@@ -656,7 +673,8 @@
    "hu": "Öregedés",
    "files": [
     "app/SiteFooter.tsx",
-    "app/gyik/FaqExplorer.tsx"
+    "app/gyik/FaqExplorer.tsx",
+    "app/tattoo-aging-simulator/page.tsx"
    ],
    "kind": "call"
   },
@@ -861,7 +879,9 @@
   "Quick answers": {
    "hu": "Gyors válaszok",
    "files": [
-    "app/SiteNav.tsx"
+    "app/SiteNav.tsx",
+    "app/tattoo-aging-simulator/page.tsx",
+    "app/tattoo-simulator/page.tsx"
    ],
    "kind": "call"
   },
@@ -966,7 +986,8 @@
   "Try it on your own photo": {
    "hu": "Próbáld ki a saját fotódon",
    "files": [
-    "app/_auth/AuthScreen.tsx"
+    "app/_auth/AuthScreen.tsx",
+    "app/tudastar/TudastarView.tsx"
    ],
    "kind": "call"
   },
@@ -1504,7 +1525,8 @@
   "See it on your skin before it’s permanent.": {
    "hu": "Nézd meg a bőrödön, mielőtt végleges lesz.",
    "files": [
-    "app/_info/InfoPage.tsx"
+    "app/_info/InfoPage.tsx",
+    "app/_tool/ToolPage.tsx"
    ],
    "kind": "call"
   },
@@ -2610,6 +2632,29 @@
    "hu": "Valódi, InkAge-dzsel készült példa. Húzd, és nézd, hogyan öregszik. Az előnézetek MI-becslések.",
    "files": [
     "app/_landing/StageSlider.tsx"
+   ],
+   "kind": "call"
+  },
+  "Try it on my photo": {
+   "hu": "Kipróbálom a fotómon",
+   "files": [
+    "app/_tool/ToolPage.tsx",
+    "app/app/gallery/Ideas.tsx",
+    "app/tattoo/[slug]/SeoView.tsx"
+   ],
+   "kind": "call"
+  },
+  "How it works, in three steps": {
+   "hu": "Így működik, három lépésben",
+   "files": [
+    "app/_tool/ToolPage.tsx"
+   ],
+   "kind": "call"
+  },
+  "Questions and answers": {
+   "hu": "Kérdések és válaszok",
+   "files": [
+    "app/_tool/ToolPage.tsx"
    ],
    "kind": "call"
   },
@@ -4296,6 +4341,13 @@
    "hu": "Műveletek",
    "files": [
     "app/admin/views/users.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Google": {
+   "hu": "a Google keresőből (utm vagy hivatkozó oldal)",
+   "files": [
+    "app/admin/views/weekly.tsx"
    ],
    "kind": "pair"
   },
@@ -8275,15 +8327,6 @@
    ],
    "kind": "call"
   },
-  "Try it on my photo": {
-   "hu": "Kipróbálom a fotómon",
-   "files": [
-    "app/app/gallery/Ideas.tsx",
-    "app/tattoo/[slug]/SeoView.tsx",
-    "app/tudastar/[slug]/ArticleCta.tsx"
-   ],
-   "kind": "call"
-  },
   "Deleting…": {
    "hu": "Törlés…",
    "files": [
@@ -10284,6 +10327,128 @@
    ],
    "kind": "call"
   },
+  "Asked most often": {
+   "hu": "Leggyakrabban kérdezik",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Is there an app that shows how my tattoo will look in 20 years?": {
+   "hu": "Van olyan app, ami megmutatja, hogyan fog kinézni a tetoválásom 20 év múlva?",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. InkAge shows a tattoo on a photo of your own skin fresh, healed after a year, and at 10, 30 and 50 years, so 20 years sits between the 10- and 30-year images. It works for a new design and for a tattoo you already have.": {
+   "hu": "Igen. Az InkAge a saját bőrödről készült fotón mutatja a tetoválást frissen, egy év után gyógyultan, valamint 10, 30 és 50 év múlva, így a 20 év a 10 és a 30 éves kép között van. Új mintával és meglévő tetoválással is működik.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can I see a tattoo on my arm before getting it?": {
+   "hu": "Megnézhetem a tetoválást a karomon, mielőtt elkészíttetném?",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. Photograph your arm, add the design (a photo, screenshot, sketch or a design from the library) and place it at real size in centimetres. InkAge draws it into your photo in about a minute.": {
+   "hu": "Igen. Fotózd le a karodat, add hozzá a mintát (fotót, képernyőfotót, vázlatot vagy egy mintát a mintatárból), és tedd fel valós méretben, centiméterre pontosan. Az InkAge kb. egy perc alatt belerajzolja a fotódba.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How accurate is a tattoo aging preview?": {
+   "hu": "Mennyire pontos egy tetoválás-öregedési előnézet?",
+   "files": [
+    "app/gyik/page.tsx",
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "It is an AI estimate of how ink, skin and sun usually behave, shown on your own photo — not a measurement of your skin or a guarantee. It is good for comparing sizes, spots and designs; the real result depends on your artist, ink, skin, sun and aftercare.": {
+   "hu": "MI-becslés arról, ahogy a tinta, a bőr és a nap általában viselkedik, a saját fotódon megjelenítve – nem a bőröd mérése és nem garancia. Méretek, helyek és minták összehasonlítására jó; a valós eredmény a tetoválódtól, a tintától, a bőrödtől, a naptól és az utókezeléstől függ.",
+   "files": [
+    "app/gyik/page.tsx",
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can an app show laser tattoo removal results?": {
+   "hu": "Meg tudja mutatni egy app a lézeres tetoválás-eltávolítás eredményét?",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "InkAge shows a laser removal preview of your own tattoo after 3, 6 and 10 sessions. It helps you set expectations before you talk to a clinic; the real number of sessions depends on the ink, the colours, your skin and the clinic’s laser.": {
+   "hu": "Az InkAge lézeres eltávolítási előnézetet mutat a saját tetoválásodról 3, 6 és 10 kezelés után. Segít reális elvárásokat kialakítani, mielőtt klinikával beszélnél; a valós kezelésszám a tintától, a színektől, a bőrödtől és a klinika lézerétől függ.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Is InkAge on iPhone and Android?": {
+   "hu": "Elérhető az InkAge iPhone-on és Androidon?",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. InkAge works in the browser on iPhone, Android and computers, and you can add it to your home screen like an app. Where the InkAge app is available in the App Store or Google Play, it uses the same account.": {
+   "hu": "Igen. Az InkAge böngészőben működik iPhone-on, Androidon és számítógépen, és appként kiteheted a kezdőképernyőre. Ahol az InkAge app elérhető az App Store-ban vagy a Google Playen, ott ugyanazt a fiókot használja.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Does InkAge keep my photos?": {
+   "hu": "Megőrzi az InkAge a fotóimat?",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Your previews are saved in your account’s private storage, and only you can see them. To make a preview, the photo and design are sent to our AI providers (Google Gemini, with OpenAI as a backup). You can delete any preview, or remove your account and all data under Profile → Delete my account and data.": {
+   "hu": "Az előnézeteid a fiókod privát tárhelyén vannak, és csak te látod őket. Az előnézet elkészítéséhez a fotót és a mintát elküldjük az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). Bármelyik előnézetet törölheted, a fiókodat és minden adatodat pedig itt: Profil → Fiókom és adataim törlése.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How long does a preview take?": {
+   "hu": "Mennyi ideig tart egy előnézet?",
+   "files": [
+    "app/gyik/page.tsx",
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "About a minute from photo to preview. With an account you can make 30 previews a month.": {
+   "hu": "Kb. egy perc a fotótól az előnézetig. Fiókkal havonta 30 előnézetet készíthetsz.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Which languages is InkAge available in?": {
+   "hu": "Milyen nyelveken érhető el az InkAge?",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "35 languages, including English, Hungarian, German, Spanish, French, Portuguese, Italian, Dutch, Polish, Czech, Japanese and Swedish. InkAge follows your browser’s language, and you can switch it at any time.": {
+   "hu": "35 nyelven, köztük magyarul, angolul, németül, spanyolul, franciául, portugálul, olaszul, hollandul, lengyelül, csehül, japánul és svédül. Az InkAge a böngésződ nyelvét követi, és bármikor átválthatod.",
+   "files": [
+    "app/gyik/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Can’t find yours? Write to us — we read every message.": {
    "hu": "Nem találod a sajátodat? Írj nekünk – minden üzenetet elolvasunk.",
    "files": [
@@ -11201,6 +11366,7 @@
    "hu": "Öt lépés, kb. egy perc.",
    "files": [
     "app/mi-az-inkage/page.tsx",
+    "app/tattoo-simulator/page.tsx",
     "app/telepites/page.tsx"
    ],
    "kind": "call"
@@ -12322,6 +12488,387 @@
    ],
    "kind": "call"
   },
+  "See how a tattoo will look in 10, 30 and 50 years on a photo of your own skin — a new design or one you already have, with a 0–100 longevity score.": {
+   "hu": "Nézd meg, hogyan fog kinézni egy tetoválás 10, 30 és 50 év múlva a saját bőrödről készült fotón – új mintával vagy a meglévő tetoválásoddal, 0–100-as tartóssági pontszámmal.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Tattoo aging simulator: see how your tattoo will age": {
+   "hu": "Tetoválás öregedés szimulátor: nézd meg, hogyan öregszik a tetoválásod",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Tattoo aging simulator": {
+   "hu": "Tetoválás öregedés szimulátor",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx",
+    "app/tattoo-simulator/page.tsx",
+    "app/tudastar/TudastarView.tsx"
+   ],
+   "kind": "call"
+  },
+  "How will your tattoo age? See it on your skin.": {
+   "hu": "Hogyan fog öregedni a tetoválásod? Nézd meg a bőrödön.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "InkAge shows a new design or a tattoo you already have at five moments: fresh, healed after a year, and at 10, 30 and 50 years.": {
+   "hu": "Az InkAge egy új mintát vagy a meglévő tetoválásodat öt időpontban mutatja meg: frissen, egy év után gyógyultan, valamint 10, 30 és 50 év múlva.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "What the aging simulator shows": {
+   "hu": "Mit mutat az öregedés szimulátor",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Tattoos change slowly. Lines spread a little under the skin, light colours fade first, and fine details that sit close together can merge. Sun and the body area speed this up or slow it down.": {
+   "hu": "A tetoválás lassan változik. A vonalak kicsit szétterülnek a bőr alatt, a világos színek fakulnak először, a közel álló finom részletek pedig összefolyhatnak. A nap és a testrész ezt gyorsítja vagy lassítja.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "InkAge applies these usual patterns to your own photo. The images keep your skin tone and light, and a 0–100 longevity score lists what helps and what hurts: size, line thickness, colour, placement and sun.": {
+   "hu": "Az InkAge ezeket a szokásos folyamatokat alkalmazza a saját fotódon. A képek megtartják a bőrtónusodat és a fényeidet, a 0–100-as tartóssági pontszám pedig felsorolja, mi segít és mi árt: méret, vonalvastagság, szín, elhelyezés és nap.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Already have the tattoo? Upload a photo of it and see where it is heading. Thinking of removal? The same app shows a laser removal preview after 3, 6 and 10 sessions.": {
+   "hu": "Már megvan a tetoválás? Tölts fel róla egy fotót, és nézd meg, merre tart. Eltávolításon gondolkodsz? Ugyanez az app lézeres eltávolítási előnézetet is mutat 3, 6 és 10 kezelés után.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "The images are AI estimates based on how ink, skin and sun usually behave, not a measurement of your skin and not medical advice.": {
+   "hu": "A képek MI-becslések arról, ahogy a tinta, a bőr és a nap általában viselkedik, nem a bőröd mérései és nem orvosi tanácsok.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Upload your photo": {
+   "hu": "Töltsd fel a fotódat",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "A new design on the spot where it would go, or a photo of a tattoo you already have.": {
+   "hu": "Egy új mintát azon a helyen, ahová kerülne, vagy egy fotót a meglévő tetoválásodról.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Set the size and spot": {
+   "hu": "Állítsd be a méretet és a helyet",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Choose the body area and the size in centimetres; both change how a tattoo ages.": {
+   "hu": "Válaszd ki a testrészt és a méretet centiméterben; mindkettő befolyásolja, hogyan öregszik a tetoválás.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Watch the years pass": {
+   "hu": "Nézd, ahogy telnek az évek",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Fresh, 1, 10, 30 and 50 years, with a longevity score and tips for a design that lasts.": {
+   "hu": "Friss, 1, 10, 30 és 50 év, tartóssági pontszámmal és tippekkel egy tartósabb mintához.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How will my tattoo look in 20 years?": {
+   "hu": "Hogyan fog kinézni a tetoválásom 20 év múlva?",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "InkAge shows 10, 30 and 50 years on your own photo, so 20 years sits between the 10- and 30-year images. Expect softer lines and lighter colours, more so on sun-exposed spots and in small, fine designs.": {
+   "hu": "Az InkAge 10, 30 és 50 évet mutat a saját fotódon, így a 20 év a 10 és a 30 éves kép között van. Lágyabb vonalakra és világosabb színekre számíts, főleg napnak kitett helyeken és kicsi, finom mintáknál.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can I see how my existing tattoo will age?": {
+   "hu": "Megnézhetem, hogyan öregszik a meglévő tetoválásom?",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. Upload a photo of the tattoo you already have and InkAge shows it at 10, 30 and 50 years on your own skin.": {
+   "hu": "Igen. Tölts fel egy fotót a meglévő tetoválásodról, és az InkAge megmutatja 10, 30 és 50 év múlva a saját bőrödön.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Which tattoos age best?": {
+   "hu": "Melyik tetoválás öregszik a legjobban?",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Bold lines, enough space between details and a size that suits the detail usually age best. Very small, fine designs and light colours blur and fade sooner. The longevity score shows which of these apply to your design, and “Make it last” offers a sturdier redraw to compare.": {
+   "hu": "Általában a vastag vonalak, a részletek közötti elég hely és a részletességhez illő méret öregszik a legjobban. A nagyon kicsi, finom minták és a világos színek hamarabb elmosódnak és fakulnak. A tartóssági pontszám megmutatja, ezek közül mi igaz a te mintádra, a „Tedd tartóssá” pedig egy tartósabb átrajzolást ad összehasonlításhoz.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can it show laser removal results too?": {
+   "hu": "A lézeres eltávolítás eredményét is meg tudja mutatni?",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. InkAge shows a laser removal preview of your tattoo after 3, 6 and 10 sessions, to help you set expectations before you talk to a clinic.": {
+   "hu": "Igen. Az InkAge lézeres eltávolítási előnézetet mutat a tetoválásodról 3, 6 és 10 kezelés után, hogy reális elvárásokkal beszélhess a klinikával.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "About a minute from photo to preview. An account comes with 30 previews a month.": {
+   "hu": "Kb. egy perc a fotótól az előnézetig. Fiókkal havonta 30 előnézet jár.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Try a tattoo on your own photo.": {
+   "hu": "Próbáld fel a tetoválást a saját fotódon.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "The full guide.": {
+   "hu": "A teljes útmutató.",
+   "files": [
+    "app/tattoo-aging-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Try a tattoo on a photo of your own body before you get it. Place any design at real size, then see it fresh and at 10, 30 and 50 years.": {
+   "hu": "Próbáld fel a tetoválást a saját testedről készült fotón, mielőtt elkészíttetnéd. Tedd fel bármelyik mintát valós méretben, és nézd meg frissen, valamint 10, 30 és 50 év múlva.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Tattoo simulator: see a tattoo on your own body before you get it": {
+   "hu": "Tetoválás szimulátor: nézd meg a tetoválást a saját testeden, mielőtt elkészíttetnéd",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "See a tattoo on your body before you get it.": {
+   "hu": "Nézd meg a tetoválást a testeden, mielőtt elkészül.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Photograph the spot, add any design, and InkAge shows it on your own skin — and how it will look in 10, 30 and 50 years.": {
+   "hu": "Fotózd le a helyet, adj hozzá bármilyen mintát, és az InkAge megmutatja a saját bőrödön – és azt is, hogyan fog kinézni 10, 30 és 50 év múlva.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "What the tattoo simulator does": {
+   "hu": "Mit csinál a tetoválás szimulátor",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "InkAge is a tattoo try-on app. You take or upload a photo of the place where the tattoo would go and add a design: a photo, a screenshot, a sketch or a design from the InkAge library. Then you move, resize and rotate it on your skin, with the size shown in centimetres.": {
+   "hu": "Az InkAge egy tetoválás-felpróbáló app. Lefotózod vagy feltöltöd azt a helyet, ahová a tetoválás kerülne, és hozzáadsz egy mintát: fotót, képernyőfotót, vázlatot vagy egy mintát az InkAge mintatárából. Utána a bőrödön mozgatod, méretezed és forgatod, a méretet centiméterben látod.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "AI then draws the design into your photo, keeping your skin tone, your light and the shape of your body, so it looks like a tattoo, not a sticker. The same preview shows it healed after a year and at 10, 30 and 50 years.": {
+   "hu": "Ezután a mesterséges intelligencia belerajzolja a mintát a fotódba, megtartva a bőrtónusodat, a fényeidet és a tested formáját, így tetoválásnak látszik, nem matricának. Ugyanaz az előnézet megmutatja egy év után gyógyultan, valamint 10, 30 és 50 év múlva is.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "It is an AI estimate, not a promise. Your artist, the ink, your skin, sun and aftercare decide the real result. Use the preview to compare sizes, spots and designs, and to talk them through with your artist.": {
+   "hu": "Ez MI-becslés, nem ígéret. A valós eredményt a tetoválód, a tinta, a bőröd, a nap és az utókezelés dönti el. Az előnézettel méreteket, helyeket és mintákat hasonlíthatsz össze, és átbeszélheted őket a tetoválóddal.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Photograph the spot": {
+   "hu": "Fotózd le a helyet",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Daylight, the area in focus. The app checks light and focus and finds the bare skin.": {
+   "hu": "Nappali fény, éles kép. Az app ellenőrzi a fényt és az élességet, és megkeresi a csupasz bőrt.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Add and place the design": {
+   "hu": "Tedd fel a mintát",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "A photo, screenshot, sketch or library design. Drag, pinch and rotate it into place at real size.": {
+   "hu": "Fotó, képernyőfotó, vázlat vagy minta a mintatárból. Húzd, méretezd és forgasd a helyére, valós méretben.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "See it on your skin": {
+   "hu": "Nézd meg a bőrödön",
+   "files": [
+    "app/tattoo-simulator/page.tsx",
+    "app/tudastar/[slug]/ArticleView.tsx"
+   ],
+   "kind": "call"
+  },
+  "In about a minute: realistic images fresh, healed and at 10, 30 and 50 years, with a 0–100 longevity score.": {
+   "hu": "Kb. egy perc alatt: valósághű képek frissen, gyógyultan, valamint 10, 30 és 50 év múlva, 0–100-as tartóssági pontszámmal.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can I see a tattoo on my body before getting it?": {
+   "hu": "Megnézhetem a tetoválást a testemen, mielőtt elkészíttetném?",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. Photograph the spot, add the design and place it at the size you want. InkAge draws it into your photo, so you see it on your own skin, not on a model.": {
+   "hu": "Igen. Fotózd le a helyet, add hozzá a mintát, és tedd fel a kívánt méretben. Az InkAge belerajzolja a fotódba, így a saját bőrödön látod, nem egy modellén.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Which designs can I try on?": {
+   "hu": "Milyen mintákat próbálhatok fel?",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Any image: a photo of someone else’s tattoo, a screenshot, a sketch, or a design from the InkAge library. If a photo shows several tattoos, you pick one and only that design is cut out.": {
+   "hu": "Bármilyen képet: más tetoválásáról készült fotót, képernyőfotót, vázlatot vagy mintát az InkAge mintatárából. Ha egy fotón több tetoválás van, kiválasztod az egyiket, és csak azt vágjuk ki.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can I try different sizes and body areas?": {
+   "hu": "Kipróbálhatok különböző méreteket és testrészeket?",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. You set the size in centimetres and can make new previews on other spots. An account comes with 30 previews a month.": {
+   "hu": "Igen. A méretet centiméterben állítod be, és más helyekre is készíthetsz új előnézetet. Fiókkal havonta 30 előnézet jár.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Can I try a tattoo I already have?": {
+   "hu": "Kipróbálhatom egy meglévő tetoválásomon?",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Yes. Upload a photo of your existing tattoo to see how it will age, or to see a laser removal preview after 3, 6 and 10 sessions.": {
+   "hu": "Igen. Tölts fel egy fotót a meglévő tetoválásodról, és nézd meg, hogyan fog öregedni, vagy nézz lézeres eltávolítási előnézetet 3, 6 és 10 kezelés után.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How realistic is the result?": {
+   "hu": "Mennyire valósághű az eredmény?",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "The images keep your skin tone, light and body shape, so they look like a real tattoo on you. They are still AI estimates, not a guarantee: the real tattoo depends on your artist, the ink, your skin and aftercare.": {
+   "hu": "A képek megtartják a bőrtónusodat, a fényeidet és a tested formáját, így valódi tetoválásnak látszanak rajtad. Ettől még MI-becslések, nem garanciák: a valódi tetoválás a tetoválódtól, a tintától, a bőrödtől és az utókezeléstől függ.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "What do I need to start?": {
+   "hu": "Mi kell az induláshoz?",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "An account (one tap with Google or Apple, or e-mail) and a photo. InkAge runs in the browser on phones and computers, so there is nothing to install.": {
+   "hu": "Egy fiók (egy koppintás Google- vagy Apple-fiókkal, vagy e-maillel) és egy fotó. Az InkAge böngészőben fut telefonon és számítógépen, így semmit nem kell telepíteni.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "How your tattoo will age.": {
+   "hu": "Hogyan öregszik a tetoválásod.",
+   "files": [
+    "app/tattoo-simulator/page.tsx"
+   ],
+   "kind": "call"
+  },
   "Install InkAge – InkAge": {
    "hu": "Telepítés a kezdőképernyőre – InkAge",
    "files": [
@@ -12709,6 +13256,13 @@
    ],
    "kind": "call"
   },
+  "See a design on your skin before you get it, and how a tattoo will look in 10, 30 and 50 years.": {
+   "hu": "Nézd meg a mintát a bőrödön, mielőtt elkészül, és azt is, hogyan fog kinézni egy tetoválás 10, 30 és 50 év múlva.",
+   "files": [
+    "app/tudastar/TudastarView.tsx"
+   ],
+   "kind": "call"
+  },
   "Wondering how yours would age?": {
    "hu": "Kíváncsi vagy, a tiéd hogyan öregedne?",
    "files": [
@@ -12775,13 +13329,6 @@
   },
   "Written by the InkAge editorial team from widely accepted tattoo-care practice. Figures are rules of thumb, not measurements. This is general information, not medical advice — ask your artist or a dermatologist about your own skin.": {
    "hu": "Az InkAge szerkesztősége írta, széles körben elfogadott tetoválási gyakorlat alapján. A számok ökölszabályok, nem mérések. Általános tájékoztatás, nem orvosi tanács – a saját bőrödről kérdezd a tetoválódat vagy egy bőrgyógyászt.",
-   "files": [
-    "app/tudastar/[slug]/ArticleView.tsx"
-   ],
-   "kind": "call"
-  },
-  "See it on your skin": {
-   "hu": "Nézd meg a bőrödön",
    "files": [
     "app/tudastar/[slug]/ArticleView.tsx"
    ],

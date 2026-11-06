@@ -3,6 +3,7 @@ import { ARTICLES } from '@/lib/articles';
 import { seoSlugs } from '@/lib/seo';
 import { LANGS, qOf, htmlLang, type Lang } from '@/lib/tr';
 import { articleLangs } from '@/lib/article-langs';
+import { TOOL_TITLE, toolLangs } from '@/lib/tool-pages';
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://inkage.app';
 // when the fixed pages and articles last really changed (a date that moves on every build teaches Google to ignore it)
@@ -20,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/`, changeFrequency: 'weekly', priority: 1 },
     { url: `${BASE}/app`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE}/tudastar`, changeFrequency: 'weekly', priority: 0.8 },
+    // the tool landing pages, only in the languages they are written in (see lib/tool-pages.ts)
+    ...(Object.keys(TOOL_TITLE) as (keyof typeof TOOL_TITLE)[]).map((p) => ({ url: `${BASE}${p}`, changeFrequency: 'monthly' as const, priority: 0.8, langs: toolLangs(TOOL_TITLE[p]) })),
     ...ARTICLES.map((a) => ({ url: `${BASE}/tudastar/${a.slug}`, changeFrequency: 'monthly' as const, priority: 0.6, langs: articleLangs(a.slug) })),
     ...seoSlugs().map((slug) => ({ url: `${BASE}/tattoo/${slug}`, changeFrequency: 'monthly' as const, priority: 0.5 })),
     ...['hogyan-mukodik', 'funkciok', 'gyik', 'rolunk', 'kapcsolat', 'adatbiztonsag', 'fiok-torlese', 'suti', 'mi-az-inkage', 'ingyenes-beta', 'telepites', 'jog'].map((p) => ({ url: `${BASE}/${p}`, changeFrequency: 'monthly' as const, priority: 0.5 })),

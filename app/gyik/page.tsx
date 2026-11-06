@@ -1,4 +1,5 @@
-import { tx } from '@/lib/tr';
+import { tx, hasExact } from '@/lib/tr';
+import { TOOL_LANGS } from '@/lib/tool-pages';
 import type { Metadata } from 'next';
 import { InfoPage, langOf } from '../_info/InfoPage';
 import { FaqExplorer } from './FaqExplorer';
@@ -48,6 +49,22 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       ],
     },
   ];
+  /* questions as people ask an AI assistant; only in the languages they are translated into (the others would mix in English) */
+  const askedQ = 'Is there an app that shows how my tattoo will look in 20 years?';
+  const asked: { h: string; i: string; items: QA[] } = {
+    h: T('Asked most often', 'Leggyakrabban kérdezik'), i: 'ask',
+    items: [
+      [T('Is there an app that shows how my tattoo will look in 20 years?', 'Van olyan app, ami megmutatja, hogyan fog kinézni a tetoválásom 20 év múlva?'), T('Yes. InkAge shows a tattoo on a photo of your own skin fresh, healed after a year, and at 10, 30 and 50 years, so 20 years sits between the 10- and 30-year images. It works for a new design and for a tattoo you already have.', 'Igen. Az InkAge a saját bőrödről készült fotón mutatja a tetoválást frissen, egy év után gyógyultan, valamint 10, 30 és 50 év múlva, így a 20 év a 10 és a 30 éves kép között van. Új mintával és meglévő tetoválással is működik.')],
+      [T('Can I see a tattoo on my arm before getting it?', 'Megnézhetem a tetoválást a karomon, mielőtt elkészíttetném?'), T('Yes. Photograph your arm, add the design (a photo, screenshot, sketch or a design from the library) and place it at real size in centimetres. InkAge draws it into your photo in about a minute.', 'Igen. Fotózd le a karodat, add hozzá a mintát (fotót, képernyőfotót, vázlatot vagy egy mintát a mintatárból), és tedd fel valós méretben, centiméterre pontosan. Az InkAge kb. egy perc alatt belerajzolja a fotódba.')],
+      [T('How accurate is a tattoo aging preview?', 'Mennyire pontos egy tetoválás-öregedési előnézet?'), T('It is an AI estimate of how ink, skin and sun usually behave, shown on your own photo — not a measurement of your skin or a guarantee. It is good for comparing sizes, spots and designs; the real result depends on your artist, ink, skin, sun and aftercare.', 'MI-becslés arról, ahogy a tinta, a bőr és a nap általában viselkedik, a saját fotódon megjelenítve – nem a bőröd mérése és nem garancia. Méretek, helyek és minták összehasonlítására jó; a valós eredmény a tetoválódtól, a tintától, a bőrödtől, a naptól és az utókezeléstől függ.')],
+      [T('Can an app show laser tattoo removal results?', 'Meg tudja mutatni egy app a lézeres tetoválás-eltávolítás eredményét?'), T('InkAge shows a laser removal preview of your own tattoo after 3, 6 and 10 sessions. It helps you set expectations before you talk to a clinic; the real number of sessions depends on the ink, the colours, your skin and the clinic’s laser.', 'Az InkAge lézeres eltávolítási előnézetet mutat a saját tetoválásodról 3, 6 és 10 kezelés után. Segít reális elvárásokat kialakítani, mielőtt klinikával beszélnél; a valós kezelésszám a tintától, a színektől, a bőrödtől és a klinika lézerétől függ.')],
+      [T('Is InkAge on iPhone and Android?', 'Elérhető az InkAge iPhone-on és Androidon?'), T('Yes. InkAge works in the browser on iPhone, Android and computers, and you can add it to your home screen like an app. Where the InkAge app is available in the App Store or Google Play, it uses the same account.', 'Igen. Az InkAge böngészőben működik iPhone-on, Androidon és számítógépen, és appként kiteheted a kezdőképernyőre. Ahol az InkAge app elérhető az App Store-ban vagy a Google Playen, ott ugyanazt a fiókot használja.')],
+      [T('Does InkAge keep my photos?', 'Megőrzi az InkAge a fotóimat?'), T('Your previews are saved in your account’s private storage, and only you can see them. To make a preview, the photo and design are sent to our AI providers (Google Gemini, with OpenAI as a backup). You can delete any preview, or remove your account and all data under Profile → Delete my account and data.', 'Az előnézeteid a fiókod privát tárhelyén vannak, és csak te látod őket. Az előnézet elkészítéséhez a fotót és a mintát elküldjük az MI-szolgáltatóinknak (Google Gemini, tartalékként OpenAI). Bármelyik előnézetet törölheted, a fiókodat és minden adatodat pedig itt: Profil → Fiókom és adataim törlése.')],
+      [T('How long does a preview take?', 'Mennyi ideig tart egy előnézet?'), T('About a minute from photo to preview. With an account you can make 30 previews a month.', 'Kb. egy perc a fotótól az előnézetig. Fiókkal havonta 30 előnézetet készíthetsz.')],
+      [T('Which languages is InkAge available in?', 'Milyen nyelveken érhető el az InkAge?'), T('35 languages, including English, Hungarian, German, Spanish, French, Portuguese, Italian, Dutch, Polish, Czech, Japanese and Swedish. InkAge follows your browser’s language, and you can switch it at any time.', '35 nyelven, köztük magyarul, angolul, németül, spanyolul, franciául, portugálul, olaszul, hollandul, lengyelül, csehül, japánul és svédül. Az InkAge a böngésződ nyelvét követi, és bármikor átválthatod.')],
+    ],
+  };
+  if (TOOL_LANGS.includes(L) && hasExact(L, askedQ)) groups.unshift(asked);
   const jsonLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: groups.flatMap((g) => g.items.map(([qq, a]) => ({ '@type': 'Question', name: qq, acceptedAnswer: { '@type': 'Answer', text: a } }))) };
   return (
     <InfoPage lang={L} path="/gyik" kickerIcon="doc" kicker={T('FAQ', 'GYIK')} title={T('Questions, answered.', 'Kérdések és válaszok.')} lede={T('Can’t find yours? Write to us — we read every message.', 'Nem találod a sajátodat? Írj nekünk – minden üzenetet elolvasunk.')}>

@@ -11,6 +11,7 @@ const ICON: Record<string, string> = {
   start: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z',
   photo: 'M4 8h4l2-3h4l2 3h4v11H4zM12 17a4 4 0 1 0 0-8a4 4 0 0 0 0 8z',
   result: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+  ask: 'M4 5h16v11H9l-5 4zM9 10h.01M12 10h.01M15 10h.01',
   privacy: 'M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM9 12l2 2 4-4',
 };
 

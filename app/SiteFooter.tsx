@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FooterLang, FooterSignup } from './FooterSignup';
 import './footer.css';
 import { LogoMark } from './LogoMark';
+import { TOOL_LANGS } from '@/lib/tool-langs';
 
 /** The site-wide footer: brand + sign-up, five link columns, copyright and language. */
 export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: boolean }) {
@@ -14,6 +15,13 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
       links: [
         { t: T('How it works', 'Hogyan működik'), href: `/hogyan-mukodik${q}` },
         { t: T('Features', 'Funkciók'), href: `/funkciok${q}` },
+        // the tool pages, only in the languages they are written in
+        ...(TOOL_LANGS.includes(lang)
+          ? [
+              { t: T('Tattoo simulator', 'Tetoválás szimulátor'), href: `/tattoo-simulator${q}` },
+              { t: T('Aging simulator', 'Öregedés szimulátor'), href: `/tattoo-aging-simulator${q}` },
+            ]
+          : []),
         { t: T('Styles', 'Stílusok'), href: `/tattoo/fine-line-forearm${qOf(lang)}` },
         { t: T('Beta', 'Béta'), href: `/ingyenes-beta${q}` },
         { t: T('FAQ', 'GYIK'), href: `/gyik${q}` },

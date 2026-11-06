@@ -36,7 +36,7 @@ export function TrustStrip({ t }: { t: T }) {
 }
 
 /* ------------------------------------------------------------------ drag to compare fresh vs 50 years */
-export function CompareSlider({ t }: { t: T }) {
+export function CompareSlider({ t, head = true }: { t: T; head?: boolean }) {
   const [v, setV] = useState(50);
   const box = useRef<HTMLDivElement>(null);
   const drag = useRef(false);
@@ -50,11 +50,13 @@ export function CompareSlider({ t }: { t: T }) {
     }
   };
   return (
-    <section className="lm-compare">
-      <div className="lm-compare-head">
-        <h2>{t('Same tattoo. Fifty years apart.', 'Ugyanaz a tetoválás. Ötven év különbséggel.')}</h2>
-        <p>{t('Drag the line. Left is the day it was done, right is half a century of sun, skin and time — on the same arm.', 'Húzd a vonalat. Balra az elkészülés napja, jobbra fél évszázad nap, bőr és idő – ugyanazon a karon.')}</p>
-      </div>
+    <section className={`lm-compare ${head ? '' : 'bare'}`}>
+      {head && (
+        <div className="lm-compare-head">
+          <h2>{t('Same tattoo. Fifty years apart.', 'Ugyanaz a tetoválás. Ötven év különbséggel.')}</h2>
+          <p>{t('Drag the line. Left is the day it was done, right is half a century of sun, skin and time — on the same arm.', 'Húzd a vonalat. Balra az elkészülés napja, jobbra fél évszázad nap, bőr és idő – ugyanazon a karon.')}</p>
+        </div>
+      )}
       <div
         className="lm-cmp"
         ref={box}

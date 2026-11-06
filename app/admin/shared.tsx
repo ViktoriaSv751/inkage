@@ -145,7 +145,7 @@ export const CH: Record<string, string> = { androidapp: "Android-app (Google Pla
 
 export const ch = (k: string) => CH[k?.toLowerCase?.()] || k;
 /* the website's buttons, by the name they are sent with */
-export const CTAK: Record<string, string> = { register: "Regisztráció gomb", nav: "Felső menü gombja", bar: "Alsó sáv gombja (telefon)", tab: "Fül gombja", article_rail: "Cikk melletti gomb", article_top: "Cikk tetején lévő gomb", article_mid: "Cikk közepén lévő gomb", article_end: "Cikk alján lévő gomb", "?": "Név nélküli gomb" };
+export const CTAK: Record<string, string> = { register: "Regisztráció gomb", nav: "Felső menü gombja", bar: "Alsó sáv gombja (telefon)", tab: "Fül gombja", article_rail: "Cikk melletti gomb", article_top: "Cikk tetején lévő gomb", article_mid: "Cikk közepén lévő gomb", article_end: "Cikk alján lévő gomb", tool_top: "Szimulátor oldal tetején lévő gomb", tool_end: "Szimulátor oldal alján lévő gomb", "?": "Név nélküli gomb" };
 
 export const PROV: Record<string, string> = { email: "E-mail + jelszó", google: "Google", apple: "Apple" };
 
