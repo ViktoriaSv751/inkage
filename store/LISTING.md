@@ -1,5 +1,7 @@
 # InkAge – áruházi adatlap és űrlap-válaszok
 
+> **2026-11-06:** a keresésre optimalizált új szövegek (név, alcím, kulcsszavak, promóciós szöveg, Play-cím, rövid és hosszú leírás) 12 nyelven: `LISTING-ASO.md` (en, hu, de, es, fr, pt, it, nl, pl, cs, ja, sv). Ezeken a nyelveken azok érvényesek az itteni szövegek helyett; ellenőrzés: `python3 store/check-listing.py`. Képernyőképek: `SCREENSHOT-PLAN.md`.
+
 Minden szöveg bemásolható. Ahol `[ ]` van, ott még a te adatod kell.
 
 ## Alapadatok
