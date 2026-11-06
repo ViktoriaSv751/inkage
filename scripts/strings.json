@@ -391,7 +391,8 @@
   "One-tap sign-up with Google or Apple · 30 previews a month · About a minute": {
    "hu": "Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc",
    "files": [
-    "app/SiteExtras.tsx"
+    "app/SiteExtras.tsx",
+    "app/tudastar/[slug]/ArticleCta.tsx"
    ],
    "kind": "call"
   },
@@ -622,41 +623,40 @@
    ],
    "kind": "call"
   },
+  "Before and after": {
+   "hu": "Előtte és utána",
+   "files": [
+    "app/SiteFooter.tsx"
+   ],
+   "kind": "call"
+  },
+  "Laser removal": {
+   "hu": "Lézeres eltávolítás",
+   "files": [
+    "app/SiteFooter.tsx",
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
+  "Removal sessions": {
+   "hu": "Hány kezelés kell?",
+   "files": [
+    "app/SiteFooter.tsx"
+   ],
+   "kind": "call"
+  },
+  "Pain chart": {
+   "hu": "Fájdalomtérkép",
+   "files": [
+    "app/SiteFooter.tsx"
+   ],
+   "kind": "call"
+  },
   "How tattoos age": {
    "hu": "Öregedés",
    "files": [
     "app/SiteFooter.tsx",
     "app/gyik/FaqExplorer.tsx"
-   ],
-   "kind": "call"
-  },
-  "Fine line": {
-   "hu": "Fine line",
-   "files": [
-    "app/SiteFooter.tsx",
-    "lib/seo.ts"
-   ],
-   "kind": "call"
-  },
-  "Best spots": {
-   "hu": "Legjobb helyek",
-   "files": [
-    "app/SiteFooter.tsx"
-   ],
-   "kind": "call"
-  },
-  "Aftercare": {
-   "hu": "Utókezelés",
-   "files": [
-    "app/SiteFooter.tsx"
-   ],
-   "kind": "call"
-  },
-  "First tattoo": {
-   "hu": "Első tetoválás",
-   "files": [
-    "app/SiteFooter.tsx",
-    "app/mi-az-inkage/page.tsx"
    ],
    "kind": "call"
   },
@@ -2181,14 +2181,16 @@
   "Know what removal looks like.": {
    "hu": "Tudd, hogyan néz ki az eltávolítás.",
    "files": [
-    "app/_landing/Features.tsx"
+    "app/_landing/Features.tsx",
+    "app/tudastar/[slug]/ArticleCta.tsx"
    ],
    "kind": "call"
   },
   "A laser removal preview after 3, 6 and 10 sessions helps you set realistic expectations — before you talk to a clinic.": {
    "hu": "A 3, 6 és 10 kezelés utáni lézeres előnézet segít reális elvárásokat kialakítani – még mielőtt klinikával beszélnél.",
    "files": [
-    "app/_landing/Features.tsx"
+    "app/_landing/Features.tsx",
+    "app/tudastar/[slug]/ArticleCta.tsx"
    ],
    "kind": "call"
   },
@@ -2720,6 +2722,20 @@
    ],
    "kind": "pair"
   },
+  "Napi": {
+   "hu": "reggeli mondat, esti összefoglaló, heti összefoglaló",
+   "files": [
+    "app/admin/extra.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Posztok": {
+   "hu": "robbanó és gyorsan terjedő poszt",
+   "files": [
+    "app/admin/extra.tsx"
+   ],
+   "kind": "pair"
+  },
   "placement": {
    "hu": "Csukló",
    "files": [
@@ -2734,11 +2750,32 @@
    ],
    "kind": "pair"
   },
+  "how to sign": {
+   "hu": "aláírás minta",
+   "files": [
+    "app/admin/mock.ts"
+   ],
+   "kind": "pair"
+  },
   "x": {
    "hu": "közvetlen",
    "files": [
     "app/admin/mock.ts",
     "app/admin/views/social.tsx"
+   ],
+   "kind": "pair"
+  },
+  "emma smith": {
+   "hu": "nagy zsófia",
+   "files": [
+    "app/admin/mock.ts"
+   ],
+   "kind": "pair"
+  },
+  "Android Chrome": {
+   "hu": "iPhone appon belül",
+   "files": [
+    "app/admin/mock.ts"
    ],
    "kind": "pair"
   },
@@ -2787,52 +2824,26 @@
    ],
    "kind": "pair"
   },
-  "links": {
-   "hu": "Új rövid link",
+  "bad": {
+   "hu": "hiba a lehúzásnál",
    "files": [
-    "app/admin/shell.tsx"
+    "app/admin/views/accounts.tsx",
+    "app/admin/views/people.tsx"
    ],
    "kind": "pair"
   },
-  "planner": {
-   "hu": "Új terv",
+  "gold": {
+   "hu": "meghívó kint, {0}-ig érvényes",
    "files": [
-    "app/admin/shell.tsx"
+    "app/admin/views/accounts.tsx"
    ],
    "kind": "pair"
   },
-  "goals": {
-   "hu": "Jegyzet vagy cél",
+  "warn": {
+   "hu": "nincs bekötve, a meghívó lejárt",
    "files": [
-    "app/admin/shell.tsx"
-   ],
-   "kind": "pair"
-  },
-  "ask": {
-   "hu": "Kérdezz",
-   "files": [
-    "app/admin/shell.tsx"
-   ],
-   "kind": "pair"
-  },
-  "live": {
-   "hu": "Élő nézet",
-   "files": [
-    "app/admin/shell.tsx"
-   ],
-   "kind": "pair"
-  },
-  "Ma eddig": {
-   "hu": "Cél",
-   "files": [
-    "app/admin/shell.tsx"
-   ],
-   "kind": "pair"
-  },
-  "Posztok": {
-   "hu": "Tölcsér",
-   "files": [
-    "app/admin/shell.tsx"
+    "app/admin/views/accounts.tsx",
+    "app/admin/views/people.tsx"
    ],
    "kind": "pair"
   },
@@ -2840,16 +2851,17 @@
    "hu": "Látogatás",
    "files": [
     "app/admin/views/alerts.tsx",
+    "app/admin/views/ma.tsx",
     "app/admin/views/social.tsx"
    ],
    "kind": "pair"
   },
-  "scored": {
-   "hu": "Előnézet",
+  "revealed": {
+   "hu": "Megnézte 50 év múlva",
    "files": [
     "app/admin/views/alerts.tsx",
     "app/admin/views/funnel.tsx",
-    "app/admin/views/social.tsx"
+    "app/admin/views/traffic.tsx"
    ],
    "kind": "pair"
   },
@@ -2858,14 +2870,24 @@
    "files": [
     "app/admin/views/alerts.tsx",
     "app/admin/views/funnel.tsx",
-    "app/admin/views/traffic.tsx"
+    "app/admin/views/ma.tsx"
    ],
    "kind": "pair"
   },
   "signups": {
    "hu": "Regisztráció",
    "files": [
-    "app/admin/views/alerts.tsx"
+    "app/admin/views/alerts.tsx",
+    "app/admin/views/platforms.tsx"
+   ],
+   "kind": "pair"
+  },
+  "made": {
+   "hu": "Elkészült előnézet",
+   "files": [
+    "app/admin/views/alerts.tsx",
+    "app/admin/views/ma.tsx",
+    "app/admin/views/people.tsx"
    ],
    "kind": "pair"
   },
@@ -2913,6 +2935,20 @@
   },
   "biztonsag": {
    "hu": "Biztonság",
+   "files": [
+    "app/admin/views/audit.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Mikor": {
+   "hu": "Művelet",
+   "files": [
+    "app/admin/views/audit.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Min": {
+   "hu": "Részletek",
    "files": [
     "app/admin/views/audit.tsx"
    ],
@@ -2968,6 +3004,141 @@
    ],
    "kind": "pair"
   },
+  "repeat": {
+   "hu": "Többször",
+   "files": [
+    "app/admin/views/customers.tsx"
+   ],
+   "kind": "pair"
+  },
+  "multi": {
+   "hu": "Több név",
+   "files": [
+    "app/admin/views/customers.tsx"
+   ],
+   "kind": "pair"
+  },
+  "unused": {
+   "hu": "Nem használta",
+   "files": [
+    "app/admin/views/customers.tsx"
+   ],
+   "kind": "pair"
+  },
+  "unhappy": {
+   "hu": "Elégedetlen",
+   "files": [
+    "app/admin/views/customers.tsx"
+   ],
+   "kind": "pair"
+  },
+  "refund": {
+   "hu": "Visszatérített",
+   "files": [
+    "app/admin/views/customers.tsx"
+   ],
+   "kind": "pair"
+  },
+  "created_at": {
+   "hu": "Időpont",
+   "files": [
+    "app/admin/views/finance.tsx",
+    "app/admin/views/users.tsx"
+   ],
+   "kind": "pair"
+  },
+  "tx": {
+   "hu": "Azonosító",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "plan": {
+   "hu": "Termék",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "amount": {
+   "hu": "Összeg",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "currency": {
+   "hu": "Pénznem",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "huf_rate": {
+   "hu": "Árfolyam (Ft/$)",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "stripe_fee": {
+   "hu": "Stripe-díj",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "refunded_at": {
+   "hu": "Visszatérítve",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "refund_usd": {
+   "hu": "Visszatérítés USD",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "country": {
+   "hu": "Ország",
+   "files": [
+    "app/admin/views/finance.tsx",
+    "app/admin/views/payments.tsx"
+   ],
+   "kind": "pair"
+  },
+  "coupon": {
+   "hu": "Kód",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "discount": {
+   "hu": "Kedvezmény",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "email": {
+   "hu": "Vevő e-mail",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
+  "note": {
+   "hu": "Megjegyzés",
+   "files": [
+    "app/admin/views/finance.tsx"
+   ],
+   "kind": "pair"
+  },
   "named": {
    "hu": "Kezdés",
    "files": [
@@ -2982,18 +3153,19 @@
    ],
    "kind": "pair"
   },
+  "scored": {
+   "hu": "Előnézet",
+   "files": [
+    "app/admin/views/funnel.tsx",
+    "app/admin/views/platforms.tsx",
+    "app/admin/views/social.tsx"
+   ],
+   "kind": "pair"
+  },
   "quiz": {
    "hu": "Kérdések",
    "files": [
     "app/admin/views/funnel.tsx"
-   ],
-   "kind": "pair"
-  },
-  "revealed": {
-   "hu": "50 év múlva",
-   "files": [
-    "app/admin/views/funnel.tsx",
-    "app/admin/views/traffic.tsx"
    ],
    "kind": "pair"
   },
@@ -3002,6 +3174,14 @@
    "files": [
     "app/admin/views/goals.tsx",
     "app/admin/views/home.tsx"
+   ],
+   "kind": "pair"
+  },
+  "androidapp": {
+   "hu": "visszatérő",
+   "files": [
+    "app/admin/views/home.tsx",
+    "app/admin/views/traffic.tsx"
    ],
    "kind": "pair"
   },
@@ -3021,6 +3201,49 @@
   },
   "morning": {
    "hu": "Reggel 30 másodpercben",
+   "files": [
+    "app/admin/views/home.tsx"
+   ],
+   "kind": "pair"
+  },
+  "stories": {
+   "hu": "A nap kártyái",
+   "files": [
+    "app/admin/views/home.tsx"
+   ],
+   "kind": "pair"
+  },
+  "tiles": {
+   "hu": "Az időszak csempéi",
+   "files": [
+    "app/admin/views/home.tsx"
+   ],
+   "kind": "pair"
+  },
+  "chart": {
+   "hu": "Alakulás",
+   "files": [
+    "app/admin/views/home.tsx"
+   ],
+   "kind": "pair"
+  },
+  "imp": {
+   "hu": "Megjelenés",
+   "files": [
+    "app/admin/views/home.tsx",
+    "app/admin/views/social.tsx"
+   ],
+   "kind": "pair"
+  },
+  "weekvid": {
+   "hu": "A hét videója",
+   "files": [
+    "app/admin/views/home.tsx"
+   ],
+   "kind": "pair"
+  },
+  "pay": {
+   "hu": "Fizetők ma",
    "files": [
     "app/admin/views/home.tsx"
    ],
@@ -3057,7 +3280,8 @@
   "path": {
    "hu": "Az út az appban",
    "files": [
-    "app/admin/views/home.tsx"
+    "app/admin/views/home.tsx",
+    "app/admin/views/users.tsx"
    ],
    "kind": "pair"
   },
@@ -3124,18 +3348,175 @@
    ],
    "kind": "obj"
   },
+  "nums": {
+   "hu": "Mai számok",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "task": {
+   "hu": "Teendő-kártyák",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "wall": {
+   "hu": "Legfrissebb előnézetek",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "goal": {
+   "hu": "Cél: fizetők és az 1 millió",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "feed": {
+   "hu": "Legutóbb",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "mirror": {
+   "hu": "Reggeli, esti és heti tükör",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "sources": {
+   "hu": "Honnan jönnek",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "game": {
+   "hu": "Heti cél, sorozat, rekordok",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "reach": {
+   "hu": "Megjelenés és platformok",
+   "files": [
+    "app/admin/views/ma.tsx",
+    "app/admin/views/social-wave.tsx",
+    "app/admin/views/social.tsx"
+   ],
+   "kind": "pair"
+  },
+  "more": {
+   "hu": "Kiugrások, nyelvek, videók",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "base": {
+   "hu": "Gyűrű",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "split": {
+   "hu": "Felosztott kártyák",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "star": {
+   "hu": "Előnézet-főszereplő",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "paying": {
+   "hu": "Egy szám",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Sztori": {
+   "hu": "lapozható kártyák megnyitáskor",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "todo": {
+   "hu": "Teendő-első",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "one": {
+   "hu": "Egy képernyős",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "chat": {
+   "hu": "Beszélgetős",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "saved": {
+   "hu": "mentés",
+   "files": [
+    "app/admin/views/ma.tsx",
+    "app/admin/views/users.tsx",
+    "app/app/gallery/page.tsx"
+   ],
+   "kind": "pair"
+  },
+  "Reggeli sztori": {
+   "hu": "minden reggel az első megnyitáskor",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "mood": {
+   "hu": "Hangulat-fény",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "sys": {
+   "hu": "A telefoné",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
+  "m": {
+   "hu": "Normál",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
   "dl": {
    "hu": "Letöltés",
    "files": [
     "app/admin/views/markets.tsx"
-   ],
-   "kind": "pair"
-  },
-  "imp": {
-   "hu": "App Store-megjelenés",
-   "files": [
-    "app/admin/views/markets.tsx",
-    "app/admin/views/social.tsx"
    ],
    "kind": "pair"
   },
@@ -3167,57 +3548,55 @@
    ],
    "kind": "pair"
   },
-  "warn": {
-   "hu": "még nem mentett előnézetet",
+  "new": {
+   "hu": "Új vevő",
    "files": [
-    "app/admin/views/people.tsx"
+    "app/admin/views/payments.tsx",
+    "app/admin/views/search.tsx"
+   ],
+   "kind": "pair"
+  },
+  "back": {
+   "hu": "Visszatérő",
+   "files": [
+    "app/admin/views/payments.tsx",
+    "app/admin/views/people.tsx",
+    "lib/seo.ts"
+   ],
+   "kind": "pair"
+  },
+  "account": {
+   "hu": "Fiók",
+   "files": [
+    "app/admin/views/payments.tsx",
+    "app/admin/views/system.tsx"
    ],
    "kind": "pair"
   },
   "good": {
-   "hu": "az elmúlt 7 napban aktív volt, és már mentett előnézetet",
-   "files": [
-    "app/admin/views/people.tsx"
-   ],
-   "kind": "pair"
-  },
-  "bad": {
-   "hu": "30+ napja nem volt aktív",
-   "files": [
-    "app/admin/views/people.tsx"
-   ],
-   "kind": "pair"
-  },
-  "confirm": {
-   "hu": "E-mail megerősítve",
-   "files": [
-    "app/admin/views/people.tsx"
-   ],
-   "kind": "pair"
-  },
-  "unlock": {
-   "hu": "Mentett egy előnézetet",
+   "hu": "A látogatásban ott a regisztrációja, vagy az előnézetei ugyanakkor készültek.",
    "files": [
     "app/admin/views/people.tsx"
    ],
    "kind": "pair"
   },
   "second": {
-   "hu": "Két vagy több előnézetet mentett",
+   "hu": "Két vagy több előnézet",
    "files": [
     "app/admin/views/people.tsx"
    ],
    "kind": "pair"
   },
-  "cal": {
-   "hu": "Elkészíttette a tetoválást",
+  "styles": {
+   "hu": "Három vagy több tetoválásstílus",
    "files": [
-    "app/admin/views/people.tsx"
+    "app/admin/views/people.tsx",
+    "app/admin/views/users.tsx"
    ],
    "kind": "pair"
   },
-  "design": {
-   "hu": "Mintát is mentett",
+  "fav": {
+   "hu": "Kedvencet jelölt",
    "files": [
     "app/admin/views/people.tsx"
    ],
@@ -3265,6 +3644,63 @@
    ],
    "kind": "obj"
   },
+  "Hi! I'm Viktória, the maker of InkAge. I saw you signed up, but your preview isn't ready yet. Did you get stuck somewhere? Just tell me, and I'll help.\n\nViktória": {
+   "hu": "Szia! Viktória vagyok, az InkAge készítője. Láttam, hogy regisztráltál, de még nem készült el az előnézeted. Elakadtál valahol? Írd meg nyugodtan, és segítek.\n\nViktória",
+   "files": [
+    "app/admin/views/people.tsx"
+   ],
+   "kind": "obj"
+  },
+  "Hi! I'm Viktória, the maker of InkAge. Thank you for trying it. One question: what did you like, and what didn't work? A sentence or two helps a lot.\n\nViktória": {
+   "hu": "Szia! Viktória vagyok, az InkAge készítője. Köszönöm, hogy kipróbáltad. Egy kérdésem lenne: mi tetszett, és mi nem működött? Egy-két mondat is sokat segít.\n\nViktória",
+   "files": [
+    "app/admin/views/people.tsx"
+   ],
+   "kind": "obj"
+  },
+  "Hi! Thank you for reporting the problem. It's fixed now, so it should work. If it doesn't, just tell me and I'll look into it.\n\nViktória": {
+   "hu": "Szia! Köszönöm, hogy jelezted a hibát. Kijavítottuk, most már működnie kell. Ha mégsem, írd meg, és megnézem.\n\nViktória",
+   "files": [
+    "app/admin/views/people.tsx"
+   ],
+   "kind": "obj"
+  },
+  "conv": {
+   "hu": "Fizetési arány",
+   "files": [
+    "app/admin/views/pricing.tsx"
+   ],
+   "kind": "pair"
+  },
+  "visits": {
+   "hu": "Látogatók",
+   "files": [
+    "app/admin/views/pricing.tsx",
+    "app/admin/views/social-wave.tsx"
+   ],
+   "kind": "pair"
+  },
+  "after_saved": {
+   "hu": "Mentés",
+   "files": [
+    "app/admin/views/product.tsx"
+   ],
+   "kind": "pair"
+  },
+  "after_shared": {
+   "hu": "Megosztás",
+   "files": [
+    "app/admin/views/product.tsx"
+   ],
+   "kind": "pair"
+  },
+  "tbl": {
+   "hu": "Táblázat",
+   "files": [
+    "app/admin/views/reach-ink.tsx"
+   ],
+   "kind": "pair"
+  },
   "lastweek": {
    "hu": "Múlt hét",
    "files": [
@@ -3300,6 +3736,21 @@
    ],
    "kind": "pair"
   },
+  "pos": {
+   "hu": "Helyezés",
+   "files": [
+    "app/admin/views/search-phone.tsx"
+   ],
+   "kind": "pair"
+  },
+  "clicks": {
+   "hu": "Kattintás",
+   "files": [
+    "app/admin/views/search-phone.tsx",
+    "app/admin/views/social.tsx"
+   ],
+   "kind": "pair"
+  },
   "brand": {
    "hu": "Márkás",
    "files": [
@@ -3318,28 +3769,6 @@
    "hu": "Keresések",
    "files": [
     "app/admin/views/search.tsx"
-   ],
-   "kind": "pair"
-  },
-  "new": {
-   "hu": "Új",
-   "files": [
-    "app/admin/views/search.tsx"
-   ],
-   "kind": "pair"
-  },
-  "reach": {
-   "hu": "Elérés",
-   "files": [
-    "app/admin/views/social-wave.tsx",
-    "app/admin/views/social.tsx"
-   ],
-   "kind": "pair"
-  },
-  "visits": {
-   "hu": "Látogató",
-   "files": [
-    "app/admin/views/social-wave.tsx"
    ],
    "kind": "pair"
   },
@@ -3387,13 +3816,6 @@
   },
   "saves": {
    "hu": "Mentés",
-   "files": [
-    "app/admin/views/social.tsx"
-   ],
-   "kind": "pair"
-  },
-  "clicks": {
-   "hu": "Kattintás",
    "files": [
     "app/admin/views/social.tsx"
    ],
@@ -3470,6 +3892,48 @@
    ],
    "kind": "pair"
   },
+  "Heti riport": {
+   "hu": "E-mail-küldés",
+   "files": [
+    "app/admin/views/system.tsx"
+   ],
+   "kind": "pair"
+  },
+  "signup": {
+   "hu": "Új fiók",
+   "files": [
+    "app/admin/views/system.tsx"
+   ],
+   "kind": "pair"
+  },
+  "weekly": {
+   "hu": "Heti összefoglaló (hétfő 8:00)",
+   "files": [
+    "app/admin/views/system.tsx"
+   ],
+   "kind": "pair"
+  },
+  "milestone": {
+   "hu": "Mérföldkő",
+   "files": [
+    "app/admin/views/system.tsx"
+   ],
+   "kind": "pair"
+  },
+  "sigfail": {
+   "hu": "Nem készülnek az előnézetek",
+   "files": [
+    "app/admin/views/system.tsx"
+   ],
+   "kind": "pair"
+  },
+  "myrule": {
+   "hu": "Saját szabályok",
+   "files": [
+    "app/admin/views/system.tsx"
+   ],
+   "kind": "pair"
+  },
   "evening": {
    "hu": "Esti összefoglaló (21:00)",
    "files": [
@@ -3500,13 +3964,6 @@
   },
   "errors": {
    "hu": "Hibahullám",
-   "files": [
-    "app/admin/views/system.tsx"
-   ],
-   "kind": "pair"
-  },
-  "account": {
-   "hu": "Hibás kapcsolat",
    "files": [
     "app/admin/views/system.tsx"
    ],
@@ -3582,22 +4039,8 @@
    ],
    "kind": "pair"
   },
-  "created_at": {
-   "hu": "Regisztrált",
-   "files": [
-    "app/admin/views/users.tsx"
-   ],
-   "kind": "pair"
-  },
   "provider": {
    "hu": "Mód",
-   "files": [
-    "app/admin/views/users.tsx"
-   ],
-   "kind": "pair"
-  },
-  "confirmed": {
-   "hu": "Megerősítve",
    "files": [
     "app/admin/views/users.tsx"
    ],
@@ -3625,29 +4068,29 @@
    ],
    "kind": "pair"
   },
-  "churn": {
-   "hu": "Lemorzsolódhat",
+  "made_ok": {
+   "hu": "Kész előnézet",
    "files": [
     "app/admin/views/users.tsx"
    ],
    "kind": "pair"
   },
-  "unlocks": {
-   "hu": "Mentett előnézetek",
+  "used_secs": {
+   "hu": "Használat legalább (mp)",
    "files": [
     "app/admin/views/users.tsx"
    ],
    "kind": "pair"
   },
-  "credits": {
-   "hu": "Bónusz előnézet",
+  "used_days": {
+   "hu": "Használati napok",
    "files": [
     "app/admin/views/users.tsx"
    ],
    "kind": "pair"
   },
-  "active_days": {
-   "hu": "Aktív napok (30)",
+  "returned": {
+   "hu": "Visszajött és használta",
    "files": [
     "app/admin/views/users.tsx"
    ],
@@ -3667,8 +4110,8 @@
    ],
    "kind": "pair"
   },
-  "followup": {
-   "hu": "Visszakeresés",
+  "nomade": {
+   "hu": "Nincs előnézete",
    "files": [
     "app/admin/views/users.tsx"
    ],
@@ -3681,15 +4124,22 @@
    ],
    "kind": "pair"
   },
-  "unconfirmed": {
-   "hu": "Nem megerősített",
+  "followup": {
+   "hu": "Visszakeresés",
    "files": [
     "app/admin/views/users.tsx"
    ],
    "kind": "pair"
   },
-  "unlocked": {
-   "hu": "Van mentett előnézete",
+  "paid": {
+   "hu": "Fizetők",
+   "files": [
+    "app/admin/views/users.tsx"
+   ],
+   "kind": "pair"
+  },
+  "churn": {
+   "hu": "Lemorzsolódhat",
    "files": [
     "app/admin/views/users.tsx"
    ],
@@ -3704,6 +4154,27 @@
   },
   "own": {
    "hu": "Saját és teszt",
+   "files": [
+    "app/admin/views/users.tsx"
+   ],
+   "kind": "pair"
+  },
+  "tick": {
+   "hu": "{0} / {1} stílus",
+   "files": [
+    "app/admin/views/users.tsx"
+   ],
+   "kind": "pair"
+  },
+  "sig": {
+   "hu": "Előnézetek",
+   "files": [
+    "app/admin/views/users.tsx"
+   ],
+   "kind": "pair"
+  },
+  "act": {
+   "hu": "Műveletek",
    "files": [
     "app/admin/views/users.tsx"
    ],
@@ -4143,6 +4614,7 @@
    "hu": null,
    "files": [
     "app/api/guest-share/route.ts",
+    "app/api/me/apple-code/route.ts",
     "app/api/me/apple-revoke/route.ts"
    ],
    "kind": "err"
@@ -4184,6 +4656,13 @@
    "hu": null,
    "files": [
     "app/api/mail-cron/route.ts"
+   ],
+   "kind": "err"
+  },
+  "Missing code.": {
+   "hu": null,
+   "files": [
+    "app/api/me/apple-code/route.ts"
    ],
    "kind": "err"
   },
@@ -4670,13 +5149,6 @@
    ],
    "kind": "call"
   },
-  "Laser removal": {
-   "hu": "Lézeres eltávolítás",
-   "files": [
-    "app/app/Result.tsx"
-   ],
-   "kind": "call"
-  },
   "Simulating 3, 6 and 10 sessions – about a minute": {
    "hu": "3, 6 és 10 kezelés szimulálása – kb. egy perc",
    "files": [
@@ -4883,6 +5355,86 @@
    "hu": "Most sokan készítenek előnézetet – sorban állsz, automatikusan újrapróbáljuk.",
    "files": [
     "app/app/_home/GenView.tsx"
+   ],
+   "kind": "call"
+  },
+  "Try this design": {
+   "hu": "Ezt a mintát próbálom",
+   "files": [
+    "app/app/_home/PickView.tsx",
+    "app/app/gallery/Uploads.tsx"
+   ],
+   "kind": "call"
+  },
+  "New tattoo": {
+   "hu": "Új tetoválás",
+   "files": [
+    "app/app/_home/PickView.tsx",
+    "app/app/create/_steps/studio/ModeSwitch.tsx"
+   ],
+   "kind": "call"
+  },
+  "Pick a saved design to try on, or add a new one.": {
+   "hu": "Válassz egy mentett mintát a felpróbáláshoz, vagy adj hozzá újat.",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "Add a new design": {
+   "hu": "Új minta hozzáadása",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "A screenshot, a saved picture, a sketch or a link": {
+   "hu": "Képernyőfotó, mentett kép, saját rajz vagy link",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "My existing tattoo": {
+   "hu": "Meglévő tetoválásom",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "Removal preview": {
+   "hu": "Eltávolítás előnézete",
+   "files": [
+    "app/app/_home/PickView.tsx",
+    "app/app/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "Your ideas": {
+   "hu": "Ötleteid",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "Designs you tried": {
+   "hu": "Kipróbált mintáid",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "From the library": {
+   "hu": "A könyvtárból",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "All designs": {
+   "hu": "Összes minta",
+   "files": [
+    "app/app/_home/PickView.tsx"
    ],
    "kind": "call"
   },
@@ -6050,8 +6602,8 @@
    ],
    "kind": "call"
   },
-  "Found something you like? Save it from your photos or a link (Pinterest, Instagram, any page). It waits in your gallery under Ideas.": {
-   "hu": "Láttál valamit, ami tetszik? Mentsd el a fotótárból vagy linkről (Pinterest, Instagram, bármilyen oldal). A galériában, az Ötletek között vár.",
+  "Found something you like? Save it from your photos or from a link. It waits in your gallery under Ideas.": {
+   "hu": "Láttál valamit, ami tetszik? Mentsd el a fotótárból vagy egy linkről. A galériában, az Ötletek között vár.",
    "files": [
     "app/app/create/IdeaSheet.tsx"
    ],
@@ -6071,8 +6623,8 @@
    ],
    "kind": "call"
   },
-  "Paste a link: Pinterest, Instagram…": {
-   "hu": "Link beillesztése: Pinterest, Instagram…",
+  "Paste a link…": {
+   "hu": "Link beillesztése…",
    "files": [
     "app/app/create/IdeaSheet.tsx"
    ],
@@ -6701,8 +7253,8 @@
    ],
    "kind": "call"
   },
-  "Paste a Pinterest, Instagram or image link. Only the tattoo will be used.": {
-   "hu": "Illessz be Pinterest-, Instagram- vagy képlinket. Csak a tetoválást használjuk fel belőle.",
+  "Paste a link to an image. Only the tattoo will be used.": {
+   "hu": "Illessz be egy képlinket. Csak a tetoválást használjuk fel belőle.",
    "files": [
     "app/app/create/_steps/studio/LinkSheet.tsx"
    ],
@@ -6724,13 +7276,6 @@
   },
   "What do you want to see?": {
    "hu": "Mit szeretnél látni?",
-   "files": [
-    "app/app/create/_steps/studio/ModeSwitch.tsx"
-   ],
-   "kind": "call"
-  },
-  "New tattoo": {
-   "hu": "Új tetoválás",
    "files": [
     "app/app/create/_steps/studio/ModeSwitch.tsx"
    ],
@@ -6952,8 +7497,8 @@
    ],
    "kind": "call"
   },
-  "From a link (Pinterest, Instagram…)": {
-   "hu": "Linkről (Pinterest, Instagram…)",
+  "From a link": {
+   "hu": "Linkről",
    "files": [
     "app/app/create/_steps/studio/Slots.tsx"
    ],
@@ -7563,8 +8108,8 @@
    ],
    "kind": "call"
   },
-  "From your photos or a link (Pinterest, Instagram…)": {
-   "hu": "Fotótárból vagy linkről (Pinterest, Instagram…)",
+  "From your photos or a link": {
+   "hu": "Fotótárból vagy linkről",
    "files": [
     "app/app/gallery/Ideas.tsx"
    ],
@@ -7603,7 +8148,7 @@
    "files": [
     "app/app/gallery/Ideas.tsx",
     "app/tattoo/[slug]/SeoView.tsx",
-    "app/tudastar/[slug]/ArticleView.tsx"
+    "app/tudastar/[slug]/ArticleCta.tsx"
    ],
    "kind": "call"
   },
@@ -7669,13 +8214,6 @@
   },
   "New design on this photo": {
    "hu": "Új terv erre a fotóra",
-   "files": [
-    "app/app/gallery/Uploads.tsx"
-   ],
-   "kind": "call"
-  },
-  "Try this design": {
-   "hu": "Ezt a mintát próbálom",
    "files": [
     "app/app/gallery/Uploads.tsx"
    ],
@@ -8120,14 +8658,6 @@
    ],
    "kind": "call"
   },
-  "saved": {
-   "hu": "mentve",
-   "files": [
-    "app/app/gallery/page.tsx",
-    "app/app/profile/_parts/ProfileHeader.tsx"
-   ],
-   "kind": "call"
-  },
   "Select": {
    "hu": "Kijelölés",
    "files": [
@@ -8185,8 +8715,8 @@
    ],
    "kind": "call"
   },
-  "Removal preview": {
-   "hu": "Eltávolítás előnézete",
+  "That design could not be loaded. Try again.": {
+   "hu": "Ezt a mintát nem sikerült betölteni. Próbáld újra.",
    "files": [
     "app/app/page.tsx"
    ],
@@ -10348,6 +10878,7 @@
    "hu": "Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.",
    "files": [
     "app/layout.tsx",
+    "app/tudastar/[slug]/ArticleCta.tsx",
     "app/tudastar/[slug]/ArticleView.tsx"
    ],
    "kind": "call"
@@ -10396,6 +10927,13 @@
   },
   "Anyone between “I love this design” and the tattoo chair.": {
    "hu": "Mindenkinek, aki az „imádom ezt a mintát” és a tetoválószék között jár.",
+   "files": [
+    "app/mi-az-inkage/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "First tattoo": {
+   "hu": "Első tetoválás",
    "files": [
     "app/mi-az-inkage/page.tsx"
    ],
@@ -10648,6 +11186,13 @@
    ],
    "kind": "call"
   },
+  "- **Approximate location:** only if you tap the UV card in Profile and allow it. Your phone rounds it to about 10 km and sends it straight to Open-Meteo to get today’s UV index; we do not receive or store it.": {
+   "hu": "- **Hozzávetőleges helyadat:** csak ha a Profilban rákoppintasz az UV-kártyára és engedélyezed. A telefonod kb. 10 km-re kerekíti, és közvetlenül az Open-Meteónak küldi a mai UV-index lekéréséhez; mi nem kapjuk meg és nem tároljuk.",
+   "files": [
+    "app/privacy/page.tsx"
+   ],
+   "kind": "call"
+  },
   "- **Notifications:** if you turn them on, a push token for your device and the reminders you scheduled (for example healing reminders).": {
    "hu": "- **Értesítések:** ha bekapcsolod, az eszközöd push-azonosítója és a beállított emlékeztetők (például gyógyulási emlékeztetők).",
    "files": [
@@ -10762,6 +11307,13 @@
   },
   "- **Resend** – sending e-mails (welcome, newsletter, vote notifications)": {
    "hu": "- **Resend** – e-mailek küldése (üdvözlő, hírlevél, szavazási értesítés)",
+   "files": [
+    "app/privacy/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "- **Open-Meteo** – UV index forecast (gets only the rounded location, straight from your phone, when you ask for it)": {
+   "hu": "- **Open-Meteo** – UV-index előrejelzés (csak a kerekített helyet kapja meg, közvetlenül a telefonodról, amikor kéred)",
    "files": [
     "app/privacy/page.tsx"
    ],
@@ -11625,7 +12177,8 @@
   "every body area": {
    "hu": "minden testrész",
    "files": [
-    "app/tattoo/[slug]/SeoView.tsx"
+    "app/tattoo/[slug]/SeoView.tsx",
+    "app/tudastar/[slug]/ArticleView.tsx"
    ],
    "kind": "call"
   },
@@ -11633,6 +12186,14 @@
    "hu": "Más stílusok –",
    "files": [
     "app/tattoo/[slug]/SeoView.tsx"
+   ],
+   "kind": "call"
+  },
+  "More from the knowledge base": {
+   "hu": "További cikkek a Tudástárból",
+   "files": [
+    "app/tattoo/[slug]/SeoView.tsx",
+    "app/tudastar/[slug]/ArticleView.tsx"
    ],
    "kind": "call"
   },
@@ -12030,6 +12591,14 @@
    ],
    "kind": "call"
   },
+  "Wondering how yours would age?": {
+   "hu": "Kíváncsi vagy, a tiéd hogyan öregedne?",
+   "files": [
+    "app/tudastar/[slug]/ArticleCta.tsx",
+    "app/tudastar/[slug]/ArticleView.tsx"
+   ],
+   "kind": "call"
+  },
   "faq": {
    "hu": "gyik",
    "files": [
@@ -12072,8 +12641,8 @@
    ],
    "kind": "call"
   },
-  "Wondering how yours would age?": {
-   "hu": "Kíváncsi vagy, a tiéd hogyan öregedne?",
+  "Read also": {
+   "hu": "Olvasd el ezt is",
    "files": [
     "app/tudastar/[slug]/ArticleView.tsx"
    ],
@@ -12116,13 +12685,6 @@
   },
   "Next article": {
    "hu": "Következő cikk",
-   "files": [
-    "app/tudastar/[slug]/ArticleView.tsx"
-   ],
-   "kind": "call"
-  },
-  "More from the knowledge base": {
-   "hu": "További cikkek a Tudástárból",
    "files": [
     "app/tudastar/[slug]/ArticleView.tsx"
    ],
@@ -12491,6 +13053,13 @@
    ],
    "kind": "err"
   },
+  "nincs STRIPE_SECRET_KEY": {
+   "hu": null,
+   "files": [
+    "lib/admin/pay.ts"
+   ],
+   "kind": "err"
+  },
   "tattoo": {
    "hu": "tetoválás",
    "files": [
@@ -12523,6 +13092,13 @@
    "hu": null,
    "files": [
     "lib/admin/server.ts"
+   ],
+   "kind": "err"
+  },
+  "A meghívós bekötés még nincs beállítva a szerveren (SOCIAL_INVITE_TOKEN).": {
+   "hu": null,
+   "files": [
+    "lib/admin/social-extra.ts"
    ],
    "kind": "err"
   },
@@ -13078,7 +13654,7 @@
    "files": [
     "lib/articles.ts",
     "lib/articles2.ts",
-    "lib/longform/tattoo-aftercare-sun-protection.ts"
+    "lib/longform/sunburned-tattoo.ts"
    ],
    "kind": "obj"
   },
@@ -14043,6 +14619,247 @@
    ],
    "kind": "obj"
   },
+  "Healing after laser tattoo removal: a day-by-day timeline, aftercare and how to avoid scars": {
+   "hu": "Gyógyulás lézeres tetoválás-eltávolítás után: napról napra, utókezelés és hogyan kerüld el a heget",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "What is normal, what to leave alone and when to call someone.": {
+   "hu": "Mi a normális, mihez ne nyúlj, és mikor kérj segítséget.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Redness and swelling on day one, blisters in the first days and crusts in the first week or two are all common. The surface usually heals in about two to four weeks, while the ink keeps fading for longer.": {
+   "hu": "Az első napon a pirosság és a duzzanat, az első napokban a hólyagok, az első egy-két hétben a pörkök mind gyakoriak. A felszín általában nagyjából két-négy hét alatt gyógyul, a tinta viszont tovább halványul.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Keep the area clean, use what your clinic recommends, leave blisters and crusts alone, avoid soaking and keep it out of the sun.": {
+   "hu": "Tartsd tisztán a területet, azt használd, amit a klinika javasol, hagyd békén a hólyagokat és a pörköket, kerüld az áztatást, és óvd a naptól.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## When to call someone": {
+   "hu": "## Mikor kérj segítséget?",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Spreading redness, increasing pain, pus or fever are not normal healing. Contact your clinic or a doctor.": {
+   "hu": "A terjedő pirosság, az erősödő fájdalom, a genny vagy a láz nem normális gyógyulás. Keresd a klinikát vagy egy orvost.",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Tattoo healing stages day by day: what is normal, with pictures from day one to month three": {
+   "hu": "A tetoválás gyógyulása napról napra: mi a normális, képekben az első naptól a harmadik hónapig",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Oozing, scabs, peeling and the cloudy stage: what is normal and when to worry.": {
+   "hu": "Szivárgás, pörk, hámlás és a tejes szakasz: mi a normális, és mikor aggódj.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Days 1–3: red, warm and oozing. Days 4–7: tight with light scabs. Weeks 2–3: peeling, itching and a cloudy look. The surface closes in about two to four weeks; the deeper skin settles for up to around three months.": {
+   "hu": "1–3. nap: piros, meleg és szivárog. 4–7. nap: feszes, vékony pörkkel. 2–3. hét: hámlik, viszket, és tejesnek tűnik. A felszín nagyjából két-négy hét alatt zárul, a mélyebb bőr akár három hónapig rendeződik.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Wash gently, moisturise thinly, don’t pick or soak, keep it out of the sun and follow your artist’s instructions.": {
+   "hu": "Mosd finoman, hidratáld vékonyan, ne vakard, ne áztasd, tartsd távol a naptól, és kövesd a tetoválód utasításait.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## When to worry": {
+   "hu": "## Mikor aggódj?",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Spreading redness, increasing pain after the first days, pus or fever are not normal healing. Contact a doctor.": {
+   "hu": "A terjedő pirosság, az első napok után erősödő fájdalom, a genny vagy a láz nem normális gyógyulás. Fordulj orvoshoz.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blackwork tattoos on the neck, hand, forearm and back: how each placement heals and ages": {
+   "hu": "Blackwork tetoválás nyakon, kézen, alkaron és háton: hogyan gyógyul és öregszik az egyes helyeken",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Solid black lasts, but placement still decides a lot.": {
+   "hu": "A telt fekete tartós, de az elhelyezés még így is sokat eldönt.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blackwork ages better than almost any other style, because black ink is stable and bold contrast survives the slow spread of pigment.": {
+   "hu": "A blackwork szinte minden más stílusnál jobban öregszik, mert a fekete tinta stabil, az erős kontraszt pedig túléli a pigment lassú szétterülését.",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Placement": {
+   "hu": "## Elhelyezés",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "The back, upper arm, outer forearm and calf treat it best. Hands, fingers and the front of the neck wear it faster and need touch-ups more often.": {
+   "hu": "A hát, a felkar, a külső alkar és a vádli bánik vele a legjobban. A kéz, az ujjak és a nyak eleje gyorsabban koptatja, és gyakrabban kell frissíteni.",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Plan it well": {
+   "hu": "## Tervezd meg jól",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Leave negative space, keep fine detail big enough, plan one touch-up after healing and protect the black from the sun.": {
+   "hu": "Hagyj negatív teret, a finom részletek legyenek elég nagyok, számolj egy gyógyulás utáni javítással, és óvd a feketét a naptól.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Sunburned tattoo: what to do now, and how long a new tattoo should stay out of the sun": {
+   "hu": "Leégett a tetoválásod? Mit tegyél most, és meddig ne érje nap az új tetoválást",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "A burned fresh tattoo and a burned healed one need different care.": {
+   "hu": "A leégett friss és a leégett gyógyult tetoválás másféle ápolást kíván.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "A fresh tattoo is an open wound: keep it covered and out of the sun until it has healed, and don’t put sunscreen on it yet.": {
+   "hu": "A friss tetoválás nyílt seb: amíg meg nem gyógyult, takard, tartsd távol a naptól, és még ne kenj rá fényvédőt.",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## If it burns": {
+   "hu": "## Ha leégett",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Cool it gently and keep it clean. On a fresh tattoo, use only products your artist approved; on a healed one, a fragrance-free aftersun or aloe gel is fine. See a doctor for large blisters, fever or signs of infection.": {
+   "hu": "Hűtsd finoman, és tartsd tisztán. Friss tetoválásra csak a tetoválód által jóváhagyott terméket használj, gyógyultra jó egy illatmentes napozás utáni krém vagy aloe gél. Nagy hólyagok, láz vagy fertőzés jelei esetén fordulj orvoshoz.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Long-term protection": {
+   "hu": "## Hosszú távú védelem",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Once healed, protect tattoos with clothing and a broad-spectrum SPF 50, reapplied every two hours and after swimming.": {
+   "hu": "Gyógyulás után ruhával és széles spektrumú, 50-es faktorú fényvédővel védd a tetoválást, kétóránként és fürdés után újrakenve.",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Cover-up tattoos: what can cover what, and when you need laser first": {
+   "hu": "Takarótetoválás (cover-up): mi mit tud eltakarni, és mikor kell előtte lézer",
+   "files": [
+    "lib/articles2.ts",
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dark covers light, cover-ups are usually bigger, and laser can widen your options.": {
+   "hu": "A sötét eltakarja a világost, a takarás általában nagyobb, és a lézer több lehetőséget ad.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "Tattoo ink is translucent, so a new design doesn’t paint over the old one: the layers mix. Dark covers light; light never covers dark.": {
+   "hu": "A tetoválótinta áttetsző, ezért az új minta nem festi le a régit: a rétegek összekeverednek. A sötét eltakarja a világost, a világos a sötétet soha.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## A good cover-up": {
+   "hu": "## A jó takarás",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "It is usually noticeably bigger and darker than the old tattoo, with texture and solid areas placed over the old lines. Flowers, feathers, Japanese backgrounds and ornamental blackwork hide best.": {
+   "hu": "Általában láthatóan nagyobb és sötétebb a régi tetoválásnál, textúrával és telt részekkel a régi vonalakon. A virágok, a tollak, a japán hátterek és az ornamentális blackwork rejtenek a legjobban.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Laser first?": {
+   "hu": "## Előbb lézer?",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
+  "For very dark, dense or large tattoos, or for a lighter new design, a few laser sessions to fade the old ink can open up far more options.": {
+   "hu": "A nagyon sötét, sűrű vagy nagy tetoválásoknál, vagy ha világosabb új mintát szeretnél, néhány halványító lézeres alkalom sokkal több lehetőséget ad.",
+   "files": [
+    "lib/articles2.ts"
+   ],
+   "kind": "obj"
+  },
   "This account was deleted, so it can’t be used to sign in. Choose another Google account or Apple ID to register again.": {
    "hu": "Ez a fiók törölve lett, ezért nem lehet vele belépni. Válassz másik Google-fiókot vagy Apple ID-t az újbóli regisztrációhoz.",
    "files": [
@@ -14826,6 +15643,41 @@
    ],
    "kind": "obj"
   },
+  "Illustration: most of good healing is keeping the area clean and leaving it alone.": {
+   "hu": "Illusztráció: a jó gyógyulás nagy része abból áll, hogy tisztán tartod a területet, és békén hagyod.",
+   "files": [
+    "lib/kb.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a fresh tattoo looks worse before it looks right. That is the process, not a problem.": {
+   "hu": "Illusztráció: a friss tetoválás előbb rosszabbul néz ki, mielőtt jól nézne ki. Ez a folyamat, nem a probléma.",
+   "files": [
+    "lib/kb.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: bold black next to bare skin is the most durable thing in tattooing, and placement still decides a lot.": {
+   "hu": "Illusztráció: az erős fekete a csupasz bőr mellett a legtartósabb a tetoválásban, és az elhelyezés még így is sokat eldönt.",
+   "files": [
+    "lib/kb.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a fresh tattoo and the sun should not meet until it has healed, and after that only with protection.": {
+   "hu": "Illusztráció: a friss tetoválás és a nap ne találkozzon, amíg meg nem gyógyult, utána is csak védelemmel.",
+   "files": [
+    "lib/kb.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: an old name hidden inside a darker, busier design. Dark covers light; light never covers dark.": {
+   "hu": "Illusztráció: egy régi név egy sötétebb, mozgalmasabb mintában elrejtve. A sötét eltakarja a világost, a világos a sötétet soha.",
+   "files": [
+    "lib/kb.ts"
+   ],
+   "kind": "obj"
+  },
   "Friction, sun and stretch decide how fast ink fades – here is how to pick a spot that ages well.": {
    "hu": "A súrlódás, a nap és a nyúlás dönti el, milyen gyorsan fakul – így válassz olyan helyet, ami szépen öregszik.",
    "files": [
@@ -14963,8 +15815,8 @@
    "hu": "[[img2]]",
    "files": [
     "lib/longform/best-placement-for-tattoo-longevity.ts",
-    "lib/longform/color-vs-black-ink-aging.ts",
-    "lib/longform/fine-line-tattoos-aging.ts"
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/color-vs-black-ink-aging.ts"
    ],
    "kind": "obj"
   },
@@ -15154,8 +16006,8 @@
    "hu": "[[img3]]",
    "files": [
     "lib/longform/best-placement-for-tattoo-longevity.ts",
-    "lib/longform/color-vs-black-ink-aging.ts",
-    "lib/longform/fine-line-tattoos-aging.ts"
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/color-vs-black-ink-aging.ts"
    ],
    "kind": "obj"
   },
@@ -15303,8 +16155,8 @@
    "hu": "[[img4]]",
    "files": [
     "lib/longform/best-placement-for-tattoo-longevity.ts",
-    "lib/longform/color-vs-black-ink-aging.ts",
-    "lib/longform/fine-line-tattoos-aging.ts"
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/color-vs-black-ink-aging.ts"
    ],
    "kind": "obj"
   },
@@ -15517,6 +16369,469 @@
    "hu": "Gyógyult tetoválás a lapockán: nagy, sík, többnyire takart felület, ahol a vonalak évtizedekig élesek maradhatnak.",
    "files": [
     "lib/longform/best-placement-for-tattoo-longevity.ts"
+   ],
+   "kind": "obj"
+  },
+  "Solid black is the most durable thing in tattooing, but placement still decides a lot. A spot-by-spot guide before you commit.": {
+   "hu": "A telt fekete a legtartósabb a tetoválásban, de az elhelyezés még így is sokat eldönt. Helyről helyre, mielőtt elköteleződnél.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Large solid areas can heal slightly patchy; one touch-up after healing is normal, not a sign of bad work.": {
+   "hu": "A nagy telt felületek kissé foltosan gyógyulhatnak; egy javítás a gyógyulás után normális, nem a rossz munka jele.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Leave room for negative space and protect the black from the sun: those two things decide how crisp it looks in twenty years.": {
+   "hu": "Hagyj helyet a negatív térnek, és óvd a feketét a naptól: ez a kettő dönti el, mennyire lesz éles húsz év múlva.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Inês had wanted a blackwork piece on the side of her neck for three years. She had a folder of screenshots, an artist she trusted and a date in the calendar. What she didn’t have was an answer to the question her mother asked at Sunday lunch: “And what will that look like when you’re sixty?” She went home and searched for it, and found either glossy fresh photos or horror stories about faded hand tattoos. Neither told her anything about her neck.": {
+   "hu": "Inês három éve szeretett volna egy blackwork tetoválást a nyaka oldalára. Volt egy mappája képernyőképekkel, egy tetoválója, akiben megbízott, és egy dátum a naptárban. Ami nem volt, az a válasz arra a kérdésre, amit az anyja tett fel a vasárnapi ebédnél: „És milyen lesz, ha hatvan leszel?” Hazament, és rákeresett, de vagy csillogó friss fotókat talált, vagy rémtörténeteket kifakult kéztetoválásokról. Egyik sem mondott semmit a nyakáról.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blackwork has a reputation as the style that ages best, and for good reason. But it still behaves differently on a hand than on a shoulder blade, and differently again on the front of the throat. This guide looks at the most popular placements one by one: how blackwork heals there, how it tends to age, and what to plan for before the needle starts.": {
+   "hu": "A blackwork híre, hogy ez a stílus öregszik a legjobban, és ennek jó oka van. Egy kézen azonban mégis másképp viselkedik, mint egy lapockán, és megint másképp a torok elején. Ez a cikk egyenként végignézi a legnépszerűbb helyeket: hogyan gyógyul ott a blackwork, hogyan szokott öregedni, és mire érdemes készülni, mielőtt elindul a tű.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "> A note on the pictures: the images in this article are illustrations made to show typical results. They are not photos of real clients.": {
+   "hu": "> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző eredményeket mutatják. Nem valódi vendégekről készült fotók.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## What makes blackwork different": {
+   "hu": "## Miben más a blackwork?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blackwork covers a wide family of designs: ornamental and geometric patterns, tribal-inspired shapes, bold illustrative pieces and large areas of solid black. What they share is the ink and the contrast. Black pigment is the most stable colour used in tattooing, and a design built from bold black shapes next to bare skin keeps its readability even as the lines slowly soften over the decades.": {
+   "hu": "A blackwork a minták széles családját fedi le: ornamentális és geometrikus mintákat, törzsi ihletésű formákat, erős illusztratív munkákat és nagy telt fekete felületeket. Ami közös bennük, az a tinta és a kontraszt. A fekete pigment a tetoválásban használt legstabilabb szín, és a csupasz bőr mellé tett erős fekete formákból épülő minta akkor is olvasható marad, amikor a vonalak az évtizedek alatt lassan puhulnak.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "That doesn’t make blackwork indestructible. Ink still spreads slightly over time, artists often estimate about a tenth of a millimetre per decade, and sun still breaks it down. What blackwork has is margin: a bold shape can lose a little crispness and still look intentional.": {
+   "hu": "Ettől a blackwork nem elpusztíthatatlan. A tinta idővel így is kissé terül, a tetoválók gyakran évtizedenként nagyjából egytized milliméterre becsülik, és a nap így is bontja. Ami a blackworknek megvan, az a tartalék: egy erős forma veszíthet egy kicsit az élességéből, és még mindig szándékosnak tűnik.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "!! Blackwork doesn’t avoid ageing. It just has more room to age in.": {
+   "hu": "!! A blackwork nem kerüli el az öregedést. Csak több helye van megöregedni.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## How blackwork heals": {
+   "hu": "## Hogyan gyógyul a blackwork?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Large areas of solid black are heavy work for the skin. Expect more swelling and tenderness than with line work, a few days of oozing, and a longer peeling stage. When it has healed, a solid area may look slightly uneven, with lighter specks or a patchy patch here and there. This is common and usually just means a part didn’t hold ink evenly while healing.": {
+   "hu": "A nagy telt fekete felületek kemény munkát jelentenek a bőrnek. Számíts több duzzanatra és érzékenységre, mint a vonalas munkáknál, néhány nap szivárgásra és hosszabb hámlásra. Gyógyulás után egy telt felület kissé egyenetlennek tűnhet, itt-ott világosabb pöttyökkel vagy egy foltosabb résszel. Ez gyakori, és általában csak annyit jelent, hogy egy rész a gyógyulás során nem egyenletesen tartotta meg a tintát.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Most artists plan a **touch-up after four to six weeks or more**, once the skin has fully settled. One touch-up on a big black piece is part of the process, not a sign that something went wrong.": {
+   "hu": "A legtöbb tetováló **négy-hat hét vagy több után tervez javítást**, amikor a bőr teljesen megnyugodott. Egy nagy fekete munkánál egy javítás a folyamat része, nem annak a jele, hogy valami elromlott.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "[[img5]]": {
+   "hu": "[[img5]]",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/cover-up-tattoos.ts",
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Placement by placement": {
+   "hu": "## Helyről helyre",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Neck": {
+   "hu": "### Nyak",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "The neck is not one placement but several. The **side and the back of the neck** are thicker-skinned and usually take blackwork well. The **front of the throat** is thinner, bends constantly and gets a lot of sun, so lines there tend to soften faster and the area can be more prone to blowouts. The neck also creases with age, and a pattern laid across those creases will follow them.": {
+   "hu": "A nyak nem egy hely, hanem több. A **nyak oldala és hátsó része** vastagabb bőrű, és általában jól viseli a blackworköt. A **torok eleje** vékonyabb, folyton hajlik, és sok napot kap, ezért ott a vonalak gyorsabban puhulnak, és a terület hajlamosabb lehet a blowoutra. A nyak az életkorral ráncolódik is, és az ezeken a ráncokon átfutó minta követni fogja őket.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Healing on the neck can be fiddly: collars rub, it gets sun, and you can’t really cover it. Plan the first weeks around loose, soft necklines.": {
+   "hu": "A nyakon a gyógyulás macerás lehet: a gallér dörzsöl, napot kap, és nem igazán lehet letakarni. Az első hetekben laza, puha nyakkivágású ruhákkal tervezz.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "**Good to know:** bold ornamental bands and shapes that follow the curve of the neck age more gracefully than fine details in the middle of the throat. And a neck tattoo is hard to hide, which matters for some jobs.": {
+   "hu": "**Jó tudni:** a nyak ívét követő erős ornamentális sávok és formák szebben öregszenek, mint a torok közepére tett finom részletek. A nyaktetoválást ráadásul nehéz elrejteni, ami egyes munkahelyeken számít.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Hand and fingers": {
+   "hu": "### Kéz és ujjak",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Hands are the toughest placement for any tattoo. The skin is thin, constantly washed, rubbed and bent, and it sees more sun than almost anywhere else. Even blackwork softens faster here, especially on the knuckles, the sides of the fingers and the palm side, which many artists won’t tattoo at all.": {
+   "hu": "A kéz a legnehezebb hely bármilyen tetoválásnak. A bőr vékony, folyton mossák, dörzsölődik és hajlik, és szinte minden más helynél több napot kap. Itt még a blackwork is gyorsabban puhul, főleg az ujjpercek fölött, az ujjak oldalán és a tenyér felőli oldalon, amit sok tetováló egyáltalán nem vállal.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "The good news is that blackwork is the most forgiving style for hands. A bold, simple design survives the wear far better than fine line or tiny lettering. Expect to need touch-ups more often than on other areas, and protect the backs of your hands from the sun like you would protect your face.": {
+   "hu": "A jó hír, hogy a kézen a blackwork a legelnézőbb stílus. Egy erős, egyszerű minta sokkal jobban bírja a kopást, mint a fine line vagy az apró felirat. Számíts rá, hogy gyakrabban kell majd frissíteni, mint más helyeken, és védd a kézfejedet a naptól úgy, ahogy az arcodat védenéd.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Forearm": {
+   "hu": "### Alkar",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "The forearm is the classic blackwork canvas, with a big difference between its two sides. The **inner forearm** is softer, more protected and ages gently. The **outer forearm** is the side that gets the sun when you drive, cycle or sit on a terrace, and that sun is what usually ages it faster. Large blackwork sleeves on the forearm hold up very well when they are kept out of the sun.": {
+   "hu": "Az alkar a klasszikus blackwork-vászon, a két oldala között viszont nagy a különbség. A **belső alkar** puhább, védettebb, és szelíden öregszik. A **külső alkar** az az oldal, amit vezetés, biciklizés vagy egy teraszon ülés közben ér a nap, és általában ez a nap öregíti gyorsabban. A nagy blackwork alkar-sleeve-ek nagyon jól tartanak, ha távol vannak tartva a naptól.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Back": {
+   "hu": "### Hát",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "The upper back and shoulder blades are the best canvas there is. The skin is stable, it is usually covered by clothing, it doesn’t bend much and it gives a big design room to breathe. A large blackwork piece here can look strong for decades. The trade-off is time: big back pieces mean long sessions, and some spots, such as the spine and shoulder blades, are among the more painful areas.": {
+   "hu": "A hát felső része és a lapockák a lehető legjobb vászon. A bőr stabil, általában ruha takarja, nem sokat hajlik, és egy nagy mintának is van helye. Egy nagy blackwork munka itt évtizedekig erős maradhat. Az ára az idő: a nagy hátmunkák hosszú üléseket jelentenek, és egyes részek, például a gerinc és a lapockák, a fájdalmasabb területek közé tartoznak.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Calf, upper arm and chest": {
+   "hu": "### Vádli, felkar és mellkas",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "The **calf** and **upper arm** are similarly kind: plenty of surface, relatively stable skin and moderate sun. The **chest** works well too, though the sternum is thin-skinned and painful, and the area can change shape with weight changes and, for some people, pregnancy.": {
+   "hu": "A **vádli** és a **felkar** hasonlóan kíméletes: sok felület, viszonylag stabil bőr és mérsékelt nap. A **mellkas** is jól működik, bár a szegycsont fölötti bőr vékony és fájdalmas, és a terület a testsúly változásával, néhány embernél pedig a terhességgel alakot is változtathat.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Blackwork on darker skin": {
+   "hu": "## Blackwork sötétebb bőrön",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blackwork is often one of the best choices for darker skin tones, because bold black reads clearly on any skin and doesn’t depend on light colours that can disappear into deeper skin. Choose an artist with healed work on skin like yours, and ask how they handle large solid areas, since some darker skin types are more prone to raised scarring.": {
+   "hu": "A blackwork sötétebb bőrtónusnál gyakran az egyik legjobb választás, mert az erős fekete minden bőrön tisztán olvasható, és nem függ olyan világos színektől, amelyek beleveszhetnek a sötétebb bőrbe. Olyan tetoválót válassz, akinek van gyógyult munkája a tiédhez hasonló bőrön, és kérdezd meg, hogyan dolgozik a nagy telt felületekkel, mert egyes sötétebb bőrtípusok hajlamosabbak a kiemelkedő hegesedésre.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "[[img6]]": {
+   "hu": "[[img6]]",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/cover-up-tattoos.ts",
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Planning a blackwork piece that ages well": {
+   "hu": "## Hogyan tervezz szépen öregedő blackworköt?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Whatever the placement, a few choices before the session make the biggest difference in twenty years.": {
+   "hu": "Bármilyen helyről is legyen szó, néhány döntés az ülés előtt számít a legtöbbet húsz év múlva.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "1. **Leave negative space.** Bare skin inside the design isn’t empty: it is what keeps the shapes readable as the edges soften.": {
+   "hu": "1. **Hagyj negatív teret.** A mintán belüli csupasz bőr nem üres: ez tartja olvashatóan a formákat, ahogy a szélek puhulnak.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "2. **Keep fine detail big enough.** Thin lines and dotwork next to solid black are the first to merge into it. Give them a few millimetres of room.": {
+   "hu": "2. **A finom részletek legyenek elég nagyok.** A telt fekete melletti vékony vonalak és pontozás olvadnak bele először. Adj nekik néhány milliméter helyet.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "3. **Follow the body.** Designs that follow the curve of a neck, forearm or shoulder move with you and look better as the skin changes.": {
+   "hu": "3. **Kövesd a testet.** A nyak, az alkar vagy a váll ívét követő minták együtt mozognak veled, és szebbek maradnak, ahogy a bőr változik.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "4. **Choose your artist by healed work.** Solid black is unforgiving of uneven saturation. Ask for photos of pieces that are a year old or more.": {
+   "hu": "4. **A tetoválót a gyógyult munkái alapján válaszd.** A telt fekete nem bocsátja meg az egyenetlen telítést. Kérj képeket legalább egyéves munkákról.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "5. **Plan for a touch-up.** Budget time for a session after healing, and more often on hands.": {
+   "hu": "5. **Számolj egy javítással.** Tervezz be időt egy gyógyulás utáni ülésre, a kézen gyakrabban.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## The sun is still the main enemy": {
+   "hu": "## Még mindig a nap a fő ellenség",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Black ink handles sunlight better than other colours, but UV still breaks pigment down and ages the skin around it. Once your tattoo has healed, use a broad-spectrum SPF 50 on any blackwork that sees the sun, especially on hands, the neck and the outer forearm. Clothing is even better. A blackwork forearm that has spent twenty summers in the sun and one that has spent them under a sleeve can look very different.": {
+   "hu": "A fekete tinta jobban bírja a napfényt, mint a többi szín, de az UV így is bontja a pigmentet, és öregíti a körülötte lévő bőrt. Ha a tetoválásod meggyógyult, használj széles spektrumú, 50-es faktorú fényvédőt minden napot kapó blackworkön, főleg a kézen, a nyakon és a külső alkaron. A ruha még jobb. Egy húsz nyarat napon töltött blackwork alkar és egy ugyanennyit ingujj alatt töltött nagyon máshogy nézhet ki.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "[[img7]]": {
+   "hu": "[[img7]]",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/cover-up-tattoos.ts",
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "## And if you change your mind": {
+   "hu": "## És ha meggondolod magad",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blackwork is often used to **cover up** older tattoos, because solid black can hide almost anything underneath. And if you ever want it gone, black is the colour that usually responds best to laser removal, although large dense areas take many sessions.": {
+   "hu": "A blackworköt gyakran használják régebbi tetoválások **takarására**, mert a telt fekete szinte bármit el tud rejteni maga alatt. Ha pedig egyszer szeretnéd eltüntetni, a fekete az a szín, ami általában a legjobban reagál a lézeres eltávolításra, bár a nagy, sűrű felületek sok alkalmat igényelnek.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## See your blackwork in thirty years first": {
+   "hu": "## Nézd meg előbb a blackworködet harminc év múlva",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Before you book, it helps to see the design where it will actually live. In InkAge you can place a blackwork design on a photo of your own neck, hand or forearm at the size you have in mind and see it fresh, healed and as it is likely to look after 10, 30 and 50 years, with a longevity score for that placement. It is an estimate, not a promise, but it is the closest thing to an answer to the question Inês’s mother asked.": {
+   "hu": "Foglalás előtt segít, ha ott látod a mintát, ahol valóban élni fog. Az InkAge-ben egy blackwork mintát a saját nyakadról, kezedről vagy alkarodról készült fotóra helyezhetsz abban a méretben, ami a fejedben van, és látod frissen, gyógyultan, valamint ahogy valószínűleg 10, 30 és 50 év múlva kinéz, az adott helyre szóló tartóssági pontszámmal. Ez becslés, nem ígéret, de ez áll a legközelebb a válaszhoz arra a kérdésre, amit Inês anyja feltett.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "## The short version": {
+   "hu": "## Röviden",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts",
+    "lib/longform/cover-up-tattoos.ts",
+    "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "Inês went ahead with the side of her neck, not the front, and asked her artist to keep the ornament bold with room between the shapes. Blackwork ages better than almost anything else in tattooing, but placement still decides how much. Choose stable, covered skin when you can, design with negative space, plan one touch-up, and keep the sun off it.": {
+   "hu": "Inês végül a nyaka oldalát választotta, nem az elejét, és megkérte a tetoválóját, hogy az ornamentika maradjon erős, a formák között legyen hely. A blackwork szinte mindennél jobban öregszik a tetoválásban, de az elhelyezés még így is eldönti, mennyire. Amikor lehet, válassz stabil, takart bőrt, tervezz negatív térrel, számolj egy javítással, és óvd a naptól.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Nyak": {
+   "hu": "A nyak nem egy hely, hanem több. A **nyak oldala és hátsó része** vastagabb bőrű, és általában jól viseli a blackworköt. A **torok eleje** vékonyabb, folyton hajlik, és sok napot kap, ezért ott a vonalak gyorsabban puhulnak, és a terület hajlamosabb lehet a blowoutra. A nyak az életkorral ráncolódik is, és az ezeken a ráncokon átfutó minta követni fogja őket.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "pair"
+  },
+  "### Alkar": {
+   "hu": "Az alkar a klasszikus blackwork-vászon, a két oldala között viszont nagy a különbség. A **belső alkar** puhább, védettebb, és szelíden öregszik. A **külső alkar** az az oldal, amit vezetés, biciklizés vagy egy teraszon ülés közben ér a nap, és általában ez a nap öregíti gyorsabban. A nagy blackwork alkar-sleeve-ek nagyon jól tartanak, ha távol vannak tartva a naptól.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "pair"
+  },
+  "Do blackwork tattoos age well?": {
+   "hu": "Szépen öregszik a blackwork tetoválás?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Generally yes, better than most styles. Black ink is stable and bold shapes stay readable as lines soften over the decades. Placement and sun still matter: hands and the front of the neck wear faster, and UV fades even black.": {
+   "hu": "Általában igen, a legtöbb stílusnál jobban. A fekete tinta stabil, az erős formák pedig olvashatók maradnak, ahogy a vonalak az évtizedek alatt puhulnak. Az elhelyezés és a nap így is számít: a kéz és a nyak eleje gyorsabban kopik, és az UV még a feketét is halványítja.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Is a blackwork neck tattoo a good idea?": {
+   "hu": "Jó ötlet a blackwork nyaktetoválás?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "The side and back of the neck usually take blackwork well. The front of the throat has thinner skin, bends constantly and gets more sun, so lines there tend to soften faster. Bold shapes that follow the curve of the neck age best.": {
+   "hu": "A nyak oldala és hátsó része általában jól viseli a blackworköt. A torok elején vékonyabb a bőr, folyton hajlik, és több napot kap, ezért ott a vonalak gyorsabban puhulnak. A nyak ívét követő erős formák öregszenek a legjobban.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Why does my blackwork tattoo look patchy after healing?": {
+   "hu": "Miért foltos a blackwork tetoválásom a gyógyulás után?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Large solid black areas often heal slightly unevenly, with lighter specks where the skin didn’t hold ink evenly. It is common, and most artists plan a touch-up after four to six weeks or more, once the skin has fully settled.": {
+   "hu": "A nagy telt fekete felületek gyakran kissé egyenetlenül gyógyulnak, világosabb pöttyökkel ott, ahol a bőr nem egyenletesen tartotta meg a tintát. Ez gyakori, és a legtöbb tetováló négy-hat hét vagy több után tervez javítást, amikor a bőr teljesen megnyugodott.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Do blackwork hand tattoos fade?": {
+   "hu": "Kifakul a blackwork kéztetoválás?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Faster than on other areas, because hands are thin-skinned, washed constantly and exposed to the sun. Blackwork is still the most forgiving style there. Keep the design bold and simple, expect more frequent touch-ups and use sunscreen on the backs of your hands.": {
+   "hu": "Gyorsabban, mint más helyeken, mert a kéz vékony bőrű, folyton mossák, és napnak van kitéve. A blackwork még így is a legelnézőbb stílus ott. Legyen a minta erős és egyszerű, számíts gyakoribb frissítésre, és használj fényvédőt a kézfejeden.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Is blackwork good for darker skin?": {
+   "hu": "Jó választás a blackwork sötétebb bőrre?",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Often one of the best choices, because bold black reads clearly on any skin tone. Choose an artist with healed work on skin like yours and ask how they handle large solid areas, as some darker skin types are more prone to raised scars.": {
+   "hu": "Gyakran az egyik legjobb, mert az erős fekete minden bőrtónuson tisztán olvasható. Olyan tetoválót válassz, akinek van gyógyult munkája a tiédhez hasonló bőrön, és kérdezd meg, hogyan dolgozik a nagy telt felületekkel, mert egyes sötétebb bőrtípusok hajlamosabbak a kiemelkedő hegekre.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: bold ornamental blackwork on the side of the neck, where the skin is thicker than at the front.": {
+   "hu": "Illusztráció: erős ornamentális blackwork a nyak oldalán, ahol vastagabb a bőr, mint elöl.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: blackwork on the back of a hand, slightly softened near the knuckles, where hands wear fastest.": {
+   "hu": "Illusztráció: blackwork a kézfejen, az ujjpercek közelében kissé puhulva, ahol a kéz a leggyorsabban kopik.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: the upper back gives a large blackwork piece stable skin and room to breathe.": {
+   "hu": "Illusztráció: a hát felső része stabil bőrt és sok helyet ad egy nagy blackwork munkának.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: solid black that healed slightly patchy. A touch-up after healing evens it out.": {
+   "hu": "Illusztráció: kissé foltosan gyógyult telt fekete. Egy gyógyulás utáni javítás kiegyenlíti.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: bold black reads clearly on any skin tone, which makes blackwork a strong choice for darker skin.": {
+   "hu": "Illusztráció: az erős fekete minden bőrtónuson tisztán olvasható, ezért a blackwork jó választás sötétebb bőrre.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: sunscreen on a healed outer forearm, the side that usually gets the most sun.": {
+   "hu": "Illusztráció: fényvédő egy gyógyult külső alkaron, azon az oldalon, ami általában a legtöbb napot kapja.",
+   "files": [
+    "lib/longform/blackwork-tattoos-placement.ts"
    ],
    "kind": "obj"
   },
@@ -16119,6 +17434,510 @@
    "hu": "Strandon, napsütésben: egy nő fényvédőt ken a vállán lévő színes virágos tetoválásra – a legegyszerűbb lépés, amivel a színek évekkel tovább élnek.",
    "files": [
     "lib/longform/color-vs-black-ink-aging.ts"
+   ],
+   "kind": "obj"
+  },
+  "Why dark beats light, why cover-ups are usually bigger, which designs hide old ink best, and when a few laser sessions make all the difference.": {
+   "hu": "Miért győz a sötét a világos felett, miért nagyobb általában a takarás, mely minták rejtik el legjobban a régi tintát, és mikor számít sokat néhány lézeres alkalom.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Tattoo ink is translucent, so a new design doesn’t paint over the old one: the two layers mix. Dark covers light; light never covers dark.": {
+   "hu": "A tetoválótinta áttetsző, ezért az új minta nem festi le a régit: a két réteg összekeveredik. A sötét eltakarja a világost, a világos a sötétet soha.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "A good cover-up is usually noticeably bigger and darker than the old tattoo, with texture and solid areas placed exactly where the old lines are.": {
+   "hu": "Egy jó takarás általában láthatóan nagyobb és sötétebb a régi tetoválásnál, textúrával és telt részekkel pontosan ott, ahol a régi vonalak vannak.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Old, faded, thin-lined tattoos are the easiest to cover. Very dark, dense or large ones often need a few laser sessions first.": {
+   "hu": "A régi, kifakult, vékony vonalas tetoválásokat a legkönnyebb eltakarni. A nagyon sötét, sűrű vagy nagy tetoválásokhoz gyakran előbb néhány lézeres alkalom kell.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Choose an artist with healed cover-up work, and see the new design on your own skin before you commit.": {
+   "hu": "Olyan tetoválót válassz, akinek van gyógyult takarómunkája, és nézd meg az új mintát a saját bőrödön, mielőtt elköteleződsz.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dani had worn the name on the inside of her wrist for nine years. It was neat, small, black, and belonged to someone she had not spoken to since the summer she turned twenty-four. She had imagined the cover-up for months: a delicate watercolour hummingbird in soft pinks and yellow, floating over the old letters. The first artist she showed it to looked at the wrist, looked at the sketch, and said gently: “I can tattoo this. You’ll still be able to read the name through it.”": {
+   "hu": "Dani kilenc évig hordta a nevet a csuklója belső oldalán. Takaros volt, kicsi, fekete, és valakié, akivel azóta a nyár óta nem beszélt, amikor huszonnégy éves lett. Hónapokig tervezgette a takarást: egy finom akvarell kolibrit lágy rózsaszínekben és sárgában, ami a régi betűk fölött lebeg. Az első tetováló, akinek megmutatta, ránézett a csuklóra, aztán a vázlatra, és szelíden azt mondta: „Ezt meg tudom csinálni. A nevet viszont továbbra is el fogod tudni olvasni alatta.”",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "That sentence sums up most of what people don’t know about cover-ups. They are one of the most common reasons people walk into a studio, and one of the most misunderstood. This guide explains how covering old ink actually works, which tattoos are easy or hard to cover, which designs hide things best, and when a few laser sessions beforehand will change your options completely.": {
+   "hu": "Ez a mondat összefoglalja, amit a legtöbben nem tudnak a takarásról. Ez az egyik leggyakoribb ok, amiért az emberek betérnek egy szalonba, és az egyik legtöbbször félreértett is. Ez a cikk elmagyarázza, hogyan működik valójában a régi tinta eltakarása, mely tetoválásokat könnyű vagy nehéz eltakarni, mely minták rejtenek el legjobban, és mikor változtat meg teljesen mindent néhány lézeres alkalom előtte.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real clients or real cover-ups.": {
+   "hu": "> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző helyzeteket mutatják. Nem valódi vendégekről vagy valódi takarásokról készült fotók.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Why you can’t just paint over a tattoo": {
+   "hu": "## Miért nem lehet egyszerűen átfesteni egy tetoválást?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "It is tempting to think of a cover-up like painting a wall: pick a new colour and roll it on. Skin doesn’t work like that. Tattoo ink is **translucent**, and the old pigment stays in the skin under the new one. What you see afterwards is the two layers mixed together, a bit like laying one coloured glass over another.": {
+   "hu": "Csábító úgy gondolni a takarásra, mint egy fal festésére: kiválasztasz egy új színt, és felhengerelted. A bőr nem így működik. A tetoválótinta **áttetsző**, a régi pigment pedig az új alatt a bőrben marad. Amit utána látsz, az a két réteg keveréke, kicsit olyan, mintha egy színes üveget egy másikra fektetnél.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "That leads to the one rule every cover-up artist works by: **dark covers light, light never covers dark.** A black line will show through yellow, pink, pastel blue or white, no matter how many layers go on. It can disappear under deep green, navy, dark red or black, especially when the new design puts its darkest parts right on top of it.": {
+   "hu": "Ebből következik az egyetlen szabály, ami szerint minden takaróművész dolgozik: **a sötét eltakarja a világost, a világos a sötétet soha.** Egy fekete vonal átlátszik a sárgán, a rózsaszínen, a pasztellkéken vagy a fehéren, akárhány réteg is kerül rá. Mélyzöld, sötétkék, sötétpiros vagy fekete alatt viszont eltűnhet, főleg ha az új minta a legsötétebb részeit pontosan rá teszi.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "!! A cover-up doesn’t erase the old tattoo. It hides it inside something darker and busier.": {
+   "hu": "!! A takarás nem törli a régi tetoválást. Elrejti valami sötétebben és mozgalmasabban.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## What makes a tattoo easy or hard to cover": {
+   "hu": "## Mitől könnyű vagy nehéz eltakarni egy tetoválást?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Before talking about designs, an artist will look at the old tattoo itself. These are the things that matter most.": {
+   "hu": "Mielőtt a mintákról beszélne, egy tetováló magát a régi tetoválást nézi meg. Ezek számítanak a legtöbbet.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **How dark it is.** Faded, greyish, older tattoos are much easier to hide than a crisp black one that is still saturated.": {
+   "hu": "- **Mennyire sötét.** A kifakult, szürkés, régebbi tetoválásokat sokkal könnyebb elrejteni, mint egy éles, még telített feketét.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **How dense it is.** Thin line work and small lettering are easier than large areas of solid black or heavy shading.": {
+   "hu": "- **Mennyire sűrű.** A vékony vonalas munkát és az apró feliratot könnyebb eltakarni, mint a nagy telt fekete felületeket vagy az erős árnyékolást.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **How big it is.** A small tattoo leaves room to design around it. A large one limits what can go on top.": {
+   "hu": "- **Mekkora.** Egy kis tetoválás köré van hely tervezni. Egy nagy behatárolja, mi kerülhet rá.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Where it is.** Some placements, such as the inner wrist or fingers, have very little room to grow a bigger design.": {
+   "hu": "- **Hol van.** Egyes helyeken, például a csukló belső oldalán vagy az ujjakon, nagyon kevés a hely egy nagyobb mintára.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Its colours.** Old blue-black and faded colour are manageable. Very dark or very saturated areas push the new design towards even darker colours.": {
+   "hu": "- **Milyen színek vannak benne.** A régi kékesfekete és a kifakult színek kezelhetők. A nagyon sötét vagy nagyon telített részek még sötétebb színek felé tolják az új mintát.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Scarring or blowouts.** Raised or uneven skin and blurry halos can be harder to hide cleanly, and need to be designed around.": {
+   "hu": "- **Heg vagy blowout.** A kiemelkedő vagy egyenetlen bőrt és az elmosódott udvarokat nehezebb tisztán elrejteni, köréjük kell tervezni.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## The rules of a good cover-up design": {
+   "hu": "## A jó takarás szabályai",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "A cover-up is a design problem first and a tattooing problem second. The best ones follow the same principles.": {
+   "hu": "A takarás először tervezési feladat, csak utána tetoválási. A legjobbak ugyanazokat az elveket követik.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "### It is usually bigger": {
+   "hu": "### Általában nagyobb",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "The new design needs room to place dark areas over the old lines and still look like a natural image, not a dark patch. That is why cover-ups are usually noticeably bigger than the original, sometimes much bigger, especially when the old tattoo is dense. If you want to stay the same size, the old tattoo usually needs to be lightened first.": {
+   "hu": "Az új mintának hely kell ahhoz, hogy a sötét részeket a régi vonalakra tegye, és mégis természetes képnek tűnjön, ne sötét foltnak. Ezért a takarás általában láthatóan nagyobb az eredetinél, néha sokkal nagyobb, főleg ha a régi tetoválás sűrű. Ha ugyanakkora méretben szeretnél maradni, a régi tetoválást általában előbb halványítani kell.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Darkness goes exactly where it is needed": {
+   "hu": "### A sötét pontosan oda kerül, ahol kell",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Good cover-up artists don’t just make everything dark. They map the old tattoo and put the deepest shadows, the darkest petals, the black outline or the solid background exactly over the old lines, then keep lighter details where there was bare skin before.": {
+   "hu": "A jó takaróművészek nem tesznek egyszerűen mindent sötétté. Feltérképezik a régi tetoválást, és a legmélyebb árnyékokat, a legsötétebb szirmokat, a fekete kontúrt vagy a telt hátteret pontosan a régi vonalakra teszik, a világosabb részleteket pedig oda, ahol korábban csupasz bőr volt.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Texture and organic shapes hide best": {
+   "hu": "### A textúra és az organikus formák rejtenek a legjobban",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Designs with lots of texture and irregular shapes are natural camouflage: flowers with layered petals, leaves, feathers, animal fur, waves, clouds, ornamental blackwork and Japanese-style pieces with dark backgrounds. Clean geometric shapes, big empty areas, fine single lines and pale colour hide very little.": {
+   "hu": "A sok textúrájú, szabálytalan formájú minták természetes álcát adnak: rétegzett szirmú virágok, levelek, tollak, állatszőr, hullámok, felhők, ornamentális blackwork és sötét hátterű japán stílusú munkák. A tiszta geometrikus formák, a nagy üres felületek, a finom egyes vonalak és a halvány színek nagyon keveset rejtenek el.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Some styles work better than others": {
+   "hu": "### Egyes stílusok jobban működnek, mint mások",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Work well:** neo-traditional, Japanese, dark floral, realism with strong shadows, ornamental blackwork.": {
+   "hu": "- **Jól működik:** neotradicionális, japán, sötét virágos, erős árnyékú realizmus, ornamentális blackwork.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Hard to make work:** fine line, minimalist designs, watercolour without dark structure, white ink and light pastels.": {
+   "hu": "- **Nehezen működik:** fine line, minimalista minták, sötét váz nélküli akvarell, fehér tinta és világos pasztellek.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **The last resort:** a **blackout**, where an area is filled with solid black, sometimes with a pattern cut out of it. It hides almost anything, but it is a big, permanent change.": {
+   "hu": "- **A végső megoldás:** a **blackout**, amikor egy területet telt feketével töltenek ki, néha egy kivágott mintával. Szinte bármit elrejt, de nagy és végleges változás.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## When you need laser first": {
+   "hu": "## Mikor kell előbb lézer?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Laser removal and cover-ups are not opposites. They are often a team. A few sessions to **lighten** the old tattoo, not remove it completely, can open up far more options for the new design.": {
+   "hu": "A lézeres eltávolítás és a takarás nem egymás ellentétei. Gyakran egy csapat. Néhány alkalom, ami a régi tetoválást **halványítja**, nem teljesen eltávolítja, sokkal több lehetőséget nyithat az új mintának.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Fading first is worth considering when:": {
+   "hu": "A halványítást érdemes megfontolni, ha:",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- the old tattoo is very dark, dense or large": {
+   "hu": "- a régi tetoválás nagyon sötét, sűrű vagy nagy",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- you want the new design to stay small or close to the same size": {
+   "hu": "- azt szeretnéd, hogy az új minta kicsi maradjon, vagy nagyjából ugyanakkora",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- you want lighter colours, fine lines or lots of bare skin in the new tattoo": {
+   "hu": "- világosabb színeket, finom vonalakat vagy sok csupasz bőrt szeretnél az új tetoválásban",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- the old tattoo has a shape that would be hard to work into any design, such as a name or a sharp outline": {
+   "hu": "- a régi tetoválás formája nehezen dolgozható bele bármilyen mintába, például egy név vagy egy éles körvonal",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Fading for a cover-up usually takes only a few sessions rather than a full course, although it depends on the tattoo. After the last session, the skin needs to heal fully before anyone tattoos over it; your laser clinic and tattoo artist will tell you how long they want you to wait, often at least six to eight weeks. Ask both of them how light the old tattoo needs to be before you start, so you don’t pay for more sessions than you need.": {
+   "hu": "A takaráshoz való halványítás általában csak néhány alkalom, nem egy teljes kúra, bár ez a tetováláson múlik. Az utolsó kezelés után a bőrnek teljesen meg kell gyógyulnia, mielőtt bárki rátetoválna; a lézeres klinika és a tetoválód megmondja, mennyit szeretnének várni, gyakran legalább hat-nyolc hetet. Mielőtt belevágsz, kérdezd meg mindkettőjüket, mennyire kell világosnak lennie a régi tetoválásnak, hogy ne fizess több alkalomért, mint amennyi kell.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Rework, cover-up or laser?": {
+   "hu": "## Átdolgozás, takarás vagy lézer?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "If you are unhappy with a tattoo, there are three main routes, and they suit different situations.": {
+   "hu": "Ha nem vagy elégedett egy tetoválással, három fő út van, és különböző helyzetekhez illenek.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Rework:** the artist keeps your tattoo and improves it, for example by bolding lines, adding shading or extending the design. Best when you still like the idea and it just looks tired or unfinished.": {
+   "hu": "- **Átdolgozás:** a tetováló megtartja a tetoválásodat, és jobbá teszi, például erősebb vonalakkal, árnyékolással vagy a minta kibővítésével. Akkor a legjobb, ha az ötlet még tetszik, csak fáradtnak vagy befejezetlennek tűnik.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Cover-up:** a new design hides the old one. Best when you want something different and are happy with a bigger, darker result.": {
+   "hu": "- **Takarás:** egy új minta elrejti a régit. Akkor a legjobb, ha valami mást szeretnél, és elfogadod a nagyobb, sötétebb eredményt.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Laser, fully or partly:** best when you want the skin back, or when lightening the old ink will give a cover-up much better results.": {
+   "hu": "- **Lézer, teljesen vagy részben:** akkor a legjobb, ha vissza szeretnéd kapni a bőrt, vagy ha a régi tinta halványítása sokkal jobb takarást tesz lehetővé.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## How the process usually goes": {
+   "hu": "## Hogyan zajlik általában?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "1. **Consultation.** Bring clear photos in daylight, or better, go in person. A good artist will be honest about what can and can’t be hidden.": {
+   "hu": "1. **Konzultáció.** Vigyél éles, nappali fényben készült fotókat, vagy még jobb, menj el személyesen. Egy jó tetováló őszinte lesz abban, mit lehet elrejteni és mit nem.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "2. **Design.** Many artists draw the new design directly over a photo of your old tattoo, so you can both see where every dark area sits.": {
+   "hu": "2. **Tervezés.** Sok tetováló közvetlenül a régi tetoválásodról készült fotóra rajzolja az új mintát, így mindketten látjátok, hová kerül minden sötét rész.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "3. **Stencil and tattooing.** Cover-ups often take longer than a fresh design of the same size, because of the density and the planning.": {
+   "hu": "3. **Sablon és tetoválás.** A takarás gyakran tovább tart, mint egy ugyanakkora új minta, a sűrűség és a tervezés miatt.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "4. **Healing.** A cover-up heals like any tattoo, but dense, dark work can be more swollen and tender at first.": {
+   "hu": "4. **Gyógyulás.** A takarás úgy gyógyul, mint bármilyen tetoválás, de a sűrű, sötét munka eleinte duzzadtabb és érzékenyebb lehet.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "5. **Touch-up.** It is common to need a touch-up once it has healed, to deepen an area where a hint of old ink still shows.": {
+   "hu": "5. **Javítás.** Gyakori, hogy gyógyulás után kell egy javítás, hogy egy részt besötétítsenek, ahol még átsejlik a régi tinta.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Choosing the right artist": {
+   "hu": "## A megfelelő tetováló kiválasztása",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Cover-ups are a specialist skill. Ask to see **healed** cover-up work, not just fresh photos, because a fresh cover-up always looks better than it will once the skin has settled. Look for before-and-after pairs where the old tattoo was similar to yours in darkness and size, and ask the artist directly whether they would recommend lightening it first.": {
+   "hu": "A takarás külön szakértelem. Kérj **gyógyult** takarómunkákat, ne csak friss fotókat, mert egy friss takarás mindig jobban néz ki, mint ahogy a bőr megnyugvása után fog. Olyan előtte–utána párokat keress, ahol a régi tetoválás sötétségben és méretben hasonló volt a tiédhez, és kérdezd meg egyenesen a tetoválót, javasolja-e előbb a halványítást.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "## See the cover-up on your own skin first": {
+   "hu": "## Nézd meg előbb a takarást a saját bőrödön",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "A cover-up is a bigger, longer commitment than the tattoo it replaces. In InkAge you can place a new design on a photo of your own skin, at the size you are considering, and see it fresh, healed and as it is likely to look after 10, 30 and 50 years. If you are thinking about fading first, the laser preview shows what the old tattoo might look like after 3, 6 and 10 sessions. Both are estimates rather than promises, but they make the conversation with your artist much more concrete.": {
+   "hu": "A takarás nagyobb és hosszabb elköteleződés, mint a tetoválás, amit helyettesít. Az InkAge-ben egy új mintát a saját bőrödről készült fotóra helyezhetsz abban a méretben, amin gondolkodsz, és látod frissen, gyógyultan, valamint ahogy valószínűleg 10, 30 és 50 év múlva kinéz. Ha előbb halványítanál, a lézeres előnézet megmutatja, hogyan nézhet ki a régi tetoválás 3, 6 és 10 alkalom után. Mindkettő becslés, nem ígéret, de sokkal konkrétabbá teszi a beszélgetést a tetoválóddal.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Dani didn’t get the pastel hummingbird. She had three laser sessions to fade the name, waited until the skin had healed, and then got a dark-winged swallow with deep blue shading, a little bigger than the old name. You can’t read anything underneath it. If you want to cover a tattoo, remember the rule: dark covers light. Expect the new design to be bigger and bolder, choose an artist with healed cover-ups, and if your dream design is light or delicate, ask about fading first.": {
+   "hu": "Dani végül nem a pasztell kolibrit kapta. Három lézeres alkalommal halványíttatta a nevet, megvárta, amíg a bőr meggyógyul, aztán egy sötét szárnyú fecskét kapott mélykék árnyékolással, egy kicsit nagyobbat a régi névnél. Alatta semmit nem lehet kiolvasni. Ha el szeretnél takarni egy tetoválást, emlékezz a szabályra: a sötét eltakarja a világost. Számíts rá, hogy az új minta nagyobb és erősebb lesz, olyan tetoválót válassz, akinek van gyógyult takarómunkája, és ha az álmaid mintája világos vagy finom, kérdezz rá a halványításra.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Can any tattoo be covered up?": {
+   "hu": "Bármilyen tetoválást el lehet takarni?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Most tattoos can be covered in some way, but not with any design. Dark, dense or large tattoos limit the options to bigger, darker designs, and very dark ones may need a few laser sessions first if you want something lighter or smaller.": {
+   "hu": "A legtöbb tetoválást valamilyen módon el lehet takarni, de nem bármilyen mintával. A sötét, sűrű vagy nagy tetoválások nagyobb, sötétebb mintákra szűkítik a lehetőségeket, a nagyon sötéteknél pedig előbb néhány lézeres alkalom kellhet, ha valami világosabbat vagy kisebbet szeretnél.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "How much bigger does a cover-up need to be?": {
+   "hu": "Mennyivel kell nagyobbnak lennie egy takarásnak?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Usually noticeably bigger than the old tattoo, and sometimes much bigger, so that dark areas can sit over the old lines while the design still looks natural. The darker and denser the old tattoo, the more room is needed. Lightening it first can keep the new design smaller.": {
+   "hu": "Általában láthatóan nagyobbnak a régi tetoválásnál, néha sokkal nagyobbnak, hogy a sötét részek a régi vonalakra kerülhessenek, és a minta mégis természetesnek tűnjön. Minél sötétebb és sűrűbb a régi tetoválás, annál több hely kell. Az előzetes halványítással kisebb maradhat az új minta.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Can you cover a black tattoo with colour?": {
+   "hu": "Le lehet takarni egy fekete tetoválást színessel?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Only with dark, saturated colours placed over the old lines, such as deep greens, blues or reds alongside black. Light colours like yellow, pink, pastels or white will let the black show through. For a lighter colour design, fade the old tattoo with laser first.": {
+   "hu": "Csak sötét, telített színekkel, amelyek a régi vonalakra kerülnek, például mélyzölddel, kékkel vagy pirossal a fekete mellett. A világos színeken, például a sárgán, a rózsaszínen, a pasztelleken vagy a fehéren átlátszik a fekete. Világosabb színes mintához előbb lézerrel halványítsd a régi tetoválást.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "How many laser sessions do I need before a cover-up?": {
+   "hu": "Hány lézeres alkalom kell egy takarás előtt?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Often only a few, because the goal is to lighten the old tattoo, not remove it. It depends on how dark and dense it is. Ask your laser clinic and your tattoo artist together how light it needs to be, and let the skin heal fully before the cover-up.": {
+   "hu": "Gyakran csak néhány, mert a cél a régi tetoválás halványítása, nem az eltávolítása. Ez azon múlik, mennyire sötét és sűrű. Kérdezd meg együtt a lézeres klinikát és a tetoválódat, mennyire kell halványnak lennie, és hagyd teljesen meggyógyulni a bőrt a takarás előtt.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Is a cover-up better than laser removal?": {
+   "hu": "Jobb a takarás, mint a lézeres eltávolítás?",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "It depends on what you want. A cover-up gives you a new tattoo, usually bigger and darker, in less time. Laser gives you the skin back but takes many sessions. Many people combine them: a few laser sessions to fade, then a cover-up with more design freedom.": {
+   "hu": "Attól függ, mit szeretnél. A takarás új tetoválást ad, általában nagyobbat és sötétebbet, rövidebb idő alatt. A lézer visszaadja a bőrt, de sok alkalmat igényel. Sokan kombinálják őket: néhány lézeres alkalom a halványításra, aztán egy takarás nagyobb tervezési szabadsággal.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: an old, dark, dense tribal. The darker and denser a tattoo is, the bigger and darker the cover-up has to be.": {
+   "hu": "Illusztráció: egy régi, sötét, sűrű tribal. Minél sötétebb és sűrűbb a tetoválás, annál nagyobb és sötétebb takarás kell.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: drawing the new design over a photo of the old tattoo, so every dark area lands on an old line.": {
+   "hu": "Illusztráció: az új minta rajzolása a régi tetoválás fotójára, hogy minden sötét rész egy régi vonalra kerüljön.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: light colours over black lines. Ink is translucent, so the old lines show straight through.": {
+   "hu": "Illusztráció: világos színek fekete vonalakon. A tinta áttetsző, ezért a régi vonalak egyenesen átlátszanak.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: an old tattoo lightened by a few laser sessions. Now the new design has far more freedom.": {
+   "hu": "Illusztráció: néhány lézeres alkalommal halványított régi tetoválás. Az új mintának így sokkal több szabadsága van.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a blackout band. It hides almost anything, but it is a big, permanent change.": {
+   "hu": "Illusztráció: egy blackout sáv. Szinte bármit elrejt, de nagy és végleges változás.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a Japanese-style cover-up. Dense water and wind bars are natural camouflage for old ink.": {
+   "hu": "Illusztráció: japán stílusú takarás. A sűrű víz és a szélsávok természetes álcát adnak a régi tintának.",
+   "files": [
+    "lib/longform/cover-up-tattoos.ts"
    ],
    "kind": "obj"
   },
@@ -18971,15 +20790,6 @@
    ],
    "kind": "obj"
   },
-  "[[img5]]": {
-   "hu": "[[img5]]",
-   "files": [
-    "lib/longform/laser-removal-before-after.ts",
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts"
-   ],
-   "kind": "obj"
-  },
   "### Yellow, white and skin tones": {
    "hu": "### Sárga, fehér és bőrszínek",
    "files": [
@@ -19047,15 +20857,6 @@
    "hu": "Ha tehát valakinek a fotóján gyorsan eltűnt egy nyaktetoválás, ne gondold, hogy a bokád ugyanazt az időbeosztást követi.",
    "files": [
     "lib/longform/laser-removal-before-after.ts"
-   ],
-   "kind": "obj"
-  },
-  "[[img6]]": {
-   "hu": "[[img6]]",
-   "files": [
-    "lib/longform/laser-removal-before-after.ts",
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts"
    ],
    "kind": "obj"
   },
@@ -19164,15 +20965,6 @@
    ],
    "kind": "obj"
   },
-  "[[img7]]": {
-   "hu": "[[img7]]",
-   "files": [
-    "lib/longform/laser-removal-before-after.ts",
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts"
-   ],
-   "kind": "obj"
-  },
   "## See your own version first": {
    "hu": "## Először nézd meg a saját változatod",
    "files": [
@@ -19184,15 +20976,6 @@
    "hu": "Mások fotói csak ennyit tudnak elmondani. Az InkAge-ben a lézeres előnézet megmutatja, hogyan nézhet ki a saját tetoválásod 3, 6 és 10 alkalom után, így még a konzultáció előtt el tudod képzelni a foltos középső szakaszt és a valószínű végeredményt. Ha pedig még új tetováláson gondolkodsz, ugyanez az app megmutatja, hogyan fog valószínűleg öregedni a minta a bőrödön. Ez vizuális becslés, nem orvosi felmérés, a kezelésről szóló döntés bőrgyógyászé vagy képzett lézeres szakemberé.",
    "files": [
     "lib/longform/laser-removal-before-after.ts"
-   ],
-   "kind": "obj"
-  },
-  "## The short version": {
-   "hu": "## Röviden",
-   "files": [
-    "lib/longform/laser-removal-before-after.ts",
-    "lib/longform/laser-removal-how-many-sessions.ts",
-    "lib/longform/tattoo-before-and-after.ts"
    ],
    "kind": "obj"
   },
@@ -19312,6 +21095,538 @@
    "hu": "Illusztráció: világos folt egy egykori tetoválás helyén. A világosabb bőr elég gyakori, és hónapok alatt gyakran javul.",
    "files": [
     "lib/longform/laser-removal-before-after.ts"
+   ],
+   "kind": "obj"
+  },
+  "What is normal on day one, day three and week three, what to put on the skin, what to leave alone, and when to call someone.": {
+   "hu": "Mi a normális az első napon, a harmadikon és a harmadik héten, mit kenj a bőrre, mihez ne nyúlj, és mikor kérj segítséget.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Redness, swelling and tenderness on day one, blisters in the first few days and crusts in the first week or two are all common after laser removal.": {
+   "hu": "Az első napon a pirosság, a duzzanat és az érzékenység, az első napokban a hólyagok, az első egy-két hétben a pörkök mind gyakoriak lézeres eltávolítás után.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "The surface usually heals within about two to four weeks, while the ink keeps fading for weeks after that, which is why sessions are spaced at least six to eight weeks apart.": {
+   "hu": "A felszín általában nagyjából két-négy hét alatt gyógyul, a tinta viszont még utána is hetekig halványul, ezért kell legalább hat-nyolc hét a kezelések között.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Scars are mostly avoidable: don’t pop blisters or pick crusts, keep the area clean and out of the sun, and follow your clinic’s instructions.": {
+   "hu": "A heg többnyire elkerülhető: ne szúrd ki a hólyagokat, ne kapard le a pörköt, tartsd tisztán a területet és távol a naptól, és kövesd a klinika utasításait.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Petra woke up on the second morning after her first session with a blister the size of a grape on her forearm. Nobody had shown her a picture of that. The clinic’s leaflet said “blistering may occur”, which, at seven in the morning, did not feel like an adequate description of what she was looking at. She took three photos, googled “tattoo removal blister normal”, and read a stranger’s story about a scar that made her feel considerably worse. Then she called the clinic, and the person on the phone asked one question: “Is it getting redder and hotter, or is it just big?” It was just big.": {
+   "hu": "Petra az első kezelése utáni második reggelen egy szőlőszem méretű hólyaggal ébredt az alkarján. Erről senki nem mutatott neki képet. A klinika tájékoztatójában az állt, hogy „hólyagok képződhetnek”, ami reggel hétkor nem tűnt megfelelő leírásnak ahhoz, amit látott. Csinált három fotót, rákeresett, hogy normális-e a hólyag tetoválás-eltávolítás után, és elolvasta egy idegen történetét egy hegről, amitől csak rosszabbul érezte magát. Aztán felhívta a klinikát, ahol egyetlen kérdést tettek fel neki: „Egyre pirosabb és melegebb, vagy csak nagy?” Csak nagy volt.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Most of the fear around healing comes from not knowing what normal looks like. This guide walks through the usual timeline day by day, explains what to do and what to leave alone at each stage, and helps you tell ordinary healing from the few signs that do need attention. It is general guidance rather than medical advice, and if your clinic’s instructions differ from anything here, follow your clinic.": {
+   "hu": "A gyógyulással kapcsolatos félelmek nagy része abból jön, hogy nem tudjuk, milyen a normális. Ez a cikk napról napra végigmegy a szokásos folyamaton, elmagyarázza, mit tegyél és mihez ne nyúlj az egyes szakaszokban, és segít megkülönböztetni a hétköznapi gyógyulást attól a néhány jeltől, amivel tényleg foglalkozni kell. Általános útmutató, nem orvosi tanács. Ha a klinikád utasításai eltérnek az itt leírtaktól, a klinikádat kövesd.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "> A note on the pictures: the images in this article are illustrations made to show typical stages. They are not photos of real patients. Everyone heals differently.": {
+   "hu": "> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző szakaszokat mutatják. Nem valódi páciensekről készült fotók. Mindenki máshogy gyógyul.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "## What is actually happening in the skin": {
+   "hu": "## Mi történik valójában a bőrben?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "A laser pulse is absorbed by the ink, which heats up in a tiny fraction of a second and shatters. That sudden change also affects the skin around it: gas bubbles form, small blood vessels leak, and the top layers can separate slightly. Your body responds the way it responds to any small injury, with inflammation first, then repair. The swelling and blisters are part of that response, not a sign that something went wrong.": {
+   "hu": "A lézerimpulzust a tinta nyeli el, ami a másodperc töredéke alatt felforrósodik és széttörik. Ez a hirtelen változás a körülötte lévő bőrre is hat: gázbuborékok keletkeznek, apró erek szivárognak, a felső rétegek pedig kissé elválhatnak egymástól. A szervezeted úgy reagál, mint bármilyen kis sérülésre: először gyulladással, aztán javítással. A duzzanat és a hólyagok ennek a részei, nem annak a jelei, hogy valami elromlott.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Meanwhile, a separate and much slower job is going on deeper down. Immune cells gather up the shattered ink and carry it away. This is why your skin can look healed long before the tattoo has finished fading.": {
+   "hu": "Közben mélyebben egy külön, sokkal lassabb munka is folyik. Az immunsejtek összeszedik és elszállítják a széttört tintát. Ezért tűnhet a bőröd gyógyultnak jóval azelőtt, hogy a tetoválás befejezné a halványulást.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "!! Your skin heals in weeks. The ink keeps leaving for much longer. Those are two different clocks.": {
+   "hu": "!! A bőröd hetek alatt gyógyul. A tinta sokkal tovább távozik. Ez két különböző óra.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "## The healing timeline, day by day": {
+   "hu": "## A gyógyulás idővonala, napról napra",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Treat these as typical ranges rather than deadlines. Larger, denser and darker tattoos usually react more strongly, and areas such as ankles and feet often heal more slowly.": {
+   "hu": "Ezeket jellemző tartományként kezeld, ne határidőként. A nagyobb, sűrűbb és sötétebb tetoválások általában erősebben reagálnak, a boka és a lábfej pedig gyakran lassabban gyógyul.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "### The first minutes and hours": {
+   "hu": "### Az első percek és órák",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "The treated area often turns white for a few minutes, a reaction known as frosting. As it fades, the skin becomes red, warm and swollen, and it may feel like a sunburn. A little pinpoint bleeding can happen, especially on dense ink. Your clinic will usually apply a soothing ointment and a dressing before you leave.": {
+   "hu": "A kezelt terület néhány percre gyakran kifehéredik, ezt frostingnak, vagyis deresedésnek hívják. Ahogy elmúlik, a bőr piros, meleg és duzzadt lesz, és olyan érzés lehet, mint egy leégés. Kis pontszerű vérzés is előfordulhat, főleg sűrű tintánál. Távozás előtt a klinika általában nyugtató kenőcsöt és kötést tesz rá.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What helps:** a cold pack wrapped in a clean cloth, for short periods at a time, and raising the area if it is an arm or a leg. Never put ice straight on the skin. Ask your clinic which pain relief suits you, because some common painkillers can increase bruising.": {
+   "hu": "**Ami segít:** egy tiszta ruhába csavart hideg borogatás, rövid ideig egyszerre, és a terület felpolcolása, ha karról vagy lábról van szó. Jeget soha ne tegyél közvetlenül a bőrre. A fájdalomcsillapításról kérdezd a klinikát, mert egyes gyakori fájdalomcsillapítók fokozhatják a véraláfutást.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Days 1 to 3: swelling and blisters": {
+   "hu": "### 1–3. nap: duzzanat és hólyagok",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Swelling often peaks in this period, and blisters may appear, sometimes following the lines of the tattoo quite precisely. They can be small or surprisingly large. Blisters are common and are not a sign of a bad treatment, though not everyone gets them.": {
+   "hu": "A duzzanat gyakran ekkor a legerősebb, és hólyagok jelenhetnek meg, néha egészen pontosan követve a tetoválás vonalait. Lehetnek kicsik vagy meglepően nagyok. A hólyagok gyakoriak, és nem a rossz kezelés jelei, bár nem mindenkinek lesznek.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What helps:** leave blisters intact, because the roof of a blister protects the skin underneath. Keep the area clean, use the ointment and dressing your clinic recommended, and wear loose clothing that doesn’t rub. If a blister is very large or sits somewhere it keeps getting knocked, call your clinic instead of dealing with it yourself.": {
+   "hu": "**Ami segít:** hagyd épen a hólyagokat, mert a tetejük védi az alatta lévő bőrt. Tartsd tisztán a területet, használd a klinika által javasolt kenőcsöt és kötést, és viselj laza ruhát, ami nem dörzsöl. Ha egy hólyag nagyon nagy, vagy olyan helyen van, ahol folyton beleütöd, hívd a klinikát, ne intézd magad.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Days 3 to 7: oozing and crusts": {
+   "hu": "### 3–7. nap: szivárgás és pörkök",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Blisters start to flatten or drain by themselves, and thin crusts form along the treated lines. The area can feel tight, and it often starts to itch. This is usually a sign that repair is underway.": {
+   "hu": "A hólyagok elkezdenek lelapulni vagy maguktól kiürülni, és vékony pörkök képződnek a kezelt vonalakon. A terület feszülhet, és gyakran viszketni kezd. Ez általában annak a jele, hogy elindult a javítás.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What helps:** gently clean the area with mild, unscented soap and pat it dry. Keep it lightly moisturised or covered as your clinic advises. Showers are generally fine, but keep them short and don’t aim the water directly at the area.": {
+   "hu": "**Ami segít:** finoman tisztítsd meg a területet enyhe, illatmentes szappannal, és itasd szárazra. Tartsd enyhén hidratálva vagy fedve, ahogy a klinika javasolja. A zuhanyzás általában rendben van, de legyen rövid, és ne közvetlenül a területre irányítsd a vizet.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Weeks 1 to 2: flaking and itching": {
+   "hu": "### 1–2. hét: hámlás és viszketés",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Crusts lift and flake off on their own, and the itching can be at its most annoying now. The temptation to help them along is strong. Don’t. Skin that loses a crust too early is far more likely to scar or change colour.": {
+   "hu": "A pörkök maguktól felválnak és lehullanak, a viszketés pedig most lehet a legidegesítőbb. Erős a kísértés, hogy besegíts. Ne tedd. A túl korán elveszített pörk alatt a bőr sokkal nagyobb eséllyel hegesedik vagy változtat színt.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What helps:** a plain, fragrance-free moisturiser once your clinic says the surface is closed, and patting or tapping the skin rather than scratching it.": {
+   "hu": "**Ami segít:** egyszerű, illatmentes hidratáló, amint a klinika szerint zárt a felszín, és a bőr paskolása, ütögetése a vakarás helyett.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Weeks 2 to 4: new pink skin": {
+   "hu": "### 2–4. hét: új, rózsaszín bőr",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "The surface has usually closed by now, and the new skin is smooth, pink and thinner than the skin around it. It may look lighter or darker than your usual tone. This often settles slowly over the following months, so don’t judge the final colour at this point.": {
+   "hu": "A felszín ekkorra általában bezárult, az új bőr sima, rózsaszín, és vékonyabb a környezeténél. Világosabbnak vagy sötétebbnek tűnhet a szokásos tónusodnál. Ez a következő hónapokban gyakran lassan rendeződik, ezért most még ne a végső színt ítéld meg.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What helps:** this new skin burns very easily. Keep it covered, and once your clinic says it is healed, use a broad-spectrum SPF 50 every time it sees the sun.": {
+   "hu": "**Ami segít:** ez az új bőr nagyon könnyen leég. Tartsd takarva, és amint a klinika szerint meggyógyult, használj széles spektrumú, 50-es faktorú fényvédőt, valahányszor napot kap.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Weeks 4 to 8 and beyond: the ink keeps fading": {
+   "hu": "### 4–8. hét és utána: a tinta tovább halványul",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Your skin looks calm, but the tattoo may keep getting lighter week by week as your body carries the fragments away. This is why clinics usually leave **at least six to eight weeks** between sessions, and often longer on slower areas or darker skin. Going back too soon doesn’t speed things up, and it gives the skin less time to recover. Our guide to the Kirby–Desai scale explains how many sessions you can roughly expect.": {
+   "hu": "A bőröd nyugodtnak tűnik, de a tetoválás hétről hétre tovább világosodhat, ahogy a szervezeted elszállítja a darabokat. Ezért hagynak a klinikák általában **legalább hat-nyolc hetet** a kezelések között, a lassabb területeken vagy sötétebb bőrön gyakran többet. A túl korai visszatérés nem gyorsít semmit, és kevesebb időt hagy a bőrnek a regenerálódásra. A Kirby–Desai skáláról szóló cikkünk elmagyarázza, nagyjából hány alkalomra számíthatsz.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Aftercare: the short list": {
+   "hu": "## Utókezelés: a rövid lista",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Your clinic’s instructions come first. These are the general habits most clinics agree on.": {
+   "hu": "A klinikád utasításai az elsők. Ezek azok az általános szokások, amelyekben a legtöbb klinika egyetért.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Keep it clean.** Wash your hands before touching the area, and clean it gently with mild soap and water.": {
+   "hu": "- **Tartsd tisztán.** Mosd meg a kezed, mielőtt hozzányúlsz, és finoman tisztítsd a területet enyhe szappannal és vízzel.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Use what your clinic gave you.** Ointments and dressings vary, so don’t swap in your own products without asking.": {
+   "hu": "- **Azt használd, amit a klinikától kaptál.** A kenőcsök és kötések különböznek, ezért ne cseréld le a saját termékeidre kérdezés nélkül.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Leave blisters and crusts alone.** No popping, peeling or scratching.": {
+   "hu": "- **Hagyd békén a hólyagokat és a pörköket.** Se kiszúrás, se lehúzás, se vakarás.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Avoid soaking.** Stay out of baths, pools, the sea, saunas and hot tubs until the skin has fully closed.": {
+   "hu": "- **Kerüld az áztatást.** Maradj távol a kádtól, a medencétől, a tengertől, a szaunától és a jakuzzitól, amíg a bőr teljesen be nem zárult.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Go easy on exercise for a few days.** Heat, sweat and friction all irritate healing skin.": {
+   "hu": "- **Néhány napig edz kíméletesen.** A hő, az izzadság és a súrlódás mind irritálja a gyógyuló bőrt.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Skip makeup, perfume, exfoliants and retinoids** on the area until it has healed.": {
+   "hu": "- **Hagyd el a sminket, a parfümöt, a radírt és a retinoidokat** a területen, amíg meg nem gyógyult.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Protect it from the sun.** Cover it first, then use sunscreen once it has healed. No tanning beds.": {
+   "hu": "- **Óvd a naptól.** Először takard, aztán gyógyulás után használj fényvédőt. Szolárium nem jöhet szóba.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Look after your general health.** Sleep, hydration and not smoking all help your body heal.": {
+   "hu": "- **Figyelj az általános egészségedre.** Az alvás, a folyadék és a dohányzás kerülése mind segít a gyógyulásban.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "## How to avoid scars": {
+   "hu": "## Hogyan kerüld el a heget?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "With a skilled practitioner and sensible aftercare, scarring is uncommon, but it can happen, and it is worth knowing what raises the risk.": {
+   "hu": "Képzett szakemberrel és észszerű utókezeléssel a hegesedés nem gyakori, de előfordulhat, ezért érdemes tudni, mi növeli a kockázatát.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Picking and popping.** This is the cause you control most. Removing a crust early or tearing a blister opens the skin up to infection and deeper damage.": {
+   "hu": "- **Kapargatás és kiszúrás.** Erre van a legnagyobb ráhatásod. A pörk korai eltávolítása vagy a hólyag felszakítása megnyitja a bőrt a fertőzés és a mélyebb károsodás előtt.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Infection.** An infected wound is much more likely to leave a mark, which is why cleanliness matters so much in the first week.": {
+   "hu": "- **Fertőzés.** A fertőzött seb sokkal nagyobb eséllyel hagy nyomot, ezért olyan fontos a tisztaság az első héten.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Settings that are too aggressive, or sessions too close together.** This is one reason to choose an experienced practitioner who works at a sensible pace rather than one who promises the fastest result.": {
+   "hu": "- **Túl erős beállítások vagy túl sűrű kezelések.** Ez az egyik ok arra, hogy tapasztalt szakembert válassz, aki észszerű tempóban dolgozik, ne azt, aki a leggyorsabb eredményt ígéri.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Sun on healing skin.** Sunburn over a treated area increases the risk of lasting colour changes.": {
+   "hu": "- **Nap a gyógyuló bőrön.** A kezelt területen a leégés növeli a tartós színváltozás kockázatát.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Your own skin.** If you tend to form raised scars or keloids, or if the tattoo itself already has scar tissue, tell the clinic before you start. Darker skin tones also have a higher risk of pigment changes, which calls for careful settings.": {
+   "hu": "- **A saját bőröd.** Ha hajlamos vagy kiemelkedő hegekre vagy keloidra, vagy ha már a tetoválásban is van hegszövet, szólj a klinikának, mielőtt belevágsz. A sötétebb bőrtónusoknál a pigmentváltozás kockázata is nagyobb, ami gondos beállításokat kíván.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "What may look like a scar is sometimes something else. An older tattoo can have scar tissue that only becomes visible once the ink above it fades. And pale or dark patches are usually changes in pigment rather than in texture, and they often improve over months. If you are unsure, show it to your clinic or a dermatologist before the next session.": {
+   "hu": "Ami hegnek tűnik, néha valami más. Egy régebbi tetoválásban lehet olyan hegszövet, ami csak akkor válik láthatóvá, amikor a fölötte lévő tinta halványul. A világos vagy sötét foltok pedig általában a pigment változásai, nem a textúráé, és hónapok alatt gyakran javulnak. Ha bizonytalan vagy, a következő kezelés előtt mutasd meg a klinikádnak vagy egy bőrgyógyásznak.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "## When to contact your clinic or a doctor": {
+   "hu": "## Mikor keresd a klinikát vagy egy orvost?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Ordinary healing gradually gets better. Get in touch if it is getting worse instead.": {
+   "hu": "A hétköznapi gyógyulás fokozatosan javul. Jelentkezz, ha ehelyett rosszabbodik.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- Redness that **spreads** away from the treated area, or red streaks": {
+   "hu": "- A kezelt területről **továbbterjedő** pirosság vagy piros csíkok",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- Pain, heat or swelling that **increases** after the first couple of days": {
+   "hu": "- Az első pár nap után **erősödő** fájdalom, melegség vagy duzzanat",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- Yellow or green pus, or a bad smell": {
+   "hu": "- Sárga vagy zöld genny, illetve rossz szag",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- Fever or feeling unwell": {
+   "hu": "- Láz vagy rossz közérzet",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- A rash, hives or severe itching across a wider area, which may point to an allergic reaction": {
+   "hu": "- Kiütés, csalánkiütés vagy erős viszketés nagyobb területen, ami allergiás reakcióra utalhat",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "- A wound that is still open after a couple of weeks": {
+   "hu": "- Néhány hét után is nyitott seb",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "If you have trouble breathing or swelling of the face or throat, treat it as an emergency. And if you have diabetes, a condition that affects your immune system, or take medication that affects healing, mention it before your first session, because it may change the plan.": {
+   "hu": "Ha nehezen veszel levegőt, vagy duzzad az arcod vagy a torkod, kezeld vészhelyzetként. Ha pedig cukorbeteg vagy, az immunrendszeredet érintő betegséged van, vagy a gyógyulást befolyásoló gyógyszert szedsz, az első kezelés előtt szólj róla, mert ez módosíthatja a tervet.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "## See where it is heading": {
+   "hu": "## Nézd meg, merre tart",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "During the slow weeks between sessions, it helps to have something to look forward to. The InkAge laser preview shows what your own tattoo might look like after 3, 6 and 10 sessions. It is a visual estimate rather than a medical assessment, but many people find it easier to be patient when they can picture the next step. A weekly photo in the same light helps too, because day to day you won’t notice the change.": {
+   "hu": "A kezelések közötti lassú hetekben jó, ha van mit várni. Az InkAge lézeres előnézete megmutatja, hogyan nézhet ki a saját tetoválásod 3, 6 és 10 alkalom után. Ez vizuális becslés, nem orvosi felmérés, de sokaknak könnyebb türelmesnek lenni, ha el tudják képzelni a következő lépést. A hetente, ugyanabban a fényben készült fotó is segít, mert napról napra nem veszed észre a változást.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Petra’s blister flattened by itself three days later. The crust came off in the second week, the skin underneath was pink and smooth, and when she went back for her second session the tattoo was visibly lighter. Nothing had gone wrong; it had just looked alarming. Keep it clean, leave it alone, keep it out of the sun, and call someone if it is getting worse rather than better. Most of good healing is resisting the urge to help.": {
+   "hu": "Petra hólyagja három nappal később magától lelapult. A pörk a második héten levált, alatta rózsaszín és sima volt a bőr, a második kezelésre pedig már láthatóan világosabb volt a tetoválás. Semmi nem romlott el, csak ijesztően nézett ki. Tartsd tisztán, hagyd békén, óvd a naptól, és szólj valakinek, ha nem javul, hanem romlik. A jó gyógyulás nagy része abból áll, hogy ellenállsz a kísértésnek, hogy segíts neki.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "How long does it take to heal after laser tattoo removal?": {
+   "hu": "Mennyi idő alatt gyógyul a bőr lézeres eltávolítás után?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "The surface usually heals in about two to four weeks, and sometimes longer on hands, ankles and feet. The ink keeps fading for weeks after that, and any colour changes in the skin can take months to settle.": {
+   "hu": "A felszín általában nagyjából két-négy hét alatt gyógyul, a kézen, a bokán és a lábfejen néha tovább tart. A tinta utána még hetekig halványul, a bőr esetleges színváltozásai pedig hónapok alatt rendeződhetnek.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Are blisters normal after laser tattoo removal?": {
+   "hu": "Normális a hólyag lézeres eltávolítás után?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Yes, blisters are common in the first few days and can be surprisingly large. Don’t pop them, keep the area clean and contact your clinic if a blister is very large, painful or in an awkward spot.": {
+   "hu": "Igen, az első napokban gyakoriak a hólyagok, és meglepően nagyok is lehetnek. Ne szúrd ki őket, tartsd tisztán a területet, és keresd a klinikát, ha egy hólyag nagyon nagy, fájdalmas vagy kellemetlen helyen van.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Will laser tattoo removal leave a scar?": {
+   "hu": "Marad heg a lézeres eltávolítás után?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Usually not with a skilled practitioner and good aftercare, but it can happen. The risk rises with picking at crusts, infection, aggressive settings, sun on healing skin and a personal tendency to form raised scars.": {
+   "hu": "Képzett szakemberrel és jó utókezeléssel általában nem, de előfordulhat. A kockázatot növeli a pörkök kapargatása, a fertőzés, a túl erős beállítás, a nap a gyógyuló bőrön és a kiemelkedő hegekre való hajlam.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Can I shower or exercise after a laser session?": {
+   "hu": "Zuhanyozhatok vagy edzhetek egy lézeres kezelés után?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Short showers are generally fine, but don’t aim the water at the area and don’t soak it in baths, pools or the sea until it has closed. Go easy on exercise for a few days, and follow your clinic’s specific advice.": {
+   "hu": "A rövid zuhany általában rendben van, de ne a területre irányítsd a vizet, és ne áztasd kádban, medencében vagy a tengerben, amíg be nem zárult. Néhány napig edz kíméletesen, és kövesd a klinikád konkrét tanácsait.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "How long should I wait between laser sessions?": {
+   "hu": "Mennyit várjak két lézeres kezelés között?",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Usually at least six to eight weeks, and often longer on slower areas or darker skin. The skin needs to recover and the ink keeps clearing during that time, so shorter gaps mostly add risk rather than speed.": {
+   "hu": "Általában legalább hat-nyolc hetet, a lassabb területeken vagy sötétebb bőrön gyakran többet. Ez idő alatt a bőrnek regenerálódnia kell, a tinta pedig tovább ürül, ezért a rövidebb szünetek inkább kockázatot adnak hozzá, nem gyorsaságot.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: the first hours. Redness and swelling are normal, and a cold pack wrapped in a cloth can help.": {
+   "hu": "Illusztráció: az első órák. A pirosság és a duzzanat normális, és segíthet egy ruhába csavart hideg borogatás.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: blisters in the first days often follow the lines of the tattoo. Leave them intact.": {
+   "hu": "Illusztráció: az első napok hólyagjai gyakran követik a tetoválás vonalait. Hagyd őket épen.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: thin crusts around the end of the first week. They come off on their own when the skin beneath is ready.": {
+   "hu": "Illusztráció: vékony pörkök az első hét vége felé. Maguktól leválnak, amikor az alattuk lévő bőr készen áll.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: new pink skin after a few weeks. It burns easily, so keep it out of the sun.": {
+   "hu": "Illusztráció: új, rózsaszín bőr néhány hét után. Könnyen leég, ezért tartsd távol a naptól.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: shade and a light sleeve are the simplest protection until the skin has fully healed.": {
+   "hu": "Illusztráció: az árnyék és egy könnyű ujj a legegyszerűbb védelem, amíg a bőr teljesen meg nem gyógyul.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a small raised scar. Scars are uncommon with good care, but show anything like this to your clinic.": {
+   "hu": "Illusztráció: egy kis kiemelkedő heg. Jó ápolással ritka, de ha ilyet látsz, mutasd meg a klinikádnak.",
+   "files": [
+    "lib/longform/laser-removal-healing.ts"
    ],
    "kind": "obj"
   },
@@ -20813,6 +23128,482 @@
    ],
    "kind": "obj"
   },
+  "A burned fresh tattoo and a burned healed one need different care. What helps, what to avoid, and how to keep your ink out of trouble next summer.": {
+   "hu": "A leégett friss és a leégett gyógyult tetoválás másféle ápolást kíván. Mi segít, mit kerülj, és hogyan óvd a tintát a következő nyáron.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "If a fresh tattoo burns, cool it gently, keep it clean, don’t use products your artist hasn’t approved, and contact your artist or a doctor if it blisters badly or looks infected.": {
+   "hu": "Ha egy friss tetoválás leég, hűtsd finoman, tartsd tisztán, ne használj olyan terméket, amit a tetoválód nem hagyott jóvá, és keresd a tetoválódat vagy egy orvost, ha erősen hólyagos, vagy fertőzöttnek tűnik.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "A burned healed tattoo can be treated like any sunburn: cool water, a fragrance-free aftersun or aloe gel, no peeling. Repeated burns fade ink and age the skin.": {
+   "hu": "A leégett gyógyult tetoválás úgy kezelhető, mint bármilyen leégés: hűvös víz, illatmentes napozás utáni krém vagy aloe gél, nem hámozod. Az ismételt leégés halványítja a tintát, és öregíti a bőrt.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Giulia got the roses on her shoulder in early June and flew to the coast ten days later. She knew the rule about keeping a new tattoo out of the sun, she wore a loose shirt to the beach, and she was careful for exactly three days. On the fourth, she fell asleep on a sunbed for an hour with the shirt folded under her head. That evening the shoulder was bright red, hot to the touch, and the petals she had spent four hours on looked swollen and blurry. Her first message to her artist was a photo. Her second was: “Did I ruin it?”": {
+   "hu": "Giulia június elején csináltatta a rózsákat a vállára, és tíz nappal később elrepült a tengerpartra. Ismerte a szabályt, hogy az új tetoválást távol kell tartani a naptól, bő inget vett fel a strandra, és pontosan három napig volt óvatos. A negyediken egy órára elaludt egy napozóágyon, az inget a feje alá hajtva. Este a válla élénkpiros volt, tapintásra forró, és a szirmok, amiken négy órát dolgoztak, duzzadtnak és elmosódottnak tűntek. Az első üzenete a tetoválójának egy fotó volt. A második: „Tönkretettem?”",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Probably not, as it turned out. But a sunburn on a tattoo deserves a little more care than one on bare skin, and what you should do depends a lot on whether the tattoo is still healing or has already healed. This guide covers both, explains how long a new tattoo really needs to stay covered, and how to protect your ink so it keeps its colour for decades.": {
+   "hu": "Mint kiderült, valószínűleg nem. De egy leégés a tetováláson kicsit több törődést érdemel, mint a csupasz bőrön, és hogy mit tegyél, az nagyban attól függ, hogy a tetoválás még gyógyul, vagy már meggyógyult. Ez a cikk mindkettővel foglalkozik, elmagyarázza, valójában meddig kell takarni egy új tetoválást, és hogyan óvd a tintát, hogy évtizedekig megtartsa a színét.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "This is general guidance, not medical advice. If your artist or doctor has told you something different, follow them.": {
+   "hu": "Ez általános útmutató, nem orvosi tanács. Ha a tetoválód vagy az orvosod mást mondott, őket kövesd.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people’s tattoos.": {
+   "hu": "> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző helyzeteket mutatják. Nem valódi emberek tetoválásairól készült fotók.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Why the sun is hard on tattoos": {
+   "hu": "## Miért nehéz eset a nap a tetoválásnak?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Ultraviolet light does two kinds of damage. It breaks down pigment particles in the skin, slowly fading the ink, especially bright and light colours. And it ages the skin itself, which softens lines and makes the whole design look older. A sunburn is simply a big dose of that damage at once, plus inflammation on top.": {
+   "hu": "Az ultraibolya fény kétféle kárt okoz. Lebontja a bőrben lévő pigmentszemcséket, lassan halványítva a tintát, főleg az élénk és világos színeket. És magát a bőrt is öregíti, ami puhítja a vonalakat, és az egész mintát idősebbnek mutatja. A leégés egyszerűen ennek a kárnak egy nagy adagja egyszerre, tetejébe gyulladással.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "A fresh tattoo is more vulnerable still, because it is an open, healing wound. Sun on healing skin can slow healing, raise the risk of blistering and leave patchy or faded areas.": {
+   "hu": "A friss tetoválás még sérülékenyebb, mert nyílt, gyógyuló seb. A gyógyuló bőrt érő nap lassíthatja a gyógyulást, növeli a hólyagosodás kockázatát, és foltos vagy kifakult részeket hagyhat.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "!! A fresh tattoo and the sun should not meet until the tattoo has healed. After that, they should only meet with protection.": {
+   "hu": "!! A friss tetoválás és a nap ne találkozzon, amíg a tetoválás meg nem gyógyult. Utána is csak védelemmel.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## If your fresh tattoo got sunburned": {
+   "hu": "## Ha a friss tetoválásod égett le",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "By fresh, we mean a tattoo that is still healing: red, oozing, scabbing or peeling, usually the first two to four weeks.": {
+   "hu": "Friss alatt olyan tetoválást értünk, ami még gyógyul: piros, szivárog, pörkösödik vagy hámlik, általában az első két-négy hétben.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "1. **Get out of the sun and cool it down.** Rest a clean, cool, damp cloth on the area for a few minutes at a time, or let lukewarm to cool water run over it in the shower. Never put ice directly on the skin.": {
+   "hu": "1. **Menj ki a napról, és hűtsd le.** Tegyél rá egy tiszta, hűvös, nedves ruhát néhány percre, többször, vagy zuhany alatt folyasd rá a langyos-hűvös vizet. Jeget soha ne tegyél közvetlenül a bőrre.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "2. **Keep it clean.** Wash gently with mild, fragrance-free soap and pat dry, as you would during normal aftercare.": {
+   "hu": "2. **Tartsd tisztán.** Mosd meg finoman enyhe, illatmentes szappannal, és itasd szárazra, ahogy a normális utókezelés során.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "3. **Stick to the products your artist approved.** Many aftersun lotions and aloe gels contain alcohol, fragrance or other ingredients that can irritate an open wound. Check with your artist before putting anything new on a fresh tattoo.": {
+   "hu": "3. **Maradj a tetoválód által jóváhagyott termékeknél.** Sok napozás utáni krém és aloe gél tartalmaz alkoholt, illatanyagot vagy más összetevőt, ami irritálhatja a nyílt sebet. Mielőtt bármi újat kensz egy friss tetoválásra, kérdezd meg a tetoválódat.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "4. **Leave blisters alone.** Don’t pop them, and don’t peel skin that lifts. Let it come off on its own.": {
+   "hu": "4. **Hagyd békén a hólyagokat.** Ne szúrd ki őket, és ne húzd le a felváló bőrt. Hagyd, hogy magától leváljon.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "5. **Drink water and rest.** A sunburn dehydrates you, and healing goes better when you are well.": {
+   "hu": "5. **Igyál vizet, és pihenj.** A leégés kiszárít, a gyógyulás pedig jobban megy, ha jól vagy.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "6. **Tell your artist.** Send a photo. They can tell you what they recommend and whether you will likely need a touch-up once it has healed.": {
+   "hu": "6. **Szólj a tetoválódnak.** Küldj egy fotót. Elmondja, mit javasol, és hogy valószínűleg kell-e majd javítás, ha meggyógyult.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "**See a doctor** if the burn is blistering over a large area, if you have a fever, chills, dizziness or nausea, or if the tattoo shows signs of infection: spreading redness, increasing pain or warmth, pus or a bad smell.": {
+   "hu": "**Fordulj orvoshoz**, ha a leégés nagy területen hólyagos, ha lázad, hidegrázásod van, szédülsz vagy hányingered van, vagy ha a tetoválás fertőzés jeleit mutatja: terjedő pirosság, erősödő fájdalom vagy melegség, genny vagy rossz szag.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "### Will it ruin the tattoo?": {
+   "hu": "### Tönkreteszi a tetoválást?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Usually not. A sunburn during healing can make parts of the tattoo heal patchily or look lighter, especially on colour work and fine lines. In many cases a touch-up after the tattoo has fully settled fixes it. Wait until it has completely healed, at least four to six weeks and often longer, before you judge the result.": {
+   "hu": "Általában nem. A gyógyulás alatti leégéstől a tetoválás egyes részei foltosan gyógyulhatnak, vagy világosabbnak tűnhetnek, főleg a színes munkáknál és a finom vonalaknál. Sok esetben egy javítás megoldja, miután a tetoválás teljesen rendeződött. Várd meg, amíg teljesen meggyógyul, legalább négy-hat hetet, gyakran többet, mielőtt megítéled az eredményt.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## If your healed tattoo got sunburned": {
+   "hu": "## Ha a gyógyult tetoválásod égett le",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "A fully healed tattoo is ordinary skin with ink in it, so you can treat the burn as you would any sunburn.": {
+   "hu": "A teljesen gyógyult tetoválás hétköznapi bőr, benne tintával, ezért a leégést úgy kezelheted, mint bármilyen leégést.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Cool it:** cool showers or a damp, cool cloth.": {
+   "hu": "- **Hűtsd:** hűvös zuhany vagy egy nedves, hűvös ruha.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Soothe it:** a fragrance-free aftersun lotion or a plain aloe vera gel is fine on healed skin. Avoid products with alcohol or strong perfume, which can sting and dry the skin further.": {
+   "hu": "- **Nyugtasd:** gyógyult bőrön rendben van egy illatmentes napozás utáni krém vagy egy egyszerű aloe vera gél. Kerüld az alkoholos vagy erősen illatosított termékeket, amelyek csíphetnek, és tovább száríthatják a bőrt.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Moisturise:** keep the skin from drying out while it recovers.": {
+   "hu": "- **Hidratáld:** ne hagyd kiszáradni a bőrt, amíg regenerálódik.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Don’t peel it:** let flakes come away on their own, even over the tattoo.": {
+   "hu": "- **Ne hámozd:** hagyd, hogy a pikkelyek maguktól leváljanak, a tetováláson is.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Stay out of the sun** until the redness has gone, and cover the area when you go out again.": {
+   "hu": "- **Maradj távol a naptól**, amíg a pirosság el nem múlt, és takard a területet, amikor újra kimész.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "For pain relief, ask a pharmacist or doctor what is suitable for you. A severe burn, with large blisters, fever or feeling unwell, needs medical care whether or not there is a tattoo in it.": {
+   "hu": "A fájdalomcsillapításról kérdezz meg egy gyógyszerészt vagy orvost, mi való neked. A súlyos leégés nagy hólyagokkal, lázzal vagy rossz közérzettel orvosi ellátást igényel, akár van benne tetoválás, akár nincs.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "One burn rarely does visible damage to a healed tattoo. Repeated burns, summer after summer, are what fade ink and age the skin around it, and they also raise the risk of skin cancer. That is a good reason to keep an eye on moles near tattoos and to see a dermatologist about any spot that changes.": {
+   "hu": "Egyetlen leégés ritkán okoz látható kárt egy gyógyult tetoválásban. Az ismételt leégés, nyárról nyárra, az, ami halványítja a tintát, és öregíti körülötte a bőrt, ráadásul növeli a bőrrák kockázatát is. Ez jó ok arra, hogy figyeld a tetoválások közelében lévő anyajegyeket, és bőrgyógyásszal nézesd meg a változó foltokat.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "### When only one colour reacts": {
+   "hu": "### Amikor csak egy szín reagál",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Some people notice that part of a healed tattoo becomes raised, itchy or swollen after time in the sun, often only in one colour, most commonly red and sometimes yellow. This can be a reaction to that pigment and light together. It usually settles when you get out of the sun, but if it keeps happening or gets worse, mention it to a dermatologist.": {
+   "hu": "Néhányan észreveszik, hogy egy gyógyult tetoválás egy része a napon töltött idő után kiemelkedővé, viszketővé vagy duzzadttá válik, gyakran csak egyetlen színben, leggyakrabban a pirosban, néha a sárgában. Ez a pigment és a fény együttes hatására adott reakció lehet. Általában elmúlik, ha kimész a napról, de ha ismétlődik vagy rosszabbodik, szólj róla egy bőrgyógyásznak.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## How long should a new tattoo stay out of the sun?": {
+   "hu": "## Meddig ne érje nap az új tetoválást?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Until it has healed. For most tattoos that means the surface has closed, typically two to four weeks, and longer for large pieces or areas such as hands, feet and joints. During that time:": {
+   "hu": "Amíg meg nem gyógyult. A legtöbb tetoválásnál ez azt jelenti, hogy a felszín bezárult, ami jellemzően két-négy hét, a nagy mintáknál vagy az olyan helyeken, mint a kéz, a lábfej és az ízületek, tovább tart. Ez idő alatt:",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **cover it** with loose, breathable clothing, ideally tightly woven fabric": {
+   "hu": "- **takard** bő, légáteresztő ruhával, lehetőleg sűrű szövésű anyaggal",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **stay in the shade**, especially in the middle of the day": {
+   "hu": "- **maradj árnyékban**, főleg a déli órákban",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **don’t use sunscreen yet** on the open wound unless your artist recommends a specific product": {
+   "hu": "- **még ne használj fényvédőt** a nyílt sebre, hacsak a tetoválód nem javasol egy konkrét terméket",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **skip tanning beds entirely**; their UV does the same damage as the sun": {
+   "hu": "- **a szoláriumot teljesen hagyd ki**; az UV-je ugyanazt a kárt okozza, mint a nap",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Once it has healed, the new skin is still delicate for a while and burns easily. Be especially careful during the first summer of a new tattoo.": {
+   "hu": "Gyógyulás után az új bőr még egy ideig érzékeny, és könnyen leég. Egy új tetoválás első nyarán különösen óvatos legyél.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Protecting healed tattoos for the long run": {
+   "hu": "## A gyógyult tetoválás hosszú távú védelme",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Sun protection is the single most effective habit for keeping a tattoo crisp and colourful for decades.": {
+   "hu": "A fényvédelem a leghatékonyabb szokás ahhoz, hogy egy tetoválás évtizedekig éles és színes maradjon.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Use a broad-spectrum SPF 50** on any tattoo that sees the sun. Apply it generously, about 15 minutes before going out.": {
+   "hu": "- **Használj széles spektrumú, 50-es faktorú fényvédőt** minden napot kapó tetováláson. Kend fel bőven, nagyjából 15 perccel kimenetel előtt.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Reapply every two hours**, and after swimming, sweating or towelling off.": {
+   "hu": "- **Kend újra kétóránként**, valamint fürdés, izzadás vagy törölközés után.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Clothing beats cream.** A light long sleeve, a hat or a UPF swim shirt protects without needing to be reapplied.": {
+   "hu": "- **A ruha jobb a krémnél.** Egy könnyű hosszú ujj, egy kalap vagy egy UPF-es fürdőpóló újrakenés nélkül is véd.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Sticks are handy** for small tattoos on hands, ankles and the neck, where lotion gets forgotten.": {
+   "hu": "- **A stift kényelmes** a kézen, a bokán és a nyakon lévő kis tetoválásokhoz, ahol a krém könnyen kimarad.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Don’t forget cloudy days**: UV gets through clouds.": {
+   "hu": "- **Ne felejtsd el a felhős napokat se**: az UV átjut a felhőkön.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "### What about self-tanner?": {
+   "hu": "### És az önbarnító?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Self-tanner doesn’t involve UV, so on a fully healed tattoo it is generally fine. It colours the outer layer of skin around and over the ink, which can lower the contrast a little until it wears off. Don’t use it on a fresh or healing tattoo, and test a small area first if your skin is sensitive.": {
+   "hu": "Az önbarnítónál nincs UV, ezért egy teljesen gyógyult tetováláson általában rendben van. A tinta körüli és feletti bőr külső rétegét színezi, ami kicsit csökkentheti a kontrasztot, amíg le nem kopik. Friss vagy gyógyuló tetoválásra ne használd, érzékeny bőrön pedig előbb próbáld ki egy kis területen.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "## See how the sun changes a tattoo over the years": {
+   "hu": "## Nézd meg, hogyan változtatja a nap a tetoválást az évek során",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Sun is the biggest difference between a tattoo that still looks sharp at fifty and one that looks tired at thirty. In InkAge you can see a design on a photo of your own skin fresh, healed and as it is likely to look after 10, 30 and 50 years. It is an estimate, not a forecast of your summers, but seeing the future version is a strong reminder to pack the sunscreen.": {
+   "hu": "A nap a legnagyobb különbség egy ötvenévesen is éles és egy harmincévesen már fáradt tetoválás között. Az InkAge-ben egy mintát a saját bőrödről készült fotón láthatsz frissen, gyógyultan, valamint ahogy valószínűleg 10, 30 és 50 év múlva kinéz. Ez becslés, nem a nyaraid előrejelzése, de a jövőbeli változat látványa erős emlékeztető, hogy tedd el a fényvédőt.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Giulia’s roses healed with one slightly lighter petal, which her artist touched up two months later. Now she keeps an SPF stick in her beach bag and wears a loose shirt for the hottest hours. If your tattoo is fresh, keep it covered and get advice if it burns. If it has healed, treat the burn like any sunburn and protect it better next time. Either way, the tattoo will thank you in twenty years.": {
+   "hu": "Giulia rózsái egy kicsit világosabb szirommal gyógyultak, amit a tetoválója két hónappal később kijavított. Most egy fényvédő stift van a strandtáskájában, és a legmelegebb órákban bő inget visel. Ha friss a tetoválásod, takard, és kérj tanácsot, ha leég. Ha már meggyógyult, kezeld a leégést, mint bármilyen leégést, és legközelebb védd jobban. A tetoválásod húsz év múlva mindkét esetben hálás lesz.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "What should I do if my new tattoo gets sunburned?": {
+   "hu": "Mit tegyek, ha leég az új tetoválásom?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Get out of the sun, cool it gently with a cool damp cloth or water, keep it clean and only use products your artist has approved. Don’t pop blisters. Tell your artist, and see a doctor if it blisters badly, you feel unwell or it shows signs of infection.": {
+   "hu": "Menj ki a napról, hűtsd finoman egy hűvös, nedves ruhával vagy vízzel, tartsd tisztán, és csak a tetoválód által jóváhagyott termékeket használd. Ne szúrd ki a hólyagokat. Szólj a tetoválódnak, és fordulj orvoshoz, ha erősen hólyagos, rosszul érzed magad, vagy fertőzés jeleit mutatja.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Can I put aftersun or aloe vera on my tattoo?": {
+   "hu": "Kenhetek napozás utáni krémet vagy aloe verát a tetoválásomra?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "On a fully healed tattoo, yes: a fragrance-free aftersun or plain aloe gel is fine. On a fresh, healing tattoo, check with your artist first, because many of these products contain alcohol or fragrance that can irritate an open wound.": {
+   "hu": "Teljesen gyógyult tetováláson igen: egy illatmentes napozás utáni krém vagy egyszerű aloe gél rendben van. Friss, gyógyuló tetováláson előbb kérdezd meg a tetoválódat, mert sok ilyen termék tartalmaz alkoholt vagy illatanyagot, ami irritálhatja a nyílt sebet.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "How long should I keep a new tattoo out of the sun?": {
+   "hu": "Meddig tartsam távol a naptól az új tetoválást?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Until it has healed, typically two to four weeks and longer for large pieces or hands, feet and joints. Cover it with loose clothing and stay in the shade. After that, protect it with a broad-spectrum SPF 50, and be extra careful during its first summer.": {
+   "hu": "Amíg meg nem gyógyul, ez jellemzően két-négy hét, a nagy mintáknál vagy a kézen, a lábfejen és az ízületeken tovább. Takard bő ruhával, és maradj árnyékban. Utána védd széles spektrumú, 50-es faktorú fényvédővel, és az első nyarán legyél különösen óvatos.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Does sunburn ruin a tattoo?": {
+   "hu": "Tönkreteszi a leégés a tetoválást?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "One burn rarely ruins a tattoo. On a fresh tattoo it can cause patchy healing that a touch-up usually fixes. Repeated sunburns over the years are what really fade ink and age the skin around it.": {
+   "hu": "Egyetlen leégés ritkán teszi tönkre a tetoválást. Friss tetováláson foltos gyógyulást okozhat, amit általában egy javítás megold. Az évek során ismétlődő leégés az, ami igazán halványítja a tintát, és öregíti körülötte a bőrt.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Can I use self-tanner on a tattoo?": {
+   "hu": "Használhatok önbarnítót a tetováláson?",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "On a fully healed tattoo, self-tanner is generally fine because it doesn’t involve UV; it may lower the contrast a little until it wears off. Don’t use it on a fresh or healing tattoo, and avoid tanning beds altogether.": {
+   "hu": "Teljesen gyógyult tetováláson az önbarnító általában rendben van, mert nincs benne UV; kicsit csökkentheti a kontrasztot, amíg le nem kopik. Friss vagy gyógyuló tetoválásra ne használd, a szoláriumot pedig teljesen kerüld.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a loose sleeve and shade are the best protection for a tattoo that is still healing.": {
+   "hu": "Illusztráció: a bő ujj és az árnyék a legjobb védelem egy még gyógyuló tetoválásnak.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a cool, damp cloth first. Never put ice directly on burned skin.": {
+   "hu": "Illusztráció: először egy hűvös, nedves ruha. Jeget soha ne tegyél közvetlenül a leégett bőrre.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: plain, fragrance-free aloe gel on a healed tattoo. On a fresh one, ask your artist first.": {
+   "hu": "Illusztráció: egyszerű, illatmentes aloe gél egy gyógyult tetováláson. Friss tetoválásnál előbb kérdezd a tetoválódat.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: peeling after a burn. Let the flakes come off on their own, even over the tattoo.": {
+   "hu": "Illusztráció: hámlás leégés után. Hagyd, hogy a pikkelyek maguktól leváljanak, a tetováláson is.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: only the red parts raised after sun. A dermatologist can tell you more if it keeps happening.": {
+   "hu": "Illusztráció: napozás után csak a piros részek emelkedtek ki. Ha ismétlődik, egy bőrgyógyász többet tud mondani.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: a hat, shade and SPF 50 on a tattooed hand. Clothing and sunscreen together protect best.": {
+   "hu": "Illusztráció: kalap, árnyék és 50-es faktor egy tetovált kézen. A ruha és a fényvédő együtt véd a legjobban.",
+   "files": [
+    "lib/longform/sunburned-tattoo.ts"
+   ],
+   "kind": "obj"
+  },
   "The first weeks of healing and the sun decide most of your tattoo’s future – these small habits add years to your ink.": {
    "hu": "A tetoválásod jövőjét főleg az első hetek és a nap döntik el – ezek az apró szokások éveket adnak a tintának.",
    "files": [
@@ -21481,7 +24272,8 @@
   "How do I know if my tattoo is infected?": {
    "hu": "Honnan tudom, hogy elfertőződött a tetoválásom?",
    "files": [
-    "lib/longform/tattoo-aftercare-sun-protection.ts"
+    "lib/longform/tattoo-aftercare-sun-protection.ts",
+    "lib/longform/tattoo-healing-stages.ts"
    ],
    "kind": "obj"
   },
@@ -22595,6 +25387,531 @@
    "hu": "A hetente, ugyanabban a fényben készült fotók a legmegbízhatóbb módja, hogy megkülönböztesd a gyógyulást a blowouttól.",
    "files": [
     "lib/longform/tattoo-blowout.ts"
+   ],
+   "kind": "obj"
+  },
+  "Oozing, scabs, peeling and the strange cloudy stage: what a new tattoo goes through, what to do at each step and when to worry.": {
+   "hu": "Szivárgás, pörk, hámlás és a furcsa, tejes szakasz: min megy át egy új tetoválás, mit tegyél az egyes lépéseknél, és mikor aggódj.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Day 1–3: red, warm, a little swollen and oozing. Days 4–7: tight, dry, light scabs. Weeks 2–3: peeling, itching and a dull, cloudy look.": {
+   "hu": "1–3. nap: piros, meleg, kicsit duzzadt és szivárog. 4–7. nap: feszes, száraz, vékony pörk. 2–3. hét: hámlik, viszket, és fakónak, tejesnek tűnik.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "The surface usually closes in about two to four weeks, but the deeper skin keeps settling for up to around three months. Only then do you see the real result.": {
+   "hu": "A felszín általában nagyjából két-négy hét alatt zárul, a mélyebb bőr viszont akár három hónapig is rendeződik. Csak akkor látod a valódi eredményt.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Wash gently, moisturise thinly, don’t pick or soak, and keep it out of the sun. Your artist’s instructions come first.": {
+   "hu": "Mosd finoman, hidratáld vékonyan, ne vakard, ne áztasd, és tartsd távol a naptól. A tetoválód utasításai az elsők.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Spreading redness, increasing pain or heat after the first days, pus or fever are not normal healing. Contact a doctor.": {
+   "hu": "A terjedő pirosság, az első napok után erősödő fájdalom vagy melegség, a genny és a láz nem normális gyógyulás. Fordulj orvoshoz.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "On the fifth night after his first tattoo, Marco took a photo of his forearm under the kitchen light and sent it to his sister with one word: “normal?” The sharp black swallow he had admired in the studio mirror now looked dull and flaky, with tiny dry patches along the lines, and one wing seemed lighter than the other. His sister, who has nine tattoos, replied with a laughing emoji and a single sentence: “Wait for the milky stage, that one is worse.”": {
+   "hu": "Az első tetoválása utáni ötödik estén Marco lefotózta az alkarját a konyhai lámpa alatt, és elküldte a nővérének egyetlen szóval: „normális?” Az éles fekete fecske, amit a szalon tükrében csodált, most fakónak és hámlónak tűnt, a vonalak mentén apró száraz foltokkal, és az egyik szárny világosabbnak látszott a másiknál. A nővére, akinek kilenc tetoválása van, egy nevető emojival és egyetlen mondattal válaszolt: „Várd meg a tejes szakaszt, az rosszabb.”",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Almost everyone goes through a version of this. A fresh tattoo changes a lot in its first weeks, and some of those changes look alarming if nobody has warned you about them. This guide walks you through the usual stages one by one, with what you are likely to see, what to do and what to leave alone. Healing varies with the size of the tattoo, the placement, the style and your skin, so treat the timings as typical ranges. And if your artist gave you different instructions, follow your artist.": {
+   "hu": "Szinte mindenki átesik ennek valamilyen változatán. Egy friss tetoválás sokat változik az első hetekben, és ezek közül néhány változás ijesztően néz ki, ha senki nem figyelmeztetett rájuk. Ez a cikk egyenként végigvezet a szokásos szakaszokon: mit fogsz valószínűleg látni, mit tegyél, és mihez ne nyúlj. A gyógyulás a tetoválás méretétől, helyétől, stílusától és a bőrödtől függ, ezért az időpontokat jellemző tartományként kezeld. Ha pedig a tetoválód mást mondott, a tetoválódat kövesd.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "> A note on the pictures: the images in this article are illustrations made to show typical stages. They are not photos of real clients. Your own tattoo may look different at each step.": {
+   "hu": "> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző szakaszokat mutatják. Nem valódi vendégekről készült fotók. A saját tetoválásod minden lépésnél másképp nézhet ki.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Why a tattoo has to heal at all": {
+   "hu": "## Miért kell egyáltalán gyógyulnia egy tetoválásnak?",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "A tattoo machine pushes ink through the top layer of your skin, the epidermis, into the layer beneath it, the dermis. Thousands of tiny punctures later, your skin treats the area exactly like a fresh graze. It becomes inflamed, it seals itself, it grows a new top layer, and it sheds the damaged one. The ink that sits in the dermis stays put. The ink caught in the outer layer leaves with the old skin, which is why some flakes and scabs look coloured.": {
+   "hu": "A tetoválógép a bőr felső rétegén, a hámon át juttatja a tintát az alatta lévő rétegbe, az irhába. Több ezer apró szúrás után a bőröd pontosan úgy kezeli a területet, mint egy friss horzsolást. Begyullad, lezárja magát, új felső réteget növeszt, és levedli a sérültet. Az irhában lévő tinta a helyén marad. A külső rétegben ragadt tinta a régi bőrrel távozik, ezért színes néhány hámlás és pörk.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Two things run at different speeds. The surface heals in a few weeks. The deeper skin takes longer to settle, often around three months, and until then the tattoo can look slightly softer or duller than it will in the end.": {
+   "hu": "Két dolog fut eltérő tempóban. A felszín néhány hét alatt gyógyul. A mélyebb bőrnek tovább tart rendeződnie, gyakran nagyjából három hónapig, és addig a tetoválás kicsit puhábbnak vagy fakóbbnak tűnhet, mint végül lesz.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "!! A healing tattoo looks worse before it looks right. That is the process, not a problem.": {
+   "hu": "!! A gyógyuló tetoválás előbb rosszabbul néz ki, mielőtt jól nézne ki. Ez a folyamat, nem a probléma.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Stage 1: days 1 to 3, red, swollen and oozing": {
+   "hu": "## 1. szakasz: 1–3. nap, piros, duzzadt és szivárog",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "For the first few days the tattoo is an open wound. It is usually red, warm to the touch and a little swollen, especially on bony or busy areas such as ankles, wrists and ribs. It weeps clear plasma, sometimes mixed with a little ink and blood, and it can feel like a mild sunburn.": {
+   "hu": "Az első néhány napban a tetoválás nyílt seb. Általában piros, tapintásra meleg és kicsit duzzadt, főleg a csontos vagy sokat mozgó helyeken, például a bokán, a csuklón és a bordákon. Átlátszó nyirkot szivárogtat, néha egy kis tintával és vérrel keverve, és olyan érzés lehet, mint egy enyhe leégés.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to do:** keep the first covering on for as long as your artist said. Some use a breathable adhesive film that stays on for a few days, others a wrap that comes off after a few hours. Once it is off, wash the tattoo gently with lukewarm water and a mild, fragrance-free soap, pat it dry with a clean paper towel and let it air for a few minutes before applying a very thin layer of the ointment or lotion your artist recommends.": {
+   "hu": "**Mit tegyél:** az első takarást addig hagyd rajta, ameddig a tetoválód mondta. Van, aki légáteresztő öntapadó fóliát használ, ami néhány napig marad fent, más fóliát, ami néhány óra után lejön. Ha lekerült, mosd meg finoman langyos vízzel és enyhe, illatmentes szappannal, itasd szárazra egy tiszta papírtörlővel, és hagyd pár percig levegőzni, mielőtt nagyon vékonyan felviszed a tetoválód által javasolt kenőcsöt vagy krémet.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to avoid:** wiping hard, rough towels, tight clothes rubbing on it, and the temptation to cover it with a thick layer of cream. Skin needs to breathe.": {
+   "hu": "**Mit kerülj:** az erős törölgetést, a durva törölközőt, a rá dörzsölődő szűk ruhát, és a kísértést, hogy vastag krémréteggel fedd be. A bőrnek levegő kell.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Stage 2: days 4 to 7, tight, dry and lightly scabbed": {
+   "hu": "## 2. szakasz: 4–7. nap, feszes, száraz és enyhén pörkös",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "The redness fades and the swelling goes down. The surface starts to dry out, it may feel tight when you move, and thin scabs or slightly raised dry patches form along the lines, especially where the ink is dense. This is often when the tattoo looks dull for the first time, and when people like Marco start sending photos to their siblings.": {
+   "hu": "A pirosság halványul, a duzzanat lemegy. A felszín kezd kiszáradni, mozgáskor feszülhet, és a vonalak mentén vékony pörkök vagy kicsit kiemelkedő száraz foltok képződnek, főleg ott, ahol sűrű a tinta. Ilyenkor tűnik a tetoválás először fakónak, és ilyenkor kezdenek a Marcóhoz hasonlók fotókat küldözgetni a testvéreiknek.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to do:** keep washing it gently once or twice a day and keep it lightly moisturised. Thin is the key word: a shiny, sticky layer can soften scabs and make them come off too early.": {
+   "hu": "**Mit tegyél:** továbbra is mosd finoman naponta egyszer-kétszer, és tartsd enyhén hidratálva. A kulcsszó a vékony: egy fényes, ragacsos réteg felpuhíthatja a pörköt, és túl korán leválaszthatja.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to avoid:** picking, scratching or peeling anything. A scab pulled off early can take ink with it and leave a light patch that needs a touch-up.": {
+   "hu": "**Mit kerülj:** a piszkálást, a vakarást és bármi lehúzását. A korán letépett pörk tintát is vihet magával, és világos foltot hagyhat, amit javítani kell.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Stage 3: days 7 to 14, peeling and itching": {
+   "hu": "## 3. szakasz: 7–14. nap, hámlás és viszketés",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "This is the stage most people find hardest. The tattoo peels like a sunburn, often in small coloured flakes, and it can be very itchy. Lines may look uneven or patchy under the peeling skin. This is normal, and it is not a sign that the ink is falling out.": {
+   "hu": "A legtöbben ezt a szakaszt találják a legnehezebbnek. A tetoválás úgy hámlik, mint egy leégés, gyakran apró színes pikkelyekben, és nagyon viszkethet. A hámló bőr alatt a vonalak egyenetlennek vagy foltosnak tűnhetnek. Ez normális, és nem azt jelenti, hogy kihullik a tinta.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to do:** if the itch is driving you mad, lightly tap or pat the area rather than scratching it, or press a clean, cool cloth on it for a moment. Keep moisturising thinly. Loose sleeves help.": {
+   "hu": "**Mit tegyél:** ha az őrületbe kerget a viszketés, finoman ütögesd vagy paskold meg a területet vakarás helyett, vagy nyomj rá egy pillanatra egy tiszta, hideg ruhát. Továbbra is hidratáld vékonyan. A bő ujj segít.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to avoid:** baths, swimming pools, the sea, saunas and hot tubs. Soaking softens the healing skin and raises the risk of infection. Short showers are fine.": {
+   "hu": "**Mit kerülj:** a kádat, a medencét, a tengert, a szaunát és a jakuzzit. Az áztatás felpuhítja a gyógyuló bőrt, és növeli a fertőzés kockázatát. A rövid zuhany rendben van.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Stage 4: weeks 2 to 4, the cloudy “milky” stage": {
+   "hu": "## 4. szakasz: 2–4. hét, a felhős, „tejes” szakasz",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "The flakes are gone and the surface feels smooth again, but the tattoo looks strangely faded, as if it were behind frosted glass. Colours seem pale, black looks grey and fine lines look soft. This is the stage Marco’s sister warned him about.": {
+   "hu": "A pikkelyek eltűntek, a felszín újra sima, a tetoválás viszont furcsán kifakultnak tűnik, mintha tejüveg mögött lenne. A színek sápadtak, a fekete szürkének látszik, a finom vonalak puhák. Erre a szakaszra figyelmeztette Marcót a nővére.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "What you are seeing is a fresh, thin layer of new skin over the ink. It is still settling, slightly shiny and not yet fully transparent. Over the following weeks it clears, and the tattoo comes back to life. Many people panic here and book a touch-up straight away. Don’t. Wait until the skin has settled before you decide anything.": {
+   "hu": "Amit látsz, az egy friss, vékony új bőrréteg a tinta fölött. Még rendeződik, kicsit fényes, és még nem teljesen átlátszó. A következő hetekben kitisztul, és a tetoválás újra életre kel. Sokan itt pánikba esnek, és azonnal javítást foglalnak. Ne tedd. Várd meg, amíg a bőr megnyugszik, mielőtt bármiről döntesz.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "**What to do:** keep moisturising if your skin feels dry, and keep the tattoo out of the sun. New skin burns very easily.": {
+   "hu": "**Mit tegyél:** hidratáld tovább, ha szárazságot érzel, és tartsd távol a tetoválást a naptól. Az új bőr nagyon könnyen leég.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Stage 5: months 1 to 3, fully settled": {
+   "hu": "## 5. szakasz: 1–3. hónap, teljesen rendeződik",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Somewhere between four weeks and three months, depending on the tattoo and your skin, the deeper layers finish settling. The tattoo looks matte rather than shiny, the colours are steady and the lines are as crisp as they are going to be. This is the version you should judge.": {
+   "hu": "Valahol négy hét és három hónap között, a tetoválástól és a bőrödtől függően, a mélyebb rétegek befejezik a rendeződést. A tetoválás inkább matt, mint fényes, a színek stabilak, a vonalak pedig olyan élesek, amilyenek lesznek. Ezt a változatot érdemes megítélni.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "If a line has healed patchy or a solid area looks uneven at this point, that is what touch-ups are for. Most artists want you to wait at least a month, often longer, before they go over anything, and many include a first touch-up in the price.": {
+   "hu": "Ha ekkor egy vonal foltosan gyógyult, vagy egy telt felület egyenetlennek tűnik, arra való a javítás. A legtöbb tetováló azt szeretné, hogy legalább egy hónapot, gyakran többet várj, mielőtt bármit áthúz, és sokan az árban benne foglalják az első javítást.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## Aftercare in one list": {
+   "hu": "## Utókezelés egy listában",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Your artist’s instructions come first, because products and methods vary. These are the habits most artists agree on.": {
+   "hu": "A tetoválód utasításai az elsők, mert a termékek és a módszerek különböznek. Ezek azok a szokások, amelyekben a legtöbb tetováló egyetért.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "1. **Wash your hands before touching it.** Every time.": {
+   "hu": "1. **Mosd meg a kezed, mielőtt hozzányúlsz.** Minden alkalommal.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "2. **Clean gently.** Lukewarm water, mild fragrance-free soap, fingertips only, then pat dry.": {
+   "hu": "2. **Tisztítsd finoman.** Langyos víz, enyhe illatmentes szappan, csak az ujjbegyeiddel, aztán itasd szárazra.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "3. **Moisturise thinly.** A thin layer of what your artist recommends, a few times a day. Less is more.": {
+   "hu": "3. **Hidratáld vékonyan.** Vékony réteg abból, amit a tetoválód javasol, naponta néhányszor. A kevesebb több.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "4. **Let it breathe.** Loose clothing, clean bedding, no tight straps over it.": {
+   "hu": "4. **Hagyd levegőzni.** Bő ruha, tiszta ágynemű, ne legyen rajta szoros pánt.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "5. **Don’t pick or scratch.** Let scabs and flakes come off on their own.": {
+   "hu": "5. **Ne piszkáld, ne vakard.** Hagyd, hogy a pörk és a hámlás maguktól leváljanak.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "6. **Don’t soak it.** No baths, pools, sea or saunas until it has fully closed.": {
+   "hu": "6. **Ne áztasd.** Kád, medence, tenger és szauna csak azután, hogy teljesen bezárult.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "7. **Keep it out of the sun.** Cover it while it heals, then use a broad-spectrum SPF 50 once it has healed.": {
+   "hu": "7. **Tartsd távol a naptól.** Gyógyulás alatt takard, utána használj széles spektrumú, 50-es faktorú fényvédőt.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "8. **Go easy on the gym.** Heavy sweating and friction can irritate it in the first days, especially on joints.": {
+   "hu": "8. **Kíméletesen az edzéssel.** Az első napokban az erős izzadás és a súrlódás irritálhatja, főleg az ízületeken.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## When healing is not normal": {
+   "hu": "## Amikor a gyógyulás nem normális",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Normal healing gets a little better every day. Contact a doctor, and let your artist know, if you notice any of these:": {
+   "hu": "A normális gyógyulás minden nap egy kicsit jobb. Fordulj orvoshoz, és szólj a tetoválódnak is, ha ezek közül bármelyiket észreveszed:",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- redness or warmth that **spreads** beyond the tattoo, or red streaks": {
+   "hu": "- a tetováláson túl **terjedő** pirosság vagy melegség, illetve piros csíkok",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- pain or swelling that **gets worse** after the first two or three days": {
+   "hu": "- az első két-három nap után **erősödő** fájdalom vagy duzzanat",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- yellow or green pus, or a bad smell": {
+   "hu": "- sárga vagy zöld genny, illetve rossz szag",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- fever, chills or feeling unwell": {
+   "hu": "- láz, hidegrázás vagy rossz közérzet",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- an itchy, bumpy rash limited to one colour of ink, which can point to an allergic reaction, most often to red": {
+   "hu": "- egyetlen tintaszínre korlátozódó, viszkető, dudoros kiütés, ami allergiás reakcióra utalhat, leggyakrabban a pirosra",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- a wound that is still open after a few weeks": {
+   "hu": "- néhány hét után is nyitott seb",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "If you have a condition that affects healing, such as diabetes, or take medication that affects your immune system or bleeding, talk to your doctor before you get tattooed.": {
+   "hu": "Ha olyan betegséged van, ami befolyásolja a gyógyulást, például cukorbetegség, vagy az immunrendszeredre vagy a vérzésre ható gyógyszert szedsz, tetoválás előtt beszélj az orvosoddal.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## How long until I can…?": {
+   "hu": "## Mennyi idő múlva…?",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "These are typical answers. When in doubt, ask your artist.": {
+   "hu": "Ezek jellemző válaszok. Ha bizonytalan vagy, kérdezd a tetoválódat.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Shower:** usually the same day or the next, briefly.": {
+   "hu": "- **Zuhanyozhatok:** általában még aznap vagy másnap, röviden.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Swim, take a bath or use a sauna:** after the surface has fully closed, usually two to four weeks.": {
+   "hu": "- **Úszhatok, fürödhetek kádban vagy mehetek szaunába:** miután a felszín teljesen bezárult, általában két-négy hét után.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Go in the sun:** cover it until it has healed, then use sunscreen. Never sunbathe a fresh tattoo.": {
+   "hu": "- **Mehetek napra:** amíg nem gyógyult meg, takard, utána használj fényvédőt. Friss tetoválást soha ne napoztass.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Work out:** light exercise after a couple of days; heavy, sweaty training once it has calmed down, especially for tattoos on joints.": {
+   "hu": "- **Edzhetek:** könnyű mozgás néhány nap után, kemény, izzasztó edzés akkor, ha megnyugodott, főleg az ízületeken lévő tetoválásoknál.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "- **Get a touch-up:** usually after at least four to six weeks.": {
+   "hu": "- **Kérhetek javítást:** általában legalább négy-hat hét után.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "## See how it will look once it has healed, and years later": {
+   "hu": "## Nézd meg, milyen lesz gyógyultan, és évek múlva",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Healing is the first chapter of a tattoo’s life, not the last. InkAge shows you a design on your own skin fresh, healed, and as it is likely to look after 10, 30 and 50 years, so you can check before you book whether a detail is too small or a line too fine for the spot you have in mind. It is an estimate rather than a promise, but it is a good way to see past the shiny day-one photo.": {
+   "hu": "A gyógyulás a tetoválás életének első fejezete, nem az utolsó. Az InkAge megmutatja a mintát a saját bőrödön frissen, gyógyultan, valamint ahogy valószínűleg 10, 30 és 50 év múlva kinéz, így még foglalás előtt megnézheted, nem túl apró-e egy részlet, vagy nem túl vékony-e egy vonal az adott helyhez. Ez becslés, nem ígéret, de jó módja annak, hogy túlláss a csillogó első napi fotón.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Marco’s swallow went through every stage in this article. It oozed, it scabbed, it peeled, it went milky, and around six weeks later it was sharp again. The only thing he had to do was keep it clean, keep it moisturised, keep his fingers off it and keep it out of the sun. Most healing problems come from doing too much, not too little.": {
+   "hu": "Marco fecskéje átment a cikk minden szakaszán. Szivárgott, pörkösödött, hámlott, tejes lett, és nagyjából hat héttel később újra éles volt. Csak annyi dolga volt, hogy tisztán és hidratálva tartsa, ne nyúljon hozzá, és óvja a naptól. A gyógyulási gondok többsége abból jön, hogy túl sokat csinálunk, nem túl keveset.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "How long does a tattoo take to heal?": {
+   "hu": "Mennyi idő alatt gyógyul meg egy tetoválás?",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "The surface usually closes in about two to four weeks. The deeper skin keeps settling for up to around three months, so the tattoo can look slightly dull or cloudy until then. Large pieces and areas such as hands, feet and joints often take longer.": {
+   "hu": "A felszín általában nagyjából két-négy hét alatt zárul. A mélyebb bőr akár három hónapig is tovább rendeződik, ezért a tetoválás addig kicsit fakónak vagy tejesnek tűnhet. A nagy minták és az olyan helyek, mint a kéz, a láb és az ízületek, gyakran tovább gyógyulnak.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Why does my new tattoo look faded and cloudy?": {
+   "hu": "Miért tűnik kifakultnak és tejesnek az új tetoválásom?",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Around weeks two to four a thin layer of new skin covers the ink and isn’t fully transparent yet. It is often called the milky stage. It clears over the following weeks, so wait until the tattoo has fully settled before you judge it or book a touch-up.": {
+   "hu": "Nagyjából a második-negyedik héten egy vékony új bőrréteg fedi a tintát, ami még nem teljesen átlátszó. Ezt gyakran tejes szakasznak hívják. A következő hetekben kitisztul, ezért várd meg, amíg a tetoválás teljesen rendeződik, mielőtt megítéled vagy javítást foglalsz.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Is it normal for a new tattoo to peel?": {
+   "hu": "Normális, hogy hámlik az új tetoválás?",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Yes. Peeling usually starts around the end of the first week and can last a week or so. The flakes may be coloured because they carry ink from the outer layer. Don’t pull them off; let them come away on their own.": {
+   "hu": "Igen. A hámlás általában az első hét vége felé kezdődik, és körülbelül egy hétig tarthat. A pikkelyek színesek lehetnek, mert a külső réteg tintáját viszik magukkal. Ne húzd le őket, hagyd, hogy maguktól leváljanak.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Normal healing improves day by day. Redness or warmth that spreads, pain or swelling that gets worse after the first few days, pus, a bad smell or fever are warning signs. Contact a doctor if you notice any of them.": {
+   "hu": "A normális gyógyulás napról napra javul. A terjedő pirosság vagy melegség, az első napok után erősödő fájdalom vagy duzzanat, a genny, a rossz szag vagy a láz figyelmeztető jelek. Ha bármelyiket észreveszed, fordulj orvoshoz.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "When can I swim or go in the sun with a new tattoo?": {
+   "hu": "Mikor úszhatok vagy mehetek napra egy új tetoválással?",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Swimming, baths and saunas usually have to wait until the surface has fully closed, typically two to four weeks. Keep the tattoo covered from the sun while it heals, and once it has healed, protect it with a broad-spectrum SPF 50.": {
+   "hu": "Az úszással, a kádas fürdéssel és a szaunával általában meg kell várni, amíg a felszín teljesen bezárul, ez jellemzően két-négy hét. Gyógyulás alatt takard a tetoválást a nap elől, utána pedig védd széles spektrumú, 50-es faktorú fényvédővel.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: day one. Redness, slight swelling and a shiny layer of plasma are all part of normal healing.": {
+   "hu": "Illusztráció: az első nap. A pirosság, az enyhe duzzanat és a fényes nyirokréteg mind a normális gyógyulás része.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: around day five. Thin scabs along the lines and a dull look. Leave them alone.": {
+   "hu": "Illusztráció: az ötödik nap körül. Vékony pörkök a vonalak mentén és fakó látvány. Hagyd őket békén.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: around day ten. Peeling like a mild sunburn, often with coloured flakes.": {
+   "hu": "Illusztráció: a tizedik nap körül. Hámlás, mint egy enyhe leégésnél, gyakran színes pikkelyekkel.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: the milky stage, around week three. The new skin over the ink hasn’t cleared yet.": {
+   "hu": "Illusztráció: a tejes szakasz, a harmadik hét körül. A tinta fölötti új bőr még nem tisztult ki.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: lukewarm water, mild fragrance-free soap and clean fingertips. Then pat dry.": {
+   "hu": "Illusztráció: langyos víz, enyhe illatmentes szappan és tiszta ujjbegyek. Aztán itasd szárazra.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
+   ],
+   "kind": "obj"
+  },
+  "Illustration: the same tattoo fully settled after a few months. This is the version to judge.": {
+   "hu": "Illusztráció: ugyanaz a tetoválás néhány hónap után, teljesen rendeződve. Ezt a változatot érdemes megítélni.",
+   "files": [
+    "lib/longform/tattoo-healing-stages.ts"
    ],
    "kind": "obj"
   },
@@ -27795,6 +31112,13 @@
    ],
    "kind": "call"
   },
+  "Fine line": {
+   "hu": "Fine line (vékony vonalas)",
+   "files": [
+    "lib/seo.ts"
+   ],
+   "kind": "obj"
+  },
   "Realism": {
    "hu": "Realista",
    "files": [
@@ -27825,13 +31149,6 @@
   },
   "shoulder": {
    "hu": "váll",
-   "files": [
-    "lib/seo.ts"
-   ],
-   "kind": "obj"
-  },
-  "back": {
-   "hu": "hát",
    "files": [
     "lib/seo.ts"
    ],
@@ -28968,6 +32285,13 @@
    ],
    "kind": "pair"
   },
+  "tegnap ilyenkor: {0}": {
+   "hu": "tegnap egész nap: {0}",
+   "files": [
+    "app/admin/views/ma.tsx"
+   ],
+   "kind": "pair"
+  },
   "A mai keret ({0} MI-hívás, minden oldal együtt) elfogyott. Éjfélkor újraindul.": {
    "hu": null,
    "files": [
@@ -29476,6 +32800,13 @@
    ],
    "kind": "err"
   },
+  "Stripe {0}: {1}": {
+   "hu": null,
+   "files": [
+    "lib/admin/pay.ts"
+   ],
+   "kind": "err"
+  },
   "Bing {0} {1}": {
    "hu": null,
    "files": [
@@ -29610,7 +32941,7 @@
    "kind": "call"
   },
   "They start again on {0}.": {
-   "hu": "{0}: újraindul.",
+   "hu": "Újraindul: {0}.",
    "files": [
     "lib/mail-more.ts"
    ],

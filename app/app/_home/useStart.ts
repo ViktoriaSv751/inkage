@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, type Dispatch, type MutableRefObject, type SetStateAction } from 'react';
+import { useEffect, useRef, type Dispatch, type MutableRefObject, type SetStateAction } from 'react';
+import { useRouter } from 'next/navigation';
 import { useApp } from '../AppProvider';
 import { OnboardingAnswers } from '../create/Onboarding';
 import { Design, Photo } from '../create/steps';
@@ -11,6 +12,9 @@ import { USE_UPLOAD_KEY, type UseUpload } from '@/lib/uploads';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { processDesign } from '@/lib/editor';
 import type { Phase } from './types';
+
+/** Set once the first /app screen of this visit has been decided: only that one can be the app's opening. */
+let coldChecked = false;
 
 /** Opening the page: the onboarding answers, a draft in progress, or work handed over from the gallery or Explore. */
 export function useStart({
@@ -37,6 +41,9 @@ export function useStart({
   againRef: MutableRefObject<boolean>;
 }) {
   const { me, ui, toast } = useApp();
+  const router = useRouter();
+  // where an answered onboarding leads: "Your designs" after the plus, the form when work was handed over
+  const first = useRef<'pick' | 'studio'>('studio');
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   // start: onboarding once, then straight into creating
   useEffect(() => {
@@ -57,9 +64,25 @@ export function useStart({
     explicitMode.current = m === 'removal' || m === 'existing' || !!redo0 || !!pick0;
     if (m === 'removal' || m === 'existing') setMode(m);
     if (again) againRef.current = true;
+    // the plus leaves a time stamp (read, not removed: the page can mount twice and both must see it)
+    let plus = false;
+    let freshFlag = false;
+    try {
+      plus = Date.now() - Number(sessionStorage.getItem('ink_plus') || 0) < 8000;
+      freshFlag = sessionStorage.getItem('ink_fresh') === '1';
+    } catch {}
+    const handover = !!redo0 || !!pick0 || !!lsGet<UseUpload | null>(USE_UPLOAD_KEY, null)?.src || m === 'removal' || m === 'existing' || sp.has('job');
+    // opening the app (the first screen of this visit, not the plus, nothing handed over, no work in progress): the gallery comes first
+    const cold = !coldChecked && !plus && !freshFlag && !handover && !again && !draft;
+    coldChecked = true;
+    if (cold) {
+      router.replace(`/app/gallery${location.search}`);
+      return;
+    }
+    first.current = plus && !handover ? 'pick' : 'studio';
     if (ans && !again) {
       applyOnboarding(ans);
-      setPhase('studio');
+      setPhase(first.current);
     } else if (sp.has('job')) setPhase('studio'); // opened from an e-mail: straight to the result
     else setPhase('onboarding');
     // "New design": start with empty slots; otherwise keep work in progress when switching tabs
@@ -116,7 +139,7 @@ export function useStart({
     if (phase === 'onboarding' && me.onboarding && Object.keys(me.onboarding).length > 0 && !againRef.current) {
       lsSet('ink_onboarding', me.onboarding);
       applyOnboarding(me.onboarding);
-      setPhase('studio');
+      setPhase(first.current);
     }
   }, [me.onboarding, phase]); // eslint-disable-line react-hooks/exhaustive-deps
 }

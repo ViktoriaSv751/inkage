@@ -215,7 +215,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // any "new design" link starts empty: photo and design slots cleared (recent photos stay)
     const fresh = (e: MouseEvent) => {
       const a = (e.target as HTMLElement)?.closest?.('a[href="/app"]');
-      if (a) try { sessionStorage.setItem('ink_fresh', '1'); } catch {}
+      if (a) try { sessionStorage.setItem('ink_fresh', '1'); sessionStorage.setItem('ink_plus', String(Date.now())); } catch {}
     };
     document.addEventListener('click', fresh, true);
     // error reporting: what broke and where (max 5 per visit, no personal data)

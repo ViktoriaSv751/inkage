@@ -24,6 +24,7 @@ import { useDraftSave, useFactTicker, useFreshReset, useJobRecovery } from './_h
 import { StepHead } from './_home/StepHead';
 import { GenView } from './_home/GenView';
 import { CompareCard } from './_home/CompareCard';
+import { PickView } from './_home/PickView';
 
 export default function CreatePage() {
   const { ui, me, toast } = useApp();
@@ -193,7 +194,43 @@ export default function CreatePage() {
           if (me.user) sb()?.rpc('save_profile', { p_onboarding: a, p_lang: ui.lang }).then(() => {}, () => {});
           // "just looking around": the Explore page, with a "try it on your photo" button there
           if (a.goal === 'explore') return void router.push(`/app/explore${qOf(ui.lang)}`);
+          // a new tattoo starts on "Your designs"; an existing one or a removal goes straight to the form
+          setPhase(a.goal === 'existing' || a.goal === 'removal' ? 'studio' : 'pick');
+        }}
+      />
+    );
+
+  const toPick = () => {
+    setPhase('pick');
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  };
+
+  if (phase === 'pick')
+    return (
+      <PickView
+        onPick={async (x) => {
+          try {
+            const d = await processDesign(x.src, x.colorMode === 'color' ? 'color' : 'black');
+            setMode('new');
+            setPhoto(null);
+            setDesign({ raw: x.src, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: x.colorMode === 'color' ? 'color' : 'black', ...(x.libId ? { libId: x.libId } : {}) });
+            setPhase('studio');
+            window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+          } catch {
+            toast(t('That design could not be loaded. Try again.', 'Ezt a mintát nem sikerült betölteni. Próbáld újra.'));
+          }
+        }}
+        onNew={() => {
+          setMode('new');
+          setDesign(null);
           setPhase('studio');
+          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+        }}
+        onMode={(m) => {
+          setMode(m);
+          setDesign(null);
+          setPhase('studio');
+          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
         }}
       />
     );
@@ -205,8 +242,8 @@ export default function CreatePage() {
     return (
       <>
         {mode === 'removal'
-          ? head(t('Removal preview', 'Eltávolítás előnézete'), t('Pick the spot and add a photo of the tattoo.', 'Válaszd ki a helyet, és töltsd fel a tetoválás fotóját.'))
-          : head(t('New preview', 'Új előnézet'), t('Pick the spot, add a photo of it and a design.', 'Válaszd ki a helyet, töltsd fel a fotóját és a mintát.'))}
+          ? head(t('Removal preview', 'Eltávolítás előnézete'), t('Pick the spot and add a photo of the tattoo.', 'Válaszd ki a helyet, és töltsd fel a tetoválás fotóját.'), toPick)
+          : head(t('New preview', 'Új előnézet'), t('Pick the spot, add a photo of it and a design.', 'Válaszd ki a helyet, töltsd fel a fotóját és a mintát.'), toPick)}
         {err && mode !== 'new' && (
           <div className="warnbox" role="alert" style={{ marginBottom: 12 }}>
             <span>⚠️</span>

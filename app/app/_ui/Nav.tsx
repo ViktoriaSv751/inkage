@@ -94,7 +94,8 @@ export function BottomNav() {
     haptic();
     setGoing(href);
     // "New design" always starts with empty photo and design slots (recent photos stay)
-    if (href === '/app') try { sessionStorage.setItem('ink_fresh', '1'); } catch {}
+    // the plus opens "Your designs" first (pick a saved design or add a new one), not the empty form
+    if (href === '/app') try { sessionStorage.setItem('ink_fresh', '1'); sessionStorage.setItem('ink_plus', String(Date.now())); } catch {}
     if (href !== path) router.push(href);
     else if (href === '/app') window.dispatchEvent(new Event('ink:fresh'));
   };

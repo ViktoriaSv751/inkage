@@ -30,7 +30,8 @@ export function useFreshReset({
       setPhoto(null);
       setDesign(null);
       setExtras([]);
-      setPhase((ph) => (ph === 'onboarding' || ph === 'loading' ? ph : 'studio'));
+      // the plus tapped again: back to "Your designs"
+      setPhase((ph) => (ph === 'onboarding' || ph === 'loading' ? ph : 'pick'));
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     };
     window.addEventListener('ink:fresh', h);
