@@ -428,4 +428,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'cover-up-tattoos',
+    tag: { en: 'Removal', hu: 'Eltávolítás' },
+    title: { en: 'Cover-up tattoos: what can cover what, and when you need laser first', hu: 'Takarótetoválás (cover-up): mi mit tud eltakarni, és mikor kell előtte lézer' },
+    desc: { en: 'Dark covers light, cover-ups are usually bigger, and laser can widen your options.', hu: 'A sötét eltakarja a világost, a takarás általában nagyobb, és a lézer több lehetőséget ad.' },
+    body: {
+      en: [
+        'Tattoo ink is translucent, so a new design doesn’t paint over the old one: the layers mix. Dark covers light; light never covers dark.',
+        '## A good cover-up',
+        'It is usually noticeably bigger and darker than the old tattoo, with texture and solid areas placed over the old lines. Flowers, feathers, Japanese backgrounds and ornamental blackwork hide best.',
+        '## Laser first?',
+        'For very dark, dense or large tattoos, or for a lighter new design, a few laser sessions to fade the old ink can open up far more options.',
+      ],
+      hu: [
+        'A tetoválótinta áttetsző, ezért az új minta nem festi le a régit: a rétegek összekeverednek. A sötét eltakarja a világost, a világos a sötétet soha.',
+        '## A jó takarás',
+        'Általában láthatóan nagyobb és sötétebb a régi tetoválásnál, textúrával és telt részekkel a régi vonalakon. A virágok, a tollak, a japán hátterek és az ornamentális blackwork rejtenek a legjobban.',
+        '## Előbb lézer?',
+        'A nagyon sötét, sűrű vagy nagy tetoválásoknál, vagy ha világosabb új mintát szeretnél, néhány halványító lézeres alkalom sokkal több lehetőséget ad.',
+      ],
+    },
+  },
 ];

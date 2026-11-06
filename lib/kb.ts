@@ -296,6 +296,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-11-04',
     faq: [],
   },
+  'cover-up-tattoos': {
+    img: 'hf_20261106_071053_4e8c0e70-83a0-4efc-a09d-6e195dc80916',
+    img2: 'hf_20261106_071052_97f0b07e-4df3-4852-854d-60b8314859b9',
+    img3: 'hf_20261106_071052_dab070a5-8a2f-432c-9553-a79948e55ee2',
+    img4: 'hf_20261106_071053_6e0f76e4-ec28-4ab2-abef-d4a324edf008',
+    img5: 'hf_20261106_071056_3c15233e-bcc9-4235-8d14-9204074f1849',
+    img6: 'hf_20261106_071055_490bd214-5ef8-4288-be33-cf82cc9360c6',
+    img7: 'hf_20261106_071056_cd11765b-f506-4daf-a56a-a0cd28ab0ad4',
+    cap2: { en: 'Illustration: an old name hidden inside a darker, busier design. Dark covers light; light never covers dark.', hu: 'Illusztráció: egy régi név egy sötétebb, mozgalmasabb mintában elrejtve. A sötét eltakarja a világost, a világos a sötétet soha.' },
+    date: '2026-11-06',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
