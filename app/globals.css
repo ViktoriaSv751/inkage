@@ -331,3 +331,15 @@ html.native .web-only { display: none !important; }
 /* no "Beta" in the store apps (App Store 2.2: the store holds finished apps only) */
 html.native .beta-pill, html.native .rail-beta > b { display: none !important; }
 html.native .stephead .free-pill { visibility: hidden; }
+
+/* a real example aging, drag through 5 moments (app "Try an example", articles, style pages) */
+.stg { width: 100%; }
+.stg-pic { position: relative; aspect-ratio: 4/5; border-radius: 22px; overflow: hidden; background: #1c1c1f; }
+.stg.compact .stg-pic { aspect-ratio: 1; }
+.stg-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .25s ease; user-select: none; }
+.stg-badge { position: absolute; left: 12px; top: 12px; background: rgba(0, 0, 0, .62); color: #fff; font-weight: 800; font-size: 15px; padding: 6px 12px; border-radius: 999px; }
+.stg-range { width: 100%; margin: 14px 0 4px; accent-color: #5b3df5; height: 28px; }
+.stg-ticks { display: flex; justify-content: space-between; gap: 4px; }
+.stg-ticks button { border: 0; background: none; padding: 2px 0; font-size: 12px; color: inherit; opacity: .6; font-weight: 600; cursor: pointer; }
+.stg-ticks button.on { opacity: 1; color: #5b3df5; }
+.stg-note { font-size: 12px; opacity: .65; margin: 8px 0 0; }

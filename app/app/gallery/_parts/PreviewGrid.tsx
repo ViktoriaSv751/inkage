@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { StageSlider } from '@/app/_landing/StageSlider';
 import { useApp } from '../../AppProvider';
 import { Icon } from '../../ui';
 import { tx } from '@/lib/i18n';
@@ -50,6 +51,10 @@ export function PreviewGrid({
       <Link className="btn" href="/app">
         {ui.t('nav.create')}
       </Link>
+      {/* not a dead end: a real example to drag through right here */}
+      <div style={{ marginTop: 22, textAlign: 'left' }}>
+        <StageSlider t={t} where="gallery_empty" compact />
+      </div>
     </div>
   ) : (
     <div className="galgrid">

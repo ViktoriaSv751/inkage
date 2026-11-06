@@ -5,11 +5,12 @@ import { useApp } from '../AppProvider';
 import { OnboardingAnswers } from '../create/Onboarding';
 import { Design, Photo } from '../create/steps';
 import { tx } from '@/lib/i18n';
-import { lsGet, lsSet } from '@/lib/store';
+import { lsGet, lsSet, track } from '@/lib/store';
 import { Placement } from '@/lib/editor';
 import { prepareImage } from '@/lib/client';
 import { USE_UPLOAD_KEY, type UseUpload } from '@/lib/uploads';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
+import { PLACEMENTS } from '@/lib/placements';
 import { processDesign } from '@/lib/editor';
 import type { Phase } from './types';
 
@@ -68,10 +69,21 @@ export function useStart({
     let plus = false;
     let freshFlag = false;
     try {
-      plus = Date.now() - Number(sessionStorage.getItem('ink_plus') || 0) < 8000;
+      // ?start=1: a new account or a "Try it" button – the same as the plus
+      plus = sp.has('start') || Date.now() - Number(sessionStorage.getItem('ink_plus') || 0) < 8000;
       freshFlag = sessionStorage.getItem('ink_fresh') === '1';
     } catch {}
-    const handover = !!redo0 || !!pick0 || !!lsGet<UseUpload | null>(USE_UPLOAD_KEY, null)?.src || m === 'removal' || m === 'existing' || sp.has('job');
+    // a style guide page hands over its body area and style (?place=Ankle&style=fine-line)
+    const place0 = sp.get('place');
+    const placeV = place0 === 'Neck' ? 'Side of neck' : PLACEMENTS.some((x) => x.v === place0) ? place0 : null;
+    const style0 = sp.get('style');
+    const styleDesign = style0 ? DESIGNS.find((d) => (d as any).style === style0) : undefined;
+    if (styleDesign && !pick0 && !redo0) {
+      setMode('new');
+      processDesign(styleDesign.src, 'black').then((d) => setDesign({ raw: styleDesign.src, ink: d.dataUrl, ratio: d.ratio, detail: d.detail, mode: 'black', libId: styleDesign.id })).catch(() => {});
+    }
+    if (placeV || styleDesign) track('guide_try', { place: placeV, style: style0 });
+    const handover = !!placeV || !!styleDesign || !!redo0 || !!pick0 || !!lsGet<UseUpload | null>(USE_UPLOAD_KEY, null)?.src || m === 'removal' || m === 'existing' || sp.has('job');
     // opening the app (the first screen of this visit, not the plus, nothing handed over, no work in progress): the gallery comes first
     const cold = !coldChecked && !plus && !freshFlag && !handover && !again && !draft;
     coldChecked = true;
@@ -84,7 +96,17 @@ export function useStart({
       applyOnboarding(ans);
       setPhase(first.current);
     } else if (sp.has('job')) setPhase('studio'); // opened from an e-mail: straight to the result
-    else setPhase('onboarding');
+    else if (again) setPhase('onboarding'); // asked again from the profile
+    else {
+      // no questions first (half the people left there): "Your designs" asks what they want, the form asks where
+      const def = { adult: true, has: '', goal: 'new', placement: '', style: 'other', size: '8', sun: 'medium', age: '', fear: '' } as OnboardingAnswers;
+      lsSet('ink_onboarding', def);
+      applyOnboarding(def);
+      track('onboarding_auto');
+      setPhase(handover ? 'studio' : 'pick');
+    }
+    // the guide page's body area wins over the onboarding answer
+    if (placeV) setPlacement(placeV);
     // "New design": start with empty slots; otherwise keep work in progress when switching tabs
     let freshStart = false;
     try {
@@ -95,9 +117,9 @@ export function useStart({
       }
     } catch {}
     if (draft && !freshStart) {
-      if (draft.placement) setPlacement(draft.placement);
+      if (draft.placement && !placeV) setPlacement(draft.placement);
       if (draft.photo) setPhoto(draft.photo);
-      if (draft.design) setDesign(draft.design);
+      if (draft.design && !styleDesign) setDesign(draft.design);
       if (draft.pl) setPl(draft.pl);
     }
     // "New preview with this design" from the gallery

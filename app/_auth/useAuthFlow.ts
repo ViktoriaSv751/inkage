@@ -106,8 +106,8 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     setBusy(false);
     if (error) return setErr(friendly(error.message));
     track('auth_signup');
-    if (data?.session) return playSplash('in'), router.replace(withLang(nextFromUrl() || '/app', lang));
-    rememberNext(nextFromUrl() || '/app'); // the confirmation link opens the gallery: go on from there
+    if (data?.session) return playSplash('in'), router.replace(withLang(nextFromUrl() || '/app?start=1', lang));
+    rememberNext(nextFromUrl() || '/app?start=1'); // the confirmation link opens the gallery: go on from there
     setSentKind('confirm');
     setStep('sent');
   };
@@ -129,7 +129,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
       return setErr(provider === 'google' ? T('Google sign-in is coming soon. Use your e-mail for now.', 'A Google-belépés hamarosan elérhető. Addig használd az e-mail-címedet.') : T('Apple sign-in is coming soon. Use your e-mail for now.', 'Az Apple-belépés hamarosan elérhető. Addig használd az e-mail-címedet.'));
     setErr('');
     ageAgreed(); // tapping is the agreement, said right under the buttons
-    rememberNext(nextFromUrl() || (mode === 'signup' ? '/app' : null));
+    rememberNext(nextFromUrl() || (mode === 'signup' ? '/app?start=1' : null));
     // Instagram / TikTok / Facebook: Google refuses to sign in inside their browser; carry the page to the phone's browser
     if (provider === 'google' && (await import('@/lib/inapp')).escapeForGoogle()) return;
     if ((window as any).Capacitor?.isNativePlatform?.()) {

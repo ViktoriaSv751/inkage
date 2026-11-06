@@ -47,7 +47,8 @@ export function AuthCta({ lang, light = false, where = 'cta', style }: { lang: L
 }
 
 /** A single call to action: the app when signed in, otherwise registration. */
-export function TryLink({ className, children, onClick, lang }: { className?: string; children: React.ReactNode; onClick?: () => void; lang?: Lang }) {
+/** `to`: where in the app to start (e.g. /app?mode=removal); signed-out people get there right after signing up. */
+export function TryLink({ className, children, onClick, lang, to = '/app?start=1' }: { className?: string; children: React.ReactNode; onClick?: () => void; lang?: Lang; to?: string }) {
   const signedIn = useSignedIn();
   // without a lang prop the page language is read after load (the server can't know it here)
   const [docLang, setDocLang] = useState<Lang | null>(null);
@@ -59,7 +60,7 @@ export function TryLink({ className, children, onClick, lang }: { className?: st
   }, [lang]);
   const l: Lang = lang || docLang || 'hu';
   return (
-    <Link className={className} href={signedIn ? '/app' : `/regisztracio${qOf(l)}`} onClick={onClick}>
+    <Link className={className} href={signedIn ? to : `/regisztracio${qOf(l)}${qOf(l) ? '&' : '?'}next=${encodeURIComponent(to)}`} onClick={onClick}>
       {children}
     </Link>
   );

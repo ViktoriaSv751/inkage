@@ -8,6 +8,7 @@ import { qOf } from '@/lib/tr';
 import { cloud, haptic, local, track } from '@/lib/store';
 import { uploads } from '@/lib/uploads';
 import { ALL_DESIGNS } from '@/lib/designs';
+import { StageSlider } from '@/app/_landing/StageSlider';
 
 export type Picked = { src: string; colorMode?: 'black' | 'color'; libId?: string; from: 'idea' | 'design' | 'preview' | 'library' };
 type Tile = Picked & { key: string; thumb: string; label?: string };
@@ -22,6 +23,7 @@ export function PickView({ onPick, onNew, onMode }: { onPick: (p: Picked) => Pro
   const [ideas, setIdeas] = useState<Tile[] | null>(null);
   const [mine, setMine] = useState<Tile[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [demo, setDemo] = useState(false);
 
   useEffect(() => {
     track('pick_open');
@@ -100,14 +102,27 @@ export function PickView({ onPick, onNew, onMode }: { onPick: (p: Picked) => Pro
           <small>{t('A screenshot, a saved picture, a sketch or a link', 'Képernyőfotó, mentett kép, saját rajz vagy link')}</small>
         </span>
       </button>
+      {/* the people who age a tattoo they already have make the most previews: a big way in, one photo, no design */}
+      <button className="pick-new alt" onClick={() => onMode('existing')} disabled={!!busy}>
+        <span className="pick-new-ico" aria-hidden="true">⏳</span>
+        <span>
+          <b>{t('How will my tattoo age?', 'Hogyan öregszik a meglévő tetoválásom?')}</b>
+          <small>{t('One photo of it, no design needed', 'Csak egy fotó róla, minta nem kell')}</small>
+        </span>
+      </button>
       <div className="row pick-modes">
-        <button className="chipbtn" onClick={() => onMode('existing')} disabled={!!busy}>
-          {t('My existing tattoo', 'Meglévő tetoválásom')}
-        </button>
         <button className="chipbtn" onClick={() => onMode('removal')} disabled={!!busy}>
           {t('Removal preview', 'Eltávolítás előnézete')}
         </button>
+        <button className="chipbtn" onClick={() => { setDemo((v) => !v); track('example_open', { where: 'pick' }); }} aria-expanded={demo}>
+          {t('See an example first', 'Előbb egy példát nézek')}
+        </button>
       </div>
+      {demo && (
+        <div style={{ margin: '10px 0 4px' }}>
+          <StageSlider t={t} where="pick" compact />
+        </div>
+      )}
 
       {(ideas === null || ideas.length > 0) && (
         <section>
