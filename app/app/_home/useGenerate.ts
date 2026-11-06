@@ -169,6 +169,16 @@ export function useGenerate({
       await new Promise((res) => setTimeout(res, 12000));
       r = await api<any>('/api/generate', body);
     }
+    // the AI returned no picture this time (it happens now and then with the same photo): one more go, with a new job
+    if (!r.ok && r.status === 502 && /could not be created|IMAGE_OTHER/i.test(r.data?.error || '')) {
+      track('generate_retry', { why: 'no_image' });
+      const retryJob = crypto.randomUUID();
+      r = await api<any>('/api/generate', { ...body, job: retryJob });
+      if (!r.ok && (r.status === 0 || r.status === 504)) {
+        const got = await waitForJob(retryJob);
+        if (got) r = { ok: true, status: 200, data: got };
+      }
+    }
     setBusyNote(false);
     timers.forEach(clearTimeout);
 
@@ -182,7 +192,10 @@ export function useGenerate({
         return;
       }
       setErr(trErr(ui.lang, r.data?.error));
-      track('generate_error', { status: r.status, msg: String(r.data?.error || '').slice(0, 80) });
+      const m = String(r.data?.error || '');
+      // a reason the admin can count: no connection, the AI paused / out of credit, no picture, photo, other
+      const reason = r.status === 0 ? 'offline' : /paused|credit|billing/i.test(m) ? 'paused' : /Lots of people/.test(m) ? 'busy' : /could not be created|IMAGE_OTHER/i.test(m) ? 'no_image' : /photo|skin|body/i.test(m) ? 'photo' : r.status === 504 ? 'timeout' : 'other';
+      track('generate_error', { status: r.status, reason, msg: m.slice(0, 80) });
       return;
     }
 
