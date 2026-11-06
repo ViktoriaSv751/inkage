@@ -17,6 +17,7 @@ import { Connect } from "./views/connect";
 import { Accounts } from "./views/accounts";
 import { Feedback } from "./views/feedback";
 import { FunnelTab } from "./views/funnel";
+import { Weekly } from "./views/weekly";
 import { Goals } from "./views/goals";
 import { Home } from "./views/home";
 import { Links } from "./views/links";
@@ -54,14 +55,14 @@ import { Pricing } from "./views/pricing";
 
 /* a few words under each menu item */
 const NAVSUB: Partial<Record<Tab, string>> = { payments: "cél, ma eddig, források", customers: "érték, út, elégedettség", finance: "díjak, kifizetés, zárás", payfail: "elakadt, vitatott, hiányzó", pricing: "termékek, kódok, teszt", announce: "üzenet az appban", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", accounts: "minden fiók egymás mellett", feedback: "csillagok, vélemények", search: "keresések, cikkek",
-  links: "rövid linkek", markets: "nyelvek, országok", stores: "letöltések", users: "fiókok", funnel: "lépésről lépésre", retention: "visszatérők", product: "mit használnak", inkage: "moderálás, MI, korlát",
+  links: "rövid linkek", markets: "nyelvek, országok", stores: "letöltések", users: "fiókok", funnel: "lépésről lépésre", weekly: "hétről hétre, cikkek, hibák", retention: "visszatérők", product: "mit használnak", inkage: "moderálás, MI, korlát",
   viral: "megosztások", connect: "bekötések", goals: "célok, jegyzetek", system: "beállítások, biztonság" };
 
 /* Which page follows what. The dashboard's own numbers (admin_dashboard) follow the channel and language filter and the
    range of her own; the pages with their own data count in days (a range becomes "from its first day to today");
    the rest has no period at all. The controls show only where they act, so nothing looks filtered that is not. */
 const FILTER_TABS: Tab[] = ["home", "alerts", "live", "ask", "traffic", "funnel", "users", "retention", "viral", "product"];
-const NO_PERIOD: Tab[] = ["inkage", "finance", "feedback", "todo", "goals", "announce", "audit", "live", "links", "connect", "more", "inbox", "planner", "audience", "report", "seo", "brand", "monitor", "retention"];
+const NO_PERIOD: Tab[] = ["inkage", "finance", "feedback", "todo", "goals", "announce", "audit", "live", "links", "connect", "more", "inbox", "planner", "audience", "report", "seo", "brand", "monitor", "retention", "weekly"];
 const DAYS_ONLY: Tab[] = ["payments", "customers", "payfail", "pricing", "stores", "social", "accounts", "platforms", "search", "youtube", "impressions", "markets"];
 /* Google, YouTube Analytics and the stores report whole days, 1–3 days late: these pages say which days they show */
 const LATE_GOOGLE: Tab[] = ["search", "impressions", "markets", "youtube", "stores"];
@@ -476,6 +477,7 @@ export function Dashboard({ signOut }: { signOut: (note?: string) => void }) {
               {tab === "search" && <Search days={period.eff} />}
               {tab === "links" && <Links />}
               {tab === "funnel" && <FunnelTab d={data} />}
+              {tab === "weekly" && <Weekly />}
               {tab === "users" && <Users d={data} />}
               {tab === "viral" && <Viral d={data} />}
               {tab === "inkage" && <InkAge />}
