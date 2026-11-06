@@ -1,0 +1,32 @@
+# InkAge
+
+> InkAge (https://inkage.app) is a tattoo simulator and tattoo aging simulator. It shows a tattoo design on a photo of the user's own body, fresh and as it would look after 1, 10, 30 and 50 years, and shows a laser tattoo removal preview after 3, 6 and 10 sessions.
+
+## Facts
+
+- What it does: the user uploads or takes a photo of a body area, adds a design (a photo of a tattoo, a screenshot, a sketch or a design from the InkAge library) and places it at real size in centimetres. AI draws the tattoo into the photo, keeping the user's skin tone, light and body shape.
+- Five moments: fresh, healed after 1 year, 10 years, 30 years, 50 years. 20 years falls between the 10- and 30-year images.
+- Existing tattoos: a photo of a tattoo the user already has can be aged the same way.
+- Laser removal preview: the user's tattoo after 3, 6 and 10 laser sessions.
+- Longevity score: 0–100, with the reasons (size, line thickness, colour, placement, sun) and tips; "Make it last" offers a sturdier redraw to compare.
+- Sharing: a vote link for friends (only the fresh and 50-year images are shared), short videos, and a PDF for the tattoo artist.
+- Speed: about a minute from photo to preview.
+- Account: needed to make previews. Sign-in with Google or Apple (one tap) or with e-mail.
+- Monthly allowance: 30 previews a month per account, plus bonus previews when friends join through an invite link. It restarts on the 1st of each month.
+- Platforms: works in the browser on iPhone, Android and computers and can be added to the home screen. Where the InkAge app is available in the App Store or Google Play, it uses the same account.
+- Languages: 35, including English, Hungarian, German, Spanish, French, Portuguese, Italian, Dutch, Polish, Czech, Japanese and Swedish. Pages take ?lang=xx (for example ?lang=en); Hungarian is the default without it.
+- Privacy: previews are stored in the account's private storage and only the owner can see them. Photos and designs are sent to AI providers (Google Gemini, with OpenAI as a backup) only to check the photo and make the preview. No advertising trackers. Previews can be deleted one by one; Profile → Delete my account and data removes the account and every saved preview.
+- Age: users must be 18 or older. Photos of minors and nude photos are refused automatically.
+- Limits: previews are AI estimates of how ink, skin and sun usually behave, not measurements of the user's skin, not a guarantee and not medical advice.
+
+## Pages
+
+- [Tattoo simulator](https://inkage.app/tattoo-simulator?lang=en): see a tattoo on your own body before you get it.
+- [Tattoo aging simulator](https://inkage.app/tattoo-aging-simulator?lang=en): how a new or existing tattoo will look in 10, 30 and 50 years.
+- [What is InkAge?](https://inkage.app/mi-az-inkage?lang=en)
+- [How it works](https://inkage.app/hogyan-mukodik?lang=en)
+- [Features](https://inkage.app/funkciok?lang=en)
+- [FAQ](https://inkage.app/gyik?lang=en)
+- [Knowledge base](https://inkage.app/tudastar?lang=en): guides on tattoo aging, placement, aftercare and laser removal.
+- [Data security](https://inkage.app/adatbiztonsag?lang=en)
+- [Privacy policy](https://inkage.app/privacy?lang=en)

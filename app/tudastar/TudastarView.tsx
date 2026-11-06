@@ -5,6 +5,7 @@ import { kbList } from '@/lib/kb-server';
 import { KbList } from './KbList';
 import { KbChrome } from './KbChrome';
 import { SiteFooter } from '../SiteFooter';
+import { TOOL_LANGS } from '@/lib/tool-langs';
 import './kb.css';
 
 /** The knowledge base list. Inside the app (inApp) it keeps the app's frame and its links stay in the app. */
@@ -34,6 +35,18 @@ export function TudastarView({ lang, inApp = false }: { lang: Lang; inApp?: bool
           {T('Open the guides', 'Megnyitom')} <span aria-hidden="true">→</span>
         </Link>
       </section>
+      {!inApp && TOOL_LANGS.includes(lang) && (
+        <section className="kb-guides">
+          <h2>{T('Try it on your own photo', 'Próbáld ki a saját fotódon')}</h2>
+          <p>{T('See a design on your skin before you get it, and how a tattoo will look in 10, 30 and 50 years.', 'Nézd meg a mintát a bőrödön, mielőtt elkészül, és azt is, hogyan fog kinézni egy tetoválás 10, 30 és 50 év múlva.')}</p>
+          <Link className="kb-more" href={`/tattoo-simulator${qOf(lang)}`}>
+            {T('Tattoo simulator', 'Tetoválás szimulátor')} <span aria-hidden="true">→</span>
+          </Link>
+          <Link className="kb-more" href={`/tattoo-aging-simulator${qOf(lang)}`}>
+            {T('Tattoo aging simulator', 'Tetoválás öregedés szimulátor')} <span aria-hidden="true">→</span>
+          </Link>
+        </section>
+      )}
       <div style={{ height: inApp ? 20 : 80 }} />
       {!inApp && <SiteFooter lang={lang} />}
     </div>

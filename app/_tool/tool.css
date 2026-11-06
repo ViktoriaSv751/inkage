@@ -1,0 +1,21 @@
+/* ================================================================ tool landing pages (/tattoo-simulator, /tattoo-aging-simulator) */
+.tl-top { display: grid; gap: 16px; }
+.tl-top .lm-compare.bare { padding: 0; }
+.tl-cta { display: grid; gap: 10px; justify-items: center; text-align: center; }
+.tl-cta small { color: var(--muted); font-size: 13px; line-height: 1.4; }
+a.tl-go { display: inline-block; padding: 17px 30px; border-radius: 999px; background: var(--ink); color: var(--bg); font-weight: 800; font-size: 16.5px; text-decoration: none; text-align: center; transition: transform .15s; }
+a.tl-go:hover { transform: translateY(-1px); }
+@media (max-width: 600px) { .tl-cta a.tl-go { display: block; width: 100%; } }
+
+.tl-steps { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .tl-steps { grid-template-columns: repeat(3, 1fr); } }
+.tl-steps li { position: relative; display: grid; gap: 6px; align-content: start; padding: 20px 18px; border-radius: 20px; background: var(--soft); }
+.tl-steps b { font-size: 16.5px; margin-top: 8px; color: var(--ink); }
+.tl-steps p { margin: 0 !important; font-size: 14.5px !important; line-height: 1.55 !important; color: var(--muted) !important; }
+.tl-n { position: absolute; top: 16px; right: 18px; font-size: 13px; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.tl-end { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; padding: 32px 30px; border-radius: 28px; background: radial-gradient(120% 140% at 100% 0%, #8f78ff 0%, transparent 55%), linear-gradient(135deg, #2a1c8f, #5b3df5); color: #fff; }
+.tl-end h2 { margin: 0 0 6px; font-size: clamp(22px, 2.8vw, 32px); letter-spacing: -.03em; max-width: 22ch; color: #fff; }
+.tl-end p { margin: 0; color: rgba(255, 255, 255, .78); font-size: 14.5px; line-height: 1.45; }
+.tl-end a.tl-go { background: #fff; color: #1d1460; }
+@media (max-width: 600px) { .tl-end { padding: 26px 22px; } .tl-end a.tl-go { width: 100%; } }
