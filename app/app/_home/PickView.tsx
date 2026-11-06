@@ -95,7 +95,7 @@ export function PickView({ onPick, onNew, onMode }: { onPick: (p: Picked) => Pro
       <h1 style={{ margin: 0 }}>{ui.t('gallery.title')}</h1>
       <p className="sub">{t('Pick a saved design to try on, or add a new one.', 'Válassz egy mentett mintát a felpróbáláshoz, vagy adj hozzá újat.')}</p>
 
-      <button className="pick-new" onClick={onNew} disabled={!!busy}>
+      <button className="pick-new" onClick={() => { track('pick_mode', { m: 'new' }); onNew(); }} disabled={!!busy}>
         <span className="pick-new-ico" aria-hidden="true">{Icon.plus}</span>
         <span>
           <b>{t('Add a new design', 'Új minta hozzáadása')}</b>
@@ -103,7 +103,7 @@ export function PickView({ onPick, onNew, onMode }: { onPick: (p: Picked) => Pro
         </span>
       </button>
       {/* the people who age a tattoo they already have make the most previews: a big way in, one photo, no design */}
-      <button className="pick-new alt" onClick={() => onMode('existing')} disabled={!!busy}>
+      <button className="pick-new alt" onClick={() => { track('pick_mode', { m: 'existing' }); onMode('existing'); }} disabled={!!busy}>
         <span className="pick-new-ico" aria-hidden="true">⏳</span>
         <span>
           <b>{t('How will my tattoo age?', 'Hogyan öregszik a meglévő tetoválásom?')}</b>
@@ -111,7 +111,7 @@ export function PickView({ onPick, onNew, onMode }: { onPick: (p: Picked) => Pro
         </span>
       </button>
       <div className="row pick-modes">
-        <button className="chipbtn" onClick={() => onMode('removal')} disabled={!!busy}>
+        <button className="chipbtn" onClick={() => { track('pick_mode', { m: 'removal' }); onMode('removal'); }} disabled={!!busy}>
           {t('Removal preview', 'Eltávolítás előnézete')}
         </button>
         <button className="chipbtn" onClick={() => { setDemo((v) => !v); track('example_open', { where: 'pick' }); }} aria-expanded={demo}>
