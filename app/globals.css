@@ -343,3 +343,19 @@ html.native .stephead .free-pill { visibility: hidden; }
 .stg-ticks button { border: 0; background: none; padding: 2px 0; font-size: 12px; color: inherit; opacity: .6; font-weight: 600; cursor: pointer; }
 .stg-ticks button.on { opacity: 1; color: #5b3df5; }
 .stg-note { font-size: 12px; opacity: .65; margin: 8px 0 0; }
+
+/* longevity score without a photo (home page, guides) */
+.sct-box { display: grid; gap: 18px; grid-template-columns: 1fr; background: var(--surface, #f4f4f6); border-radius: 24px; padding: 18px; }
+@media (min-width: 800px) { .sct-box { grid-template-columns: 1fr 1fr; padding: 26px; } }
+.sct-form { display: grid; gap: 12px; }
+.sct-form label { display: grid; gap: 6px; font-weight: 600; font-size: 14px; }
+.sct-form select { font: inherit; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(127, 127, 127, .35); background: var(--bg, #fff); color: inherit; }
+.sct-form input[type='range'] { accent-color: #5b3df5; width: 100%; }
+.sct-out { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.sct-score { display: flex; align-items: baseline; gap: 4px; }
+.sct-score b { font-size: 64px; line-height: 1; font-weight: 800; letter-spacing: -.04em; }
+.sct-score.good b { color: #1f9d55; } .sct-score.ok b { color: #c98a00; } .sct-score.low b { color: #d0342c; }
+.sct-verdict { font-weight: 700; margin: 0; }
+.sct-why { margin: 0; padding-left: 18px; font-size: 14px; }
+.sct-why li.neg::marker { color: #d0342c; } .sct-why li.pos::marker { color: #1f9d55; }
+.sct-note { font-size: 12px; opacity: .65; margin: 0; }

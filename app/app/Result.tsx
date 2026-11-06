@@ -283,6 +283,10 @@ export function Result({
           <button className="btn wide" onClick={() => { track('next_vote'); setPollOpen(true); }}>
             {t('Ask friends to vote', 'Kérd ki a barátaid véleményét')}
           </button>
+          {/* the step after deciding: the plan for the artist, with size, spot and the years */}
+          <button className="btn wide ghost" style={{ marginTop: 8 }} onClick={() => { track('next_artist_pdf'); pdf(); }} disabled={pdfBusy}>
+            {pdfBusy ? t('Making the PDF…', 'PDF készül…') : t('Show it to my tattoo artist (PDF)', 'Megmutatom a tetoválómnak (PDF)')}
+          </button>
           {onNew && (
             <button className="btn wide ghost" style={{ marginTop: 8 }} onClick={() => { track('next_new'); onNew(); }}>
               {t('Try another design or spot', 'Másik minta vagy hely kipróbálása')}

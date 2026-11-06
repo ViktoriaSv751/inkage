@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { IMG, PIC } from '@/lib/img';
 import type { LandingData } from '@/lib/landing-data';
 import { track } from '@/lib/track';
+import { ScoreTool } from './_landing/ScoreTool';
 import { AgingTimeline, BetaInstall, CompareSlider, CompareTable, LandingFaq, Precision, PrivacyBlock, UseCases } from './LandingMore';
 import './landing2.css';
 
@@ -82,6 +83,7 @@ export function LandingSections({ lang, data, made, onUpload }: { lang: Lang; da
   return (
     <>
       <CompareSlider t={t} />
+      <ScoreTool t={t} lang={lang} where="home" />
       {/* ---------------------------------------------------------------- how it works */}
       <section className="ls-sec">
         <div className="ls-head">
