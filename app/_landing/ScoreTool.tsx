@@ -12,6 +12,8 @@ import type { T } from './types';
  * "How long will it last?" without a photo or an account: style, body area, size and sun → the same 0–100
  * longevity score the app gives, with the reasons. The button takes the choices into the app.
  */
+const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+
 export function ScoreTool({ t, lang, where }: { t: T; lang: Lang; where: string }) {
   const [style, setStyle] = useState<(typeof SEO_STYLES)[number]['k']>('fine-line');
   const [area, setArea] = useState<(typeof SEO_AREAS)[number]['k']>('forearm');
@@ -54,7 +56,7 @@ export function ScoreTool({ t, lang, where }: { t: T; lang: Lang; where: string 
             <select value={area} onChange={(e) => setArea(e.target.value as any)}>
               {SEO_AREAS.map((x) => (
                 <option key={x.k} value={x.k}>
-                  {pick(x, lang)}
+                  {cap(pick(x, lang))}
                 </option>
               ))}
             </select>
