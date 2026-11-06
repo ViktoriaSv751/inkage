@@ -919,8 +919,8 @@
    "hu": "Ma",
    "files": [
     "app/_auth/AuthArt.tsx",
-    "app/app/Result.tsx",
-    "app/app/_result/useShareActions.ts"
+    "app/_landing/StageSlider.tsx",
+    "app/app/Result.tsx"
    ],
    "kind": "call"
   },
@@ -1947,8 +1947,8 @@
    "hu": "50 év",
    "files": [
     "app/_landing/Demos.tsx",
-    "app/app/_result/useShareActions.ts",
-    "app/tattoo/[slug]/SeoView.tsx"
+    "app/_landing/StageSlider.tsx",
+    "app/app/_result/useShareActions.ts"
    ],
    "kind": "call"
   },
@@ -1984,8 +1984,8 @@
    "hu": "1 év",
    "files": [
     "app/_landing/Demos.tsx",
-    "app/tattoo/[slug]/SeoView.tsx",
-    "lib/i18n.ts"
+    "app/_landing/StageSlider.tsx",
+    "app/tattoo/[slug]/SeoView.tsx"
    ],
    "kind": "call"
   },
@@ -2007,8 +2007,8 @@
    "hu": "10 év",
    "files": [
     "app/_landing/Demos.tsx",
-    "app/tattoo/[slug]/SeoView.tsx",
-    "lib/i18n.ts"
+    "app/_landing/StageSlider.tsx",
+    "app/tattoo/[slug]/SeoView.tsx"
    ],
    "kind": "call"
   },
@@ -2031,8 +2031,8 @@
    "hu": "30 év",
    "files": [
     "app/_landing/Demos.tsx",
-    "app/tattoo/[slug]/SeoView.tsx",
-    "lib/i18n.ts"
+    "app/_landing/StageSlider.tsx",
+    "app/tattoo/[slug]/SeoView.tsx"
    ],
    "kind": "call"
   },
@@ -2491,6 +2491,125 @@
    "hu": "Funkció",
    "files": [
     "app/_landing/Features.tsx"
+   ],
+   "kind": "call"
+  },
+  "Usually ages well.": {
+   "hu": "Általában jól öregszik.",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "A good choice, with a few things to watch.": {
+   "hu": "Jó választás, néhány dologra figyelni kell.",
+   "files": [
+    "app/_landing/ScoreTool.tsx",
+    "app/tattoo/[slug]/SeoView.tsx"
+   ],
+   "kind": "call"
+  },
+  "Likely to blur or fade noticeably.": {
+   "hu": "Valószínűleg észrevehetően elmosódik vagy fakul.",
+   "files": [
+    "app/_landing/ScoreTool.tsx",
+    "app/tattoo/[slug]/SeoView.tsx"
+   ],
+   "kind": "call"
+  },
+  "How long will your tattoo last?": {
+   "hu": "Meddig marad szép a tetoválásod?",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Pick a style, a spot and a size. No photo, no account.": {
+   "hu": "Válassz stílust, helyet és méretet. Fotó és fiók nélkül.",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Style": {
+   "hu": "Stílus",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Body area": {
+   "hu": "Testrész",
+   "files": [
+    "app/_landing/ScoreTool.tsx",
+    "app/app/create/_steps/PlacementPicker.tsx",
+    "app/app/create/_steps/place/AreaPicker.tsx"
+   ],
+   "kind": "call"
+  },
+  "Size": {
+   "hu": "Méret",
+   "files": [
+    "app/_landing/ScoreTool.tsx",
+    "lib/articles.ts",
+    "lib/brief.ts"
+   ],
+   "kind": "call"
+  },
+  "Sun on that spot": {
+   "hu": "Napfény azon a helyen",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Rarely": {
+   "hu": "Ritkán",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Sometimes": {
+   "hu": "Néha",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Often": {
+   "hu": "Gyakran",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "See it on my own skin": {
+   "hu": "Megnézem a saját bőrömön",
+   "files": [
+    "app/_landing/ScoreTool.tsx",
+    "lib/mail-welcome.ts"
+   ],
+   "kind": "call"
+  },
+  "An estimate from how ink, skin and sun usually behave.": {
+   "hu": "Becslés abból, ahogy a tinta, a bőr és a nap általában viselkedik.",
+   "files": [
+    "app/_landing/ScoreTool.tsx"
+   ],
+   "kind": "call"
+  },
+  "Years after the tattoo": {
+   "hu": "Évek a tetoválás után",
+   "files": [
+    "app/_landing/StageSlider.tsx"
+   ],
+   "kind": "call"
+  },
+  "A real example made with InkAge. Drag to see it age. Previews are AI estimates.": {
+   "hu": "Valódi, InkAge-dzsel készült példa. Húzd, és nézd, hogyan öregszik. Az előnézetek MI-becslések.",
+   "files": [
+    "app/_landing/StageSlider.tsx"
    ],
    "kind": "call"
   },
@@ -5286,6 +5405,21 @@
    ],
    "kind": "call"
   },
+  "Making the PDF…": {
+   "hu": "PDF készül…",
+   "files": [
+    "app/app/Result.tsx",
+    "app/app/_result/NextSteps.tsx"
+   ],
+   "kind": "call"
+  },
+  "Show it to my tattoo artist (PDF)": {
+   "hu": "Megmutatom a tetoválómnak (PDF)",
+   "files": [
+    "app/app/Result.tsx"
+   ],
+   "kind": "call"
+  },
   "Try another design or spot": {
    "hu": "Másik minta vagy hely kipróbálása",
    "files": [
@@ -5395,8 +5529,15 @@
    ],
    "kind": "call"
   },
-  "My existing tattoo": {
-   "hu": "Meglévő tetoválásom",
+  "How will my tattoo age?": {
+   "hu": "Hogyan öregszik a meglévő tetoválásom?",
+   "files": [
+    "app/app/_home/PickView.tsx"
+   ],
+   "kind": "call"
+  },
+  "One photo of it, no design needed": {
+   "hu": "Csak egy fotó róla, minta nem kell",
    "files": [
     "app/app/_home/PickView.tsx"
    ],
@@ -5407,6 +5548,13 @@
    "files": [
     "app/app/_home/PickView.tsx",
     "app/app/page.tsx"
+   ],
+   "kind": "call"
+  },
+  "See an example first": {
+   "hu": "Előbb egy példát nézek",
+   "files": [
+    "app/app/_home/PickView.tsx"
    ],
    "kind": "call"
   },
@@ -5647,13 +5795,6 @@
   },
   "Next steps": {
    "hu": "Következő lépések",
-   "files": [
-    "app/app/_result/NextSteps.tsx"
-   ],
-   "kind": "call"
-  },
-  "Making the PDF…": {
-   "hu": "PDF készül…",
    "files": [
     "app/app/_result/NextSteps.tsx"
    ],
@@ -6929,15 +7070,6 @@
    "hu": "Kameraváltás",
    "files": [
     "app/app/create/_steps/CameraSheet.tsx"
-   ],
-   "kind": "call"
-  },
-  "Body area": {
-   "hu": "Testrész",
-   "files": [
-    "app/app/create/_steps/PlacementPicker.tsx",
-    "app/app/create/_steps/place/AreaPicker.tsx",
-    "app/app/gallery/_parts/GalleryFilters.tsx"
    ],
    "kind": "call"
   },
@@ -12040,20 +12172,6 @@
    ],
    "kind": "call"
   },
-  "A good choice, with a few things to watch.": {
-   "hu": "Jó választás, néhány dologra figyelni kell.",
-   "files": [
-    "app/tattoo/[slug]/SeoView.tsx"
-   ],
-   "kind": "call"
-  },
-  "Likely to blur or fade noticeably.": {
-   "hu": "Valószínűleg észrevehetően elmosódik vagy fakul.",
-   "files": [
-    "app/tattoo/[slug]/SeoView.tsx"
-   ],
-   "kind": "call"
-  },
   "The ink settles and lines soften very slightly.": {
    "hu": "A tinta leülepszik, a vonalak picit lágyulnak.",
    "files": [
@@ -13726,15 +13844,6 @@
    "hu": "Ez az útmutató általános tájékoztatás, nem orvosi tanács. Ha egy tetoválás fertőzöttnek tűnik, vagy reagálsz a tintára, fordulj orvoshoz.",
    "files": [
     "lib/articles.ts"
-   ],
-   "kind": "obj"
-  },
-  "Size": {
-   "hu": "Méret",
-   "files": [
-    "lib/articles.ts",
-    "lib/brief.ts",
-    "lib/longform/tattoo-size-guide.ts"
    ],
    "kind": "obj"
   },
@@ -30595,13 +30704,6 @@
   },
   "Don’t ask me. See for yourself.": {
    "hu": "Ne engem kérdezz. Nézd meg.",
-   "files": [
-    "lib/mail-welcome.ts"
-   ],
-   "kind": "call"
-  },
-  "See it on my own skin": {
-   "hu": "Megnézem a saját bőrömön",
    "files": [
     "lib/mail-welcome.ts"
    ],
