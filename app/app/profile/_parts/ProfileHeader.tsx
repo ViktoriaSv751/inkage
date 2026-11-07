@@ -113,10 +113,23 @@ export function ProfileHeader({
             <span>{t('bonus', 'bónusz')}</span>
           </div>
         </div>
-        {canBuy && counted && (
-          <button className="btn ghost wide" style={{ marginTop: 12 }} onClick={() => openPaywall('menu')}>
-            {t('Buy more previews', 'További előnézetek vásárlása')}
-          </button>
+        {counted && (
+          <div className="pf-credits">
+            <div className="pf-credits-n">
+              <b>{Math.max(0, me.remaining ?? 0)}</b>
+              <span>{t('previews left', 'előnézet maradt')}</span>
+            </div>
+            <p>
+              {(me.credits ?? 0) > 0
+                ? t(`${me.credits} bought in packages, plus your trial. They never expire.`, `${me.credits} csomagban vásárolt, plusz a próba. Nem járnak le.`)
+                : t('Your trial shows the 50-year image. A package opens every year.', 'A próba az 50 éves képet mutatja. A csomag minden évet megnyit.')}
+            </p>
+            {canBuy && (
+              <button className="pf-credits-buy" onClick={() => openPaywall('menu')}>
+                {(me.credits ?? 0) > 0 ? t('Buy more previews', 'További előnézetek vásárlása') : t('See packages', 'Csomagok megnézése')}
+              </button>
+            )}
+          </div>
         )}
       </div>
     </>

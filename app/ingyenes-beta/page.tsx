@@ -1,4 +1,6 @@
-import { tx } from '@/lib/tr';
+import { tx, qOf } from '@/lib/tr';
+import { redirect } from 'next/navigation';
+import { webPaymentsOn } from '@/lib/pricing';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
@@ -9,6 +11,8 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
 
 export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
   const L = langOf(searchParams);
+  // with payments on there is no monthly allowance to describe: the page moves to How it works
+  if (webPaymentsOn) redirect(`/hogyan-mukodik${qOf(L)}`);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [
     {

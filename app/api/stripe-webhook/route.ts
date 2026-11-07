@@ -41,6 +41,7 @@ export async function POST(req: Request) {
     console.error('grant_failed', s.id, String(e));
     return json({ error: 'grant_failed' }, 500);
   }
+  await saleMail(String(s.id), planTitle(plan), amount, s.currency || 'usd', s.customer_details?.email || s.customer_email || '', s.customer_details?.address?.country || m.country || '');
   if (!invoicingOn()) return json({ ok: true });
   try {
     const c = s.customer_details ?? {};
@@ -147,4 +148,12 @@ async function missingAddressMail(session: string, email: string, item: string, 
     `Vásárlás: ${item}, ${amount} ${currency.toUpperCase()}\nVevő e-mail: ${email || 'nincs'}\nStripe: ${session}\n\n` +
     `Teendő: kérd el a vevőtől a nevét és a címét, és állítsd ki a számlát a Billingóban.`;
   await sendMail(to, '🧾 InkAge számla vár: hiányzik a vevő címe', `<pre style="font:14px/1.5 sans-serif;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`, text, email || undefined, 'inkage-invoice-address-' + session).catch(() => false);
+}
+
+/* the owner hears about every sale at once (one e-mail per checkout, never twice) */
+async function saleMail(session: string, item: string, amount: number, currency: string, email: string, country: string) {
+  const to = process.env.ADMIN_NOTIFY_EMAIL || process.env.CONTACT_EMAIL;
+  if (!to) return;
+  const text = `Új InkAge-vásárlás!\n\n${item}\n${amount} ${currency.toUpperCase()}${country ? ` · ${country}` : ''}\nVevő: ${email || 'nincs e-mail'}\nStripe: ${session}`;
+  await sendMail(to, `🎉 Új InkAge-vásárlás: ${item.split(':')[0]} ${amount} ${currency.toUpperCase()}`, `<pre style="font:14px/1.5 sans-serif;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`, text, email || undefined, 'inkage-sale-' + session).catch(() => false);
 }
