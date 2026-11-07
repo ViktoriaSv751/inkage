@@ -3,8 +3,9 @@
 ## Amit tud
 - **Csomagok:** egyszeri vásárlás, minden országban ugyanaz a dollárár (`lib/pricing.ts` és az adatbázis `pay_plan_credits` függvénye; a kettőt mindig együtt kell módosítani).
   - Mini: 5 előnézet, $4.99
-  - Plus: 15 előnézet, $11.99 (kiemelt)
+  - Plus: 15 előnézet, $11.99 („Legnépszerűbb” címkével)
   - Studio: 40 előnézet, $27.99
+- **Csomagoldal** (`app/app/_ui/Packages.tsx`): teljes képernyős, sötét oldal, a Calligráéhoz hasonló. A tetején mozgó képfal van négy valódi InkAge-eredményből (felül „Ma”, alatta ugyanaz „50 év”). Mindig a Mini van előre kiválasztva. Alatta a „Próba és csomag” összehasonlító tábla pipákkal és lakatokkal, az elállási jelölőnégyzet (pipa nélkül pirosan megrázkódik) és egy ragadós fizetés gomb.
 - **Kipróbálás:** 1 előnézet. Ebből csak a friss kép és az 50 év múlva kép készül (lézeres módban a 10 kezelés utáni). Az 1, 10 és 30 év (illetve a 3 és 6 kezelés) lakattal látszik, és bármelyik csomag megnyitja. Vásárlás után a galériában a „Hiányzó évek elkészítése” gomb pótolja őket.
 - **AI rajz és kivágás:** vásárlás előtt összesen 2 használható, utána a régi napi 15-ös korlát él.
 - **Régi fiókok** (a bekapcsolás előtt regisztráltak): a bekapcsolás hónapjának végéig a régi havi 30-at kapják, lakat nélkül. Utána nekik is kipróbálás + csomag jár.
