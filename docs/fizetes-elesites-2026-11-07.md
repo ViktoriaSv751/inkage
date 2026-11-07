@@ -10,7 +10,7 @@
 - **AI rajz és kivágás:** vásárlás előtt összesen 2 használható, utána a régi napi 15-ös korlát él.
 - **Régi fiókok** (a bekapcsolás előtt regisztráltak): a bekapcsolás hónapjának végéig a régi havi 30-at kapják, lakat nélkül. Utána nekik is kipróbálás + csomag jár.
 - **Áruházi appok** (iOS / Android): semmi nem változik, maradnak a havi 30-on. Árat és csomagot sehol nem látnak (Apple 3.1.1), amíg nincs áruházi vásárlás. Az app minden hívásban küldi az `x-ink-app` fejlécet; a szerver ezt csak WebView-ból és a db-titokkal együtt fogadja el.
-- **Stripe:** Checkout `price_data`-val (Stripe-ban nem kell terméket létrehozni). Az elállási jogról lemondó jelölőnégyzet nélkül nem indul fizetés. A bankszámlakivonaton „INKAGE” utótag szerepel.
+- **Stripe:** Checkout `price_data`-val (Stripe-ban nem kell terméket létrehozni). Jelölőnégyzet nincs (a tulajdonos döntése, 2026-11-07): a gomb alatt egy halvány sor mondja, hogy a fizetéssel azonnal megkapja az előnézeteket, és így a 14 napos elállási jog nem illeti meg; a gomb megnyomása a nyilatkozat, a Stripe fizetőoldala megismétli. A bankszámlakivonaton „INKAGE” utótag szerepel.
 - **Számla:** minden eladásról Billingo e-számla és NAV-bejelentés, ugyanabban a számlatömbben, mint a Calligráé. Ha nincs a vevőnek címe, a számla nem megy ki, hanem e-mail jön róla. A sikertelen számlákat a `/api/pay-cron` 10 percenként újrapróbálja.
 - **Admin:** a Bevétel oldalak (Fizetések, Vevők, Pénzügy, Fizetési hibák, Árak) innentől valós adatot mutatnak. A „Csomag adása” gomb működik.
 

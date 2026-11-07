@@ -29,8 +29,6 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   const { ui, toast, profile } = useApp();
   const L = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [plan, setPlan] = useState<PlanId>('mini');
-  const [consent, setConsent] = useState(false);
-  const [need, setNeed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [pair, setPair] = useState(0);
@@ -41,7 +39,6 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   useEffect(() => {
     if (!open) return;
     setPlan('mini');
-    setNeed(false);
     const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
@@ -94,13 +91,6 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
 
   const buy = async () => {
     if (busy) return;
-    if (!consent) {
-      setNeed(false);
-      requestAnimationFrame(() => setNeed(true));
-      haptic();
-      track('pay_blocked', { why: 'waiver', plan });
-      return;
-    }
     setBusy(true);
     track('checkout_start', { plan, why });
     const r = await api<{ url?: string; error?: string }>('/api/checkout', { plan, consent: true, lang: ui.lang });
@@ -214,6 +204,21 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
             })}
           </div>
 
+          <div className="pz-more">
+            <span className="pz-more-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+            </span>
+            <span>
+              <b>{L('Add more any time', 'Bármikor bővítheted')}</b>
+              <small>
+                {L(
+                  'Need more later? Buy another package whenever you like: 5, 15 or 40 more previews, added to the ones you have.',
+                  'Kell még később? Bármikor vehetsz újabb csomagot: még 5, 15 vagy 40 előnézetet, és ezek hozzáadódnak a meglévőkhöz.'
+                )}
+              </small>
+            </span>
+          </div>
+
           <ul className="pz-trust">
             <li>
               <Check /> {L('Pay once, no subscription', 'Egyszer fizetsz, nincs előfizetés')}
@@ -234,15 +239,15 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
             <span>{busy ? L('Opening secure payment…', 'Biztonságos fizetés megnyitása…') : L(`Get ${p.name}`, `${p.name} csomag`)}</span>
             {!busy && <b>{fmtUsd(p.usd, loc)}</b>}
           </button>
-          <label className={`pz-waive ${need ? 'need' : ''}`}>
-            <input type="checkbox" checked={consent} onChange={(e) => (setConsent(e.target.checked), setNeed(false), e.target.checked && track('pay_waive'))} />
-            <span>
-              {L('I ask for the previews right away and accept that this way I lose the 14-day right of withdrawal.', 'Kérem az előnézetek azonnali teljesítését, és tudomásul veszem, hogy így elveszítem a 14 napos elállási jogot.')}{' '}
-              <a href={`/terms${ui.lang === 'hu' ? '' : `?lang=${ui.lang}`}`} target="_blank" rel="noopener">
-                {L('Terms', 'ÁSZF')}
-              </a>
-            </span>
-          </label>
+          {/* one quiet line instead of a tick box (owner, 2026-11-07): pressing the button above it is the buyer's express
+              request for immediate delivery and the acknowledgement that the 14-day right of withdrawal is lost
+              (45/2014 Korm. r. 29. § (1) m); Stripe's page repeats it */}
+          <p className="pz-waive">
+            {L('Paying gets you the previews right away, so the 14-day right of withdrawal does not apply.', 'A fizetéssel azonnal megkapod az előnézeteket, így a 14 napos elállási jog nem illet meg.')}{' '}
+            <a href={`/terms${ui.lang === 'hu' ? '' : `?lang=${ui.lang}`}`} target="_blank" rel="noopener">
+              {L('Terms', 'ÁSZF')}
+            </a>
+          </p>
           <p className="pz-secure">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
             {L('Secure card payment with Stripe', 'Biztonságos kártyás fizetés · Stripe')}
