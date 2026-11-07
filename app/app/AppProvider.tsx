@@ -83,6 +83,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     track('paywall_open', { why });
     setPaywall(why);
   }, [canBuy]);
+  // a look at the packages page before payments are on (owner's preview link: /app/explore?csomagok=elonezet);
+  // never in the store apps, and the pay button only says buying isn't open yet (/api/checkout answers 501)
+  const [pwPreview, setPwPreview] = useState(false);
+  useEffect(() => {
+    if ((window as any).Capacitor?.isNativePlatform?.() || new URLSearchParams(location.search).get('csomagok') !== 'elonezet') return;
+    setPwPreview(true);
+    setTimeout(() => setPaywall('locked'), 600);
+  }, []);
   // any call the server answers with "choose a package" opens the packages (lib/sb.ts api)
   useEffect(() => {
     const on = (e: Event) => openPaywall(((e as CustomEvent).detail as PaywallWhy) || 'previews');
@@ -307,7 +315,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
       {gate === 'in' && <AnnouncementBanner lang={ui.lang} closeLabel={ui.t('common.close')} />}
       <AiConsent lang={ui.lang} />
-      {canBuy && <Packages open={!!paywall} why={paywall || 'menu'} onClose={() => setPaywall(null)} />}
+      {(canBuy || pwPreview) && <Packages open={!!paywall} why={paywall || 'menu'} onClose={() => setPaywall(null)} />}
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>
