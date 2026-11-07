@@ -43,9 +43,9 @@ export function useStages({
     setPending((p) => (p.includes(k) ? p : [...p, k]));
     const parent = !fromFresh && PARENT[k] && PARENT[k] !== 'fresh' ? tokens.current[PARENT[k]!] : null;
     const base = parent || { token: j.token, image: j.fresh };
-    let r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: base.image, token: base.token, job: j.id });
+    let r = await api<{ image: string; token?: string; error?: string; code?: string }>('/api/age', { stage: k, image: base.image, token: base.token, job: j.id });
     // if continuing from the previous stage fails, start from the fresh photo instead
-    if (!r.ok && parent && job.current === j) r = await api<{ image: string; token?: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token, job: j.id });
+    if (!r.ok && parent && job.current === j) r = await api<{ image: string; token?: string; error?: string; code?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token, job: j.id });
     if (job.current !== j) return; // a newer preview was started meanwhile
     setPending((p) => p.filter((x) => x !== k));
     if (r.ok && r.data.image) {
@@ -54,6 +54,8 @@ export function useStages({
       persistLate({ [k]: r.data.image });
       if (k === 'y50') track('stage_y50');
       chain(k); // next link of the chain
+    } else if (r.data?.code === 'locked') {
+      // comes with a package: the packages sheet is open (lib/sb.ts api), the tab shows a lock
     } else {
       setFailed((f) => [...f, k]);
       chain(k, true); // the rest of the chain can still start from the fresh photo
@@ -87,6 +89,13 @@ export function useStages({
     removalIntent.current = false;
     started.current = new Set();
     setFailed([]);
+    // the trial: only the 50-year image, straight from the fresh one; the other years come with a package
+    if (me.pay === 'trial') {
+      setPending(['y50']);
+      ageOne('y50', true);
+      track(was ? 'removal_then_aging' : 'aging_start', { trial: 1 });
+      return;
+    }
     setPending(AGE_STAGES);
     AGE_STAGES.filter((k) => PARENT[k] === 'fresh').forEach((k) => ageOne(k));
     track(was ? 'removal_then_aging' : 'aging_start');
@@ -96,17 +105,18 @@ export function useStages({
     const j = job.current;
     if (!j) return;
     setRemPending((p) => (p.includes(k) ? p : [...p, k]));
-    const r = await api<{ image: string; error?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token, job: j.id });
+    const r = await api<{ image: string; error?: string; code?: string }>('/api/age', { stage: k, image: j.fresh, token: j.token, job: j.id });
     if (job.current !== j) return;
     setRemPending((p) => p.filter((x) => x !== k));
     if (r.ok && r.data.image) {
       setPreview((p) => (p ? { ...p, removal: { ...(p.removal || {}), [k]: r.data.image } } : p));
       persistLate({ [k]: r.data.image }, true);
-    } else if (r.data?.error) toast(trErr(ui.lang, r.data.error));
+    } else if (r.data?.error && r.data?.code !== 'locked') toast(trErr(ui.lang, r.data.error));
   };
   const startRemoval = () => {
     track('removal_start');
-    REMOVAL_STAGES.forEach((k) => removalOne(k));
+    // the trial: only the 10-session image
+    (me.pay === 'trial' ? (['laser10'] as RemovalKey[]) : REMOVAL_STAGES).forEach((k) => removalOne(k));
   };
 
   return { tokens, started, ageOne, lateQueue, persistLate, startAging, startRemoval };

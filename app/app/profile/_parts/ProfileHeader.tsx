@@ -29,7 +29,8 @@ export function ProfileHeader({
   signOut: () => void;
   setErase: (v: boolean) => void;
 }) {
-  const { ui, me, profile } = useApp();
+  const { ui, me, profile, canBuy, openPaywall } = useApp();
+  const counted = me.pay === 'trial' || me.pay === 'paid';
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const meta = profile;
   return (
@@ -105,13 +106,18 @@ export function ProfileHeader({
           </div>
           <div>
             <b>{me.user ? Math.max(0, me.remaining ?? 0) : '–'}</b>
-            <span>{t('left this month', 'maradt e hónapban')}</span>
+            <span>{counted ? t('previews left', 'előnézet maradt') : t('left this month', 'maradt e hónapban')}</span>
           </div>
           <div>
             <b>{me.bonus ?? 0}</b>
             <span>{t('bonus', 'bónusz')}</span>
           </div>
         </div>
+        {canBuy && counted && (
+          <button className="btn ghost wide" style={{ marginTop: 12 }} onClick={() => openPaywall('menu')}>
+            {t('Buy more previews', 'További előnézetek vásárlása')}
+          </button>
+        )}
       </div>
     </>
   );

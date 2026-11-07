@@ -1,4 +1,5 @@
 import { tx } from '@/lib/tr';
+import { webPaymentsOn } from '@/lib/pricing';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
@@ -60,7 +61,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       icon: 'gift',
       id: 'beta',
       ps: [
-        T('Every feature on this page is open while InkAge is in beta. Your account gets 30 previews a month; the allowance restarts on the 1st of each month.', 'Az oldalon szereplő minden funkció elérhető, amíg az InkAge béta. A fiókod havonta 30 előnézetet kap; a keret minden hónap 1-jén újraindul.'),
+        (webPaymentsOn ? T('Your account comes with one preview to try, with the 50-year image. Packages add previews with every year and the laser sessions. You pay once, no subscription.', 'A fiókoddal egy előnézetet kipróbálhatsz, az 50 éves képpel. A csomagok további előnézeteket adnak minden évvel és a lézeres kezelésekkel. Egyszer fizetsz, nincs előfizetés.') : T('Every feature on this page is open while InkAge is in beta. Your account gets 30 previews a month; the allowance restarts on the 1st of each month.', 'Az oldalon szereplő minden funkció elérhető, amíg az InkAge béta. A fiókod havonta 30 előnézetet kap; a keret minden hónap 1-jén újraindul.')),
         T('An account is needed to make previews: one tap with Google or Apple, or e-mail and password. It keeps your images private, on every device, and lets you earn extra previews by inviting friends.', 'Az előnézetekhez fiók kell: egy koppintás Google- vagy Apple-fiókkal, vagy e-mail és jelszó. Így a képeid privátak maradnak, minden eszközödön meglesznek, és barátok meghívásával extra előnézeteket szerezhetsz.'),
       ],
     },

@@ -1,4 +1,5 @@
 import { tx, qOf, htmlLang, type Lang } from '@/lib/tr';
+import { webPaymentsOn } from '@/lib/pricing';
 import { SITE_URL } from '@/lib/site';
 import { InfoPage, Ico, type IconKey } from '../_info/InfoPage';
 import { ToolCta, ToolSlider } from './ToolBits';
@@ -24,7 +25,7 @@ export function ToolPage({ lang, c }: { lang: Lang; c: ToolContent }) {
   const page = c.path.slice(1);
   const url = `${SITE_URL}${c.path}${qOf(lang)}`;
   const ctaLabel = T('Try it on my photo', 'Kipróbálom a fotómon');
-  const ctaSmall = T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc');
+  const ctaSmall = (webPaymentsOn ? T('One-tap sign-up with Google or Apple · One preview to try · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Egy előnézet kipróbálásra · Kb. egy perc') : T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc'));
   const jsonLd = [
     {
       '@context': 'https://schema.org',

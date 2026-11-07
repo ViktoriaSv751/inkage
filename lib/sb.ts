@@ -25,6 +25,15 @@ export async function authHeader(): Promise<Record<string, string>> {
   return data.session ? { Authorization: `Bearer ${data.session.access_token}` } : {};
 }
 
+/** The store apps say so on every call: until store billing exists they keep the old monthly previews and see no
+    prices (the server believes it only from a WebView, lib/pay.ts nativeReq). */
+export function appHeader(): Record<string, string> {
+  const cap = typeof window !== 'undefined' ? (window as any).Capacitor : undefined;
+  if (!cap?.isNativePlatform?.()) return {};
+  const p = cap.getPlatform?.();
+  return p === 'ios' || p === 'android' ? { 'x-ink-app': p } : {};
+}
+
 export async function api<T = any>(path: string, body?: unknown): Promise<{ ok: boolean; status: number; data: T }> {
   if (typeof window !== 'undefined') {
     const m = await import('./ai-consent');
@@ -39,7 +48,7 @@ export async function api<T = any>(path: string, body?: unknown): Promise<{ ok: 
   try {
     res = await fetch(path, {
       method: body === undefined ? 'GET' : 'POST',
-      headers: { 'content-type': 'application/json', ...(await authHeader()) },
+      headers: { 'content-type': 'application/json', ...(await authHeader()), ...appHeader() },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
@@ -51,5 +60,8 @@ export async function api<T = any>(path: string, body?: unknown): Promise<{ ok: 
   } catch {
     data = { error: res.status === 504 ? 'The server took too long. Please try again.' : 'Network error' };
   }
+  // "choose a package": the app opens the packages wherever the call came from (AppProvider)
+  if (res.status === 402 && (data?.code === 'paywall' || data?.code === 'locked') && typeof window !== 'undefined')
+    window.dispatchEvent(new CustomEvent('ink:paywall', { detail: data.code === 'locked' ? 'locked' : /api\/(design|improve|extract|model-photo)/.test(path) ? 'helper' : 'previews' }));
   return { ok: res.ok, status: res.status, data };
 }

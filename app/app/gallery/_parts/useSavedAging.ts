@@ -15,13 +15,15 @@ export function useSavedAging(setOpen: Dispatch<SetStateAction<Preview | null>>,
   const started = useRef(new Set<string>());
 
   const one = async (id: string, k: StageKey) => {
-    const r = await api<{ image: string; error?: string }>('/api/age-saved', { id, stage: k });
+    const r = await api<{ image: string; error?: string; code?: string }>('/api/age-saved', { id, stage: k });
     setPending((all) => ({ ...all, [id]: (all[id] || []).filter((x) => x !== k) }));
     if (r.ok && r.data.image) {
       const add = (p: Preview) => (p.id === id ? { ...p, images: { ...p.images, [k]: r.data.image } } : p);
       setOpen((o) => (o ? add(o) : o));
       setItems((all) => all?.map(add) ?? null);
       if (k === 'y50') track('stage_y50');
+    } else if (r.data?.code === 'locked') {
+      // comes with a package: the packages sheet is open (lib/sb.ts api)
     } else if (r.status !== 409 || r.data?.error !== 'Already done') {
       setFailed((all) => ({ ...all, [id]: [...(all[id] || []), k] }));
       if (r.data?.error) toast(trErr(ui.lang, r.data.error));

@@ -186,6 +186,11 @@ export function useGenerate({
       lsSet('ink_job', null);
       setPhase(existing ? 'studio' : 'place');
       if (r.data?.code === 'busy') setWaitlist(true);
+      // payments on: the packages sheet is already open (lib/sb.ts api); nothing else to say
+      if (r.data?.code === 'paywall') {
+        track('paywall_hit');
+        return;
+      }
       if (r.data?.code === 'limit') {
         track('monthly_limit');
         setOutOfPreviews(true);

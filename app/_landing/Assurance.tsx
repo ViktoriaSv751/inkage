@@ -1,6 +1,7 @@
 'use client';
 
 import { TryLink } from '../AuthCta';
+import { webPaymentsOn } from '@/lib/pricing';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { track } from '@/lib/track';
@@ -94,7 +95,7 @@ export function BetaInstall({ t, lang }: { t: T; lang?: Lang }) {
     <section className="ls-sec lm-beta" id="beta">
       <div className="lm-beta-card">
         <h2>{t('Every feature, with your account.', 'Minden funkció, a fiókoddal.')}</h2>
-        <p>{t('30 previews a month with your account, plus invite bonuses. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézet, plusz meghívási bónuszok. A keret minden hónap 1-jén újraindul.')}</p>
+        <p>{(webPaymentsOn ? t('One preview to try with your account. More previews, with every year, come in one-time packages.', 'Fiókkal egy előnézet kipróbálásra. További előnézetek, minden évvel, egyszeri csomagokban.') : t('30 previews a month with your account, plus invite bonuses. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézet, plusz meghívási bónuszok. A keret minden hónap 1-jén újraindul.'))}</p>
         <ul>
           <li>{t('Ageing previews at 1, 10, 30 and 50 years', 'Öregedési előnézet 1, 10, 30 és 50 évre')}</li>
           <li>{t('Longevity score and “Make it last” redraw', 'Tartóssági pontszám és „Tedd tartóssá” átrajzolás')}</li>
@@ -154,7 +155,7 @@ export function BetaInstall({ t, lang }: { t: T; lang?: Lang }) {
 /* ------------------------------------------------------------------ FAQ */
 export function LandingFaq({ t, kbSfx }: { t: T; kbSfx: string }) {
   const qs = [
-    [t('How many previews can I make?', 'Hány előnézetet készíthetek?'), t('30 previews a month with your account, plus bonus previews when friends join through your invite link. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézetet, plusz bónuszt, ha a barátaid a meghívó linkeddel csatlakoznak. A keret minden hónap 1-jén újraindul.')],
+    [t('How many previews can I make?', 'Hány előnézetet készíthetek?'), (webPaymentsOn ? t('One with your account, to try: your tattoo fresh and after 50 years. More previews, each with every year and the laser sessions, come in one-time packages. No subscription.', 'Fiókkal egyet kipróbálhatsz: a tetoválásod frissen és 50 év múlva. További előnézetek, mindegyik az összes évvel és a lézeres kezelésekkel, egyszeri csomagokban. Nincs előfizetés.') : t('30 previews a month with your account, plus bonus previews when friends join through your invite link. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézetet, plusz bónuszt, ha a barátaid a meghívó linkeddel csatlakoznak. A keret minden hónap 1-jén újraindul.'))],
     [t('How accurate is the ageing?', 'Mennyire pontos az öregítés?'), t('It is an AI estimate based on how ink, skin and sun usually behave — not a measurement of your skin. Use it to compare designs, sizes and placements, and talk details through with your artist.', 'MI-alapú becslés arról, ahogy a tinta, a bőr és a nap általában viselkedik – nem a saját bőröd mérése. Minták, méretek és helyek összehasonlítására használd, a részleteket pedig beszéld át a tetoválóddal.')],
     [t('Do I need to sign up?', 'Kell regisztrálnom?'), t('Yes. A quick sign-up with Google or Apple (or e-mail) is needed, so your images stay private in your account.', 'Igen. Egy gyors regisztráció kell Google- vagy Apple-fiókkal (vagy e-maillel), így a képeid privátak maradnak a fiókodban.')],
     [t('What photo works best?', 'Milyen fotó működik a legjobban?'), t('Daylight, the spot in focus, filling most of the frame, without heavy filters. The app checks the light and focus for you.', 'Nappali fény, éles terület, ami kitölti a kép nagy részét, erős szűrők nélkül. Az app ellenőrzi helyetted a fényt és az élességet.')],

@@ -23,6 +23,8 @@ export function StageBar({
   setRemKey,
   remLabel,
   removalPending,
+  locked = [],
+  onLocked,
 }: {
   view: 'aging' | 'removal';
   mode: 'view' | 'split';
@@ -42,6 +44,9 @@ export function StageBar({
   setRemKey: (k: 'fresh' | RemovalKey) => void;
   remLabel: (k: 'fresh' | RemovalKey) => string;
   removalPending: RemovalKey[];
+  /** stages that come with a package (the trial): shown with a lock, a tap opens the packages */
+  locked?: (StageKey | RemovalKey)[];
+  onLocked?: () => void;
 }) {
   const { ui } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
@@ -67,6 +72,13 @@ export function StageBar({
           {STAGES.map((k) => {
             const fail = failed.includes(k);
             const idx = ready.indexOf(k);
+            if (idx < 0 && locked.includes(k) && onLocked)
+              return (
+                <button key={k} role="tab" aria-selected={false} className="locked" aria-label={`${label(k)} – ${t('comes with a package', 'csomaggal nyílik')}`} onClick={() => (haptic(), onLocked())}>
+                  <LockIco />
+                  {label(k)}
+                </button>
+              );
             return (
               <button
                 key={k}
@@ -90,7 +102,13 @@ export function StageBar({
     );
   return (
     <div className="stagebar four" role="tablist" aria-label={t('Laser sessions', 'Lézeres kezelések')}>
-      {(['fresh', ...REMOVAL_STAGES] as ('fresh' | RemovalKey)[]).map((k) => (
+      {(['fresh', ...REMOVAL_STAGES] as ('fresh' | RemovalKey)[]).map((k) =>
+        k !== 'fresh' && !rem[k] && !removalPending.includes(k) && locked.includes(k) && onLocked ? (
+          <button key={k} role="tab" aria-selected={false} className="locked" aria-label={`${remLabel(k)} – ${t('comes with a package', 'csomaggal nyílik')}`} onClick={() => (haptic(), onLocked())}>
+            <LockIco />
+            {remLabel(k)}
+          </button>
+        ) : (
         <button
           key={k}
           role="tab"
@@ -104,7 +122,15 @@ export function StageBar({
         >
           {remLabel(k)}
         </button>
-      ))}
+        )
+      )}
     </div>
   );
 }
+
+const LockIco = () => (
+  <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" style={{ marginRight: 4, verticalAlign: '-1px' }}>
+    <rect x="5" y="11" width="14" height="10" rx="2" />
+    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </svg>
+);

@@ -48,9 +48,13 @@ export function Result({
   gallery = false,
   onTryPlace,
 }: ResultProps) {
-  const { ui, toast } = useApp();
+  const { ui, toast, me, openPaywall, canBuy } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const img = preview.images;
+  /** the trial: the years other than 50 (and the laser sessions other than 10) come with a package */
+  const trial = me.pay === 'trial' && canBuy;
+  const locked: (StageKey | RemovalKey)[] = trial ? ['healed', 'y10', 'y30', 'laser3', 'laser6'] : [];
+  const onLocked = () => (track('locked_tap'), openPaywall('locked'));
   const rem = preview.removal || {};
   const report = preview.report;
   const ready = STAGES.filter((k) => img[k]);
@@ -192,6 +196,8 @@ export function Result({
         setRemKey={setRemKey}
         remLabel={remLabel}
         removalPending={removalPending}
+        locked={locked}
+        onLocked={onLocked}
       />
 
       {onRedo && view === 'aging' && img.fresh && !own && (
@@ -212,8 +218,22 @@ export function Result({
                 : t('Want to see how it looks over the years?', 'Megnézed, hogyan néz ki az évek múlásával?')
               : t('Saved to your gallery. Want to see how it looks over the years?', 'Elmentve a galériádba. Megnézed, hogyan néz ki az évek múlásával?')}
           </p>
-          <button className="btn wide" onClick={onAging}>
-            {gallery && ready.length > 1 ? t('Finish the missing years', 'Hiányzó évek elkészítése') : t('Show how it ages (1–50 years)', 'Mutasd, hogyan öregszik (1–50 év)')}
+          <button className="btn wide" onClick={trial && img.y50 ? onLocked : onAging}>
+            {gallery && ready.length > 1
+              ? trial && img.y50
+                ? t('Unlock the other years', 'A többi év megnyitása')
+                : t('Finish the missing years', 'Hiányzó évek elkészítése')
+              : trial
+                ? t('Show it in 50 years', 'Mutasd 50 év múlva')
+                : t('Show how it ages (1–50 years)', 'Mutasd, hogyan öregszik (1–50 év)')}
+          </button>
+        </div>
+      )}
+      {trial && !gallery && view === 'aging' && img.y50 && pending.length === 0 && (
+        <div className="age-offer unlock-offer">
+          <p>{t('This was 50 years. Want to see 1, 10 and 30 years too, and more designs?', 'Ez volt az 50 év. Megnéznéd az 1, 10 és 30 évet is, és további terveket?')}</p>
+          <button className="btn wide" onClick={onLocked}>
+            {t('Unlock every year', 'Minden év megnyitása')}
           </button>
         </div>
       )}

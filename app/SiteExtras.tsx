@@ -1,5 +1,6 @@
 'use client';
 import { tx, qOf, type Lang } from '@/lib/tr';
+import { webPaymentsOn } from '@/lib/pricing';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -51,7 +52,7 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
         </div>
         <div className="ctabar-txt">
           <b>{T('See your tattoo 50 years from now', 'Nézd meg a tetoválásod 50 év múlva')}</b>
-          <span>{T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc')}</span>
+          <span>{(webPaymentsOn ? T('One-tap sign-up with Google or Apple · One preview to try · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Egy előnézet kipróbálásra · Kb. egy perc') : T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc'))}</span>
         </div>
         <div className="ctabar-act">
           <Link href={`/belepes${qOf(lang)}`} className="ctabar-ghost" tabIndex={visible ? 0 : -1}>

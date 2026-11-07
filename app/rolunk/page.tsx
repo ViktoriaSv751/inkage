@@ -1,4 +1,5 @@
 import READY from '@/lib/locales/ready.json';
+import { webPaymentsOn } from '@/lib/pricing';
 import { tx, qOf } from '@/lib/tr';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -192,7 +193,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
             <li>
               <Ico k="gift" />
               <span>
-                <b>{T('30 previews a month', 'Havi 30 előnézet')}</b>
+                <b>{(webPaymentsOn ? T('One preview to try', 'Egy előnézet kipróbálásra') : T('30 previews a month', 'Havi 30 előnézet'))}</b>
                 {T('All features, with your account.', 'Minden funkció, a fiókoddal.')}
               </span>
             </li>

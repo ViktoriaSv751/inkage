@@ -141,7 +141,7 @@ export function BottomNav() {
       <div className="rail-foot">
         <div className="rail-beta">
           <b>{tx(ui.lang, 'Beta', 'Béta')}</b>
-          <p>{tx(ui.lang, 'You get 30 previews a month with your account.', 'A fiókoddal havonta 30 előnézet jár.')}</p>
+          <p>{me.pay === 'trial' || me.pay === 'paid' ? tx(ui.lang, `Previews left: ${me.remaining ?? 0}`, `Hátralévő előnézetek: ${me.remaining ?? 0}`) : tx(ui.lang, 'You get 30 previews a month with your account.', 'A fiókoddal havonta 30 előnézet jár.')}</p>
         </div>
         <Link href={`/tudastar${q}`}>{tx(ui.lang, 'Guides', 'Tudástár')}</Link>
         <Link href={`/gyik${q}`}>{tx(ui.lang, 'FAQ', 'GYIK')}</Link>

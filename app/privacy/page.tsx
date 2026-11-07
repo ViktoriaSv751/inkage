@@ -2,6 +2,7 @@ import { tx } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 import { PUBLIC } from '@/lib/public-config';
+import { webPaymentsOn } from '@/lib/pricing';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
@@ -46,6 +47,12 @@ export default function Privacy({ searchParams }: { searchParams: { lang?: strin
       T('- **Google (Firebase Cloud Messaging)** and **Apple (APNs)** – push notifications', '- **Google (Firebase Cloud Messaging)** és **Apple (APNs)** – push-értesítések'),
       T('- **Resend** – sending e-mails (welcome, newsletter, vote notifications)', '- **Resend** – e-mailek küldése (üdvözlő, hírlevél, szavazási értesítés)'),
       T('- **Open-Meteo** – UV index forecast (gets only the rounded location, straight from your phone, when you ask for it)', '- **Open-Meteo** – UV-index előrejelzés (csak a kerekített helyet kapja meg, közvetlenül a telefonodról, amikor kéred)'),
+      ...(webPaymentsOn
+        ? [
+            T('- **Stripe** – card payments for packages (Stripe receives your card, name, e-mail and billing address; we never see the card number)', '- **Stripe** – a csomagok kártyás fizetése (a Stripe kapja meg a kártyádat, a neved, az e-mail-címed és a számlázási címed; a kártyaszámot mi soha nem látjuk)'),
+            T('- **Billingo** – issuing the invoice for a purchase and reporting it to the Hungarian tax authority, as the law requires (name, address, e-mail, the amount; kept for 8 years)', '- **Billingo** – a vásárlás számlájának kiállítása és a NAV-nak küldése, ahogy a jogszabály előírja (név, cím, e-mail, összeg; 8 évig őrizzük)'),
+          ]
+        : []),
       T('- **Google** and **Apple** – sign-in with your Google account or Apple ID', '- **Google** és **Apple** – belépés Google-fiókkal vagy Apple ID-val'),
       T('Some of them are based in the United States; transfers rely on the EU–US Data Privacy Framework or the EU standard contractual clauses.', 'Közülük néhány az Egyesült Államokban működik; az adattovábbítás az EU–USA adatvédelmi keretrendszeren vagy az EU általános szerződési feltételein alapul.'),
     ] },

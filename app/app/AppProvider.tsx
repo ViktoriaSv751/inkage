@@ -11,6 +11,8 @@ import { lsGet, lsSet, migrateLocal, track, visitSource } from '@/lib/store';
 import { AgeGate } from './AgeGate';
 import { AnnouncementBanner } from './_ui/AnnouncementBanner';
 import { AiConsent } from './AiConsent';
+import { Packages, type PaywallWhy } from './_ui/Packages';
+import { webPaymentsOn } from '@/lib/pricing';
 
 export type Me = {
   user: { id: string; email?: string } | null;
@@ -19,6 +21,11 @@ export type Me = {
   bonus?: number;
   onboarding?: any;
   notifyVotes?: boolean;
+  /** 'free' = the old monthly previews (payments off, store apps, older accounts' first month), 'trial' = never bought
+      (locked years), 'paid' = bought a package. From my_quota. */
+  pay?: 'free' | 'trial' | 'paid';
+  payLive?: boolean;
+  credits?: number;
 };
 /** What the person set on their account (name, picture). Kept here, so the top bar, the profile and the edit sheet
     always show the same thing. */
@@ -40,6 +47,10 @@ type Ctx = {
   authReason: string;
   closeAuth: () => void;
   ui: ReturnType<typeof useLang>;
+  /** the packages sheet (web only; does nothing in the store apps or while web payments are off) */
+  openPaywall: (why?: PaywallWhy) => void;
+  /** may this person buy here: web payments on and not a store app */
+  canBuy: boolean;
 };
 
 const AppCtx = createContext<Ctx>(null as any);
@@ -65,6 +76,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [msg, setMsg] = useState('');
   const [authOpen, setAuthOpen] = useState(false);
   const [authReason, setAuthReason] = useState('');
+  const [paywall, setPaywall] = useState<PaywallWhy | null>(null);
+  const canBuy = webPaymentsOn && !(typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.());
+  const openPaywall = useCallback((why: PaywallWhy = 'previews') => {
+    if (!canBuy) return;
+    track('paywall_open', { why });
+    setPaywall(why);
+  }, [canBuy]);
+  // any call the server answers with "choose a package" opens the packages (lib/sb.ts api)
+  useEffect(() => {
+    const on = (e: Event) => openPaywall(((e as CustomEvent).detail as PaywallWhy) || 'previews');
+    window.addEventListener('ink:paywall', on);
+    return () => window.removeEventListener('ink:paywall', on);
+  }, [openPaywall]);
   const timer = useRef<any>();
   const migrated = useRef(false);
   // an account is needed to use the app: no session → the sign-in page
@@ -212,6 +236,25 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if ((window as any).Capacitor?.isNativePlatform?.()) import('@/lib/native').then((m) => m.initNative()).catch(() => {});
     else if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then(() => import('@/lib/push').then((m) => m.syncPush())).catch(() => {});
     track('app_open', { path: location.pathname });
+    // back from Stripe: the webhook adds the previews within seconds, so ask again a few times
+    const back = new URLSearchParams(location.search);
+    if (back.get('paid') || back.get('canceled')) {
+      const paid = back.get('paid');
+      back.delete('paid');
+      back.delete('canceled');
+      history.replaceState(null, '', location.pathname + (back.toString() ? `?${back}` : '') + location.hash);
+      if (paid) {
+        track('checkout_done', { plan: paid });
+        let n = 0;
+        const again = async () => {
+          const m = await refreshMeRef.current?.().catch(() => null);
+          if (m?.pay === 'paid') return toast(tx(ui.lang, 'Thank you! Your previews are here. Locked years open in your gallery.', 'Köszönjük! Megjöttek az előnézeteid. A lezárt évek a galériádban megnyílnak.'));
+          if (++n < 8) setTimeout(again, 2500);
+          else toast(tx(ui.lang, 'Payment received. Your previews arrive in a minute.', 'A fizetés megérkezett. Az előnézeteid egy percen belül megjönnek.'));
+        };
+        setTimeout(again, 1500);
+      }
+    }
     // any "new design" link starts empty: photo and design slots cleared (recent photos stay)
     const fresh = (e: MouseEvent) => {
       const a = (e.target as HTMLElement)?.closest?.('a[href="/app"]');
@@ -256,12 +299,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           setAuthOpen(true);
         },
         closeAuth: () => setAuthOpen(false),
+        openPaywall,
+        canBuy,
       }}
     >
       {gate === 'in' ? children : <div className="gate-wait" aria-busy="true"><b>InkAge</b><i /></div>}
       {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
       {gate === 'in' && <AnnouncementBanner lang={ui.lang} closeLabel={ui.t('common.close')} />}
       <AiConsent lang={ui.lang} />
+      {canBuy && <Packages open={!!paywall} why={paywall || 'menu'} onClose={() => setPaywall(null)} />}
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>

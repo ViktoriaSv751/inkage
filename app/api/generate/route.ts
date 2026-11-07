@@ -8,6 +8,7 @@ import { sendMail } from '@/lib/mail';
 import { limitEmail } from '@/lib/mail-more';
 import { longevity } from '@/lib/score';
 import { guestFrom, guestRefund, guestStart } from '@/lib/guest';
+import { payArgs } from '@/lib/pay';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -49,10 +50,13 @@ export async function POST(req: Request) {
   let owner: string;
 
   if (a) {
-    const { data: start, error } = await a.db.rpc('start_generation', { p_placement: placement });
+    const { data: start, error } = await a.db.rpc('start_generation', { p_placement: placement, ...payArgs(req) });
     if (error) return json({ error: 'Could not start your preview. Try again.' }, 500);
     if (!start.ok && start.reason === 'busy')
       return json({ error: 'So many people are trying InkAge today that previews are paused. Try again tomorrow.', code: 'busy' }, 429);
+    // payments on and the trial (or the packages) used up: the app shows the packages
+    if (!start.ok && start.reason === 'paywall')
+      return json({ error: 'You used your previews. Choose a package to make more.', code: 'paywall', remaining: 0 }, 402);
     if (!start.ok) {
       // once a month: an e-mail about it (never holds up the answer on failure)
       if (a.user.email) {

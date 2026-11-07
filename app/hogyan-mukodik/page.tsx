@@ -1,4 +1,5 @@
 import { tx } from '@/lib/tr';
+import { webPaymentsOn } from '@/lib/pricing';
 import type { Metadata } from 'next';
 import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 
@@ -87,7 +88,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       highlights={[
         { i: 'clock', h: T('About a minute', 'Kb. egy perc'), p: T('From photo to five ageing stages.', 'A fotótól az öt öregedési stádiumig.') },
         { i: 'user', h: T('One-tap sign-up', 'Egy koppintásos regisztráció'), p: T('With Google or Apple, or with e-mail.', 'Google- vagy Apple-fiókkal, vagy e-maillel.') },
-        { i: 'spark', h: T('30 a month', 'Havi 30'), p: T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.') },
+        { i: 'spark', h: (webPaymentsOn ? T('Try one', 'Egy próba') : T('30 a month', 'Havi 30')), p: (webPaymentsOn ? T('One preview to try with your account, more in one-time packages.', 'Fiókkal egy előnézet kipróbálásra, továbbiak egyszeri csomagokban.') : T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.')) },
       ]}
       related={[
         { href: '/funkciok', t: T('Features', 'Funkciók'), p: T('Everything InkAge can do.', 'Minden, amit az InkAge tud.'), i: 'spark' },

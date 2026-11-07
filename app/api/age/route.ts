@@ -3,6 +3,8 @@ import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken, verifyT
 import { agePrompt, aiConfigured, secondaryImageModels, Analysis, editImage, friendlyAiError, REMOVAL, RemovalStage, removalPrompt, STAGES, Stage, stageYears } from '@/lib/ai';
 import { guestBumpAge, guestFrom } from '@/lib/guest';
 import { jobPut } from '@/lib/jobs';
+import { payArgs } from '@/lib/pay';
+import { userClient } from '@/lib/server';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -23,12 +25,16 @@ export async function POST(req: Request) {
   if (t.uid.startsWith('guest:')) {
     const g = guestFrom(req);
     if (`guest:${g.id}` !== t.uid) return json({ error: 'Start a new preview and try again.' }, 403);
+    // payments on: a guest gets the trial's images only (the 50-year and the 10-session one)
+    const { data: live } = await userClient().rpc('pay_live');
+    if (live && stage !== 'y50' && stage !== 'laser10') return json({ error: 'The other years come with a package.', code: 'locked' }, 402);
     allowed = await guestBumpAge(t.gid, g.id);
   } else {
     const a = await getAuthed(req);
     if (!a || a.user.id !== t.uid) return json({ error: 'Please sign in again.', code: 'auth' }, 401);
-    const { data } = await a.db.rpc('bump_age', { p_gid: t.gid });
-    allowed = !!data;
+    const { data } = await a.db.rpc('age_step', { p_gid: t.gid, p_stage: stage, ...payArgs(req) });
+    if (data?.reason === 'locked') return json({ error: 'The other years come with a package.', code: 'locked' }, 402);
+    allowed = !!data?.ok;
     db = a;
   }
   if (!allowed) return json({ error: 'Limit reached for this image. Start a new preview.' }, 429);
@@ -47,6 +53,8 @@ export async function POST(req: Request) {
   } catch (e) {
     console.error('age failed', e);
     await logServerError('age', e);
+    // a trial image that failed may be tried again
+    if (db) await db.db.rpc('age_refund', { p_gid: t.gid, p_stage: stage }).then(() => {}, () => {});
     return json({ error: friendlyAiError(e) }, 502);
   }
 }

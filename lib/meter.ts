@@ -1,5 +1,6 @@
 import { getAuthed, json } from './server';
 import { guestFrom, guestHelperStart, guestRefund } from './guest';
+import { payArgs } from './pay';
 
 /**
  * Counts one helper AI job (cut-out, AI design, redraw) against its own daily allowance,
@@ -14,7 +15,7 @@ export async function startUnit(req: Request, label: string) {
     return res;
   };
   if (a) {
-    const { data, error } = await a.db.rpc('helper_start', { p_label: label });
+    const { data, error } = await a.db.rpc('helper_start', { p_label: label, ...payArgs(req) });
     if (error) return { ok: false as const, res: json({ error: 'Could not start your preview. Try again.' }, 500) };
     if (!data.ok)
       return {
@@ -22,7 +23,9 @@ export async function startUnit(req: Request, label: string) {
         res:
           data.reason === 'busy'
             ? json({ error: 'So many people are trying InkAge today that previews are paused. Try again tomorrow.', code: 'busy' }, 429)
-            : json({ error: 'You used today’s cut-outs and AI drawings. Try again tomorrow.', code: 'helper_limit' }, 429),
+            : data.reason === 'paywall'
+              ? json({ error: 'More AI drawings and cut-outs come with a package.', code: 'paywall' }, 402)
+              : json({ error: 'You used today’s cut-outs and AI drawings. Try again tomorrow.', code: 'helper_limit' }, 429),
       };
     return { ok: true as const, owner: a.user.id, gid: data.gid as number, refund: async () => void (await a.db.rpc('refund_generation', { p_gid: data.gid })), withCookie };
   }

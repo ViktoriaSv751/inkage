@@ -56,8 +56,8 @@ export type Quota = {
   canAge: boolean;
 };
 
-export async function quota(db: SupabaseClient): Promise<Quota> {
-  const { data, error } = await db.rpc('my_quota');
+export async function quota(db: SupabaseClient, args: Record<string, unknown> = {}): Promise<Quota> {
+  const { data, error } = await db.rpc('my_quota', args);
   if (error) throw error;
   return data as Quota;
 }

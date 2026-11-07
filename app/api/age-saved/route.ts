@@ -3,6 +3,7 @@ import { logServerError } from '@/lib/errlog';
 import { getAuthed, json, serverConfig } from '@/lib/server';
 import { agePrompt, aiConfigured, analyse, Analysis, editImage, friendlyAiError, secondaryImageModels, STAGES, Stage, stageYears } from '@/lib/ai';
 import { DEFAULT_ANALYSIS } from '@/lib/ai/types';
+import { payArgs } from '@/lib/pay';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -34,8 +35,9 @@ export async function POST(req: Request) {
 
   const { data: gid } = await a.db.rpc('start_saved_aging', { p_preview: id });
   if (!gid) return json({ error: 'Start a new preview and try again.' }, 404);
-  const { data: allowed } = await a.db.rpc('bump_age', { p_gid: gid });
-  if (!allowed) return json({ error: 'Limit reached for this image. Start a new preview.' }, 429);
+  const { data: step } = await a.db.rpc('age_step', { p_gid: gid, p_stage: stage, ...payArgs(req) });
+  if (step?.reason === 'locked') return json({ error: 'The other years come with a package.', code: 'locked' }, 402);
+  if (!step?.ok) return json({ error: 'Limit reached for this image. Start a new preview.' }, 429);
 
   try {
     const { data: file, error } = await a.db.storage.from(BUCKET).download(paths[key]);
@@ -70,6 +72,7 @@ export async function POST(req: Request) {
   } catch (e) {
     console.error('saved aging failed', e);
     await logServerError('age-saved', e);
+    await a.db.rpc('age_refund', { p_gid: gid, p_stage: stage }).then(() => {}, () => {});
     return json({ error: friendlyAiError(e) }, 502);
   }
 }
