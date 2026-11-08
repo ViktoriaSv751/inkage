@@ -38,6 +38,12 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'tattoos-blood-donation-mri': ['first-tattoo-checklist', 'tattoo-ink-safety-eu', 'tattoo-healing-stages', 'tattoos-when-you-get-old', 'tattoo-removal-pregnancy', 'tattoo-itching-peeling'],
   'raised-tattoo': ['tattoo-healing-stages', 'tattoo-itching-peeling', 'sunburned-tattoo', 'tattoo-blowout', 'tattoo-ink-safety-eu', 'tattoos-on-darker-skin'],
   'minimalist-tattoos': ['how-tattoos-age', 'fine-line-tattoos-aging', 'tattoo-size-guide', 'tattoo-touch-ups', 'best-placement-for-tattoo-longevity', 'hand-and-finger-tattoos'],
+  'ankle-tattoos': ['best-placement-for-tattoo-longevity', 'tattoo-pain-chart', 'neck-tattoos', 'tattoo-healing-stages', 'fine-line-tattoos-aging', 'tattoo-aftercare-sun-protection'],
+  'watercolour-tattoos': ['tattoo-styles-guide', 'color-vs-black-ink-aging', 'tattoos-that-age-well', 'tattoo-touch-ups', 'tattoo-aftercare-sun-protection', 'best-placement-for-tattoo-longevity'],
+  'behind-the-ear-tattoos': ['neck-tattoos', 'best-placement-for-tattoo-longevity', 'tattoo-pain-chart', 'fine-line-tattoos-aging', 'tattoo-healing-stages', 'tattoo-size-guide'],
+  'neo-traditional-tattoos': ['tattoo-styles-guide', 'american-traditional-tattoo-aging', 'color-vs-black-ink-aging', 'tattoos-that-age-well', 'tattoo-size-guide', 'best-placement-for-tattoo-longevity'],
+  'dotwork-geometric-tattoos': ['tattoo-styles-guide', 'blackwork-tattoos-placement', 'fine-line-tattoos-aging', 'tattoos-weight-change-pregnancy', 'tattoo-touch-ups', 'tattoo-size-guide'],
+  'white-and-uv-ink-tattoos': ['color-vs-black-ink-aging', 'tattoo-ink-safety-eu', 'colour-tattoo-removal', 'tattoos-on-darker-skin', 'tattoo-aftercare-sun-protection', 'raised-tattoo'],
   'laser-tattoo-removal-summer': ['laser-removal-healing', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-what-to-expect', 'sunburned-tattoo', 'tattoos-on-darker-skin'],
   'laser-removal-healing': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'tattoo-healing-stages', 'sunburned-tattoo', 'laser-removal-before-after'],
   // healing & care
@@ -92,7 +98,7 @@ const STYLE_ARTICLES: Record<string, string[]> = {
   color: ['color-vs-black-ink-aging', 'tattoos-on-darker-skin', 'tattoo-aftercare-sun-protection'],
   realism: ['realism-tattoos-aging', 'tattoo-before-and-after', 'tattoo-styles-guide'],
 };
-const AREA_ARTICLES: Record<string, string[]> = { hand: ['hand-and-finger-tattoos'], finger: ['hand-and-finger-tattoos'], neck: ['neck-tattoos'], ribs: ['rib-tattoos'] };
+const AREA_ARTICLES: Record<string, string[]> = { hand: ['hand-and-finger-tattoos'], finger: ['hand-and-finger-tattoos'], neck: ['neck-tattoos'], ribs: ['rib-tattoos'], ankle: ['ankle-tattoos'] };
 
 export function seoPageArticles(style: string, area: string): string[] {
   const all = [...(STYLE_ARTICLES[style] || []), ...(AREA_ARTICLES[area] || []), 'best-placement-for-tattoo-longevity', 'tattoo-pain-chart', 'tattoo-healing-stages'];

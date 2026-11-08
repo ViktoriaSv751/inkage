@@ -52,9 +52,15 @@ import a46 from './japanese-tattoos';
 import a47 from './tattoos-blood-donation-mri';
 import a48 from './raised-tattoo';
 import a49 from './minimalist-tattoos';
+import a50 from './ankle-tattoos';
+import a51 from './watercolour-tattoos';
+import a52 from './behind-the-ear-tattoos';
+import a53 from './neo-traditional-tattoos';
+import a54 from './dotwork-geometric-tattoos';
+import a55 from './white-and-uv-ink-tattoos';
 
 export type { LongArticle } from './types';
-const ALL: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49];
+const ALL: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55];
 /** The articles that are out today (see isLive in lib/kb.ts). */
 export const liveLong = () => ALL.filter((a) => isLive(a.slug));
 export const longArticle = (slug: string) => liveLong().find((a) => a.slug === slug);
