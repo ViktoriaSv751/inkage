@@ -31,8 +31,12 @@ export function generateMetadata(): Metadata {
     // the app's own screens stay out of search; its knowledge-base copies name the public article as canonical
     // (app/app/tudastar sets that), so Google never indexes /app/tudastar/... as a second, untitled copy
     robots: inApp && !path.startsWith('/app/tudastar') ? { index: false, follow: true } : undefined,
-    // Google Search Console ownership check (the code from "HTML tag" verification)
-    verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
+    // Google Search Console ownership check (the code from "HTML tag" verification) and the Pinterest website claim
+    // of the @inkageapp business account (Settings → Link to Pinterest → Websites, 2026-11-08)
+    verification: {
+      ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),
+      other: { 'p:domain_verify': '5ab26a9e6d9e08b04ff8eba075f6d41b' },
+    },
     manifest: '/manifest.webmanifest',
     appleWebApp: { capable: true, title: 'InkAge', statusBarStyle: 'default' },
     icons: { icon: '/icon.svg', apple: '/icons/apple-touch-icon.png' },
