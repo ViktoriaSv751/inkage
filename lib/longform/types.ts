@@ -19,5 +19,6 @@ export type LongArticle = {
   summary: { en: string[]; hu: string[] }; // "In short": 3–4 key takeaways
   body: { en: string[]; hu: string[] };
   faq: { q: L2; a: L2 }[]; // 4–5 questions
+  sources?: { t: string; u: string }[]; // where the facts come from (shown under the article, linked)
   captions: { img2: L2; img3: L2; img4: L2; img5?: L2; img6?: L2; img7?: L2 }; // captions for the inline photos
 };

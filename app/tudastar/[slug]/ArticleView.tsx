@@ -13,6 +13,8 @@ import { KbChrome } from '../KbChrome';
 import { Helpful, ShareBtn } from '../ArticleBits';
 import { SiteFooter } from '../../SiteFooter';
 import { Blocks, rich, type Fig } from './Blocks';
+import { PainMap } from './PainMap';
+import { painMapText } from '@/lib/pain-map';
 import { ReadProgress, TocNav } from './Reader';
 import '../kb.css';
 import './article.css';
@@ -81,7 +83,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Article', headline: pick(a.title, L), description: pick(a.desc, L), inLanguage: L, wordCount: n, datePublished: meta?.date, dateModified: meta?.date, image: meta ? [`https://inkage.app${IMG(meta.img, 1200)}`] : undefined, author: { '@type': 'Organization', name: 'InkAge' }, publisher: { '@type': 'Organization', name: 'InkAge' } },
+      { '@type': 'Article', headline: pick(a.title, L), description: pick(a.desc, L), inLanguage: L, wordCount: n, datePublished: meta?.date, dateModified: meta?.date, image: meta ? [meta.img, ...Object.keys(figs).map((k) => meta[k as 'img2'])].filter(Boolean).map((id) => ({ '@type': 'ImageObject', url: `https://inkage.app${IMG(id as string, 1200)}`, width: 1200 })) : undefined, author: { '@type': 'Organization', name: 'InkAge', url: 'https://inkage.app/szerkesztoseg' }, citation: a.sources?.map((x) => x.u), publisher: { '@type': 'Organization', name: 'InkAge' } },
       { '@type': 'BreadcrumbList', itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'InkAge', item: `https://inkage.app/${sfx}` },
           { '@type': 'ListItem', position: 2, name: T('Knowledge base', 'Tudástár'), item: `https://inkage.app/tudastar${sfx}` },
@@ -98,7 +100,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
       <ReadProgress />
 
       <header className="ka-cover">
-        <img src={IMG(meta?.img || KB_STILL, 1400)} srcSet={IMGSET(meta?.img || KB_STILL)} sizes="100vw" alt="" fetchPriority="high" decoding="async" />
+        <img src={IMG(meta?.img || KB_STILL, 1400)} srcSet={IMGSET(meta?.img || KB_STILL)} sizes="100vw" alt={pick(a.title, L)} fetchPriority="high" decoding="async" />
         <div className="ka-cover-in">
           <nav className="ka-bc2" aria-label={T('Breadcrumb', 'Morzsamenü')}>
             <Link href={`${base}${sfx}`}>{T('Knowledge base', 'Tudástár')}</Link>
@@ -110,7 +112,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
           <div className="ka-meta2">
             <span className="ka-by">
               <LogoMark />
-              {T('InkAge editorial team', 'InkAge szerkesztőség')}
+              {inApp ? T('InkAge editorial team', 'InkAge szerkesztőség') : <Link href={`/szerkesztoseg${sfx}`}>{T('InkAge editorial team', 'InkAge szerkesztőség')}</Link>}
             </span>
             <span>{fmtDate(meta?.date || '2026-10-12', L)}</span>
             <span>
@@ -137,6 +139,8 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
               ))}
             </ul>
           </section>
+
+          {a.slug === 'tattoo-pain-chart' && <PainMap t={painMapText(L)} />}
 
           {!inApp && <ArticleCta slug={a.slug} lang={L} where="top" removal={removal} />}
 
@@ -220,6 +224,21 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
               </details>
             ))}
           </section>
+
+          {a.sources && a.sources.length > 0 && (
+            <section className="ka-s ka-sources">
+              <h2>{T('Sources', 'Források')}</h2>
+              <ol>
+                {a.sources.map((x) => (
+                  <li key={x.u}>
+                    <a href={x.u} target="_blank" rel="noopener">
+                      {x.t}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
 
           {!inApp && <ArticleCta slug={a.slug} lang={L} where="end" removal={removal} />}
 

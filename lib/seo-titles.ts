@@ -71,3 +71,40 @@ export const SEO_TITLES: Record<string, Partial<Record<Lang, string>>> = {
 };
 
 export const seoTitle = (path: string, L: Lang) => SEO_TITLES[path]?.[L];
+
+/** Search descriptions that open with the answer (same pages and queries as SEO_TITLES). */
+export const SEO_DESCS: Record<string, Partial<Record<Lang, string>>> = {
+  '/tudastar/tattoo-before-and-after': {
+    en: 'At 10 years bold work looks almost the same; by 20–30 years fine lines widen and tight detail merges. Four tattoos followed decade by decade, plus how to read online photos.',
+    es: 'A los 10 años los trazos gruesos casi no cambian; a los 20–30 las líneas finas se ensanchan. Cuatro tatuajes seguidos década a década y cómo leer las fotos de antes y después.',
+    pt: 'Aos 10 anos o traço grosso quase não muda; aos 20–30 as linhas finas engrossam. Quatro tatuagens acompanhadas década a década e como ler fotos de antes e depois.',
+    de: 'Nach 10 Jahren sieht kräftige Linienarbeit fast gleich aus, nach 20–30 Jahren werden feine Linien breiter. Vier Tattoos Jahrzehnt für Jahrzehnt – und wie du Vorher-nachher-Fotos liest.',
+  },
+  '/tudastar/laser-tattoo-removal-what-to-expect': {
+    cs: 'Většina tetování potřebuje 6–12 sezení s odstupem 6–8 týdnů, tedy 1–2 roky. Jak funguje pikosekundový a Nd:YAG laser, které barvy mizí nejhůř a co čekat před a po.',
+    sv: 'De flesta tatueringar behöver 6–12 behandlingar med 6–8 veckors mellanrum, alltså ett till två år. Så fungerar lasern, vilka färger som är svårast och vad du kan vänta dig.',
+    no: 'De fleste tatoveringer trenger 6–12 behandlinger med 6–8 ukers mellomrom, altså ett til to år. Slik virker laseren, hvilke farger som er vanskeligst og hva du kan forvente.',
+    nl: 'De meeste tattoos hebben 6–12 behandelingen nodig, 6–8 weken uit elkaar: één tot twee jaar. Hoe de laser werkt, welke kleuren het lastigst zijn en wat je kunt verwachten.',
+    el: 'Τα περισσότερα τατουάζ χρειάζονται 6–12 συνεδρίες με απόσταση 6–8 εβδομάδων, δηλαδή ένα με δύο χρόνια. Πώς δουλεύει το laser, ποια χρώματα φεύγουν δυσκολότερα και τι να περιμένεις.',
+    es: 'La mayoría de los tatuajes necesitan 6–12 sesiones, con 6–8 semanas entre ellas: uno o dos años. Cómo actúa el láser, qué colores cuestan más y qué esperar.',
+    en: 'Most tattoos need 6–12 sessions, 6–8 weeks apart – often one to two years. How the laser works, which colours resist, what it feels like and what can remain.',
+  },
+  '/tudastar/laser-removal-how-many-sessions': {
+    cs: 'Většina profesionálních tetování potřebuje zhruba 5–15 sezení. Na čem počet závisí (barvy, místo, typ pleti, množství barvy) a jak si ho odhadnout podle Kirby-Desai škály.',
+    sv: 'De flesta professionella tatueringar behöver ungefär 5–15 behandlingar. Vad antalet beror på och hur du kan uppskatta det med Kirby–Desai-skalan.',
+    nl: 'De meeste professionele tattoos hebben ongeveer 5–15 behandelingen nodig. Waar het aantal van afhangt en hoe je het inschat met de Kirby-Desai-schaal.',
+    es: 'La mayoría de los tatuajes profesionales necesitan entre 5 y 15 sesiones. De qué depende el número y cómo estimarlo con la escala Kirby-Desai.',
+    en: 'Most professional tattoos need about 5–15 laser sessions. What the number depends on – colours, placement, skin type, amount of ink – and how to estimate yours with the Kirby–Desai scale.',
+  },
+  '/tudastar/tattoo-pain-chart': {
+    fil: 'Pinakamasakit sa tadyang, dibdib, gulugod, paa, kamay, tuhod at kili-kili; pinakamagaan sa labas ng braso, hita, binti at likod. Tingnan ang pain chart bago magpa-tattoo.',
+    cs: 'Nejvíc bolí žebra, hrudní kost, páteř, chodidla, ruce, kolena a podpaží; nejméně vnější strana paže, stehno, lýtko a záda. Mapa bolesti tetování podle místa.',
+    fi: 'Eniten sattuu kylkiluihin, rintalastaan, selkärankaan, jalkapohjiin, käsiin ja polviin; vähiten olkavarren ulkosivuun, reiteen, pohkeeseen ja yläselkään.',
+    no: 'Mest vondt gjør ribbeina, brystbeinet, ryggraden, føttene, hendene og knærne; minst ytre overarm, lår, legg og øvre rygg. Smertekart for tatovering.',
+  },
+  '/tudastar/laser-removal-healing': {
+    cs: 'Zarudnutí a otok první den, puchýře v prvních dnech a strupy 1–2 týdny jsou normální. Povrch se hojí 2–4 týdny. Jak se vyhnout jizvám a kdy jít k lékaři.',
+  },
+};
+
+export const seoDesc = (path: string, L: Lang) => SEO_DESCS[path]?.[L];

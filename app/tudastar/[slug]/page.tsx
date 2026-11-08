@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { longArticle } from '@/lib/longform';
 import { IMG, KB } from '@/lib/kb';
 import { ArticleView } from './ArticleView';
-import { seoTitle } from '@/lib/seo-titles';
+import { seoTitle, seoDesc } from '@/lib/seo-titles';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +16,7 @@ export function generateMetadata({ params, searchParams }: { params: { slug: str
   const img = KB[a.slug]?.img;
   return {
     title: seoTitle(`/tudastar/${a.slug}`, L) || `${pick(a.title, L)} – InkAge`,
-    description: pick(a.desc, L),
+    description: seoDesc(`/tudastar/${a.slug}`, L) || pick(a.desc, L),
     openGraph: { type: 'article', title: pick(a.title, L), description: pick(a.desc, L), images: img ? [{ url: IMG(img, 1200) }] : undefined },
     /* a new article shows its English text in languages it isn't translated into yet: those versions point to the
        English one and stay out of the index; every version lists only the languages the article is written in */

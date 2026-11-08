@@ -1,0 +1,12 @@
+.rc { border: 1px solid var(--ka-line, rgba(127,127,127,.25)); border-radius: 22px; padding: 22px; margin: 8px 0 32px; }
+.rc h2 { margin: 0 0 16px; font-size: 22px; }
+.rc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.rc-f { display: grid; gap: 6px; font-size: 14.5px; font-weight: 700; }
+.rc-f select { font: inherit; font-weight: 500; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--ka-line, rgba(127,127,127,.35)); background: var(--bg, transparent); color: inherit; max-width: 100%; }
+.rc-out { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 20px; }
+.rc-out > div { border-radius: 16px; padding: 14px 16px; background: rgba(127,127,127,.1); display: grid; gap: 4px; }
+.rc-out small { font-size: 13px; opacity: .75; }
+.rc-out b { font-size: clamp(17px, 4.6vw, 21px); overflow-wrap: anywhere; }
+.rc-out .rc-total { background: var(--ka-accent, #5b3df5); color: #fff; }
+.rc-score { margin: 14px 0 4px; font-weight: 700; font-size: 15px; }
+.rc-note { margin: 0; font-size: 14px; opacity: .75; line-height: 1.5; }

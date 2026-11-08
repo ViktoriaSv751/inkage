@@ -169,3 +169,32 @@
 .ka-areas a { display: flex; justify-content: space-between; gap: 10px; padding: 12px 16px; border: 1px solid #ece7d8; border-radius: 14px; text-decoration: none; color: var(--ink); font-family: 'Geist Sans', sans-serif; font-size: 15px; }
 .ka-areas a:hover { border-color: var(--acc); }
 .ka-areas a b { color: var(--ink-2); font-weight: 600; }
+
+.ka-sources ol { margin: 0; padding-left: 22px; font-size: 15.5px; line-height: 1.55; color: var(--muted, inherit); }
+.ka-sources li { margin: 6px 0; word-break: break-word; }
+.ka-sources a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+/* interactive pain map (tattoo-pain-chart) */
+.pm { margin: 28px 0; border: 1px solid var(--line); border-radius: 22px; padding: 18px; }
+.pm-h { display: grid; gap: 4px; margin-bottom: 12px; font-family: inherit; }
+.pm-h b { font-size: 19px; }
+.pm-h span { font-size: 14.5px; color: var(--muted); }
+.pm-wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 640px) { .pm-wrap { grid-template-columns: 1fr; } }
+.pm svg { width: 100%; height: auto; display: block; }
+.pm-body > * { fill: rgba(150, 150, 165, .32); }
+.pm-lab { font-size: 13px; fill: var(--muted); }
+.pm-z { cursor: pointer; outline: none; }
+.pm-z > * { stroke: transparent; stroke-width: 3; transition: opacity .15s; opacity: .82; }
+.pm-z:hover > *, .pm-z:focus-visible > * { opacity: 1; stroke: var(--body); }
+.pm-z.on > * { opacity: 1; stroke: var(--body); }
+.pm-l0 > *, i.pm-l0 { fill: #3fae6a; background: #3fae6a; }
+.pm-l1 > *, i.pm-l1 { fill: #f0a830; background: #f0a830; }
+.pm-l2 > *, i.pm-l2 { fill: #e0483c; background: #e0483c; }
+.pm-legend { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
+.pm-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: -1px; }
+.pm-card { border-radius: 16px; padding: 14px 16px; background: rgba(127, 127, 127, .1); border-left: 5px solid; }
+.pm-c0 { border-color: #3fae6a; } .pm-c1 { border-color: #f0a830; } .pm-c2 { border-color: #e0483c; }
+.pm-card b { display: block; font-size: 18px; }
+.pm-card span { font-size: 14px; color: var(--muted); }
+.pm-card p { margin: 8px 0 0; font-size: 16px; line-height: 1.55; }

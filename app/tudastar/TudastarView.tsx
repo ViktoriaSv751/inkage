@@ -45,6 +45,12 @@ export function TudastarView({ lang, inApp = false }: { lang: Lang; inApp?: bool
           <Link className="kb-more" href={`/tattoo-aging-simulator${qOf(lang)}`}>
             {T('Tattoo aging simulator', 'Tetoválás öregedés szimulátor')} <span aria-hidden="true">→</span>
           </Link>
+          <Link className="kb-more" href={`/tattoo-removal-calculator${qOf(lang)}`}>
+            {T('Laser tattoo removal calculator', 'Lézeres tetoválás-eltávolítás kalkulátor')} <span aria-hidden="true">→</span>
+          </Link>
+          <Link className="kb-more" href={`/szotar${qOf(lang)}`}>
+            {T('Tattoo glossary', 'Tetoválás szótár')} <span aria-hidden="true">→</span>
+          </Link>
         </section>
       )}
       <div style={{ height: inApp ? 20 : 80 }} />

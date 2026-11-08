@@ -71,7 +71,7 @@ export function SeoView({ slug, L, inApp = false }: { slug: string; L: Lang; inA
           </div>
         </div>
         <figure className="sp-hero-img">
-          <img src={IMG(STYLE_IMG[s.k], 1200)} alt="" fetchPriority="high" />
+          <img src={IMG(STYLE_IMG[s.k], 1200)} alt={sN} fetchPriority="high" />
           <figcaption>{sN}</figcaption>
         </figure>
       </header>

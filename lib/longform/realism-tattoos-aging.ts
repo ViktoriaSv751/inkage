@@ -194,6 +194,12 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "TatScout – Realism tattoo style", u: "https://tatscout.com/style/realism" },
+    { t: "TattooNOW – Black and grey realism", u: "https://tattoonow.com/tattoo-news/black-and-grey-realism-tattoo~907530de-945f-431c-912d-84f8e24ed715" },
+    { t: "Tattoodo – Realism guide", u: "https://tattoodo.com/guides/styles/realism" },
+    { t: "Authority Tattoo – Tattoo fading", u: "https://authoritytattoo.com/tattoo-fading" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: the same face with low and high contrast. After years of softening, only the high-contrast version still reads as a face.',

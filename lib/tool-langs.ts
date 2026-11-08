@@ -8,4 +8,7 @@ export const TOOL_LANGS: readonly Lang[] = ['hu', 'en', 'de', 'es', 'fr', 'pt', 
 export const TOOL_TITLE = {
   '/tattoo-simulator': 'Tattoo simulator: see a tattoo on your own body before you get it',
   '/tattoo-aging-simulator': 'Tattoo aging simulator: see how your tattoo will age',
+  '/tattoo-removal-calculator': 'Laser tattoo removal calculator: how many sessions and what it costs',
+  '/szotar': 'Tattoo glossary: 30 terms explained simply',
+  '/szerkesztoseg': 'Editorial standards: how InkAge articles are made',
 } as const;

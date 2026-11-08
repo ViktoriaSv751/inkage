@@ -20,6 +20,12 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'how-to-book-a-tattoo': ['first-tattoo-checklist', 'tattoo-size-guide', 'tattoo-pain-chart', 'best-placement-for-tattoo-longevity', 'tattoo-healing-stages', 'tattoo-touch-ups'],
   'laser-tattoo-removal-cost': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'color-vs-black-ink-aging', 'cover-up-tattoos', 'laser-removal-before-after', 'laser-removal-healing'],
   'tattoo-ink-safety-eu': ['color-vs-black-ink-aging', 'first-tattoo-checklist', 'tattoo-healing-stages', 'laser-tattoo-removal-what-to-expect', 'tattoos-on-darker-skin'],
+  'laser-tattoo-removal-pain': ['laser-tattoo-removal-what-to-expect', 'laser-removal-healing', 'tattoo-pain-chart', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-cost', 'color-vs-black-ink-aging'],
+  'colour-tattoo-removal': ['laser-tattoo-removal-what-to-expect', 'color-vs-black-ink-aging', 'laser-removal-how-many-sessions', 'cover-up-tattoos', 'tattoos-on-darker-skin', 'laser-tattoo-removal-cost'],
+  'tattoo-removal-creams-diy': ['laser-tattoo-removal-what-to-expect', 'laser-tattoo-removal-cost', 'cover-up-tattoos', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'laser-removal-before-after'],
+  'neck-tattoos': ['best-placement-for-tattoo-longevity', 'blackwork-tattoos-placement', 'tattoo-pain-chart', 'tattoo-healing-stages', 'tattoo-aftercare-sun-protection', 'laser-tattoo-removal-cost'],
+  'rib-tattoos': ['first-tattoo-checklist', 'tattoo-pain-chart', 'best-placement-for-tattoo-longevity', 'tattoos-weight-change-pregnancy', 'fine-line-tattoos-aging', 'tattoo-healing-stages'],
+  'tattoo-itching-peeling': ['tattoo-healing-stages', 'tattoo-aftercare-sun-protection', 'sunburned-tattoo', 'tattoo-ink-safety-eu', 'color-vs-black-ink-aging', 'tattoo-touch-ups'],
   'laser-tattoo-removal-summer': ['laser-removal-healing', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-what-to-expect', 'sunburned-tattoo', 'tattoos-on-darker-skin'],
   'laser-removal-healing': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'tattoo-healing-stages', 'sunburned-tattoo', 'laser-removal-before-after'],
   // healing & care
@@ -68,13 +74,13 @@ export const ARTICLE_STYLE: Record<string, string> = {
 
 /** The articles a style × body-area page links to: the style's own articles, then the body area's, then placement in general. */
 const STYLE_ARTICLES: Record<string, string[]> = {
-  'fine-line': ['fine-line-tattoos-aging', 'tattoo-size-guide', 'tattoo-blowout'],
-  blackwork: ['blackwork-tattoos-placement', 'tattoos-that-age-well', 'color-vs-black-ink-aging'],
-  traditional: ['tattoos-that-age-well', 'how-tattoos-age', 'tattoo-touch-ups'],
+  'fine-line': ['fine-line-tattoos-aging', 'tattoo-size-guide', 'tattoo-styles-guide'],
+  blackwork: ['blackwork-tattoos-placement', 'tattoo-styles-guide', 'color-vs-black-ink-aging'],
+  traditional: ['american-traditional-tattoo-aging', 'tattoos-that-age-well', 'tattoo-styles-guide'],
   color: ['color-vs-black-ink-aging', 'tattoos-on-darker-skin', 'tattoo-aftercare-sun-protection'],
-  realism: ['tattoo-before-and-after', 'how-tattoos-age', 'tattoo-touch-ups'],
+  realism: ['realism-tattoos-aging', 'tattoo-before-and-after', 'tattoo-styles-guide'],
 };
-const AREA_ARTICLES: Record<string, string[]> = { hand: ['hand-and-finger-tattoos'], finger: ['hand-and-finger-tattoos'] };
+const AREA_ARTICLES: Record<string, string[]> = { hand: ['hand-and-finger-tattoos'], finger: ['hand-and-finger-tattoos'], neck: ['neck-tattoos'], ribs: ['rib-tattoos'] };
 
 export function seoPageArticles(style: string, area: string): string[] {
   const all = [...(STYLE_ARTICLES[style] || []), ...(AREA_ARTICLES[area] || []), 'best-placement-for-tattoo-longevity', 'tattoo-pain-chart', 'tattoo-healing-stages'];

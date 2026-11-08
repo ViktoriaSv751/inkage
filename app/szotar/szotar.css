@@ -1,0 +1,5 @@
+.gl-list { margin: 0; display: grid; gap: 4px; }
+.gl-item { padding: 18px 0; border-bottom: 1px solid var(--ka-line, rgba(127,127,127,.25)); scroll-margin-top: 90px; }
+.gl-item dt { font-weight: 800; font-size: 19px; margin-bottom: 6px; }
+.gl-item dd { margin: 0; font-size: 17px; line-height: 1.6; }
+.gl-item dd a { font-weight: 700; white-space: nowrap; }

@@ -50,6 +50,14 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
             ['how-tattoos-age', T('How tattoos age', 'Öregedés')],
           ] as const
         ).map(([s, t]) => ({ t, href: `/tudastar/${s}${q}` })),
+        // the calculator, glossary and editorial pages, only in the languages they are written in
+        ...(TOOL_LANGS.includes(lang)
+          ? [
+              { t: T('Removal calculator', 'Eltávolítás kalkulátor'), href: `/tattoo-removal-calculator${q}` },
+              { t: T('Glossary', 'Szótár'), href: `/szotar${q}` },
+              { t: T('Editorial standards', 'Szerkesztési irányelvek'), href: `/szerkesztoseg${q}` },
+            ]
+          : []),
       ],
     },
     {
