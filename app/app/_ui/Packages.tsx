@@ -250,6 +250,9 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
               <Check /> {L('Invoice by e-mail', 'Számla e-mailben')}
             </li>
           </ul>
+          {huf && ui.lang === 'hu' && (
+            <p className="pz-fx-note">A fizetés dollárban történik; a forintösszeg csak tájékoztató a napi árfolyamon, a bankod saját árfolyama dönt.</p>
+          )}
         </section>
       </div>
 
@@ -273,9 +276,6 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
               {L('Terms', 'ÁSZF')}
             </a>
           </p>
-          {huf && ui.lang === 'hu' && (
-            <p className="pz-waive">A fizetés dollárban történik; a forintösszeg csak tájékoztató a napi árfolyamon, a bankod saját árfolyama dönt.</p>
-          )}
           <p className="pz-secure">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
             {L('Secure card payment with Stripe', 'Biztonságos kártyás fizetés · Stripe')}
