@@ -128,7 +128,7 @@ export const cleanAns = (v: unknown) => { const t = String(v ?? "").replace(/^@[
 /* a sent phone notification that no device could receive (admin_push_status: "devices" = subscriptions at that time) */
 export const PushNone = ({ x }: { x: D }) => (x && x.devices === 0 ? <em className="chip bad" style={{ fontStyle: "normal" }}>0 eszközre ment – senki nem kapta meg</em> : null);
 
-export const HIDDEN = new Set(["paywall_shown", "plan_pick", "purchase"]); /* the app is free: older test events stay hidden */
+export const HIDDEN = new Set(["paywall_shown"]); /* old test event; plan_pick and purchase count since payments went live (2026-11-08) */
 
 export const ERRS = new Set(["client_error", "storage_full", "signin_failed", "auth_error"]);
 

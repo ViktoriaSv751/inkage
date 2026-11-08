@@ -24,3 +24,7 @@
   .cc-act { margin-top: 10px; gap: 6px; }
   .cc-yes, .cc-no { height: 40px; padding: 0 14px; font-size: 14px; }
 }
+
+/* the packages page is a full-screen sale page: the cookie note and the sign-up bar wait until it closes (2026-11-08,
+   on a phone the note covered the packages) */
+body:has(.pz) .cc, body:has(.pz) .ctabar { display: none !important; }

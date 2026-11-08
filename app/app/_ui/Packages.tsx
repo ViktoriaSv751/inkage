@@ -34,15 +34,32 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   const [pair, setPair] = useState(0);
   const hero = useRef<HTMLDivElement>(null);
   const held = useRef(0); // until when a drag holds the sweep
+  const opened = useRef(0); // when the page opened, for the close event
+  const picked = useRef<PlanId | null>(null);
+  // the day's dollar → forint rate for the Hungarian guide amount (null: no guide, the dollar price alone)
+  const [huf, setHuf] = useState<number | null>(null);
   useScrollLock(open);
   useEffect(() => setMounted(true), []);
+  /* closing the page (X, Escape) is counted, with how long it was open and the package last tapped */
+  const close = () => {
+    track('paywall_close', { why, plan: picked.current || '', secs: Math.round((Date.now() - opened.current) / 1000) });
+    onClose();
+  };
+  const closeRef = useRef(close);
+  closeRef.current = close;
   useEffect(() => {
     if (!open) return;
     setPlan('mini');
-    const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    opened.current = Date.now();
+    picked.current = null;
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && closeRef.current();
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
-  }, [open, onClose]);
+  }, [open]);
+  useEffect(() => {
+    if (!open || ui.lang !== 'hu' || huf) return;
+    api<{ huf?: number | null }>('/api/fx').then((r) => r.ok && Number(r.data.huf) > 0 && setHuf(Number(r.data.huf)));
+  }, [open, ui.lang, huf]);
 
   // the sweep: today → 50 years → today, then the next example (paused while someone drags)
   useEffect(() => {
@@ -79,6 +96,8 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   const p = PLAN[plan];
   const base = PLAN.mini.usd / PLAN.mini.n;
   const save = (k: PlanId) => Math.round((1 - PLAN[k].usd / PLAN[k].n / base) * 100);
+  /** "kb. 1630 Ft": a guide for Hungarian visitors only, rounded to 10 Ft (the charge itself is in dollars) */
+  const ft = (usd: number) => (huf && ui.lang === 'hu' ? `kb. ${new Intl.NumberFormat('hu-HU').format(Math.round((usd * huf) / 10) * 10)} Ft` : '');
 
   const drag = (e: React.PointerEvent) => {
     const el = hero.current;
@@ -114,7 +133,7 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   return createPortal(
     <div className="pz" role="dialog" aria-modal="true" aria-label={L('Packages', 'Csomagok')}>
       <div className="pz-glow" aria-hidden="true" />
-      <button className="pz-x" onClick={onClose} aria-label={L('Close', 'Bezárás')}>
+      <button className="pz-x" onClick={close} aria-label={L('Close', 'Bezárás')}>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
       </button>
 
@@ -184,7 +203,7 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
                   role="radio"
                   aria-checked={plan === k}
                   className={`pz-plan ${plan === k ? 'on' : ''}`}
-                  onClick={() => (setPlan(k), haptic(), track('plan_pick', { plan: k }))}
+                  onClick={() => (setPlan(k), (picked.current = k), haptic(), track('plan_pick', { plan: k }))}
                 >
                   {k === BEST && <span className="pz-pop">{L('Most popular', 'Legnépszerűbb')}</span>}
                   <span className="pz-radio" aria-hidden="true" />
@@ -194,6 +213,7 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
                   </span>
                   <span className="pz-cost">
                     <b>{fmtUsd(q.usd, loc)}</b>
+                    {ft(q.usd) && <span className="pz-ft">{ft(q.usd)}</span>}
                     <small>
                       {s > 0 && <em>−{s}%</em>}
                       {L(`${fmtUsd(q.usd / q.n, loc)} a preview`, `${fmtUsd(q.usd / q.n, loc)} / előnézet`)}
@@ -237,7 +257,12 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
         <div className="pz-foot-in">
           <button className={`pz-cta ${busy ? 'busy' : ''}`} onClick={buy} disabled={busy}>
             <span>{busy ? L('Opening secure payment…', 'Biztonságos fizetés megnyitása…') : L(`Get ${p.name}`, `${p.name} csomag`)}</span>
-            {!busy && <b>{fmtUsd(p.usd, loc)}</b>}
+            {!busy && (
+              <b>
+                {fmtUsd(p.usd, loc)}
+                {ft(p.usd) && <small className="pz-cta-ft">{ft(p.usd)}</small>}
+              </b>
+            )}
           </button>
           {/* one quiet line instead of a tick box (owner, 2026-11-07): pressing the button above it is the buyer's express
               request for immediate delivery and the acknowledgement that the 14-day right of withdrawal is lost
@@ -248,6 +273,9 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
               {L('Terms', 'ÁSZF')}
             </a>
           </p>
+          {huf && ui.lang === 'hu' && (
+            <p className="pz-waive">A fizetés dollárban történik; a forintösszeg csak tájékoztató a napi árfolyamon, a bankod saját árfolyama dönt.</p>
+          )}
           <p className="pz-secure">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
             {L('Secure card payment with Stripe', 'Biztonságos kártyás fizetés · Stripe')}

@@ -1245,6 +1245,21 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
   .pz-foot-in > * { grid-column: 2; }
   .pz-cta { margin-top: 4px; }
 }
+/* the dollar price's forint guide (Hungarian only) */
+.pz-ft { display: block; margin-top: 1px; font-size: 12px; font-weight: 600; color: var(--t2); font-variant-numeric: tabular-nums; }
+.pz-cta b { display: grid; justify-items: end; line-height: 1.15; }
+.pz-cta-ft { font-size: 11px; font-weight: 600; opacity: .85; }
+/* a phone: the packages come right after the headline, the picture is shorter, the years and the rest follow */
+@media (max-width: 899px) {
+  .pz-hero { max-height: 30vh; }
+  .pz-main { display: flex; flex-direction: column; padding-top: 18px; }
+  .pz-plans { order: 3; margin-top: 18px; }
+  .pz-time { order: 4; margin-top: 26px; }
+  .pz-time-note { order: 5; }
+  .pz-more { order: 6; }
+  .pz-trust { order: 7; }
+  .pz-x { background: rgba(10,10,14,.82); }
+}
 @media (max-width: 350px) { .pz-title { font-size: 29px; } .pz-plan { padding: 14px; gap: 10px; } .pz-cost b { font-size: 17px; } }
 
 /* the profile's previews card (payments on) */
