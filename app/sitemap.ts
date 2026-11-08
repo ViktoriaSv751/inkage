@@ -25,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(Object.keys(TOOL_TITLE) as (keyof typeof TOOL_TITLE)[]).map((p) => ({ url: `${BASE}${p}`, changeFrequency: 'monthly' as const, priority: 0.8, langs: toolLangs(TOOL_TITLE[p]) })),
     ...ARTICLES.map((a) => ({ url: `${BASE}/tudastar/${a.slug}`, changeFrequency: 'monthly' as const, priority: 0.6, langs: articleLangs(a.slug) })),
     ...seoSlugs().map((slug) => ({ url: `${BASE}/tattoo/${slug}`, changeFrequency: 'monthly' as const, priority: 0.5 })),
-    ...['hogyan-mukodik', 'funkciok', 'gyik', 'rolunk', 'kapcsolat', 'adatbiztonsag', 'fiok-torlese', 'suti', 'mi-az-inkage', 'ingyenes-beta', 'telepites', 'jog'].map((p) => ({ url: `${BASE}/${p}`, changeFrequency: 'monthly' as const, priority: 0.5 })),
+    ...['hogyan-mukodik', 'funkciok', 'gyik', 'rolunk', 'kapcsolat', 'adatbiztonsag', 'fiok-torlese', 'suti', 'mi-az-inkage', 'telepites', 'jog'].map((p) => ({ url: `${BASE}/${p}`, changeFrequency: 'monthly' as const, priority: 0.5 })),
     { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${BASE}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
   ]);
