@@ -7,7 +7,7 @@ import { welcomeEmail } from '@/lib/mail-welcome';
 
 export const dynamic = 'force-dynamic';
 
-/** Once per account: the welcome e-mail, and a notice to the owner. */
+/** Once per account: the welcome e-mail, and a notice to the owner. Anyone this misses gets both from /api/mail-cron within ~10 minutes. */
 export async function POST(req: Request) {
   const a = await getAuthed(req);
   if (!a) return json({ ok: false }, 401);
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     if (!told) await logServerError('signup_notice', new Error('new sign-up notice could not be sent'));
   }
   const w = welcomeEmail(name, lang);
-  const sent = await sendMail(email as string, w.subject, w.html, w.text, process.env.CONTACT_EMAIL || undefined);
+  const sent = await sendMail(email as string, w.subject, w.html, w.text, process.env.CONTACT_EMAIL || undefined, `welcome-${a.user.id}`);
   if (!sent) {
     // shows up in the dashboard's errors; with a key set, the next app open tries again
     await logServerError('welcome', new Error(mailReady() ? 'welcome e-mail could not be sent' : 'welcome e-mail not sent: no RESEND_API_KEY'));

@@ -6,6 +6,8 @@ import { photoReminderEmail, previewReadyEmail } from '@/lib/mail-lifecycle';
 import { anniversaryEmail, limitEmail, newsletterEmail } from '@/lib/mail-more';
 import { monthGuides } from '@/lib/mail-guides';
 import { isLang, type Lang } from '@/lib/tr';
+import { welcomeEmail } from '@/lib/mail-welcome';
+import { signupEmail } from '@/lib/mail-signup';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
@@ -24,10 +26,33 @@ export async function GET(req: Request) {
   if (error) return json({ ok: false, error: error.message }, 500);
   const langOf = (l: string | null): Lang => (isLang(l) ? l : 'hu');
   const reply = process.env.CONTACT_EMAIL || undefined;
-  const res = { ready: 0, photo: 0, restart: 0, anniv: 0, guide: 0, failed: 0 };
+  const res = { welcome: 0, ready: 0, photo: 0, restart: 0, anniv: 0, guide: 0, failed: 0 };
   const offLink = (uid: string) => `${SITE()}/api/mail-off?t=${encodeURIComponent(signToken({ uid, off: 1, exp: Date.now() + 365 * 864e5 }))}`;
   const unsubHeaders = (off: string) => ({ 'List-Unsubscribe': `<${off}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' });
   const mark = (kind: string, id: string) => db.rpc('mail_mark', { p_secret: secret, p_kind: kind, p_id: id }).then(() => {}, () => {});
+  // the welcome e-mail for anyone /api/welcome missed (left right after sign-up, a failed request): claimed with the
+  // same welcome_once mark the app uses, so nobody gets it twice; the owner's sign-up notice goes with it
+  const { data: wdue } = await db.rpc('welcome_due', { p_secret: secret }).then((x) => x, () => ({ data: [] }));
+  const notify = process.env.ADMIN_NOTIFY_EMAIL || process.env.ALERT_EMAIL;
+  for (const r of (wdue || []) as { id: string; email: string; lang: string | null; meta: any; provider: string; created_at: string; source: string | null }[]) {
+    const { data: em } = await db.rpc('welcome_once', { p_secret: secret, p_user: r.id });
+    if (!em) continue;
+    const lang = langOf(r.lang), md = r.meta || {};
+    const fullName = String(md.full_name || md.name || md.display_name || '').trim();
+    const parts = fullName.split(/\s+/).filter(Boolean);
+    const name = String(md.given_name || (lang === 'hu' ? parts[parts.length - 1] : parts[0]) || '');
+    const w = welcomeEmail(name, lang);
+    if (!(await sendMail(em as string, w.subject, w.html, w.text, reply, `welcome-${r.id}`))) {
+      res.failed += 1;
+      await db.rpc('welcome_undo', { p_secret: secret, p_user: r.id }).then(() => {}, () => {});
+      continue;
+    }
+    res.welcome += 1;
+    if (notify) {
+      const n = signupEmail({ name: fullName, email: em as string, lang, country: '', provider: r.provider || 'email', createdAt: r.created_at, userId: r.id, source: String(r.source || '').slice(0, 60), count: null });
+      await sendMail(notify, n.subject, n.html, n.text, em as string, `signup-${r.id}`);
+    }
+  }
   for (const r of ((data as any)?.ready || []) as Due[]) {
     const m = previewReadyEmail(langOf(r.lang), r.id);
     if (await sendMail(r.email, m.subject, m.html, m.text, reply, `ready-${r.id}`)) ((res.ready += 1), await mark('ready', r.id));
