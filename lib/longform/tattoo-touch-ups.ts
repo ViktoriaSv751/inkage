@@ -14,13 +14,13 @@ const a: LongArticle = {
   summary: {
     en: [
       'There are two kinds of touch-up: the first one 4–8 weeks after the tattoo, and a long-term refresh years later.',
-      'Many people refresh black lines and faded colours every 8–10 years – sooner on hands, feet and sun-exposed areas.',
+      'A common rule of thumb is to refresh black lines and faded colours every 8–10 years – sooner on hands, feet and sun-exposed areas.',
       'A touch-up can re-saturate and brighten, but lines that have already spread can never be made thin again.',
       'The best touch-up strategy starts on day one: size, spacing and line weight decide how refreshable a tattoo will be.',
     ],
     hu: [
       'Kétféle frissítés van: az első 4–8 héttel a tetoválás után, a hosszú távú pedig évekkel később.',
-      'Sokan 8–10 évente frissíttetik a fekete vonalakat és a fakult színeket – kézen, lábon és napos helyeken korábban.',
+      'Egy gyakori ökölszabály szerint a fekete vonalakat és a fakult színeket 8–10 évente érdemes frissíttetni – kézen, lábon és napos helyeken korábban.',
       'A frissítés újratöltheti és élénkítheti a mintát, de a már szétterült vonalakat soha nem lehet újra vékonnyá tenni.',
       'A legjobb frissítési stratégia az első napon kezdődik: a méret, a térköz és a vonalvastagság dönti el, mennyire lesz frissíthető a tetoválás.',
     ],
@@ -202,8 +202,8 @@ const a: LongArticle = {
     {
       q: { en: 'How often should I refresh a tattoo?', hu: 'Milyen gyakran érdemes frissíteni?' },
       a: {
-        en: 'Roughly every 8–10 years, sooner on hands, feet and sun-exposed areas. Bold black work often needs it less, while fine lines and light colours need it sooner. Let the tattoo’s readability guide you rather than the calendar.',
-        hu: 'Nagyjából 8–10 évente, kézen, lábon és napos helyeken korábban. A vastag vonalú fekete munkáknak gyakran ritkábban, a finom vonalaknak és világos színeknek hamarabb van rá szükségük. Inkább a tetoválás olvashatósága legyen az iránytű, mint a naptár.',
+        en: 'A common artists’ rule of thumb is roughly every 8–10 years, sooner on hands, feet and sun-exposed areas. Bold black work often needs it less, while fine lines and light colours need it sooner. Let the tattoo’s readability guide you rather than the calendar.',
+        hu: 'A tetoválók gyakori ökölszabálya szerint nagyjából 8–10 évente, kézen, lábon és napos helyeken korábban. A vastag vonalú fekete munkáknak gyakran ritkábban, a finom vonalaknak és világos színeknek hamarabb van rá szükségük. Inkább a tetoválás olvashatósága legyen az iránytű, mint a naptár.',
       },
     },
     {
@@ -227,6 +227,13 @@ const a: LongArticle = {
         hu: 'Nagyjából úgy gyógyul, mint egy új tetoválás, néha kicsit gyorsabban, mert gyakran kisebb a felület. Ugyanaz az utógondozás érvényes: tisztaság, nincs vakarás, és kerüld a napot, az uszodát és a szaunát a teljes gyógyulásig. Utána pedig védd fényvédővel.',
       },
     },
+  ],
+  sources: [
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Tattoo removal: how it works, process, healing and scarring – Cleveland Clinic", u: "https://my.clevelandclinic.org/health/treatments/8313-tattoo-removal" },
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
   ],
   captions: {
     img2: {

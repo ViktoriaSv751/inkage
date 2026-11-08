@@ -13,13 +13,13 @@ const a: LongArticle = {
   },
   summary: {
     hu: [
-      'A kéz bőre gyorsan megújul, naponta sokszor mossuk, és mindenhez hozzáér – ezért a tinta itt gyorsabban halványul és mosódik el, mint szinte bárhol máshol.',
+      'A kéz bőre gyorsan megújul, naponta sokszor mossuk, és mindenhez hozzáér – ezért a tetoválók egybehangzó tapasztalata szerint a tinta itt gyorsabban halványul és mosódik el, mint szinte bárhol máshol.',
       'Az ujjak oldala és a tenyér felőli rész a legkritikusabb: a vékony bőr miatt nagyobb az elmosódás (blowout) és a „kiesés” esélye.',
       'Egyszerű, vastag vonalas, levegős minta a kézfejen vagy az ujjak tetején tart a legjobban – és érdemes eleve javítással számolni.',
       'Gondold végig a láthatóságot is: a kéz szinte mindig szem előtt van, a munkában és a hétköznapokban is.',
     ],
     en: [
-      'Skin on the hands renews quickly, gets washed many times a day and touches everything – so ink fades and blurs faster here than almost anywhere else.',
+      'Skin on the hands renews quickly, gets washed many times a day and touches everything – so tattoo artists widely agree that ink fades and blurs faster here than almost anywhere else.',
       'The sides of the fingers and the palm side are the most critical: thin skin raises the risk of blowout and of lines “falling out”.',
       'A simple, bold, airy design on the back of the hand or the top of the fingers holds best – and it’s wise to plan for a touch-up from the start.',
       'Think about visibility too: hands are almost always on show, at work and in everyday life.',
@@ -189,8 +189,8 @@ const a: LongArticle = {
     {
       q: { en: 'Why do finger tattoos fade so fast?', hu: 'Miért fakul ilyen gyorsan az ujjtetoválás?' },
       a: {
-        en: 'The skin on the fingers renews quickly and is constantly rubbed and washed, so ink is lost faster than elsewhere. On the sides of the fingers the skin is also harder to tattoo at the right depth. Together these make fine lines blur or drop out sooner.',
-        hu: 'Az ujjak bőre gyorsan megújul, állandóan súrlódik és mossuk, ezért a tinta gyorsabban távozik, mint máshol. Az ujjak oldalán ráadásul nehezebb a megfelelő mélységbe dolgozni. Mindez együtt azt okozza, hogy a finom vonalak hamarabb elmosódnak vagy kiesnek.',
+        en: 'The skin on the fingers renews quickly and is constantly rubbed and washed, so artists find that ink is lost faster than elsewhere. On the sides of the fingers the skin is also harder to tattoo at the right depth. Together these make fine lines blur or drop out sooner.',
+        hu: 'Az ujjak bőre gyorsan megújul, állandóan súrlódik és mossuk, ezért a tetoválók tapasztalata szerint a tinta gyorsabban távozik, mint máshol. Az ujjak oldalán ráadásul nehezebb a megfelelő mélységbe dolgozni. Mindez együtt azt okozza, hogy a finom vonalak hamarabb elmosódnak vagy kiesnek.',
       },
     },
     {
@@ -221,6 +221,13 @@ const a: LongArticle = {
         hu: 'Igen – az InkAge-ben a pontszám „same design elsewhere” összehasonlítása megmutatja, hogyan tartana ugyanaz a minta egy másik területen, például az alkaron. Tölts fel nappali fényes fotót a saját kezedről, hogy a saját bőrtónusodon lásd az öregített változatokat.',
       },
     },
+  ],
+  sources: [
+    { t: "4 skin care tips for your hands – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/care/skin-care-tips-hands" },
+    { t: "Dry skin relief from handwashing – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/dry/coronavirus-handwashing" },
+    { t: "Anatomy, skin (integument), epidermis – StatPearls (NCBI Bookshelf)", u: "https://www.ncbi.nlm.nih.gov/books/NBK470464/" },
+    { t: "An atypical migration pattern of tattoo pigment (tattoo blowout case report) – Cureus (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10355335/" },
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
   ],
   captions: {
     img2: {

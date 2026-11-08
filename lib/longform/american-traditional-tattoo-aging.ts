@@ -15,13 +15,13 @@ const a: LongArticle = {
     en: [
       'American traditional ages better than almost any other style because it was built for it: thick black outlines, a small palette, solid fills and simple, readable shapes.',
       'Over decades every tattoo softens. Lines spread a little and colours mellow, but a bold design has enough margin that it still reads clearly at 30 years and beyond.',
-      'Black, red and green usually hold best; yellow and white fade first. Sun is the biggest single factor in how fast that happens.',
+      'Black, red and green usually hold best; yellow and white fade first. Sun exposure is one of the main things that speeds that up.',
       'Size and placement matter as much as style: shrunk-down flash and sun-exposed spots like hands and feet age fastest.',
     ],
     hu: [
       'Az amerikai tradicionális szinte minden más stílusnál jobban öregszik, mert erre tervezték: vastag fekete kontúr, kevés szín, tömör kitöltés és egyszerű, jól olvasható formák.',
       'Évtizedek alatt minden tetoválás lágyul. A vonalak kicsit szétterülnek, a színek megszelídülnek, de egy erős mintának van elég tartaléka ahhoz, hogy 30 év múlva is tisztán olvasható legyen.',
-      'A fekete, a piros és a zöld általában bírja a legjobban, a sárga és a fehér halványul el elsőként. Hogy ez milyen gyorsan történik, abban a nap számít a legtöbbet.',
+      'A fekete, a piros és a zöld általában bírja a legjobban, a sárga és a fehér halványul el elsőként. A napfény az egyik fő tényező, ami ezt felgyorsítja.',
       'A méret és az elhelyezés ugyanannyit számít, mint a stílus: a lekicsinyített flash minták és a napnak kitett helyek, például a kéz és a láb, öregszenek a leggyorsabban.',
     ],
   },
@@ -192,8 +192,8 @@ const a: LongArticle = {
     {
       q: { en: 'What does an American traditional tattoo look like after 20 years?', hu: 'Hogyan néz ki egy amerikai tradicionális tetoválás 20 év után?' },
       a: {
-        en: 'Usually softer but clearly recognisable. The lines are slightly wider, the colours warmer and more muted, and yellow or white may be faint. Sun exposure makes the biggest difference: a protected piece can look far younger than one on a sunny forearm.',
-        hu: 'Általában lágyabb, de jól felismerhető. A vonalak kicsit szélesebbek, a színek melegebbek és tompábbak, a sárga vagy a fehér halvány lehet. A nap számít a legtöbbet: egy védett darab sokkal fiatalabbnak tűnhet, mint egy napos alkaron lévő.',
+        en: 'Usually softer but clearly recognisable. The lines are slightly wider, the colours warmer and more muted, and yellow or white may be faint. Sun exposure makes a big difference: a protected piece can look far younger than one on a sunny forearm.',
+        hu: 'Általában lágyabb, de jól felismerhető. A vonalak kicsit szélesebbek, a színek melegebbek és tompábbak, a sárga vagy a fehér halvány lehet. A nap sokat számít: egy védett darab sokkal fiatalabbnak tűnhet, mint egy napos alkaron lévő.',
       },
     },
     {
@@ -217,6 +217,14 @@ const a: LongArticle = {
         hu: 'Norman „Sailor Jerry” Collins (1911–1973) egykori haditengerész volt, aki Honolulu Hotel Street negyedében tetovált. Továbbcsiszolta a klasszikus amerikai tradicionális motívumokat, mintákat cserélt japán tetoválómesterekkel, és Don Ed Hardy mestere volt. Sok népszerű tradicionális minta az ő flash lapjaira vezethető vissza.',
       },
     },
+  ],
+  sources: [
+    { t: "Electrical tattooing set (Samuel O'Reilly's 1891 electric tattoo machine) – Smithsonian American Art Museum", u: "https://americanart.si.edu/artwork/eletrical-tattooing-34519" },
+    { t: "Hori Smoku Sailor Jerry: the life and times of Norman K. Collins – Honolulu Magazine", u: "https://www.honolulumagazine.com/?p=12685" },
+    { t: "Self-reported adverse tattoo reactions: a New York City Central Park study – Contact Dermatitis", u: "https://onlinelibrary.wiley.com/doi/10.1111/cod.12425" },
+    { t: "Photochemical cleavage of a tattoo pigment by UVB radiation or natural sunlight – Journal of the German Society of Dermatology", u: "https://pubmed.ncbi.nlm.nih.gov/17610608/" },
+    { t: "Degradation products of tattoo pigments by sunlight, laser irradiation and metabolism: a systematic review – Journal of Exposure Science and Environmental Epidemiology", u: "https://pubmed.ncbi.nlm.nih.gov/34274958/" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
   ],
   captions: {
     img2: {

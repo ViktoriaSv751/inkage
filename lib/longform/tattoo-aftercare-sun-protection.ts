@@ -16,13 +16,13 @@ const a: LongArticle = {
       'Az első 2–4 hét a legfontosabb: kíméletes mosás, vékony réteg illatmentes krém, és semmi kapargatás, áztatás vagy nap.',
       'A gyógyulás után a nap a tetoválás legnagyobb ellensége: széles spektrumú, 50-es fényvédő, erős napon kétóránként és fürdés után újrakenve.',
       'A terjedő bőrpír, a melegség, a genny vagy a láz nem a normális gyógyulás része – ilyenkor fordulj orvoshoz.',
-      'Hosszú távon a rendszeres hidratálás, a stabil testsúly és a 8–10 évente esedékes frissítés tartja élesen a vonalakat.',
+      'Hosszú távon a rendszeres hidratálás, a stabil testsúly és a frissítés, amikor a vonalak lágyulnak (a tetoválók szerint gyakran 8–10 évente), tartja élesen a vonalakat.',
     ],
     en: [
       'The first 2–4 weeks matter most: gentle washing, a thin layer of unscented balm, and no picking, soaking or sun.',
       'Once healed, the sun is your tattoo’s biggest enemy: a broad-spectrum SPF 50, reapplied every two hours in strong sun and after swimming.',
       'Spreading redness, heat, pus or fever are not part of normal healing – see a doctor if you notice them.',
-      'In the long run, regular moisturising, a stable weight and a touch-up every 8–10 years keep lines crisp.',
+      'In the long run, regular moisturising, a stable weight and a touch-up when lines soften (artists often say every 8–10 years) keep lines crisp.',
     ],
   },
   body: {
@@ -94,7 +94,7 @@ const a: LongArticle = {
       '## Hosszú távú szokások, amik éveket adnak',
       'A gyógyulás után már nem kell minden nap a tetoválásodra gondolnod, de néhány egyszerű szokás nagyon sokat számít. A **rendszeres hidratálás** segít, hogy a bőr rugalmas és egészséges maradjon, és a jól hidratált bőrön a tinta is élesebbnek, élénkebbnek látszik. Ehhez nem kell különleges termék: egy jó, illatmentes testápoló is elég.',
       'A testsúly is számít. A nagy és gyors változások megnyújthatják a bőrt, és ezzel a tetoválást is torzíthatják. Ez persze nem ok arra, hogy a tetoválásod miatt bármit másképp csinálj az életedben – egyszerűen jó tudni, hogy egy stabilabb testsúly a tetoválásnak is kedvez.',
-      'Végül: **a frissítés is a hosszú távú ápolás része.** Még a legjobban ápolt tetoválás is lágyul valamennyit az évek alatt. Nagyjából 8–10 évente érdemes számolni egy frissítéssel, ha éles vonalakat szeretnél; kézen, lábon és napos helyeken korábban is szükség lehet rá. Sok tetováló a gyógyulás után, nagyjából egy hónap elteltével ingyen vagy kedvezménnyel javítja a foltos részeket – ezt érdemes előre megkérdezni.',
+      'Végül: **a frissítés is a hosszú távú ápolás része.** Még a legjobban ápolt tetoválás is lágyul valamennyit az évek alatt. Ha éles vonalakat szeretnél, a tetoválók ökölszabálya szerint nagyjából 8–10 évente érdemes számolni egy frissítéssel; kézen, lábon és napos helyeken korábban is szükség lehet rá. Sok tetováló a gyógyulás után, nagyjából egy hónap elteltével ingyen vagy kedvezménnyel javítja a foltos részeket – ezt érdemes előre megkérdezni.',
       '[[img4]]',
       '## Így segít az InkAge az ápolásban',
       'A jó szokásokat sokkal könnyebb megtartani, ha látod, mit nyersz velük. Az InkAge-ben a saját fotódon nézheted meg, hogyan változhat a tetoválásod az idők során, és arra is emlékeztet, mikor mire figyelj. Az előnézet becslés, nem pontos jóslat, de nagyon jól megmutatja, mekkora a különbség egy jól és egy kevésbé jól védett tetoválás között.',
@@ -183,7 +183,7 @@ const a: LongArticle = {
       '## Long-term habits that add years',
       'After healing, you don’t need to think about your tattoo every day, but a few simple habits make a big difference. **Regular moisturising** helps keep skin supple and healthy, and on well-hydrated skin ink looks sharper and more vivid. You don’t need anything special: a good, unscented body lotion is enough.',
       'Weight matters too. Large, rapid changes can stretch the skin and distort the tattoo with it. That’s certainly no reason to live your life differently because of a tattoo – it’s just good to know that a more stable weight is kinder to your ink as well.',
-      'Finally: **touch-ups are part of long-term care too.** Even the best-cared-for tattoo softens somewhat over the years. If you want crisp lines, plan on a touch-up roughly every 8–10 years; on hands, feet and sunny spots you may need one sooner. Many artists fix patchy areas for free or at a discount after healing, about a month later – it’s worth asking in advance.',
+      'Finally: **touch-ups are part of long-term care too.** Even the best-cared-for tattoo softens somewhat over the years. If you want crisp lines, a common artists’ rule of thumb is a touch-up roughly every 8–10 years; on hands, feet and sunny spots you may need one sooner. Many artists fix patchy areas for free or at a discount after healing, about a month later – it’s worth asking in advance.',
       '[[img4]]',
       '## How InkAge helps with aftercare',
       'Good habits are much easier to keep when you can see what they get you. In InkAge you can see on your own photo how your tattoo may change over time, and it also reminds you what to watch out for and when. The preview is an estimate, not an exact prediction, but it shows very clearly how big the difference is between a well-protected tattoo and a less protected one.',
@@ -241,6 +241,14 @@ const a: LongArticle = {
         hu: 'Az első napokban némi bőrpír, duzzanat és érzékenység normális. A folyamatosan terjedő bőrpír, a melegség, az erősödő fájdalom, a genny, a piros csíkok vagy a láz viszont nem – ilyenkor ne otthon kezeld, hanem fordulj orvoshoz.',
       },
     },
+  ],
+  sources: [
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "How to apply sunscreen – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/sun-protection/shade-clothing-sunscreen/how-to-apply-sunscreen" },
+    { t: "UV window film and tint – Skin Cancer Foundation", u: "https://www.skincancer.org/skin-cancer-prevention/sun-protection/uv-window-film/" },
+    { t: "Tattoos: understand risks and precautions – Mayo Clinic", u: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067" },
+    { t: "Scented lotions may cause scarring and premature fading of tattoos – PMC (NIH)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10205046/" },
   ],
   captions: {
     img2: {

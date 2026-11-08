@@ -216,6 +216,14 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Laser therapy in skin of colour – DermNet", u: "https://dermnetnz.org/topics/laser-therapy-in-skin-of-colour" },
+    { t: "Postinflammatory hyperpigmentation – DermNet", u: "https://dermnetnz.org/topics/postinflammatory-hyperpigmentation" },
+    { t: "Keloid scars: causes – American Academy of Dermatology", u: "https://www.aad.org/public/diseases/a-z/keloids-causes" },
+    { t: "Tattoos: 7 unexpected skin reactions and what to do about them – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/tattoo-skin-reactions" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Laser tattoo removal: a clinical update – Journal of Cutaneous and Aesthetic Surgery", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4411606/" },
+  ],
   captions: {
     img2: {
       en: 'Bold outline, solid black and clean negative space: on deeper skin, contrast does the talking.',

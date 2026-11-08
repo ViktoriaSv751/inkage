@@ -76,7 +76,7 @@ const a: LongArticle = {
       '2. **Size it for its detail.** If there is text or fine work, give it room. The extra centimetres pay you back for decades.',
       '3. **Think about placement for the long run.** Areas that stay covered and don’t sag much will treat your tattoo kindly for longest.',
       '4. **Keep it out of the sun.** Every summer you protect it is a summer it doesn’t age.',
-      '5. **Plan on touch-ups.** A refresh every eight to ten years keeps lines and colour where you want them, and many artists enjoy bringing an old piece back to life.',
+      '5. **Plan on touch-ups.** Artists often suggest a refresh every eight to ten years to keep lines and colour where you want them, and many of them enjoy bringing an old piece back to life.',
       '## See it at 30 and 50 years',
       'It is hard to imagine your own skin decades from now. InkAge does it for you: upload a photo of the spot, place your design at the size you want, and see it fresh, healed, and at 10, 30 and 50 years, with the softening of the ink and the skin built in.',
       'The longevity score shows how well your design suits that size and placement. If the 50-year view looks more like a smudge than a swallow, try a slightly bigger size, a different spot, or the “Make it last” version with stronger lines and more space. It is an estimate rather than a promise, but it turns “what will it look like when you’re eighty?” from a warning into a question you can actually answer.',
@@ -134,7 +134,7 @@ const a: LongArticle = {
       '2. **A méret illeszkedjen a részletekhez.** Ha szöveg vagy finom munka van benne, adj neki helyet. A plusz centik évtizedekig kamatoznak.',
       '3. **Hosszú távra gondolkodj az elhelyezésben.** A takart, kevéssé megereszkedő helyek bánnak a legtovább kíméletesen a tetoválásoddal.',
       '4. **Tartsd távol a naptól.** Minden nyár, amikor megóvod, egy nyár, amikor nem öregszik.',
-      '5. **Számolj a frissítéssel.** A nyolc-tíz évenkénti felfrissítés ott tartja a vonalakat és a színeket, ahol szeretnéd, és sok tetováló kifejezetten élvezi, ha egy régi munkát új életre kelthet.',
+      '5. **Számolj a frissítéssel.** A tetoválók gyakran nyolc-tíz évenkénti felfrissítést javasolnak, hogy a vonalak és a színek ott maradjanak, ahol szeretnéd, és sok tetováló kifejezetten élvezi, ha egy régi munkát új életre kelthet.',
       '## Nézd meg 30 és 50 év múlva',
       'Nehéz elképzelni a saját bőrödet évtizedek múlva. Az InkAge megteszi helyetted: tölts fel egy fotót a helyről, tedd rá a mintát a kívánt méretben, és látod frissen, gyógyultan, valamint 10, 30 és 50 év múlva, a tinta és a bőr lágyulásával együtt.',
       'A tartóssági pontszám megmutatja, mennyire illik a minta az adott mérethez és helyhez. Ha az 50 éves nézet inkább maszatnak tűnik, mint fecskének, próbálj ki egy kicsit nagyobb méretet, egy másik helyet, vagy az erősebb vonalú, levegősebb „Tedd tartóssá” változatot. Ez becslés, nem ígéret, de a „milyen lesz, ha nyolcvan leszel?” kérdésből figyelmeztetés helyett olyan kérdést csinál, amire tényleg tudsz válaszolni.',
@@ -179,6 +179,13 @@ const a: LongArticle = {
         hu: 'Igen. A bőrgyógyászok általában azt tanácsolják, hogy a tetoválás kerülje el az anyajegyeket, hogy a bőrvizsgálatkor könnyen észre lehessen venni a változásokat, ami az életkorral egyre fontosabb. Ha már van tetoválásod egy anyajegy közelében, szólj róla az orvosodnak.',
       },
     },
+  ],
+  sources: [
+    { t: "Aging changes in skin – MedlinePlus (NIH)", u: "https://medlineplus.gov/ency/article/004014.htm" },
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Tattoos and permanent makeup: fact sheet – U.S. Food and Drug Administration", u: "https://www.fda.gov/cosmetics/cosmetic-products/tattoos-permanent-makeup-fact-sheet" },
+    { t: "Tattoo-associated skin reactions – DermNet", u: "https://dermnetnz.org/topics/tattoo-associated-skin-reactions" },
   ],
   captions: {
     img2: {

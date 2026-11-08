@@ -61,7 +61,7 @@ const a: LongArticle = {
       '[[img5]]',
       'Many clinics advertise that picosecond lasers need fewer sessions. The research so far is more careful: reviews suggest picosecond lasers work better on some colours, such as blue and green, but there is no clear proof that they need fewer sessions for ordinary black ink. For a simple black tattoo, a well-run Q-switched treatment can be just as good value. For stubborn colours, a picosecond laser may be worth the higher price.',
       '### Who treats you',
-      'In some countries the choice is partly made for you. In Germany, laser tattoo removal has been reserved for doctors with the right training since the end of 2021. In France, removal is officially a medical procedure as well, even though not every provider follows the rule. Elsewhere, specialist laser studios, beauty clinics and dermatologists all offer it. Doctor-led clinics usually charge more, but they can also judge your skin, deal with complications and handle difficult cases such as allergic reactions to old ink.',
+      'In some countries the choice is partly made for you. In Germany, laser tattoo removal has been reserved for doctors with the right training since 31 December 2020. In France, removal is officially a medical procedure as well, even though not every provider follows the rule. Elsewhere, specialist laser studios, beauty clinics and dermatologists all offer it. Doctor-led clinics usually charge more, but they can also judge your skin, deal with complications and handle difficult cases such as allergic reactions to old ink.',
       '### Everything else',
       '- **City and country.** Rent and wages show up in the price. Capital cities are usually the most expensive.',
       '- **Where on the body.** Tattoos on the hands, feet and lower legs often fade more slowly because circulation there is weaker, which can add sessions.',
@@ -133,7 +133,7 @@ const a: LongArticle = {
       '[[img5]]',
       'Sok klinika azt hirdeti, hogy a pikoszekundumos lézerrel kevesebb alkalom kell. A kutatások eddig óvatosabbak: az összefoglalók szerint a pikoszekundumos lézerek egyes színeknél, például a kéknél és a zöldnél jobban működnek, de nincs egyértelmű bizonyíték arra, hogy átlagos fekete tintánál kevesebb alkalom kellene. Egy egyszerű fekete tetoválásnál egy jól végzett Q-kapcsolt kezelés ugyanolyan jó ár-érték arányú lehet. Makacs színeknél megérheti a magasabb árat a pikoszekundumos lézer.',
       '### Ki kezel',
-      'Egyes országokban a döntés egy részét meghozták helyetted. Németországban 2021 vége óta csak megfelelő képzettségű orvos végezhet lézeres tetoválás-eltávolítást. Franciaországban az eltávolítás hivatalosan szintén orvosi beavatkozás, még ha nem is tartja be minden szolgáltató ezt a szabályt. Máshol lézeres szakstúdiók, szépségszalonok és bőrgyógyászok egyaránt kínálják. Az orvosi rendelők általában drágábbak, de meg tudják ítélni a bőrödet, kezelni tudják a szövődményeket, és a nehéz eseteket is, például a régi tintára adott allergiás reakciót.',
+      'Egyes országokban a döntés egy részét meghozták helyetted. Németországban 2020. december 31. óta csak megfelelő képzettségű orvos végezhet lézeres tetoválás-eltávolítást. Franciaországban az eltávolítás hivatalosan szintén orvosi beavatkozás, még ha nem is tartja be minden szolgáltató ezt a szabályt. Máshol lézeres szakstúdiók, szépségszalonok és bőrgyógyászok egyaránt kínálják. Az orvosi rendelők általában drágábbak, de meg tudják ítélni a bőrödet, kezelni tudják a szövődményeket, és a nehéz eseteket is, például a régi tintára adott allergiás reakciót.',
       '### Minden más',
       '- **Város és ország.** A bérleti díj és a bérek megjelennek az árban. A fővárosok általában a legdrágábbak.',
       '- **Hol van a testen.** A kézen, a lábfejen és a lábszáron lévő tetoválások gyakran lassabban halványulnak, mert ott gyengébb a vérkeringés, ez pedig plusz alkalmakat jelenthet.',
@@ -207,6 +207,14 @@ const a: LongArticle = {
         hu: 'Általában nem. A legtöbb országban a tetoválás-eltávolítás esztétikai beavatkozásnak számít, így magad fizeted. A kivételek ritkák, például bizonyos orvosi okok, mint a tintára adott súlyos reakció. Kezdés előtt érdeklődj a biztosítódnál.',
       },
     },
+  ],
+  sources: [
+    { t: "Tattoo removal: how it works, process, healing and scarring – Cleveland Clinic", u: "https://my.clevelandclinic.org/health/treatments/8313-tattoo-removal" },
+    { t: "The Kirby-Desai Scale: a proposed scale to assess tattoo-removal treatments – Journal of Clinical and Aesthetic Dermatology", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2923953/" },
+    { t: "Comparing the efficacy and safety of laser treatments in tattoo removal: a systematic review – Journal of the American Academy of Dermatology", u: "https://pubmed.ncbi.nlm.nih.gov/32763326/" },
+    { t: "Tattoo removal – German Federal Office for Radiation Protection (BfS)", u: "https://www.bfs.de/EN/topics/opt/application-medicine-wellness/tattoo/tattoo_node.html" },
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "Understanding laser tattoo removal – University of Utah Health", u: "https://healthcare.utah.edu/healthfeed/2025/05/understanding-laser-tattoo-removal" },
   ],
   captions: {
     img2: {

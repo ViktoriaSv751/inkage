@@ -13,14 +13,14 @@ const a: LongArticle = {
   },
   summary: {
     hu: [
-      "A vékony vonalban kevesebb a tinta, ezért a fakulás és a szétterülés jobban látszik – a lágyulás gyakran 5–10 év után feltűnik.",
-      "Az 1 mm-nél közelebbi finom vonalak 10–15 év alatt összeolvadhatnak, ezért hagyj legalább 1–2 mm rést.",
+      "A vékony vonalban kevesebb a tinta, ezért a fakulás és a szétterülés jobban látszik – a tetoválók szerint a lágyulás gyakran 5–10 év után feltűnik.",
+      "Gyakori ökölszabály: az 1 mm-nél közelebbi finom vonalak 10–15 év alatt összeolvadhatnak, ezért hagyj legalább 1–2 mm rést.",
       "Válaszd kicsit nagyobbra, kérj erősebb fő vonalakat, és tedd védett helyre.",
       "A tapasztalt tetováló, a gondos gyógyulás és a fényvédelem itt még többet számít, mint más stílusoknál.",
     ],
     en: [
-      "A thin line holds less ink, so fading and spreading show more – softening often becomes noticeable after 5–10 years.",
-      "Fine lines closer than 1 mm can merge within 10–15 years, so leave at least 1–2 mm between them.",
+      "A thin line holds less ink, so fading and spreading show more – artists often say softening becomes noticeable after 5–10 years.",
+      "A common rule of thumb: fine lines closer than 1 mm can merge within 10–15 years, so leave at least 1–2 mm between them.",
       "Go slightly bigger, ask for stronger key lines and choose a protected spot.",
       "An experienced artist, careful healing and sun protection matter even more here than with other styles.",
     ],
@@ -43,8 +43,8 @@ const a: LongArticle = {
       "Minden tetoválás tintája lassan vándorol. Az irhában élő immunsejtek, a makrofágok bekebelezik a pigmentet, majd amikor elpusztulnak, a festék kiszabadul, és új sejtek fogják be újra – egy 2018-as egérkísérlet (Baranska és munkatársai, Journal of Experimental Medicine) éppen ezt a körforgást írta le. Közben egy kevés pigment mindig elmozdul. Sok tetováló ökölszabálya szerint a vonalak **évtizedenként nagyjából egytized millimétert** terülnek szét. Ez becslés, nem pontos mérés, de jól mutatja az arányokat.",
       "Itt jön a fine line legnagyobb kihívása. Egy vastag vonalban sok a tinta, így a fakulás és a szétterülés arányaiban kicsi. **A vékony vonalban kevesebb a tinta**, ezért ugyanakkora fakulás jobban látszik, és ugyanannyi szétterülés a vonal szélességéhez képest sokkal nagyobb változás. Egy nagyon vékony vonal, amely tíz év alatt egytized millimétert terül, arányaiban jóval vastagabb és puhább szélű lesz, míg egy két milliméteres vonalon ugyanez szinte észrevehetetlen.",
       "### Egy egyszerű számpélda",
-      "Képzelj el két párhuzamos finom vonalat, köztük 1 milliméter réssel. Ha mindkettő kifelé terül, a rés két oldalról szűkül. 10–15 év alatt a különbség már jól látszik, és a túl közel húzott vonalak gyakran összeolvadnak. Ezért mondják, hogy **az 1 mm-nél közelebbi finom vonalak 10–15 év alatt jellemzően egybefolynak.** Ha a rés 2 mm, ugyanez a folyamat évtizedekig is eltarthat.",
-      "A gyakorlatban ez azt jelenti, hogy egy fine line tetoválás gyakran 5–10 év után kezd láthatóan lágyulni – a mérettől, a helytől és a naptól függően. A nagyobb, levegősebb minták ennél sokkal tovább megőrzik a karakterüket.",
+      "Képzelj el két párhuzamos finom vonalat, köztük 1 milliméter réssel. Ha mindkettő kifelé terül, a rés két oldalról szűkül. Az évek során a különbség láthatóvá válik, és a túl közel húzott vonalak gyakran összeolvadnak. Ezért mondják a tetoválók, hogy **az 1 mm-nél közelebbi finom vonalak 10–15 év alatt jellemzően egybefolynak.** Ha a rés 2 mm, ugyanez a folyamat évtizedekig is eltarthat.",
+      "A gyakorlatban a tetoválók azt látják, hogy egy fine line tetoválás gyakran 5–10 év után kezd láthatóan lágyulni – a mérettől, a helytől és a naptól függően. A nagyobb, levegősebb minták ennél sokkal tovább megőrzik a karakterüket.",
       "A fakulás is másképp jelentkezik. Egy vastag fekete vonal évek múlva is fekete marad, legfeljebb kissé szürkébb lesz. Egy hajszálvékony vonal viszont annyira kevés tintát tartalmaz, hogy már kis veszteség után is szürkévé, helyenként szinte áttetszővé válhat. Különösen igaz ez a hígított, szürke tintával készült, árnyékolt részekre: ezek gyakran már az első években halványabbak lesznek, mint amire számítottál.",
       "## A tetováló keze: mélység, blowout és kiesés",
       "A fine line az egyik legnehezebb technika, mert nagyon kicsi a hibahatár. A tinta helye az irha: ha a tű túl sekélyen dolgozik, a festék a gyógyulás során foltosan kiesik, és a vonal szakadozott lesz. Ha túl mélyen, a tinta szétfuthat a bőr alatti rétegben, és a vonal körül kékes, elmosódott udvar keletkezik – ezt nevezik **blowoutnak**.",
@@ -103,7 +103,7 @@ const a: LongArticle = {
       "Ha mindkét változat megvan, PDF-ben elviheted a tetoválódnak, vagy megkérheted a barátaidat, hogy szavazzanak. Az előnézet becslés, nem garancia – de nagyon jó arra, hogy még a foglalás előtt meghozd a legfontosabb döntéseket a méretről, a helyről és a részletekről.",
       "## Az egy mondat, amit érdemes elvinni",
       "Tartósak a fine line tetoválások? **Igen, ha helyet adsz nekik.** Kicsit nagyobb méret, kicsit erősebb fő vonalak, legalább 1–2 mm rés, védett hely, tapasztalt művész és következetes fényvédelem – ezekkel egy finom vonalas minta évtizedek múlva is szép lehet.",
-      "Számíts rá, hogy lágyulni fog, és tervezz 8–10 évente egy frissítéssel. A cél nem az, hogy örökre olyan maradjon, mint a friss fotón, hanem hogy harminc év múlva is ugyanazt érezd, amikor ránézel.",
+      "Számíts rá, hogy lágyulni fog, és ahogy a tetoválók gyakran javasolják, tervezz nagyjából 8–10 évente egy frissítéssel. A cél nem az, hogy örökre olyan maradjon, mint a friss fotón, hanem hogy harminc év múlva is ugyanazt érezd, amikor ránézel.",
     ],
     en: [
       "It’s late and you’re scrolling Instagram when an image stops you: a slender, graceful olive branch on a wrist, or a word in hair-thin script, barely a few centimetres long, on someone’s ribs. Perfect and delicate, as if drawn with a pen. You save it, then another, and soon there are twenty similar pictures in your folder. You’ve already picked out the studio, and only the booking button stands between you and making one of them yours.",
@@ -122,8 +122,8 @@ const a: LongArticle = {
       "The ink in every tattoo slowly drifts. Immune cells in the dermis called macrophages swallow the pigment; when they die, the ink is released and captured again by new cells – a 2018 mouse study (Baranska and colleagues, Journal of Experimental Medicine) described exactly this cycle. Along the way, a little pigment always shifts. Many artists use the rule of thumb that lines spread by **roughly a tenth of a millimetre per decade**. It is an estimate, not a precise measurement, but it shows the proportions well.",
       "Here comes fine line’s biggest challenge. A bold line contains a lot of ink, so fading and spreading are proportionally small. **A thin line contains less ink**, so the same fading is more visible, and the same spread is a much bigger change relative to the line’s width. A very thin line that spreads by a tenth of a millimetre over ten years becomes proportionally much thicker and softer-edged, while on a two-millimetre line the same change is almost imperceptible.",
       "### A simple example in numbers",
-      "Picture two parallel fine lines with a 1-millimetre gap between them. If both spread outwards, the gap closes from both sides. Within 10–15 years the difference is clearly visible, and lines drawn too close together often merge. That’s why it’s said that **fine lines closer than 1 mm typically run together within 10–15 years.** With a 2 mm gap, the same process can take decades.",
-      "In practice, this means a fine line tattoo often starts to soften visibly after 5–10 years – depending on size, placement and sun. Larger, airier designs keep their character much longer.",
+      "Picture two parallel fine lines with a 1-millimetre gap between them. If both spread outwards, the gap closes from both sides. Over the years the difference becomes visible, and lines drawn too close together often merge. That’s why artists often say that **fine lines closer than 1 mm typically run together within 10–15 years.** With a 2 mm gap, the same process can take decades.",
+      "In practice, artists often see a fine line tattoo start to soften visibly after 5–10 years – depending on size, placement and sun. Larger, airier designs keep their character much longer.",
       "Fading shows up differently, too. A bold black line stays black for years, at most turning slightly greyer. A hair-thin line, however, holds so little ink that even a small loss can turn it grey and in places almost translucent. This is especially true of shaded areas made with diluted grey ink: these often become lighter than you expected within the first few years.",
       "## The artist’s hand: depth, blowouts and fallout",
       "Fine line is one of the hardest techniques because the margin for error is tiny. Ink belongs in the dermis: if the needle works too shallow, the pigment falls out in patches as the skin heals and the line becomes broken. Too deep, and the ink can spread in the layer beneath, leaving a bluish, blurry halo around the line – known as a **blowout**.",
@@ -182,15 +182,15 @@ const a: LongArticle = {
       "Once you have both versions, you can take them to your artist as a PDF, or ask your friends to vote. The preview is an estimate, not a guarantee – but it is very good for making the most important decisions about size, placement and detail before you book.",
       "## The one thing to take away",
       "Do fine line tattoos last? **Yes, if you give them room.** A slightly bigger size, slightly stronger key lines, at least 1–2 mm between lines, a protected spot, an experienced artist and consistent sun protection – with these, a fine line design can still look beautiful decades from now.",
-      "Expect it to soften, and plan a touch-up every 8–10 years. The goal isn’t for it to stay forever as it looks in the fresh photo, but for you to feel the same thing when you look at it thirty years from now.",
+      "Expect it to soften, and plan a touch-up roughly every 8–10 years, as artists often suggest. The goal isn’t for it to stay forever as it looks in the fresh photo, but for you to feel the same thing when you look at it thirty years from now.",
     ],
   },
   faq: [
     {
       q: { hu: "Meddig marad éles egy fine line tetoválás?", en: "How long does a fine line tattoo stay crisp?" },
       a: {
-        hu: "Gyakran 5–10 év, mire a lágyulás feltűnik – a mérettől, a helytől és a naptól függően. A nagyobb, levegősebb minták sokkal tovább tartanak. Az apró, sűrű részletek mosódnak el a leghamarabb.",
-        en: "Often 5–10 years before softening is noticeable, depending on size, placement and sun. Larger, airier designs last much longer. Tiny, dense details blur first.",
+        hu: "A tetoválók szerint gyakran 5–10 év, mire a lágyulás feltűnik – a mérettől, a helytől és a naptól függően. A nagyobb, levegősebb minták sokkal tovább tartanak. Az apró, sűrű részletek mosódnak el a leghamarabb.",
+        en: "Artists often say 5–10 years before softening is noticeable, depending on size, placement and sun. Larger, airier designs last much longer. Tiny, dense details blur first.",
       },
     },
     {
@@ -221,6 +221,13 @@ const a: LongArticle = {
         en: "Because it holds less ink, fewer sessions are often enough, but that isn’t guaranteed: depth, ink and skin all play a role. InkAge’s laser preview helps you picture the process. Always discuss removal with a dermatologist or a qualified specialist.",
       },
     },
+  ],
+  sources: [
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "Tattoo ink nanoparticles in skin tissue and fibroblasts – Beilstein Journal of Nanotechnology (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4464189/" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
+    { t: "How to apply sunscreen – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/sun-protection/shade-clothing-sunscreen/how-to-apply-sunscreen" },
   ],
   captions: {
     img2: {

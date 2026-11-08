@@ -13,14 +13,14 @@ const a: LongArticle = {
   },
   summary: {
     hu: [
-      'A vonalak évtizedenként nagyjából 0,1 mm-t terülnek szét – egy kis mintán ez sokkal többet számít, mint egy nagyon.',
-      'A minimális méretet a minta legkisebb részlete határozza meg: az 1 mm-nél szűkebb rések 10–15 év alatt jellemzően összefolynak.',
+      'A tetoválók gyakori ökölszabálya: a vonalak évtizedenként nagyjából 0,1 mm-t terülnek szét – egy kis mintán ez sokkal többet számít, mint egy nagyon.',
+      'A minimális méretet a minta legkisebb részlete határozza meg: a tetoválók szerint az 1 mm-nél szűkebb rések 10–15 év alatt jellemzően összefolynak.',
       'Egyszerű szimbólum: 3–5 cm; felirat: legalább kb. 1 cm-es betűk; részletes minta: 8 cm vagy több; realizmus: gyakran jóval több.',
       'Teszteld a méretet kinyomtatva a bőrödön vagy az InkAge-ben, és nézd meg a 30 éves előnézetet, mielőtt döntesz.',
     ],
     en: [
-      'Lines spread by roughly 0.1 mm per decade – on a small design that matters far more than on a large one.',
-      'The minimum size is set by the design’s smallest detail: gaps narrower than 1 mm typically merge within 10–15 years.',
+      'A common artists’ rule of thumb: lines spread by roughly 0.1 mm per decade – on a small design that matters far more than on a large one.',
+      'The minimum size is set by the design’s smallest detail: artists often say gaps narrower than 1 mm merge within 10–15 years.',
       'Simple symbol: 3–5 cm; lettering: letters at least about 1 cm tall; detailed piece: 8 cm or more; realism: often much more.',
       'Test the size on your skin with a printout or in InkAge, and check the 30-year preview before you decide.',
     ],
@@ -44,7 +44,7 @@ const a: LongArticle = {
       '### Egyszerű szimbólumok és vastag formák',
       'Egy kontúros szív, csillag, hold, egy vastag vonalas geometrikus forma vagy egy egyszerű sziluett jellemzően 3–5 cm-en is szépen öregszik. Kevés benne a belső részlet, a formát pedig a külső kontúr adja, ami idővel lágyul ugyan, de olvasható marad.',
       '### Finom vonalas (fine line) minták',
-      'A fine line stílus szépsége pont a vékony vonal – és egyben ez a gyengéje is. A vékony vonal kevesebb festéket tartalmaz, ezért hamarabb halványul, a részletek közötti rések pedig hamarabb záródnak. Finom vonalas mintánál érdemes inkább nagyobbat választani, mint amit elsőre gondolnál, és kerülni a túl sűrű belső részleteket. Az élesség sokszor már 5–10 év után láthatóan lágyul, a mérettől, a helytől és a naptól függően.',
+      'A fine line stílus szépsége pont a vékony vonal – és egyben ez a gyengéje is. A vékony vonal kevesebb festéket tartalmaz, ezért hamarabb halványul, a részletek közötti rések pedig hamarabb záródnak. Finom vonalas mintánál érdemes inkább nagyobbat választani, mint amit elsőre gondolnál, és kerülni a túl sűrű belső részleteket. A tetoválók szerint az élesség sokszor már 5–10 év után láthatóan lágyul, a mérettől, a helytől és a naptól függően.',
       '### Több elemből álló kompozíciók',
       'Ha a mintád több motívumból áll – például egy virágból, egy madárból és egy dátumból –, akkor minden elemnek külön is olvashatónak kell lennie. Az ilyen minták általában **8 cm-t vagy többet** kívánnak, és sokat segít, ha az elemek között marad egy kis levegő.',
       '### Arcok, portrék, realizmus',
@@ -130,7 +130,7 @@ const a: LongArticle = {
       '### Simple symbols and bold shapes',
       'An outlined heart, star or moon, a bold-line geometric shape or a simple silhouette usually ages well even at 3–5 cm. There’s little inner detail, and the shape comes from the outer outline, which softens over time but stays readable.',
       '### Fine line designs',
-      'The beauty of fine line work is the thin line itself – and that’s also its weakness. A thin line holds less ink, so it fades sooner, and the gaps between details close sooner too. With a fine line design it’s worth going bigger than you’d first think and avoiding dense inner detail. Crispness often visibly softens after 5–10 years, depending on size, placement and sun.',
+      'The beauty of fine line work is the thin line itself – and that’s also its weakness. A thin line holds less ink, so it fades sooner, and the gaps between details close sooner too. With a fine line design it’s worth going bigger than you’d first think and avoiding dense inner detail. Artists often say crispness visibly softens after 5–10 years, depending on size, placement and sun.',
       '### Compositions with several elements',
       'If your design combines several motifs – say a flower, a bird and a date – each element has to be readable on its own. Designs like this usually need **8 cm or more**, and a little breathing room between the elements helps a lot.',
       '### Faces, portraits, realism',
@@ -235,6 +235,12 @@ const a: LongArticle = {
         en: 'Ask which detail they’re worried about and what they’d leave out if it had to be smaller. There’s often a middle ground: a simpler design at the size you want. If you’re still unsure, test both versions with a printout or in InkAge.',
       },
     },
+  ],
+  sources: [
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "Tattoo ink nanoparticles in skin tissue and fibroblasts – Beilstein Journal of Nanotechnology (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4464189/" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
   ],
   captions: {
     img2: {

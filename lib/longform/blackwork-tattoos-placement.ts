@@ -162,6 +162,14 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Tattoo removal: how it works, process, healing and scarring – Cleveland Clinic", u: "https://my.clevelandclinic.org/health/treatments/8313-tattoo-removal" },
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "How to apply sunscreen – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/sun-protection/shade-clothing-sunscreen/how-to-apply-sunscreen" },
+    { t: "Laser therapy in skin of colour – DermNet", u: "https://dermnetnz.org/topics/laser-therapy-in-skin-of-colour" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: bold ornamental blackwork on the side of the neck, where the skin is thicker than at the front.',

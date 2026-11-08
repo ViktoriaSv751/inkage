@@ -1,6 +1,6 @@
 import { articleLangs } from './article-langs';
 import { TOP_ARTICLES } from './kb-links';
-import { ARTICLES } from './articles';
+import { liveArticles } from './articles';
 import { KB } from './kb';
 import { SEO_AREAS, SEO_STYLES, seoPage } from './seo';
 import { pick, type Lang } from './tr';
@@ -9,7 +9,7 @@ import { pick, type Lang } from './tr';
 export function landingData(lang: Lang) {
   /* the most searched articles that are written in this language (lib/kb-links.ts) */
   const featured = TOP_ARTICLES.filter((s) => articleLangs(s).includes(lang))
-    .map((s) => ARTICLES.find((a) => a.slug === s)!)
+    .map((s) => liveArticles().find((a) => a.slug === s)!)
     .filter(Boolean)
     .slice(0, 4)
     .map((a) => ({ slug: a.slug, img: KB[a.slug].img, tag: pick(a.tag, lang), title: pick(a.title, lang), desc: pick(a.desc, lang) }));
@@ -19,6 +19,6 @@ export function landingData(lang: Lang) {
     name: pick(s, lang),
     ranked: SEO_AREAS.map((a) => ({ k: a.k as string, name: pick(a, lang), score: seoPage(`${s.k}-${a.k}`, lang)?.medium ?? 0 })).sort((x, y) => y.score - x.score),
   }));
-  return { articleCount: ARTICLES.length, featured, styles };
+  return { articleCount: liveArticles().length, featured, styles };
 }
 export type LandingData = ReturnType<typeof landingData>;

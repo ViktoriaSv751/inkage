@@ -226,6 +226,13 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Stretch marks: what they are, causes and treatments – Cleveland Clinic", u: "https://my.clevelandclinic.org/health/diseases/10785-stretch-marks" },
+    { t: "Tattoos: understand risks and precautions – Mayo Clinic", u: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067" },
+    { t: "Contraindications for tattooing – Current Problems in Dermatology (PubMed)", u: "https://pubmed.ncbi.nlm.nih.gov/25833628/" },
+    { t: "Aging changes in skin – MedlinePlus (NIH)", u: "https://medlineplus.gov/ency/article/004014.htm" },
+    { t: "Laser tattoo removal – UCSF Health", u: "https://www.ucsfhealth.org/treatments/laser_tattoo_removal/" },
+  ],
   captions: {
     img2: {
       hu: 'A vádli ritkán árulja el, mennyit változott körülötte a test – a minta itt évekig hű marad önmagához.',

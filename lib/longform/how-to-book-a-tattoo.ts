@@ -254,6 +254,13 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Tattoo, piercing and electrolysis licence (England and Wales) – GOV.UK", u: "https://www.gov.uk/skin-piercing-and-tattooing" },
+    { t: "Tattooing of Minors Act 1969 – legislation.gov.uk", u: "https://www.legislation.gov.uk/ukpga/1969/24" },
+    { t: "Chemicals: new EU rules for safer ink tattoos across the EU – European Commission", u: "https://cyprus.representation.ec.europa.eu/news/chemicals-new-eu-rules-safer-ink-tattoos-across-eu-2022-01-04_en" },
+    { t: "Tattoos and permanent makeup: fact sheet – U.S. Food and Drug Administration", u: "https://www.fda.gov/cosmetics/cosmetic-products/tattoos-permanent-makeup-fact-sheet" },
+    { t: "Tattoos: understand risks and precautions – Mayo Clinic", u: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: the same design fresh and healed. Judge an artist by the healed photos, where clean lines and even fill really show.',

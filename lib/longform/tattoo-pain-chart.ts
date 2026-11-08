@@ -27,7 +27,7 @@ const a: LongArticle = {
   },
   body: {
     hu: [
-      'Ez az első kérdés, amit szinte mindenki feltesz, mielőtt életében először leül a tetoválószékbe: mennyire fog fájni? A barátaid valószínűleg teljesen mást mondanak. Az egyik szerint olyan, mint egy macskakarmolás, a másik szerint a bordáján töltött három óra volt élete leghosszabb délutánja. Mindkettőjüknek igaza lehet – mert a tetoválás fájdalma nagyon is attól függ, **hová** kerül, **mekkora** és **kinek** a bőrére.',
+      'Ez az első kérdés, amit szinte mindenki feltesz, mielőtt életében először leül a tetoválószékbe: mennyire fog fájni? A barátaid valószínűleg teljesen mást mondanak. Az egyik szerint olyan, mint egy macskakarmolás, a másik szerint a bordáján töltött három óra volt élete leghosszabb délutánja. Mindkettőjüknek igaza lehet – mert a tetoválás fájdalma attól is függ, **hová** kerül, **mekkora** és **kinek** a bőrére.',
       'Ebben a cikkben testtájanként végigmegyünk azon, hol fáj a legjobban és hol a legkevésbé, elmagyarázzuk, miért, leírjuk, milyen érzés valójában, és összegyűjtjük, mit tehetsz azért, hogy az ülés a lehető legkönnyebb legyen. A végén pedig arról is szó lesz, miért nem érdemes **csak** a fájdalom alapján helyet választani.',
       '## Miért fáj jobban egyes helyeken?',
       'A tetoválógép tűi percenként több ezerszer szúrnak a bőr felső rétegein át az irhába, ahol a tinta megmarad. Hogy ez mennyire kellemetlen, főleg három dolgon múlik:',
@@ -35,7 +35,7 @@ const a: LongArticle = {
       '- **Milyen vékony a bőr.** A vékony, finom bőr – a belső kar, a hónalj, a térdhajlat – érzékenyebb, mint a vastag bőr a combon vagy a háton.',
       '- **Mennyi idegvégződés van ott.** A kézfej, az ujjak, a lábfej, az arc és az ajak tele van idegvégződéssel, ezért ott minden szúrás erősebben érződik.',
       'A fájdalomtérkép tehát nem titok: ha megtapintod a tervezett helyet, és szinte rögtön csontot érzel, vagy a bőr nagyon vékony és puha, számíts erősebb érzésre.',
-      '> A fájdalom egyéni. Az alábbi térkép azt mutatja, amit a legtöbb ember tapasztal – de a saját testedben lehetnek meglepetések mindkét irányban.',
+      '> A fájdalom egyéni. Az alábbi térkép azt tükrözi, amiről a tetovált emberek informális felmérésekben általában beszámolnak, nem klinikai adatokat – egy több mint 1000 tetovált emberrel végzett vizsgálatban a testtáj nem jelezte előre megbízhatóan, mennyire fáj –, így a saját testedben lehetnek meglepetések mindkét irányban.',
       '## Fájdalomtérkép: a legkevésbé fájdalmas helyek',
       'Ha az első tetoválásodat tervezed, vagy egyszerűen alacsony a fájdalomtűrésed, ezekkel a helyekkel kezdj. A legtöbben 1–4 közé teszik őket egy tízes skálán.',
       '- **A felkar külső oldala és a váll külső része:** vastag bőr, sok izom, kevés idegvégződés. A klasszikus „első tetoválás” hely nem véletlenül az.',
@@ -78,7 +78,7 @@ const a: LongArticle = {
       '- **Az ülés hossza:** egy egyórás munka egészen más élmény, mint egy hatórás. A hosszú üléseknél a fájdalom inkább a fáradtságból és a felhalmozódó érzékenységből jön.',
       '- **A stílus:** a sok kitöltés, a tömör fekete és az erős színezés hosszabb és fárasztóbb, mint egy egyszerű vonalas minta.',
       '- **A tetováló keze:** egy tapasztalt tetováló egyenletesen, a szükségesnél nem mélyebben dolgozik. Ez nemcsak kevésbé fáj, hanem szebben is gyógyul.',
-      '- **A ciklus:** sokan arról számolnak be, hogy a menstruáció előtti és alatti napokban érzékenyebbek. Ha teheted, ehhez igazítsd az időpontot.',
+      '- **A ciklus:** van, aki a menstruáció előtti és alatti napokban érzékenyebbnek érzi magát, bár egy nagy vizsgálat tetovált embereknél nem talált egyértelmű összefüggést a ciklus szakaszával. Ha magadon észreveszed, igazítsd hozzá az időpontot.',
       '[[img3]]',
       '## Hogyan lesz könnyebb az ülés?',
       'A fájdalmat nem lehet teljesen eltüntetni, de sokat lehet tenni azért, hogy kezelhető maradjon. Ezek a legtöbbet érő lépések:',
@@ -106,7 +106,7 @@ const a: LongArticle = {
       'Ha két hely között vacillálsz, érdemes mindkettőt mérlegelni: melyiket bírod könnyebben, és melyik marad szép hosszabb ideig? Az InkAge-dzsel feltölthetsz egy fotót a tervezett helyről, és megnézheted a mintát a saját bőrödön 10, 30 és 50 év múlva – így a döntésed nem csak az ülés napjáról, hanem a következő évtizedekről is szól.',
     ],
     en: [
-      'It is the first question almost everyone asks before sitting in a tattoo chair for the first time: how much is it going to hurt? Your friends will probably tell you completely different things. One says it feels like a cat scratch; another says the three hours on their ribs were the longest afternoon of their life. Both can be right – because tattoo pain depends heavily on **where** it goes, **how big** it is and **whose** skin it is on.',
+      'It is the first question almost everyone asks before sitting in a tattoo chair for the first time: how much is it going to hurt? Your friends will probably tell you completely different things. One says it feels like a cat scratch; another says the three hours on their ribs were the longest afternoon of their life. Both can be right – because tattoo pain depends on **where** it goes, **how big** it is and **whose** skin it is on.',
       'In this article we go through the body area by area: where it hurts most and least, why, what it actually feels like, and what you can do to make the session as easy as possible. At the end we also look at why it is not a good idea to choose a spot based on pain **alone**.',
       '## Why does it hurt more in some places?',
       'The needles of a tattoo machine pierce the top layers of the skin thousands of times a minute to reach the dermis, where the ink stays. How unpleasant that is depends mainly on three things:',
@@ -114,7 +114,7 @@ const a: LongArticle = {
       '- **How thin the skin is.** Thin, delicate skin – the inner arm, the armpit, the back of the knee – is more sensitive than the thick skin of the thigh or the back.',
       '- **How many nerve endings there are.** Hands, fingers, feet, the face and the lips are full of nerve endings, so every pass of the needle is felt more strongly there.',
       'So the pain map is no secret: if you press on the spot you have in mind and feel bone almost straight away, or the skin is very thin and soft, expect a stronger sensation.',
-      '> Pain is personal. The map below shows what most people experience – but your own body can surprise you in either direction.',
+      '> Pain is personal. The map below reflects what tattooed people commonly report in informal surveys, not clinical data – a study of more than 1,000 tattooed people found that body area did not reliably predict how much it hurt – so your own body can surprise you in either direction.',
       '## Pain chart: the least painful places',
       'If you are planning your first tattoo, or simply have a low pain threshold, start with these spots. Most people put them at 1–4 on a scale of ten.',
       '- **Outer upper arm and outer shoulder:** thick skin, plenty of muscle, few nerve endings. It is no accident that this is the classic “first tattoo” spot.',
@@ -157,7 +157,7 @@ const a: LongArticle = {
       '- **Length of the session:** a one-hour piece is a completely different experience from a six-hour one. In long sessions, the pain comes more from fatigue and building sensitivity.',
       '- **Style:** lots of filling, solid black and heavy colour packing take longer and are more tiring than a simple line design.',
       '- **The artist’s hand:** an experienced artist works evenly and no deeper than necessary. That not only hurts less, it also heals better.',
-      '- **Your cycle:** many people report being more sensitive in the days before and during their period. If you can, plan the appointment around it.',
+      '- **Your cycle:** some people feel more sensitive in the days before and during their period, although a large study of tattooed people found no clear effect of cycle phase. If you notice it in yourself, plan the appointment around it.',
       '[[img3]]',
       '## How to make the session easier',
       'Pain cannot be removed completely, but there is a lot you can do to keep it manageable. These are the steps that make the most difference:',
@@ -221,6 +221,12 @@ const a: LongArticle = {
         hu: 'Általában 2–3 napig olyan, mint egy napégés, utána enyhül. A gyógyulás alatt viszketés és hámlás következik. Ha a fájdalom erősödik, a bőr egyre forróbb és vörösebb, vagy lázas leszel, fordulj orvoshoz.',
       },
     },
+  ],
+  sources: [
+    { t: "Gender differences in subjective pain perception during and after tattooing – International Journal of Environmental Research and Public Health (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7767267/" },
+    { t: "FDA warns consumers to avoid certain topical pain relief products – U.S. Food and Drug Administration", u: "https://www.fda.gov/news-events/press-announcements/fda-warns-consumers-avoid-certain-topical-pain-relief-products-due-potential-dangerous-health" },
+    { t: "Tattoos: understand risks and precautions – Mayo Clinic", u: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067" },
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
   ],
   captions: {
     img2: {

@@ -186,6 +186,14 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Laser tattoo removal: a clinical update – Journal of Cutaneous and Aesthetic Surgery", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4411606/" },
+    { t: "Comparing the efficacy and safety of laser treatments in tattoo removal: a systematic review – Journal of the American Academy of Dermatology", u: "https://pubmed.ncbi.nlm.nih.gov/32763326/" },
+    { t: "Tattoo removal: options and results – U.S. Food and Drug Administration", u: "https://www.fda.gov/consumers/consumer-updates/tattoo-removal-options-and-results" },
+    { t: "The Kirby-Desai Scale: a proposed scale to assess tattoo-removal treatments – Journal of Clinical and Aesthetic Dermatology", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2923953/" },
+    { t: "Tattoos (laser treatment) – Bristol Laser Centre, North Bristol NHS Trust", u: "https://www.nbt.nhs.uk/bristol-laser-centre/laser-treatments/tattoos" },
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: frosting right after a pulse. The white colour fades within minutes and says nothing about the final result.',

@@ -43,7 +43,7 @@ export const KB: Record<string, KbMeta> = {
     cap2: { en: 'Up close, the thinnest lines are the first to spread and lose their edge.', hu: 'Közelről nézve a legvékonyabb vonalak terülnek szét és veszítik el először az élüket.' },
     date: '2026-10-12',
     faq: [
-      { q: { en: 'How long does a fine line tattoo stay crisp?', hu: 'Meddig marad éles egy fine line tetoválás?' }, a: { en: 'Often 5–10 years before softening is noticeable, depending on size, placement and sun. Larger pieces with more space hold up much longer.', hu: 'Gyakran 5–10 év, mire a lágyulás feltűnik – a mérettől, a helytől és a naptól függően. A nagyobb, levegősebb minták sokkal tovább tartanak.' } },
+      { q: { en: 'How long does a fine line tattoo stay crisp?', hu: 'Meddig marad éles egy fine line tetoválás?' }, a: { en: 'Artists often say 5–10 years before softening is noticeable, depending on size, placement and sun. Larger pieces with more space hold up much longer.', hu: 'A tetoválók szerint gyakran 5–10 év, mire a lágyulás feltűnik – a mérettől, a helytől és a naptól függően. A nagyobb, levegősebb minták sokkal tovább tartanak.' } },
       { q: { en: 'Is a fine line tattoo a bad idea?', hu: 'Rossz ötlet a fine line tetoválás?' }, a: { en: 'No — just give it room. Ask for slightly bolder key lines and fewer tiny details, and check the 30-year preview before you book.', hu: 'Nem – csak adj neki helyet. Kérj kicsit erősebb fő vonalakat és kevesebb apró részletet, és foglalás előtt nézd meg a 30 éves előnézetet.' } },
     ],
   },
@@ -116,7 +116,7 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-10-13',
     faq: [
       { q: { en: 'Is the first touch-up free?', hu: 'Ingyenes az első javítás?' }, a: { en: 'Many studios include one touch-up within a few months. Ask before you book.', hu: 'Sok szalon az első néhány hónapban egy javítást az árban foglal. Foglalás előtt kérdezz rá.' } },
-      { q: { en: 'How often should I refresh a tattoo?', hu: 'Milyen gyakran érdemes frissíteni?' }, a: { en: 'Roughly every 8–10 years, sooner on hands, feet and sunny spots.', hu: 'Nagyjából 8–10 évente, kézen, lábon és napos helyeken korábban.' } },
+      { q: { en: 'How often should I refresh a tattoo?', hu: 'Milyen gyakran érdemes frissíteni?' }, a: { en: 'A common artists’ rule of thumb is roughly every 8–10 years, sooner on hands, feet and sunny spots.', hu: 'A tetoválók gyakori ökölszabálya szerint nagyjából 8–10 évente, kézen, lábon és napos helyeken korábban.' } },
     ],
   },
   'tattoos-on-darker-skin': {
@@ -401,7 +401,7 @@ export const KB: Record<string, KbMeta> = {
     img6: 'kb_20261109_removalpain-6',
     img7: 'kb_20261109_removalpain-7',
     cap2: { en: 'Illustration: each laser pulse feels like a rubber band snap, followed by a short wave of heat.', hu: 'Illusztráció: minden lézerimpulzus olyan, mint egy befőttesgumi csattanása, utána egy rövid hőhullámmal.' },
-    date: '2026-11-09',
+    date: '2026-11-08',
     faq: [],
   },
   'colour-tattoo-removal': {
@@ -413,7 +413,7 @@ export const KB: Record<string, KbMeta> = {
     img6: 'kb_20261109_colourremoval-6',
     img7: 'kb_20261109_colourremoval-7',
     cap2: { en: 'Illustration: each ink absorbs some colours of light and reflects others. The laser has to use a wavelength the ink absorbs.', hu: 'Illusztráció: minden tinta a fény bizonyos színeit elnyeli, másokat visszaver. A lézernek olyan hullámhosszt kell használnia, amit a tinta elnyel.' },
-    date: '2026-11-09',
+    date: '2026-11-08',
     faq: [],
   },
   'tattoo-removal-creams-diy': {
@@ -425,7 +425,7 @@ export const KB: Record<string, KbMeta> = {
     img6: 'kb_20261109_diyremoval-6',
     img7: 'kb_20261109_diyremoval-7',
     cap2: { en: 'Illustration: a cream stays on the surface of the skin, while tattoo ink sits deeper, in the dermis.', hu: 'Illusztráció: a krém a bőr felszínén marad, a tetováló tinta pedig mélyebben, az irhában van.' },
-    date: '2026-11-09',
+    date: '2026-11-08',
     faq: [],
   },
   'neck-tattoos': {
@@ -437,7 +437,7 @@ export const KB: Record<string, KbMeta> = {
     img6: 'kb_20261109_neck-6',
     img7: 'kb_20261109_neck-7',
     cap2: { en: 'Illustration: the neck as four areas. The back of the neck and behind the ear are gentler, the front of the throat is the most demanding.', hu: 'Illusztráció: a nyak négy területe. A tarkó és a fül mögötti rész kíméletesebb, a torok eleje a legigényesebb.' },
-    date: '2026-11-09',
+    date: '2026-11-08',
     faq: [],
   },
   'rib-tattoos': {
@@ -449,7 +449,7 @@ export const KB: Record<string, KbMeta> = {
     img6: 'kb_20261109_ribs-6',
     img7: 'kb_20261109_ribs-7',
     cap2: { en: 'Illustration: on the ribs, thin skin sits right on bone; on the forearm, a soft layer cushions the needle.', hu: 'Illusztráció: a bordán a vékony bőr közvetlenül a csonton ül; az alkaron egy puha réteg tompítja a tűt.' },
-    date: '2026-11-09',
+    date: '2026-11-08',
     faq: [],
   },
   'tattoo-itching-peeling': {
@@ -461,12 +461,91 @@ export const KB: Record<string, KbMeta> = {
     img6: 'kb_20261109_itching-6',
     img7: 'kb_20261109_itching-7',
     cap2: { en: 'Illustration: a rough timeline of healing. The itch usually peaks in the second week, while the skin peels.', hu: 'Illusztráció: a gyógyulás nagyjábóli idővonala. A viszketés általában a második héten tetőzik, amíg a bőr hámlik.' },
-    date: '2026-11-09',
+    date: '2026-11-08',
+    faq: [],
+  },
+  'how-much-does-a-tattoo-cost': {
+    img: 'kb_20261110_tattoocost-0',
+    img2: 'kb_20261110_tattoocost-2',
+    img3: 'kb_20261110_tattoocost-3',
+    img4: 'kb_20261110_tattoocost-4',
+    img5: 'kb_20261110_tattoocost-5',
+    img6: 'kb_20261110_tattoocost-6',
+    img7: 'kb_20261110_tattoocost-7',
+    cap2: { en: 'Illustration: four common ways to price a tattoo: a shop minimum, an hourly rate, a fixed price per piece and a day rate.', hu: 'Illusztráció: a tetoválás árazásának négy gyakori módja: minimumár, óradíj, fix darabár és napidíj.' },
+    date: '2026-11-10',
+    faq: [],
+  },
+  'laser-removal-darker-skin': {
+    img: 'kb_20261110_darkremoval-0',
+    img2: 'kb_20261110_darkremoval-2',
+    img3: 'kb_20261110_darkremoval-3',
+    img4: 'kb_20261110_darkremoval-4',
+    img5: 'kb_20261110_darkremoval-5',
+    img6: 'kb_20261110_darkremoval-6',
+    img7: 'kb_20261110_darkremoval-7',
+    cap2: { en: 'Illustration: the six Fitzpatrick skin types. The more pigment in the top layer of the skin, the more care the laser needs.', hu: 'Illusztráció: a hat Fitzpatrick-bőrtípus. Minél több pigment van a bőr felső rétegében, annál nagyobb óvatosság kell a lézerrel.' },
+    date: '2026-11-12',
+    faq: [],
+  },
+  'first-tattoo-ideas': {
+    img: 'kb_20261110_firstideas-0',
+    img2: 'kb_20261110_firstideas-2',
+    img3: 'kb_20261110_firstideas-3',
+    img4: 'kb_20261110_firstideas-4',
+    img5: 'kb_20261110_firstideas-5',
+    img6: 'kb_20261110_firstideas-6',
+    img7: 'kb_20261110_firstideas-7',
+    cap2: { en: 'Illustration: six kinds of first tattoo that age well: a small symbol, a single botanical, an animal silhouette, short script, open line art and a meaningful object.', hu: 'Illusztráció: hatféle első tetoválás, ami szépen öregszik: kis szimbólum, egy szál növény, állatsziluett, rövid felirat, levegős vonalrajz és egy jelentéssel bíró tárgy.' },
+    date: '2026-11-14',
+    faq: [],
+  },
+  'laser-fading-before-cover-up': {
+    img: 'kb_20261110_fading-0',
+    img2: 'kb_20261110_fading-2',
+    img3: 'kb_20261110_fading-3',
+    img4: 'kb_20261110_fading-4',
+    img5: 'kb_20261110_fading-5',
+    img6: 'kb_20261110_fading-6',
+    img7: 'kb_20261110_fading-7',
+    cap2: { en: 'Illustration: a few laser sessions lighten a dark old tattoo so a lighter, finer cover-up can go on top.', hu: 'Illusztráció: néhány lézeres alkalom kivilágosítja a sötét régi tetoválást, így egy világosabb, finomabb takarás kerülhet rá.' },
+    date: '2026-11-16',
+    faq: [],
+  },
+  'eyebrow-pmu-removal': {
+    img: 'kb_20261110_pmuremoval-0',
+    img2: 'kb_20261110_pmuremoval-2',
+    img3: 'kb_20261110_pmuremoval-3',
+    img4: 'kb_20261110_pmuremoval-4',
+    img5: 'kb_20261110_pmuremoval-5',
+    img6: 'kb_20261110_pmuremoval-6',
+    img7: 'kb_20261110_pmuremoval-7',
+    cap2: { en: 'Illustration: paradoxical darkening. Rust-red, pink or skin-tone pigment can turn black within seconds of a laser pulse instead of breaking up.', hu: 'Illusztráció: paradox sötétedés. A rozsdavörös, rózsaszín vagy bőrszínű pigment széttörés helyett a lézerimpulzus után másodperceken belül feketévé válhat.' },
+    date: '2026-11-18',
+    faq: [],
+  },
+  'tattoo-removal-pregnancy': {
+    img: 'kb_20261110_pregnancy-0',
+    img2: 'kb_20261110_pregnancy-2',
+    img3: 'kb_20261110_pregnancy-3',
+    img4: 'kb_20261110_pregnancy-4',
+    img5: 'kb_20261110_pregnancy-5',
+    img6: 'kb_20261110_pregnancy-6',
+    img7: 'kb_20261110_pregnancy-7',
+    cap2: { en: 'Illustration: the main reasons clinics postpone. No safety studies, ink cleared through the lymph system, numbing creams and open skin that can get infected.', hu: 'Illusztráció: a halasztás fő okai. Nincsenek biztonsági vizsgálatok, a tinta a nyirokrendszeren át távozik, érzéstelenítő krémek és befertőződhető nyitott bőr.' },
+    date: '2026-11-20',
     faq: [],
   },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
+
+/** Articles go live on their date (UTC), so new ones come out a few a week instead of all at once.
+    Checked on every request, so an article appears on its day without a new deploy. */
+export const isLive = (slug: string, now = new Date()) => {
+  const d = KB[slug]?.date;
+  return !d || d <= now.toISOString().slice(0, 10);
+};
 
 export const fmtDate = (iso: string, lang: Lang) =>
   new Date(iso + 'T12:00:00Z').toLocaleDateString(localeOf(lang), { year: 'numeric', month: 'long', day: 'numeric' });

@@ -14,13 +14,13 @@ const a: LongArticle = {
   summary: {
     en: [
       'Day 1–3: red, warm, a little swollen and oozing. Days 4–7: tight, dry, light scabs. Weeks 2–3: peeling, itching and a dull, cloudy look.',
-      'The surface usually closes in about two to four weeks, but the deeper skin keeps settling for up to around three months. Only then do you see the real result.',
+      'The surface usually closes in about two to four weeks, but the deeper skin keeps settling for several months, sometimes up to a year. Only then do you see the real result.',
       'Wash gently, moisturise thinly, don’t pick or soak, and keep it out of the sun. Your artist’s instructions come first.',
       'Spreading redness, increasing pain or heat after the first days, pus or fever are not normal healing. Contact a doctor.',
     ],
     hu: [
       '1–3. nap: piros, meleg, kicsit duzzadt és szivárog. 4–7. nap: feszes, száraz, vékony pörk. 2–3. hét: hámlik, viszket, és fakónak, tejesnek tűnik.',
-      'A felszín általában nagyjából két-négy hét alatt zárul, a mélyebb bőr viszont akár három hónapig is rendeződik. Csak akkor látod a valódi eredményt.',
+      'A felszín általában nagyjából két-négy hét alatt zárul, a mélyebb bőr viszont több hónapig, néha akár egy évig is rendeződik. Csak akkor látod a valódi eredményt.',
       'Mosd finoman, hidratáld vékonyan, ne vakard, ne áztasd, és tartsd távol a naptól. A tetoválód utasításai az elsők.',
       'A terjedő pirosság, az első napok után erősödő fájdalom vagy melegség, a genny és a láz nem normális gyógyulás. Fordulj orvoshoz.',
     ],
@@ -32,7 +32,7 @@ const a: LongArticle = {
       '> A note on the pictures: the images in this article are illustrations made to show typical stages. They are not photos of real clients. Your own tattoo may look different at each step.',
       '## Why a tattoo has to heal at all',
       'A tattoo machine pushes ink through the top layer of your skin, the epidermis, into the layer beneath it, the dermis. Thousands of tiny punctures later, your skin treats the area exactly like a fresh graze. It becomes inflamed, it seals itself, it grows a new top layer, and it sheds the damaged one. The ink that sits in the dermis stays put. The ink caught in the outer layer leaves with the old skin, which is why some flakes and scabs look coloured.',
-      'Two things run at different speeds. The surface heals in a few weeks. The deeper skin takes longer to settle, often around three months, and until then the tattoo can look slightly softer or duller than it will in the end.',
+      'Two things run at different speeds. The surface heals in a few weeks. The deeper skin takes longer to settle, often several months and sometimes up to a year, and until then the tattoo can look slightly softer or duller than it will in the end.',
       '!! A healing tattoo looks worse before it looks right. That is the process, not a problem.',
       '## Stage 1: days 1 to 3, red, swollen and oozing',
       'For the first few days the tattoo is an open wound. It is usually red, warm to the touch and a little swollen, especially on bony or busy areas such as ankles, wrists and ribs. It weeps clear plasma, sometimes mixed with a little ink and blood, and it can feel like a mild sunburn.',
@@ -54,8 +54,8 @@ const a: LongArticle = {
       'What you are seeing is a fresh, thin layer of new skin over the ink. It is still settling, slightly shiny and not yet fully transparent. Over the following weeks it clears, and the tattoo comes back to life. Many people panic here and book a touch-up straight away. Don’t. Wait until the skin has settled before you decide anything.',
       '**What to do:** keep moisturising if your skin feels dry, and keep the tattoo out of the sun. New skin burns very easily.',
       '[[img5]]',
-      '## Stage 5: months 1 to 3, fully settled',
-      'Somewhere between four weeks and three months, depending on the tattoo and your skin, the deeper layers finish settling. The tattoo looks matte rather than shiny, the colours are steady and the lines are as crisp as they are going to be. This is the version you should judge.',
+      '## Stage 5: month 1 onwards, settling in',
+      'From about four weeks on, the deeper layers keep settling for several months, sometimes up to a year, depending on the tattoo and your skin. The tattoo looks matte rather than shiny, the colours are steady and the lines are as crisp as they are going to be. This is the version you should judge.',
       'If a line has healed patchy or a solid area looks uneven at this point, that is what touch-ups are for. Most artists want you to wait at least a month, often longer, before they go over anything, and many include a first touch-up in the price.',
       '[[img7]]',
       '## Aftercare in one list',
@@ -96,7 +96,7 @@ const a: LongArticle = {
       '> Megjegyzés a képekről: a cikkben szereplő képek illusztrációk, amelyek a jellemző szakaszokat mutatják. Nem valódi vendégekről készült fotók. A saját tetoválásod minden lépésnél másképp nézhet ki.',
       '## Miért kell egyáltalán gyógyulnia egy tetoválásnak?',
       'A tetoválógép a bőr felső rétegén, a hámon át juttatja a tintát az alatta lévő rétegbe, az irhába. Több ezer apró szúrás után a bőröd pontosan úgy kezeli a területet, mint egy friss horzsolást. Begyullad, lezárja magát, új felső réteget növeszt, és levedli a sérültet. Az irhában lévő tinta a helyén marad. A külső rétegben ragadt tinta a régi bőrrel távozik, ezért színes néhány hámlás és pörk.',
-      'Két dolog fut eltérő tempóban. A felszín néhány hét alatt gyógyul. A mélyebb bőrnek tovább tart rendeződnie, gyakran nagyjából három hónapig, és addig a tetoválás kicsit puhábbnak vagy fakóbbnak tűnhet, mint végül lesz.',
+      'Két dolog fut eltérő tempóban. A felszín néhány hét alatt gyógyul. A mélyebb bőrnek tovább tart rendeződnie, gyakran több hónapig, néha akár egy évig, és addig a tetoválás kicsit puhábbnak vagy fakóbbnak tűnhet, mint végül lesz.',
       '!! A gyógyuló tetoválás előbb rosszabbul néz ki, mielőtt jól nézne ki. Ez a folyamat, nem a probléma.',
       '## 1. szakasz: 1–3. nap, piros, duzzadt és szivárog',
       'Az első néhány napban a tetoválás nyílt seb. Általában piros, tapintásra meleg és kicsit duzzadt, főleg a csontos vagy sokat mozgó helyeken, például a bokán, a csuklón és a bordákon. Átlátszó nyirkot szivárogtat, néha egy kis tintával és vérrel keverve, és olyan érzés lehet, mint egy enyhe leégés.',
@@ -118,8 +118,8 @@ const a: LongArticle = {
       'Amit látsz, az egy friss, vékony új bőrréteg a tinta fölött. Még rendeződik, kicsit fényes, és még nem teljesen átlátszó. A következő hetekben kitisztul, és a tetoválás újra életre kel. Sokan itt pánikba esnek, és azonnal javítást foglalnak. Ne tedd. Várd meg, amíg a bőr megnyugszik, mielőtt bármiről döntesz.',
       '**Mit tegyél:** hidratáld tovább, ha szárazságot érzel, és tartsd távol a tetoválást a naptól. Az új bőr nagyon könnyen leég.',
       '[[img5]]',
-      '## 5. szakasz: 1–3. hónap, teljesen rendeződik',
-      'Valahol négy hét és három hónap között, a tetoválástól és a bőrödtől függően, a mélyebb rétegek befejezik a rendeződést. A tetoválás inkább matt, mint fényes, a színek stabilak, a vonalak pedig olyan élesek, amilyenek lesznek. Ezt a változatot érdemes megítélni.',
+      '## 5. szakasz: az 1. hónaptól, beérik',
+      'Nagyjából négy héttől a mélyebb rétegek még több hónapig, néha akár egy évig rendeződnek, a tetoválástól és a bőrödtől függően. A tetoválás inkább matt, mint fényes, a színek stabilak, a vonalak pedig olyan élesek, amilyenek lesznek. Ezt a változatot érdemes megítélni.',
       'Ha ekkor egy vonal foltosan gyógyult, vagy egy telt felület egyenetlennek tűnik, arra való a javítás. A legtöbb tetováló azt szeretné, hogy legalább egy hónapot, gyakran többet várj, mielőtt bármit áthúz, és sokan az árban benne foglalják az első javítást.',
       '[[img7]]',
       '## Utókezelés egy listában',
@@ -159,8 +159,8 @@ const a: LongArticle = {
     {
       q: { en: 'How long does a tattoo take to heal?', hu: 'Mennyi idő alatt gyógyul meg egy tetoválás?' },
       a: {
-        en: 'The surface usually closes in about two to four weeks. The deeper skin keeps settling for up to around three months, so the tattoo can look slightly dull or cloudy until then. Large pieces and areas such as hands, feet and joints often take longer.',
-        hu: 'A felszín általában nagyjából két-négy hét alatt zárul. A mélyebb bőr akár három hónapig is tovább rendeződik, ezért a tetoválás addig kicsit fakónak vagy tejesnek tűnhet. A nagy minták és az olyan helyek, mint a kéz, a láb és az ízületek, gyakran tovább gyógyulnak.',
+        en: 'The surface usually closes in about two to four weeks. The deeper skin keeps settling for several months, sometimes up to a year, so the tattoo can look slightly dull or cloudy for a while. Large pieces often take longer than small ones.',
+        hu: 'A felszín általában nagyjából két-négy hét alatt zárul. A mélyebb bőr több hónapig, néha akár egy évig is tovább rendeződik, ezért a tetoválás egy ideig kicsit fakónak vagy tejesnek tűnhet. A nagy minták gyakran tovább gyógyulnak, mint a kicsik.',
       },
     },
     {
@@ -191,6 +191,13 @@ const a: LongArticle = {
         hu: 'Az úszással, a kádas fürdéssel és a szaunával általában meg kell várni, amíg a felszín teljesen bezárul, ez jellemzően két-négy hét. Gyógyulás alatt takard a tetoválást a nap elől, utána pedig védd széles spektrumú, 50-es faktorú fényvédővel.',
       },
     },
+  ],
+  sources: [
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+    { t: "Tattoos: understand risks and precautions – Mayo Clinic", u: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067" },
+    { t: "Tattooing: immediate and long-term adverse reactions and complications – Archives of Industrial Hygiene and Toxicology (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11739707/" },
+    { t: "Tattoo-associated skin reactions – DermNet", u: "https://dermnetnz.org/topics/tattoo-associated-skin-reactions" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
   ],
   captions: {
     img2: {

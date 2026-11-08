@@ -9,6 +9,7 @@ export const TOOL_TITLE = {
   '/tattoo-simulator': 'Tattoo simulator: see a tattoo on your own body before you get it',
   '/tattoo-aging-simulator': 'Tattoo aging simulator: see how your tattoo will age',
   '/tattoo-removal-calculator': 'Laser tattoo removal calculator: how many sessions and what it costs',
+  '/tattoo-size-calculator': 'Tattoo size calculator: how big to go so it stays readable for decades',
   '/szotar': 'Tattoo glossary: 30 terms explained simply',
   '/szerkesztoseg': 'Editorial standards: how InkAge articles are made',
 } as const;

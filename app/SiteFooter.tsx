@@ -54,6 +54,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
         ...(TOOL_LANGS.includes(lang)
           ? [
               { t: T('Removal calculator', 'Eltávolítás kalkulátor'), href: `/tattoo-removal-calculator${q}` },
+              { t: T('Size calculator', 'Méretkalkulátor'), href: `/tattoo-size-calculator${q}` },
               { t: T('Glossary', 'Szótár'), href: `/szotar${q}` },
               { t: T('Editorial standards', 'Szerkesztési irányelvek'), href: `/szerkesztoseg${q}` },
             ]

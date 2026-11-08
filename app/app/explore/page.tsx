@@ -10,7 +10,7 @@ import { placeName } from '../create/steps';
 import { useApp } from '../AppProvider';
 import { tx } from '@/lib/i18n';
 import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
-import { ARTICLES } from '@/lib/articles';
+import { liveArticles } from '@/lib/articles';
 import { IMG, KB } from '@/lib/kb';
 import { anonId, lsGet, lsSet, track } from '@/lib/store';
 import { Icon } from '../ui';
@@ -188,7 +188,7 @@ export default function ExplorePage() {
         </Link>
       </div>
       <div className="hscroll ex-articles">
-        {ARTICLES.map((a) => (
+        {liveArticles().map((a) => (
           <Link key={a.slug} className="article-card" href={`/app/tudastar/${a.slug}${qOf(ui.lang)}`}>
             {KB[a.slug] && <img src={IMG(KB[a.slug].img, 600)} alt="" loading="lazy" />}
             <span className="tag">{pick(a.tag, ui.lang)}</span>

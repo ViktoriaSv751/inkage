@@ -63,7 +63,7 @@ const a: LongArticle = {
       'Some people notice that part of a healed tattoo becomes raised, itchy or swollen after time in the sun, often only in one colour, most commonly red and sometimes yellow. This can be a reaction to that pigment and light together. It usually settles when you get out of the sun, but if it keeps happening or gets worse, mention it to a dermatologist.',
       '[[img6]]',
       '## How long should a new tattoo stay out of the sun?',
-      'Until it has healed. For most tattoos that means the surface has closed, typically two to four weeks, and longer for large pieces or areas such as hands, feet and joints. During that time:',
+      'Until it has healed. For most tattoos that means the surface has closed, typically two to four weeks, and longer for large pieces. During that time:',
       '- **cover it** with loose, breathable clothing, ideally tightly woven fabric',
       '- **stay in the shade**, especially in the middle of the day',
       '- **don’t use sunscreen yet** on the open wound unless your artist recommends a specific product',
@@ -121,7 +121,7 @@ const a: LongArticle = {
       'Néhányan észreveszik, hogy egy gyógyult tetoválás egy része a napon töltött idő után kiemelkedővé, viszketővé vagy duzzadttá válik, gyakran csak egyetlen színben, leggyakrabban a pirosban, néha a sárgában. Ez a pigment és a fény együttes hatására adott reakció lehet. Általában elmúlik, ha kimész a napról, de ha ismétlődik vagy rosszabbodik, szólj róla egy bőrgyógyásznak.',
       '[[img6]]',
       '## Meddig ne érje nap az új tetoválást?',
-      'Amíg meg nem gyógyult. A legtöbb tetoválásnál ez azt jelenti, hogy a felszín bezárult, ami jellemzően két-négy hét, a nagy mintáknál vagy az olyan helyeken, mint a kéz, a lábfej és az ízületek, tovább tart. Ez idő alatt:',
+      'Amíg meg nem gyógyult. A legtöbb tetoválásnál ez azt jelenti, hogy a felszín bezárult, ami jellemzően két-négy hét, a nagy mintáknál tovább tart. Ez idő alatt:',
       '- **takard** bő, légáteresztő ruhával, lehetőleg sűrű szövésű anyaggal',
       '- **maradj árnyékban**, főleg a déli órákban',
       '- **még ne használj fényvédőt** a nyílt sebre, hacsak a tetoválód nem javasol egy konkrét terméket',
@@ -161,8 +161,8 @@ const a: LongArticle = {
     {
       q: { en: 'How long should I keep a new tattoo out of the sun?', hu: 'Meddig tartsam távol a naptól az új tetoválást?' },
       a: {
-        en: 'Until it has healed, typically two to four weeks and longer for large pieces or hands, feet and joints. Cover it with loose clothing and stay in the shade. After that, protect it with a broad-spectrum SPF 50, and be extra careful during its first summer.',
-        hu: 'Amíg meg nem gyógyul, ez jellemzően két-négy hét, a nagy mintáknál vagy a kézen, a lábfejen és az ízületeken tovább. Takard bő ruhával, és maradj árnyékban. Utána védd széles spektrumú, 50-es faktorú fényvédővel, és az első nyarán legyél különösen óvatos.',
+        en: 'Until it has healed, typically two to four weeks and longer for large pieces. Cover it with loose clothing and stay in the shade. After that, protect it with a broad-spectrum SPF 50, and be extra careful during its first summer.',
+        hu: 'Amíg meg nem gyógyul, ez jellemzően két-négy hét, a nagy mintáknál tovább. Takard bő ruhával, és maradj árnyékban. Utána védd széles spektrumú, 50-es faktorú fényvédővel, és az első nyarán legyél különösen óvatos.',
       },
     },
     {
@@ -179,6 +179,14 @@ const a: LongArticle = {
         hu: 'Teljesen gyógyult tetováláson az önbarnító általában rendben van, mert nincs benne UV; kicsit csökkentheti a kontrasztot, amíg le nem kopik. Friss vagy gyógyuló tetoválásra ne használd, a szoláriumot pedig teljesen kerüld.',
       },
     },
+  ],
+  sources: [
+    { t: "How to treat sunburn – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/injured-skin/burns/treat-sunburn" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+    { t: "Tattoo-associated skin reactions – DermNet", u: "https://dermnetnz.org/topics/tattoo-associated-skin-reactions" },
+    { t: "How to apply sunscreen – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/sun-protection/shade-clothing-sunscreen/how-to-apply-sunscreen" },
+    { t: "UV window film and tint – Skin Cancer Foundation", u: "https://www.skincancer.org/skin-cancer-prevention/sun-protection/uv-window-film/" },
   ],
   captions: {
     img2: {

@@ -1,4 +1,5 @@
 import { pick } from '@/lib/tr';
+import { isLive } from '@/lib/kb';
 import { type Lang } from '@/lib/tr';
 // All long-form knowledge base articles, keyed by slug. Server-side only (large).
 import type { LongArticle } from './types';
@@ -39,10 +40,18 @@ import a34 from './tattoo-removal-creams-diy';
 import a35 from './neck-tattoos';
 import a36 from './rib-tattoos';
 import a37 from './tattoo-itching-peeling';
+import a38 from './how-much-does-a-tattoo-cost';
+import a39 from './laser-removal-darker-skin';
+import a40 from './first-tattoo-ideas';
+import a41 from './laser-fading-before-cover-up';
+import a42 from './eyebrow-pmu-removal';
+import a43 from './tattoo-removal-pregnancy';
 
 export type { LongArticle } from './types';
-export const LONG: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37];
-export const longArticle = (slug: string) => LONG.find((a) => a.slug === slug);
+const ALL: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43];
+/** The articles that are out today (see isLive in lib/kb.ts). */
+export const liveLong = () => ALL.filter((a) => isLive(a.slug));
+export const longArticle = (slug: string) => liveLong().find((a) => a.slug === slug);
 
 /** Words in the body (markup stripped). */
 export function words(a: LongArticle, lang: Lang) {

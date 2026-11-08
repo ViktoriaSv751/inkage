@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { toolAlternates, TOOL_TITLE } from '@/lib/tool-pages';
 import { GLOSSARY } from '@/lib/glossary';
-import { LONG } from '@/lib/longform';
+import { liveLong } from '@/lib/longform';
 import { articleLangs } from '@/lib/article-langs';
 import { SITE_URL } from '@/lib/site';
 import { InfoPage } from '../_info/InfoPage';
@@ -49,7 +49,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <dl className="gl-list">
         {terms.map((t) => {
-          const see = t.see && LONG.find((x) => x.slug === t.see && articleLangs(x.slug).includes(L));
+          const see = t.see && liveLong().find((x) => x.slug === t.see && articleLangs(x.slug).includes(L));
           return (
             <div key={t.id} id={t.id} className="gl-item">
               <dt>{pick(t.term, L)}</dt>

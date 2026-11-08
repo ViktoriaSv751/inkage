@@ -140,7 +140,7 @@ const a: LongArticle = {
       '1. **Gyógyítsd rendesen.** Kövesd a tetoválód utókezelési utasításait, ne vakard, és amíg nem gyógyult meg, tartsd távol a naptól, a medencétől és a tengertől.',
       '2. **Kenj fényvédőt, valahányszor szabadon van.** A széles spektrumú, 50-es faktorú fényvédő a legjobb, amit egy tetoválásért egész élete során tehetsz.',
       '3. **Tartsd jó formában a bőröd.** A hidratált bőrön tisztábban látszik a tinta. Ami általában öregíti a bőrt, például a dohányzás és a leégés, az a tetoválást is öregíti.',
-      '4. **Frissítsd, amikor kéri.** Sok tetoválásnak jót tesz 8–10 évente egy felfrissítés. Gondolj rá úgy, mint egy ablakkeret újrafestésére: karbantartás.',
+      '4. **Frissítsd, amikor kéri.** A tetoválók szerint sok tetoválásnak jót tesz 8–10 évente egy felfrissítés. Gondolj rá úgy, mint egy ablakkeret újrafestésére: karbantartás.',
       '## Foglalás előtt nézd meg harminc év múlva',
       'A hunyorgós és a karnyújtásnyi próba jó, de semmi sem ér fel azzal, ha a saját mintádat a saját bőrödön, öregítve látod. Az InkAge-ben feltöltesz egy fotót a helyről, elhelyezed a mintát abban a méretben, ami a fejedben van, és látod frissen, gyógyultan, valamint 10, 30 és 50 év múlva.',
       'A 0-tól 100-ig terjedő tartóssági pontszám megmutatja, mennyire illik a minta az adott mérethez és helyhez. Ha alacsony, próbáld ki a „Tedd tartóssá” változatot, ami erősebb fő vonalakkal és több levegővel rajzolja újra a mintát, és nézd meg a kettőt egymás mellett. A PDF-et a tetoválódhoz is elviheted, ami általában pontosan a megfelelő beszélgetést indítja el.',
@@ -185,6 +185,13 @@ const a: LongArticle = {
         hu: 'Hunyorogj rá, amíg el nem mosódik, és nézd meg valódi méretben nagyjából egy méterről. Ha még mindig olvasható, jó a szerkezete. Alaposabb képhez nézd meg az InkAge-ben a saját bőrödön 10, 30 és 50 év múlva, és nézd meg a tartóssági pontszámot.',
       },
     },
+  ],
+  sources: [
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "How to apply sunscreen – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/sun-protection/shade-clothing-sunscreen/how-to-apply-sunscreen" },
+    { t: "Photochemical cleavage of a tattoo pigment by UVB radiation or natural sunlight – Journal of the German Society of Dermatology", u: "https://pubmed.ncbi.nlm.nih.gov/17610608/" },
   ],
   captions: {
     img2: {

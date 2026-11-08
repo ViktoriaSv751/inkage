@@ -35,3 +35,8 @@ export function seoPage(slug: string, lang: Lang) {
   const sunny = longevity({ ...base, sun: 'high' }, lang).score;
   return { s, a, report, small: at(4), medium: report.score, large: at(14), sunny };
 }
+
+/** The languages where style × body-area pages are indexed: the ones where people search for them (Search Console,
+    2026-11-08). The others stay readable but are noindex and out of the sitemap, so ~1,300 near-template pages in
+    languages without demand don't dilute the site. Add a language here once it shows real searches. */
+export const TATTOO_LANGS: readonly Lang[] = ['hu', 'en', 'es', 'pt', 'no', 'sv', 'de', 'fil', 'da'];

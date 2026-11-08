@@ -2,6 +2,29 @@ import { loadImage } from '@/lib/client';
 
 export const toBlob = async (src: string) => (await fetch(src)).blob();
 
+/** A saved preview with a small "inkage.app" mark in the lower right corner, so a shared picture says where it came from. */
+export async function withMark(src: string): Promise<Blob> {
+  try {
+    const img = await loadImage(src);
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth;
+    c.height = img.naturalHeight;
+    const x = c.getContext('2d')!;
+    x.drawImage(img, 0, 0);
+    const fs = Math.max(14, Math.round(c.width * 0.026));
+    x.font = `600 ${fs}px 'Geist Sans', system-ui, sans-serif`;
+    x.textAlign = 'right';
+    x.textBaseline = 'bottom';
+    x.shadowColor = 'rgba(0,0,0,.55)';
+    x.shadowBlur = fs * 0.4;
+    x.fillStyle = 'rgba(255,255,255,.82)';
+    x.fillText('inkage.app', c.width - fs * 0.9, c.height - fs * 0.7);
+    return await new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('blob'))), 'image/jpeg', 0.92));
+  } catch {
+    return toBlob(src); // a cross-origin or broken image is saved as it is
+  }
+}
+
 /** Small JPEG for links (kept under ~450 KB). */
 export async function smallJpeg(src: string, max = 900) {
   const img = await loadImage(src);

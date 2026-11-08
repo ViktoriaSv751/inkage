@@ -26,6 +26,12 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'neck-tattoos': ['best-placement-for-tattoo-longevity', 'blackwork-tattoos-placement', 'tattoo-pain-chart', 'tattoo-healing-stages', 'tattoo-aftercare-sun-protection', 'laser-tattoo-removal-cost'],
   'rib-tattoos': ['first-tattoo-checklist', 'tattoo-pain-chart', 'best-placement-for-tattoo-longevity', 'tattoos-weight-change-pregnancy', 'fine-line-tattoos-aging', 'tattoo-healing-stages'],
   'tattoo-itching-peeling': ['tattoo-healing-stages', 'tattoo-aftercare-sun-protection', 'sunburned-tattoo', 'tattoo-ink-safety-eu', 'color-vs-black-ink-aging', 'tattoo-touch-ups'],
+  'how-much-does-a-tattoo-cost': ['first-tattoo-checklist', 'how-to-book-a-tattoo', 'tattoo-size-guide', 'tattoo-touch-ups', 'cover-up-tattoos', 'laser-tattoo-removal-cost'],
+  'laser-removal-darker-skin': ['laser-tattoo-removal-what-to-expect', 'tattoos-on-darker-skin', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'laser-tattoo-removal-summer', 'colour-tattoo-removal'],
+  'first-tattoo-ideas': ['first-tattoo-checklist', 'tattoos-that-age-well', 'tattoo-size-guide', 'best-placement-for-tattoo-longevity', 'how-to-book-a-tattoo', 'tattoo-pain-chart'],
+  'laser-fading-before-cover-up': ['laser-tattoo-removal-what-to-expect', 'cover-up-tattoos', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-cost', 'laser-removal-healing', 'colour-tattoo-removal'],
+  'eyebrow-pmu-removal': ['laser-tattoo-removal-what-to-expect', 'colour-tattoo-removal', 'tattoo-removal-creams-diy', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'laser-tattoo-removal-cost'],
+  'tattoo-removal-pregnancy': ['laser-tattoo-removal-what-to-expect', 'tattoos-weight-change-pregnancy', 'laser-removal-healing', 'laser-removal-how-many-sessions', 'tattoo-removal-creams-diy', 'laser-tattoo-removal-summer'],
   'laser-tattoo-removal-summer': ['laser-removal-healing', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-what-to-expect', 'sunburned-tattoo', 'tattoos-on-darker-skin'],
   'laser-removal-healing': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'tattoo-healing-stages', 'sunburned-tattoo', 'laser-removal-before-after'],
   // healing & care

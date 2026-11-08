@@ -64,7 +64,7 @@ const a: LongArticle = {
       '6. **Safety instructions for use,** where these are not already required by the general EU labelling rules for chemicals.',
       '[[img4]]',
       'One more line in the regulation matters to you directly. Before using an ink, the person tattooing must give you the information printed on the package or in its instructions for use. You are entitled to know what is going into your skin, not just its colour.',
-      'In practice, labels have been the weak point. A Nordic enforcement project in 2022 found that only about a quarter of the inks checked carried the mandatory statement correctly. In a 2024 European enforcement action, the Dutch Food and Consumer Product Safety Authority (NVWA) analysed 52 ink samples from 26 brands: 37 had at least one problem, from heavy metals and preservatives to missing or incorrect ingredient lists.',
+      'In practice, labels have been the weak point. A Nordic enforcement project in 2023–2024 found that only about a quarter of the inks checked carried the mandatory statement correctly. In a 2024 European enforcement action, the Dutch Food and Consumer Product Safety Authority (NVWA) analysed 52 ink samples from 26 brands: 37 had at least one problem, from heavy metals and preservatives to missing or incorrect ingredient lists.',
       '## What is an inktpaspoort?',
       'If you look up tattoo ink rules in Dutch, you will soon come across the word inktpaspoort, ink passport. It is worth being precise here: **an inktpaspoort is not an official document with a law of its own.** It is the everyday name, used by studios and clients, for a written record of the inks used in your tattoo.',
       'The obligation behind it is real, though. Dutch studios need a licence from their regional public health service (GGD), renewed every three years, and to get it they must meet the European hygiene standard for tattooing, EN 17169. That standard requires the studio to record information about the inks it uses. The Dutch National Institute for Public Health (RIVM) explains why: if a reaction ever needs investigating, it matters which type of ink, which manufacturer and which batch were used. RIVM therefore tells studios that it is important to give this information to the client, and advises clients to keep it for at least seven years.',
@@ -143,7 +143,7 @@ const a: LongArticle = {
       '6. **Biztonsági használati utasítás,** ha ezt a vegyi anyagokra vonatkozó általános uniós címkézési szabályok még nem írják elő.',
       '[[img4]]',
       'A rendeletben van még egy sor, amely közvetlenül téged érint. A festék használata előtt a tetoválónak át kell adnia neked a csomagoláson vagy a használati utasításban szereplő információkat. Jogod van tudni, mi kerül a bőrödbe, nem csak azt, hogy milyen színű.',
-      'A gyakorlatban a címkék a gyenge pontok. Egy 2022-es északi ellenőrzési projekt szerint a vizsgált festékeknek csak nagyjából a negyedén szerepelt helyesen a kötelező mondat. Egy 2024-es európai ellenőrzési akcióban a holland élelmiszer- és fogyasztásicikk-biztonsági hatóság (NVWA) 26 márka 52 festékmintáját elemezte: 37-nél legalább egy probléma volt, a nehézfémektől és tartósítószerektől a hiányzó vagy hibás összetevőlistáig.',
+      'A gyakorlatban a címkék a gyenge pontok. Egy 2023–2024-es északi ellenőrzési projekt szerint a vizsgált festékeknek csak nagyjából a negyedén szerepelt helyesen a kötelező mondat. Egy 2024-es európai ellenőrzési akcióban a holland élelmiszer- és fogyasztásicikk-biztonsági hatóság (NVWA) 26 márka 52 festékmintáját elemezte: 37-nél legalább egy probléma volt, a nehézfémektől és tartósítószerektől a hiányzó vagy hibás összetevőlistáig.',
       '## Mi az az inktpaspoort?',
       'Ha hollandul keresel rá a tetoválófestékekre vonatkozó szabályokra, hamar találkozol az inktpaspoort, vagyis tintaútlevél szóval. Itt érdemes pontosnak lenni: **az inktpaspoort nem saját törvénnyel rendelkező hivatalos dokumentum.** Ez a stúdiók és a vendégek által használt hétköznapi név a tetoválásodhoz használt festékek írásos nyilvántartására.',
       'A mögötte lévő kötelezettség viszont valódi. A holland stúdióknak engedély kell a regionális népegészségügyi szolgálattól (GGD), amelyet háromévente megújítanak, és ehhez meg kell felelniük a tetoválásra vonatkozó európai higiéniai szabványnak, az EN 17169-nek. Ez a szabvány előírja, hogy a stúdió jegyezze fel az általa használt festékek adatait. A holland Nemzeti Közegészségügyi Intézet (RIVM) el is magyarázza, miért: ha egy reakciót valaha ki kell vizsgálni, számít, milyen típusú festéket, melyik gyártótól és melyik tételből használtak. Ezért az RIVM azt írja a stúdióknak, hogy fontos ezeket az adatokat átadni a vendégnek, a vendégeknek pedig azt tanácsolja, hogy legalább hét évig őrizzék meg őket.',
@@ -221,6 +221,14 @@ const a: LongArticle = {
         hu: 'Nem. A REACH-korlátozás a 2022 januárjától forgalmazott és használt festékekre vonatkozik. Senkitől nem követeli meg, hogy egy régebbi tetoválást eltávolíttasson vagy kezeltessen.',
       },
     },
+  ],
+  sources: [
+    { t: "Commission Regulation (EU) 2020/2081 on substances in tattoo inks or permanent make-up – EUR-Lex", u: "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32020R2081" },
+    { t: "Tattoo inks and permanent make-up – European Chemicals Agency (ECHA)", u: "https://echa.europa.eu/hot-topics/tattoo-inks" },
+    { t: "Tattoo inks: risk assessment for Pigment Blue 15:3 and Pigment Green 7 – German Federal Institute for Risk Assessment (BfR)", u: "https://www.bfr.bund.de/cm/349/tattoo-inks-risk-assessment-for-pigment-blue-15-3-and-pigment-green-7.pdf" },
+    { t: "Explanation of the NEN-EN 17169 tattooing standard – RIVM", u: "https://www.rivm.nl/hygienerichtlijnen/EU-norm-toelichting-tatoeeren" },
+    { t: "Supervision of tattoo inks and dyes 2024 – Netherlands Food and Consumer Product Safety Authority (NVWA)", u: "https://english.nvwa.nl/topics/tattoo/supervision-of-tattoo-inks-and-dyes" },
+    { t: "Tattoo-associated skin reactions – DermNet", u: "https://dermnetnz.org/topics/tattoo-associated-skin-reactions" },
   ],
   captions: {
     img2: {

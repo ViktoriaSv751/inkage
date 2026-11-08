@@ -1,0 +1,4 @@
+.pm-embed { padding: 8px; background: var(--bg, #fff); min-height: 100vh; box-sizing: border-box; }
+.pm-embed .pm { margin: 0; }
+.pm-src { margin: 8px 4px 0; font-size: 13px; color: var(--muted); }
+.pm-src a { color: inherit; text-decoration: underline; }

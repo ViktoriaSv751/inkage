@@ -9,10 +9,11 @@ import { KbChrome } from '../../tudastar/KbChrome';
 import { SiteFooter } from '../../SiteFooter';
 import '../../tudastar/kb.css';
 import './seo.css';
-import { ARTICLES } from '@/lib/articles';
+import { liveArticles, type Article } from '@/lib/articles';
 import { articleLangs } from '@/lib/article-langs';
 import { seoPageArticles } from '@/lib/kb-links';
 import { KB } from '@/lib/kb';
+import { AREA_TEXT, STYLE_TEXT } from '@/lib/seo-content';
 
 const tone = (v: number) => (v >= 75 ? 'good' : v >= 55 ? 'mid' : 'low');
 
@@ -31,8 +32,8 @@ export function SeoView({ slug, L, inApp = false }: { slug: string; L: Lang; inA
   const areas = SEO_AREAS.map((x) => ({ x, v: seoPage(`${s.k}-${x.k}`, L)?.medium ?? 0 })).sort((m, n) => n.v - m.v);
   /* the knowledge-base articles about this style and body area, in this language only (lib/kb-links.ts) */
   const reads = seoPageArticles(s.k, a.k)
-    .map((k) => ARTICLES.find((x) => x.slug === k))
-    .filter((x): x is (typeof ARTICLES)[number] => !!x && articleLangs(x.slug).includes(L))
+    .map((k) => liveArticles().find((x) => x.slug === k))
+    .filter((x): x is Article => !!x && articleLangs(x.slug).includes(L))
     .slice(0, 4);
   const stages = [
     { y: T('1 year', '1 év'), h: T('Settled', 'Leülepedett'), p: T('The ink settles and lines soften very slightly.', 'A tinta leülepszik, a vonalak picit lágyulnak.') },
@@ -110,6 +111,16 @@ export function SeoView({ slug, L, inApp = false }: { slug: string; L: Lang; inA
             ))}
           </ol>
         </section>
+
+        {AREA_TEXT[a.k] && (
+          <section className="sp-sec sp-about">
+            <h2>{pick(AREA_TEXT[a.k].h, L)}</h2>
+            {AREA_TEXT[a.k].ps.map((x, i) => (
+              <p key={i}>{pick(x, L)}</p>
+            ))}
+            {STYLE_TEXT[s.k] && <p>{pick(STYLE_TEXT[s.k], L)}</p>}
+          </section>
+        )}
 
         <div className="sp-two">
           <section className="sp-sec">

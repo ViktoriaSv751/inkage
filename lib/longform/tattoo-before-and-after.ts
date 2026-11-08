@@ -15,13 +15,13 @@ const a: LongArticle = {
     en: [
       'The photo you fall for is usually taken the day the tattoo was finished. The tattoo you live with is the healed one, and it keeps changing.',
       'At 10 years bold work looks almost the same, fine detail starts to soften and light colours pale.',
-      'At 20–30 years lines are visibly wider and anything packed tighter than about a millimetre tends to merge.',
+      'At 20–30 years lines are visibly wider and, by the artists’ rule of thumb, anything packed tighter than about a millimetre tends to merge.',
       'When you compare before-and-after photos, check the light, the angle and whether the “before” is fresh or healed. Most of the drama online comes from those three things.',
     ],
     hu: [
       'A fotó, amibe beleszeretsz, általában az elkészülés napján készül. A tetoválás, amivel élsz, a gyógyult változat, és az is folyamatosan változik.',
       '10 év után a vastag minták szinte ugyanolyanok, a finom részletek puhulnak, a világos színek halványulnak.',
-      '20–30 év után a vonalak láthatóan szélesebbek, és ami nagyjából egy milliméternél sűrűbb, az hajlamos összeolvadni.',
+      '20–30 év után a vonalak láthatóan szélesebbek, és a tetoválók ökölszabálya szerint ami nagyjából egy milliméternél sűrűbb, az hajlamos összeolvadni.',
       'Ha előtte–utána fotókat nézel, figyeld a fényt, a szöget, és hogy az „előtte” friss vagy gyógyult. A neten látott drámai különbségek nagy része ebből a háromból jön.',
     ],
   },
@@ -146,7 +146,7 @@ const a: LongArticle = {
       '- **Erős kontúr**, főleg színes mintánál. A kontúr a váz, ami akkor is tartja a formát, amikor a kitöltés lágyul.',
       '- **Elhelyezés.** A belső kar, a felkar, a váll, a hát és a comb szelíden öregszik. A kéz, az ujjak, a lábfej és a külső alkar gyorsabban kopik.',
       '- **Nap.** Gyógyulás alatt takard, utána pedig használj széles spektrumú, 50-es faktorú fényvédőt, valahányszor szabadon van. Ez az egy szokás a legolcsóbb öregedésgátló kezelés, amit a tetoválásod valaha kapni fog.',
-      '- **Frissítés, amikor kell.** Sok mintának jót tesz 8–10 évente egy felfrissítés, és ez teljesen normális, nem kudarc.',
+      '- **Frissítés, amikor kell.** A tetoválók szerint sok mintának jót tesz 8–10 évente egy felfrissítés, és ez teljesen normális, nem kudarc.',
       '[[img6]]',
       '## Nézd meg a saját előtte–utánádat',
       'Mások tetoválásairól olvasni csak egy darabig segít. Amit igazán tudni szeretnél, az az, hogyan fog kinézni a te mintád a te bőrödön, a te méretedben, a te helyeden. Erre készült az InkAge.',
@@ -194,6 +194,12 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Photochemical cleavage of a tattoo pigment by UVB radiation or natural sunlight – Journal of the German Society of Dermatology", u: "https://pubmed.ncbi.nlm.nih.gov/17610608/" },
+  ],
   captions: {
     img2: {
       en: 'A fine line vine around the wrist, freshly healed. Hairline work like this is the first thing time softens.',
@@ -208,8 +214,8 @@ const a: LongArticle = {
       hu: 'Egy évtizedekkel ezelőtti horgony. A kötél és a felirat tónussá olvadt, de a sziluett még megvan.',
     },
     img5: {
-      en: 'A touch-up in progress. Retracing faded lines every 8–10 years is routine maintenance, not a repair.',
-      hu: 'Frissítés közben. A kifakult vonalak 8–10 évenkénti újrahúzása rutin karbantartás, nem javítás.',
+      en: 'A touch-up in progress. Retracing faded lines, which artists often suggest every 8–10 years, is routine maintenance, not a repair.',
+      hu: 'Frissítés közben. A kifakult vonalak újrahúzása, amit a tetoválók gyakran 8–10 évente javasolnak, rutin karbantartás, nem javítás.',
     },
     img6: {
       en: 'Sunscreen on a tattooed shoulder. UV light is the single biggest thing you can keep away from your ink.',

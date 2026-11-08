@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import '@fontsource/newsreader/400.css';
 import '@fontsource/newsreader/400-italic.css';
 import '@fontsource/newsreader/600.css';
-import { LONG, longArticle, words } from '@/lib/longform';
+import { liveLong, longArticle, words, type LongArticle } from '@/lib/longform';
 import { fmtDate, IMG, IMGSET, KB, KB_STILL } from '@/lib/kb';
 import { readMin } from '@/lib/kb-server';
 import { KbChrome } from '../KbChrome';
@@ -14,6 +14,7 @@ import { Helpful, ShareBtn } from '../ArticleBits';
 import { SiteFooter } from '../../SiteFooter';
 import { Blocks, rich, type Fig } from './Blocks';
 import { PainMap } from './PainMap';
+import { EmbedCode } from './EmbedCode';
 import { painMapText } from '@/lib/pain-map';
 import { ReadProgress, TocNav } from './Reader';
 import '../kb.css';
@@ -64,8 +65,9 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
     }
   /* links go only to articles written in this language (others are English, noindex copies): first the hand-picked
      ones of lib/kb-links.ts, then the same topic, then the rest */
-  const inLang = (x: (typeof LONG)[number]) => x.slug !== a.slug && articleLangs(x.slug).includes(L);
-  const picked = (ARTICLE_LINKS[a.slug] || []).map((s) => LONG.find((x) => x.slug === s)).filter((x): x is (typeof LONG)[number] => !!x && inLang(x));
+  const LONG = liveLong();
+  const inLang = (x: LongArticle) => x.slug !== a.slug && articleLangs(x.slug).includes(L);
+  const picked = (ARTICLE_LINKS[a.slug] || []).map((s) => LONG.find((x) => x.slug === s)).filter((x): x is LongArticle => !!x && inLang(x));
   const pool = [...picked, ...LONG.filter((x) => inLang(x) && x.tag.en === a.tag.en), ...LONG.filter(inLang)].filter((x, i, arr) => arr.indexOf(x) === i);
   /* two "Read also" lines inside the article (the hub of the topic first), the next-article card, three related cards */
   const readAlso = pool.slice(0, 2);
@@ -141,8 +143,16 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
           </section>
 
           {a.slug === 'tattoo-pain-chart' && <PainMap t={painMapText(L)} />}
+          {a.slug === 'tattoo-pain-chart' && !inApp && (
+            <EmbedCode
+              title={T('Put this map on your site', 'Tedd ki ezt a térképet a saját oldaladra')}
+              copy={T('Copy code', 'Kód másolása')}
+              done={T('Copied', 'Másolva')}
+              code={`<iframe src="https://inkage.app/embed/pain-map${sfx}" title="${T('Tattoo pain map', 'Tetoválás fájdalomtérkép')}" width="100%" height="640" style="border:0;max-width:760px" loading="lazy"></iframe>\n<p><a href="https://inkage.app/tudastar/tattoo-pain-chart${sfx}">${T('Tattoo pain chart by InkAge', 'Tetoválás fájdalomtérkép – InkAge')}</a></p>`}
+            />
+          )}
 
-          {!inApp && <ArticleCta slug={a.slug} lang={L} where="top" removal={removal} />}
+          {!inApp && <ArticleCta slug={a.slug} lang={L} where="top" removal={removal} topic={a.tag.en} />}
 
           <details className="ka-toc-m">
             <summary>
@@ -190,7 +200,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
                     <TryLink lang={L}>{T('Try it on my photo', 'Kipróbálom a fotómon')}</TryLink>
                   </aside>
                 ) : (
-                  <ArticleCta slug={a.slug} lang={L} where="mid" removal={removal} />
+                  <ArticleCta slug={a.slug} lang={L} where="mid" removal={removal} topic={a.tag.en} />
                 ))}
             </section>
           ))}
@@ -240,7 +250,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
             </section>
           )}
 
-          {!inApp && <ArticleCta slug={a.slug} lang={L} where="end" removal={removal} />}
+          {!inApp && <ArticleCta slug={a.slug} lang={L} where="end" removal={removal} topic={a.tag.en} />}
 
           <section className="ka-editorial">
             <LogoMark />

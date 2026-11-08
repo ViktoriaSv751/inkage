@@ -242,6 +242,13 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Irezumi: the Japanese tattoo unveiled – Nippon.com", u: "https://www.nippon.com/en/views/b06701/" },
+    { t: "Electrical tattooing set (Samuel O'Reilly's 1891 electric tattoo machine) – Smithsonian American Art Museum", u: "https://americanart.si.edu/artwork/eletrical-tattooing-34519" },
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+  ],
   captions: {
     img2: {
       en: "Illustration: the same slow spread of ink is barely visible on a bold line but swallows most of a thin one.",

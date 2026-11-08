@@ -238,6 +238,14 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Tattoo removal: how it works, process, healing and scarring – Cleveland Clinic", u: "https://my.clevelandclinic.org/health/treatments/8313-tattoo-removal" },
+    { t: "Understanding laser tattoo removal – University of Utah Health", u: "https://healthcare.utah.edu/healthfeed/2025/05/understanding-laser-tattoo-removal" },
+    { t: "Laser tattoo removal: a clinical update – Journal of Cutaneous and Aesthetic Surgery", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4411606/" },
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "Tattoo removal: options and results – U.S. Food and Drug Administration", u: "https://www.fda.gov/consumers/consumer-updates/tattoo-removal-options-and-results" },
+    { t: "The Kirby-Desai Scale: a proposed scale to assess tattoo-removal treatments – Journal of Clinical and Aesthetic Dermatology", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2923953/" },
+  ],
   captions: {
     img2: {
       en: 'The black fades first: colours like green and yellow often linger long after the outline is gone.',

@@ -184,6 +184,12 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "Tattoo removal: options and results – U.S. Food and Drug Administration", u: "https://www.fda.gov/consumers/consumer-updates/tattoo-removal-options-and-results" },
+    { t: "Laser tattoo removal: a clinical update – Journal of Cutaneous and Aesthetic Surgery", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4411606/" },
+    { t: "The Kirby-Desai Scale: a proposed scale to assess tattoo-removal treatments – Journal of Clinical and Aesthetic Dermatology", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2923953/" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: an old, dark, dense tribal. The darker and denser a tattoo is, the bigger and darker the cover-up has to be.',

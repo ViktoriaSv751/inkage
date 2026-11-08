@@ -86,7 +86,7 @@ const a: LongArticle = {
       'Ami az árat illeti: **a tetoválás az a ritka vásárlás, amit egész életedben viselsz.** Az ár tükrözi a tetováló tapasztalatát, a tervezés idejét, az anyagokat és a higiéniai eszközöket. Egy feltűnően olcsó ajánlat mögött gyakran épp ezeken spórolnak. Inkább várj pár hónapot és gyűjts, mint hogy kompromisszumot köss a minőségben. Ha egy nagyobb munka nem fér bele most a keretedbe, kérdezd meg, lehet-e több alkalomra bontani.',
       '> Tipp: tervezd a költségvetésbe az utókezelés kellékeit és egy esetleges javító alkalmat is, így nem ér meglepetés.',
       '## Életkor, egészség, papírok',
-      'Magyarországon a tetoválást jellemzően **18 év felett**, saját döntés alapján lehet elkészíttetni; fiatalabb korban a szabályok és a szalonok gyakorlata eltérő lehet, sok helyen pedig 18 év alatt egyáltalán nem vállalnak munkát. Mivel a pontos előírások változhatnak, mindig kérdezd meg a szalont, és számíts rá, hogy személyi igazolványt kérnek. Jellemzően egy beleegyező nyilatkozatot is alá kell írnod, amelyben egészségügyi kérdésekre is válaszolsz.',
+      'Magyarországon 18 év a nagykorúság határa, és a szalonok jellemzően a **18 év feletti** felnőtteket tetoválják saját döntésük alapján; fiatalabb korban a szabályok és a szalonok gyakorlata eltérő lehet, sok helyen pedig 18 év alatt egyáltalán nem vállalnak munkát. Mivel a pontos előírások változhatnak, mindig kérdezd meg a szalont, és számíts rá, hogy személyi igazolványt kérnek. Jellemzően egy beleegyező nyilatkozatot is alá kell írnod, amelyben egészségügyi kérdésekre is válaszolsz.',
       'Ezeket a kérdéseket érdemes őszintén kitölteni. Ha bőrbetegséged, ismert allergiád, véralvadási problémád, cukorbetegséged, szívbetegséged van, vagy rendszeresen szedsz gyógyszert, **beszéld meg előre az orvosoddal, és szólj a tetoválónak is.** Ugyanez igaz, ha várandós vagy, szoptatsz, vagy épp gyógyul egy bőrsérülés a tervezett területen. Ilyenkor sokszor a jobb döntés a várakozás.',
       'Ne feledd: a tetováló nem orvos, és nem is kell annak lennie. Az ő dolga a biztonságos munkavégzés; a te dolgod, hogy tisztában legyél a saját egészségi állapotoddal, és szükség esetén szakember véleményét kérd.',
       '## Az előző nap és a nagy nap',
@@ -102,7 +102,7 @@ const a: LongArticle = {
       'Az alkalom alatt nyugodtan szólj, ha szünetre van szükséged, ha szédülsz vagy kényelmetlen a testhelyzet. Ez teljesen megszokott, és a tetoválók számítanak rá. A végén, mielőtt letakarják a tetoválást, nézd meg alaposan – most még lehet kérdezni.',
       '## Utókezelés: előre tervezd meg',
       'A tetoválás csak félig készül el a szalonban – a másik felét te csinálod meg otthon, a gyógyulás alatt. **Egy rosszul kezelt friss tetoválás akkor is veszíthet a szépségéből, ha a tetováló tökéletes munkát végzett.** Ezért az utókezelést már foglalás előtt érdemes megtervezni, és lehetőleg olyan időszakra tenni az időpontot, amikor a következő hetekben nem vár rád strand, szauna vagy hosszú tengerparti nyaralás.',
-      '- Tervezz nagyjából két hetet úszás, kád, szauna és napozás nélkül.',
+      '- Úszás, kád és szauna csak a teljes gyógyulás után (ez általában két-négy hét, néha több), és legalább az első hónapban kerüld a közvetlen napot.',
       '- Tartsd a tetoválást tisztán, és hidratáld vékonyan, a tetováló utasításai szerint.',
       '- Ne vakard, ne szedd le a hámló részeket.',
       '- Viselj laza, puha ruhát, ami nem dörzsöli a területet.',
@@ -177,7 +177,7 @@ const a: LongArticle = {
       'As for price: **a tattoo is that rare purchase you wear for the rest of your life.** The price reflects the artist’s experience, the design time, the materials and the hygiene supplies. A strikingly cheap offer often saves on exactly these. Better to wait a few months and save up than to compromise on quality. If a bigger piece doesn’t fit your budget right now, ask whether it can be split across several sessions.',
       '> Tip: include aftercare supplies and a possible touch-up session in your budget, so nothing catches you by surprise.',
       '## Age, health, paperwork',
-      'In Hungary you can generally get tattooed on your own decision **over 18**; for younger people the rules and studio practices can differ, and many studios won’t work on anyone under 18 at all. Because the exact regulations can change, always ask the studio, and expect to be asked for ID. You’ll usually also sign a consent form that includes health questions.',
+      'In Hungary, 18 is the age of adulthood, and studios generally tattoo adults **over 18** on their own decision; for younger people the rules and studio practices can differ, and many studios won’t work on anyone under 18 at all. Because the exact regulations can change, always ask the studio, and expect to be asked for ID. You’ll usually also sign a consent form that includes health questions.',
       'It’s worth answering those questions honestly. If you have a skin condition, a known allergy, a blood-clotting problem, diabetes or a heart condition, or you take medication regularly, **talk it over with your doctor in advance, and tell your artist too.** The same goes if you’re pregnant, breastfeeding, or if a skin injury is still healing on the planned area. In these cases, waiting is often the better decision.',
       'Remember: your artist isn’t a doctor and doesn’t need to be. Their job is to work safely; yours is to know your own health and to seek a professional’s opinion when needed.',
       '## The day before and the big day',
@@ -193,7 +193,7 @@ const a: LongArticle = {
       'During the session, feel free to speak up if you need a break, feel dizzy or are uncomfortable in your position. That’s completely normal, and artists expect it. At the end, before it’s covered, take a good look at the tattoo – now is still the time to ask questions.',
       '## Aftercare: plan it in advance',
       'A tattoo is only half finished in the studio – you complete the other half at home, while it heals. **A badly cared-for fresh tattoo can lose its beauty even if the artist did perfect work.** So it’s worth planning aftercare before you book, and ideally choosing a date when the following weeks don’t hold a beach, a sauna or a long seaside holiday.',
-      '- Plan roughly two weeks without swimming, baths, sauna or sunbathing.',
+      '- Skip swimming, baths and sauna until it has fully healed (usually two to four weeks, sometimes longer), and keep it out of direct sun for at least the first month.',
       '- Keep the tattoo clean and moisturise it lightly, following your artist’s instructions.',
       '- Don’t scratch it, and don’t pick off flaking skin.',
       '- Wear loose, soft clothing that won’t rub the area.',
@@ -227,8 +227,8 @@ const a: LongArticle = {
     {
       q: { hu: 'Hány éves kortól lehet tetováltatni Magyarországon?', en: 'From what age can you get tattooed in Hungary?' },
       a: {
-        hu: 'Jellemzően 18 év felett lehet saját döntés alapján tetováltatni, és sok szalon fiatalabbakat egyáltalán nem vállal. A pontos szabályok változhatnak, ezért mindig kérdezd meg az adott szalont, és számíts rá, hogy személyi igazolványt kérnek.',
-        en: 'Generally you can get tattooed on your own decision over 18, and many studios don’t take younger clients at all. Exact rules can change, so always ask the specific studio, and expect to be asked for ID.',
+        hu: 'A szalonok jellemzően a 18 év feletti felnőtteket tetoválják saját döntésük alapján, és sok szalon fiatalabbakat egyáltalán nem vállal. A pontos szabályok változhatnak, ezért mindig kérdezd meg az adott szalont, és számíts rá, hogy személyi igazolványt kérnek.',
+        en: 'Studios generally tattoo adults over 18 on their own decision, and many studios don’t take younger clients at all. Exact rules can change, so always ask the specific studio, and expect to be asked for ID.',
       },
     },
     {
@@ -245,6 +245,13 @@ const a: LongArticle = {
         en: 'A deposit usually secures your slot and the design work, and is often deducted from the final price. Whether it’s refundable depends on the studio’s policy – ask about cancellation and rescheduling terms in advance, ideally in writing.',
       },
     },
+  ],
+  sources: [
+    { t: "Tattoos: understand risks and precautions – Mayo Clinic", u: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Contraindications for tattooing – Current Problems in Dermatology (PubMed)", u: "https://pubmed.ncbi.nlm.nih.gov/25833628/" },
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+    { t: "Tattoos and permanent makeup: fact sheet – U.S. Food and Drug Administration", u: "https://www.fda.gov/cosmetics/cosmetic-products/tattoos-permanent-makeup-fact-sheet" },
   ],
   captions: {
     img2: {

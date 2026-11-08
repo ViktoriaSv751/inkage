@@ -10,3 +10,4 @@
 .rc-out .rc-total { background: var(--ka-accent, #5b3df5); color: #fff; }
 .rc-score { margin: 14px 0 4px; font-weight: 700; font-size: 15px; }
 .rc-note { margin: 0; font-size: 14px; opacity: .75; line-height: 1.5; }
+.rc-f input { font: inherit; font-weight: 500; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--ka-line, rgba(127,127,127,.35)); background: var(--bg, transparent); color: inherit; max-width: 100%; box-sizing: border-box; }

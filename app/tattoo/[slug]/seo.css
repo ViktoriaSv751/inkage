@@ -82,3 +82,4 @@
 .sp-reads span { font-size: 13px; opacity: .65; }
 .sp-reads b { font-size: 16px; line-height: 1.3; }
 .sp-reads a:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.sp-about p { margin: 0 0 14px; font-size: 17px; line-height: 1.65; }

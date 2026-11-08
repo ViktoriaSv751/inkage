@@ -9,7 +9,7 @@ import { useScrollLock } from '@/lib/scrolllock';
 import { PollSheet } from './PollSheet';
 import { AiReport } from './AiReport';
 import { WHY } from './_result/constants';
-import { toBlob } from './_result/media';
+import { withMark } from './_result/media';
 import type { ResultProps } from './_result/types';
 import { useTimeline } from './_result/useTimeline';
 import { useShareActions } from './_result/useShareActions';
@@ -112,7 +112,7 @@ export function Result({
   const saveImage = async () => {
     if (!activeSrc) return;
     track('save_image', { stage: view === 'removal' ? remKey : active });
-    await shareOrDownload(await toBlob(activeSrc), `inkage-${view === 'removal' ? remKey : active}.jpg`);
+    await shareOrDownload(await withMark(activeSrc), `inkage-${view === 'removal' ? remKey : active}.jpg`);
   };
 
   const suggestCm = preview.sizeCm && preview.sizeCm < 8 && !own ? Math.ceil(Math.max(8, preview.sizeCm * 1.4)) : null;

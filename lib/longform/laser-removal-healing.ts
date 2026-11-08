@@ -194,6 +194,13 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "Understanding laser tattoo removal – University of Utah Health", u: "https://healthcare.utah.edu/healthfeed/2025/05/understanding-laser-tattoo-removal" },
+    { t: "Tattoo removal: how it works, process, healing and scarring – Cleveland Clinic", u: "https://my.clevelandclinic.org/health/treatments/8313-tattoo-removal" },
+    { t: "Laser tattoo removal: a clinical update – Journal of Cutaneous and Aesthetic Surgery", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4411606/" },
+    { t: "Tattoos (laser treatment) – Bristol Laser Centre, North Bristol NHS Trust", u: "https://www.nbt.nhs.uk/bristol-laser-centre/laser-treatments/tattoos" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: the first hours. Redness and swelling are normal, and a cold pack wrapped in a cloth can help.',

@@ -198,3 +198,7 @@
 .pm-card b { display: block; font-size: 18px; }
 .pm-card span { font-size: 14px; color: var(--muted); }
 .pm-card p { margin: 8px 0 0; font-size: 16px; line-height: 1.55; }
+.pm-code { margin: -14px 0 28px; font-size: 15px; }
+.pm-code summary { cursor: pointer; color: var(--muted); }
+.pm-code textarea { width: 100%; box-sizing: border-box; margin: 10px 0 8px; font: 13px/1.4 ui-monospace, Menlo, monospace; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: inherit; resize: vertical; }
+.pm-code button { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }

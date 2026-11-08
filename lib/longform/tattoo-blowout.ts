@@ -192,6 +192,13 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "An atypical migration pattern of tattoo pigment (tattoo blowout case report) – Cureus (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10355335/" },
+    { t: "Laser tattoo removal – UCSF Health", u: "https://www.ucsfhealth.org/treatments/laser_tattoo_removal/" },
+    { t: "Tattoos and permanent makeup: fact sheet – U.S. Food and Drug Administration", u: "https://www.fda.gov/cosmetics/cosmetic-products/tattoos-permanent-makeup-fact-sheet" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Tattoo aftercare tips from a dermatologist – Cleveland Clinic", u: "https://health.clevelandclinic.org/tattoo-aftercare" },
+  ],
   captions: {
     img2: {
       en: 'A tattoo on day one: red, puffy and a little shiny. All of this is normal healing, not a blowout.',

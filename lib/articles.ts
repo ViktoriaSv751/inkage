@@ -144,6 +144,9 @@ export const ARTICLES: Article[] = [
 ];
 
 import { MORE_ARTICLES } from './articles2';
+import { isLive } from './kb';
 ARTICLES.push(...MORE_ARTICLES);
 
 export const article = (slug: string) => ARTICLES.find((a) => a.slug === slug) || null;
+/** The guides that are out today (scheduled ones appear on their date, see isLive in lib/kb.ts). */
+export const liveArticles = () => ARTICLES.filter((a) => isLive(a.slug));

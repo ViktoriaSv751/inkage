@@ -1,6 +1,6 @@
 import { IMG } from '@/lib/img';
 import { KB } from '@/lib/kb';
-import { LONG } from '@/lib/longform';
+import { liveLong } from '@/lib/longform';
 import { articleLangs } from '@/lib/article-langs';
 import { pick, qOf } from '@/lib/tr';
 import { SITE_URL } from '@/lib/site';
@@ -10,14 +10,14 @@ import { SITE_URL } from '@/lib/site';
  * and inline pictures (captions in that language). Next 14's sitemap.ts can't list images, so this is plain XML;
  * robots.txt points to it next to /sitemap.xml.
  */
-export const dynamic = 'force-static';
+export const revalidate = 3600; // hourly, so scheduled articles join on their day
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const abs = (u: string) => (u.startsWith('http') ? u : `${SITE_URL}${u}`);
 
 export function GET() {
   const rows: string[] = [];
-  for (const a of LONG) {
+  for (const a of liveLong()) {
     const m = KB[a.slug];
     if (!m) continue;
     for (const L of articleLangs(a.slug)) {

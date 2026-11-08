@@ -15,13 +15,13 @@ const a: LongArticle = {
     hu: [
       'Három dolog koptatja a tetoválást: a súrlódás, a nap és a bőr nyúlása. Minél kevesebbet kap belőlük egy testrész, annál tovább marad éles.',
       'A felső hát, a lapocka, a felkar és a comb külső oldala öregszik a legszebben; az ujjak, a tenyér, a kéz és a láb oldala, valamint az ajak fakul a leggyorsabban.',
-      'A hely mellett a méret és a stílus is számít: ugyanaz a finom minta a felkaron évekig kitart, az ujjon akár egy év alatt elmosódhat.',
+      'A hely mellett a méret és a stílus is számít: ugyanaz a finom minta a felkaron évekig kitart, az ujjon viszont a tetoválók tapasztalata szerint akár egy év alatt elmosódhat.',
       'A „nehéz” hely nem tilos – csak több törődést, fényvédelmet és gyakoribb frissítést igényel.',
     ],
     en: [
       'Three things wear a tattoo down: friction, sun and skin stretch. The less of each a spot gets, the longer it stays crisp.',
       'The upper back, shoulder blade, upper arm and outer thigh age best; fingers, palms, the sides of hands and feet, and lips fade fastest.',
-      'Size and style matter alongside placement: the same fine design can hold for years on the upper arm and blur within a year on a finger.',
+      'Size and style matter alongside placement: the same fine design can hold for years on the upper arm, while on a finger artists often see it blur within a year.',
       'A “difficult” spot is not off-limits – it just needs more care, more sun protection and more frequent touch-ups.',
     ],
   },
@@ -54,7 +54,7 @@ const a: LongArticle = {
       '> **Gyakorlati tipp:** ha az első tetoválásodnál bizonytalan vagy, válassz olyan helyet, amit könnyen eltakarhatsz és ritkán ér nap – például a felkart vagy a lapockát. Ha később bátrabb leszel, a következő mehet látványosabb helyre.',
       '## A legrosszabb helyek: ahol gyorsan elmegy a tinta',
       'Vannak testrészek, ahol a tetoválás szinte biztosan gyorsabban fakul, akármilyen ügyes a tetováló és akármennyire vigyázol rá. Ez nem a tetoválók hibája, hanem a bőr és a mindennapi használat természete. Érdemes előre tudni róluk, hogy ne érjen meglepetés.',
-      '- **Ujjak, főleg az oldaluk:** az állandó kézmosás, a szappan és a folyamatos érintés miatt itt fakul a leggyorsabban a tinta. Sok ujjtetoválás már egy éven belül frissítést igényel, és a finom vonalak gyakran foltossá válnak.',
+      '- **Ujjak, főleg az oldaluk:** az állandó kézmosás, a szappan és a folyamatos érintés miatt itt fakul a leggyorsabban a tinta. A tetoválók szerint sok ujjtetoválás már egy éven belül frissítést igényel, és a finom vonalak gyakran foltossá válnak.',
       '- **Tenyér és a kéz oldala:** vastag, gyorsan megújuló bőr, rengeteg súrlódás. Sok tetováló kifejezetten óvatos ezekkel a területekkel, vagy előre szól, hogy az eredmény kiszámíthatatlan.',
       '- **A lábfej és a láb oldala, a talp:** a cipő és a zokni folyamatosan dörzsöli, ráadásul a lábon a gyógyulás is lassabb és macerásabb lehet.',
       '- **Ajak (különösen a belső oldala):** a nyálkahártya nagyon gyorsan megújul, ezért az itt lévő tetoválás sokszor már rövid idő alatt jelentősen halványul.',
@@ -137,7 +137,7 @@ const a: LongArticle = {
       '> **Practical tip:** if you’re unsure about your first tattoo, pick a spot that’s easy to cover and rarely sees the sun – such as the upper arm or shoulder blade. If you feel bolder later, the next one can go somewhere more visible.',
       '## The worst spots: where ink fades fast',
       'Some body parts are almost guaranteed to fade faster, however skilled the artist and however careful you are. That isn’t the artist’s fault; it’s the nature of the skin and of everyday use. It’s worth knowing about them in advance so nothing comes as a surprise.',
-      '- **Fingers, especially the sides:** constant hand-washing, soap and touching make ink fade fastest here. Many finger tattoos need a touch-up within a year, and fine lines often turn patchy.',
+      '- **Fingers, especially the sides:** constant hand-washing, soap and touching make ink fade fastest here. Artists often say many finger tattoos need a touch-up within a year, and fine lines often turn patchy.',
       '- **Palms and the sides of the hands:** thick, fast-renewing skin and a huge amount of friction. Many artists are very cautious with these areas, or tell you up front that the result is unpredictable.',
       '- **The top and sides of the feet, and the soles:** shoes and socks rub them constantly, and healing on the feet can be slower and fussier, too.',
       '- **Lips (especially the inside):** the mucous membrane renews very quickly, so a tattoo here often fades significantly in a short time.',
@@ -204,8 +204,8 @@ const a: LongArticle = {
     {
       q: { en: 'And which fade fastest?', hu: 'És melyek fakulnak a leggyorsabban?' },
       a: {
-        en: 'Fingers, palms, the sides of the hands and feet, and lips. These areas are washed, rubbed or renewed so often that ink leaves them faster. Many finger tattoos need a touch-up within a year.',
-        hu: 'Az ujjak, a tenyér, a kéz és a láb oldala, valamint az ajak. Ezeket a területeket olyan gyakran mossuk, dörzsöljük, vagy olyan gyorsan megújulnak, hogy a tinta hamarabb távozik belőlük. Sok ujjtetoválás már egy éven belül frissítést igényel.',
+        en: 'Fingers, palms, the sides of the hands and feet, and lips. These areas are washed, rubbed or renewed so often that ink leaves them faster. Artists often say many finger tattoos need a touch-up within a year.',
+        hu: 'Az ujjak, a tenyér, a kéz és a láb oldala, valamint az ajak. Ezeket a területeket olyan gyakran mossuk, dörzsöljük, vagy olyan gyorsan megújulnak, hogy a tinta hamarabb távozik belőlük. A tetoválók szerint sok ujjtetoválás már egy éven belül frissítést igényel.',
       },
     },
     {
@@ -229,6 +229,14 @@ const a: LongArticle = {
         hu: 'Tölts fel egy fotót az InkAge-be, válaszd ki a testrészt a testtérképen, és helyezd el a mintát. A 10 és 30 éves képek, valamint az „Ugyanez a minta máshol” összehasonlítás megmutatja, hogyan öregedhet ugyanaz a tetoválás egy másik helyen. Ez becslés, de jól láthatóvá teszi a különbséget.',
       },
     },
+  ],
+  sources: [
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "Making an epidermis (epidermal turnover) – Annals of the New York Academy of Sciences (PMC)", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2861991/" },
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "How to apply sunscreen – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/sun-protection/shade-clothing-sunscreen/how-to-apply-sunscreen" },
+    { t: "How to protect tattoos from sun exposure – MD Anderson Cancer Center", u: "https://www.mdanderson.org/cancerwise/how-to-protect-tattoos-from-sun-exposure-sunscreen.h00-159541323.html" },
+    { t: "Aging changes in skin – MedlinePlus (NIH)", u: "https://medlineplus.gov/ency/article/004014.htm" },
   ],
   captions: {
     img2: {

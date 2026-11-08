@@ -14,13 +14,13 @@ const a: LongArticle = {
   summary: {
     hu: [
       'A szénalapú fekete a legfénystabilabb tetoválófesték – ezért élik túl a fekete vonalak általában a színes kitöltést.',
-      'A sárga, a narancs, a fehér és a pasztellek fakulnak először, főleg napnak kitett bőrön, gyakran már 5–10 éven belül.',
+      'A sárga, a narancs, a fehér és a pasztellek fakulnak először, főleg napnak kitett bőrön – a tetoválók szerint gyakran már 5–10 éven belül.',
       'Egy erős, sötét kontúr megtartja a színes minta formáját akkor is, ha a kitöltés halványul; a kontúr nélküli akvarell elmosódhat.',
       'A színes minta tartósságát a fényvédelem és a jó kontraszt dönti el – az InkAge-ben a 30 éves képeken össze is vetheted a feketét és a színest.',
     ],
     en: [
       'Carbon-based black is the most light-stable tattoo ink – that’s why black lines usually outlive colour fill.',
-      'Yellow, orange, white and pastels fade first, especially on sun-exposed skin, often within 5–10 years.',
+      'Yellow, orange, white and pastels fade first, especially on sun-exposed skin – artists often say within 5–10 years.',
       'A strong dark outline keeps a colour piece’s shape even as the fill fades; watercolour without outlines can blur.',
       'Sun protection and good contrast decide how long colour lasts – in InkAge you can compare black and colour side by side in the 30-year images.',
     ],
@@ -46,7 +46,7 @@ const a: LongArticle = {
       '### Zöld és lila',
       'A zöld és a lila viselkedése márkától és árnyalattól függően elég változó. A sötétebb, telített árnyalatok általában jobban tartanak, a világos, élénk tónusok hamarabb fakulhatnak.',
       '### Sárga és narancs',
-      'A sárga és a narancs a leggyorsabban fakuló színek közé tartozik. Több UV-fényt nyelnek el, és gyorsabban bomlanak le, ezért napnak kitett bőrön gyakran **már 5–10 éven belül** kimosottnak tűnhetnek.',
+      'A sárga és a narancs a leggyorsabban fakuló színek közé tartozik. Több UV-fényt nyelnek el, és gyorsabban bomlanak le, ezért a tetoválók tapasztalata szerint napnak kitett bőrön gyakran **már 5–10 éven belül** kimosottnak tűnhetnek.',
       '### Fehér és pasztell',
       'A fehér és a nagyon halvány pasztellek a legkevésbé tartósak. Néhány éven belül kifakulhatnak, besárgulhatnak, vagy egyszerűen beleolvadhatnak a bőr tónusába. Kiemelésnek, apró fénypontnak jók, de egy minta fő elemét ritkán érdemes rájuk bízni.',
       'Külön említést érdemelnek az UV-fényben világító, úgynevezett „blacklight” festékek. Ezek látványosak lehetnek egy buliban, de a hosszú távú viselkedésükről kevesebb a tapasztalat, és sok tetováló óvatosan bánik velük. Ha ilyet szeretnél, kérdezd meg a tetoválót, mit tud az adott festékről.',
@@ -123,7 +123,7 @@ const a: LongArticle = {
       '### Green and purple',
       'Green and purple vary quite a lot depending on the brand and the shade. Darker, saturated shades generally last better; light, bright tones can fade sooner.',
       '### Yellow and orange',
-      'Yellow and orange are among the fastest-fading colours. They absorb more ultraviolet light and break down faster, so on sun-exposed skin they can look washed out **within 5–10 years**.',
+      'Yellow and orange are among the fastest-fading colours. They absorb more ultraviolet light and break down faster, so on sun-exposed skin, artists often see them look washed out **within 5–10 years**.',
       '### White and pastels',
       'White and very pale pastels are the least durable. Within a few years they can fade, turn yellowish, or simply blend into the skin tone. They’re fine for highlights and small points of light, but it’s rarely worth trusting them with the main element of a design.',
       'UV-reactive, so-called “blacklight” inks deserve a special mention. They can be spectacular at a party, but there’s less experience with how they behave over the long term, and many artists are cautious with them. If you want one, ask your artist what they know about that particular ink.',
@@ -217,6 +217,13 @@ const a: LongArticle = {
         en: 'Not necessarily, but it’s riskier in the long run: without a dark line, the colour edges can blur over time. If you love the style, ask for at least a fine dark outline around the main shapes, or darker values in key areas.',
       },
     },
+  ],
+  sources: [
+    { t: "Caring for tattooed skin – American Academy of Dermatology", u: "https://www.aad.org/public/everyday-care/skin-care-basics/tattoos/caring-for-tattooed-skin" },
+    { t: "Unveiling skin macrophage dynamics explains both tattoo persistence and strenuous removal – Journal of Experimental Medicine", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5881467/" },
+    { t: "Photochemical cleavage of a tattoo pigment by UVB radiation or natural sunlight – Journal of the German Society of Dermatology", u: "https://pubmed.ncbi.nlm.nih.gov/17610608/" },
+    { t: "Degradation products of tattoo pigments by sunlight, laser irradiation and metabolism: a systematic review – Journal of Exposure Science and Environmental Epidemiology", u: "https://pubmed.ncbi.nlm.nih.gov/34274958/" },
+    { t: "Tattoo removal: options and results – U.S. Food and Drug Administration", u: "https://www.fda.gov/consumers/consumer-updates/tattoo-removal-options-and-results" },
   ],
   captions: {
     img2: {

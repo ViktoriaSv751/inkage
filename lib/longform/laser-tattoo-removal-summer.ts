@@ -200,6 +200,13 @@ const a: LongArticle = {
       },
     },
   ],
+  sources: [
+    { t: "Tattoos (laser treatment) – Bristol Laser Centre, North Bristol NHS Trust", u: "https://www.nbt.nhs.uk/bristol-laser-centre/laser-treatments/tattoos" },
+    { t: "Tattoo removal: lasers outshine other methods – American Academy of Dermatology", u: "https://www.aad.org/public/cosmetic/hair-removal/laser-tattoo-removal" },
+    { t: "Laser tattoo removal: a clinical update – Journal of Cutaneous and Aesthetic Surgery", u: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4411606/" },
+    { t: "Tattoo removal – German Federal Office for Radiation Protection (BfS)", u: "https://www.bfs.de/EN/topics/opt/application-medicine-wellness/tattoo/tattoo_node.html" },
+    { t: "Postinflammatory hyperpigmentation – DermNet", u: "https://dermnetnz.org/topics/postinflammatory-hyperpigmentation" },
+  ],
   captions: {
     img2: {
       en: 'Illustration: on tanned skin, part of the laser light is absorbed by the skin’s own pigment instead of only the ink.',

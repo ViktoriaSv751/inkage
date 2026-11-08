@@ -1,7 +1,7 @@
 import { pick } from '@/lib/tr';
 import { type Lang } from '@/lib/tr';
 // Server-only helpers that need the full long-form texts (kept out of client bundles).
-import { Article, ARTICLES } from './articles';
+import { Article, liveArticles } from './articles';
 import { longArticle, words } from './longform';
 import { IMG, KB, KB_STILL } from './kb';
 
@@ -22,7 +22,7 @@ export type KbItem = {
   min: number;
 };
 export function kbList(lang: Lang): KbItem[] {
-  return ARTICLES.map((a) => ({
+  return liveArticles().map((a) => ({
     slug: a.slug,
     cat: pick(a.tag, lang),
     title: pick(a.title, lang),
