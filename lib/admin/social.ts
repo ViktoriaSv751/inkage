@@ -597,7 +597,8 @@ async function syncPinterest(r: Run, tok: string) {
    the 90-day history only come with the API connection (PINTEREST_APP_ID / _SECRET, then "Összekapcsolás"); once that
    account exists this part stops and the API sync writes the same pins (the same post_id). A pin added by hand earlier
    ("m:" + its id) is replaced by the real one by the database (social_posts_merge_manual), its date kept. */
-const pinUser = () => env().PINTEREST_USERNAME || "";
+// @inkageapp is InkAge's Pinterest business account (made 2026-11-08); PINTEREST_USERNAME still overrides it
+const pinUser = () => env().PINTEREST_USERNAME || "inkageapp";
 const unent = (t?: string | null) => String(t || "").replace(/&#(\d+);/g, (_, c) => String.fromCodePoint(Number(c))).replace(/&#x([0-9a-f]+);/gi, (_, c) => String.fromCodePoint(parseInt(c, 16)))
   .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 async function syncPinterestPublic(state: Record<string, unknown> | null, fresh: number): Promise<string> {
