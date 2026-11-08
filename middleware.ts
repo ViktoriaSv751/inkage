@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { fromBrowser, isLang } from './lib/tr';
+import { LANGS, fromBrowser, isLang } from './lib/tr';
 
 /**
  * Website pages are rendered on the server in the language of ?lang= (Hungarian without it).
@@ -36,6 +36,13 @@ export function middleware(req: NextRequest) {
   const cookie = req.cookies.get('ink_lang')?.value;
   const app = /^\/(app|v|admin|offline|go)(\/|$)/.test(url.pathname);
   const q = url.searchParams.get('lang');
+  // a broken ?lang (e.g. "esCuidados" from a mangled link) moves for good to the language it starts with, or drops
+  if (q !== null && !isLang(q)) {
+    const fix = [...LANGS].sort((a, b) => b.length - a.length).find((l) => q.toLowerCase().startsWith(l));
+    if (fix) url.searchParams.set('lang', fix);
+    else url.searchParams.delete('lang');
+    return NextResponse.redirect(url, 308);
+  }
   if (!app && !q) {
     const accept = req.headers.get('accept-language');
     // no preference at all (search engines): keep the Hungarian page

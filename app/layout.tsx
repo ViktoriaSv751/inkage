@@ -17,6 +17,7 @@ export function generateMetadata(): Metadata {
   const h = headers().get('x-ink-lang');
   const L = isLang(h) ? h : 'hu';
   const path = headers().get('x-ink-path') || '/';
+  const inApp = /^\/app(\/|$)/.test(path);
   const title = `InkAge – ${tx(L, 'See your tattoo in 50 years', 'Nézd meg a tetoválásod 50 év múlva')}`;
   const description = tx(L, 'Upload a photo and see any design on your skin at 10, 30 and 50 years.', 'Tölts fel egy fotót, és nézd meg bármelyik mintát a bőrödön 10, 30 és 50 év múlva.');
   return {
@@ -26,7 +27,10 @@ export function generateMetadata(): Metadata {
     // every page points Google at its own language version and lists the others (pages may override).
     // Not on the home page: Next drops the ?lang query from metadata URLs whose path is "/", which made all 35
     // home pages name the Hungarian one as canonical; RootLayout writes those <link>s itself (HomeLangLinks)
-    alternates: path === '/' ? undefined : langAlternates(path, L),
+    alternates: path === '/' || inApp ? undefined : langAlternates(path, L),
+    // the app's own screens stay out of search; its knowledge-base copies name the public article as canonical
+    // (app/app/tudastar sets that), so Google never indexes /app/tudastar/... as a second, untitled copy
+    robots: inApp && !path.startsWith('/app/tudastar') ? { index: false, follow: true } : undefined,
     // Google Search Console ownership check (the code from "HTML tag" verification)
     verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
     manifest: '/manifest.webmanifest',

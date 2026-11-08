@@ -82,6 +82,11 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
     '@context': 'https://schema.org',
     '@graph': [
       { '@type': 'Article', headline: pick(a.title, L), description: pick(a.desc, L), inLanguage: L, wordCount: n, datePublished: meta?.date, dateModified: meta?.date, image: meta ? [`https://inkage.app${IMG(meta.img, 1200)}`] : undefined, author: { '@type': 'Organization', name: 'InkAge' }, publisher: { '@type': 'Organization', name: 'InkAge' } },
+      { '@type': 'BreadcrumbList', itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'InkAge', item: `https://inkage.app/${sfx}` },
+          { '@type': 'ListItem', position: 2, name: T('Knowledge base', 'Tudástár'), item: `https://inkage.app/tudastar${sfx}` },
+          { '@type': 'ListItem', position: 3, name: pick(a.title, L), item: `https://inkage.app/tudastar/${a.slug}${sfx}` },
+        ] },
       { '@type': 'FAQPage', mainEntity: a.faq.map((f) => ({ '@type': 'Question', name: pick(f.q, L), acceptedAnswer: { '@type': 'Answer', text: pick(f.a, L) } })) },
     ],
   };

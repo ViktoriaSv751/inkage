@@ -14,6 +14,12 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'laser-tattoo-removal-what-to-expect': ['laser-removal-how-many-sessions', 'laser-removal-before-after', 'laser-removal-healing', 'color-vs-black-ink-aging', 'tattoo-blowout', 'tattoo-touch-ups'],
   'laser-removal-how-many-sessions': ['laser-tattoo-removal-what-to-expect', 'laser-removal-before-after', 'laser-removal-healing', 'color-vs-black-ink-aging', 'tattoos-on-darker-skin'],
   'laser-removal-before-after': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'tattoo-before-and-after', 'color-vs-black-ink-aging'],
+'tattoo-styles-guide': ['how-tattoos-age', 'tattoos-that-age-well', 'fine-line-tattoos-aging', 'blackwork-tattoos-placement', 'color-vs-black-ink-aging', 'first-tattoo-checklist'],
+  'realism-tattoos-aging': ['how-tattoos-age', 'tattoos-that-age-well', 'color-vs-black-ink-aging', 'tattoo-touch-ups', 'best-placement-for-tattoo-longevity', 'tattoo-size-guide'],
+  'american-traditional-tattoo-aging': ['how-tattoos-age', 'tattoos-that-age-well', 'tattoo-before-and-after', 'color-vs-black-ink-aging', 'tattoo-touch-ups', 'best-placement-for-tattoo-longevity'],
+  'how-to-book-a-tattoo': ['first-tattoo-checklist', 'tattoo-size-guide', 'tattoo-pain-chart', 'best-placement-for-tattoo-longevity', 'tattoo-healing-stages', 'tattoo-touch-ups'],
+  'laser-tattoo-removal-cost': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'color-vs-black-ink-aging', 'cover-up-tattoos', 'laser-removal-before-after', 'laser-removal-healing'],
+  'tattoo-ink-safety-eu': ['color-vs-black-ink-aging', 'first-tattoo-checklist', 'tattoo-healing-stages', 'laser-tattoo-removal-what-to-expect', 'tattoos-on-darker-skin'],
   'laser-tattoo-removal-summer': ['laser-removal-healing', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-what-to-expect', 'sunburned-tattoo', 'tattoos-on-darker-skin'],
   'laser-removal-healing': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'tattoo-healing-stages', 'sunburned-tattoo', 'laser-removal-before-after'],
   // healing & care
@@ -54,6 +60,9 @@ export const ARTICLE_STYLE: Record<string, string> = {
   'hand-and-finger-tattoos': 'traditional',
   'tattoo-before-and-after': 'realism',
   'how-tattoos-age': 'realism',
+  'realism-tattoos-aging': 'realism',
+  'american-traditional-tattoo-aging': 'traditional',
+  'tattoo-styles-guide': 'traditional',
   'first-tattoo-checklist': 'realism',
 };
 

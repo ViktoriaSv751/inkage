@@ -1,12 +1,13 @@
 import { tx, langOf } from '@/lib/tr';
 import type { Metadata } from 'next';
 import { TudastarView } from './TudastarView';
+import { seoTitle } from '@/lib/seo-titles';
 
 export const dynamic = 'force-dynamic';
 export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
   const L = langOf(searchParams);
   return {
-    title: `${tx(L, 'Knowledge base', 'Tudástár')} – InkAge`,
+    title: seoTitle('/tudastar', L) || `${tx(L, 'Knowledge base', 'Tudástár')} – InkAge`,
     description: tx(
       L,
       'Long, honest articles about what really happens to ink over the years, which size and placement last, and how to keep your tattoo looking new. Read them before you book.',

@@ -27,9 +27,15 @@ import a22 from './blackwork-tattoos-placement';
 import a23 from './sunburned-tattoo';
 import a24 from './cover-up-tattoos';
 import a25 from './laser-tattoo-removal-summer';
+import a26 from './tattoo-styles-guide';
+import a27 from './realism-tattoos-aging';
+import a28 from './american-traditional-tattoo-aging';
+import a29 from './how-to-book-a-tattoo';
+import a30 from './laser-tattoo-removal-cost';
+import a31 from './tattoo-ink-safety-eu';
 
 export type { LongArticle } from './types';
-export const LONG: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25];
+export const LONG: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31];
 export const longArticle = (slug: string) => LONG.find((a) => a.slug === slug);
 
 /** Words in the body (markup stripped). */
