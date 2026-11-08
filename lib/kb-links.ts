@@ -14,6 +14,7 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'laser-tattoo-removal-what-to-expect': ['laser-removal-how-many-sessions', 'laser-removal-before-after', 'laser-removal-healing', 'color-vs-black-ink-aging', 'tattoo-blowout', 'tattoo-touch-ups'],
   'laser-removal-how-many-sessions': ['laser-tattoo-removal-what-to-expect', 'laser-removal-before-after', 'laser-removal-healing', 'color-vs-black-ink-aging', 'tattoos-on-darker-skin'],
   'laser-removal-before-after': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'tattoo-before-and-after', 'color-vs-black-ink-aging'],
+  'laser-tattoo-removal-summer': ['laser-removal-healing', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-what-to-expect', 'sunburned-tattoo', 'tattoos-on-darker-skin'],
   'laser-removal-healing': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'tattoo-healing-stages', 'sunburned-tattoo', 'laser-removal-before-after'],
   // healing & care
   'tattoo-healing-stages': ['tattoo-aftercare-sun-protection', 'sunburned-tattoo', 'tattoo-touch-ups', 'laser-removal-healing', 'tattoo-blowout', 'first-tattoo-checklist'],

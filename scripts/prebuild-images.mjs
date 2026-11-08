@@ -10,7 +10,9 @@ const OUT = path.join(ROOT, 'public', 'img');
 const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
 const WIDTHS = [240, 480, 640, 900, 1400, 1800];
 const AVIF_W = [480, 720, 900];
-const RX = /hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36}/g;
+const RX = /hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36}|kb_[0-9]{8}_[a-z0-9-]+/g;
+// our own drawn illustrations (no image credits): source PNGs live in scripts/kb-images/<id>.png
+const LOCAL = path.join(ROOT, 'scripts', 'kb-images');
 
 function walk(dir, acc = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -35,10 +37,15 @@ const t0 = Date.now();
 async function one(id) {
   if (ready(id)) return done++;
   try {
-    const ctl = AbortSignal.timeout(30000);
-    const r = await fetch(CDN + id + '.png', { signal: ctl });
-    if (!r.ok) throw new Error(String(r.status));
-    const buf = Buffer.from(await r.arrayBuffer());
+    let buf;
+    const local = path.join(LOCAL, id + '.png');
+    if (id.startsWith('kb_')) buf = fs.readFileSync(local);
+    else {
+      const ctl = AbortSignal.timeout(30000);
+      const r = await fetch(CDN + id + '.png', { signal: ctl });
+      if (!r.ok) throw new Error(String(r.status));
+      buf = Buffer.from(await r.arrayBuffer());
+    }
     for (const w of WIDTHS) {
       await sharp(buf).resize({ width: w, withoutEnlargement: true }).webp({ quality: 76, effort: 4 }).toFile(path.join(OUT, `${id}-${w}.webp`));
     }

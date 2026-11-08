@@ -450,4 +450,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'laser-tattoo-removal-summer',
+    tag: { en: 'Removal', hu: 'Eltávolítás' },
+    title: { en: 'Can you get laser tattoo removal in summer? What a tan really changes', hu: 'Lehet lézerrel tetoválást eltávolíttatni nyáron? Mit változtat valójában a barnaság' },
+    desc: { en: 'Yes, but not on tanned skin. Covered areas can go on all year; a summer pause costs little.', hu: 'Igen, de barna bőrön nem. A letakart területek egész évben kezelhetők, a nyári szünet kevésbe kerül.' },
+    body: {
+      en: [
+        'A tan adds pigment the laser also hits, which raises the risk of burns, blisters and light or dark patches. Most clinics ask for a few weeks without sun or self-tanner before each session.',
+        '## What you can do in summer',
+        'Areas under clothes, such as the back or upper arm, can usually be treated all year. Hands, ankles and the face are easier to pause from June to August.',
+        '## A pause costs little',
+        'Sessions are six to eight weeks apart and removal often takes one to two years, so a summer break adds some time but does not undo progress.',
+      ],
+      hu: [
+        'A barnaság olyan pigmentet ad a bőrhöz, amit a lézer is eltalál, ez növeli az égés, a hólyagok és a világos vagy sötét foltok kockázatát. A legtöbb klinika minden kezelés előtt néhány hét nap- és önbarnítómentességet kér.',
+        '## Mit tehetsz nyáron',
+        'A ruha alatti területek, például a hát vagy a felkar, általában egész évben kezelhetők. A kéznél, a bokánál és az arcnál könnyebb júniustól augusztusig szünetet tartani.',
+        '## A szünet kevésbe kerül',
+        'Az alkalmak között hat-nyolc hét telik el, és az eltávolítás gyakran egy-két évig tart, így egy nyári szünet ad némi időt, de nem teszi tönkre a haladást.',
+      ],
+    },
+  },
 ];

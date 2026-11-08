@@ -308,6 +308,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-11-06',
     faq: [],
   },
+  'laser-tattoo-removal-summer': {
+    img: 'kb_20261108_summer-0',
+    img2: 'kb_20261108_summer-2',
+    img3: 'kb_20261108_summer-3',
+    img4: 'kb_20261108_summer-4',
+    img5: 'kb_20261108_summer-5',
+    img6: 'kb_20261108_summer-6',
+    img7: 'kb_20261108_summer-7',
+    cap2: { en: 'Illustration: on tanned skin, part of the laser light is absorbed by the skin’s own pigment instead of only the ink.', hu: 'Illusztráció: barna bőrön a lézerfény egy részét a bőr saját pigmentje nyeli el, nem csak a tinta.' },
+    date: '2026-11-08',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
