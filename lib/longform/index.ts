@@ -58,9 +58,17 @@ import a52 from './behind-the-ear-tattoos';
 import a53 from './neo-traditional-tattoos';
 import a54 from './dotwork-geometric-tattoos';
 import a55 from './white-and-uv-ink-tattoos';
+import a56 from './tattoo-age-limit';
+import a57 from './what-to-avoid-after-a-tattoo';
+import a58 from './second-skin-tattoo-film';
+import a59 from './couple-and-name-tattoos';
+import a60 from './knee-and-elbow-tattoos';
+import a61 from './tattoos-at-work';
+import a62 from './tribal-tattoos';
+import a63 from './stick-and-poke-tattoos';
 
 export type { LongArticle } from './types';
-const ALL: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55];
+const ALL: LongArticle[] = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, a63];
 /** The articles that are out today (see isLive in lib/kb.ts). */
 export const liveLong = () => ALL.filter((a) => isLive(a.slug));
 export const longArticle = (slug: string) => liveLong().find((a) => a.slug === slug);
