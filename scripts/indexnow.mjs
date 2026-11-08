@@ -17,12 +17,13 @@ async function sitemapUrls() {
 }
 
 const urls = process.argv.length > 2 ? process.argv.slice(2) : await sitemapUrls();
-for (let i = 0; i < urls.length; i += 10000) {
-  const batch = urls.slice(i, i + 10000);
+for (let i = 0; i < urls.length; i += 50) {
+  const batch = urls.slice(i, i + 50);
   const r = await fetch('https://api.indexnow.org/indexnow', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
     body: JSON.stringify({ host: HOST, key: KEY, keyLocation: 'https://' + HOST + '/' + KEY + '.txt', urlList: batch }),
   });
   console.log('IndexNow', batch.length, 'URLs ->', r.status, r.statusText);
+  await new Promise((ok) => setTimeout(ok, 1500));
 }

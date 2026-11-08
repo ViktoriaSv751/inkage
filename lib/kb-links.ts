@@ -32,6 +32,12 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'laser-fading-before-cover-up': ['laser-tattoo-removal-what-to-expect', 'cover-up-tattoos', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-cost', 'laser-removal-healing', 'colour-tattoo-removal'],
   'eyebrow-pmu-removal': ['laser-tattoo-removal-what-to-expect', 'colour-tattoo-removal', 'tattoo-removal-creams-diy', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'laser-tattoo-removal-cost'],
   'tattoo-removal-pregnancy': ['laser-tattoo-removal-what-to-expect', 'tattoos-weight-change-pregnancy', 'laser-removal-healing', 'laser-removal-how-many-sessions', 'tattoo-removal-creams-diy', 'laser-tattoo-removal-summer'],
+  'fine-line-script-tattoos': ['fine-line-tattoos-aging', 'tattoo-size-guide', 'tattoo-styles-guide', 'hand-and-finger-tattoos', 'tattoo-touch-ups', 'best-placement-for-tattoo-longevity'],
+  'infected-tattoo-signs': ['tattoo-healing-stages', 'tattoo-itching-peeling', 'tattoo-aftercare-sun-protection', 'tattoo-ink-safety-eu', 'first-tattoo-checklist', 'tattoo-touch-ups'],
+  'japanese-tattoos': ['tattoo-styles-guide', 'american-traditional-tattoo-aging', 'tattoos-that-age-well', 'how-much-does-a-tattoo-cost', 'color-vs-black-ink-aging', 'cover-up-tattoos'],
+  'tattoos-blood-donation-mri': ['first-tattoo-checklist', 'tattoo-ink-safety-eu', 'tattoo-healing-stages', 'tattoos-when-you-get-old', 'tattoo-removal-pregnancy', 'tattoo-itching-peeling'],
+  'raised-tattoo': ['tattoo-healing-stages', 'tattoo-itching-peeling', 'sunburned-tattoo', 'tattoo-blowout', 'tattoo-ink-safety-eu', 'tattoos-on-darker-skin'],
+  'minimalist-tattoos': ['how-tattoos-age', 'fine-line-tattoos-aging', 'tattoo-size-guide', 'tattoo-touch-ups', 'best-placement-for-tattoo-longevity', 'hand-and-finger-tattoos'],
   'laser-tattoo-removal-summer': ['laser-removal-healing', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-what-to-expect', 'sunburned-tattoo', 'tattoos-on-darker-skin'],
   'laser-removal-healing': ['laser-tattoo-removal-what-to-expect', 'laser-removal-how-many-sessions', 'tattoo-healing-stages', 'sunburned-tattoo', 'laser-removal-before-after'],
   // healing & care
