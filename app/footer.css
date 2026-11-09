@@ -61,4 +61,4 @@
 .sf-badges { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
 .sf-badges a { display: inline-flex; opacity: .85; transition: opacity .15s; }
 .sf-badges a:hover { opacity: 1; }
-.sf-badges img { height: 40px; width: auto; display: block; }
+.sf-badges img { height: 40px; width: auto; display: block; background: #fff; border-radius: 8px; } /* Kick Product's badge is black on transparent */
