@@ -60,18 +60,28 @@ export async function syncStripe() {
   const ev: D[] = [];
   for (const s of cs.data) {
     const m = s.metadata || {};
+    /* the Stripe account also sells Calligra: only InkAge's own checkouts belong here */
+    if (m.app !== "inkage") continue;
     const base = { session_id: s.id, payment_intent: s.payment_intent || null, user_id: m.user || null, plan: m.plan || null, amount: major(s.amount_total), currency: s.currency, email: s.customer_details?.email || s.customer_email || null, device: m.device || null, country: s.customer_details?.address?.country || m.country || null, store: "stripe" };
     if (s.status === "expired") ev.push({ ...base, kind: "expired", ref: s.id, at: sec(s.expires_at) });
     else if (s.payment_status === "paid" && !have.has(s.id) && Date.now() / 1000 - s.created > 600) ev.push({ ...base, kind: "paid_missing", ref: s.id, at: sec(s.created), reason: "A Stripe szerint fizetett, de nálunk nincs meg a vásárlás (nem jött meg a Stripe értesítése)." });
   }
   const dsp = await stripe<{ data: D[] }>(`disputes?limit=20&created[gte]=${Math.floor(Date.now() / 1000) - 120 * 86400}`).catch(() => ({ data: [] as D[] }));
   for (const x of dsp.data) {
+    if (!(await inkagePayment(x.payment_intent))) continue;
     const closed = ["won", "lost", "warning_closed"].includes(x.status);
     ev.push({ kind: "dispute", ref: x.id, at: sec(x.created), store: "stripe", payment_intent: x.payment_intent || null, amount: major(x.amount), currency: x.currency, reason: x.reason, detail: { status: x.status, due_by: sec(x.evidence_details?.due_by), charge: x.charge } });
     if (closed) ev.push({ kind: "dispute_closed", ref: x.id, at: sec(x.created), store: "stripe", amount: major(x.amount), currency: x.currency, reason: x.status, detail: { status: x.status } });
   }
   const n = ev.length ? await call<number>("admin_w_pay_events", { p_rows: ev }) : 0;
   return `${w?.tx ?? 0} mozgás, ${w?.payouts ?? 0} kifizetés, ${n} új jelzés`;
+}
+
+/* a dispute names only the payment: ours if the payment carries metadata app=inkage (Calligra's are skipped) */
+async function inkagePayment(pi?: string | null) {
+  if (!pi) return false;
+  const j = await stripe<D>(`payment_intents/${encodeURIComponent(String(pi))}`).catch(() => null);
+  return j?.metadata?.app === "inkage";
 }
 
 /* ---------- exchange rates (the ECB's, through frankfurter.app), once a day ---------- */
