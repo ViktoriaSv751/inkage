@@ -16,6 +16,7 @@ const ORG_LD = {
   sameAs: [
     'https://www.wikidata.org/wiki/Q142090126',
     'https://www.pinterest.com/inkageapp/',
+    'https://www.linkedin.com/company/inkage-app/',
     'https://www.indiehackers.com/product/inkage',
     'https://peerlist.io/vviktoriasoti/project/inkage',
   ],
