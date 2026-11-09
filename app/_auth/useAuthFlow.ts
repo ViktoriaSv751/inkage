@@ -139,6 +139,7 @@ export function useAuthFlow(mode: 'login' | 'signup' | 'forgot', lang: Lang) {
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
     markSplash('in');
+    (await import('@/lib/i18n')).rememberLang(lang);
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(friendly(error.message));
   };

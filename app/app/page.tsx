@@ -129,6 +129,25 @@ export default function CreatePage() {
 
   useJobRecovery({ phase, preview, recovering, setPhase, setGenStep, showResult });
 
+  /* The trial's one 50-year image starts by itself a moment after the fresh result shows (2026-11-09: a visitor saved
+     the preview and went to the gallery without ever pressing "Show it in 50 years", so never saw the point of the app).
+     Once per preview; never for laser removal, never when the 50 years are already there, never for paying users
+     (their four years stay on request: each costs an image). */
+  const autoAged = useRef<string | null>(null);
+  useEffect(() => {
+    const p = preview;
+    if (!p || me.pay !== 'trial' || p.mode === 'removal' || removalIntent.current) return;
+    if (!p.images?.fresh || p.images.y50 || autoAged.current === p.id) return;
+    const id = p.id;
+    const t = setTimeout(() => {
+      if (autoAged.current === id || previewRef.current?.id !== id || previewRef.current?.images?.y50 || !job.current) return;
+      autoAged.current = id;
+      startAging();
+    }, 2200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preview?.id, preview?.images?.fresh, me.pay]);
+
   // "Make it last": redraw the design with the AI, then run it again on the same spot.
   const improve = async () => {
     if (!design) return;

@@ -46,6 +46,7 @@ export function AuthSheet() {
     }
     (await import('@/lib/apple-token')).markOAuthStart(provider);
     (await import('@/lib/splash')).markSplash('in');
+    (await import('@/lib/i18n')).rememberLang(ui.lang);
     const { error } = (await sb()?.auth.signInWithOAuth({ provider, options: { redirectTo: `${siteOrigin()}/app/gallery`, queryParams: oauthParams(provider) } })) || {};
     if (error) setErr(L('Sign-in didn’t work. Try again, or use your e-mail.', 'A belépés nem sikerült. Próbáld újra, vagy lépj be e-maillel.'));
   };

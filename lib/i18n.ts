@@ -220,6 +220,16 @@ export function detectLang(): Lang {
   return typeof navigator !== 'undefined' ? fromBrowser(navigator.language) : 'en';
 }
 
+/** Remember a language without reloading: before a Google / Apple sign-in, so the app comes back in the language the
+    visitor was reading (2026-11-08: an English visitor came back in Hungarian, then in the browser's Portuguese). */
+export function rememberLang(l: string) {
+  if (!isLang(l)) return;
+  try {
+    localStorage.setItem('ink_lang', l);
+    document.cookie = `ink_lang=${l}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  } catch {}
+}
+
 let current: Lang = 'en';
 const listeners = new Set<(l: Lang) => void>();
 
