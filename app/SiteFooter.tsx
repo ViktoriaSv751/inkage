@@ -133,6 +133,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
                 <img src={f.src} alt={f.alt} height={40} loading="lazy" decoding="async" />
               </a>
             ))}
+            <a className="sf-textlink" href="https://www.aitoolzdir.com" target="_blank" rel="noopener">AI Toolz Dir</a>
           </div>
         </div>
 
