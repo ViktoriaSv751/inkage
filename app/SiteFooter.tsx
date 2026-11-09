@@ -5,6 +5,16 @@ import './footer.css';
 import { LogoMark } from './LogoMark';
 import { TOOL_LANGS } from '@/lib/tool-langs';
 
+/* Directory listings that require their badge (with a followed link) on the home page or footer
+   to keep InkAge listed. Remove a badge only together with its listing. Added 2026-11-09. */
+const FEATURED: { href: string; src: string; alt: string }[] = [
+  { href: 'https://aitechviral.com/ai/inkage', src: 'https://aitechviral.com/assets/images/badge.png', alt: 'AI Tech Viral' },
+  { href: 'https://goodaitools.com/ai/inkage', src: 'https://goodaitools.com/assets/images/badge.png', alt: 'Good AI Tools' },
+  { href: 'https://acidtools.com/ai/inkage', src: 'https://acidtools.com/assets/images/badge.png', alt: 'Acid Tools' },
+  { href: 'https://kickproduct.com/products/inkage', src: 'https://www.kickproduct.com/listedbadge.png', alt: 'Listed on Kick Product' },
+  { href: 'https://showmebest.ai', src: 'https://showmebest.ai/badge/feature-badge-white.webp', alt: 'Featured on ShowMeBestAI' },
+];
+
 /** The site-wide footer: brand + sign-up, five link columns, copyright and language. */
 export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: boolean }) {
   const T = (en: string, hu: string) => tx(lang, en, hu);
@@ -106,6 +116,18 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
                   </Link>
                 ))}
               </nav>
+            ))}
+          </div>
+        </div>
+
+        <div className="sf-featured">
+          <b>{T('Featured on', 'Megjelent itt')}</b>
+          <div className="sf-badges">
+            {FEATURED.map((f) => (
+              <a key={f.href} href={f.href} target="_blank" rel="noopener">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={f.src} alt={f.alt} height={40} loading="lazy" decoding="async" />
+              </a>
             ))}
           </div>
         </div>

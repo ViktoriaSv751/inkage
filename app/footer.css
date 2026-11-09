@@ -54,3 +54,11 @@
 @media (min-width: 900px) { .sf-copy { display: flex; gap: 20px; } }
 /* align footer to the 1120px content column used by pages */
 @media (min-width: 1000px) { .sf-in { max-width: 1200px; padding-left: 40px; padding-right: 40px; } }
+
+/* "Featured on" directory badges (required by the listings, see FEATURED in SiteFooter.tsx) */
+.sf-featured { display: grid; gap: 12px; margin-top: 40px; }
+.sf-featured b { font-size: 13px; font-weight: 700; color: var(--ink-3); }
+.sf-badges { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.sf-badges a { display: inline-flex; opacity: .85; transition: opacity .15s; }
+.sf-badges a:hover { opacity: 1; }
+.sf-badges img { height: 40px; width: auto; display: block; }
