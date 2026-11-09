@@ -17,6 +17,7 @@ const FEATURED: { href: string; src: string; alt: string }[] = [
   { href: 'https://startupfa.me/s/inkage?utm_source=inkage.app', src: 'https://startupfa.me/badge?t=classic&theme=default', alt: 'InkAge - Featured on Startup Fame' },
   { href: 'https://fazier.com', src: 'https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=neutral', alt: 'Fazier badge' },
   { href: 'https://thankjohn.com', src: 'https://thankjohn.com/badge-dark.svg', alt: 'Featured on Thank John' },
+  { href: 'https://bowora.com', src: 'https://bowora.com/api/badge?startup=inkage.app&theme=light', alt: 'Featured on Bowora' },
   { href: 'https://www.toolpilot.ai', src: 'https://www.toolpilot.ai/cdn/shop/files/f-w_690x151_crop_center.png', alt: 'Featured on ToolPilot' },
 ];
 
