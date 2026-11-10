@@ -91,7 +91,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if ((window as any).Capacitor?.isNativePlatform?.() || new URLSearchParams(location.search).get('csomagok') !== 'elonezet') return;
     setPwPreview(true);
-    setTimeout(() => setPaywall('locked'), 600);
+    setTimeout(() => setPaywall('previews'), 600); // no trial any more (2026-11-10): the page as a new buyer sees it
   }, []);
   // any call the server answers with "choose a package" opens the packages (lib/sb.ts api)
   useEffect(() => {
