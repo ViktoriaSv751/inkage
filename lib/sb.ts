@@ -31,7 +31,9 @@ export function appHeader(): Record<string, string> {
   const cap = typeof window !== 'undefined' ? (window as any).Capacitor : undefined;
   if (!cap?.isNativePlatform?.()) return {};
   const p = cap.getPlatform?.();
-  return p === 'ios' || p === 'android' ? { 'x-ink-app': p } : {};
+  if (p !== 'ios' && p !== 'android') return {};
+  // a build that can sell (App Store / Google Play purchases): counted like the website, packages and all (2026-11-10)
+  return cap.isPluginAvailable?.('NativePurchases') ? { 'x-ink-app': p, 'x-ink-bill': '1' } : { 'x-ink-app': p };
 }
 
 export async function api<T = any>(path: string, body?: unknown): Promise<{ ok: boolean; status: number; data: T }> {

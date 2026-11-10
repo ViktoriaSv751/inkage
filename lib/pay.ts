@@ -11,6 +11,8 @@ export const planTitle = (p: PlanId) => `InkAge ${PLAN[p].name}: ${PLAN[p].n} ta
 export function nativeReq(req: Request) {
   const app = req.headers.get('x-ink-app');
   if (app !== 'ios' && app !== 'android') return false;
+  // a store build that sells packages is counted like the website (no free monthly previews), 2026-11-10
+  if (req.headers.get('x-ink-bill') === '1') return false;
   const ua = req.headers.get('user-agent') || '';
   return /; wv\)/.test(ua) || (/AppleWebKit/.test(ua) && !/Safari\//.test(ua));
 }

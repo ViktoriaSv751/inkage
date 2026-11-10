@@ -4,7 +4,8 @@ import { createPortal } from 'react-dom';
 import { useApp } from '../AppProvider';
 import { tx } from '@/lib/i18n';
 import { localeOf } from '@/lib/tr';
-import { api } from '@/lib/sb';
+import { api, sb } from '@/lib/sb';
+import { billingReady, buyStore, restoreStore, storePrices } from '@/lib/store-billing';
 import { haptic, track } from '@/lib/store';
 import { IMG } from '@/lib/img';
 import { useScrollLock } from '@/lib/scrolllock';
@@ -26,7 +27,10 @@ const SWEEP = 5200; // one look from today to 50 years and back, ms
     first, as in Calligra) and a pinned pay button with the withdrawal waiver beside it. Two columns on a computer.
     Web only: the store apps never open it (lib/pricing.ts webPaymentsOn, AppProvider canBuy). */
 export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWhy; onClose: () => void }) {
-  const { ui, toast, profile } = useApp();
+  const { ui, toast, profile, me, refreshMe } = useApp();
+  // the iOS / Android app sells through the App Store / Google Play, at the store's own local prices (2026-11-10)
+  const store = billingReady();
+  const [sp, setSp] = useState<Partial<Record<PlanId, string>> | null>(null);
   const L = (en: string, hu: string) => tx(ui.lang, en, hu);
   const [plan, setPlan] = useState<PlanId>('mini');
   const [busy, setBusy] = useState(false);
@@ -57,7 +61,11 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
     return () => window.removeEventListener('keydown', k);
   }, [open]);
   useEffect(() => {
-    if (!open || ui.lang !== 'hu' || huf) return;
+    if (!open || !store || sp) return;
+    storePrices().then((x) => x && setSp(x));
+  }, [open, store, sp]);
+  useEffect(() => {
+    if (!open || store || ui.lang !== 'hu' || huf) return;
     api<{ huf?: number | null }>('/api/fx').then((r) => r.ok && Number(r.data.huf) > 0 && setHuf(Number(r.data.huf)));
   }, [open, ui.lang, huf]);
 
@@ -108,8 +116,37 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
     held.current = performance.now() + 3500;
   };
 
+  const buyInApp = async () => {
+    const client = sb();
+    if (!client || !me.user) return;
+    setBusy(true);
+    track('checkout_start', { plan, why, store: 1 });
+    try {
+      await buyStore(client, me.user.id, plan, ui.lang);
+      track('store_purchase', { plan });
+      await refreshMe();
+      toast(L('Thank you! Your previews are ready to use.', 'Köszönjük! Az előnézeteid már használhatók.'));
+      onClose();
+    } catch (e) {
+      const m = String((e as Error)?.message || e).toLowerCase();
+      // the buyer closed the store sheet: nothing to say
+      if (!/cancel/.test(m)) toast(L('The purchase did not finish. If you were charged, tap Restore purchases.', 'A vásárlás nem fejeződött be. Ha levonták az összeget, koppints a Vásárlások visszaállítására.'));
+    }
+    setBusy(false);
+  };
+  const restore = async () => {
+    const client = sb();
+    if (!client) return;
+    setBusy(true);
+    const n = await restoreStore(client, ui.lang).catch(() => 0);
+    await refreshMe();
+    setBusy(false);
+    toast(n ? L('Your purchase was restored.', 'A vásárlásod visszaállítva.') : L('Everything you bought is already on your account.', 'Minden vásárlásod már a fiókodon van.'));
+  };
+
   const buy = async () => {
     if (busy) return;
+    if (store) return buyInApp();
     setBusy(true);
     track('checkout_start', { plan, why });
     const r = await api<{ url?: string; error?: string }>('/api/checkout', { plan, consent: true, lang: ui.lang });
@@ -214,11 +251,11 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
                     <small>{L(`${q.n} previews`, `${q.n} előnézet`)}</small>
                   </span>
                   <span className="pz-cost">
-                    <b>{fmtUsd(q.usd, loc)}</b>
-                    {ft(q.usd) && <span className="pz-ft">{ft(q.usd)}</span>}
+                    <b>{store ? sp?.[k] || fmtUsd(q.usd, loc) : fmtUsd(q.usd, loc)}</b>
+                    {!store && ft(q.usd) && <span className="pz-ft">{ft(q.usd)}</span>}
                     <small>
                       {s > 0 && <em>−{s}%</em>}
-                      {L(`${fmtUsd(q.usd / q.n, loc)} a preview`, `${fmtUsd(q.usd / q.n, loc)} / előnézet`)}
+                      {store ? L(`${q.n} previews`, `${q.n} előnézet`) : L(`${fmtUsd(q.usd / q.n, loc)} a preview`, `${fmtUsd(q.usd / q.n, loc)} / előnézet`)}
                     </small>
                   </span>
                 </button>
@@ -248,11 +285,13 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
             <li>
               <Check /> {L('Previews never expire', 'Az előnézetek nem járnak le')}
             </li>
-            <li>
-              <Check /> {L('Invoice by e-mail', 'Számla e-mailben')}
-            </li>
+            {!store && (
+              <li>
+                <Check /> {L('Invoice by e-mail', 'Számla e-mailben')}
+              </li>
+            )}
           </ul>
-          {huf && ui.lang === 'hu' && (
+          {!store && huf && ui.lang === 'hu' && (
             <p className="pz-fx-note">A fizetés dollárban történik; a forintösszeg csak tájékoztató a napi árfolyamon, a bankod saját árfolyama dönt.</p>
           )}
         </section>
@@ -264,8 +303,8 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
             <span>{busy ? L('Opening secure payment…', 'Biztonságos fizetés megnyitása…') : L(`Get ${p.name}`, `${p.name} csomag`)}</span>
             {!busy && (
               <b>
-                {fmtUsd(p.usd, loc)}
-                {ft(p.usd) && <small className="pz-cta-ft">{ft(p.usd)}</small>}
+                {store ? sp?.[plan] || fmtUsd(p.usd, loc) : fmtUsd(p.usd, loc)}
+                {!store && ft(p.usd) && <small className="pz-cta-ft">{ft(p.usd)}</small>}
               </b>
             )}
           </button>
@@ -280,8 +319,19 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
           </p>
           <p className="pz-secure">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
-            {L('Secure card payment with Stripe', 'Biztonságos kártyás fizetés · Stripe')}
+            {store
+              ? me.user && typeof window !== 'undefined' && (window as any).Capacitor?.getPlatform?.() === 'ios'
+                ? L('Paid through your Apple ID', 'Fizetés az Apple ID-don keresztül')
+                : L('Paid through Google Play', 'Fizetés a Google Playen keresztül')
+              : L('Secure card payment with Stripe', 'Biztonságos kártyás fizetés · Stripe')}
           </p>
+          {store && (
+            <p className="pz-secure">
+              <button type="button" className="pz-restore" onClick={restore} disabled={busy}>
+                {L('Restore purchases', 'Vásárlások visszaállítása')}
+              </button>
+            </p>
+          )}
         </div>
       </footer>
     </div>,

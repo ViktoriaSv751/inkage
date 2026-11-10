@@ -12,6 +12,7 @@ import { AgeGate } from './AgeGate';
 import { AnnouncementBanner } from './_ui/AnnouncementBanner';
 import { AiConsent } from './AiConsent';
 import { Packages, type PaywallWhy } from './_ui/Packages';
+import { billingReady } from '@/lib/store-billing';
 import { webPaymentsOn } from '@/lib/pricing';
 
 export type Me = {
@@ -77,7 +78,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [authOpen, setAuthOpen] = useState(false);
   const [authReason, setAuthReason] = useState('');
   const [paywall, setPaywall] = useState<PaywallWhy | null>(null);
-  const canBuy = webPaymentsOn && !(typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.());
+  // the website, and store builds that carry in-app purchases (lib/store-billing.ts); older store builds never sell
+  const canBuy = webPaymentsOn && (!(typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.()) || billingReady());
   const openPaywall = useCallback((why: PaywallWhy = 'previews') => {
     if (!canBuy) return;
     track('paywall_open', { why });
