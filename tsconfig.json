@@ -39,6 +39,7 @@
     "demo",
     "scripts/native",
     ".native-build",
-    "cap-native"
+    "cap-native",
+    "supabase/functions"
   ]
 }
