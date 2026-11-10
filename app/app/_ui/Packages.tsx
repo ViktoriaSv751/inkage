@@ -127,7 +127,7 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
     ['1', true],
     ['10', true],
     ['30', true],
-    ['50', false],
+    ['50', why !== 'locked'], // only someone who saw the trial's 50 years has it already
   ];
 
   return createPortal(
@@ -176,7 +176,9 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
           <p className="pz-sub">
             {why === 'helper'
               ? L('More AI drawings and cut-outs come with any package, together with every year of your previews.', 'Bármelyik csomaggal jönnek a további MI-rajzok és kivágások, és az előnézeteid minden éve.')
-              : L('Your trial showed 50 years. A package shows the whole way there, and laser removal too.', 'A próba megmutatta az 50 évet. A csomag az odavezető utat is, és a lézeres eltávolítást is.')}
+              : why === 'locked'
+                ? L('Your trial showed 50 years. A package shows the whole way there, and laser removal too.', 'A próba megmutatta az 50 évet. A csomag az odavezető utat is, és a lézeres eltávolítást is.')
+                : L('A preview shows your own photo at 1, 10, 30 and 50 years, and laser removal after 3, 6 and 10 sessions.', 'Egy előnézet a saját fotódon mutatja az 1, 10, 30 és 50 évet, és a lézeres eltávolítást 3, 6 és 10 kezelés után.')}
           </p>
 
           <div className="pz-time" aria-label={L('Years a package opens', 'A csomaggal megnyíló évek')}>

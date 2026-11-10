@@ -56,7 +56,7 @@ function content(L: Lang): ToolContent & { meta: string } {
       ],
       [
         T('Can I try different sizes and body areas?', 'Kipróbálhatok különböző méreteket és testrészeket?'),
-        (webPaymentsOn ? T('Yes. You set the size in centimetres and can make new previews on other spots. Your account comes with one preview to try, and more come in packages.', 'Igen. A méretet centiméterben állítod be, és más helyekre is készíthetsz új előnézetet. Fiókkal egy előnézet kipróbálásra, továbbiak csomagokban.') : T('Yes. You set the size in centimetres and can make new previews on other spots. An account comes with 30 previews a month.', 'Igen. A méretet centiméterben állítod be, és más helyekre is készíthetsz új előnézetet. Fiókkal havonta 30 előnézet jár.')),
+        (webPaymentsOn ? T('Yes. You set the size in centimetres and can make new previews on other spots. Previews come in one-time packages.', 'Igen. A méretet centiméterben állítod be, és más helyekre is készíthetsz új előnézetet. Az előnézetek egyszeri csomagokban érhetők el.') : T('Yes. You set the size in centimetres and can make new previews on other spots. An account comes with 30 previews a month.', 'Igen. A méretet centiméterben állítod be, és más helyekre is készíthetsz új előnézetet. Fiókkal havonta 30 előnézet jár.')),
       ],
       [
         T('Can I try a tattoo I already have?', 'Kipróbálhatom egy meglévő tetoválásomon?'),

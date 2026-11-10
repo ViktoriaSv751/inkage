@@ -238,7 +238,7 @@ export function LandingSections({ lang, data, made, onUpload }: { lang: Lang; da
           <h2>{t('See it before it’s permanent.', 'Nézd meg, mielőtt végleges lesz.')}</h2>
           <p>
             {made >= 100
-              ? (webPaymentsOn ? t(`${made.toLocaleString('en')} previews made so far. One preview to try with your account.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Fiókkal egy előnézet kipróbálásra.`) : t(`${made.toLocaleString('en')} previews made so far. 30 previews a month with your account.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Fiókkal havonta 30 előnézet.`))
+              ? (webPaymentsOn ? t(`${made.toLocaleString('en')} previews made so far. Previews come in one-time packages, no subscription.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Az előnézetek egyszeri csomagokban, előfizetés nélkül.`) : t(`${made.toLocaleString('en')} previews made so far. 30 previews a month with your account.`, `Eddig ${made.toLocaleString('hu')} előnézet készült. Fiókkal havonta 30 előnézet.`))
               : t('One-tap sign-up with Google or Apple.', 'Egy koppintásos regisztráció Google- vagy Apple-fiókkal.')}
           </p>
           <AuthCta lang={lang} light where="final" style={{ justifyContent: 'center' }} />

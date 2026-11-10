@@ -193,7 +193,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
             <li>
               <Ico k="gift" />
               <span>
-                <b>{(webPaymentsOn ? T('One preview to try', 'Egy előnézet kipróbálásra') : T('30 previews a month', 'Havi 30 előnézet'))}</b>
+                <b>{(webPaymentsOn ? T('One-time packages', 'Egyszeri csomagok') : T('30 previews a month', 'Havi 30 előnézet'))}</b>
                 {T('All features, with your account.', 'Minden funkció, a fiókoddal.')}
               </span>
             </li>

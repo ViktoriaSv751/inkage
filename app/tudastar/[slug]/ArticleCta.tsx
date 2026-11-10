@@ -42,7 +42,7 @@ export function ArticleCta({ slug, lang, where, removal, topic = '' }: { slug: s
       <TryLink lang={lang} className="ka-join-go" to={removal ? '/app?mode=removal' : '/app?start=1'} onClick={() => countCta(`article_${where}`, slug)}>
         {T('Try it on my photo', 'Kipróbálom a fotómon')}
       </TryLink>
-      <small>{(webPaymentsOn ? T('One-tap sign-up with Google or Apple · One preview to try · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Egy előnézet kipróbálásra · Kb. egy perc') : T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc'))}</small>
+      <small>{(webPaymentsOn ? T('One-tap sign-up with Google or Apple · One-time packages, no subscription · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Egyszeri csomagok, nincs előfizetés · Kb. egy perc') : T('One-tap sign-up with Google or Apple · 30 previews a month · About a minute', 'Egy koppintásos Google- vagy Apple-regisztráció · Havi 30 előnézet · Kb. egy perc'))}</small>
     </aside>
   );
 }

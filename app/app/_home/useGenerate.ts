@@ -91,7 +91,7 @@ export function useGenerate({
   setFailed: Dispatch<SetStateAction<StageKey[]>>;
   setRemPending: Dispatch<SetStateAction<RemovalKey[]>>;
 }) {
-  const { ui, me, openAuth, refreshMe } = useApp();
+  const { ui, me, openAuth, refreshMe, openPaywall } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   const go = async (over?: { design?: Design; pl?: Placement; redo?: string[] }) => {
     let d = over?.design ?? design;
@@ -107,6 +107,13 @@ export function useGenerate({
     const existing = mode !== 'new';
     removalIntent.current = mode === 'removal';
     if (!photo || (!d && !existing)) return;
+    // 2026-11-10: no free preview any more — without a package the packages open here, before anything is sent
+    // (the photo and design stay on the page, so after buying the same button makes the preview)
+    if (me.user && me.pay === 'trial' && (me.remaining ?? 0) <= 0) {
+      track('paywall_hit', { at: 'start' });
+      openPaywall('previews');
+      return;
+    }
     recovering.current = true; // a new job: nothing to recover any more
     // keep the finished one around to compare with
     if (previewRef.current?.images.y50) prevRef.current = previewRef.current;

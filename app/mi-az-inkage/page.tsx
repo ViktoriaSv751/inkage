@@ -65,7 +65,7 @@ export default function Page({ searchParams }: { searchParams: { lang?: string }
       highlights={[
         { i: 'clock', h: T('5 moments', '5 időpont'), p: T('Fresh, 1, 10, 30, 50 years.', 'Friss, 1, 10, 30, 50 év.') },
         { i: 'camera', h: T('Your own photo', 'A saját fotód'), p: T('Your skin tone, your light.', 'A bőrtónusod, a fényeid.') },
-        { i: 'gift', h: (webPaymentsOn ? T('Try one', 'Egy próba') : T('30 a month', 'Havi 30')), p: (webPaymentsOn ? T('One preview to try with your account, more in one-time packages.', 'Fiókkal egy előnézet kipróbálásra, továbbiak egyszeri csomagokban.') : T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.')) },
+        { i: 'gift', h: (webPaymentsOn ? T('One-time packages', 'Egyszeri csomagok') : T('30 a month', 'Havi 30')), p: (webPaymentsOn ? T('Every year in every preview. You pay once, no subscription.', 'Minden előnézetben minden év. Egyszer fizetsz, nincs előfizetés.') : T('30 previews a month with your account.', 'Fiókkal havonta 30 előnézet.')) },
       ]}
       related={[
         { href: '/hogyan-mukodik', t: T('How it works', 'Hogyan működik'), p: T('Five steps, about a minute.', 'Öt lépés, kb. egy perc.'), i: 'camera' },

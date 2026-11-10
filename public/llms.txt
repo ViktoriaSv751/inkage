@@ -12,7 +12,7 @@
 - Sharing: a vote link for friends (only the fresh and 50-year images are shared), short videos, and a PDF for the tattoo artist.
 - Speed: about a minute from photo to preview.
 - Account: needed to make previews. Sign-in with Google or Apple (one tap) or with e-mail.
-- Pricing: an account comes with one preview to try (the fresh image and the 50-year image). More previews come in one-time packages on the website: Mini 5 previews $4.99, Plus 15 previews $11.99, Studio 40 previews $27.99. No subscription; packages add up and never expire. A package preview includes every year (1, 10, 30, 50) and the laser removal preview.
+- Pricing: every preview comes from a one-time package bought on the website (no free trial preview since 2026-11-10): Mini 5 previews $4.99, Plus 15 previews $11.99, Studio 40 previews $27.99. No subscription; packages add up and never expire. A package preview includes every year (1, 10, 30, 50) and the laser removal preview.
 - Platforms: works in the browser on iPhone, Android and computers and can be added to the home screen. Where the InkAge app is available in the App Store or Google Play, it uses the same account.
 - Languages: 35, including English, Hungarian, German, Spanish, French, Portuguese, Italian, Dutch, Polish, Czech, Japanese and Swedish. Pages take ?lang=xx (for example ?lang=en); Hungarian is the default without it.
 - Privacy: previews are stored in the account's private storage and only the owner can see them. Photos and designs are sent to AI providers (Google Gemini, with OpenAI as a backup) only to check the photo and make the preview. No advertising trackers. Previews can be deleted one by one; Profile → Delete my account and data removes the account and every saved preview.

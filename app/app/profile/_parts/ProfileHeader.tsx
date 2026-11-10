@@ -121,8 +121,8 @@ export function ProfileHeader({
             </div>
             <p>
               {(me.credits ?? 0) > 0
-                ? t(`${me.credits} bought in packages, plus your trial. They never expire.`, `${me.credits} csomagban vásárolt, plusz a próba. Nem járnak le.`)
-                : t('Your trial shows the 50-year image. A package opens every year.', 'A próba az 50 éves képet mutatja. A csomag minden évet megnyit.')}
+                ? t(`${me.credits} bought in packages. They never expire.`, `${me.credits} csomagban vásárolt. Nem járnak le.`)
+                : t('Previews come in one-time packages, each with every year.', 'Az előnézetek egyszeri csomagokban, mindegyik minden évvel.')}
             </p>
             {canBuy && (
               <button className="pf-credits-buy" onClick={() => openPaywall('menu')}>

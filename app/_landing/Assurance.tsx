@@ -95,7 +95,7 @@ export function BetaInstall({ t, lang }: { t: T; lang?: Lang }) {
     <section className="ls-sec lm-beta" id="beta">
       <div className="lm-beta-card">
         <h2>{t('Every feature, with your account.', 'Minden funkció, a fiókoddal.')}</h2>
-        <p>{(webPaymentsOn ? t('One preview to try with your account. More previews, with every year, come in one-time packages.', 'Fiókkal egy előnézet kipróbálásra. További előnézetek, minden évvel, egyszeri csomagokban.') : t('30 previews a month with your account, plus invite bonuses. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézet, plusz meghívási bónuszok. A keret minden hónap 1-jén újraindul.'))}</p>
+        <p>{(webPaymentsOn ? t('Previews come in one-time packages, each with every year and the laser sessions. You pay once, no subscription.', 'Az előnézetek egyszeri csomagokban: mindegyik minden évvel és a lézeres kezelésekkel. Egyszer fizetsz, nincs előfizetés.') : t('30 previews a month with your account, plus invite bonuses. The allowance restarts on the 1st of each month.', 'Fiókkal havonta 30 előnézet, plusz meghívási bónuszok. A keret minden hónap 1-jén újraindul.'))}</p>
         <ul>
           <li>{t('Ageing previews at 1, 10, 30 and 50 years', 'Öregedési előnézet 1, 10, 30 és 50 évre')}</li>
           <li>{t('Longevity score and “Make it last” redraw', 'Tartóssági pontszám és „Tedd tartóssá” átrajzolás')}</li>

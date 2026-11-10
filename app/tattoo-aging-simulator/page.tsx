@@ -72,7 +72,7 @@ function content(L: Lang): ToolContent & { meta: string } {
       ],
       [
         T('How long does a preview take?', 'Mennyi ideig tart egy előnézet?'),
-        (webPaymentsOn ? T('About a minute from photo to preview. Your account comes with one preview to try.', 'Kb. egy perc a fotótól az előnézetig. A fiókoddal egy előnézetet kipróbálhatsz.') : T('About a minute from photo to preview. An account comes with 30 previews a month.', 'Kb. egy perc a fotótól az előnézetig. Fiókkal havonta 30 előnézet jár.')),
+        (webPaymentsOn ? T('About a minute from photo to preview. Previews come in one-time packages.', 'Kb. egy perc a fotótól az előnézetig. Az előnézetek egyszeri csomagokban érhetők el.') : T('About a minute from photo to preview. An account comes with 30 previews a month.', 'Kb. egy perc a fotótól az előnézetig. Fiókkal havonta 30 előnézet jár.')),
       ],
     ],
     related: [
