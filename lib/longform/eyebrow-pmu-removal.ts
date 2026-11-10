@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Mira had her brows microbladed four years ago, when thin, high arches were everywhere. At first she loved them. Then they slowly changed. The hair strokes blurred into a soft band, the tails drifted upwards, and on a sunny day in the bathroom mirror she finally saw it clearly: her brows were no longer brown. They were a warm salmon colour, almost orange, sitting a few millimetres above her own hairs.',
       'She wanted them gone before anyone touched her face again. What she did not expect was how many different answers she would get. One studio offered saline removal on the spot. A laser clinic talked about a test spot and “possible darkening”. A friend warned her that the laser would burn off her real brows. All three had a point, and this guide sorts out which risks are real, which are rare and what you can do about each.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real patients or real treatment results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real treatment results.',
       '## First: what you are actually removing',
       'Permanent make-up (often shortened to PMU) is a tattoo, but a gentle one. Microblading places pigment in fine hand-drawn strokes; powder or ombré brows, lip blush and eyeliner use a machine. In every case there is usually less pigment than in a body tattoo, and it sits shallower in the skin. That is why most PMU fades on its own over one to a few years, and why it usually needs fewer removal sessions than a tattoo on the arm.',
       'The other big difference is the pigment itself. Brow colours are mostly blends of **iron oxides**: black, red and yellow oxides mixed into browns. Lighter, softer or skin-tone shades often add **titanium dioxide**, a white pigment. Lip colours mix iron oxides, titanium dioxide and organic reds. These ingredients are chosen for natural-looking colour, not for how they will behave under a laser years later.',
@@ -102,7 +102,7 @@ const a: LongArticle = {
     hu: [
       'Mira négy éve csináltatott microbladinget, amikor mindenhol a vékony, magas ív volt a divat. Eleinte imádta. Aztán lassan megváltozott. A szálak elmosódtak egy puha sávvá, a szemöldökvégek felfelé vándoroltak, és egy napos délelőttön a fürdőszobatükörben végre tisztán látta: a szemöldöke már nem barna. Meleg lazacszínű volt, majdnem narancs, és néhány milliméterrel a saját szőrei fölött ült.',
       'El akarta tüntetni, mielőtt bárki újra hozzányúl az arcához. Arra nem számított, hogy ennyi különböző választ kap. Az egyik szalon azonnal sóoldatos eltávolítást ajánlott. Egy lézerklinikán próbafoltról és „lehetséges sötétedésről” beszéltek. Egy barátnője pedig figyelmeztette, hogy a lézer leégeti az igazi szemöldökét. Mindháromnak volt igaza valamiben, és ez az útmutató szétválogatja, mely kockázatok valósak, melyek ritkák, és mit tehetsz mindegyikkel.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi pácienseket vagy valódi kezelési eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi kezelési eredményekről készült fotók.',
       '## Először: mit is távolítasz el valójában',
       'A sminktetoválás (angolul gyakran PMU, permanent make-up) is tetoválás, csak finomabb. A microblading kézzel húzott, vékony szálakban juttatja be a pigmentet; a púderes vagy ombre szemöldök, az ajaksatír és a szemhéjtus géppel készül. Mindegyiknél általában kevesebb a pigment, mint egy testtetoválásban, és sekélyebben ül a bőrben. Ezért halványul el a legtöbb sminktetoválás magától egy-néhány év alatt, és ezért kell hozzá általában kevesebb eltávolító alkalom, mint egy karon lévő tetováláshoz.',
       'A másik nagy különbség maga a pigment. A szemöldökszínek többnyire **vas-oxidok** keverékei: fekete, vörös és sárga oxidokból kevert barnák. A világosabb, lágyabb vagy bőrszínű árnyalatokhoz gyakran **titán-dioxidot**, egy fehér pigmentet is adnak. Az ajakszínek vas-oxidokat, titán-dioxidot és szerves pirosakat kevernek. Ezeket az összetevőket a természetes hatású színért választják, nem azért, mert évekkel később jól viselkednek a lézer alatt.',
@@ -220,28 +220,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: paradoxical darkening. Rust-red, pink or skin-tone pigment can turn black within seconds of a laser pulse instead of breaking up.',
-      hu: 'Illusztráció: paradox sötétedés. A rozsdavörös, rózsaszín vagy bőrszínű pigment széttörés helyett a lézerimpulzus után másodperceken belül feketévé válhat.',
+      en: 'Illustration: the white frosting that appears on skin right after a laser pulse. With some permanent make-up pigments, the colour turns darker at this moment instead of breaking up.',
+      hu: 'Illusztráció: a fehér „deresedés”, ami közvetlenül a lézerimpulzus után jelenik meg a bőrön. Egyes sminktetoválás-pigmenteknél a szín ilyenkor szétesés helyett sötétebbre vált.',
     },
     img3: {
-      en: 'Illustration: unmasking. The dark part of a brown brow often clears first, leaving an orange stage before the brow fades further.',
-      hu: 'Illusztráció: a rejtett színek előbújása. A barna szemöldök sötét része gyakran tűnik el először, és narancs szakasz jön, mielőtt tovább halványul.',
+      en: 'Illustration: faded green remnants left after the darker ink has cleared. Brown brows can do the same and leave an orange stage before they fade further.',
+      hu: 'Illusztráció: halvány zöld maradványok, miután a sötétebb tinta eltűnt. A barna szemöldök is így viselkedhet: narancsos szakasz marad, mielőtt tovább halványul.',
     },
     img4: {
-      en: 'Illustration: a test spot. A small area, such as the tail of one brow, is treated first and judged only once it has fully healed.',
-      hu: 'Illusztráció: próbafolt. Először egy kis területet, például az egyik szemöldök végét kezelik, és csak a teljes gyógyulás után értékelik.',
+      en: 'Illustration: a consultation with skin-tone swatches, a form and the laser. A careful clinic starts here and treats a small test spot first.',
+      hu: 'Illusztráció: konzultáció bőrtónus-mintákkal, űrlappal és a lézerrel. A gondos klinika itt kezdi, és először csak egy kis próbafoltot kezel.',
     },
     img5: {
-      en: 'Illustration: saline removal. A salt solution is worked into the skin, and part of the pigment lifts out with the scab as it heals.',
-      hu: 'Illusztráció: sóoldatos eltávolítás. Sóoldatot dolgoznak a bőrbe, és a pigment egy része a gyógyuló pörkkel együtt távozik.',
+      en: 'Illustration: sterile needles, gloves and single-use caps on a wrapped table. Saline removal also works with a needle in the skin, so it needs the same hygiene as tattooing.',
+      hu: 'Illusztráció: steril tűk, kesztyű és egyszer használatos kupakok fóliázott asztalon. A sóoldatos eltávolítás is tűvel dolgozik a bőrben, ezért ugyanaz a higiénia kell hozzá, mint a tetováláshoz.',
     },
     img6: {
-      en: 'Illustration: eyeliner removal needs a metal shield placed on the eye under the lid. Closed eyelids alone do not stop laser light.',
-      hu: 'Illusztráció: a szemhéjtus eltávolításához fém pajzs kell a szemen, a szemhéj alatt. A csukott szemhéj egymagában nem állítja meg a lézerfényt.',
+      en: 'Illustration: practitioner and patient both wear safety goggles during a laser session. Near the eye that is not enough: eyeliner removal needs a metal shield under the lid.',
+      hu: 'Illusztráció: lézeres kezelés közben a kezelő és a páciens is védőszemüveget visel. A szem közelében ez nem elég: a szemhéjtetoválás eltávolításához fém szemvédő kell a szemhéj alá.',
     },
     img7: {
-      en: 'Illustration: brow hairs can turn white after a session. With protection they usually regrow in their own colour over the following months.',
-      hu: 'Illusztráció: a szemöldökszőrök egy kezelés után kifehéredhetnek. Védelemmel általában a következő hónapokban visszanőnek a saját színükben.',
+      en: 'Illustration: a cool compress on treated skin after a laser session. Brow hairs in the area can turn white for a while and usually regrow in their own colour over the following months.',
+      hu: 'Illusztráció: hűsítő borogatás a kezelt bőrön lézeres alkalom után. A szemöldökszőrök a kezelt részen egy időre kifehéredhetnek, és a következő hónapokban általában a saját színükben nőnek vissza.',
     },
   },
 };

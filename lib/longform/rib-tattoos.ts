@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Nora had the quote written out for months before she booked it: a single line from a letter her grandfather wrote, in his own handwriting, running along her left ribs. She liked that it would be hers alone, hidden under a T-shirt and only visible when she chose. The only thing that kept her from booking was what everyone told her the moment she mentioned the ribs: “Are you sure? That’s the worst spot.”',
       'They were not entirely wrong. The ribs really are one of the most painful places to get tattooed. But that is only half the story. The same spot is also one of the kindest to a tattoo over the years, and a few practical choices make the session itself far more manageable. In this guide we look at why the ribs hurt, how rib tattoos age, which designs suit them, how to get through the appointment and the healing, and what to expect decades later.',
-      '> A note on the pictures: the images in this article are simple illustrations made to show typical effects. They are not photos of real tattoos or clients.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical effects. They are not photos of real tattoos or clients.',
       '## Why rib tattoos hurt more than most spots',
       'Tattoo pain depends on the person, the artist and the design, but some areas are hard for almost everyone, and the ribs are near the top of nearly every pain chart. There are three reasons, and they add up.',
       '- **Thin skin directly over bone.** On the side of the ribcage there is very little fat or muscle between the skin and the ribs. Nothing absorbs the pressure of the needle, and many people feel its vibration travel into the bone itself.',
@@ -92,7 +92,7 @@ const a: LongArticle = {
     hu: [
       'Nóra hónapok óta leírva hordta magánál az idézetet, mielőtt időpontot foglalt volna: egyetlen sort a nagyapja egyik leveléből, az ő kézírásával, a bal bordái mentén. Tetszett neki, hogy csak az övé lesz, póló alatt rejtve, és csak akkor látszik, amikor ő akarja. Egyetlen dolog tartotta vissza a foglalástól: amit mindenki mondott, amint szóba hozta a bordát: „Biztos? Az a legrosszabb hely.”',
       'Nem tévedtek teljesen. A borda tényleg az egyik legfájdalmasabb hely a tetováláshoz. De ez csak a történet fele. Ugyanez a hely az évek során az egyik legkíméletesebb a tetováláshoz, és néhány gyakorlati döntéssel maga az ülés is sokkal elviselhetőbb. Ebben a cikkben megnézzük, miért fáj a borda, hogyan öregszik a bordatetoválás, milyen minták illenek rá, hogyan vészeld át az időpontot és a gyógyulást, és mire számíthatsz évtizedek múlva.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, amelyek a tipikus hatásokat mutatják. Nem valódi tetoválásokról vagy vendégekről készült fotók.',
+      '> Megjegyzés a képekhez: a cikk képei a tipikus hatásokat bemutató illusztrációk. Nem valódi tetoválásokról vagy vendégekről készült fotók.',
       '## Miért fáj jobban a bordatetoválás, mint a legtöbb hely',
       'A tetoválás fájdalma függ az embertől, a tetoválótól és a mintától, de vannak helyek, amelyek szinte mindenkinek nehezek, és a borda szinte minden fájdalomtérképen a lista elején van. Három oka van, és ezek összeadódnak.',
       '- **Vékony bőr közvetlenül a csonton.** A bordakosár oldalán nagyon kevés zsír vagy izom van a bőr és a bordák között. Semmi nem nyeli el a tű nyomását, és sokan érzik, ahogy a rezgése egészen a csontig hatol.',
@@ -200,28 +200,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: on the ribs, thin skin sits right on bone; on the forearm, a soft layer cushions the needle.',
-      hu: 'Illusztráció: a bordán a vékony bőr közvetlenül a csonton ül; az alkaron egy puha réteg tompítja a tűt.',
+      en: 'Illustration: a tattoo in progress on the side of the ribs. Thin skin right over bone is why this spot is one of the hardest to sit through.',
+      hu: 'Illusztráció: készülő tetoválás a bordák oldalán. A csont fölötti vékony bőr miatt ez az egyik legnehezebben kibírható terület.',
     },
     img3: {
-      en: 'Illustration: script along the ribs, a fine line floral and a larger piece that follows the curve of the torso.',
-      hu: 'Illusztráció: felirat a bordák mentén, egy finom vonalas virág és egy nagyobb darab, ami a törzs ívét követi.',
+      en: 'Illustration: a fine-line floral vine that follows the curve of the body. Designs that flow with the torso like this suit the ribs well.',
+      hu: 'Illusztráció: finom vonalas virágos inda, amely követi a test ívét. Az ilyen, a törzs vonalával együtt futó minták jól mutatnak a bordán.',
     },
     img4: {
-      en: 'Illustration: covered by clothing, the ribs see little sun; big body changes can stretch a design.',
-      hu: 'Illusztráció: ruha alatt a bordát kevés nap éri; a nagy testi változások megnyújthatnak egy mintát.',
+      en: 'Illustration: a woman in a long-sleeved shirt reading in the shade. Covered by clothing most of the time, the ribs see very little sun.',
+      hu: 'Illusztráció: hosszú ujjú inges nő olvas az árnyékban. A bordákat szinte mindig ruha takarja, ezért alig éri őket nap.',
     },
     img5: {
-      en: 'Illustration: shorter sessions with breaks and slow, steady breathing make a rib tattoo easier to sit through.',
-      hu: 'Illusztráció: a szünetekkel tarkított rövidebb ülések és a lassú, egyenletes légzés könnyebbé teszik a bordatetoválást.',
+      en: 'Illustration: a water bottle, snacks, headphones and the design laid out for tattoo day. Breaks, food and something to listen to make a long rib session easier.',
+      hu: 'Illusztráció: vizes palack, rágcsálnivaló, fejhallgató és a minta előkészítve a tetoválás napjára. A szünetek, az evés és valami zene megkönnyítik a hosszú bordás ülést.',
     },
     img6: {
-      en: 'Illustration: bra bands and waistbands cross the ribs; keep them from rubbing a fresh tattoo.',
-      hu: 'Illusztráció: a melltartópánt és a nadrágderék keresztezi a bordát; ne hagyd, hogy dörzsöljék a friss tetoválást.',
+      en: 'Illustration: a fresh moth tattoo with reddened skin around it. At this stage a bra band or waistband rubbing over the area can irritate it and pull at the healing skin.',
+      hu: 'Illusztráció: friss lepketetoválás kipirosodott bőrrel. Ilyenkor a rajta dörzsölődő melltartópánt vagy derékpánt irritálhatja és húzhatja a gyógyuló bőrt.',
     },
     img7: {
-      en: 'Illustration: a rib tattoo at 10, 20 and 30 years. Lines soften slowly; bold, well-spaced designs stay readable.',
-      hu: 'Illusztráció: bordatetoválás 10, 20 és 30 év után. A vonalak lassan puhulnak; az erős, jól tagolt minták olvashatók maradnak.',
+      en: 'Illustration: a small swallow on a shoulder blade years after it was done. The lines have softened, but the simple shape is still easy to read, as on a well-placed rib tattoo.',
+      hu: 'Illusztráció: kis fecske a lapockán, évekkel az elkészülte után. A vonalak puhultak, de az egyszerű forma még jól olvasható, ahogy egy jól elhelyezett bordatetoválásnál is.',
     },
   },
 };

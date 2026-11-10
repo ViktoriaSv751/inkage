@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lea had finally made the call. The small black wave on her ankle, a souvenir from a trip ten years earlier, was going. She booked her first laser session for the second week of June, the only gap in her calendar, and turned up straight from a long weekend at the lake: sandals, bare legs, a light golden tan she hadn’t even noticed. The technician looked at her ankle, pressed the skin with a finger, compared it with the inside of her arm and said: “Not today. Come back in the autumn, or at least when this has faded.”',
       'Lea was annoyed for about a day. Then she asked the obvious question, the same one thousands of people type into search engines every spring: can you actually get a tattoo removed in summer, or do you have to wait? The honest answer is more useful than a simple yes or no, and it can save you both a wasted appointment and a patch of skin that heals the wrong colour.',
-      '> A note on the pictures: the images in this article are simple illustrations and charts made for this guide. They show typical situations, not real patients or real treatment results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real treatment results.',
       '## The short answer',
       '**Yes, you can have laser tattoo removal in summer, but not on tanned or sunburned skin.** What matters to the laser is not the date on the calendar but the state of the skin on the day of treatment and in the weeks after it. Plenty of clinics treat people in July and August, and some patients go through a whole summer without a break. They simply keep the treated area out of the sun.',
       'That is why many clinics quietly prefer autumn and winter. Not because the laser works better in the cold, but because in those months almost nobody turns up tanned, people wear long sleeves anyway, and protecting a healing area is easy. In summer the same rules apply, they are just harder to keep.',
@@ -97,7 +97,7 @@ const a: LongArticle = {
     hu: [
       'Lea végre rászánta magát. A bokáján lévő kis fekete hullámnak, egy tíz évvel korábbi utazás emlékének, mennie kellett. Az első lézeres alkalmat június második hetére foglalta, mert csak akkor volt szabad ideje, és egyenesen egy tóparti hosszú hétvégéről érkezett: szandálban, csupasz lábbal, enyhe aranybarna színnel, amit észre sem vett. A kezelő megnézte a bokáját, ujjal megnyomta a bőrt, összehasonlította a karja belső oldalával, és azt mondta: „Ma nem. Gyere vissza ősszel, vagy legalább akkor, ha ez már lekopott.”',
       'Lea körülbelül egy napig bosszankodott. Aztán feltette a kézenfekvő kérdést, ugyanazt, amit tavasszal emberek ezrei írnak be a keresőbe: lehet egyáltalán nyáron tetoválást eltávolíttatni, vagy várni kell? Az őszinte válasz hasznosabb egy egyszerű igennél vagy nemnél, és megspórolhat egy elvesztegetett időpontot és egy rossz színűre gyógyult bőrfoltot is.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk és ábrák, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi pácienseket vagy valódi kezelési eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi kezelési eredményekről készült fotók.',
       '## A rövid válasz',
       '**Igen, nyáron is lehet lézerrel tetoválást eltávolíttatni, de barna vagy leégett bőrön nem.** A lézernek nem a naptári dátum számít, hanem az, hogy milyen állapotban van a bőr a kezelés napján és az utána következő hetekben. Rengeteg klinika kezel júliusban és augusztusban is, és vannak, akik szünet nélkül végigmennek egy egész nyáron. Ők egyszerűen távol tartják a naptól a kezelt területet.',
       'Ezért szeretik csendben sok klinikán az őszt és a telet. Nem azért, mert hidegben jobban működik a lézer, hanem mert ezekben a hónapokban szinte senki sem érkezik barnán, amúgy is hosszú ujjú ruhát hordanak az emberek, és könnyű védeni a gyógyuló területet. Nyáron ugyanazok a szabályok érvényesek, csak nehezebb betartani őket.',
@@ -209,28 +209,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: on tanned skin, part of the laser light is absorbed by the skin’s own pigment instead of only the ink.',
-      hu: 'Illusztráció: barna bőrön a lézerfény egy részét a bőr saját pigmentje nyeli el, nem csak a tinta.',
+      en: 'Illustration: a laser consultation with skin-tone swatches beside the handpiece. On tanned skin, part of the laser light is absorbed by the skin’s own pigment instead of only the ink.',
+      hu: 'Illusztráció: lézeres konzultáció, a kézidarab mellett bőrszín-mintákkal. Barna bőrön a lézerfény egy részét a bőr saját pigmentje nyeli el, nem csak a festék.',
     },
     img3: {
-      en: 'Illustration: self-tanner colours the top layer of the skin, right above the ink. Stop using it on the area before a session.',
-      hu: 'Illusztráció: az önbarnító a bőr felső rétegét színezi, közvetlenül a tinta fölött. A kezelés előtt hagyd abba a használatát a területen.',
+      en: 'Illustration: rubbing a lotion into a tattooed forearm. If it is a self-tanner, it colours the top layer of skin right above the ink, so stop using it on the area before a session.',
+      hu: 'Illusztráció: testápoló bedörzsölése egy tetovált alkarba. Ha önbarnítóról van szó, az a festék fölötti felső bőrréteget színezi, ezért a kezelés előtt ne használd azon a területen.',
     },
     img4: {
-      en: 'Illustration: a typical timeline around one session. Weeks without sun before, a covered healing phase, then SPF 50 until the next one.',
-      hu: 'Illusztráció: egy kezelés tipikus idővonala. Előtte napmentes hetek, utána letakart gyógyulás, aztán SPF 50 a következő alkalomig.',
+      en: 'Illustration: a freshly treated forearm being bandaged. The healing phase stays covered, with weeks out of the sun before a session and SPF 50 until the next one.',
+      hu: 'Illusztráció: egy frissen kezelt alkar bekötözése. A gyógyulás alatt a terület takarva marad, előtte hetekig kerülöd a napot, utána a következő alkalomig 50-es fényvédő jár.',
     },
     img5: {
-      en: 'Illustration: areas that stay under clothes in summer (green) are much easier to treat than hands, ankles, neck and face (orange).',
-      hu: 'Illusztráció: a nyáron is ruha alatt maradó területek (zöld) sokkal könnyebben kezelhetők, mint a kéz, a boka, a nyak és az arc (narancs).',
+      en: 'Illustration: reading in the shade in a long-sleeved shirt. Areas that stay under clothes in summer are much easier to keep treating than hands, ankles, neck and face.',
+      hu: 'Illusztráció: olvasás árnyékban, hosszú ujjú ingben. A nyáron ruha alatt maradó területeket sokkal könnyebb tovább kezelni, mint a kezet, a bokát, a nyakat vagy az arcot.',
     },
     img6: {
-      en: 'Illustration: an example removal year. Sessions every six to eight weeks from autumn to spring, a planned summer pause for exposed areas.',
-      hu: 'Illusztráció: egy példa eltávolítási év. Ősztől tavaszig hat-nyolc hetente kezelés, nyáron tervezett szünet a szabadon lévő területeknél.',
+      en: 'Illustration: planning dates on a wall calendar. Sessions every six to eight weeks from autumn to spring leave room for a planned summer pause for exposed areas.',
+      hu: 'Illusztráció: időpontok tervezése egy falinaptáron. Ősztől tavaszig hat-nyolc hetente egy alkalom, így belefér egy tervezett nyári szünet a fedetlen területeknek.',
     },
     img7: {
-      en: 'Illustration: protecting a treated area in summer. Cover first, SPF 50 on closed skin, shade at midday, no sunbeds.',
-      hu: 'Illusztráció: a kezelt terület védelme nyáron. Előbb takarás, bezárult bőrön SPF 50, délben árnyék, szolárium nem.',
+      en: 'Illustration: long sleeves, a hat and shade under a beach umbrella. Cover a treated area first, put SPF 50 on closed skin, stay in the shade at midday and skip sunbeds.',
+      hu: 'Illusztráció: hosszú ujj, kalap és árnyék a napernyő alatt. A kezelt területet először takard le, a zárt bőrre tegyél 50-es fényvédőt, délben maradj árnyékban, és hagyd ki a szoláriumot.',
     },
   },
 };

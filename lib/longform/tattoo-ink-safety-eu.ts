@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Noor was sitting in a studio in Utrecht, forearm shaved and cleaned, looking at a short row of ink bottles next to the artist’s tray: a deep red for the poppy, a soft green for the stem, black for the outline. Before starting, the artist turned one of the bottles round, showed her the label and slid a small card across the table. Brand, colour, batch number, today’s date. “Your ink passport,” he said. “Keep it somewhere safe. If you ever react to the red, a doctor will want to know exactly which one it was.”',
       'Noor had never heard of an ink passport. Most people haven’t, and most people also have no idea that since 2022 the ink going into their skin has been covered by one of the strictest chemical rules in Europe. Here is what those rules actually say, what they changed for colours like blue and green, what an inktpaspoort is in the Netherlands, and what you can reasonably ask your artist before the needle starts.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They do not show real products, real labels or real patients.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real products, real labels or real patients.',
       '## The short answer',
       '**Since 4 January 2022, tattoo and permanent make-up inks sold or used in the EU must meet limits on about 4,000 hazardous substances under the REACH chemicals regulation.** Substances that can cause cancer, damage DNA, harm fertility, trigger allergies or irritate the skin are either banned or allowed only in tiny traces. Two widely used pigments, Pigment Blue 15:3 and Pigment Green 7, got an extra year and have been restricted since 4 January 2023.',
       'The same rules require a proper label on every bottle, including a batch number and a full ingredient list, and they oblige the person tattooing you to share that information with you before the procedure. An inktpaspoort is simply a practical way of keeping that information: a written record of which inks went into your tattoo.',
@@ -108,7 +108,7 @@ const a: LongArticle = {
     hu: [
       'Noor egy utrechti stúdióban ült, leborotvált és megtisztított alkarral, és a tetováló tálcája melletti kis üvegsort nézte: mélypiros a pipacshoz, lágy zöld a szárához, fekete a kontúrhoz. Mielőtt nekikezdett volna, a tetováló megfordította az egyik üveget, megmutatta neki a címkét, és odatolt az asztalon egy kis kártyát. Márka, szín, tételszám, a mai dátum. „A tintaútleveled” – mondta. „Tedd el jó helyre. Ha valaha reagálsz a pirosra, az orvos pontosan tudni akarja majd, melyik volt az.”',
       'Noor még sosem hallott tintaútlevélről. A legtöbb ember sem, és a legtöbben azt sem tudják, hogy 2022 óta a bőrükbe kerülő festékre Európa egyik legszigorúbb vegyianyag-szabálya vonatkozik. Most megnézzük, mit mondanak valójában ezek a szabályok, mit változtattak az olyan színeknél, mint a kék és a zöld, mi az az inktpaspoort Hollandiában, és mit kérdezhetsz meg nyugodtan a tetoválótól, mielőtt elindul a tű.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Nem valódi termékeket, valódi címkéket vagy valódi pácienseket mutatnak.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi termékekről, valódi címkékről vagy valódi páciensekről készült fotók.',
       '## A rövid válasz',
       '**2022. január 4. óta az EU-ban forgalmazott vagy használt tetováló- és sminktetoválás-festékeknek a REACH vegyianyag-rendelet alapján nagyjából 4000 veszélyes anyagra vonatkozó határértéket kell betartaniuk.** A rákot okozó, a DNS-t károsító, a termékenységet veszélyeztető, allergiát kiváltó vagy bőrirritáló anyagok vagy tilosak, vagy csak apró nyomokban lehetnek jelen. Két széles körben használt pigment, a Pigment Blue 15:3 és a Pigment Green 7 egy év haladékot kapott, és 2023. január 4. óta korlátozott.',
       'Ugyanezek a szabályok minden üvegre rendes címkét írnak elő, gyártási tételszámmal és teljes összetevőlistával, és kötelezik azt, aki tetovál, hogy ezeket az adatokat a beavatkozás előtt megossza veled. Az inktpaspoort egyszerűen ezeknek az adatoknak a gyakorlati megőrzése: írásos feljegyzés arról, milyen festékek kerültek a tetoválásodba.',
@@ -232,28 +232,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the 2022 rule works like a filter. Hazardous substances are kept out of the ink or allowed only in tiny traces.',
-      hu: 'Illusztráció: a 2022-es szabály szűrőként működik. A veszélyes anyagok nem kerülhetnek a festékbe, vagy csak apró nyomokban.',
+      en: 'Illustration: black ink spreading in water. The 2022 rule works like a filter: hazardous substances are kept out of tattoo ink or allowed only in tiny traces.',
+      hu: 'Illusztráció: vízben szétterülő fekete festék. A 2022-es szabály szűrőként működik: a veszélyes anyagok nem kerülhetnek a tetoválófestékbe, vagy csak apró nyomokban.',
     },
     img3: {
-      en: 'Illustration: the timeline. Dutch rules in 2003, German rules in 2009, the EU proposal in 2017, the EU rules in 2022, blue and green in 2023.',
-      hu: 'Illusztráció: az idővonal. Holland szabályok 2003-ban, németek 2009-ben, uniós javaslat 2017-ben, uniós szabályok 2022-ben, a kék és a zöld 2023-ban.',
+      en: 'Illustration: a watercolour tattoo with blue and green tones. These two colours got a longer transition and came under the EU rules a year later, in 2023.',
+      hu: 'Illusztráció: akvarell tetoválás kék és zöld árnyalatokkal. Ez a két szín hosszabb átmeneti időt kapott, és egy évvel később, 2023-ban került az uniós szabályok alá.',
     },
     img4: {
-      en: 'Illustration: a compliant bottle carries the mandatory statement, a batch number, a full ingredient list and any allergy warnings.',
-      hu: 'Illusztráció: egy szabályos üvegen ott a kötelező mondat, a tételszám, a teljes összetevőlista és az esetleges allergiafigyelmeztetés.',
+      en: 'Illustration: ink bottles on a studio shelf. A compliant bottle carries the mandatory statement, a batch number, a full ingredient list and any allergy warnings.',
+      hu: 'Illusztráció: festékes üvegek egy stúdió polcán. Egy szabályos üvegen ott a kötelező felirat, a gyártási tételszám, a teljes összetevőlista és az esetleges allergiafigyelmeztetés.',
     },
     img5: {
-      en: 'Illustration: an ink record lists the date, the brand, the colour and the batch number of every ink used in the tattoo.',
-      hu: 'Illusztráció: a festéknyilvántartás tartalmazza a dátumot, valamint minden felhasznált festék márkáját, színét és tételszámát.',
+      en: 'Illustration: a prepared station with needles, gloves and small ink caps. Every ink used belongs in your ink record, with the date, brand, colour and batch number.',
+      hu: 'Illusztráció: előkészített munkaállomás tűkkel, kesztyűvel és kis festékkupakokkal. Minden felhasznált festéknek benne kell lennie a festéknyilvántartásodban, dátummal, márkával, színnel és tételszámmal.',
     },
     img6: {
-      en: 'Illustration: an allergic reaction to red ink usually stays inside the red areas, while the black outline next to it stays calm.',
-      hu: 'Illusztráció: a piros festékre adott allergiás reakció általában a piros részeken belül marad, a mellette lévő fekete kontúr nyugodt.',
+      en: 'Illustration: a red flower tattoo on a shoulder. When red ink causes an allergic reaction, it usually stays inside the red areas while the black outline stays calm.',
+      hu: 'Illusztráció: piros virágtetoválás a vállon. Ha a piros festék allergiás reakciót okoz, az általában a piros részeken belül marad, a fekete kontúr pedig nyugodt marad.',
     },
     img7: {
-      en: 'Illustration: before the session, check the label, ask for an ink record, single-use caps and, in the Netherlands, a GGD licence.',
-      hu: 'Illusztráció: az alkalom előtt nézd meg a címkét, kérj festéknyilvántartást, egyszer használatos kupakokat, Hollandiában GGD-engedélyt.',
+      en: 'Illustration: a clean station with sealed needles, gloves and wrapped surfaces. Before the session, ask to see the bottles, ask for an ink record and look for single-use caps.',
+      hu: 'Illusztráció: tiszta munkaállomás lezárt tűkkel, kesztyűvel és letakart felületekkel. A kezelés előtt kérd, hogy megnézhesd az üvegeket, kérj festéknyilvántartást, és figyeld, hogy egyszer használatos kupakokat használnak-e.',
     },
   },
 };

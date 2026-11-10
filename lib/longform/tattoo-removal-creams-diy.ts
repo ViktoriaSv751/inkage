@@ -30,7 +30,7 @@ const a: LongArticle = {
       'Jonas found the ad late one evening, scrolling on his phone. A small tube, a before-and-after photo of a faded name on a forearm, and a promise that sounded perfect: remove your tattoo at home, no laser, no pain, results in weeks. He had been thinking about the name on his own forearm for two years, ever since the relationship ended. The cream cost less than one laser session, so he ordered it.',
       'He followed the instructions for nine weeks. Rub it in twice a day, sometimes scrub the skin first so the cream could work deeper. By week four the skin was red and flaky. By week seven it had peeled twice, and there were patches that looked shiny and lighter than the rest of his arm. The name was still there, every letter. If anything, it now stood out more, framed by irritated skin.',
       'Jonas is not unusual. "Tattoo removal cream" and "does it work" are among the most common things people search when they start to regret a tattoo, in English and in many other languages. The honest answer is short, but the reasons behind it are worth knowing, because they also explain why salt, lemon, acids and cheap home lasers fail in the same way, and what you can do instead.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real patients or real treatment results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real treatment results.',
       '## The short answer',
       '**No, tattoo removal creams do not remove tattoos.** At best they lighten the skin around the tattoo a little or make it peel. At worst they cause chemical burns and scars, and the tattoo is still there. In the United States the Food and Drug Administration (FDA) states that it has not approved any tattoo removal ointments, creams or do-it-yourself kits, and that it is not aware of any evidence that they are safe or effective.',
       'This is not about one bad brand. It comes down to where tattoo ink sits in your skin, and that does not change whichever product you buy.',
@@ -99,7 +99,7 @@ const a: LongArticle = {
       'Jonas késő este, telefonozás közben akadt rá a hirdetésre. Egy kis tubus, egy előtte-utána fotó egy alkaron kifakult névről, és egy tökéletesen hangzó ígéret: távolítsd el a tetoválásod otthon, lézer és fájdalom nélkül, eredmény néhány hét alatt. Két éve, a szakítás óta gondolkodott a saját alkarján lévő néven. A krém kevesebbe került, mint egyetlen lézeres alkalom, úgyhogy megrendelte.',
       'Kilenc hétig követte az utasításokat. Naponta kétszer bedörzsölte, néha előtte meg is dörzsölte a bőrt, hogy a krém mélyebbre hasson. A negyedik hétre a bőr vörös és hámló lett. A hetedikre kétszer is levált, és lettek olyan foltok, amelyek fényesek és világosabbak voltak, mint a karja többi része. A név még mindig ott volt, minden betűje. Ha lehet, most még jobban kitűnt, irritált bőrrel keretezve.',
       'Jonas nem kivétel. A „tetoválás-eltávolító krém” és a „működik-e” a leggyakoribb keresések közé tartozik, amikor valaki megbánja a tetoválását, angolul és sok más nyelven is. Az őszinte válasz rövid, de az okait érdemes ismerni, mert azok azt is megmagyarázzák, miért bukik el ugyanígy a só, a citrom, a sav és az olcsó otthoni lézer, és mit tehetsz helyettük.',
-      '> Megjegyzés a képekhez: a cikkben szereplő képek egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi pácienseket vagy valódi kezelési eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi kezelési eredményekről készült fotók.',
       '## A rövid válasz',
       '**Nem, a tetoválás-eltávolító krémek nem tüntetik el a tetoválást.** Legjobb esetben kicsit kivilágosítják a tetoválás körüli bőrt, vagy hámlasztják. Legrosszabb esetben vegyi égést és heget okoznak, a tetoválás pedig marad. Az Egyesült Államokban az élelmiszer- és gyógyszerhatóság (FDA) kimondja, hogy egyetlen tetoválás-eltávolító kenőcsöt, krémet vagy házi készletet sem engedélyezett, és nem tud olyan bizonyítékról, hogy ezek biztonságosak vagy hatásosak lennének.',
       'Ez nem egyetlen rossz márkáról szól. Azon múlik, hol van a tetováló tinta a bőrödben, és ez nem változik, bármilyen terméket veszel is.',
@@ -212,28 +212,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: a cream stays on the surface of the skin, while tattoo ink sits deeper, in the dermis.',
-      hu: 'Illusztráció: a krém a bőr felszínén marad, a tetováló tinta pedig mélyebben, az irhában van.',
+      en: 'Illustration: a gloved hand tattooing a fine line. The needle places the ink below the surface, in the dermis, where a cream spread on top cannot reach it.',
+      hu: 'Illusztráció: kesztyűs kéz egy vékony vonalat tetovál. A tű a felszín alá, az irhába juttatja a tintát, ahová a bőrre kent krém nem ér le.',
     },
     img3: {
-      en: 'Illustration: salt, lemon and acids damage the top of the skin. The ink underneath stays where it is.',
-      hu: 'Illusztráció: a só, a citrom és a sav a bőr tetejét károsítja. Az alatta lévő tinta a helyén marad.',
+      en: 'Illustration: a small fresh tattoo with red, irritated skin around it. Salt, lemon and acids injure the top of the skin like this, while the ink underneath stays put.',
+      hu: 'Illusztráció: kis, friss tetoválás vörös, irritált bőrrel körülötte. A só, a citrom és a savak így sértik a bőr felszínét, a tinta alattuk viszont a helyén marad.',
     },
     img4: {
-      en: 'Illustration: a cheap home laser pen mostly heats the skin, which can mean burns and blisters over a tattoo that is still there.',
-      hu: 'Illusztráció: egy olcsó otthoni lézertoll főleg a bőrt melegíti, ami égést és hólyagokat jelenthet egy még mindig látható tetoválás fölött.',
+      en: 'Illustration: a laser removal session in a clinic, with goggles for both people. Real removal lasers are large machines used with eye protection, not pens for home.',
+      hu: 'Illusztráció: lézeres eltávolítás egy klinikán, mindkét embernél védőszemüveggel. Az igazi eltávolító lézerek nagy gépek, szemvédelemmel használják őket, nem otthoni tollak.',
     },
     img5: {
-      en: 'Illustration: the professional non-laser options. Saline removal with a tattoo machine, surgical excision and dermabrasion.',
-      hu: 'Illusztráció: a szakszerű, nem lézeres lehetőségek. Sóoldatos eltávolítás tetoválógéppel, sebészi kimetszés és dermabrázió.',
+      en: 'Illustration: a sterile work station with needles, black gloves and wrapped surfaces. Saline removal, excision and dermabrasion all belong in clean, trained hands.',
+      hu: 'Illusztráció: steril munkaterület tűkkel, fekete kesztyűvel és fóliázott felületekkel. A sóoldatos eltávolítás, a kimetszés és a dermabrázió is tiszta körülményeket és képzett kezet kíván.',
     },
     img6: {
-      en: 'Illustration: a rough comparison, not measured data. How much ink each method can remove (dark) against the risk of scarring (orange).',
-      hu: 'Illusztráció: durva összehasonlítás, nem mért adat. Mennyi tintát tud eltávolítani az egyes módszer (sötét), szemben a hegesedés kockázatával (narancs).',
+      en: 'Illustration: four panels of the same rose fading step by step through laser sessions. Laser is slow, but it is the method that actually breaks the ink up.',
+      hu: 'Illusztráció: ugyanaz a rózsa négy képen, lézeres alkalomról alkalomra halványulva. A lézer lassú, de ez az a módszer, amely valóban szétbontja a tintát.',
     },
     img7: {
-      en: 'Illustration: fading first, then a cover-up. A few laser sessions lighten the old ink so the new design does not have to be a dark block.',
-      hu: 'Illusztráció: előbb halványítás, aztán takarás. Néhány lézeres alkalom kivilágosítja a régi tintát, így az új mintának nem kell sötét tömbnek lennie.',
+      en: 'Illustration: thin script on the left, covered by a dark floral design on the right. Lighter old ink gives a cover-up artist more freedom.',
+      hu: 'Illusztráció: balra egy vékony felirat, jobbra ugyanaz egy sötét virágos mintával eltakarva. Minél világosabb a régi tinta, annál szabadabban dolgozhat a takaró tetováló.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Marco waited two years before he got his grandmother’s portrait. He had the photo, the one from her sixtieth birthday where she is laughing at something just outside the frame. He had the spot, the outside of his left forearm, where he would see it every time he reached for something. And he had a question he couldn’t quite shake: would she still look like herself in twenty years, or would she slowly turn into a grey shape that only he could recognise?',
       'It is the right question to ask. Realism is the style that looks most impressive on the day it is finished, and it is also the style that depends most on how it is planned. In this guide we look at why realism ages the way it does, what contrast and size have to do with it, which placements suit it best, and how to find an artist whose work will still look like a face, an animal or a flower long after the photos are taken.',
-      '> A note on the pictures: the images in this article are simple illustrations made to show typical effects. They are not photos of real tattoos or clients.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical effects. They are not photos of real tattoos or clients.',
       '## What makes realism different',
       'Most tattoo styles are built on lines. Traditional work has a heavy outline, blackwork has bold shapes, even fine line is, by definition, line. Realism mostly isn’t. It builds an image the way a photograph does: through smooth transitions from deep shadow to light, soft edges and tiny changes in tone. A cheekbone in a realistic portrait is not drawn; it appears because one grey sits next to a slightly lighter grey.',
       'Realism comes in two main families. **Black-and-grey realism** uses black ink diluted into a range of greys, and lets bare skin act as the brightest highlight. **Colour realism** adds full colour, often with many layered shades, and can look almost like a painted photograph. Within both, portraits of people and pets are the most demanding subject, followed by animals, flowers, eyes, statues and landscapes.',
@@ -94,7 +94,7 @@ const a: LongArticle = {
     hu: [
       'Marco két évig várt, mire elkészíttette a nagymamája portréját. Megvolt a fotó, a hatvanadik születésnapján készült, amin valamin nevet, ami épp kilóg a képből. Megvolt a hely, a bal alkarja külső oldala, ahol minden alkalommal látja, amikor kinyúl valamiért. És volt egy kérdése, amitől nem tudott szabadulni: húsz év múlva is önmagára fog hasonlítani, vagy lassan szürke folttá válik, amit csak ő ismer fel?',
       'Jó kérdés. A realizmus az a stílus, ami az elkészülés napján a leglenyűgözőbb, és egyben az, amelyiknél a legtöbb múlik a tervezésen. Ebben a cikkben megnézzük, miért úgy öregszik a realista tetoválás, ahogy, mi köze ehhez a kontrasztnak és a méretnek, mely helyek illenek hozzá a legjobban, és hogyan találj olyan tetoválót, akinek a munkája jóval a fotózás után is arc, állat vagy virág marad.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, amelyek a tipikus hatásokat mutatják. Nem valódi tetoválásokról vagy vendégekről készült fotók.',
+      '> Megjegyzés a képekhez: a cikk képei a tipikus hatásokat bemutató illusztrációk. Nem valódi tetoválásokról vagy vendégekről készült fotók.',
       '## Miben más a realizmus',
       'A legtöbb tetoválásstílus vonalakra épül. A tradicionálisnak vastag kontúrja van, a blackworknek erős formái, és még a finom vonalas is definíció szerint vonal. A realizmus többnyire nem az. Úgy építi fel a képet, ahogy egy fotó: a mély árnyéktól a fényig tartó sima átmenetekkel, lágy élekkel és apró tónusváltásokkal. Egy realista portréban a járomcsontot nem megrajzolják; azért jelenik meg, mert egy szürke egy kicsit világosabb szürke mellett ül.',
       'A realizmusnak két fő ága van. A **fekete-szürke realizmus** hígított fekete tintából kever szürke árnyalatokat, és a csupasz bőrt használja a legvilágosabb fénynek. A **színes realizmus** teljes színskálával dolgozik, gyakran sok egymásra rétegzett árnyalattal, és szinte festett fotónak hathat. Mindkettőn belül az emberekről és háziállatokról készült portré a legnehezebb téma, utána jönnek az állatok, a virágok, a szemek, a szobrok és a tájak.',
@@ -202,28 +202,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the same face with low and high contrast. After years of softening, only the high-contrast version still reads as a face.',
-      hu: 'Illusztráció: ugyanaz az arc kis és nagy kontraszttal. Évek puhulása után csak a nagy kontrasztú változat olvasható még arcként.',
+      en: 'Illustration: a black-and-grey rose on the shoulder that has softened with time. The light grey shading melts into the skin first; only the darkest areas still hold the shape.',
+      hu: 'Illusztráció: egy idővel megpuhult fekete-szürke rózsa a vállon. A világosszürke árnyékolás olvad bele elsőként a bőrbe, a formát már csak a legsötétebb részek tartják.',
     },
     img3: {
-      en: 'Illustration: one portrait at three sizes, fresh and aged. The smallest loses its features first.',
-      hu: 'Illusztráció: egy portré három méretben, frissen és öregen. A legkisebb veszíti el elsőként a vonásait.',
+      en: 'Illustration: three stencils of the same flower in different sizes on a forearm. Try the size on your skin first; the smallest version loses its details first.',
+      hu: 'Illusztráció: ugyanannak a virágnak három, különböző méretű sablonja egy alkaron. Előbb próbáld ki a méretet a bőrödön: a legkisebb változat veszíti el elsőként a részleteit.',
     },
     img4: {
-      en: 'Illustration: black-and-grey and colour realism side by side. Pale colours fade first; the black structure holds the shape.',
-      hu: 'Illusztráció: fekete-szürke és színes realizmus egymás mellett. A halvány színek fakulnak először, a fekete szerkezet tartja a formát.',
+      en: 'Illustration: two peony tattoos, one with bright colour and one where the colour has faded. Pale colours fade first, while the darker structure keeps the shape.',
+      hu: 'Illusztráció: két bazsarózsa-tetoválás, az egyik élénk színű, a másikon már kifakult a szín. A halvány színek fakulnak először, a sötétebb szerkezet tartja meg a formát.',
     },
     img5: {
-      en: 'Illustration: forearm, upper arm, calf, thigh and back (green) suit realism best; hands, feet and the front of the neck (orange) are hardest.',
-      hu: 'Illusztráció: az alkar, a felkar, a vádli, a comb és a hát (zöld) illik legjobban a realizmushoz; a kéz, a lábfej és a nyak eleje (narancs) a legnehezebb.',
+      en: 'Illustration: a black-and-grey sleeve on the forearm. Large, fairly flat areas like the forearm, upper arm, calf, thigh and back suit realism best.',
+      hu: 'Illusztráció: fekete-szürke sleeve az alkaron. A nagy, viszonylag sík felületek, mint az alkar, a felkar, a vádli, a comb és a hát illenek legjobban a realizmushoz.',
     },
     img6: {
-      en: 'Illustration: a touch-up on realism deepens the shadows and restores contrast rather than redrawing lines.',
-      hu: 'Illusztráció: a realizmus frissítése az árnyékokat mélyíti és a kontrasztot állítja vissza, nem a vonalakat rajzolja újra.',
+      en: 'Illustration: an artist working on the shading of a rose on a forearm. A touch-up on realism deepens the shadows and restores contrast rather than redrawing lines.',
+      hu: 'Illusztráció: tetováló egy alkaron lévő rózsa árnyékolásán dolgozik. A realizmus frissítése az árnyékokat mélyíti és a kontrasztot hozza vissza, nem a vonalakat rajzolja újra.',
     },
     img7: {
-      en: 'Illustration: when choosing an artist, look for healed realism with real blacks and clean highlights, not only fresh photos.',
-      hu: 'Illusztráció: tetováló választásakor gyógyult, valódi feketékkel és tiszta fényekkel dolgozó realista munkákat keress, ne csak friss fotókat.',
+      en: 'Illustration: an artist and a client looking through a book of work together. Ask to see healed realism with real blacks and clean highlights, not only fresh photos.',
+      hu: 'Illusztráció: tetováló és vendég együtt lapoz át egy munkákat bemutató albumot. Kérj gyógyult realista munkákat valódi feketékkel és tiszta fényekkel, ne csak friss fotókat.',
     },
   },
 };

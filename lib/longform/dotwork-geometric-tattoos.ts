@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena had saved the same picture for months: a round mandala, built from fine lines and soft clouds of dots, sitting on someone’s forearm like a piece of lace. When she finally showed it to an artist, the first answers surprised her. The artist wanted to make it a little bigger, spread the dots further apart in the lightest parts, and move it a few centimetres away from her wrist. “It will look almost the same today,” he said, “but very different in fifteen years.”',
       'That conversation sums up dotwork and geometric tattoos. These styles are about precision: even spacing, clean circles, gradients that fade from black to skin. Skin is not paper, though. It curves, stretches, moves and slowly changes the ink inside it. This guide explains what actually decides whether a dotwork or geometric piece stays crisp, where symmetry survives on the body, how long the sessions take, and how to heal and look after it.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## Dotwork, geometric, mandala: what the words mean',
       'The terms overlap, and many tattoos combine all three, but they describe different things.',
       '- **Dotwork** is a technique. Instead of smooth shading, the artist builds tone from thousands of individual dots: dense where it should look dark, sparse where it should look light. It can be done with a machine or by hand, and it is often used for shading inside other styles.',
@@ -105,7 +105,7 @@ const a: LongArticle = {
     hu: [
       'Lena hónapok óta ugyanazt a képet mentegette: egy kerek mandalát finom vonalakból és lágy pontfelhőkből, ami úgy ült valakinek az alkarján, mint egy csipke. Amikor végül megmutatta egy tetoválónak, az első válaszok meglepték. A tetováló kicsit nagyobbra akarta venni, a legvilágosabb részeken ritkábbra akarta szórni a pontokat, és néhány centivel távolabb akarta tenni a csuklójától. „Ma szinte ugyanúgy fog kinézni – mondta –, de tizenöt év múlva nagyon máshogy.”',
       'Ez a beszélgetés jól összefoglalja a dotwork és a geometrikus tetoválás lényegét. Ezek a stílusok a pontosságról szólnak: egyenletes távolságok, tiszta körök, feketéből a bőr színébe halványuló átmenetek. A bőr azonban nem papír. Ível, nyúlik, mozog, és lassan megváltoztatja a benne lévő tintát. Ez az útmutató elmagyarázza, mi dönti el valójában, hogy egy dotwork vagy geometrikus minta éles marad-e, hol marad meg a szimmetria a testen, meddig tartanak az alkalmak, és hogyan gyógyítsd és ápold.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi embereket vagy tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Dotwork, geometrikus, mandala: mit jelentenek a szavak',
       'A fogalmak átfedik egymást, és sok tetoválás mindhármat ötvözi, de mégis mást írnak le.',
       '- **A dotwork** technika. Sima árnyalás helyett a tetováló pontok ezreiből építi fel a tónust: sűrűn, ahol sötétnek kell látszania, ritkán, ahol világosnak. Készülhet géppel vagy kézzel, és gyakran más stílusokon belül használják árnyalásra.',
@@ -225,28 +225,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: dotwork is a shading technique, geometric work is a type of design, and a mandala usually combines both.',
-      hu: 'Illusztráció: a dotwork árnyalási technika, a geometrikus tetoválás mintatípus, a mandala pedig általában mindkettőt ötvözi.',
+      en: 'Illustration: an ornamental geometric tattoo in red and black on the forearm. Geometric and mandala work depend on order: even spacing and clean shapes.',
+      hu: 'Illusztráció: díszítő geometrikus tetoválás pirosban és feketében az alkaron. A geometrikus és a mandalaminták a rendre épülnek: egyenletes távolságokra és tiszta formákra.',
     },
     img3: {
-      en: 'Illustration: tightly packed dots merge into flat grey over the years, while open gradients keep their texture.',
-      hu: 'Illusztráció: a sűrűn rakott pontok az évek alatt lapos szürkévé olvadnak, a laza átmenetek megtartják a textúrájukat.',
+      en: 'Illustration: a mandala on the calf after some years, with softer lines and dots. As the ink drifts, the gaps between the dots are what time takes first.',
+      hu: 'Illusztráció: mandala a vádlin néhány év után, lágyabb vonalakkal és pontokkal. Ahogy a tinta vándorol, először a pontok közti rések tűnnek el.',
     },
     img4: {
-      en: 'Illustration: lines set too close together close up first; a bold outline and wider gaps stay readable.',
-      hu: 'Illusztráció: a túl közel futó vonalak záródnak össze először, a vastag körvonal és a szélesebb rések olvashatók maradnak.',
+      en: 'Illustration: ornamental blackwork across the upper back. Bold shapes with clear gaps between them stay readable even when every line widens a little.',
+      hu: 'Illusztráció: díszítő blackwork a hát felső részén. A határozott formák, köztük tiszta résekkel, akkor is olvashatók maradnak, ha minden vonal kicsit kiszélesedik.',
     },
     img5: {
-      en: 'Illustration: a perfect circle on a tapering, curved limb is seen as an oval; good stencils are adjusted for the curve.',
-      hu: 'Illusztráció: az elvékonyodó, íves végtagon a tökéletes kör oválisnak látszik, a jó sablont az ívhez igazítják.',
+      en: 'Illustration: a black ornamental band around the forearm. On a limb that tapers and turns, a pattern that is perfect on paper has to be fitted to the body.',
+      hu: 'Illusztráció: fekete díszítő karpánt az alkar körül. Egy elvékonyodó, forduló végtagon a papíron tökéletes mintát a testhez kell igazítani.',
     },
     img6: {
-      en: 'Illustration: flat, stable areas such as the outer forearm, upper back and calf suit mandalas and strict geometry best.',
-      hu: 'Illusztráció: a lapos, stabil területek, például az alkar külső oldala, a hát felső része és a vádli illenek legjobban a mandalához és a szigorú geometriához.',
+      en: 'Illustration: bold geometric blackwork on the calf. A fairly flat surface with enough room lets precise lines stay straight and spacing stay even.',
+      hu: 'Illusztráció: határozott geometrikus blackwork a vádlin. Egy viszonylag lapos, elég nagy felületen a pontos vonalak egyenesek, a távolságok egyenletesek maradnak.',
     },
     img7: {
-      en: 'Illustration: the surface heals in two to four weeks; judge the dots after about six to eight weeks, when a touch-up can fill any gaps.',
-      hu: 'Illusztráció: a felszín két-négy hét alatt gyógyul, a pontokat nagyjából hat-nyolc hét után érdemes megítélni, ekkor egy javítás kitöltheti a hiányokat.',
+      en: 'Illustration: a forearm tattoo being washed gently at a sink. Aftercare is the same as for any tattoo: wash gently, do not pick, keep it out of the sun.',
+      hu: 'Illusztráció: alkartetoválást mosnak le óvatosan a mosdónál. Az ápolás ugyanaz, mint bármely tetoválásnál: óvatos mosás, nem piszkáljuk, és távol tartjuk a naptól.',
     },
   },
 };

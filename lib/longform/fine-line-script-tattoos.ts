@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Nora had the word picked out for years: her grandmother’s way of signing every birthday card, copied from an old envelope. She wanted it on the inside of her wrist, small and delicate, in a hair-thin line like the ones all over her feed. Her artist looked at the photo, measured her wrist and said something she did not expect: “I can do it this small. But in ten years you won’t be able to read it.”',
       'That is the honest problem with script tattoos. Words are among the most requested tattoos and among the ones that age worst, not because lettering is a bad idea, but because letters are made of exactly the kind of detail skin does not keep forever. This guide is about lettering only: which typefaces hold up, how big the letters need to be, single-needle script versus bolder lettering, where words sit best, how long a quote can be, handwriting tattoos and what to check on the stencil. For fine line in general, see our guide to how fine line tattoos age; for size across all designs, see the tattoo size guide.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real tattoos.',
       '## Why words blur before anything else',
       'Tattoo ink does not sit still. The pigment is held by immune cells in the dermis, called macrophages. A 2018 study in mice showed that these cells capture the ink, die off and release it, and new cells pick it up again, over and over. Researchers think tiny amounts escape in each cycle. Add years of sun and the skin’s own aging, and every line slowly gets a little wider and a little softer.',
       'For a flower or a symbol, a line that is a fraction of a millimetre wider hardly matters. For a letter it can change everything. You read words by the small shapes inside them: the eye of an e, the bowl of an a, the gap between r and n. When those spaces fill in, an e becomes a dot, rn starts to look like m, and a word becomes a grey line with a few bumps.',
@@ -112,7 +112,7 @@ const a: LongArticle = {
     hu: [
       'Nóra évek óta tudta, melyik szót szeretné: azt, ahogy a nagymamája minden születésnapi képeslapot aláírt, egy régi borítékról lemásolva. A csuklója belső oldalára akarta, kicsiben és finoman, hajszálvékony vonallal, ahogy a hírfolyamában látta. A tetoválója megnézte a fotót, lemérte a csuklóját, és olyat mondott, amire Nóra nem számított: „Meg tudom csinálni ilyen kicsiben. De tíz év múlva nem fogod tudni elolvasni.”',
       'Ez a feliratos tetoválások őszinte problémája. A szavak a legkedveltebb tetoválások közé tartoznak, és a legrosszabbul öregedők közé is. Nem azért, mert rossz ötlet a felirat, hanem mert a betűk pont abból a fajta részletből állnak, amit a bőr nem őriz meg örökre. Ez az útmutató csak a feliratokról szól: melyik betűtípus bírja, mekkorák legyenek a betűk, egytűs írás vagy vastagabb felirat, hol mutatnak a legjobban a szavak, milyen hosszú lehet egy idézet, kézírásos tetoválások, és mit nézz meg a sablonon. A fine line stílusról általában a fine line tetoválások öregedéséről szóló cikkünkben, a méretről minden mintatípusra a tetoválás méretválasztó útmutatónkban olvashatsz.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi tetoválásokról készült fotók.',
       '## Miért mosódnak el a szavak minden másnál előbb',
       'A tetoválótinta nem marad egy helyben. A pigmentet a dermiszben lévő immunsejtek, úgynevezett makrofágok tartják. Egy 2018-as, egereken végzett kutatás kimutatta, hogy ezek a sejtek befogják a tintát, elpusztulnak és elengedik, majd új sejtek veszik fel újra, újra és újra. A kutatók szerint minden körben apró mennyiség távozik. Adj hozzá éveknyi napfényt és a bőr saját öregedését, és minden vonal lassan kicsit szélesebb és puhább lesz.',
       'Egy virágnál vagy szimbólumnál alig számít, ha egy vonal egy milliméter töredékével szélesebb. Egy betűnél viszont mindent megváltoztathat. A szavakat a bennük lévő apró formák alapján olvasod: az e szeméből, az a hasából, az r és az n közötti résből. Ha ezek a terek betelnek, az e-ből pötty lesz, az rn m-nek látszik, a szó pedig egy szürke vonallá válik néhány dudorral.',
@@ -239,28 +239,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the same pseudo-script word fresh and years later. At small size the loops and the spaces inside the letters fill in first.',
-      hu: 'Illusztráció: ugyanaz az írásszerű szó frissen és évekkel később. Kis méretben a hurkok és a betűk belső terei telnek be elsőként.',
+      en: 'Illustration: fine script on a wrist whose lines have started to blur. At small size the loops and the spaces inside the letters fill in first.',
+      hu: 'Illusztráció: finom felirat a csuklón, amelynek a vonalai már kezdenek elmosódni. Kis méretnél először a hurkok és a betűk belsejében lévő terek telnek be.',
     },
     img3: {
-      en: 'Illustration: the four checks for lettering: letter height, an even stroke, open counters and space between letters and lines.',
-      hu: 'Illusztráció: a felirat négy ellenőrzőpontja: betűmagasság, egyenletes vonal, nyitott belső terek, és hely a betűk és a sorok között.',
+      en: 'Illustration: a short word in fine script on the inner wrist. Letter height, an even stroke, open counters and space between letters decide how long it stays readable.',
+      hu: 'Illusztráció: egy rövid szó finom kézírásos betűkkel a csukló belső oldalán. A betűmagasság, az egyenletes vonal, a nyitott betűbelsők és a betűk közti hely dönti el, meddig marad olvasható.',
     },
     img4: {
-      en: 'Illustration: a single-needle line next to a slightly heavier line. The finer line starts more delicate but softens sooner.',
-      hu: 'Illusztráció: egytűs vonal egy kicsit vastagabb vonal mellett. A finomabb vonal frissen légiesebb, de hamarabb puhul.',
+      en: 'Illustration: a gloved hand pulling a single fine line. A single-needle line looks delicate when fresh but has the least room to spare and softens sooner.',
+      hu: 'Illusztráció: kesztyűs kéz egyetlen vékony vonalat húz. Az egytűs vonal frissen finomnak tűnik, de ennek van a legkevesebb tartaléka, és hamarabb lágyul.',
     },
     img5: {
-      en: 'Illustration: lettering running along the forearm, centred on the arm, rather than wrapped around it.',
-      hu: 'Illusztráció: az alkar mentén, a kar közepén futó felirat, ahelyett, hogy körbetekeredne rajta.',
+      en: 'Illustration: a tiny tattoo on the side of a finger. Skin here renews fast and rubs all day, so letters on fingers blur and fade first.',
+      hu: 'Illusztráció: apró tetoválás az ujj oldalán. Itt gyorsan megújul és egész nap dörzsölődik a bőr, ezért az ujjakon lévő betűk mosódnak el és fakulnak ki először.',
     },
     img6: {
-      en: 'Illustration: handwriting from a card is scanned, enlarged and re-drawn with an even line and opened loops before it becomes a stencil.',
-      hu: 'Illusztráció: a képeslapon lévő kézírást beszkennelik, felnagyítják és egyenletes vonallal, kinyitott hurkokkal újrarajzolják, mielőtt sablon lesz belőle.',
+      en: 'Illustration: a client and an artist working on a design together at a table. Handwriting is redrawn the same way, with an even line and opened loops, before it becomes a stencil.',
+      hu: 'Illusztráció: a vendég és a tetováló együtt dolgozik egy mintán az asztalnál. A kézírást ugyanígy újrarajzolják egyenletes vonallal és kinyitott hurkokkal, mielőtt sablon lesz belőle.',
     },
     img7: {
-      en: 'Illustration: checking the stencil in the mirror from a distance, with the arm relaxed and then turned.',
-      hu: 'Illusztráció: a sablon ellenőrzése a tükörben, távolról, először leengedett, aztán elfordított karral.',
+      en: 'Illustration: a printed stencil held up next to the forearm. Check the lettering from a distance in the mirror, with the arm relaxed and then turned.',
+      hu: 'Illusztráció: a kinyomtatott sablon az alkar mellé tartva. Nézd meg a feliratot tükörben, távolabbról is, előbb ellazított, aztán elfordított karral.',
     },
   },
 };

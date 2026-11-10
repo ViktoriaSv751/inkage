@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena wanted something small. A tiny crescent moon, just behind her left ear, the kind of tattoo she could show with her hair up and forget about with it down. She wears glasses every day, sleeps on her left side and runs in the park three times a week. The evening before her appointment she was not worried about the design. She was worried about everything around it: would it hurt right next to the bone, how do you heal a tattoo under the arm of your glasses, and will a moon that small still look like a moon in twenty years?',
       'Behind the ear is one of the most popular spots for a first small tattoo, and it has its own set of rules. Our guide to neck tattoos covers it briefly as one of four areas of the neck. This article goes deeper: what it feels like, how to heal it around hair, glasses, masks and pillows, how small designs age on that thin skin, which motifs and sizes work, and how your hairstyle decides who sees it.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## Where “behind the ear” actually is',
       'The phrase covers a few slightly different spots, and the difference matters for pain, healing and how much people see.',
       '- **In the fold.** Right where the back of the ear meets the head. The ear itself hides this skin, it creases, and it stays a little warm and moist. Tiny designs here are the most hidden and also the most fiddly to heal.',
@@ -109,7 +109,7 @@ const a: LongArticle = {
     hu: [
       'Lena valami kicsit szeretett volna. Egy apró holdsarlót közvetlenül a bal füle mögé, olyan tetoválást, amit feltűzött hajjal megmutathat, leengedett hajjal pedig elfelejthet. Minden nap szemüveget hord, a bal oldalán alszik, és hetente háromszor fut a parkban. Az időpont előtti estén nem a minta miatt aggódott, hanem minden más miatt: fájni fog-e közvetlenül a csont mellett, hogyan gyógyul egy tetoválás a szemüvegszár alatt, és egy ilyen kicsi hold húsz év múlva is holdnak fog-e látszani?',
       'A fül mögötti rész az egyik legnépszerűbb hely egy első kis tetoválásnak, és megvannak a saját szabályai. A nyaktetoválásról szóló útmutatónk röviden kitér rá, mint a nyak négy területének egyikére. Ez a cikk mélyebbre megy: milyen érzés, hogyan gyógyítsd haj, szemüveg, maszk és párna mellett, hogyan öregszenek a kis minták ezen a vékony bőrön, milyen motívumok és méretek működnek, és hogyan dönti el a frizurád, ki látja.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Hol is van pontosan a „fül mögött”?',
       'A kifejezés néhány kicsit eltérő helyet takar, és a különbség számít a fájdalom, a gyógyulás és a láthatóság szempontjából.',
       '- **A hajlatban.** Ott, ahol a fül hátulja találkozik a fejjel. Ezt a bőrt maga a fül takarja, gyűrődik, és kicsit meleg és nyirkos marad. Az itteni apró minták a legrejtettebbek, és a legmacerásabb meggyógyítani őket.',
@@ -233,28 +233,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: behind the ear means three spots: the fold, the flat skin over the bone, and the hairline running down towards the neck.',
-      hu: 'Illusztráció: a fül mögött három helyet jelent: a hajlatot, a csont fölötti lapos bőrt és a nyak felé futó hajvonalat.',
+      en: 'Illustration: a small tattoo on the side of the neck and one on the top of the foot. Thin skin over bone is what these spots share with the area behind the ear.',
+      hu: 'Illusztráció: kis tetoválás a nyak oldalán és egy a lábfej tetején. A csont fölötti vékony bőr közös bennük a fül mögötti területtel.',
     },
     img3: {
-      en: 'Illustration: glasses, mask loops, earphones, hair and pillows all touch a healing tattoo behind the ear.',
-      hu: 'Illusztráció: a szemüveg, a maszk gumija, a fülhallgató, a haj és a párna mind hozzáér a gyógyuló fül mögötti tetováláshoz.',
+      en: 'Illustration: a simple aftercare kit on a nightstand. Behind the ear, think about your sleeping side, your pillow and your glasses during healing too.',
+      hu: 'Illusztráció: egyszerű ápolókészlet az éjjeliszekrényen. A fül mögött a gyógyulás alatt arra is gondolj, melyik oldaladon alszol, és mi a helyzet a párnával és a szemüveggel.',
     },
     img4: {
-      en: 'Illustration: a simple, bold design stays readable over the years, while a tiny detailed one blurs on the thin skin.',
-      hu: 'Illusztráció: az egyszerű, vastagabb vonalú minta évek múlva is olvasható, az apró, részletes minta elmosódik a vékony bőrön.',
+      en: 'Illustration: an older hand with a tiny, faded tattoo. Small designs on thin skin soften over the decades, so simple shapes hold up best.',
+      hu: 'Illusztráció: idős kéz egy apró, kifakult tetoválással. A vékony bőrön lévő kis minták évtizedek alatt puhulnak, ezért az egyszerű formák bírják a legjobban.',
     },
     img5: {
-      en: 'Illustration: fingernail size with a few lines and open space works better behind the ear than a miniature full of detail.',
-      hu: 'Illusztráció: a fül mögött a körömnyi, kevés vonalas, levegős minta jobban működik, mint egy részletekkel teli miniatűr.',
+      en: 'Illustration: a short word in fine script on the wrist. A single word can work small, while long sentences in tiny handwriting are the first to blur.',
+      hu: 'Illusztráció: rövid szó finom írással a csuklón. Egyetlen szó kicsiben is működhet, a hosszú mondatok apró kézírással viszont mosódnak el elsőként.',
     },
     img6: {
-      en: 'Illustration: hair down hides a behind-the-ear tattoo, a ponytail or short hair shows it.',
-      hu: 'Illusztráció: a leengedett haj eltakarja a fül mögötti tetoválást, a lófarok vagy a rövid haj megmutatja.',
+      en: 'Illustration: a fine-line fern along the spine, with the hair tied up. Hair up shows a tattoo near the neck and behind the ear; hair down hides it.',
+      hu: 'Illusztráció: finom vonalas páfrány a gerinc mentén, feltűzött hajjal. Feltűzött hajjal látszik a nyak és a fül mögötti tetoválás, leengedett hajjal rejtve marad.',
     },
     img7: {
-      en: 'Illustration: sunscreen when your hair is up and an occasional touch-up keep a small design sharp for decades.',
-      hu: 'Illusztráció: a fényvédő feltűzött hajnál és egy-egy javítás évtizedekig élesen tartja a kis mintát.',
+      en: 'Illustration: a woman under a beach umbrella putting on sunscreen. Behind the ear is often shaded, but a little sunscreen there keeps a small design sharp for longer.',
+      hu: 'Illusztráció: nő napernyő alatt naptejet ken magára. A fül mögötti rész gyakran árnyékban van, de egy kevés naptej ott is tovább tartja élesen a kis mintát.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Marco had planned it for weeks: give blood on Friday with his colleagues, then celebrate the end of the project with a small compass tattoo on Saturday. Except the order got swapped. The studio had a cancellation on Wednesday, he took it, and on Friday the nurse at the donation centre looked at the fresh cling film on his forearm and gently sent him home. “Come back in four months,” she said.',
       'Nobody had told him. And it made him wonder what else his tattoos might change the next time he deals with doctors. An MRI for his knee? The epidural his partner had mentioned for their baby? The mole that now sat right next to the compass needle? This guide answers those questions calmly and with sources, because the honest answer to most of them is reassuring.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real patients or real skin.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real skin.',
       '## The short answer',
       '**Tattoos rarely stop you from getting medical care, but a new tattoo can pause your blood donations for a while.** How long depends on where you live and, in some places, on whether the studio was licensed. For MRI scans, surgery and epidurals the rule of thumb is the same: tell the team about your tattoos, especially fresh, large or dark ones and permanent make-up. For moles, the main risk is that ink makes changes harder to see.',
       'This article is general information, not medical advice. Your blood service, radiographer, anaesthetist or doctor knows your situation and has the final word.',
@@ -98,7 +98,7 @@ const a: LongArticle = {
     hu: [
       'Marco hetekkel előre eltervezte: pénteken vért ad a kollégáival, szombaton pedig egy kis iránytűs tetoválással ünnepli a projekt végét. Csak a sorrend felcserélődött. A szalonban szerdán lemondott valaki, ő elvállalta az időpontot, pénteken pedig a véradóhelyen a nővér ránézett az alkarján lévő friss fóliára, és kedvesen hazaküldte. „Négy hónap múlva jöjjön vissza” – mondta.',
       'Ezt senki nem mondta neki. És elgondolkodott, mit változtathatnak még a tetoválásai, amikor legközelebb orvoshoz kerül. Egy MRI a térde miatt? Az epidurális érzéstelenítés, amiről a párja beszélt a baba miatt? Az anyajegy, ami most épp az iránytű tűje mellett ül? Ez az útmutató nyugodtan és forrásokkal válaszol ezekre a kérdésekre, mert a legtöbbre az őszinte válasz megnyugtató.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi betegeket vagy valódi bőrt.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi betegekről vagy valódi bőrről készült fotók.',
       '## A rövid válasz',
       '**A tetoválás ritkán akadályozza az orvosi ellátást, egy új tetoválás viszont egy időre szüneteltetheti a véradást.** Hogy mennyi időre, az attól függ, hol élsz, és néhol attól is, hogy engedéllyel működő szalonban készült-e. Az MRI-nél, a műtéteknél és az epidurálisnál ugyanaz az ökölszabály: szólj a tetoválásaidról, főleg a friss, nagy vagy sötét darabokról és a tartós sminkről. Az anyajegyeknél a fő kockázat az, hogy a tintában nehezebb észrevenni a változást.',
       'Ez a cikk általános tájékoztatás, nem orvosi tanács. A véradó szolgálat, a radiológus, az aneszteziológus vagy a kezelőorvosod ismeri a helyzetedet, és övé a végső szó.',
@@ -212,28 +212,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: after a new tattoo, blood services ask you to wait for a while. How long depends on the country.',
-      hu: 'Illusztráció: egy új tetoválás után a véradó szolgálatok egy ideig várakozást kérnek. Hogy mennyit, az országtól függ.',
+      en: 'Illustration: a small rose being tattooed on a forearm. After a new tattoo, blood services ask you to wait for a while, and how long depends on the country.',
+      hu: 'Illusztráció: kis rózsa tetoválása az alkaron. Új tetoválás után a véradó szolgálatok egy ideig várakozást kérnek, és hogy mennyit, az országtól függ.',
     },
     img3: {
-      en: 'Illustration: give blood first, get tattooed after. Part of the waiting period then overlaps with the normal gap between donations.',
-      hu: 'Illusztráció: előbb véradás, utána tetoválás. Így a várakozás egy része egybeesik a két véradás közötti szokásos szünettel.',
+      en: 'Illustration: planning dates on a wall calendar. Give blood first and get tattooed after, so part of the waiting period overlaps with the normal gap between donations.',
+      hu: 'Illusztráció: időpontok tervezése a falinaptáron. Előbb adj vért, utána tetováltass, így a várakozási idő egy része egybeesik a véradások közötti szokásos szünettel.',
     },
     img4: {
-      en: 'Illustration: during an MRI, a tattoo rarely feels warm or tingly. A cool compress and the call button are there if it does.',
-      hu: 'Illusztráció: MRI alatt egy tetoválás ritkán melegnek vagy bizsergőnek érződhet. Ilyenkor ott a hideg borogatás és a hívógomb.',
+      en: 'Illustration: a cool compress on a forearm tattoo. If a tattoo feels warm or tingly during an MRI, which is rare, a compress and the call button are there to help.',
+      hu: 'Illusztráció: hűsítő borogatás egy alkartetováláson. Ha a tetoválás MRI közben melegnek vagy bizsergőnek érződik, ami ritka, a borogatás és a hívógomb segít.',
     },
     img5: {
-      en: 'Illustration: with a lower back tattoo, anaesthetists usually look for a gap in the ink for the epidural needle.',
-      hu: 'Illusztráció: derékon lévő tetoválásnál az aneszteziológusok általában rést keresnek a tintában az epidurális tűnek.',
+      en: 'Illustration: a fine-line fern along the spine. With a lower back tattoo, anaesthetists usually look for a gap in the ink for the epidural needle.',
+      hu: 'Illusztráció: finom vonalas páfrány a gerinc mentén. Derékra került tetoválásnál az aneszteziológus általában a tinta közötti résen keresztül szúrja be az epidurális tűt.',
     },
     img6: {
-      en: 'Illustration: leave moles and a little skin around them untattooed, so changes stay easy to spot.',
-      hu: 'Illusztráció: az anyajegyeket és körülöttük egy kis bőrt hagyd tetoválatlanul, hogy a változások könnyen észrevehetők maradjanak.',
+      en: 'Illustration: a small tattoo among freckles and spots on the back of a hand. Leave moles and a little skin around them uninked, so changes stay easy to spot.',
+      hu: 'Illusztráció: kis tetoválás szeplők és foltok között a kézfejen. Az anyajegyeket és körülöttük egy kis bőrt hagyd tetoválás nélkül, hogy a változások könnyen észrevehetők maradjanak.',
     },
     img7: {
-      en: 'Illustration: before any appointment, note the date of your latest tattoo and where your tattoos are.',
-      hu: 'Illusztráció: bármilyen vizsgálat előtt jegyezd fel a legutóbbi tetoválásod dátumát és azt, hol vannak a tetoválásaid.',
+      en: 'Illustration: photographing a forearm tattoo at home. Before any appointment, note the date of your latest tattoo and where your tattoos are.',
+      hu: 'Illusztráció: alkartetoválás lefényképezése otthon. Bármilyen orvosi időpont előtt jegyezd fel a legutóbbi tetoválásod dátumát és azt, hogy hol vannak tetoválásaid.',
     },
   },
 };

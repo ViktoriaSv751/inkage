@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'It was the first really hot day of August, and Marco was waiting for a train when he ran his thumb over the compass on his forearm. He had had it for six years. That morning the lines felt like Braille, every outline standing up from the skin. By the evening, after a cool shower, they were flat again, and he had already typed “raised tattoo” into his phone.',
       'A tattoo that feels raised, swollen or bumpy is one of the most common things people worry about, and in most cases it is nothing serious. But a few causes do need a doctor, and they look different. This guide helps you tell them apart by asking three simple questions: how old is the tattoo, which part of it is raised, and does it come and go?',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real clients or real skin. This article is general information, not a diagnosis.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real clients or real skin. This article is general information, not a diagnosis.',
       '## The short answer',
       '**Most raised tattoos are either healing or reacting to the weather.** A new tattoo is swollen and raised for the first days because it is a fresh wound. An old tattoo can rise slightly on hot, humid days, after exercise or after a lot of standing, and it settles again within hours or a few days.',
       'The causes worth a closer look have their own patterns: a raised area that stays on **one ink colour**, firm lumps that **don’t go away**, thick ridges that **grow beyond the lines**, or swelling that comes with **spreading redness, pain, pus or fever**. Each of these is covered below.',
@@ -98,7 +98,7 @@ const a: LongArticle = {
     hu: [
       'Augusztus első igazán forró napja volt, Marco a vonatra várt, amikor végighúzta a hüvelykujját az alkarján lévő iránytűn. Hat éve volt meg. Aznap reggel a vonalak olyanok voltak, mint a Braille-írás, minden kontúr kiállt a bőrből. Estére, egy hideg zuhany után, újra simák lettek, ő pedig addigra már beírta a telefonjába: „kidomborodó tetoválás”.',
       'A kidomborodó, duzzadt vagy rücskös tetoválás az egyik leggyakoribb dolog, ami miatt az emberek aggódnak, és legtöbbször semmi komoly. Néhány ok viszont orvost igényel, és ezek másképp néznek ki. Ez az útmutató három egyszerű kérdéssel segít megkülönböztetni őket: milyen régi a tetoválás, melyik része domborodik ki, és jön-megy, vagy marad?',
-      '> Megjegyzés a képekhez: a cikk képei ehhez az útmutatóhoz készült egyszerű illusztrációk. Tipikus helyzeteket mutatnak, nem valódi vendégeket vagy valódi bőrt. Ez a cikk általános tájékoztatás, nem diagnózis.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi vendégekről vagy valódi bőrről készült fotók. Ez a cikk általános tájékoztatás, nem diagnózis.',
       '## A rövid válasz',
       '**A legtöbb kidomborodó tetoválás vagy gyógyul, vagy az időjárásra reagál.** Egy új tetoválás az első napokban azért duzzadt és kiemelkedő, mert friss seb. Egy régi tetoválás forró, párás napokon, edzés után vagy sok állás után kicsit kidomborodhat, majd néhány órán vagy napon belül újra megnyugszik.',
       'Azoknak az okoknak, amelyeket érdemes közelebbről megnézni, saját mintázatuk van: a kidomborodás **egy tintaszínen** marad, kemény csomók **nem múlnak el**, vastag kinövések **túlnőnek a vonalakon**, vagy a duzzanattal együtt **terjedő bőrpír, fájdalom, genny vagy láz** jelentkezik. Ezek mindegyikéről lent olvashatsz.',
@@ -212,28 +212,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: a new tattoo is swollen and raised in the first days, then flattens over the following weeks.',
-      hu: 'Illusztráció: egy új tetoválás az első napokban duzzadt és kiemelkedő, aztán a következő hetekben kisimul.',
+      en: 'Illustration: a fresh moth tattoo with red, swollen skin around it. A new tattoo is raised in the first days and flattens over the following weeks.',
+      hu: 'Illusztráció: friss lepketetoválás, körülötte piros, duzzadt bőrrel. Az új tetoválás az első napokban kidomborodik, majd a következő hetekben lelapul.',
     },
     img3: {
-      en: 'Illustration: on a hot, humid day the lines of an old tattoo can rise, and they settle again once the skin cools down.',
-      hu: 'Illusztráció: forró, párás napon egy régi tetoválás vonalai kidomborodhatnak, és újra kisimulnak, amikor a bőr lehűl.',
+      en: 'Illustration: touching an arm tattoo on a hot, sunny day. In heat and humidity the lines of an old tattoo can rise, and they settle again once the skin cools down.',
+      hu: 'Illusztráció: egy kartetoválás megérintése forró, napos időben. Hőségben és párás levegőben egy régi tetoválás vonalai kidomborodhatnak, majd a bőr lehűlése után újra lelapulnak.',
     },
     img4: {
-      en: 'Illustration: only the red petals are raised while the black outline stays flat, a typical sign of a reaction to one ink.',
-      hu: 'Illusztráció: csak a piros szirmok domborodnak ki, a fekete kontúr sima marad, ez az egy tintára adott reakció tipikus jele.',
+      en: 'Illustration: a rose with red petals and a black outline. If only the red parts rise while the black stays flat, it points to a reaction to that one ink.',
+      hu: 'Illusztráció: rózsa piros szirmokkal és fekete kontúrral. Ha csak a piros részek domborodnak ki, a fekete pedig lapos marad, az egyetlen tintára adott reakcióra utal.',
     },
     img5: {
-      en: 'Illustration: a hypertrophic scar stays within the lines, while a keloid grows beyond them onto healthy skin.',
-      hu: 'Illusztráció: a hipertrófiás heg a vonalakon belül marad, a keloid viszont túlnő rajtuk az ép bőrre.',
+      en: 'Illustration: a faded rose on slightly textured, scar-like skin. A hypertrophic scar stays within the lines, while a keloid grows beyond them onto healthy skin.',
+      hu: 'Illusztráció: halvány rózsa enyhén egyenetlen, hegszerű bőrön. A hipertrófiás heg a vonalakon belül marad, a keloid viszont túlnő rajtuk az egészséges bőrre.',
     },
     img6: {
-      en: 'Illustration: ink placed at the right depth heals flat. A needle that goes too deep can leave raised lines and a blurry blowout.',
-      hu: 'Illusztráció: a megfelelő mélységbe juttatott tinta simán gyógyul. A túl mélyre hatoló tű kiemelkedő vonalakat és elmosódott kifutást hagyhat.',
+      en: 'Illustration: floral lines that have spread into a blurry halo. A needle that goes too deep can leave raised lines and this kind of blowout.',
+      hu: 'Illusztráció: virágos vonalak, amelyek elmosódott udvarrá terültek szét. A túl mélyre hatoló tű kidomborodó vonalakat és ilyen kifolyást (blowoutot) hagyhat.',
     },
     img7: {
-      en: 'Illustration: spreading redness, red streaks and fever are signs that a raised tattoo needs a doctor.',
-      hu: 'Illusztráció: a terjedő bőrpír, a piros csíkok és a láz azt jelzik, hogy a kidomborodó tetoválással orvoshoz kell fordulni.',
+      en: 'Illustration: looking at a photo of a tattoo on the phone. Spreading redness, red streaks or fever are signs that a raised tattoo needs a doctor.',
+      hu: 'Illusztráció: egy tetoválás fotójának nézegetése a telefonon. A terjedő pirosság, a piros csíkok vagy a láz azt jelzik, hogy a kidomborodó tetoválást orvosnak kell megnéznie.',
     },
   },
 };

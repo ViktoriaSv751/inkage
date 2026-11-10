@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena trains five mornings a week, so she booked her forearm tattoo for a Friday afternoon and planned to be back on the bench press on Monday. Then she remembered the pool day with friends in two weeks, the wedding with an open bar the Saturday after, and the beach holiday at the end of the month. In the studio, she asked her artist which of those she would have to cancel. The artist laughed and said: “None of them, if you are clever about it. Just not all of them on day three.”',
       'That is the honest answer. A fresh tattoo does not stop your life, but for a few weeks it needs you to make room for it. This guide goes through the things people most often ask about, the gym, swimming, sauna, alcohol, sun, tight clothes, shaving and scratching, explains why each one matters, and ends with a simple timeline of when each is usually OK again.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## Why the first weeks matter',
       'A tattoo needle punctures the skin thousands of times and leaves the ink in the deeper layer, the dermis. For your body, that is a wound, and for the first days it behaves like one: it is red, a little swollen, it weeps plasma and it is open to germs. Over the following one to two weeks it scabs, peels and itches, and after that a thin new layer of skin covers the ink.',
       'The surface usually closes in about two to four weeks, sometimes longer for large or heavily shaded pieces. The deeper skin keeps settling for months. Almost every rule below protects the tattoo during that first window: from germs while it is open, from friction while it is fragile, and from sun and water while the new skin is still thin.',
@@ -116,7 +116,7 @@ const a: LongArticle = {
     hu: [
       'Lena heti öt reggel edz, ezért péntek délutánra foglalta az alkartetoválását, és úgy tervezte, hétfőn már újra fekvenyomózik. Aztán eszébe jutott a két hét múlva esedékes strandnap a barátaival, az utána következő szombati esküvő nyitott bárral, és a hónap végi tengerparti nyaralás. A szalonban megkérdezte a tetoválóját, ezek közül mit kell lemondania. A tetováló nevetett, és azt mondta: „Egyiket sem, ha okosan csinálod. Csak ne mindet a harmadik napon.”',
       'Ez az őszinte válasz. Egy friss tetoválás nem állítja meg az életed, de néhány hétig helyet kell csinálnod neki. Ez a cikk végigmegy azokon a dolgokon, amikről a legtöbben kérdeznek: edzőterem, úszás, szauna, alkohol, nap, szűk ruha, borotválás és vakarás. Elmondja, miért számít mindegyik, és a végén egy egyszerű idővonalon megmutatja, mikor jöhet általában újra.',
-      '> Megjegyzés a képekről: a cikkben szereplő képek egyszerű illusztrációk, amelyek ehhez a cikkhez készültek. Jellemző helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Miért számítanak az első hetek?',
       'A tetoválótű több ezerszer szúrja át a bőrt, és a tintát a mélyebb rétegben, az irhában hagyja. A testednek ez seb, és az első napokban úgy is viselkedik: piros, kicsit duzzadt, nyirkot szivárogtat, és nyitva áll a kórokozók előtt. A következő egy-két hétben pörkösödik, hámlik és viszket, utána pedig egy vékony új bőrréteg fedi be a tintát.',
       'A felszín általában két-négy hét alatt zárul be, a nagy vagy erősen árnyalt mintáknál néha tovább tart. A mélyebb bőr hónapokig rendeződik. Az alábbi szabályok szinte mind ezt az első időszakot védik: a kórokozóktól, amíg nyitott, a dörzsöléstől, amíg sérülékeny, a naptól és a víztől pedig, amíg az új bőr még vékony.',
@@ -248,28 +248,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: sweat, friction and stretching are why hard training waits. Train the parts of the body away from the fresh tattoo first.',
-      hu: 'Illusztráció: az izzadás, a dörzsölés és a feszülés miatt vár a kemény edzés. Először a friss tetoválástól távoli testrészeket edzd.',
+      en: 'Illustration: a heavily tattooed arm in the gym. Sweat, friction and stretching are why hard training has to wait while a tattoo heals.',
+      hu: 'Illusztráció: erősen tetovált kar az edzőteremben. Az izzadás, a dörzsölés és a bőr feszülése miatt kell várni a kemény edzéssel, amíg a tetoválás gyógyul.',
     },
     img3: {
-      en: 'Illustration: pool, bath and sauna wait until the tattoo has fully healed; a short, lukewarm shower is fine from the start.',
-      hu: 'Illusztráció: a medence, a kád és a szauna várhat a teljes gyógyulásig, a rövid, langyos zuhany kezdettől rendben van.',
+      en: 'Illustration: rinsing a floral forearm tattoo under running water. A short, lukewarm rinse is fine from the start; pool, bath and sauna wait until it has fully healed.',
+      hu: 'Illusztráció: virágos alkartetoválás leöblítése folyó víz alatt. A rövid, langyos zuhany az első naptól rendben van, a medence, a kád és a szauna csak a teljes gyógyulás után jöhet.',
     },
     img4: {
-      en: 'Illustration: water instead of alcohol the day before and the first days after a tattoo.',
-      hu: 'Illusztráció: víz alkohol helyett a tetoválás előtti napon és az utána következő első napokban.',
+      en: 'Illustration: a water bottle, a glass of water and snacks laid out for tattoo day. Water instead of alcohol the day before and the first days after.',
+      hu: 'Illusztráció: vizes palack, egy pohár víz és nasi a tetoválás napjára előkészítve. Alkohol helyett víz az előző napon és az utána következő első napokban.',
     },
     img5: {
-      en: 'Illustration: a loose sleeve and shade protect a healing tattoo; direct sun waits at least a month.',
-      hu: 'Illusztráció: a bő ruhaujj és az árnyék védi a gyógyuló tetoválást, a közvetlen nap legalább egy hónapot vár.',
+      en: 'Illustration: reading in the shade in a long-sleeved shirt. Covered skin and shade protect a healing tattoo; direct sun waits at least a month.',
+      hu: 'Illusztráció: olvasás árnyékban, hosszú ujjú ingben. A takarás és az árnyék védi a gyógyuló tetoválást, a közvetlen nap legalább egy hónapot vár.',
     },
     img6: {
-      en: 'Illustration: razors, scratching nails and tight straps are the small, everyday things that damage a fresh tattoo.',
-      hu: 'Illusztráció: a borotva, a vakaró köröm és a szoros pánt azok az apró, hétköznapi dolgok, amelyek megsértik a friss tetoválást.',
+      en: 'Illustration: a fresh flower tattoo with red, irritated skin around it. Scratching, picking and the wrong products make this kind of irritation worse.',
+      hu: 'Illusztráció: friss virágtetoválás, körülötte vörös, irritált bőrrel. A vakarás, a piszkálás és a rossz termékek csak rontanak az ilyen irritáción.',
     },
     img7: {
-      en: 'Illustration: a typical timeline. Shower first, light exercise after a few days, hard training after one to two weeks, swimming and sun once fully healed.',
-      hu: 'Illusztráció: egy jellemző idővonal. Előbb a zuhany, néhány nap után a könnyű mozgás, egy-két hét után a kemény edzés, az úszás és a nap a teljes gyógyulás után.',
+      en: 'Illustration: running by the sea at sunset with a forearm tattoo. Light exercise comes back after a few days, hard training after one to two weeks, sun once it has fully healed.',
+      hu: 'Illusztráció: futás naplementekor a tengerparton, alkartetoválással. A könnyű mozgás néhány nap után jöhet vissza, a kemény edzés egy-két hét után, a nap csak a teljes gyógyulás után.',
     },
   },
 };

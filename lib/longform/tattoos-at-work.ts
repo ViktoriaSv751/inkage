@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Sofia is 24 and has wanted a botanical piece on her forearm for years: a long stem with leaves, running from the wrist towards the elbow. The design is ready, the artist is booked, and then a friend asks a simple question. “What about job interviews?” Sofia works in a café now, but next year she wants to apply for jobs in hotel management and maybe at a bank. Suddenly she is searching for things like “tattoos at work” and “visible tattoos job” late at night.',
       'It is a fair question, and the honest answer is more relaxed than it would have been twenty years ago, but not completely simple. This guide looks at how attitudes have changed, where visible tattoos are still restricted, what the law usually says in general terms, which placements are easy to cover, how to handle interviews, and which covering methods actually work. It is not here to tell you whether to get a tattoo. It is here to help you plan one with your eyes open.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## How attitudes have changed',
       'Tattoos are now common. In a 2023 Pew Research Center survey, **about one in three American adults had at least one tattoo**, and eight in ten said society has become more accepting of people with tattoos. In Britain, a 2022 YouGov survey found that about a quarter of adults had a tattoo.',
       'The way people see tattoos at work has shifted with that. In the same YouGov survey in Britain, **64% said a visible tattoo is not unprofessional, as long as it is not on the face or neck**. In the US, YouGov found in 2025 that favourable views of tattoos had risen from about a quarter in 2015 to well over a third, while unfavourable views fell from 40% to about a quarter.',
@@ -92,7 +92,7 @@ const a: LongArticle = {
     hu: [
       'Szofi 24 éves, és évek óta szeretne egy növényes tetoválást az alkarjára: egy hosszú szárat levelekkel, a csuklótól a könyök felé. A minta kész, a tetováló időpontja megvan, aztán egy barátnője feltesz egy egyszerű kérdést: „És mi lesz az állásinterjúkon?” Szofi most kávézóban dolgozik, de jövőre szállodai vezetői munkára, esetleg bankba szeretne jelentkezni. Hirtelen késő este olyanokra keres rá, hogy „tetoválás munkahely” és „látható tetoválás állás”.',
       'Jogos kérdés, és az őszinte válasz lazább, mint húsz éve lett volna, de nem teljesen egyszerű. Ez az útmutató végigveszi, hogyan változott a megítélés, hol korlátozzák még a látható tetoválást, mit mond általában a jog, mely helyeket könnyű eltakarni, hogyan kezeld az állásinterjút, és melyik takarási módszer működik valóban. Nem arról szól, hogy csináltass-e tetoválást, hanem arról, hogy nyitott szemmel tervezd meg.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, amelyeket ehhez az útmutatóhoz készítettünk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Hogyan változott a megítélés',
       'A tetoválás ma már hétköznapi. A Pew Research Center 2023-as felmérése szerint **nagyjából minden harmadik amerikai felnőttnek van legalább egy tetoválása**, és tízből nyolcan mondták, hogy a társadalom elfogadóbb lett a tetovált emberekkel. Nagy-Britanniában a YouGov 2022-es felmérése szerint a felnőttek körülbelül negyedének van tetoválása.',
       'Ezzel együtt változott az is, hogyan látják az emberek a tetoválást a munkahelyen. Ugyanebben a brit YouGov-felmérésben **64% mondta, hogy a látható tetoválás nem szakszerűtlen, ha nem az arcon vagy a nyakon van**. Az Egyesült Államokban a YouGov 2025-ben azt találta, hogy a tetoválásról kedvezően vélekedők aránya a 2015-ös nagyjából negyedről jóval egyharmad fölé nőtt, a kedvezőtlenül vélekedőké pedig 40%-ról körülbelül negyedre csökkent.',
@@ -215,28 +215,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: favourable views of tattoos have grown over the last decade, while unfavourable views have fallen.',
-      hu: 'Illusztráció: az elmúlt évtizedben nőtt a tetoválásról kedvezően vélekedők aránya, a kedvezőtlenül vélekedőké pedig csökkent.',
+      en: 'Illustration: an older man getting tattooed by a young artist. Tattoos have become an ordinary part of life across age groups, and views at work have followed.',
+      hu: 'Illusztráció: idősebb férfit tetovál egy fiatal tetováló. A tetoválás minden korosztályban a hétköznapok része lett, és a munkahelyi megítélés is ezt követi.',
     },
     img3: {
-      en: 'Illustration: since 2022 the US Army allows one small tattoo on each hand, up to one inch. Uniformed services set some of the most specific rules.',
-      hu: 'Illusztráció: 2022 óta az amerikai hadsereg kezenként egy legfeljebb egy hüvelykes kis tetoválást enged. Az egyenruhás szolgálatok szabályai a legrészletesebbek közé tartoznak.',
+      en: 'Illustration: a small sun tattoo on the back of a hand. Uniformed services are among the employers that set exact rules for hand tattoos like this.',
+      hu: 'Illusztráció: kis naptetoválás a kézfejen. Az egyenruhás szolgálatok azok közé a munkáltatók közé tartoznak, amelyek pontos szabályokat írnak elő az ilyen kézfejtetoválásokra.',
     },
     img4: {
-      en: 'Illustration: employers can usually set a dress code, but rules must be applied fairly, and religion can change the picture.',
-      hu: 'Illusztráció: a munkáltató általában meghatározhat öltözködési szabályokat, de azokat igazságosan kell alkalmazni, és a vallás megváltoztathatja a helyzetet.',
+      en: 'Illustration: small finger tattoos on a hand holding a coffee cup. Whether they are fine at work depends on the employer’s dress code and on local law.',
+      hu: 'Illusztráció: apró ujjtetoválások egy kávéscsészét tartó kézen. Hogy a munkahelyen elfogadottak-e, a munkáltató öltözködési szabályzatán és a helyi jogon múlik.',
     },
     img5: {
-      en: 'Illustration: three zones of visibility. Torso and upper arms are almost always covered, forearms and the back of the neck when you want, hands, neck and face almost never.',
-      hu: 'Illusztráció: a láthatóság három zónája. A törzs és a felkar szinte mindig takarva van, az alkar és a tarkó akkor, amikor akarod, a kéz, a nyak és az arc szinte soha.',
+      en: 'Illustration: a blackwork band around a man’s neck. The neck, the hands and the face are on show in almost every job, all year round.',
+      hu: 'Illusztráció: blackwork sáv egy férfi nyakán. A nyak, a kéz és az arc szinte minden munkában és egész évben látszik.',
     },
     img6: {
-      en: 'Illustration: a long-sleeved shirt or a thin sleeve cover is the simplest way to hide a forearm tattoo at work.',
-      hu: 'Illusztráció: a hosszú ujjú ing vagy egy vékony karvédő ujj a legegyszerűbb módja annak, hogy a munkahelyen eltakard az alkartetoválást.',
+      en: 'Illustration: an anchor tattoo on a forearm below a rolled-up denim sleeve. Rolled down, a long sleeve is the simplest way to cover a forearm tattoo at work.',
+      hu: 'Illusztráció: horgonytetoválás egy alkaron, felhajtott farmering alatt. Letűrve a hosszú ujj a legegyszerűbb módja, hogy egy alkartetoválást eltakarj a munkahelyen.',
     },
     img7: {
-      en: 'Illustration: cover-up make-up in three steps: colour corrector, full-coverage foundation, setting powder.',
-      hu: 'Illusztráció: tetoválás eltakarása sminkkel három lépésben: színkorrektor, erősen fedő alapozó, fixáló púder.',
+      en: 'Illustration: a small fine-line branch on a wrist. Small, black designs on flat areas like this are the easiest to hide with cover-up make-up.',
+      hu: 'Illusztráció: kis, vékony vonalas ág a csuklón. Az ilyen kicsi, fekete, sík felületen lévő mintákat a legkönnyebb fedősminkkel eltüntetni.',
     },
   },
 };

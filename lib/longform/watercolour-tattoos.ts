@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena had wanted the hummingbird for years: no outline, just a burst of turquoise, violet and a little coral melting into each other on the inside of her forearm, with a few drips of colour trailing off like wet paint. The pictures she had saved were stunning. Then a friend showed her a watercolour fox she had got eight years earlier, and Lena had to look twice to see the fox. The colours were still there, softly, but the shape had wandered.',
       'Both things are true about watercolour tattoos. They can be some of the most beautiful pieces you will ever see on skin, and they are also one of the styles that change most over the years. This guide explains why, what a black outline or skeleton really changes, which colours and placements give you the best odds, how to look after one, and what you can honestly expect after ten and twenty years.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical tendencies, not real tattoos or real people.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## What a watercolour tattoo actually is',
       'A watercolour tattoo is a style, not a different kind of ink. The artist uses normal tattoo pigments but applies them to look like paint on paper: soft gradients that fade into bare skin, washes of colour that overlap, splashes, drips and brush-like strokes. Many pieces have no black outline at all; others combine the colour with a few fine black lines or a sketchy drawing.',
       'The style became popular in the 2010s, mostly with flowers, birds, animals and abstract shapes. That matters for one reason: there are not many watercolour tattoos that are thirty years old yet. What we know about how they age comes from what artists and dermatologists see in pieces that are five to fifteen years old, and from what we know about how ink behaves in skin in general.',
@@ -117,7 +117,7 @@ const a: LongArticle = {
     hu: [
       'Léna évek óta egy kolibrit szeretett volna: kontúr nélkül, csak türkiz, lila és egy kis korall színrobbanás az alkarja belső oldalán, néhány lecsorgó festékcseppel, mintha még nedves lenne. A mentett képek gyönyörűek voltak. Aztán egy barátnője megmutatta neki a nyolc éve készült akvarell rókáját, és Lénának kétszer kellett ránéznie, hogy lássa a rókát. A színek még ott voltak, lágyan, de a forma elvándorolt.',
       'Az akvarell tetoválásról mindkettő igaz. Lehet a legszebb darab, amit valaha bőrön látsz, és egyben az egyik stílus, amelyik a legtöbbet változik az évek során. Ez az útmutató elmagyarázza, miért, mit változtat valójában egy fekete kontúr vagy váz, melyik szín és hely adja a legjobb esélyt, hogyan vigyázz rá, és mire számíthatsz őszintén tíz és húsz év után.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, amelyek ehhez az útmutatóhoz készültek. Jellemző tendenciákat mutatnak, nem valódi tetoválásokat vagy embereket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Mi is valójában az akvarell tetoválás',
       'Az akvarell tetoválás egy stílus, nem másfajta tinta. A tetováló normál tetováló pigmenteket használ, de úgy viszi fel őket, hogy papíron lévő festéknek tűnjenek: lágy átmenetek, amelyek a csupasz bőrbe olvadnak, egymásra csúszó színfoltok, fröccsenések, lecsorgások és ecsetszerű vonások. Sok darabnak egyáltalán nincs fekete kontúrja, mások néhány vékony fekete vonallal vagy vázlatos rajzzal egészítik ki a színt.',
       'A stílus a 2010-es években lett népszerű, leginkább virágokkal, madarakkal, állatokkal és absztrakt formákkal. Ez egy okból számít: még nincs sok harmincéves akvarell tetoválás. Amit az öregedésükről tudunk, az abból jön, amit tetoválók és bőrgyógyászok öt-tizenöt éves darabokon látnak, és abból, amit általában tudunk a tinta viselkedéséről a bőrben.',
@@ -249,28 +249,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: four ways to build a watercolour tattoo, from pure colour with no outline to a full dark skeleton under the washes.',
-      hu: 'Illusztráció: az akvarell tetoválás négy felépítése, a kontúr nélküli tiszta színtől a színfoltok alatti teljes sötét vázig.',
+      en: 'Illustration: caps of coloured tattoo ink on a steel tray. Watercolour is a way of applying ordinary tattoo pigments, not a different kind of ink.',
+      hu: 'Illusztráció: színes tetoválótinták kupakokban egy acéltálcán. Az akvarell a hagyományos tetoválópigmentek egyfajta felvitele, nem másfajta tinta.',
     },
     img3: {
-      en: 'Illustration: over the years ink particles drift slightly and pale colour loses contrast, so a soft edge has nothing left to hold the shape.',
-      hu: 'Illusztráció: az évek során a tintaszemcsék kissé elvándorolnak, a halvány szín pedig veszít a kontrasztjából, így a lágy szélnél már semmi sem tartja a formát.',
+      en: 'Illustration: two peony tattoos side by side, one in bright colour and one with faded colour. Pale washes and light colours are the first to lose contrast.',
+      hu: 'Illusztráció: két bazsarózsa-tetoválás egymás mellett, az egyik élénk, a másik kifakult színekkel. A halvány színfoltok és a világos színek veszítik el először a kontrasztjukat.',
     },
     img4: {
-      en: 'Illustration: the same flower without and with a dark skeleton, fresh, after about 10 years and after about 20 years.',
-      hu: 'Illusztráció: ugyanaz a virág sötét váz nélkül és vázzal, frissen, körülbelül 10 és körülbelül 20 év után.',
+      en: 'Illustration: a colourful koi held together by dark lines. A dark structure under the colour keeps the shape readable long after the brightest tones soften.',
+      hu: 'Illusztráció: színes koi, amelyet sötét vonalak tartanak össze. A szín alatti sötét váz akkor is olvashatóan tartja a formát, amikor a legélénkebb tónusok már lágyultak.',
     },
     img5: {
-      en: 'Illustration: dark, saturated colours keep their strength much longer than pale yellows, pastels and white.',
-      hu: 'Illusztráció: a sötét, telített színek sokkal tovább megőrzik az erejüket, mint a halványsárgák, a pasztellek és a fehér.',
+      en: 'Illustration: a colour lily on the forearm whose pale tones have faded. Build the design so that it still makes sense if the lightest colour disappears.',
+      hu: 'Illusztráció: színes liliom az alkaron, a halvány tónusai kifakultak. Úgy építsd fel a mintát, hogy akkor is értelmes maradjon, ha a legvilágosabb szín eltűnik.',
     },
     img6: {
-      en: 'Illustration: the upper arm, shoulder blade, back and thigh are kind to soft colour; hands, feet, wrists and elbows are the hardest.',
-      hu: 'Illusztráció: a felkar, a lapocka, a hát és a comb kíméletes a lágy színekhez; a kéz, a lábfej, a csukló és a könyök a legnehezebb.',
+      en: 'Illustration: a sunburned shoulder with a colour floral tattoo on the beach. Sun and friction are the two enemies of a watercolour piece.',
+      hu: 'Illusztráció: leégett váll színes virágos tetoválással a strandon. A nap és a dörzsölés az akvarell tetoválás két fő ellensége.',
     },
     img7: {
-      en: 'Illustration: the first touch-up after healing, then occasional colour refreshes over the years keep a watercolour piece alive.',
-      hu: 'Illusztráció: az első javítás gyógyulás után, majd az évek során egy-egy színfrissítés tartja életben az akvarell darabot.',
+      en: 'Illustration: an artist in black gloves working colour into a small rose. A touch-up adds ink again, but it cannot make soft edges crisper than they were.',
+      hu: 'Illusztráció: fekete kesztyűs tetováló színt visz egy kis rózsába. A frissítés újra tintát ad, de a lágy széleket nem teszi élesebbé, mint amilyenek voltak.',
     },
   },
 };

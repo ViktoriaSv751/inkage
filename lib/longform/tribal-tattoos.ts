@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Daniel got his armband in 1998, the summer he turned twenty: a ring of sharp black points around the upper arm, picked from a sheet on the studio wall in about five minutes. Twenty-seven years later the black is still surprisingly solid. What changed is everything around it. His niece wants a Polynesian-style piece for her own arm, and she asked him what his tattoo means. He had no answer, and it made him wonder whether he should keep it, change it or cover it.',
       'That conversation sums up why “tribal tattoo” is such a confusing search. The same word is used for a fashion that came and went, and for tattooing traditions that are thousands of years old and very much alive. This guide separates the two, explains why bold black tribal work ages so well, how to choose placement and size, and what your options are if you have an old 90s piece you no longer love.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They do not reproduce any traditional design, and they show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They do not reproduce any traditional design, and they are not photos of real people or real results.',
       '## Two things called “tribal”',
       'When people say tribal today, they usually mean one of two things.',
       '- **1990s tribal, sometimes called neo-tribal.** Abstract shapes of solid black with sharp, flowing points: armbands, shoulder pieces, lower-back designs, flames and swirls. It borrowed the boldness of older traditions, but usually not their structure or their meaning.',
@@ -95,7 +95,7 @@ const a: LongArticle = {
     hu: [
       'Dániel 1998-ban csináltatta a karpántját, azon a nyáron, amikor húszéves lett: éles fekete csúcsokból álló gyűrű a felkarján, amit nagyjából öt perc alatt választott ki egy mintaívről a szalon falán. Huszonhét évvel később a fekete még meglepően telt. Ami megváltozott, az minden más körülötte. Az unokahúga polinéz stílusú tetoválást szeretne a karjára, és megkérdezte tőle, mit jelent az övé. Nem tudott válaszolni, és elgondolkodott, hogy megtartsa, átalakíttassa vagy letakartassa.',
       'Ez a beszélgetés jól mutatja, miért olyan zavaros keresés a „tribal tetoválás”. Ugyanazt a szót használják egy divatra, ami jött és ment, és olyan tetoválási hagyományokra, amelyek több ezer évesek és ma is nagyon élők. Ez az útmutató szétválasztja a kettőt, elmagyarázza, miért öregszik olyan jól a vastag fekete tribal, hogyan válassz helyet és méretet, és milyen lehetőségeid vannak, ha van egy régi 90-es évekbeli tetoválásod, amit már nem szeretsz.',
-      '> Egy megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Nem másolnak le hagyományos mintát, és tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Egy megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem másolnak le hagyományos mintát, és nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Két dolog, amit tribalnak hívnak',
       'Ha ma valaki azt mondja, tribal, általában két dolog egyikére gondol.',
       '- **A 90-es évek tribalja, néha neo-tribalnak is hívják.** Telt fekete, éles, hullámzó csúcsokban végződő absztrakt formák: karpántok, vállminták, derékminták, lángok és örvények. Az idősebb hagyományok merészségét vette át, de általában nem a szerkezetüket vagy a jelentésüket.',
@@ -206,28 +206,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: two things called tribal. An abstract 1990s flash shape on one side, hand-tapping tools of living traditions on the other.',
-      hu: 'Illusztráció: két dolog, amit tribalnak hívnak. Egyik oldalon egy absztrakt 90-es évekbeli mintaív-forma, a másikon az élő hagyományok kézi ütögetős eszközei.',
+      en: 'Illustration: flash sheets, a stencil and a machine on a studio desk. Much of 1990s tribal spread the same way, as ready-made flash on studio walls, far from the living traditions it borrowed from.',
+      hu: 'Illusztráció: flash lapok, sablon és tetoválógép egy stúdióasztalon. A 90-es évek tribalja nagyrészt így terjedt, kész flash mintaként a stúdiók falán, messze azoktól az élő hagyományoktól, amelyekből merített.',
     },
     img3: {
-      en: 'Illustration: bold black shapes with wide gaps stay readable for decades; thin tips and narrow gaps are the first to close up.',
-      hu: 'Illusztráció: a széles résekkel tervezett vastag fekete formák évtizedekig olvashatók maradnak, a vékony csúcsok és a keskeny rések záródnak össze először.',
+      en: 'Illustration: a wide band of solid black on a forearm. Bold black shapes with clear gaps of skin stay readable for decades.',
+      hu: 'Illusztráció: széles, telt fekete sáv egy alkaron. A merész fekete formák, köztük tiszta bőrközökkel, évtizedekig olvashatók maradnak.',
     },
     img4: {
-      en: 'Illustration: a design that flows over the shoulder and along the arm moves with the body; a straight band fights the muscle.',
-      hu: 'Illusztráció: a vállon átfutó, a kar mentén haladó minta a testtel együtt mozog, az egyenes pánt az izommal harcol.',
+      en: 'Illustration: a large ornamental blackwork piece across the upper back. Sized and shaped for the body, the black shapes and the gaps between them stay wide.',
+      hu: 'Illusztráció: nagy, ornamentikus blackwork minta a hát felső részén. A testhez méretezve és formálva a fekete formák és a köztük lévő bőr is elég széles marad.',
     },
     img5: {
-      en: 'Illustration: covering an old tribal usually means a bigger, darker design placed over the densest black.',
-      hu: 'Illusztráció: egy régi tribal letakarása általában nagyobb, sötétebb mintát jelent, ami a legsűrűbb fekete fölé kerül.',
+      en: 'Illustration: an old black tribal on a shoulder. Covering it usually means a bigger, darker design placed over the densest black.',
+      hu: 'Illusztráció: régi fekete tribal egy vállon. Az eltakarása általában egy nagyobb, sötétebb mintát jelent, amely a legsűrűbb fekete részekre kerül.',
     },
     img6: {
-      en: 'Illustration: a few laser sessions, weeks apart, lighten the old black so a cover-up has more freedom.',
-      hu: 'Illusztráció: néhány, hetekkel egymás után következő lézeres kezelés halványítja a régi feketét, így a takarásnak nagyobb a szabadsága.',
+      en: 'Illustration: a tribal shoulder tattoo before and after laser fading. A few sessions lighten the old black so a cover-up has more freedom.',
+      hu: 'Illusztráció: tribal válltetoválás lézeres halványítás előtt és után. Néhány kezelés kivilágosítja a régi feketét, így a takarásnál szabadabb a tervezés.',
     },
     img7: {
-      en: 'Illustration: previewing a tribal piece at 10, 30 and 50 years before you decide on a new design, a rework or a cover-up.',
-      hu: 'Illusztráció: egy tribal minta előnézete 10, 30 és 50 év múlva, mielőtt új mintáról, átalakításról vagy takarásról döntesz.',
+      en: 'Illustration: a man photographing his arm tattoo with his phone at home. A clear photo is the starting point for seeing a design years ahead, before you decide.',
+      hu: 'Illusztráció: férfi otthon lefényképezi a telefonjával a kartetoválását. Egy tiszta fotó a kiindulópont ahhoz, hogy évekre előre lásd a mintát, mielőtt döntesz.',
     },
   },
 };

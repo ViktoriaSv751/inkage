@@ -30,7 +30,7 @@ const a: LongArticle = {
       'On day two, Marco’s new forearm tattoo was pink, warm and a little puffy, and the cling film had left a smear of ink-tinted fluid on his sleeve. He took a photo, compared it with the pictures his artist had sent him, and relaxed. That was exactly what a fresh tattoo was supposed to look like.',
       'On day five it was different. The pink edge had crept a finger’s width beyond the outline, the whole arm throbbed when he let it hang, and the skin felt hot even through his shirt. He almost waited another day. Instead he showed it to a doctor that afternoon, was told it was an early skin infection, took the antibiotics he was prescribed and healed without a mark on the design.',
       'The difference between those two days is what this guide is about: what a normal healing tattoo looks like, what an infected one looks like, how an allergy differs from both, and exactly when to stop reading and see a doctor.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real clients or real skin. This article is general information, not a diagnosis. If you are worried about your tattoo, a doctor should look at it.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real clients or real skin. This article is general information, not a diagnosis. If you are worried about your tattoo, a doctor should look at it.',
       '## The short answer',
       '**A fresh tattoo is supposed to be red, warm, slightly swollen and sore for the first two or three days.** It may ooze clear fluid, a little blood and excess ink. What matters is the direction. Normal healing gets a little calmer every day. An infection does the opposite: after the first few days the redness spreads, the pain and swelling grow, and pus, a bad smell, red streaks or fever can appear.',
       'If your tattoo is getting worse instead of better, don’t wait it out. Dermatologists advise seeing a doctor as soon as you notice signs of infection, because early treatment means less harm to you and to the tattoo.',
@@ -134,7 +134,7 @@ const a: LongArticle = {
       'A második napon Marco új alkartetoválása rózsaszín, meleg és kicsit duzzadt volt, a fólia pedig tintától színes nedvességcsíkot hagyott az ingujján. Lefotózta, összevetette a képekkel, amelyeket a tetoválója küldött neki, és megnyugodott. Pontosan így kell kinéznie egy friss tetoválásnak.',
       'Az ötödik napon más volt a helyzet. A rózsaszín szegély egy ujjnyival túlkúszott a körvonalon, az egész karja lüktetett, ha lógatta, és a bőre még az ingen át is forrónak tűnt. Majdnem várt még egy napot. Ehelyett aznap délután megmutatta egy orvosnak, aki korai bőrfertőzést állapított meg. Marco beszedte a felírt antibiotikumot, és a tetoválás a mintán hagyott nyom nélkül gyógyult meg.',
       'Erről a különbségről szól ez az útmutató: hogyan néz ki egy normálisan gyógyuló tetoválás, hogyan egy fertőzött, miben más az allergia, és pontosan mikor kell abbahagyni az olvasást és orvoshoz menni.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi vendégeket vagy valódi bőrt. Ez a cikk általános tájékoztatás, nem diagnózis. Ha aggódsz a tetoválásod miatt, nézze meg orvos.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi vendégekről vagy valódi bőrről készült fotók. Ez a cikk általános tájékoztatás, nem diagnózis. Ha aggódsz a tetoválásod miatt, nézze meg orvos.',
       '## A rövid válasz',
       '**Egy friss tetoválásnak az első két-három napban piros, meleg, kicsit duzzadt és érzékeny kell lennie.** Szivároghat belőle átlátszó folyadék, egy kevés vér és a felesleges tinta. Ami számít, az az irány. A normális gyógyulás napról napra egy kicsit nyugodtabb. A fertőzés ennek az ellenkezője: az első napok után a pirosság terjed, a fájdalom és a duzzanat erősödik, és megjelenhet genny, rossz szag, piros csíkok vagy láz.',
       'Ha a tetoválásod nem javul, hanem romlik, ne várd ki. A bőrgyógyászok azt tanácsolják, hogy a fertőzés első jeleinél fordulj orvoshoz, mert a korai kezelés kisebb kárt okoz neked is és a tetoválásnak is.',
@@ -282,28 +282,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: normal healing gets calmer day by day. Redness that spreads after the first few days points to infection.',
-      hu: 'Illusztráció: a normális gyógyulás napról napra nyugodtabb. Az első napok után terjedő pirosság fertőzésre utal.',
+      en: 'Illustration: dressing a fresh tattoo at the bathroom counter. Normal healing gets calmer day by day; redness that spreads after the first few days points to infection.',
+      hu: 'Illusztráció: friss tetoválás bekötése a fürdőszobapultnál. A normális gyógyulás napról napra nyugodtabb; az első napok után terjedő pirosság fertőzésre utal.',
     },
     img3: {
-      en: 'Illustration: an allergy tends to stay on one ink colour, most often red. An infection involves the whole area and can spread.',
-      hu: 'Illusztráció: az allergia jellemzően egy tintaszínen marad, leggyakrabban a pirosan. A fertőzés az egész területet érinti, és terjedhet.',
+      en: 'Illustration: a rose with red petals and a black outline. An allergy tends to stay on one ink colour, most often red, while an infection involves the whole area.',
+      hu: 'Illusztráció: rózsa piros szirmokkal és fekete kontúrral. Az allergia általában egy tintaszínhez kötődik, leggyakrabban a piroshoz, a fertőzés viszont az egész területet érinti.',
     },
     img4: {
-      en: 'Illustration: bacteria can sit in the ink itself, even in sealed bottles. Single-use caps and sterile water lower the risk.',
-      hu: 'Illusztráció: a baktérium magában a tintában is lehet, akár lezárt üvegben is. Az egyszer használatos kupakok és a steril víz csökkentik a kockázatot.',
+      en: 'Illustration: single-use caps of coloured ink on a steel tray. Bacteria can sit in the ink itself, so fresh caps and sterile water lower the risk.',
+      hu: 'Illusztráció: egyszer használatos tintakupakok színes tintával egy acéltálcán. A baktériumok magában a tintában is lehetnek, ezért a friss kupak és a steril víz csökkenti a kockázatot.',
     },
     img5: {
-      en: 'Illustration: red streaks, fever or redness that keeps spreading need a doctor the same day.',
-      hu: 'Illusztráció: a piros csíkokkal, a lázzal vagy a folyamatosan terjedő pirossággal még aznap orvoshoz kell menni.',
+      en: 'Illustration: photographing a tattoo at home. A dated photo shows whether redness is spreading. Red streaks, fever or spreading redness need a doctor the same day.',
+      hu: 'Illusztráció: tetoválás lefényképezése otthon. A dátumozott fotón látszik, terjed-e a pirosság. Piros csíkok, láz vagy terjedő pirosság esetén még aznap orvoshoz kell menni.',
     },
     img6: {
-      en: 'Illustration: no leftover antibiotics, no squeezing and no home remedies. Let a doctor choose the treatment.',
-      hu: 'Illusztráció: se megmaradt antibiotikum, se nyomkodás, se házi szerek. A kezelést válassza ki az orvos.',
+      en: 'Illustration: gently washing a tattoo at the sink. Clean water and a mild soap are fine; leftover antibiotics, squeezing and home remedies are not.',
+      hu: 'Illusztráció: a tetoválás óvatos lemosása a mosdónál. A tiszta víz és az enyhe szappan rendben van; a megmaradt antibiotikum, a nyomkodás és a házi praktikák nem.',
     },
     img7: {
-      en: 'Illustration: sealed single-use needles, fresh gloves, ink in single-use caps and barrier film on the machine.',
-      hu: 'Illusztráció: lezárt, egyszer használatos tűk, friss kesztyű, egyszer használatos kupakokba öntött tinta és védőfólia a gépen.',
+      en: 'Illustration: a prepared station with sealed needles, fresh black gloves and wrapped surfaces. Most infection prevention happens before the needle touches you.',
+      hu: 'Illusztráció: előkészített munkaállomás lezárt tűkkel, friss fekete kesztyűvel és fóliázott felületekkel. A fertőzés megelőzésének nagy része azelőtt történik, hogy a tű hozzád érne.',
     },
   },
 };

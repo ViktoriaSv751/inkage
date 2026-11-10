@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena and Tom had been together for three years when they started talking about a tattoo. Tom wanted her name on his forearm, in her own handwriting. Lena loved the idea of something together but felt uneasy about names. In the end they sat down with their artist with three questions: should it match, should it be a name, and how do we make sure we both still love it in twenty years?',
       'Those questions come up in almost every couple tattoo consultation. This guide goes through the different kinds of couple tattoos, what the surveys actually say about name regret, ideas that keep their meaning whatever happens, why names of children and parents are a different story, how big a name needs to be, and what you can do if a tattoo stops fitting your life. No judgement either way: plenty of people wear a partner’s name happily for decades.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## Three kinds of couple tattoos',
       'When people search for couple tattoos or matching tattoos, they usually mean one of three things. Knowing which one you want makes the conversation with your artist much easier.',
       '- **Matching.** The same design on both of you, often in the same place. Simple and clear: two small suns, two paper planes, the same line of a song.',
@@ -95,7 +95,7 @@ const a: LongArticle = {
     hu: [
       'Lena és Tom három éve voltak együtt, amikor szóba került a tetoválás. Tom Lena nevét szerette volna az alkarjára, Lena saját kézírásával. Lenának tetszett az ötlet, hogy legyen valami közös, de a nevekkel kapcsolatban bizonytalan volt. Végül három kérdéssel ültek le a tetoválójukkal: legyen egyforma, legyen név, és hogyan érhetjük el, hogy húsz év múlva is mindketten szeressük?',
       'Ezek a kérdések szinte minden páros tetoválásos konzultáción előkerülnek. Ez az útmutató sorra veszi a páros tetoválások fajtáit, azt, hogy mit mondanak valójában a felmérések a nevek megbánásáról, azokat az ötleteket, amelyek bármi történjék is megőrzik a jelentésüket, azt, hogy miért más a gyerekek és szülők neve, mekkora legyen egy név, és mit tehetsz, ha egy tetoválás már nem illik az életedbe. Ítélkezés nélkül: rengetegen hordják boldogan évtizedekig a párjuk nevét.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## A páros tetoválás három fajtája',
       'Amikor valaki páros tetoválásra vagy egyforma tetoválásra keres rá, általában háromféle dologra gondol. Ha tudod, melyiket szeretnéd, sokkal könnyebb lesz a beszélgetés a tetoválóddal.',
       '- **Egyforma.** Ugyanaz a minta mindkettőtökön, gyakran ugyanott. Egyszerű és egyértelmű: két kis nap, két papírrepülő, ugyanaz a dalsor.',
@@ -205,28 +205,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: three kinds of couple tattoos. Matching designs, two complementary halves of one idea, and two different designs that share one story.',
-      hu: 'Illusztráció: a páros tetoválás három fajtája. Egyforma minták, egy ötlet két kiegészítő fele, és két különböző minta egy közös történettel.',
+      en: 'Illustration: two matching peony tattoos on two forearms. Each one is a complete design on its own, even on the days you are apart.',
+      hu: 'Illusztráció: két egyforma pünkösdirózsa két alkaron. Mindkettő önmagában is teljes minta, azokon a napokon is, amikor nem vagytok együtt.',
     },
     img3: {
-      en: 'Illustration: shared symbols, dates and inside jokes keep their meaning in any chapter of life; a full name is tied to one person.',
-      hu: 'Illusztráció: a közös szimbólumok, dátumok és belsős poénok az élet bármely szakaszában megőrzik a jelentésüket, egy teljes név egyetlen emberhez kötődik.',
+      en: 'Illustration: a name in fine script on an inner wrist. Lettering like this is tied to one person, while shared symbols keep their meaning in any chapter of life.',
+      hu: 'Illusztráció: név finom kézírással a csukló belső oldalán. Az ilyen felirat egyetlen emberhez kötődik, a közös szimbólumok viszont az élet minden szakaszában megtartják a jelentésüket.',
     },
     img4: {
-      en: 'Illustration: a family branch that leaves room for more. Designs for children and parents can grow as the family does.',
-      hu: 'Illusztráció: egy családi ág, amelyen van még hely. A gyerekeknek és szülőknek szóló minták bővülhetnek, ahogy a család is.',
+      en: 'Illustration: a grandmother and her granddaughter comparing their tattoos on a sofa. Family designs can carry meaning across generations and leave room to grow.',
+      hu: 'Illusztráció: nagymama és unokája a kanapén hasonlítja össze a tetoválását. A családi minták generációkon át is jelentéssel bírnak, és hagyhatnak helyet a bővítésnek.',
     },
     img5: {
-      en: 'Illustration: the same name at about 1 cm and at a few millimetres. Over the years the tiny version blurs into a line, the larger one stays readable.',
-      hu: 'Illusztráció: ugyanaz a név nagyjából 1 cm-es és néhány milliméteres betűkkel. Az évek alatt az apró változat egy vonallá mosódik, a nagyobb olvasható marad.',
+      en: 'Illustration: three stencils of the same flower in different sizes on a forearm. Testing the real size on the skin shows whether fine detail, or a name, will stay readable.',
+      hu: 'Illusztráció: ugyanannak a virágnak három különböző méretű sablonja egy alkaron. Ha a valódi méretet a bőrön próbálod ki, látod, hogy a finom részlet vagy egy név olvasható marad-e.',
     },
     img6: {
-      en: 'Illustration: thin lettering hidden under a bigger, darker floral cover-up, with dark petals placed over the old letters.',
-      hu: 'Illusztráció: vékony felirat egy nagyobb, sötétebb virágos takarás alatt, a sötét szirmok pontosan a régi betűkre kerülnek.',
+      en: 'Illustration: thin script on a forearm before and after a cover-up with a bigger, darker floral design.',
+      hu: 'Illusztráció: vékony felirat egy alkaron, előtte és utána: egy nagyobb, sötétebb virágos minta takarja el.',
     },
     img7: {
-      en: 'Illustration: laser removal fades a name step by step over many sessions, usually spread across one to two years.',
-      hu: 'Illusztráció: a lézeres eltávolítás lépésről lépésre halványítja a nevet sok alkalom alatt, általában egy-két év alatt.',
+      en: 'Illustration: a laser removal session on a forearm, the patient in safety goggles. Fading a name usually takes many sessions spread over a long time.',
+      hu: 'Illusztráció: lézeres eltávolítás egy alkaron, a páciensen védőszemüveg. Egy név halványítása általában sok kezelést igényel, hosszú időre elosztva.',
     },
   },
 };

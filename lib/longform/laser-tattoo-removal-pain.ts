@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Tom had a name on the inside of his wrist. Thin black letters, about six centimetres long, from a relationship that had ended years ago. He had finally booked a consultation for laser removal, and the night before he did what most people do: he searched for how much it hurts. The answers ranged from “barely felt it” to “worse than anything I have ever had done”, which did not help at all.',
       'The next day he sat in the chair, the technician turned on a machine that blew cold air at his wrist, and the first pulses landed. Tom’s verdict afterwards was more useful than anything he had read: “It hurt. Properly. But it was over before I could get annoyed about it.” This article explains why both kinds of stories you read online are true, what decides where you will land, and what you can do to make it easier.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real patients or real treatment results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real treatment results.',
       '## The short answer',
       '**Yes, laser tattoo removal hurts, but the pain is short and it can be made much more bearable.** Most people rate it as uncomfortable to clearly painful while the laser is firing, and as a sunburn-like soreness for a day or two afterwards. Many describe it as more intense than getting the tattoo, but much shorter: a small tattoo is often done in a few minutes, while the tattoo itself may have taken an hour.',
       'How much it hurts for you depends on a handful of things you can predict: where the tattoo is, how much ink is in it, which session you are in, what numbing you use and how tired or tense you are on the day.',
@@ -99,7 +99,7 @@ const a: LongArticle = {
     hu: [
       'Tom csuklója belső oldalán egy név volt. Vékony fekete betűk, nagyjából hat centi hosszan, egy évekkel korábban véget ért kapcsolatból. Végre időpontot foglalt egy lézeres eltávolítási konzultációra, és előtte való este azt tette, amit a legtöbben: rákeresett, mennyire fáj. A válaszok a „szinte nem is éreztem”-től a „rosszabb volt mindennél, amit valaha csináltattam”-ig terjedtek, ami egyáltalán nem segített.',
       'Másnap beült a székbe, a kezelő bekapcsolt egy gépet, ami hideg levegőt fújt a csuklójára, és megjöttek az első impulzusok. Tom utólagos ítélete hasznosabb volt bárminél, amit olvasott: „Fájt. Rendesen. De vége lett, mielőtt bosszankodni kezdhettem volna.” Ez a cikk elmagyarázza, miért igaz mindkét fajta történet, amit a neten olvasol, mi dönti el, hová kerülsz, és mit tehetsz azért, hogy könnyebb legyen.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi pácienseket vagy valódi kezelési eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi kezelési eredményekről készült fotók.',
       '## A rövid válasz',
       '**Igen, a lézeres tetoválás-eltávolítás fáj, de a fájdalom rövid, és sokkal elviselhetőbbé tehető.** A legtöbben kellemetlennek vagy kifejezetten fájdalmasnak érzik, amíg a lézer működik, utána pedig egy-két napig leégéshez hasonló érzékenységet éreznek. Sokan erősebbnek írják le, mint a tetoválást, de sokkal rövidebbnek: egy kis tetoválás gyakran néhány perc alatt megvan, míg maga a tetoválás talán egy órát vett igénybe.',
       'Hogy neked mennyire fáj, néhány előre látható dolgon múlik: hol van a tetoválás, mennyi tinta van benne, hányadik alkalomnál tartasz, milyen érzéstelenítést használsz, és mennyire vagy fáradt vagy feszült aznap.',
@@ -213,28 +213,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: each laser pulse feels like a rubber band snap, followed by a short wave of heat.',
-      hu: 'Illusztráció: minden lézerimpulzus olyan, mint egy befőttesgumi csattanása, utána egy rövid hőhullámmal.',
+      en: 'Illustration: a flower tattoo turning white right after a laser pulse. Each pulse feels like a rubber band snap, followed by a short wave of heat.',
+      hu: 'Illusztráció: egy virágtetoválás, amely közvetlenül a lézerimpulzus után kifehéredik. Minden impulzus olyan, mint egy gumiszalag csattanása, utána rövid hőhullám jön.',
     },
     img3: {
-      en: 'Illustration: bony and thin-skinned areas (orange) usually hurt more than fleshy ones (green).',
-      hu: 'Illusztráció: a csontos, vékony bőrű területek (narancs) általában jobban fájnak, mint a húsosabbak (zöld).',
+      en: 'Illustration: small tattoos on the neck and on the top of the foot. Bony and thin-skinned areas like these usually hurt more than fleshy ones.',
+      hu: 'Illusztráció: kis tetoválások a nyakon és a lábfejen. Az ilyen csontos, vékony bőrű területek általában jobban fájnak, mint a húsosabbak.',
     },
     img4: {
-      en: 'Illustration: many people find the first sessions the most intense; as the ink thins, sessions are often milder and shorter.',
-      hu: 'Illusztráció: sokan az első alkalmakat érzik a legerősebbnek; ahogy fogy a tinta, a kezelések gyakran enyhébbek és rövidebbek.',
+      en: 'Illustration: a rose on the upper arm that has faded after several laser sessions. As the ink thins, sessions are often milder and shorter than the first ones.',
+      hu: 'Illusztráció: több lézeres alkalom után kifakult rózsa a felkaron. Ahogy fogy a festék, az alkalmak gyakran enyhébbek és rövidebbek, mint az elsők.',
     },
     img5: {
-      en: 'Illustration: numbing cream about an hour before, cold air during the session, ice afterwards. Injections are given only by doctors.',
-      hu: 'Illusztráció: zsibbasztó krém nagyjából egy órával előtte, hideg levegő közben, jég utána. Injekciót csak orvos adhat.',
+      en: 'Illustration: a cold compress pressed on a tattooed forearm. Cold before and after a session takes the edge off; numbing cream and cold air help during it.',
+      hu: 'Illusztráció: hideg borogatás egy tetovált alkaron. A hideg a kezelés előtt és után tompítja a fájdalmat, közben a zsibbasztó krém és a hideg levegő segít.',
     },
     img6: {
-      en: 'Illustration: a typical course after a session. Soreness peaks on day one, blisters and scabs follow, most skin has closed within two weeks.',
-      hu: 'Illusztráció: egy kezelés utáni tipikus lefolyás. Az érzékenység az első napon a legerősebb, utána hólyagok és pörkök jönnek, a bőr többnyire két héten belül bezárul.',
+      en: 'Illustration: gently washing a treated forearm at the sink. Soreness peaks on the first day, blisters and scabs may follow, and most skin has closed within two weeks.',
+      hu: 'Illusztráció: egy kezelt alkar óvatos lemosása a mosdóban. A fájdalom az első napon a legerősebb, utána hólyagok és var jöhetnek, és a bőr nagy része két héten belül bezárul.',
     },
     img7: {
-      en: 'Illustration: normal soreness eases day by day. Pain that grows, spreading redness, red streaks or fever need a doctor.',
-      hu: 'Illusztráció: a normális érzékenység napról napra enyhül. A növekvő fájdalom, a terjedő pír, a piros csíkok vagy a láz orvost igényel.',
+      en: 'Illustration: red, irritated skin around a small tattoo. Normal soreness eases day by day; pain that grows, spreading redness, red streaks or fever need a doctor.',
+      hu: 'Illusztráció: piros, irritált bőr egy kis tetoválás körül. A normális fájdalom napról napra enyhül; ha erősödik, terjed a pirosság, piros csíkok jelennek meg vagy lázas leszel, fordulj orvoshoz.',
     },
   },
 };

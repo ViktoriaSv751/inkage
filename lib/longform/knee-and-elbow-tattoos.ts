@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Jonas had wanted a mandala on his knee for years. Not above it, not below it, but right on the kneecap, a perfect circle that would sit there like a medallion when he wore shorts. His artist said yes, but with two conditions: the session would be split into two, and he should come back for a touch-up once it had healed. Jonas wondered why a knee needed special rules. By the third week of healing, when the skin cracked every time he climbed the stairs, he understood.',
       'Knees and elbows are among the most striking places for a tattoo, and among the most demanding. The skin there is thick in some spots and thin in others, it sits right on bone, and it folds hundreds of times a day. This guide explains why joints hurt, why they heal slowly, which designs suit them, how they age and how to get through healing with the least ink loss.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## Two joints, four placements',
       'When people say knee tattoo or elbow tattoo, they can mean quite different things. Each joint has a bony outside and a soft inside, and they behave very differently under the needle and during healing.',
       '- **The kneecap.** A round, bony area at the front of the knee. The skin is fairly thick and rough, but there is almost no padding between it and the bone, so the needle vibrates through.',
@@ -100,7 +100,7 @@ const a: LongArticle = {
     hu: [
       'Jonas évek óta térdtetoválást akart. Nem fölé, nem alá, hanem pont a térdkalácsra egy mandalát, egy tökéletes kört, ami rövidnadrágban úgy ül ott, mint egy medál. A tetoválója igent mondott, de két feltétellel: két alkalomra bontják, és gyógyulás után vissza kell jönnie egy javításra. Jonas nem értette, miért kell egy térdnek külön szabály. A gyógyulás harmadik hetében, amikor a bőre minden lépcsőzésnél megrepedt, megértette.',
       'A térd és a könyök a tetoválás egyik leglátványosabb helye, és az egyik legigényesebb is. A bőr itt helyenként vastag, máshol vékony, közvetlenül a csonton fekszik, és naponta több százszor gyűrődik. Ez az útmutató elmagyarázza, miért fájnak az ízületek, miért gyógyulnak lassan, milyen minták illenek hozzájuk, hogyan öregednek, és hogyan vészeld át a gyógyulást a lehető legkevesebb tintavesztéssel.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Két ízület, négy terület',
       'Amikor valaki térd- vagy könyöktetoválást mond, egészen különböző dolgokra gondolhat. Mindkét ízületnek van egy csontos külső és egy puha belső része, és ezek egészen másképp viselkednek a tű alatt és a gyógyulás közben.',
       '- **A térdkalács.** Kerek, csontos terület a térd elején. A bőr elég vastag és durva, de szinte nincs párnázás közte és a csont között, így a tű rezgése átjön.',
@@ -215,28 +215,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the knee and the elbow as four areas. The bony points sit right on bone, the ditches have thin skin that folds shut.',
-      hu: 'Illusztráció: a térd és a könyök négy területe. A csontos pontok közvetlenül a csonton fekszenek, a hajlatokban vékony a bőr, és összezáródik.',
+      en: 'Illustration: an arm sleeve being tattooed. A sleeve that reaches the elbow has to cross two very different areas: the bony point and the soft inner crease.',
+      hu: 'Illusztráció: készülő kartetoválás (sleeve). Ha a sleeve eléri a könyököt, két nagyon különböző területen kell átmennie: a csontos könyökhegyen és a puha belső hajlaton.',
     },
     img3: {
-      en: 'Illustration: every bend stretches the skin over the bone and folds it in the crease, which keeps cracking a fresh tattoo.',
-      hu: 'Illusztráció: minden hajlítás megnyújtja a bőrt a csont fölött és összegyűri a hajlatban, ez újra és újra megrepeszti a friss tetoválást.',
+      en: 'Illustration: faded linework that has blurred and spread into the skin. On a joint, cracking scabs and thin skin make patchy healing and blurry lines more likely.',
+      hu: 'Illusztráció: kifakult vonalak, amelyek elmosódtak és szétterültek a bőrben. Ízületen a folyton felrepedő pörk és a vékony bőr miatt gyakoribb a foltos gyógyulás és az elmosódott vonal.',
     },
     img4: {
-      en: 'Illustration: spiderwebs, mandalas and big flowers follow the round shape of the joint and look good bent or straight.',
-      hu: 'Illusztráció: a pókháló, a mandala és a nagy virágok követik az ízület kerek formáját, hajlítva és kinyújtva is jól néznek ki.',
+      en: 'Illustration: a dotwork mandala that follows the round shape of a hand. Round designs like mandalas suit the kneecap and the elbow point for the same reason.',
+      hu: 'Illusztráció: pontozott mandala, amely követi a kézfej íveit. A kerek minták, például a mandalák, ugyanezért illenek a térdkalácsra és a könyökhegyre.',
     },
     img5: {
-      en: 'Illustration: a bold design on the knee stays readable as the years go by, even as the skin softens and wrinkles.',
-      hu: 'Illusztráció: egy vastag minta a térden az évek során is jól olvasható marad, még ha a bőr puhul és ráncosodik is.',
+      en: 'Illustration: an older leg with a faded compass tattoo. The softer lines are still readable because the design is bold and simple.',
+      hu: 'Illusztráció: idősebb láb kifakult iránytűtetoválással. A puhább vonalak ellenére is olvasható, mert a minta merész és egyszerű.',
     },
     img6: {
-      en: 'Illustration: a healed joint tattoo with small gaps before and after a touch-up session.',
-      hu: 'Illusztráció: egy begyógyult ízületi tetoválás apró hiányokkal, a javítás előtt és után.',
+      en: 'Illustration: a gloved artist going over a fine line on an arm. A short touch-up session fills the small gaps a joint tattoo often has after healing.',
+      hu: 'Illusztráció: kesztyűs tetováló egy finom vonalon dolgozik egy karon. Egy rövid javító alkalom kitölti azokat a kis hézagokat, amelyek az ízületi tetoválásokon gyógyulás után gyakran megmaradnak.',
     },
     img7: {
-      en: 'Illustration: a raised leg, loose clothes and no kneeling help a fresh knee tattoo heal without cracking.',
-      hu: 'Illusztráció: a felpolcolt láb, a laza ruha és a térdelés kerülése segít, hogy a friss térdtetoválás repedés nélkül gyógyuljon.',
+      en: 'Illustration: rubbing a thin layer of lotion into a forearm tattoo. On a joint that keeps bending, supple skin cracks less while it heals.',
+      hu: 'Illusztráció: vékony réteg krém bedörzsölése egy alkartetoválásba. A folyton hajló ízületen a rugalmas bőr kevésbé reped fel gyógyulás közben.',
     },
   },
 };

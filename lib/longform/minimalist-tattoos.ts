@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Mira wanted something small. A tiny paper plane on the inside of her wrist, about the size of her fingernail, with a dotted trail behind it. Her artist liked the idea but suggested two changes: make the plane a little larger, and drop the dotted trail. Mira was disappointed for about a day. Eight years later, the plane still reads as a plane from across a café table. Her friend, who got almost the same design the same week at a smaller size with the trail, now has what most people take for a grey smudge.',
       'That story is the whole topic in miniature. Small and minimalist tattoos are among the most requested designs in studios today, and many of them age beautifully. Some of them don’t. The difference is rarely luck. It comes down to a few choices about line weight, the number of elements, the space between them and where the tattoo goes. This guide goes through what “minimal” really means, what a tiny design can and can’t do over ten to thirty years, which spots suit small tattoos, what to expect from touch-ups, and which ideas work small and which need room.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## Why small and minimalist tattoos are so popular',
       'It is easy to see the appeal. A small tattoo is quick, often finished in under an hour. It hurts for a short time. It is easy to hide for work or family, and easy to show when you want to. It feels like a lower commitment than a sleeve, which makes it a natural first tattoo. And the clean look of a single line or a small symbol photographs well, so it spreads fast on social media.',
       'Price plays a part too, though less than people think. Most studios have a minimum charge that covers setup, sterile single-use supplies and the artist’s time. In the US that minimum is often somewhere around $50–200, depending on the city and the artist, and studios elsewhere work in a similar way. So a tattoo the size of a coin and one the size of a matchbox often cost about the same. That is worth knowing, because it means going a little bigger usually costs you little or nothing extra.',
@@ -111,7 +111,7 @@ const a: LongArticle = {
     hu: [
       'Mira valami kicsit szeretett volna. Egy apró papírrepülőt a csuklója belső oldalára, nagyjából a körme méretében, mögötte egy pontozott csíkkal. A tetoválójának tetszett az ötlet, de két változtatást javasolt: legyen egy kicsit nagyobb a repülő, és maradjon el a pontozott csík. Mira nagyjából egy napig csalódott volt. Nyolc évvel később a repülő még mindig repülőnek látszik egy kávézóasztal túloldaláról is. A barátnője, aki ugyanazon a héten majdnem ugyanezt a mintát csináltatta kisebben és a csíkkal, ma olyasmit visel, amit a legtöbben szürke maszatnak néznek.',
       'Ez a történet kicsiben az egész téma. A kis és minimalista tetoválások ma a legkeresettebb minták közé tartoznak a stúdiókban, és sokuk gyönyörűen öregszik. Néhányuk nem. A különbség ritkán szerencse kérdése. Néhány döntésen múlik: a vonalvastagságon, az elemek számán, a köztük hagyott helyen és azon, hová kerül a tetoválás. Ez az útmutató végigveszi, mit jelent valójában a „minimal”, mit bír ki és mit nem egy apró minta tíz-harminc év alatt, mely helyek valók kis tetoválásnak, mire számíts a javításoknál, és mely ötletek működnek kicsiben, melyeknek kell hely.',
-      '> Pár szó a képekről: a cikk képei egyszerű illusztrációk, kifejezetten ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Pár szó a képekről: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Miért ilyen népszerűek a kis és minimalista tetoválások?',
       'Könnyű megérteni a vonzerejüket. Egy kis tetoválás gyors, sokszor egy óránál rövidebb idő alatt kész. Rövid ideig fáj. Könnyű eltakarni a munkahelyen vagy a család előtt, és könnyű megmutatni, amikor szeretnéd. Kisebb elköteleződésnek érződik, mint egy teljes kar, ezért természetes első tetoválás. Egyetlen vonal vagy egy kis szimbólum letisztult látványa ráadásul jól mutat fotón, így gyorsan terjed a közösségi médiában.',
       'Az ár is számít, bár kevésbé, mint gondolnánk. A legtöbb stúdiónak van minimális díja, ami fedezi az előkészítést, a steril, egyszer használatos eszközöket és a tetováló idejét. Az Egyesült Államokban ez a minimum gyakran nagyjából 50–200 dollár, a várostól és a tetoválótól függően, és máshol is hasonló a rendszer. Így egy érmenyi és egy gyufásdoboznyi tetoválás sokszor nagyjából ugyanannyiba kerül. Ezt érdemes tudni, mert azt jelenti, hogy egy kicsit nagyobb méret általában alig vagy egyáltalán nem drágább.',
@@ -237,28 +237,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the same idea as a crowded micro design and as a minimalist one with fewer elements and more space.',
-      hu: 'Illusztráció: ugyanaz az ötlet zsúfolt mikromintaként és minimalista változatban, kevesebb elemmel és több hellyel.',
+      en: 'Illustration: a fine-line olive branch on the wrist. One idea, a few elements and plenty of bare skin around it: that is what minimalist really means.',
+      hu: 'Illusztráció: finom vonalas olajág a csuklón. Egy ötlet, kevés elem és sok szabad bőr körülötte: valójában ezt jelenti a minimalista.',
     },
     img3: {
-      en: 'Illustration: a tiny design with thin, close lines and a simple bold one, fresh and after 10 and 30 years. The gaps in the first one close up.',
-      hu: 'Illusztráció: egy vékony, sűrű vonalú apró minta és egy egyszerű, határozott, frissen és 10, illetve 30 év után. Az elsőnél a rések bezárulnak.',
+      en: 'Illustration: fine script on the wrist whose lines have already softened a little. At this size, a fraction of a millimetre is enough to blur the letters.',
+      hu: 'Illusztráció: finom írás a csuklón, a vonalai már kicsit elpuhultak. Ekkora méretnél egy milliméter töredéke is elég, hogy a betűk elmosódjanak.',
     },
     img4: {
-      en: 'Illustration: the three rules for a small tattoo: a line bold enough to survive, fewer elements and enough space.',
-      hu: 'Illusztráció: a kis tetoválás három szabálya: elég erős vonal, kevesebb elem és elég hely.',
+      en: 'Illustration: three stencils of the same flower in different sizes on a forearm. Trying the real size on the skin is the easiest way to see what will stay readable.',
+      hu: 'Illusztráció: ugyanannak a virágnak három különböző méretű sablonja az alkaron. A valódi méret felpróbálása a bőrön a legegyszerűbb módja, hogy lásd, mi marad olvasható.',
     },
     img5: {
-      en: 'Illustration: good homes for small tattoos on the arm, back and behind the ear; fingers, hands and feet fade fastest.',
-      hu: 'Illusztráció: jó helyek kis tetoválásnak a karon, a háton és a fül mögött; az ujjak, a kéz és a lábfej kopik a leggyorsabban.',
+      en: 'Illustration: a small swallow on the shoulder blade. Flat, calm skin that is often covered by clothing is a good home for a small tattoo.',
+      hu: 'Illusztráció: kis fecske a lapockán. A lapos, nyugodt bőr, amit gyakran ruha takar, jó hely egy kis tetoválásnak.',
     },
     img6: {
-      en: 'Illustration: simple symbols and silhouettes work small, while a detailed scene needs a much larger size.',
-      hu: 'Illusztráció: az egyszerű szimbólumok és sziluettek kicsiben is működnek, egy részletes jelenetnek viszont sokkal nagyobb méret kell.',
+      en: 'Illustration: a small sun on the back of the hand. A simple symbol like this reads clearly at a few centimetres, though on the hand it will need touch-ups sooner.',
+      hu: 'Illusztráció: kis nap a kézfejen. Egy ilyen egyszerű szimbólum néhány centin is tisztán olvasható, a kézen viszont hamarabb kell majd javítani.',
     },
     img7: {
-      en: 'Illustration: a touch-up can restore faded ink, but it cannot reopen gaps that have already filled in.',
-      hu: 'Illusztráció: a javítás vissza tudja hozni a megkopott tintát, de a már betelt réseket nem tudja újra megnyitni.',
+      en: 'Illustration: a gloved hand redrawing a fine line on the arm. A touch-up can restore faded ink, but it cannot reopen gaps that have already filled in.',
+      hu: 'Illusztráció: kesztyűs kéz húz újra egy finom vonalat a karon. A javítás vissza tudja hozni a megkopott tintát, de a már betelt réseket nem nyitja meg újra.',
     },
   },
 };

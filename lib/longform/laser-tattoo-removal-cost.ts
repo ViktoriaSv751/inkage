@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Tom had three quotes on his kitchen table for the same tattoo: a twelve-centimetre line of script on his forearm, done in his early twenties, in a font he now finds hard to look at. The first clinic, a dermatology practice, quoted €180 per session. The second, a specialist laser studio, said €110. The third was an online deal: €49 a session, “unlimited sessions for one price”, valid until Sunday. Same tattoo, same city, prices almost four times apart. Which one was the real price?',
       'All three, in a way. Laser tattoo removal has no fixed price list, and the number on a website tells you surprisingly little about what you will pay in the end. This guide walks through typical prices per session by tattoo size, how many sessions to expect, what makes removal cheaper or dearer, and how to tell a fair package from a trap.',
-      '> A note on the numbers and pictures: the prices here are rough ranges collected from clinic price lists and consumer guides in 2025–2026. They vary a lot by country, city and clinic. Always ask for a written quote. The images are simple illustrations made for this guide, not real patients or results.',
+      '> A note on the numbers and pictures: the prices here are rough ranges collected from clinic price lists and consumer guides in 2025–2026. They vary a lot by country, city and clinic. Always ask for a written quote. The images are illustrations made to show typical situations. They are not photos of real patients or real results.',
       '## The short answer',
       '**Most people pay somewhere between a few hundred and a few thousand euros or dollars in total for laser tattoo removal.** A small, simple black tattoo can end up at a few hundred. A large, colourful piece can go well above five thousand. The price of one session depends mainly on the size of the tattoo; the total depends mainly on how many sessions it needs.',
       'That is why two people with the same per-session price can end up paying very different amounts. One tattoo fades nicely in six sessions; another, the same size, needs twelve. Before you compare clinics, it helps to understand both halves of the sum.',
@@ -101,7 +101,7 @@ const a: LongArticle = {
     hu: [
       'Tom konyhaasztalán három árajánlat feküdt ugyanarra a tetoválásra: egy tizenkét centis felirat az alkarján, húszas évei elején készült, olyan betűtípussal, amire ma már nehezen tud ránézni. Az első, egy bőrgyógyászati rendelő, alkalmanként 180 eurót kért. A második, egy lézeres szakstúdió, 110 eurót. A harmadik egy online akció volt: 49 euró alkalmanként, „korlátlan alkalom egy áron”, vasárnapig érvényes. Ugyanaz a tetoválás, ugyanaz a város, és majdnem négyszeres különbség az árak között. Melyik a valódi ár?',
       'Bizonyos értelemben mindhárom. A lézeres tetoválás-eltávolításnak nincs fix árlistája, és a weboldalon látott szám meglepően keveset árul el arról, mennyit fizetsz majd a végén. Ez az útmutató végigveszi a tipikus alkalmankénti árakat a tetoválás mérete szerint, hogy hány alkalomra számíts, mitől lesz olcsóbb vagy drágább az eltávolítás, és hogyan különböztesd meg a korrekt csomagot a csapdától.',
-      '> Megjegyzés a számokhoz és a képekhez: az itt szereplő árak durva tartományok, klinikai árlistákból és fogyasztói útmutatókból gyűjtve 2025–2026-ban. Országonként, városonként és klinikánként nagyon eltérnek. Mindig kérj írásos árajánlatot. A képek egyszerű illusztrációk, ehhez az útmutatóhoz készültek, nem valódi páciensek vagy eredmények.',
+      '> Megjegyzés a számokhoz és a képekhez: az itt szereplő árak durva tartományok, klinikai árlistákból és fogyasztói útmutatókból gyűjtve 2025–2026-ban. Országonként, városonként és klinikánként nagyon eltérnek. Mindig kérj írásos árajánlatot. A képek tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi eredményekről készült fotók.',
       '## A rövid válasz',
       '**A legtöbben összesen néhány száz és néhány ezer euró vagy dollár közötti összeget fizetnek a lézeres tetoválás-eltávolításért.** Egy kicsi, egyszerű fekete tetoválás megállhat néhány száznál. Egy nagy, színes darab jóval ötezer fölé is mehet. Egy alkalom ára főleg a tetoválás méretétől függ, a végösszeg pedig főleg attól, hány alkalom kell.',
       'Ezért fizethet két ember, akinek ugyanannyi az alkalmankénti ára, egészen eltérő összeget. Az egyik tetoválás szépen halványul hat alkalom alatt, a másik, ugyanakkora, tizenkettőt igényel. Mielőtt klinikákat hasonlítasz össze, érdemes megérteni a számítás mindkét felét.',
@@ -218,28 +218,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the bigger the tattoo, the higher the price of each session. Four typical size classes, from a few centimetres to a full sleeve.',
-      hu: 'Illusztráció: minél nagyobb a tetoválás, annál drágább egy alkalom. Négy tipikus méretkategória, néhány centitől a teljes ujjig.',
+      en: 'Illustration: a tape measure around a large arm tattoo. The bigger the tattoo, the higher the price of each session.',
+      hu: 'Illusztráció: mérőszalag egy nagy kartetoválás körül. Minél nagyobb a tetoválás, annál drágább egy-egy alkalom.',
     },
     img3: {
-      en: 'Illustration: the total is the price of one session multiplied by the number of sessions, usually spread over one to two years.',
-      hu: 'Illusztráció: a végösszeg egy alkalom ára szorozva az alkalmak számával, ami általában egy-két évre oszlik el.',
+      en: 'Illustration: a rose fading step by step over several laser sessions. The total cost is the price of one session multiplied by the number of sessions, usually over one to two years.',
+      hu: 'Illusztráció: egy rózsa, amely lépésről lépésre halványul több lézeres alkalom alatt. A teljes költség egy alkalom ára szorozva az alkalmak számával, ami általában egy-két évre oszlik el.',
     },
     img4: {
-      en: 'Illustration: a black tattoo usually needs fewer sessions than a colourful one of the same size, so it tends to cost less in total.',
-      hu: 'Illusztráció: egy fekete tetoválás általában kevesebb alkalmat igényel, mint egy ugyanakkora színes, így a végösszege is jellemzően kisebb.',
+      en: 'Illustration: green colour still left on a forearm in a laser clinic. Colourful tattoos usually need more sessions than black ones of the same size, so they tend to cost more in total.',
+      hu: 'Illusztráció: alkaron megmaradt zöld színfoltok egy lézerklinikán. A színes tetoválásokhoz általában több alkalom kell, mint az azonos méretű feketékhez, így összesen többe szoktak kerülni.',
     },
     img5: {
-      en: 'Illustration: Q-switched lasers send nanosecond pulses, picosecond lasers far shorter ones. Picosecond sessions usually cost more.',
-      hu: 'Illusztráció: a Q-kapcsolt lézerek nanoszekundumos, a pikoszekundumos lézerek sokkal rövidebb impulzusokat adnak. A pikoszekundumos alkalmak általában drágábbak.',
+      en: 'Illustration: a laser handpiece treating a faded floral tattoo on a forearm. Picosecond lasers use far shorter pulses than Q-switched ones, and their sessions usually cost more.',
+      hu: 'Illusztráció: lézeres kézidarab egy kifakult virágos alkartetováláson. A pikoszekundumos lézerek sokkal rövidebb impulzusokkal dolgoznak, mint a Q-kapcsoltak, és az alkalmaik általában drágábbak.',
     },
     img6: {
-      en: 'Illustration: a package of several sessions paid in advance often comes with a discount. Compare the total and read the conditions.',
-      hu: 'Illusztráció: a több alkalomra szóló, előre kifizetett csomag gyakran kedvezményes. A végösszeget hasonlítsd össze, és olvasd el a feltételeket.',
+      en: 'Illustration: a consultation table with a form, a pen and skin-tone swatches. Before you pay for a package in advance, compare the total and read the conditions.',
+      hu: 'Illusztráció: konzultációs asztal űrlappal, tollal és bőrszín-mintákkal. Mielőtt előre kifizetsz egy csomagot, hasonlítsd össze a teljes árat, és olvasd el a feltételeket.',
     },
     img7: {
-      en: 'Illustration: a very low price can hide a weak laser or an untrained operator, which can mean more sessions, burns or scars.',
-      hu: 'Illusztráció: a nagyon alacsony ár mögött gyenge lézer vagy képzetlen kezelő lehet, ami több alkalmat, égést vagy heget jelenthet.',
+      en: 'Illustration: a faded rose with textured, scar-like skin. A very low price can hide a weak laser or an untrained operator, which can mean more sessions, burns or scars.',
+      hu: 'Illusztráció: kifakult rózsa egyenetlen, hegszerű bőrön. A nagyon alacsony ár mögött gyenge lézer vagy képzetlen kezelő is lehet, ami több alkalmat, égési sérülést vagy hegesedést jelenthet.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena had saved the same photo for months: a delicate white ink flower on someone’s inner wrist, glowing softly against tanned skin like a piece of lace. No black outline, nothing loud, just a quiet design that looked almost like it belonged to the skin. When she finally showed it to an artist, the answer surprised her. “I can do it,” he said, “but I want you to know what it will look like in two years, not just next week.”',
       'That conversation is worth having before any white ink or UV tattoo. Both are beautiful in photos, both behave differently from black ink in the skin, and both come with a few surprises that most people only learn about afterwards. This guide explains how white ink looks on different skin tones, why it often fades or yellows, what white highlights do in other tattoos, what UV blacklight ink actually is, what is known about its safety, and why both are difficult to remove.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## The short answer',
       '**White ink tattoos can look striking when fresh, but they are among the least predictable tattoos over time.** The white pigment sits under your top layer of skin, so it always shows through your own skin tone and never looks paper white. Many settle into a soft, slightly raised or scar-like look, fade, or take on a yellowish tone within a few years. **UV ink** glows under blacklight and is meant to be faint in daylight, but there is little long-term data on it. If you want either, keep the design simple, expect touch-ups, and think about removal before you start.',
       '## How white ink works in the skin',
@@ -103,7 +103,7 @@ const a: LongArticle = {
     hu: [
       'Lena hónapokig ugyanazt a fotót nézegette: egy finom, fehér tintás virágot valakinek a csuklója belső oldalán, ami barnás bőrön lágyan világított, mint egy darab csipke. Nincs fekete kontúr, semmi harsány, csak egy csendes minta, ami szinte a bőr részének tűnt. Amikor végül megmutatta egy tetoválónak, a válasz meglepte. „Meg tudom csinálni – mondta –, de szeretném, ha tudnád, hogyan fog kinézni két év múlva, nem csak jövő héten.”',
       'Ezt a beszélgetést minden fehér vagy UV-tetoválás előtt érdemes lefolytatni. Fotón mindkettő gyönyörű, mindkettő másképp viselkedik a bőrben, mint a fekete tinta, és mindkettő tartogat néhány meglepetést, amiről a legtöbben csak utólag értesülnek. Ez az útmutató elmagyarázza, hogyan néz ki a fehér tinta különböző bőrszíneken, miért halványul vagy sárgul gyakran, mit csinálnak a fehér kiemelések más tetoválásokban, mi valójában az UV-festék, mit tudunk a biztonságáról, és miért nehéz mindkettőt eltávolítani.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## A rövid válasz',
       '**A fehér tetoválás frissen látványos lehet, de idővel az egyik legkevésbé kiszámítható tetoválás.** A fehér pigment a bőr felső rétege alatt van, így mindig a saját bőrszíneden keresztül látszik, és soha nem lesz papírfehér. Sok fehér tetoválás puha, kissé kiemelkedő vagy hegszerű megjelenésűvé válik, halványul, vagy néhány éven belül sárgás árnyalatot kap. Az **UV-festék** blacklight alatt világít, és nappal halványnak szánják, de kevés róla a hosszú távú adat. Ha bármelyiket szeretnéd, tartsd egyszerűnek a mintát, számolj javításokkal, és még a kezdés előtt gondolj az eltávolításra is.',
       '## Hogyan működik a fehér tinta a bőrben?',
@@ -222,28 +222,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: white ink sits under the top layer of skin, so your own skin tone always lies over it like a tinted window.',
-      hu: 'Illusztráció: a fehér festék a bőr felső rétege alatt van, így a saját bőrszíned mindig színezett ablakként fekszik fölötte.',
+      en: 'Illustration: skin-tone swatches from light to deep brown on a table. The same white ink can look very different depending on the skin it goes into.',
+      hu: 'Illusztráció: bőrszínminták a világostól a sötétbarnáig egy asztalon. Ugyanaz a fehér tinta egészen másképp nézhet ki attól függően, milyen bőrbe kerül.',
     },
     img3: {
-      en: 'Illustration: a white design over the years. It softens after healing, and sun and time can turn it creamy or scar-like.',
-      hu: 'Illusztráció: egy fehér minta az évek során. Gyógyulás után lágyul, a nap és az idő pedig krémszínűvé vagy hegszerűvé teheti.',
+      en: 'Illustration: a pale, faded rose on slightly textured skin. A light design seen through the skin can end up looking more like a faint scar than a drawing.',
+      hu: 'Illusztráció: halvány, kifakult rózsa enyhén egyenetlen bőrön. A bőrön át látszó világos minta végül inkább halvány hegnek tűnhet, mint rajznak.',
     },
     img4: {
-      en: 'Illustration: small white highlights make a design look three-dimensional, and they are usually the first part to fade.',
-      hu: 'Illusztráció: a kis fehér kiemelések térhatásúvá teszik a mintát, és általában ezek halványulnak el elsőként.',
+      en: 'Illustration: a red rose with small bright highlights on the petals. Highlights like these are usually the first part of a coloured tattoo to fade.',
+      hu: 'Illusztráció: piros rózsa apró, világos fényekkel a szirmokon. Az ilyen kiemelések halványulnak el általában elsőként egy színes tetoválásban.',
     },
     img5: {
-      en: 'Illustration: a UV tattoo is faint in daylight and glows under a blacklight, but it is rarely completely invisible.',
-      hu: 'Illusztráció: az UV-tetoválás nappal halvány, blacklight alatt világít, de ritkán teljesen láthatatlan.',
+      en: 'Illustration: a tattoo session in a dark studio lit in purple. UV ink is meant to glow under blacklight, but in daylight its lines often stay faintly visible.',
+      hu: 'Illusztráció: tetoválás egy lila fénnyel megvilágított, sötét szalonban. Az UV-festék feketefényben világít, nappal azonban a vonalai gyakran halványan látszanak.',
     },
     img6: {
-      en: 'Illustration: ask for the ink’s brand and batch number and keep a photo of the label, especially for UV ink.',
-      hu: 'Illusztráció: kérdezd meg a festék márkáját és tételszámát, és őrizz meg egy fotót a címkéről, főleg UV-festéknél.',
+      en: 'Illustration: a fresh small flower tattoo with red, irritated skin around it. Some redness is normal at first; a reaction that lasts or spreads needs a doctor.',
+      hu: 'Illusztráció: friss kis virágtetoválás, körülötte vörös, irritált bőr. Az elején némi bőrpír normális, a tartós vagy terjedő reakcióval viszont orvoshoz kell fordulni.',
     },
     img7: {
-      en: 'Illustration: under the laser, black breaks up and fades, while white can reflect the light or even turn darker.',
-      hu: 'Illusztráció: a lézer alatt a fekete szétesik és halványul, a fehér viszont visszaverheti a fényt, vagy akár sötétebb is lehet.',
+      en: 'Illustration: before and after a cover-up, where thin script is hidden under a dark floral design. A darker new tattoo can cover a white or UV design completely.',
+      hu: 'Illusztráció: előtte és utána egy átfedésnél, ahol a vékony írást sötét virágos minta takarja. Egy sötétebb új tetoválás teljesen eltakarhatja a fehér vagy UV-mintát.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Kemi was nineteen when she had a name written in black script along her inner forearm. Eleven years later the name belonged to someone she no longer spoke to, and she decided it was time for it to go. She had read the forums, though, and one fear kept coming back: people with skin like hers, a deep brown that rarely burns, posting photos of a pale ghost of a tattoo, or a dark patch in its shape, after a laser session that went wrong. Was removal even safe for her?',
       'The short answer is yes, with the right laser, the right settings and a clinic that has done it many times before. The longer answer is what this guide is about: why darker skin carries more risk, what a careful clinic does differently, and how much more time and patience to plan for. How tattoos look, heal and age on darker skin in the first place is covered in our separate guide on tattoos on darker skin tones. This one is only about taking ink out.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real patients or real treatment results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real treatment results.',
       '## Why darker skin needs a different approach',
       'Laser removal works by firing extremely short pulses of light into the skin. The ink particles absorb that light, heat up in a tiny fraction of a second and shatter into fragments small enough for the body to clear away over the following weeks. The whole method relies on one thing: the light should be absorbed by the ink, and as little as possible by anything else.',
       'The trouble is that ink is not the only pigment in the skin. **Melanin, the pigment that gives skin its colour, absorbs laser light too.** Darker skin has much more melanin in its top layer, the epidermis, sitting right above the tattoo. Every pulse has to pass through that layer on its way to the ink, and part of the energy can be soaked up there instead.',
@@ -96,7 +96,7 @@ const a: LongArticle = {
     hu: [
       'Kemi tizenkilenc éves volt, amikor egy nevet tetováltatott fekete kézírással az alkarja belső oldalára. Tizenegy évvel később a név olyasvalakihez tartozott, akivel már nem beszélt, és úgy döntött, ideje megszabadulni tőle. A fórumokat viszont elolvasta, és egy félelem újra meg újra visszatért: a hozzá hasonló, mélybarna, ritkán leégő bőrű emberek fotói egy tetoválás halvány szellemképéről vagy egy sötét, tetoválás alakú foltról, egy rosszul sikerült lézeres kezelés után. Egyáltalán biztonságos neki az eltávolítás?',
       'A rövid válasz: igen, a megfelelő lézerrel, a megfelelő beállításokkal és egy olyan klinikán, ahol már sokszor csinálták. A hosszabb válaszról szól ez az útmutató: miért kockázatosabb a sötétebb bőr, mit csinál másképp egy gondos klinika, és mennyi plusz időre és türelemre érdemes készülni. Hogy maga a tetoválás hogyan néz ki, gyógyul és öregszik sötétebb bőrön, arról külön útmutatónk szól a sötétebb bőrtónusokon lévő tetoválásokról. Ez a cikk csak a tinta eltávolításáról szól.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi pácienseket vagy valódi kezelési eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi kezelési eredményekről készült fotók.',
       '## Miért kell más megközelítés sötétebb bőrön',
       'A lézeres eltávolítás rendkívül rövid fényimpulzusokat juttat a bőrbe. A tintaszemcsék elnyelik ezt a fényt, a másodperc parányi töredéke alatt felforrósodnak, és olyan apró darabokra törnek, amelyeket a szervezet a következő hetekben el tud szállítani. Az egész módszer egyetlen dolgon múlik: a fényt a tinta nyelje el, és amennyire csak lehet, semmi más.',
       'A gond az, hogy a bőrben nem a tinta az egyetlen pigment. **A melanin, vagyis a bőr színét adó pigment, szintén elnyeli a lézerfényt.** A sötétebb bőr felső rétegében, a hámban sokkal több melanin van, közvetlenül a tetoválás fölött. Minden impulzusnak át kell haladnia ezen a rétegen, mielőtt eléri a tintát, és az energia egy része ott nyelődhet el.',
@@ -208,28 +208,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the six Fitzpatrick skin types. The more pigment in the top layer of the skin, the more care the laser needs.',
-      hu: 'Illusztráció: a hat Fitzpatrick-bőrtípus. Minél több pigment van a bőr felső rétegében, annál nagyobb óvatosság kell a lézerrel.',
+      en: 'Illustration: skin-tone swatches from light to deep brown next to a consultation form. Where your skin sits on that range shapes how carefully the laser must be set.',
+      hu: 'Illusztráció: világostól mélybarnáig terjedő bőrszínminták egy konzultációs lap mellett. Hogy a bőröd hol helyezkedik el ezen a skálán, az határozza meg, mennyire óvatosan kell beállítani a lézert.',
     },
     img3: {
-      en: 'Illustration: the two pigment changes to know about. A light patch where pigment cells were damaged, and a dark patch where irritated skin made extra pigment.',
-      hu: 'Illusztráció: a két pigmentváltozás, amiről tudni érdemes. Világos folt, ahol a pigmentsejtek sérültek, és sötét folt, ahol az irritált bőr extra pigmentet termelt.',
+      en: 'Illustration: a pale outline of a rose on a tanned shoulder. A light patch like this, where the skin lost pigment, is one of the changes to watch for.',
+      hu: 'Illusztráció: egy rózsa halvány körvonala barna bőrű vállon. Az ilyen világos folt, ahol a bőr pigmentet veszített, az egyik változás, amire figyelni kell.',
     },
     img4: {
-      en: 'Illustration: short wavelengths such as 532 nm are absorbed by the skin’s pigment near the surface, while 1064 nm passes through and reaches the ink.',
-      hu: 'Illusztráció: a rövid hullámhosszakat, például az 532 nm-t, a bőr pigmentje a felszín közelében elnyeli, az 1064 nm viszont áthalad, és eléri a tintát.',
+      en: 'Illustration: a laser handpiece over a faded floral tattoo in a clinic. On darker skin, the wavelength the clinic chooses matters as much as the machine itself.',
+      hu: 'Illusztráció: lézerfej egy halványuló virágos tetoválás fölött a klinikán. Sötétebb bőrön a választott hullámhossz ugyanolyan fontos, mint maga a gép.',
     },
     img5: {
-      en: 'Illustration: a test spot on the edge of the tattoo, a few weeks of healing, then a check before the whole design is treated.',
-      hu: 'Illusztráció: próbafolt a tetoválás szélén, néhány hét gyógyulás, aztán ellenőrzés, mielőtt az egész mintát kezelik.',
+      en: 'Illustration: white frosting on part of a flower tattoo right after a laser pulse. A test spot works the same way: a small area first, then weeks of healing before the rest.',
+      hu: 'Illusztráció: fehér „deresedés” egy virágos tetoválás egy részén, közvetlenül a lézerimpulzus után. A próbafolt is így működik: előbb egy kis terület, aztán hetekig gyógyulás, csak utána jön a többi.',
     },
     img6: {
-      en: 'Illustration: the same tattoo over time. On darker skin, longer gaps and gentler sessions stretch removal over a longer period.',
-      hu: 'Illusztráció: ugyanaz a tetoválás az idő múlásával. Sötétebb bőrön a hosszabb szünetek és a kíméletesebb alkalmak hosszabb időre nyújtják az eltávolítást.',
+      en: 'Illustration: someone marking dates on a wall calendar. With longer gaps between sessions, removal on darker skin often stretches well over a year.',
+      hu: 'Illusztráció: valaki dátumokat jelöl egy falinaptárban. A hosszabb szünetek miatt sötétebb bőrön az eltávolítás gyakran jóval több mint egy évig tart.',
     },
     img7: {
-      en: 'Illustration: aftercare on darker skin. Cool the area, keep it covered while it heals, then SPF 30 to 50 every day.',
-      hu: 'Illusztráció: utókezelés sötétebb bőrön. Hűtsd a területet, gyógyulás alatt tartsd letakarva, utána minden nap SPF 30–50.',
+      en: 'Illustration: a woman under a beach umbrella putting on sunscreen. Shade and daily SPF in the weeks after each session help the skin colour recover evenly.',
+      hu: 'Illusztráció: nő napernyő alatt naptejet ken magára. Az árnyék és a mindennapi fényvédő a kezelések utáni hetekben segít, hogy a bőr színe egyenletesen álljon helyre.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena walked into the studio with one picture: an orange koi, about the size of her palm, for the outside of her forearm. The artist looked at it, then at her arm, and asked whether she had ever thought about the rest of the arm. Not to sell her more hours, he said, but because a koi on its own is a single word, and Japanese tattooing is usually written in whole sentences. Water above it, a wave below, maybe a peony at the shoulder. She left with no appointment and a lot to think about, and came back three weeks later with a plan for a half sleeve.',
       'That conversation sums up what makes Japanese tattoos different from almost every other style. This guide explains the classic motifs and what they are commonly said to mean, how a large piece is composed, the difference between hand tattooing and the machine, what sleeves and back pieces cost in time and money, how bold outlines and black backgrounds hold up over the years, and a few practical things to know if you travel to Japan with your ink.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real tattoos.',
       '## What makes a tattoo “Japanese”',
       'In Japan, decorative tattooing is usually called **irezumi** or **horimono**, and the traditional style is sometimes called wabori. Outside Japan, “Japanese tattoo” has come to mean a whole visual language: big motifs taken from folklore, nature and religion, thick black outlines, strong shading and a background that fills the space between them.',
       'Much of this look goes back to the first half of the nineteenth century. Woodblock prints by **Utagawa Kuniyoshi** showed the outlaw heroes of the Chinese novel Water Margin covered in full-body tattoos, and the prints were a hit. Firefighters, labourers and couriers in Edo, today’s Tokyo, wore large tattoos as a sign of courage and belonging. The Meiji government banned decorative tattooing in **1872**, and the ban was lifted only in **1948**, during the post-war occupation. Tattooing continued in private all the same, and the masters kept the craft alive.',
@@ -103,7 +103,7 @@ const a: LongArticle = {
     hu: [
       'Lena egyetlen képpel érkezett a stúdióba: egy narancssárga koival, nagyjából tenyérnyi méretben, az alkarja külső oldalára. A tetováló ránézett a képre, aztán a karjára, és megkérdezte, gondolt-e már a kar többi részére. Nem azért, hogy több órát adjon el, mondta, hanem mert egy koi önmagában csak egy szó, a japán tetoválás pedig általában egész mondatokban beszél. Fölötte víz, alatta egy hullám, a vállán talán egy bazsarózsa. Lena időpont nélkül ment el, sok gondolkodnivalóval, és három hét múlva egy félkaros tervvel tért vissza.',
       'Ez a beszélgetés jól összefoglalja, miben más a japán tetoválás szinte minden más stílusnál. Ez az útmutató elmagyarázza a klasszikus motívumokat és azt, hogy mit szokás jelenteni, hogyan épül fel egy nagy minta, mi a különbség a kézi tetoválás és a gép között, mennyi időbe és pénzbe kerül egy teljes kar vagy hát, hogyan bírja az éveket a vastag kontúr és a fekete háttér, és mit érdemes tudni, ha tetoválással utazol Japánba.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi tetoválásokról készült fotók.',
       '## Mitől „japán” egy tetoválás?',
       'Japánban a díszítő tetoválást általában **irezuminak** vagy **horimononak** hívják, a hagyományos stílust néha wabori néven is emlegetik. Japánon kívül a „japán tetoválás” egy egész vizuális nyelvet jelent: népmesékből, a természetből és a vallásból vett nagy motívumokat, vastag fekete kontúrt, erős árnyalást és egy hátteret, ami kitölti a köztük lévő teret.',
       'Ennek a látványnak nagy része a 19. század első feléből ered. **Utagawa Kuniyoshi** fametszetei a kínai Vízparti történet című regény törvényen kívüli hőseit egész testet borító tetoválással ábrázolták, és a nyomatok óriási sikert arattak. Edóban, a mai Tokióban a tűzoltók, a munkások és a futárok bátorságuk és összetartozásuk jeleként viseltek nagy tetoválásokat. A Meidzsi-kormány **1872-ben** betiltotta a díszítő tetoválást, és a tilalmat csak **1948-ban**, a háború utáni megszállás idején oldották fel. A tetoválás ettől függetlenül titokban tovább élt, és a mesterek életben tartották a mesterséget.',
@@ -221,28 +221,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: classic Japanese motifs: a koi, a peony, a cherry blossom and a wave. Their meanings are traditions, not fixed rules.',
-      hu: 'Illusztráció: klasszikus japán motívumok: koi, bazsarózsa, cseresznyevirág és hullám. A jelentésük hagyomány, nem kötött szabály.',
+      en: 'Illustration: flash sheets with a tiger, a snake and flowers, motifs that also appear in Japanese tattooing. Their meanings are traditions, not fixed rules.',
+      hu: 'Illusztráció: flash-lapok tigrissel, kígyóval és virágokkal, olyan motívumokkal, amelyek a japán tetoválásban is megjelennek. A jelentésük hagyomány, nem kőbe vésett szabály.',
     },
     img3: {
-      en: 'Illustration: a Japanese sleeve is drawn for the arm: the main motif runs along the limb and the background ties everything together.',
-      hu: 'Illusztráció: a japán kar a karra készül: a fő motívum a végtag hosszában fut, a háttér pedig mindent összeköt.',
+      en: 'Illustration: a koi leg sleeve with waves around it. The main motif runs along the limb and the background ties the whole piece together.',
+      hu: 'Illusztráció: koi a lábszáron, körülötte hullámokkal. A fő motívum a végtag hosszában fut, a háttér pedig egységbe fogja az egész darabot.',
     },
     img4: {
-      en: 'Illustration: tebori, hand tattooing with a long rod, next to a modern tattoo machine. The artist matters more than the tool.',
-      hu: 'Illusztráció: a tebori, vagyis a hosszú pálcás kézi tetoválás egy modern tetoválógép mellett. A tetováló fontosabb, mint az eszköz.',
+      en: 'Illustration: a large tiger tattooed on the forearm with a machine. Whether by hand or by machine, the artist matters more than the tool.',
+      hu: 'Illusztráció: nagy tigris tetoválása gépel az alkaron. Akár kézzel, akár géppel készül, a tetováló többet számít, mint az eszköz.',
     },
     img5: {
-      en: 'Illustration: a sleeve grows in stages: outline first, then background and shading, then colour, over many sessions.',
-      hu: 'Illusztráció: a teljes kar szakaszokban készül: először a kontúr, aztán a háttér és az árnyalás, végül a szín, sok alkalom alatt.',
+      en: 'Illustration: an artist working on a forearm sleeve. A piece like this is built over many sessions, so budget for the finished work, not the first appointment.',
+      hu: 'Illusztráció: a tetováló egy alkart borító mintán dolgozik. Egy ilyen darab sok alkalom alatt készül el, ezért a kész munkára tervezd a költséget, ne az első alkalomra.',
     },
     img6: {
-      en: 'Illustration: the same koi fresh and after about 30 years. The black outline and background hold; pale colours and thin gaps soften.',
-      hu: 'Illusztráció: ugyanaz a koi frissen és nagyjából 30 év után. A fekete kontúr és a háttér megmarad, a halvány színek és a vékony rések puhulnak.',
+      en: 'Illustration: two peony tattoos, one in bright colour and one faded. Bold black holds for decades, while pale colours and thin gaps soften first.',
+      hu: 'Illusztráció: két bazsarózsa-tetoválás, az egyik élénk színű, a másik kifakult. Az erős fekete évtizedekig kitart, a halvány színek és a vékony rések lágyulnak először.',
     },
     img7: {
-      en: 'Illustration: in Japan, a private bath is the easiest way to enjoy an onsen with a large tattoo.',
-      hu: 'Illusztráció: Japánban egy privát fürdő a legegyszerűbb módja, hogy nagy tetoválással is élvezd az onszent.',
+      en: 'Illustration: long sleeves on a summer day. Some gyms, pools and beaches in Japan ask you to cover tattoos, and for an onsen with a large piece a private bath is the easiest choice.',
+      hu: 'Illusztráció: hosszú ujjú ing egy nyári napon. Japánban egyes edzőtermek, uszodák és strandok kérik a tetoválás eltakarását, nagy tetoválással pedig az onsenhez a privát fürdő a legegyszerűbb megoldás.',
     },
   },
 };

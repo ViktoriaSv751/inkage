@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Daniel’s koi fish took two long sessions to tattoo, back when he was twenty-two. Orange scales, a red fin, blue water swirling around it, a few green leaves and bright white highlights on the eyes and the waves. Twelve years later he wanted his forearm back. At the consultation he expected to hear a number of sessions. Instead the technician spent ten minutes going through the tattoo colour by colour: “The black outline will go quickly. The red and orange should be fine. The blue and green need a different wavelength. And these white highlights, I want to test first.”',
       'Daniel had assumed a laser is a laser. It is not, and colour is the main reason. If your tattoo has anything other than black in it, understanding how each ink reacts will tell you more about your removal than any price list. It explains why some clinics turn colour tattoos away, why two people with the same size tattoo can need very different numbers of sessions, and why a small test patch is not a waste of time.',
-      '> A note on the pictures: the images in this article are simple illustrations and charts made for this guide. They show typical situations, not real patients or real treatment results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real treatment results.',
       '## The short answer',
       '**Coloured tattoos can be removed or faded with a laser, but they usually take longer than black ones, need more than one wavelength, and some shades may never disappear completely.** Black and dark blue are the easiest colours. Red usually responds reasonably well. Green, light blue and yellow are harder. White, skin-tone and pastel inks are the most unpredictable, because some of them can turn darker instead of lighter when the laser hits them.',
       'Whether your colours fade well depends mostly on two things: which wavelengths the clinic’s laser can produce, and what your specific inks are made of. The first you can ask about. The second nobody knows exactly in advance, which is why experienced clinics often start with a test.',
@@ -114,7 +114,7 @@ const a: LongArticle = {
     hu: [
       'Daniel koija két hosszú alkalom alatt készült el, még huszonkét évesen. Narancssárga pikkelyek, egy piros uszony, körülötte kavargó kék víz, néhány zöld levél és élénk fehér csillanások a szemen és a hullámokon. Tizenkét évvel később vissza akarta kapni az alkarját. A konzultáción azt várta, hogy elhangzik egy szám, hány alkalom kell. Ehelyett a kezelő tíz percen át színenként végigment a tetováláson: „A fekete kontúr gyorsan elmegy. A piros és a narancs rendben lesz. A kékhez és a zöldhöz másik hullámhossz kell. Ezeket a fehér csillanásokat pedig előbb kipróbálnám.”',
       'Daniel azt hitte, a lézer az lézer. Nem az, és ennek fő oka a szín. Ha a tetoválásodban a feketén kívül más is van, akkor abból, hogyan reagál az egyes tinta, többet megtudsz az eltávolításodról, mint bármilyen árlistából. Ez magyarázza, miért utasítanak el egyes klinikák színes tetoválásokat, miért kell két azonos méretű tetováláshoz nagyon eltérő számú alkalom, és miért nem időpocsékolás egy kis próbafolt.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk és ábrák, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi pácienseket vagy valódi kezelési eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi kezelési eredményekről készült fotók.',
       '## A rövid válasz',
       '**A színes tetoválások lézerrel eltávolíthatók vagy halványíthatók, de általában tovább tart, mint a feketéknél, egynél több hullámhossz kell hozzájuk, és egyes árnyalatok talán soha nem tűnnek el teljesen.** A fekete és a sötétkék a legkönnyebb. A piros általában elég jól reagál. A zöld, a világoskék és a sárga nehezebb. A fehér, a bőrszínű és a pasztell tinták a legkiszámíthatatlanabbak, mert némelyikük világosodás helyett sötétebb lehet, amikor a lézer eltalálja.',
       'Hogy a színeid jól halványulnak-e, főleg két dolgon múlik: milyen hullámhosszakat tud a klinika lézere, és miből áll pontosan a te tintád. Az elsőről kérdezhetsz. A másodikat előre senki sem tudja biztosan, ezért kezdenek a tapasztalt klinikák gyakran egy próbával.',
@@ -244,28 +244,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: each ink absorbs some colours of light and reflects others. The laser has to use a wavelength the ink absorbs.',
-      hu: 'Illusztráció: minden tinta a fény bizonyos színeit elnyeli, másokat visszaver. A lézernek olyan hullámhosszt kell használnia, amit a tinta elnyel.',
+      en: 'Illustration: bottles of black, red, blue, green, yellow and white ink. Each colour absorbs different light, so each needs a laser wavelength it can absorb.',
+      hu: 'Illusztráció: fekete, piros, kék, zöld, sárga és fehér tintás üvegek. Minden szín más fényt nyel el, ezért mindegyikhez olyan hullámhossz kell, amelyet elnyel.',
     },
     img3: {
-      en: 'Illustration: a rough order of difficulty, from black and dark blue on the left to yellow, white and skin tones on the right.',
-      hu: 'Illusztráció: a nehézség hozzávetőleges sorrendje, balra a fekete és a sötétkék, jobbra a sárga, a fehér és a bőrszínek.',
+      en: 'Illustration: a lily in soft yellow and pale pink tones. Light shades like these are among the hardest colours for a laser to clear.',
+      hu: 'Illusztráció: halvány sárga és rózsaszín árnyalatú liliom. Az ilyen világos színeket tudja a lézer a legnehezebben eltüntetni.',
     },
     img4: {
-      en: 'Illustration: a Q-switched pulse lasts nanoseconds, a picosecond pulse about a thousand times less, and tends to break ink into smaller fragments.',
-      hu: 'Illusztráció: a Q-kapcsolt impulzus nanoszekundumokig tart, a pikoszekundumos nagyjából ezerszer rövidebb ideig, és általában kisebb darabokra töri a tintát.',
+      en: 'Illustration: a removal session on the arm, with the practitioner and the patient both wearing safety goggles. Whether the laser is picosecond or Q-switched, the setting looks much the same.',
+      hu: 'Illusztráció: lézeres kezelés a karon, a kezelő és a páciens is védőszemüveget visel. Akár pikoszekundumos, akár Q-kapcsolt lézerről van szó, a helyzet nagyjából így néz ki.',
     },
     img5: {
-      en: 'Illustration: paradoxical darkening. Some white, skin-tone and pastel inks turn grey or black within seconds of the laser pulse.',
-      hu: 'Illusztráció: paradox sötétedés. Egyes fehér, bőrszínű és pasztell tinták a lézerimpulzus után másodperceken belül szürkévé vagy feketévé válnak.',
+      en: 'Illustration: white frosting on a flower tattoo right after a laser pulse. Frosting fades within minutes; paradoxical darkening is different, the ink itself turns grey or black.',
+      hu: 'Illusztráció: fehér „deresedés” egy virágos tetováláson közvetlenül a lézerimpulzus után. Ez perceken belül elmúlik; a paradox sötétedés más: ott maga a tinta szürkül vagy feketedik be.',
     },
     img6: {
-      en: 'Illustration: typical session ranges. Black ink alone, a tattoo with a few colours, and a multicolour piece with light shades.',
-      hu: 'Illusztráció: tipikus alkalomszám-tartományok. Csak fekete tinta, néhány színű tetoválás, és egy többszínű darab világos árnyalatokkal.',
+      en: 'Illustration: green ink remnants on a forearm in a laser clinic. Colours like green often stay visible after the black has gone, which adds sessions.',
+      hu: 'Illusztráció: zöld tintamaradványok egy alkaron a lézerklinikán. A zöldhöz hasonló színek gyakran akkor is látszanak még, amikor a fekete már eltűnt, és ez plusz alkalmakat jelent.',
     },
     img7: {
-      en: 'Illustration: before a colour tattoo, ask about wavelengths, a test spot and an estimate for the whole course.',
-      hu: 'Illusztráció: színes tetoválás előtt kérdezz a hullámhosszakról, a próbafoltról és a teljes kezelésre vonatkozó becslésről.',
+      en: 'Illustration: a consultation table with skin-tone swatches, a form and a laser handpiece. This is the moment to ask about wavelengths, a test spot and the whole course.',
+      hu: 'Illusztráció: konzultációs asztal bőrszínmintákkal, egy űrlappal és egy lézerfejjel. Ilyenkor érdemes rákérdezni a hullámhosszakra, a próbafoltra és a teljes kúrára.',
     },
   },
 };

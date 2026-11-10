@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lea is twenty-four and has forty-one screenshots in a folder called “maybe”. A tiny constellation, a wildflower bouquet the size of a stamp, her best friend’s handwriting, a cat drawn in one line, a quote that felt perfect last spring. She knows she wants a first tattoo. What she does not know is which of these she will still want to see on her arm when she is fifty.',
       'That is the right question, and it is a different one from “what is pretty right now”. This guide is not a list of a hundred designs. It goes through the six kinds of first tattoo that tend to age well, the size and spot where each one works best, the ideas worth skipping as a first, and how to turn whatever you choose into a clear brief your artist can work with. If you are still at the very beginning, our first tattoo checklist covers the whole process from choosing an artist to aftercare.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## What makes a first tattoo idea last',
       'Every tattoo changes with time. Ink particles slowly spread a little in the skin, lines get softer and wider, and contrast drops, faster in the sun and on skin that rubs or folds a lot. A design that ages well is one that still reads clearly after that softening. Our guide to tattoos that age well explains the mechanics in detail; for a first tattoo, three filters do most of the work.',
       '- **A meaning that is yours.** It can be big or small, but it should not depend on one relationship, one job or one summer’s feed. “It reminds me of the sea where I grew up” lasts longer than “everyone has this one”.',
@@ -118,7 +118,7 @@ const a: LongArticle = {
     hu: [
       'Lea huszonnégy éves, és van a telefonján egy „talán” nevű mappa negyvenegy képernyőképpel. Egy apró csillagkép, egy bélyegnyi vadvirágcsokor, a legjobb barátnője kézírása, egy egyetlen vonallal rajzolt macska, egy idézet, ami tavaly tavasszal tökéletesnek tűnt. Tudja, hogy szeretne egy első tetoválást. Azt viszont nem tudja, melyiket akarja majd ötvenévesen is látni a karján.',
       'Ez a jó kérdés, és más, mint az, hogy „mi szép most”. Ez az útmutató nem egy száz mintás lista. Végigveszi azt a hatféle első tetoválást, ami általában szépen öregszik, hogy mindegyik milyen méretben és hol működik a legjobban, mely ötleteket érdemes elsőnek kihagyni, és hogyan lesz bármiből, amit választasz, egy világos brief, amivel a tetoválód dolgozni tud. Ha még a legelején tartasz, az első tetoválás ellenőrzőlistánk a teljes folyamatot végigveszi a tetováló kiválasztásától az utókezelésig.',
-      '> Pár szó a képekről: a cikk képei egyszerű illusztrációk, kifejezetten ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Pár szó a képekről: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi tetoválásokról készült fotók.',
       '## Mitől marad jó egy első tetoválás ötlet?',
       'Minden tetoválás változik az idővel. A tintarészecskék lassan szétterülnek egy kicsit a bőrben, a vonalak puhábbak és szélesebbek lesznek, a kontraszt csökken, gyorsabban a napon és ott, ahol a bőr sokat dörzsölődik vagy gyűrődik. Az a minta öregszik jól, ami ez után a puhulás után is tisztán olvasható. A szépen öregedő tetoválásokról szóló útmutatónk részletesen elmagyarázza a folyamatot; egy első tetoválásnál három szűrő elvégzi a munka nagy részét.',
       '- **Olyan jelentés, ami a tiéd.** Lehet nagy vagy kicsi, de ne egyetlen kapcsolaton, munkahelyen vagy egy nyár hírfolyamán múljon. Az, hogy „arra a tengerre emlékeztet, ahol felnőttem”, tovább tart, mint az, hogy „mindenkinek ilyen van”.',
@@ -251,28 +251,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: six kinds of first tattoo that age well: a small symbol, a single botanical, an animal silhouette, short script, open line art and a meaningful object.',
-      hu: 'Illusztráció: hatféle első tetoválás, ami szépen öregszik: kis szimbólum, egy szál növény, állatsziluett, rövid felirat, levegős vonalrajz és egy jelentéssel bíró tárgy.',
+      en: 'Illustration: flash sheets with a tiger, a snake and flowers on a studio desk. Animals and botanicals are two of the idea families that tend to age well.',
+      hu: 'Illusztráció: flash-lapok tigrissel, kígyóval és virágokkal egy stúdióasztalon. Az állatok és a növények a jól öregedő ötletcsaládok közé tartoznak.',
     },
     img3: {
-      en: 'Illustration: the outer forearm, outer upper arm, calf and shoulder blade are gentle on ink; hands, fingers and feet fade fastest.',
-      hu: 'Illusztráció: a külső alkar, a külső felkar, a vádli és a lapocka kíméli a tintát, a kéz, az ujjak és a lábfej kopnak a leggyorsabban.',
+      en: 'Illustration: a fine-line wildflower bouquet on the forearm. The forearm is a gentle spot for a first tattoo: easy to heal and kind to the ink over the years.',
+      hu: 'Illusztráció: finom vonalas vadvirágcsokor az alkaron. Az alkar kíméletes hely az első tetoválásnak: könnyen gyógyul, és az évek során is jól tartja a tintát.',
     },
     img4: {
-      en: 'Illustration: the same detailed design small and large. At a few centimetres the detail merges over the years; with more room it stays readable.',
-      hu: 'Illusztráció: ugyanaz a részletes minta kicsiben és nagyban. Néhány centin a részletek az évek alatt összefolynak, több hellyel olvashatók maradnak.',
+      en: 'Illustration: a tiny moon-and-stars design next to a ruler. At this size, keep the design simple; fine detail merges as the ink slowly spreads.',
+      hu: 'Illusztráció: apró hold és csillagok minta egy vonalzó mellett. Ekkora méretnél maradj az egyszerű mintánál, mert a finom részletek összefolynak, ahogy a tinta lassan szétterül.',
     },
     img5: {
-      en: 'Illustration: the arm’s-length test. A printed design taped to the spot shows whether it still reads from a few metres away.',
-      hu: 'Illusztráció: a karnyújtásnyi próba. A kinyomtatott, helyére ragasztott minta megmutatja, pár méterről is olvasható-e.',
+      en: 'Illustration: a printed floral design held up next to the forearm. Seeing the idea on the spot before the session is one of the simplest tests.',
+      hu: 'Illusztráció: kinyomtatott virágos minta az alkar mellé tartva. Az egyik legegyszerűbb próba, ha még a tetoválás előtt a helyén látod az ötletet.',
     },
     img6: {
-      en: 'Illustration: a good brief has the meaning, a few references, the spot, the size in centimetres and the style in one short message.',
-      hu: 'Illusztráció: egy jó briefben egyetlen rövid üzenetben ott van a jelentés, néhány referencia, a hely, a méret centiben és a stílus.',
+      en: 'Illustration: a client and an artist sketching designs together at a table. A clear brief gives the artist a good starting point for the drawing.',
+      hu: 'Illusztráció: a vendég és a tetováló együtt rajzol egy asztalnál. Egy világos leírás jó kiindulópontot ad a tetoválónak a rajzhoz.',
     },
     img7: {
-      en: 'Illustration: a simple design at a good size looks much the same fresh and decades later.',
-      hu: 'Illusztráció: egy jó méretű, egyszerű minta frissen és évtizedek múlva is nagyjából ugyanúgy néz ki.',
+      en: 'Illustration: two rose tattoos side by side, one fresh and one aged. A bold, simple design stays readable even when the lines soften.',
+      hu: 'Illusztráció: két rózsatetoválás egymás mellett, az egyik friss, a másik öregebb. Egy határozott, egyszerű minta akkor is olvasható marad, amikor a vonalak puhulnak.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena had saved the same design for months: a sprig of eucalyptus about the size of her palm, for the outside of her forearm. She asked three studios what it would cost. The first said €120 and could do it on Saturday. The second said around €350, about two and a half hours at their hourly rate. The third, an artist whose fine botanical work she had followed for years, quoted €600 and a date four months away.',
       'Same idea, same size, three prices five times apart. None of them was a scam. Tattoo prices are not fixed anywhere, and the number you hear depends on how the artist charges, how long the work really takes, where the studio is and how in demand the artist is. This guide explains how pricing works, gives typical ranges by size, style and country, and covers the parts people forget: deposits, tips, touch-ups and what a cheap tattoo can cost later.',
-      '> A note on the numbers and pictures: the prices here are rough ranges collected from studio price lists, price guides and calculators published in 2025–2026. They vary a lot by country, city and artist, and they are not quotes. Ask the artist for a price for your design. The images are simple illustrations made for this guide.',
+      '> A note on the numbers and pictures: the prices here are rough ranges collected from studio price lists, price guides and calculators published in 2025–2026. They vary a lot by country, city and artist, and they are not quotes. Ask the artist for a price for your design. The images are illustrations made to show typical situations. They are not photos of real people or real tattoos.',
       '## The short answer',
       '**A small, simple tattoo usually costs about the shop minimum, often €60–200 in Europe or $80–250 in the US. A palm-sized piece is typically €200–600 ($250–700), a half sleeve €1,000–2,500 ($1,000–3,000) and a full sleeve or back piece several thousand.** Most of the difference comes from time: experienced artists in Western Europe and the US typically charge somewhere around €80–200 or $100–250 per hour, and in-demand artists more.',
       'On top of the price itself, plan for a deposit when you book (usually taken off the total), a tip if you are in a country where tipping is expected, and aftercare. If the work spans several sessions, you usually pay as you go.',
@@ -116,7 +116,7 @@ const a: LongArticle = {
     hu: [
       'Lena hónapok óta őrizgette ugyanazt a mintát: egy tenyérnyi eukaliptuszágat az alkarja külső oldalára. Három stúdiót kérdezett meg, mennyibe kerülne. Az első 120 eurót mondott, és szombaton már meg is tudta csinálni. A második nagyjából 350 eurót, kb. két és fél óra az óradíjukkal. A harmadik, egy tetováló, akinek finom növényes munkáit évek óta követte, 600 eurót kért, és négy hónappal későbbi időpontot adott.',
       'Ugyanaz az ötlet, ugyanaz a méret, három ár, ötszörös különbséggel. Egyik sem volt átverés. A tetoválásnak sehol nincs fix ára, és az, hogy milyen számot hallasz, attól függ, hogyan számol a tetováló, mennyi ideig tart valójában a munka, hol van a stúdió, és mennyire keresett a tetováló. Ez az útmutató elmagyarázza, hogyan működik az árazás, tipikus ártartományokat ad méret, stílus és ország szerint, és kitér arra is, amiről sokan elfeledkeznek: foglaló, borravaló, javítás, és mennyibe kerülhet később egy olcsó tetoválás.',
-      '> Megjegyzés a számokhoz és a képekhez: az itt szereplő árak durva tartományok, stúdiók árlistáiból, árkalauzokból és 2025–2026-ban közzétett kalkulátorokból gyűjtve. Országonként, városonként és tetoválónként nagyon eltérnek, és nem árajánlatok. A saját mintádra kérj árat a tetoválótól. A képek egyszerű illusztrációk, ehhez az útmutatóhoz készültek.',
+      '> Megjegyzés a számokhoz és a képekhez: az itt szereplő árak durva tartományok, stúdiók árlistáiból, árkalauzokból és 2025–2026-ban közzétett kalkulátorokból gyűjtve. Országonként, városonként és tetoválónként nagyon eltérnek, és nem árajánlatok. A saját mintádra kérj árat a tetoválótól. A képek tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi tetoválásokról készült fotók.',
       '## A rövid válasz',
       '**Egy kicsi, egyszerű tetoválás általában nagyjából a stúdió minimumárába kerül, ami Európában gyakran 60–200 euró, az USA-ban 80–250 dollár. Egy tenyérnyi darab jellemzően 200–600 euró (250–700 dollár), egy félujj 1000–2500 euró (1000–3000 dollár), egy teljes ujj vagy egy hát pedig több ezer.** A különbség nagy része az időből adódik: a tapasztalt tetoválók Nyugat-Európában és az USA-ban jellemzően nagyjából 80–200 euró vagy 100–250 dollár óradíjat kérnek, a keresett tetoválók többet.',
       'Magán az áron felül számolj foglalóval a foglaláskor (ezt általában levonják a végösszegből), borravalóval, ha olyan országban vagy, ahol ez elvárt, és az utókezeléssel. Ha a munka több alkalomra oszlik, általában alkalmanként fizetsz.',
@@ -248,28 +248,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: four common ways to price a tattoo: a shop minimum, an hourly rate, a fixed price per piece and a day rate.',
-      hu: 'Illusztráció: a tetoválás árazásának négy gyakori módja: minimumár, óradíj, fix darabár és napidíj.',
+      en: 'Illustration: a sterile setup with needles, black gloves and ink caps on a wrapped table. The shop minimum pays for all of this, even for the smallest tattoo.',
+      hu: 'Illusztráció: steril előkészítés tűkkel, fekete kesztyűvel és festékkupakokkal egy fóliázott asztalon. A stúdió minimumára ezt is fedezi, a legkisebb tetoválásnál is.',
     },
     img3: {
-      en: 'Illustration: the bigger the tattoo, the more hours it takes and the higher the price, from a small symbol to a full sleeve.',
-      hu: 'Illusztráció: minél nagyobb a tetoválás, annál több óráig tart, és annál drágább, egy kis szimbólumtól a teljes ujjig.',
+      en: 'Illustration: stencils of the same flower in three sizes on a forearm. The bigger the design, the more hours it takes and the higher the price.',
+      hu: 'Illusztráció: ugyanaz a virág három méretben, sablonként egy alkaron. Minél nagyobb a minta, annál több óra kell hozzá, és annál drágább.',
     },
     img4: {
-      en: 'Illustration: the same size can take very different times. Simple line work is quick, colour and realism take much longer.',
-      hu: 'Illusztráció: ugyanaz a méret nagyon eltérő ideig tarthat. Az egyszerű vonalas munka gyors, a szín és a realizmus sokkal tovább tart.',
+      en: 'Illustration: a realistic black-and-grey lion portrait on an upper arm. Realism like this takes far longer than simple line work of the same size.',
+      hu: 'Illusztráció: realisztikus fekete-szürke oroszlánportré a felkaron. Az ilyen realisztikus munka sokkal tovább tart, mint egy azonos méretű egyszerű vonalas minta.',
     },
     img5: {
-      en: 'Illustration: a deposit secures the date and is usually taken off the final price at the last session.',
-      hu: 'Illusztráció: a foglaló biztosítja az időpontot, és általában az utolsó alkalomnál levonják a végösszegből.',
+      en: 'Illustration: an artist drawing a custom design on a tablet with the client. A deposit usually secures the date and pays for this drawing time.',
+      hu: 'Illusztráció: a tetováló tableten rajzolja meg az egyedi mintát a vendéggel. A foglaló általában lefoglalja az időpontot, és fedezi a rajzolásra szánt időt.',
     },
     img6: {
-      en: 'Illustration: tipping customs differ: usual in the US, welcome but optional in much of Europe, not expected in Japan.',
-      hu: 'Illusztráció: a borravaló szokása eltér: az USA-ban szokás, Európa nagy részén jólesik, de nem kötelező, Japánban nem elvárt.',
+      en: 'Illustration: an artist at work on a client’s shoulder. Whether a tip is expected for work like this depends on the country.',
+      hu: 'Illusztráció: a tetováló egy vendég vállán dolgozik. Hogy az ilyen munkáért elvárt-e a borravaló, az országtól függ.',
     },
     img7: {
-      en: 'Illustration: a very cheap tattoo can lead to a cover-up or laser removal, which usually costs far more than the saving.',
-      hu: 'Illusztráció: egy nagyon olcsó tetoválásból takartetoválás vagy lézeres eltávolítás lehet, ami általában sokkal többe kerül, mint a megtakarítás.',
+      en: 'Illustration: script on a wrist with slightly blurred lines. Ink placed too deep spreads, and fixing it later usually costs more than the cheap price saved.',
+      hu: 'Illusztráció: felirat a csuklón, kissé elmosódott vonalakkal. A túl mélyre került tinta szétfolyik, és a későbbi javítás általában többe kerül, mint amennyit az olcsó ár megspórolt.',
     },
   },
 };

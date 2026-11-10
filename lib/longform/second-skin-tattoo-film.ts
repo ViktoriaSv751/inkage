@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Mia looked down at her forearm the morning after her first tattoo and nearly called the studio. The clear film her artist had smoothed over the new botanical piece had turned into a little bag of murky, grey-black liquid. The lines underneath looked blurred, and one corner of the film bulged like a blister. Had the ink run? Was it infected? Should she rip the whole thing off?',
       'None of the above. What Mia saw is exactly what second-skin film is supposed to look like on day one. But the questions are fair ones, and the film comes with its own set of rules: how long it stays on, what the fluid means, when it has to come off early and how to remove it without taking a layer of fresh skin with it. This guide goes through all of it.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real clients or real skin.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## The short answer',
       '**Most artists who use film have you keep the first piece on for up to about 24 hours, then put on a fresh piece for roughly three to six more days.** If a lot of fluid collects quickly, the first piece often comes off sooner, sometimes after eight to twelve hours. Most guides agree that the film should not stay on for more than about a week in total. After that, you switch to ordinary washing and moisturising.',
       'Brands and studios differ, so if your artist gave you a different schedule, follow theirs. They know the product they used, the size of your tattoo and how much it bled.',
@@ -102,7 +102,7 @@ const a: LongArticle = {
     hu: [
       'Mia az első tetoválása utáni reggelen lenézett az alkarjára, és majdnem felhívta a szalont. Az átlátszó fólia, amit a tetoválója az új, növényes mintára simított, zavaros, szürkésfekete folyadékkal teli kis zacskóvá változott. Alatta elmosódottnak tűntek a vonalak, a fólia egyik sarka pedig hólyagként dudorodott. Elfolyt a tinta? Elfertőződött? Tépje le az egészet?',
       'Egyik sem. Amit Mia látott, az pontosan úgy néz ki, ahogy a second skin fóliának az első napon ki kell néznie. A kérdések mégis jogosak, és a fóliának megvannak a maga szabályai: meddig maradjon fent, mit jelent a folyadék, mikor kell hamarabb levenni, és hogyan vedd le úgy, hogy ne vigyen magával egy réteget a friss bőrből. Ez az útmutató mindezt végigveszi.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi vendégeket vagy valódi bőrt.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## A rövid válasz',
       '**A legtöbb tetováló, aki fóliát használ, azt kéri, hogy az első darab legfeljebb nagyjából 24 óráig maradjon fent, utána egy friss darab még körülbelül három-hat napig.** Ha gyorsan sok folyadék gyűlik alá, az első darab gyakran hamarabb lejön, néha már nyolc-tizenkét óra után. A legtöbb útmutató egyetért abban, hogy a fólia összesen nagyjából egy hétnél tovább ne maradjon rajtad. Utána jöhet a szokásos mosás és hidratálás.',
       'A márkák és a szalonok eltérnek egymástól, ezért ha a tetoválód más menetrendet adott, azt kövesd. Ő tudja, milyen terméket használt, mekkora a tetoválásod, és mennyire vérzett.',
@@ -235,28 +235,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: second-skin film is a thin, clear polyurethane sheet that keeps water and bacteria out while letting the skin breathe.',
-      hu: 'Illusztráció: a second skin fólia vékony, átlátszó poliuretán lap, ami kívül tartja a vizet és a baktériumokat, közben a bőr lélegezhet alatta.',
+      en: 'Illustration: an artist finishing a tattoo on an upper arm. Second-skin film goes on in the studio right after, over clean skin, like a clear wound dressing.',
+      hu: 'Illusztráció: a tetováló egy felkartetováláson dolgozik. A second skin fólia rögtön utána, még a stúdióban kerül fel a tiszta bőrre, mint egy átlátszó sebkötszer.',
     },
     img3: {
-      en: 'Illustration: a common routine is a first piece for up to about 24 hours, then a second piece for roughly three to six days.',
-      hu: 'Illusztráció: gyakori menetrend az első darab legfeljebb nagyjából 24 óráig, utána a második darab körülbelül három-hat napig.',
+      en: 'Illustration: a bandage roll, a tube of gel and a glass of water on a nightstand. Many people keep the first piece of film on overnight, then switch to a second piece for a few days.',
+      hu: 'Illusztráció: kötszertekercs, gél és egy pohár víz az éjjeliszekrényen. Sokan éjszakára rajta hagyják az első fóliát, aztán néhány napra egy második darabot tesznek fel.',
     },
     img4: {
-      en: 'Illustration: a cloudy, inky pocket of plasma under the film on day one is normal and shrinks over the next day or two.',
-      hu: 'Illusztráció: az első napon normális a zavaros, tintás plazmazseb a fólia alatt, és a következő egy-két napban összezsugorodik.',
+      en: 'Illustration: a freshly done moth tattoo with red, swollen skin around it. In the first day or two a new tattoo weeps, and under film that fluid collects in a cloudy pocket.',
+      hu: 'Illusztráció: frissen elkészült lepketetoválás, körülötte vörös, duzzadt bőrrel. Az első egy-két napban az új tetoválás nedvezik, és a fólia alatt ez a folyadék zavaros zsebbe gyűlik.',
     },
     img5: {
-      en: 'Illustration: a leak at the edge, a lifted corner or a red rash in the shape of the film all mean it should come off.',
-      hu: 'Illusztráció: a szélen szivárgó folyadék, a felvált sarok vagy a fólia alakját követő piros kiütés mind azt jelenti, hogy le kell venni.',
+      en: 'Illustration: a fresh flower tattoo with red, irritated skin around it. A rash, a leak or a lifted corner means the film should come off.',
+      hu: 'Illusztráció: friss virágtetoválás, körülötte vörös, irritált bőrrel. Kiütés, szivárgás vagy felpöndörödött sarok esetén a fóliát le kell venni.',
     },
     img6: {
-      en: 'Illustration: in a warm shower, pull the film back over itself, low and parallel to the skin, never straight up.',
-      hu: 'Illusztráció: meleg zuhany alatt húzd a fóliát önmagán visszahajtva, alacsonyan, a bőrrel párhuzamosan, sosem egyenesen felfelé.',
+      en: 'Illustration: washing a forearm tattoo at the sink. Film comes off best with warm water, pulled back low over itself, never straight up.',
+      hu: 'Illusztráció: alkartetoválás lemosása a mosdónál. A fólia langyos víz alatt jön le a legjobban, alacsonyan, önmagán visszahúzva, soha nem egyenesen felfelé.',
     },
     img7: {
-      en: 'Illustration: film on the left, traditional open healing with a thin layer of lotion on the right. Both heal tattoos well.',
-      hu: 'Illusztráció: balra fólia, jobbra hagyományos, nyitott gyógyítás vékony réteg krémmel. Mindkettővel jól gyógyulnak a tetoválások.',
+      en: 'Illustration: rubbing a thin layer of lotion into a healed floral forearm tattoo. Traditional open healing with lotion and healing under film both work well.',
+      hu: 'Illusztráció: vékony réteg krém bedörzsölése egy virágos alkartetoválásba. A hagyományos, nyitott gyógyulás krémmel és a fólia alatti gyógyulás is jól működik.',
     },
   },
 };

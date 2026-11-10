@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       "Nora had 63 saved pictures in a folder called “maybe”. A red rose with a thick black outline. A tiny fine line moon. A watercolour fox with no outline at all. A Japanese koi swimming up a forearm. A geometric wolf. She liked them all, which was exactly the problem. When she finally showed the folder to a tattoo artist, he scrolled for a while and asked one question she had never thought about: “Which of these do you still want to recognise when you are sixty?”",
       "That question is what this guide is about. There are dozens of tattoo styles, and most style guides only tell you what each one looks like. That is useful, but it is half the story. Every style is also a set of technical choices: how thick the lines are, how much black there is, how much bare skin is left between the details. Those choices decide how the tattoo looks in ten, twenty and thirty years.",
-      "> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical tendencies, not real tattoos or real people.",
+      "> A note on the pictures: the images in this article are illustrations made to show typical tendencies. They are not photos of real tattoos or real people.",
       "## The short answer",
       "**Styles built on bold outlines, solid black and clear shapes, such as American traditional, tribal and heavy blackwork, usually age best. Styles that rely on very thin lines, tiny details, soft colour without an outline or white ink tend to change the most.** Neo-traditional, Japanese, realism, script, dotwork and geometric work sit in between: they can age very well when they are big enough and have enough contrast, and blur sooner when they are not.",
       "No style is a guarantee in either direction. A skilled artist can make a fine line piece last, and a badly done traditional tattoo can blow out within a year. But the style sets the starting odds.",
@@ -118,7 +118,7 @@ const a: LongArticle = {
     hu: [
       "Nórának 63 elmentett képe volt egy „talán” nevű mappában. Egy piros rózsa vastag fekete kontúrral. Egy apró fine line hold. Egy akvarell róka, kontúr nélkül. Egy alkaron felfelé úszó japán koi. Egy geometrikus farkas. Mindegyik tetszett neki, és pont ez volt a gond. Amikor végre megmutatta a mappát egy tetoválónak, az egy darabig görgetett, aztán feltett egy kérdést, amire Nóra sosem gondolt: „Ezek közül melyiket szeretnéd hatvanévesen is felismerni?”",
       "Erről a kérdésről szól ez az útmutató. Tetoválás stílusból több tucat van, és a legtöbb stílusleírás csak azt mondja meg, hogyan néz ki az egyes stílus. Ez hasznos, de csak a történet fele. Minden stílus egyben technikai döntések sora is: milyen vastagok a vonalak, mennyi benne a fekete, mennyi csupasz bőr marad a részletek között. Ezek a döntések határozzák meg, hogyan néz ki a tetoválás tíz, húsz és harminc év múlva.",
-      "> Egy megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Jellemző tendenciákat mutatnak, nem valódi tetoválásokat vagy valódi embereket.",
+      "> Egy megjegyzés a képekhez: a cikk képei jellemző tendenciákat bemutató illusztrációk. Nem valódi tetoválásokról vagy valódi emberekről készült fotók.",
       "## A rövid válasz",
       "**A vastag kontúrra, telt feketére és tiszta formákra épülő stílusok, mint az amerikai tradicionális, a tribal és a sűrű blackwork, általában a legjobban öregszenek. Azok a stílusok, amelyek nagyon vékony vonalakra, apró részletekre, kontúr nélküli lágy színekre vagy fehér tintára építenek, általában a legtöbbet változnak.** A neotradicionális, a japán, a realisztikus, az írás, a dotwork és a geometrikus stílus valahol a kettő között van: nagyon jól öregedhetnek, ha elég nagyok és elég erős a kontrasztjuk, és hamarabb elmosódnak, ha nem.",
       "Egyik stílus sem garancia, egyik irányba sem. Egy ügyes tetováló a fine line munkát is tartóssá teheti, egy rosszul elkészített old school tetoválás pedig akár egy éven belül szétfolyhat. A stílus viszont meghatározza a kiinduló esélyeket.",
@@ -251,28 +251,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: "Illustration: the same slow spread of ink is barely visible on a bold line but swallows most of a thin one.",
-      hu: "Illusztráció: a tinta ugyanolyan lassú szétterülése egy vastag vonalon alig látszik, egy vékonynak viszont a nagy részét elnyeli.",
+      en: "Illustration: thin linework up close, years later. The slow spread of ink barely shows on a bold line but blurs a thin one until the detail is gone.",
+      hu: "Illusztráció: vékony vonalak közelről, évekkel később. A festék lassú szétterülése egy vastag vonalon alig látszik, egy vékonyat viszont addig mos el, amíg a részletek eltűnnek.",
     },
     img3: {
-      en: "Illustration: an American traditional rose on a forearm, fresh and after about thirty years. Softer colour, the same clear shape.",
-      hu: "Illusztráció: amerikai tradicionális rózsa alkaron, frissen és körülbelül harminc év után. Lágyabb színek, ugyanaz a tiszta forma.",
+      en: "Illustration: an American traditional rose on a forearm: a heavy black outline, solid red and green, and bare skin around it. This is what keeps the shape clear for decades.",
+      hu: "Illusztráció: amerikai tradicionális rózsa alkaron: vastag fekete kontúr, telt piros és zöld, körülötte szabad bőr. Ettől marad tiszta a forma évtizedekig.",
     },
     img4: {
-      en: "Illustration: a Japanese-style koi with waves on the upper arm. Large shapes and a dark background keep it readable for decades.",
-      hu: "Illusztráció: japán stílusú koi hullámokkal a felkaron. A nagy formák és a sötét háttér évtizedekig olvashatóvá teszik.",
+      en: "Illustration: a colourful Japanese-style koi with waves on the shoulder blade. Large shapes and strong contrast keep this style readable for a long time.",
+      hu: "Illusztráció: színes, japán stílusú koi hullámokkal a lapockán. A nagy formák és az erős kontraszt sokáig olvashatóvá teszik ezt a stílust.",
     },
     img5: {
-      en: "Illustration: a small fine line flower on the wrist, fresh and after about twenty years. Thin lines soften and lose detail first.",
-      hu: "Illusztráció: apró fine line virág a csuklón, frissen és körülbelül húsz év után. A vékony vonalak lágyulnak és veszítenek először a részletekből.",
+      en: "Illustration: a small fine line branch on the wrist. Lines this thin are beautiful fresh, but they are the first to soften and lose detail.",
+      hu: "Illusztráció: apró fine line ág a csuklón. Az ilyen vékony vonalak frissen gyönyörűek, de ezek puhulnak meg és veszítenek részletet a leghamarabb.",
     },
     img6: {
-      en: "Illustration: watercolour without an outline (top) and with a thin dark outline (bottom), fresh and after about twenty years.",
-      hu: "Illusztráció: akvarell kontúr nélkül (fent) és vékony sötét kontúrral (lent), frissen és körülbelül húsz év után.",
+      en: "Illustration: a watercolour hummingbird on the shoulder, with soft colour and only a few dark lines. A firmer dark outline helps watercolour keep its shape as the colour fades.",
+      hu: "Illusztráció: akvarell kolibri a vállon, lágy színekkel és csak néhány sötét vonallal. Egy határozottabb sötét kontúr segít, hogy az akvarell megtartsa a formáját, ahogy a színek halványulnak.",
     },
     img7: {
-      en: "Illustration: how styles tend to age over thirty years, from bold styles that change little to delicate ones that change the most.",
-      hu: "Illusztráció: hogyan öregszenek jellemzően a stílusok harminc év alatt, a keveset változó merész stílusoktól a legtöbbet változó finomakig.",
+      en: "Illustration: two forearms side by side, one with a bolder bird and one with a fine branch. Over the years the delicate piece will change far more than the bold one.",
+      hu: "Illusztráció: két alkar egymás mellett, az egyiken egy erőteljesebb madár, a másikon egy finom ág. Az évek során a finom darab sokkal többet változik, mint a merész.",
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Marco had been planning it for two years: a black ornamental piece on the side of his neck, running from just below the ear down towards the collarbone. He had the design, he had the artist, and he had the slightly nervous feeling that comes with a placement you see in every mirror. The night before, he searched three things in a row: how much does a neck tattoo hurt, will it still look good in twenty years, and what will people at work say.',
       'Those are exactly the right three questions. The neck is one of the most striking places for a tattoo, and one of the most demanding. This guide goes through the different parts of the neck one by one, how much each hurts, how the skin there treats ink over the years, which styles hold up, how healing works when you cannot cover the area, and what to think about before you commit.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## The neck is four placements, not one',
       'When people say “neck tattoo”, they can mean very different things. The skin, the movement, the sun and the pain are not the same all the way around, so it helps to split the neck into four areas.',
       '- **The back of the neck (nape).** The skin is relatively thick, it moves less than the front, and long hair or a collar can cover it. It is the gentlest neck placement in almost every way.',
@@ -107,7 +107,7 @@ const a: LongArticle = {
     hu: [
       'Marco két éve tervezte: egy fekete, ornamentális mintát a nyaka oldalára, ami a fül alól indul, és a kulcscsont felé fut le. Megvolt a terv, megvolt a tetoválója, és megvolt az a kicsit ideges érzés is, ami minden olyan helynél jön, amit minden tükörben látsz. Előző este három dolgot keresett rá egymás után: mennyire fáj a nyaktetoválás, jól fog-e még kinézni húsz év múlva, és mit szólnak majd a munkahelyén.',
       'Pontosan ez a három jó kérdés. A nyak az egyik leglátványosabb hely egy tetoválásnak, és az egyik legigényesebb is. Ez az útmutató sorra veszi a nyak különböző részeit: mennyire fáj mindegyik, hogyan bánik a bőr a tintával az évek során, melyik stílus bírja, hogyan gyógyul egy olyan terület, amit nem tudsz letakarni, és mit érdemes végiggondolnod, mielőtt belevágsz.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## A nyak nem egy, hanem négy terület',
       'Amikor valaki azt mondja, „nyaktetoválás”, nagyon különböző dolgokra gondolhat. A bőr, a mozgás, a napfény és a fájdalom nem ugyanaz körben, ezért érdemes négy részre bontani a nyakat.',
       '- **A tarkó.** A bőr viszonylag vastag, kevésbé mozog, mint elöl, és a hosszú haj vagy egy gallér eltakarhatja. Szinte minden szempontból ez a legkíméletesebb nyaki terület.',
@@ -229,28 +229,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the neck as four areas. The back of the neck and behind the ear are gentler, the front of the throat is the most demanding.',
-      hu: 'Illusztráció: a nyak négy területe. A tarkó és a fül mögötti rész kíméletesebb, a torok eleje a legigényesebb.',
+      en: 'Illustration: a small tattoo on the side of the neck, shown next to one on the foot. The side of the neck is a moderate spot; the front of the throat is the most demanding.',
+      hu: 'Illusztráció: kis tetoválás a nyak oldalán, mellette egy a lábfejen. A nyak oldala közepesen igénybe vett terület, a torok eleje a legnehezebb.',
     },
     img3: {
-      en: 'Illustration: sun and horizontal creases are the two main reasons fine detail on the neck softens over the years.',
-      hu: 'Illusztráció: a nap és a vízszintes ráncok a két fő ok, amiért a finom részletek puhulnak a nyakon az évek során.',
+      en: 'Illustration: an older man on a beach with softened tattoos on his chest and arm. Years of sun soften ink, and the neck catches sun almost every day.',
+      hu: 'Illusztráció: idősebb férfi a tengerparton, a mellkasán és a karján elmosódott tetoválásokkal. Az évek napfénye puhítja a tintát, a nyakat pedig szinte minden nap éri a nap.',
     },
     img4: {
-      en: 'Illustration: bold blackwork, script with open letters and a small, simple design behind the ear hold up best on the neck.',
-      hu: 'Illusztráció: a vastag blackwork, a nyitott betűs felirat és egy kicsi, egyszerű minta a fül mögött bírja a legjobban a nyakon.',
+      en: 'Illustration: bold ornamental blackwork just below the nape. Strong, open shapes like these hold up much better on the neck than fine detail.',
+      hu: 'Illusztráció: erőteljes, díszítő blackwork közvetlenül a tarkó alatt. Az ilyen határozott, levegős formák sokkal jobban bírják a nyakon, mint a finom részletek.',
     },
     img5: {
-      en: 'Illustration: a design that follows the curve of the neck moves with you; a straight band across the throat fights the anatomy.',
-      hu: 'Illusztráció: a nyak ívét követő minta veled együtt mozog, a torkon átfutó egyenes sáv a testtel harcol.',
+      en: 'Illustration: three stencils of the same flower in different sizes on the skin. Trying sizes and positions before the session shows what fits the curve of the body.',
+      hu: 'Illusztráció: ugyanaz a virág három méretben, sablonként a bőrön. Ha a méretet és a helyet előre kipróbálod, látod, mi illeszkedik a test íveihez.',
     },
     img6: {
-      en: 'Illustration: collars, pillows, glasses and sun are the main things that rub or irritate a healing neck tattoo.',
-      hu: 'Illusztráció: a gallér, a párna, a szemüveg és a nap dörzsöli vagy irritálja leginkább a gyógyuló nyaktetoválást.',
+      en: 'Illustration: an aftercare kit on a nightstand: a bandage roll, a gel tube and a glass of water. A healing neck tattoo needs gentle care and no rubbing collars.',
+      hu: 'Illusztráció: utókezelő csomag az éjjeliszekrényen: kötszer, egy tubus gél és egy pohár víz. A gyógyuló nyaktetoválásnak kíméletes ápolás kell, dörzsölő gallér nélkül.',
     },
     img7: {
-      en: 'Illustration: laser removal of a neck tattoo takes many sessions spread over one to two years.',
-      hu: 'Illusztráció: egy nyaktetoválás lézeres eltávolítása sok alkalmat jelent egy-két év alatt.',
+      en: 'Illustration: a laser practitioner treating a patient’s arm, both in safety goggles. Removing a neck tattoo works the same way and takes many sessions.',
+      hu: 'Illusztráció: lézeres kezelés a páciens karján, mindketten védőszemüveget viselnek. A nyaktetoválás eltávolítása ugyanígy zajlik, és sok alkalmat igényel.',
     },
   },
 };

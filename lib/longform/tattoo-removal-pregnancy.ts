@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Mira was five months pregnant when she noticed she had started hiding her left wrist. The small script tattoo there, a name from a relationship that ended years ago, had bothered her for a while, and now that a new chapter was starting she wanted it gone before the baby arrived. She found a laser clinic, filled in the online form and stopped at one question: “Are you pregnant or breastfeeding?” She ticked yes. The reply came the next morning, friendly and short. They would be glad to see her, but only once she had finished breastfeeding.',
       'Mira’s first reaction is the one many people have: is laser removal actually dangerous for the baby, or is the clinic just covering itself? The honest answer sits somewhere in between, and it is calmer than a lot of what you will read online. This guide walks through why almost every clinic says wait, what the research does and does not show, and how to use the months in between well.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real patients. This article is general information, not medical advice: your midwife, doctor or dermatologist knows your situation.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real patients or real results. This article is general information, not medical advice: your midwife, doctor or dermatologist knows your situation.',
       '## The short answer',
       '**Most laser clinics, dermatologists and tattoo artists advise waiting until after pregnancy and breastfeeding, both for removing a tattoo and for getting a new one.** That is not because laser removal has been shown to harm babies. It is because nobody has studied it properly in pregnant or breastfeeding people, and the treatment is entirely optional. When something is elective and the safety data are missing, the standard medical habit is to postpone it.',
       'Removal is slow anyway. A typical tattoo needs several sessions spaced six to eight weeks or more apart, often over a year or longer. Starting a few months later rarely changes much in the end.',
@@ -95,7 +95,7 @@ const a: LongArticle = {
     hu: [
       'Mira ötödik hónapos terhes volt, amikor észrevette, hogy elkezdte rejtegetni a bal csuklóját. Az ott lévő kis írott tetoválás, egy évekkel korábban véget ért kapcsolatból maradt név, már egy ideje zavarta, és most, hogy új fejezet kezdődött, azt szerette volna, ha a baba érkezése előtt eltűnik. Talált egy lézeres klinikát, kitöltötte az online űrlapot, és megakadt egy kérdésnél: „Terhes vagy, vagy szoptatsz?” Bejelölte az igent. A válasz másnap reggel jött, kedves és rövid. Szívesen látják, de csak akkor, ha már befejezte a szoptatást.',
       'Mira első reakciója ugyanaz volt, mint sok embernek: tényleg veszélyes a lézeres eltávolítás a babára, vagy a klinika csak bebiztosítja magát? Az őszinte válasz valahol a kettő között van, és nyugodtabb annál, amit az interneten sokszor olvasni. Ez az útmutató végigveszi, miért mondja szinte minden klinika, hogy várj, mit mutat és mit nem mutat a kutatás, és hogyan használhatod ki jól a köztes hónapokat.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi pácienseket. Ez a cikk általános tájékoztatás, nem orvosi tanács: a szülésznőd, az orvosod vagy a bőrgyógyászod ismeri a helyzetedet.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi páciensekről vagy valódi eredményekről készült fotók. Ez a cikk általános tájékoztatás, nem orvosi tanács: a szülésznőd, az orvosod vagy a bőrgyógyászod ismeri a helyzetedet.',
       '## A rövid válasz',
       '**A legtöbb lézeres klinika, bőrgyógyász és tetováló azt tanácsolja, hogy várj a terhesség és a szoptatás végéig, a tetoválás eltávolításával és új tetoválással is.** Ennek nem az az oka, hogy a lézeres eltávolításról kiderült volna, hogy árt a babáknak. Hanem az, hogy senki sem vizsgálta rendesen terhes vagy szoptató nőknél, és a kezelés teljesen választható. Ha valami nem szükséges, és hiányoznak a biztonsági adatok, az orvosi gyakorlatban az a szokás, hogy elhalasztják.',
       'Az eltávolítás amúgy is lassú. Egy átlagos tetoválásnak több kezelés kell, hat-nyolc hetes vagy hosszabb szünetekkel, gyakran egy évig vagy tovább. Ha néhány hónappal később kezded, az a végén ritkán számít sokat.',
@@ -206,28 +206,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the main reasons clinics postpone. No safety studies, ink cleared through the lymph system, numbing creams and open skin that can get infected.',
-      hu: 'Illusztráció: a halasztás fő okai. Nincsenek biztonsági vizsgálatok, a tinta a nyirokrendszeren át távozik, érzéstelenítő krémek és befertőződhető nyitott bőr.',
+      en: 'Illustration: the skin frosts white right after a laser pulse and then needs to heal. Open skin, numbing creams and the lack of safety studies are why clinics postpone.',
+      hu: 'Illusztráció: a bőr a lézerimpulzus után azonnal kifehéredik, utána pedig gyógyulnia kell. A sérült bőr, a zsibbasztó krémek és a hiányzó biztonsági vizsgálatok miatt halasztanak a klinikák.',
     },
     img3: {
-      en: 'Illustration: the laser breaks ink into fragments, and immune cells carry part of them away through lymph vessels to nearby lymph nodes.',
-      hu: 'Illusztráció: a lézer darabokra töri a tintát, az immunsejtek pedig egy részét a nyirokereken át a közeli nyirokcsomókba szállítják.',
+      en: 'Illustration: ink spreading through water. After a laser session the shattered ink spreads too, and immune cells carry part of it away through the lymph system.',
+      hu: 'Illusztráció: vízben szétterülő tinta. A lézeres alkalom után a szétroncsolt tinta is szétterjed, és az immunsejtek egy részét a nyirokrendszeren át szállítják el.',
     },
     img4: {
-      en: 'Illustration: what the research shows (green) and the open questions nobody has studied yet (orange).',
-      hu: 'Illusztráció: amit a kutatás kimutatott (zöld), és a nyitott kérdések, amelyeket még senki sem vizsgált (narancs).',
+      en: 'Illustration: reading up on a phone at home. Online answers swing between “totally fine” and “dangerous”, while the research supports neither.',
+      hu: 'Illusztráció: utánaolvasás otthon, telefonon. Az interneten a válaszok a „teljesen rendben van” és a „veszélyes” között ingadoznak, a kutatások egyiket sem támasztják alá.',
     },
     img5: {
-      en: 'Illustration: a typical timeline. No treatment in pregnancy or while breastfeeding, the first session after weaning, sometimes a few weeks later.',
-      hu: 'Illusztráció: egy tipikus idővonal. Terhesség és szoptatás alatt nincs kezelés, az első alkalom az elválasztás után, néha néhány héttel később.',
+      en: 'Illustration: planning dates on a wall calendar. No treatment during pregnancy or breastfeeding; the first session usually comes after weaning, sometimes a few weeks later.',
+      hu: 'Illusztráció: időpontok tervezése a falinaptáron. Terhesség és szoptatás alatt nincs kezelés; az első alkalom általában az elválasztás után jön, néha néhány héttel később.',
     },
     img6: {
-      en: 'Illustration: good uses of the waiting months. Sun protection, a consultation, a plan for removal, fading or a cover-up, and some savings.',
-      hu: 'Illusztráció: a várakozás hónapjainak jó kihasználása. Napvédelem, konzultáció, terv az eltávolításra, halványításra vagy átfedésre, és egy kis megtakarítás.',
+      en: 'Illustration: sunscreen on a tattooed shoulder at the beach. Sun protection is one of the best uses of the waiting months, because tanned skin is harder to treat.',
+      hu: 'Illusztráció: naptej egy tetovált vállon a strandon. A fényvédelem az egyik legjobb dolog, amit a várakozás hónapjaiban tehetsz, mert a lebarnult bőrt nehezebb kezelni.',
     },
     img7: {
-      en: 'Illustration: bring your questions to the consultation, about timing, the laser, numbing cream and the number of sessions.',
-      hu: 'Illusztráció: vidd magaddal a kérdéseidet a konzultációra az időzítésről, a lézerről, az érzéstelenítő krémről és a kezelések számáról.',
+      en: 'Illustration: a consultation table with a form, skin-tone swatches and the laser. Bring your questions about timing, the laser, numbing cream and the number of sessions.',
+      hu: 'Illusztráció: konzultációs asztal űrlappal, bőrtónus-mintákkal és a lézerrel. Vidd magaddal a kérdéseidet az időzítésről, a lézerről, a zsibbasztó krémről és az alkalmak számáról.',
     },
   },
 };

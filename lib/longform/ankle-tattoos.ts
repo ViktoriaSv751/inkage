@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena wanted something small and quiet: a thin line of tiny stars curving around the outside of her ankle, right over the bone, ready for sandal season. The artist liked the idea but asked two questions she had not expected. What shoes will you wear for the next two weeks? And would you consider moving it a finger’s width higher?',
       'Both questions get to the heart of ankle tattoos. The ankle and the top of the foot are popular, easy to show and easy to hide, but they are also bony, they swell, they live inside shoes and they catch the summer sun. This guide covers how much each spot hurts, why the area swells, a practical footwear plan for the first two weeks, how ankle and foot tattoos age, and which styles and sizes hold up best.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## The ankle is several placements, not one',
       'An “ankle tattoo” can sit in quite different places, and each behaves a little differently.',
       '- **Just above the ankle bone.** The lower part of the shin or calf, a few centimetres above the bump. A bit more padding, less rubbing from shoe edges, and the design sits on a flatter surface.',
@@ -103,7 +103,7 @@ const a: LongArticle = {
     hu: [
       'Léna valami kicsit és visszafogottat akart: apró csillagokból álló vékony vonalat, ami a bokája külső oldalán, pont a csont fölött ível körbe, a szandálszezonra. A tetoválónak tetszett az ötlet, de feltett két kérdést, amire nem számított. Milyen cipőt fogsz hordani a következő két hétben? És nem tennéd egy ujjnyival feljebb?',
       'Ez a két kérdés a bokatetoválás lényegét érinti. A boka és a lábfej népszerű hely, könnyű megmutatni és könnyű eltakarni, de csontos, megduzzad, cipőben él, és nyáron sok napot kap. Ez az útmutató sorra veszi, mennyire fáj az egyes pontokon, miért duzzad meg a terület, ad egy gyakorlati cipőtervet az első két hétre, megmutatja, hogyan öregszik a boka- és lábfejtetoválás, és melyik stílus és méret bírja a legjobban.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## A boka nem egy, hanem több terület',
       'Egy „bokatetoválás” elég különböző helyeken ülhet, és mindegyik kicsit másképp viselkedik.',
       '- **Közvetlenül a bokacsont fölött.** A sípcsont vagy a vádli alsó része, néhány centivel a dudor fölött. Kicsit több párnázottság, kevesebb dörzsölés a cipő szélétől, és a minta laposabb felületen ül.',
@@ -222,28 +222,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the ankle area as several placements. Just above the ankle bone and the top of the foot rub less; the side of the foot rubs most.',
-      hu: 'Illusztráció: a boka környéke több külön terület. A bokacsont fölött és a lábfej tetején kevesebb a dörzsölés, a lábfej oldalán a legtöbb.',
+      en: 'Illustration: a tiny leaf just above the ankle bone, with a sneaker below it. A few centimetres up, the skin is flatter and the shoe collar stays clear of the design.',
+      hu: 'Illusztráció: apró levél közvetlenül a bokacsont fölött, alatta sportcipő. Néhány centivel feljebb laposabb a bőr, és a cipő széle nem ér a mintához.',
     },
     img3: {
-      en: 'Illustration: gravity pulls fluid down into the lower leg; raising the foot above heart level helps the swelling go down.',
-      hu: 'Illusztráció: a gravitáció lefelé húzza a folyadékot az alsó lábszárba, a láb szív fölé emelése segít lelohasztani a duzzanatot.',
+      en: 'Illustration: a cool compress wrapped in cloth pressed on a fresh tattoo. Cool, not frozen, and for short periods: on the ankle, raising the foot helps as well.',
+      hu: 'Illusztráció: ruhába csavart hideg borogatás egy friss tetováláson. Hűvös, nem fagyos, és csak rövid ideig: a bokánál a láb felpolcolása is segít.',
     },
     img4: {
-      en: 'Illustration: for the first two weeks, open-back sandals keep straps away from an ankle tattoo, while high collars and tight sock cuffs rub it.',
-      hu: 'Illusztráció: az első két hétben a nyitott sarkú szandál pántjai elkerülik a bokatetoválást, a magas szár és a szoros zoknimandzsetta viszont dörzsöli.',
+      en: 'Illustration: a simple aftercare kit by the bed: bandage, gel and a glass of water. For an ankle or foot tattoo, plan your shoes for the first two weeks just as carefully.',
+      hu: 'Illusztráció: egyszerű ápolókészlet az ágy mellett: kötszer, gél és egy pohár víz. Boka- vagy lábfejtetoválásnál az első két hét cipőit is ugyanilyen gondosan tervezd meg.',
     },
     img5: {
-      en: 'Illustration: shoe friction and sandal-season sun are the two main reasons ankle and foot tattoos soften over the years.',
-      hu: 'Illusztráció: a cipő dörzsölése és a szandálszezon napsütése a két fő ok, amiért a boka- és lábfejtetoválás puhul az évek során.',
+      en: 'Illustration: a healed leg tattoo on the beach next to a bottle of sunscreen. Sandal season brings strong sun to ankles and feet, so protect them every time.',
+      hu: 'Illusztráció: gyógyult lábtetoválás a strandon, mellette naptej. A szandálszezon erős napot hoz a bokára és a lábfejre, ezért mindig védd őket.',
     },
     img6: {
-      en: 'Illustration: bold lines, simple shapes and designs that wrap around the ankle hold up better than tiny, detailed ones.',
-      hu: 'Illusztráció: a vastag vonalak, az egyszerű formák és a bokát körbeölelő minták jobban bírják, mint az apró, részletes minták.',
+      en: 'Illustration: bold black geometric work on the lower leg. Solid shapes and thick lines stay readable even when the edges soften over the years.',
+      hu: 'Illusztráció: vastag, fekete geometrikus minta az alsó lábszáron. A tömör formák és vastag vonalak akkor is olvashatók maradnak, ha a szélek az évek során puhulnak.',
     },
     img7: {
-      en: 'Illustration: a design just above the ankle bone sits on flatter skin, away from shoe collars; on the bone, the bump bends it and shoes rub it.',
-      hu: 'Illusztráció: a bokacsont fölötti minta laposabb bőrön ül, távol a cipő szélétől, a csonton a dudor meghajlítja, és a cipő dörzsöli.',
+      en: 'Illustration: a small star right next to the ankle bone. On the bone, the skin is thin and curved, and shoe collars often end exactly here.',
+      hu: 'Illusztráció: kis csillag közvetlenül a bokacsont mellett. A csonton vékony és ívelt a bőr, és a cipő széle gyakran pont itt ér véget.',
     },
   },
 };

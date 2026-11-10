@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Mira was home by seven. The tattoo on her forearm, a line of small birds she had planned for a year, was wrapped in film, and she could not stop looking at it. Under the plastic it looked nothing like the drawing: the lines seemed thick, the skin around them red and puffy, one bird slightly lower than the others. By ten she was typing into her phone the question thousands of people type every week: how do you get rid of a tattoo you just got?',
       'If that is where you are right now, take a breath. A few days, or even a few weeks, into a new tattoo is the worst possible moment to judge it, and almost the worst moment to act. This guide explains why fresh tattoos so often look wrong, how to tell a real problem from the normal healing process, what your options actually are, and what to do in the meantime so you do not make things harder to fix.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real results.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## First: is it really a problem yet?',
       'A tattoo is a controlled wound. In the first days the skin is swollen, so lines can look thicker and blurrier than they will be. Fresh ink sits in skin that is red and irritated, which makes everything look darker and harsher. Plasma and extra ink seep to the surface. None of this is the finished tattoo.',
       'Then comes a phase most people are not warned about. After roughly the first week, the skin starts to flake and peel. Underneath, a thin new layer forms that can make the tattoo look dull, milky or faded, as if part of it had disappeared. This “cloudy” or “ghosting” stage can last a couple of weeks. It worries a lot of people, and in the vast majority of cases it simply clears.',
@@ -88,7 +88,7 @@ const a: LongArticle = {
     hu: [
       'Mira hétre ért haza. Az alkarján lévő tetoválás, egy sor apró madár, amit egy éve tervezett, fóliába volt csomagolva, és nem tudta levenni róla a szemét. A fólia alatt egyáltalán nem hasonlított a rajzra: a vonalak vastagnak tűntek, körülöttük a bőr piros és duzzadt volt, az egyik madár kicsit lejjebb került a többinél. Tízkor már azt pötyögte a telefonjába, amit hetente emberek ezrei: hogyan lehet megszabadulni egy tetoválástól, amit most csináltattál?',
       'Ha te is most itt tartasz, vegyél egy mély levegőt. Egy új tetoválás után néhány nappal, de még néhány héttel is a lehető legrosszabb pillanat megítélni, és szinte a legrosszabb pillanat cselekedni. Ez az útmutató elmagyarázza, miért tűnik olyan gyakran rossznak a friss tetoválás, hogyan különböztesd meg a valódi problémát a gyógyulás természetes menetétől, milyen lehetőségeid vannak valójában, és mit tegyél addig is, hogy ne nehezítsd meg a javítást.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi eredményeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Először: tényleg probléma ez már?',
       'A tetoválás egy kontrollált seb. Az első napokban a bőr duzzadt, ezért a vonalak vastagabbnak és elmosódottabbnak tűnhetnek, mint amilyenek lesznek. A friss tinta piros, irritált bőrben van, ettől minden sötétebbnek és keményebbnek látszik. A felszínre plazma és felesleges tinta szivárog. Ez még egyik sem a kész tetoválás.',
       'Aztán jön egy szakasz, amire a legtöbb embert nem készítik fel. Nagyjából az első hét után a bőr hámlani kezd. Alatta egy vékony új réteg képződik, amitől a tetoválás tompának, tejesnek vagy kifakultnak tűnhet, mintha egy része eltűnt volna. Ez a „párás” vagy „szellemképes” szakasz néhány hétig is eltarthat. Sokakat megijeszt, és az esetek túlnyomó többségében egyszerűen elmúlik.',
@@ -191,28 +191,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: how a new tattoo changes while it heals. Swollen and dark at first, then flaking and cloudy, settled after about four to six weeks.',
-      hu: 'Illusztráció: így változik egy új tetoválás gyógyulás közben. Eleinte duzzadt és sötét, aztán hámlik és párás, körülbelül négy-hat hét után áll be.',
+      en: 'Illustration: a freshly done moth tattoo with red, swollen skin around it. In the first days every new tattoo looks darker and angrier than it will once healed.',
+      hu: 'Illusztráció: frissen elkészült lepketetoválás, körülötte vörös, duzzadt bőrrel. Az első napokban minden új tetoválás sötétebbnek és ingerültebbnek látszik, mint amilyen gyógyulás után lesz.',
     },
     img3: {
-      en: 'Illustration: after healing, a line that healed thin or patchy can usually be touched up by the artist.',
-      hu: 'Illusztráció: gyógyulás után a vékonyra vagy foltosra gyógyult vonalat a tetováló általában ki tudja javítani.',
+      en: 'Illustration: photographing a healed forearm tattoo at home in daylight. Clear photos and a calm, specific description help most when you talk to your artist.',
+      hu: 'Illusztráció: begyógyult alkartetoválás lefényképezése otthon, nappali fényben. Ha a tetoválóddal beszélsz, a tiszta fotók és a nyugodt, konkrét leírás segít a legtöbbet.',
     },
     img4: {
-      en: 'Illustration: the four paths, from small to big. Touch-up, rework, cover-up and laser.',
-      hu: 'Illusztráció: a négy út, a kicsitől a nagyig. Javítás, átdolgozás, takarás és lézer.',
+      en: 'Illustration: an artist designing on a tablet together with a client. A cover-up starts with a new, usually larger and darker design planned around the old one.',
+      hu: 'Illusztráció: a tetováló egy vendéggel együtt tervez a tableten. A takarás egy új, általában nagyobb és sötétebb mintával kezdődik, amelyet a régi köré terveznek.',
     },
     img5: {
-      en: 'Illustration: laser usually starts only once the skin has fully healed, often at least six to eight weeks after the tattoo.',
-      hu: 'Illusztráció: a lézer általában csak a bőr teljes gyógyulása után kezdődhet, gyakran legalább hat-nyolc héttel a tetoválás után.',
+      en: 'Illustration: a laser clinic consultation with a form, skin-tone swatches and a laser handpiece. Laser usually starts only once the skin has fully healed.',
+      hu: 'Illusztráció: konzultáció egy lézerklinikán: űrlap, bőrszínminták és lézerfej. A lézeres kezelés általában csak a bőr teljes gyógyulása után kezdődhet.',
     },
     img6: {
-      en: 'Illustration: what not to do. No scrubbing, no removal creams, no salt or lemon, no deliberate sunburn.',
-      hu: 'Illusztráció: amit ne csinálj. Se dörzsölés, se eltávolító krém, se só vagy citrom, se szándékos leégés.',
+      en: 'Illustration: a sunburned, peeling shoulder with a tattoo. A deliberate sunburn does not remove a tattoo; it only damages the skin.',
+      hu: 'Illusztráció: leégett, hámló váll egy tetoválással. A szándékos leégés nem tünteti el a tetoválást, csak a bőrt károsítja.',
     },
     img7: {
-      en: 'Illustration: a calm plan for the first three months. Heal, judge, talk, then decide.',
-      hu: 'Illusztráció: nyugodt terv az első három hónapra. Gyógyulás, ítélet, beszélgetés, aztán döntés.',
+      en: 'Illustration: writing on a wall calendar. A calm plan for the first three months: heal, judge, talk, then decide.',
+      hu: 'Illusztráció: jegyzet egy falinaptárban. Nyugodt terv az első három hónapra: gyógyulás, értékelés, beszélgetés, aztán döntés.',
     },
   },
 };

@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena had a folder of saved pictures on her phone, and almost all of them were the same kind of tattoo: a fox head surrounded by peonies, an owl with a crescent moon, a woman’s face framed by an arch of flowers and pearls. Bold outlines, deep colours, lots of detail. When she showed them to a tattoo artist, he smiled and said, “So you want neo-traditional.” Her next question was the one most people ask: will all that detail still look good in twenty years?',
       'This guide answers that. It explains what makes a tattoo neo-traditional, how it differs from the American traditional style it grew out of, what the years do to it, and how to choose the size, spot and colours that give it the best chance of ageing well.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## What makes a tattoo neo-traditional',
       'Neo-traditional is easiest to understand as American traditional with the volume turned up. It keeps the backbone of the older style, a strong black outline and clear, readable shapes, and builds a more detailed, more painterly image on top of it. You can usually recognise it by these features:',
       '- **Varied line weight.** A heavy outer outline with thinner lines inside it. Many artists call this the quickest way to tell the style apart: traditional uses roughly the same bold line everywhere, neo-traditional mixes thick and thin.',
@@ -98,7 +98,7 @@ const a: LongArticle = {
     hu: [
       'Lenának volt egy mappája a telefonján elmentett képekkel, és szinte mindegyik ugyanolyan tetoválás volt: pünkösdi rózsákkal körülvett rókafej, bagoly félholddal, virágokból és gyöngyökből álló ívvel keretezett női arc. Vastag kontúrok, mély színek, sok részlet. Amikor megmutatta őket egy tetoválónak, az elmosolyodott: „Szóval neotradicionálist szeretnél.” A következő kérdése az volt, amit a legtöbben feltesznek: ennyi részlet húsz év múlva is jól fog mutatni?',
       'Ez az útmutató erre ad választ. Elmagyarázza, mitől neotradicionális egy tetoválás, miben különbözik az amerikai tradicionális stílustól, amiből kinőtt, mit csinálnak vele az évek, és hogyan válaszd meg a méretet, a helyet és a színeket, hogy a legjobb esélye legyen a szép öregedésre.',
-      '> Egy megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Egy megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## Mitől neotradicionális egy tetoválás',
       'A neotradicionálist úgy a legkönnyebb megérteni, mint felhangosított amerikai tradicionálist. Megtartja a régebbi stílus vázát, az erős fekete kontúrt és a tiszta, olvasható formákat, és erre épít egy részletesebb, festőibb képet. Általában ezekről ismered fel:',
       '- **Változó vonalvastagság.** Vastag külső kontúr, benne vékonyabb vonalak. Sok tetováló szerint ez a leggyorsabb megkülönböztető jel: a tradicionális nagyjából mindenhol ugyanazt a vastag vonalat használja, a neotradicionális keveri a vastagot és a vékonyat.',
@@ -211,28 +211,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: American traditional uses one heavy line and flat colour; neo-traditional keeps the heavy outline but adds thin inner lines, blends and highlights.',
-      hu: 'Illusztráció: az amerikai tradicionális egyféle vastag vonalat és lapos színt használ, a neotradicionális megtartja a vastag kontúrt, de vékony belső vonalakat, átmeneteket és fényeket ad hozzá.',
+      en: 'Illustration: flash sheets with a tiger, a snake and flowers on a studio desk. Neo-traditional grew out of this kind of classic flash and added more detail and colour.',
+      hu: 'Illusztráció: tigrist, kígyót és virágokat ábrázoló flash-lapok egy szalon asztalán. A neotradicionális ilyen klasszikus flash-mintákból nőtt ki, több részlettel és színnel.',
     },
     img3: {
-      en: 'Illustration: over the decades the outline holds the image together while the fine inner lines and pale colours soften.',
-      hu: 'Illusztráció: az évtizedek alatt a kontúr egyben tartja a képet, a finom belső vonalak és a halvány színek pedig lágyulnak.',
+      en: 'Illustration: two rose tattoos on forearms, one fresh and one aged. The outline still carries the shape, while fine inner lines and shading soften first.',
+      hu: 'Illusztráció: két rózsatetoválás alkaron, az egyik friss, a másik öregebb. A kontúr még tartja a formát, a finom belső vonalak és az árnyékolás viszont előbb lágyulnak.',
     },
     img4: {
-      en: 'Illustration: a detailed design needs room. At palm size the gaps between lines survive; shrunk down, they close up.',
-      hu: 'Illusztráció: a részletes mintának hely kell. Tenyérnyi méretben a vonalak közötti rések megmaradnak, lekicsinyítve összezárnak.',
+      en: 'Illustration: an arm being measured with a tape over a table of flash designs. Detail needs space, so measure before you decide on the size.',
+      hu: 'Illusztráció: egy kart mérőszalaggal mérnek, előttük flash-minták az asztalon. A részletnek hely kell, ezért mérj, mielőtt döntesz a méretről.',
     },
     img5: {
-      en: 'Illustration: upper arm, thigh and calf give neo-traditional pieces a broad, stable surface, placed along the line of the limb.',
-      hu: 'Illusztráció: a felkar, a comb és a vádli széles, stabil felületet ad a neotradicionális daraboknak, a végtag tengelye mentén elhelyezve.',
+      en: 'Illustration: a detailed lion portrait on the upper arm. A broad, stable surface gives a detailed animal head the room it needs to stay readable.',
+      hu: 'Illusztráció: részletes oroszlánportré a felkaron. Egy széles, stabil felület megadja a részletes állatfejnek a helyet, hogy olvasható maradjon.',
     },
     img6: {
-      en: 'Illustration: black and deep, saturated colours hold up longest; pastels, pale yellow and white highlights fade first.',
-      hu: 'Illusztráció: a fekete és a mély, telített színek bírják a legtovább, a pasztellek, a halványsárga és a fehér fények fakulnak először.',
+      en: 'Illustration: a red flower with dark shading on the shoulder. Built on dark against light, the design will read for decades even when the red softens.',
+      hu: 'Illusztráció: piros virág sötét árnyékolással a vállon. A világoson sötétre épülő minta évtizedekig olvasható marad, akkor is, ha a piros lágyul.',
     },
     img7: {
-      en: 'Illustration: once healed, broad-spectrum sunscreen of SPF 30 or more and clothing keep the colours bright for longer.',
-      hu: 'Illusztráció: gyógyulás után a legalább SPF 30-as, széles spektrumú fényvédő és a ruha tovább tartja élénken a színeket.',
+      en: 'Illustration: sunscreen being spread over a shoulder tattoo at the beach. Daily sun protection is the habit that keeps neo-traditional colours bright.',
+      hu: 'Illusztráció: naptejet kennek egy válltetoválásra a strandon. A rendszeres fényvédelem az a szokás, ami élénken tartja a neotradicionális színeket.',
     },
   },
 };

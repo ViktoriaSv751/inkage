@@ -30,7 +30,7 @@ const a: LongArticle = {
       'Nora had wanted the same tattoo for two years: a sprig of wild olive running along the inside of her forearm. One evening she finally opened Instagram, found five artists near her and sent each of them the same message: “Hi, how much for a small flower tattoo?” One replied a week later with a price list. The other four never answered.',
       'It was not that the artists were rude. They simply had nothing to work with. No size, no placement, no picture, no dates. A month later Nora tried again, this time with one artist whose healed fine-line work she had studied for weeks, and a message that answered every question before it was asked. She had a reply the same day and a consultation the following week.',
       'Booking a tattoo is not hard, but it has its own unwritten rules. This guide walks you through them in order: finding the right artist, checking that they are safe, writing a message that gets answered, and what to expect with deposits, prices, waiting lists and the day itself.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real artists, studios or clients.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real artists, studios or clients.',
       '## The short answer',
       '**Pick the style, find artists who specialise in it, check their healed work and their hygiene, then send one clear message with the idea, placement, size, colour, references and your availability.** Expect to pay a deposit to secure the date, to get a price either per hour or per piece, and to give at least two or three days’ notice if you need to move the appointment.',
       'Everything else is detail. But the details are where most first bookings go wrong, so here they are.',
@@ -125,7 +125,7 @@ const a: LongArticle = {
       'Nóra két éve ugyanazt a tetoválást szerette volna: egy vadolajágat az alkarja belső oldalán, végig a kar hosszában. Egy este végre megnyitotta az Instagramot, talált öt tetoválót a közelben, és mindegyiknek ugyanazt írta: „Szia, mennyi egy kis virágos tetoválás?” Egy hét múlva egyikük küldött egy árlistát. A másik négy nem válaszolt.',
       'Nem azért, mert udvariatlanok lettek volna. Egyszerűen nem volt mivel dolgozniuk. Nem volt méret, hely, kép, időpont. Egy hónappal később Nóra újra próbálkozott, ezúttal egyetlen tetoválónál, akinek a gyógyult finomvonalas munkáit hetekig nézegette, és egy olyan üzenettel, ami minden kérdésre előre válaszolt. Még aznap kapott választ, a következő héten pedig konzultációt.',
       'Tetoválásra időpontot foglalni nem nehéz, de megvannak a maga íratlan szabályai. Ez az útmutató sorban végigvezet rajtuk: hogyan találd meg a megfelelő tetoválót, hogyan ellenőrizd, hogy biztonságos-e, hogyan írj olyan üzenetet, amire válaszolnak, és mire számíts a foglalóval, az árakkal, a várólistákkal és magával a nappal kapcsolatban.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi tetoválókat, stúdiókat vagy vendégeket.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi tetoválókról, stúdiókról vagy vendégekről készült fotók.',
       '## A rövid válasz',
       '**Válaszd ki a stílust, keress olyan tetoválót, aki erre szakosodott, nézd meg a gyógyult munkáit és a higiéniát, aztán küldj egyetlen világos üzenetet az ötlettel, a hellyel, a mérettel, a színnel, a referenciákkal és azzal, hogy mikor érsz rá.** Számíts arra, hogy az időpont lefoglalásához foglalót kell fizetned, hogy az árat óradíjban vagy darabra kapod meg, és hogy ha át kell tenned az időpontot, legalább két-három nappal előre szólnod kell.',
       'Minden más részletkérdés. De az első foglalások többnyire épp a részleteken csúsznak el, úgyhogy jöjjenek a részletek.',
@@ -263,28 +263,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: the same design fresh and healed. Judge an artist by the healed photos, where clean lines and even fill really show.',
-      hu: 'Illusztráció: ugyanaz a minta frissen és gyógyultan. A tetoválót a gyógyult fotók alapján ítéld meg, ott látszanak igazán a tiszta vonalak és az egyenletes kitöltés.',
+      en: 'Illustration: a client and an artist looking through a portfolio of healed tattoos. Judge an artist by healed work, where clean lines and even fill really show.',
+      hu: 'Illusztráció: vendég és tetováló egy gyógyult tetoválásokat bemutató portfóliót nézeget. A tetoválót a gyógyult munkái alapján ítéld meg, azokon látszik igazán a tiszta vonal és az egyenletes kitöltés.',
     },
     img3: {
-      en: 'Illustration: signs of a clean studio. Sealed single-use needles, fresh gloves, covered surfaces and ink in small single-use caps.',
-      hu: 'Illusztráció: a tiszta stúdió jelei. Lezárt, egyszer használatos tűk, friss kesztyű, letakart felületek és kis, egyszer használatos kupakokba töltött festék.',
+      en: 'Illustration: a clean station with sealed single-use needles, black gloves, small ink caps and wrapped surfaces. These are the signs of a studio that takes hygiene seriously.',
+      hu: 'Illusztráció: tiszta munkaállomás lezárt, egyszer használatos tűkkel, fekete kesztyűvel, kis festékkupakokkal és letakart felületekkel. Ezek egy higiéniára igényes stúdió jelei.',
     },
     img4: {
-      en: 'Illustration: a booking message that gets answered. Idea, placement, size, black or colour, references and your available dates.',
-      hu: 'Illusztráció: egy foglalási üzenet, amire válaszolnak. Ötlet, hely, méret, fekete vagy színes, referenciák és a szabad időpontjaid.',
+      en: 'Illustration: looking at a tattoo idea on a phone before writing to the artist. A good message covers the idea, placement, size, black or colour, references and your dates.',
+      hu: 'Illusztráció: egy tetoválásötlet nézegetése a telefonon, mielőtt írsz a tetoválónak. Egy jó üzenetben benne van az ötlet, a hely, a méret, fekete vagy színes, a referenciák és a szabad időpontjaid.',
     },
     img5: {
-      en: 'Illustration: in most studios the deposit is not an extra charge. It secures the date and is deducted from the final price.',
-      hu: 'Illusztráció: a legtöbb stúdióban a foglaló nem plusz költség. Lefoglalja az időpontot, és levonják a végösszegből.',
+      en: 'Illustration: an artist working on a design on a tablet with the client. The deposit protects this drawing time and your date, and in most studios it is taken off the final price.',
+      hu: 'Illusztráció: a tetováló táblagépen dolgozik a terven a vendéggel együtt. A foglaló ezt a rajzolási időt és az időpontodat védi, és a legtöbb stúdióban levonják a végső árból.',
     },
     img6: {
-      en: 'Illustration: popular artists open their books for short windows. Have your message ready and ask about a cancellation list.',
-      hu: 'Illusztráció: a népszerű tetoválók rövid időszakokra nyitják meg a foglalást. Legyen kész az üzeneted, és kérdezz rá a lemondási listára.',
+      en: 'Illustration: someone at a desk late in the evening, looking at a design drawing. While you wait for the books to open, get your message ready and ask about a cancellation list.',
+      hu: 'Illusztráció: valaki késő este az asztalánál ül, és egy tervrajzot néz. Amíg a foglalások megnyitására vársz, készítsd elő az üzenetedet, és kérdezz rá a lemondási listára.',
     },
     img7: {
-      en: 'Illustration: getting ready for the day. Sleep, a proper meal, water, no alcohol, photo ID, and a stencil you have checked in the mirror.',
-      hu: 'Illusztráció: felkészülés a napra. Alvás, rendes étkezés, víz, alkohol nélkül, fényképes igazolvány, és egy tükörben ellenőrzött sablon.',
+      en: 'Illustration: a water bottle, snacks, headphones and the design laid out for tattoo day. Sleep well, eat a proper meal, skip alcohol and bring photo ID.',
+      hu: 'Illusztráció: vizespalack, nasi, fejhallgató és a terv előkészítve a tetoválás napjára. Aludd ki magad, egyél rendesen, ne igyál alkoholt, és vidd magaddal a fényképes igazolványodat.',
     },
   },
 };

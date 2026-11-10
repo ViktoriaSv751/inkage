@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Jonas had worn the black tribal band on his forearm since he was nineteen. Fifteen years later he knew exactly what he wanted instead: a botanical piece with fine stems, open leaves and plenty of bare skin between them. The first tattoo artist he asked was honest. “I can cover that band today,” she said, “but only with something almost as black as the band itself. If you want the plant you showed me, fade it first.”',
       'That conversation happens in studios every day. A cover-up hides old ink inside a new, usually darker design. Laser fading is the step before it: a few sessions that lighten the old tattoo so the artist has more freedom. Our guide to cover-up tattoos explains how covering works in general. This article is only about the fading step: when it is worth it, how many sessions it takes, how long to wait before the new tattoo, what your artist wants to see, and how the cost compares with full removal.',
-      '> A note on the numbers and pictures: session counts, waiting times and prices here are typical ranges from clinics, dermatologists and tattoo artists. Your own plan depends on your tattoo, your skin and the new design. The images are illustrations made for this guide, not photos of real clients.',
+      '> A note on the numbers and pictures: session counts, waiting times and prices here are typical ranges from clinics, dermatologists and tattoo artists. Your own plan depends on your tattoo, your skin and the new design. The images are illustrations made to show typical situations. They are not photos of real clients or real results.',
       '## Fading is not removal',
       'Full laser removal aims to make a tattoo disappear as far as possible. That usually takes many sessions, often somewhere around six to twelve for a professional black tattoo, and more for dense or colourful work. Fading has a smaller, more practical goal: **to make the old tattoo light enough that the new design can hide what is left.**',
       'How light is light enough depends on the new tattoo, not on the old one. A bold, dark design with heavy shading can hide a lot, so it needs less fading. A delicate design with fine lines, light colours or open skin needs the old ink to be much paler. Some dermatologists describe the usual aim as lightening the tattoo by roughly half to three quarters, rather than erasing it.',
@@ -104,7 +104,7 @@ const a: LongArticle = {
     hu: [
       'Jonas tizenkilenc éves kora óta viselte az alkarján a fekete tribal karperecet. Tizenöt évvel később pontosan tudta, mit szeretne helyette: egy növényes mintát vékony szárakkal, nyitott levelekkel és köztük sok szabad bőrrel. Az első tetováló, akihez fordult, őszinte volt. „Ma is el tudom takarni ezt a karperecet – mondta –, de csak valamivel, ami majdnem olyan fekete, mint maga a karperec. Ha a növényt szeretnéd, amit mutattál, előbb halványítsd ki.”',
       'Ez a beszélgetés minden nap lezajlik valamelyik szalonban. A takarótetoválás (cover-up) egy új, általában sötétebb mintába rejti a régi tintát. A lézeres halványítás az előtte lévő lépés: néhány alkalom, ami világosabbá teszi a régi tetoválást, így a tetoválónak nagyobb a szabadsága. A takarótetoválásról szóló cikkünk általánosan elmagyarázza, hogyan működik a takarás. Ez a cikk csak a halványításról szól: mikor éri meg, hány alkalom kell, mennyit várj az új tetoválásig, mit szeretne látni a tetoválód, és hogyan aránylik az ára a teljes eltávolításhoz.',
-      '> Megjegyzés a számokhoz és a képekhez: az alkalmak száma, a várakozási idők és az árak klinikák, bőrgyógyászok és tetoválók által megadott tipikus tartományok. A saját terved a tetoválásodtól, a bőrödtől és az új mintától függ. A képek ehhez a cikkhez készült illusztrációk, nem valódi vendégekről készült fotók.',
+      '> Megjegyzés a számokhoz és a képekhez: az alkalmak száma, a várakozási idők és az árak klinikák, bőrgyógyászok és tetoválók által megadott tipikus tartományok. A saját terved a tetoválásodtól, a bőrödtől és az új mintától függ. A képek tipikus helyzeteket bemutató illusztrációk. Nem valódi vendégekről vagy valódi eredményekről készült fotók.',
       '## A halványítás nem eltávolítás',
       'A teljes lézeres eltávolítás célja, hogy a tetoválás amennyire csak lehet, eltűnjön. Ehhez általában sok alkalom kell, egy profi fekete tetoválásnál gyakran nagyjából hat-tizenkettő, sűrű vagy színes munkánál több. A halványításnak kisebb, gyakorlatiasabb a célja: **annyira világosítani a régi tetoválást, hogy az új minta eltakarja, ami megmaradt belőle.**',
       'Hogy mennyire világos az elég világos, az az új tetoválástól függ, nem a régitől. Egy merész, sötét, erősen árnyékolt minta sokat eltakar, ezért kevesebb halványítás kell hozzá. Egy finom, vékony vonalas, világos színű vagy sok szabad bőrt hagyó mintához a régi tintának sokkal halványabbnak kell lennie. Egyes bőrgyógyászok szerint a szokásos cél az, hogy a tetoválás nagyjából a felére-negyedére halványodjon, nem az, hogy eltűnjön.',
@@ -224,28 +224,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: a dark, dense old tattoo and a light, delicate new design are the classic case for fading first.',
-      hu: 'Illusztráció: a sötét, sűrű régi tetoválás és a világos, finom új minta a klasszikus eset, amikor előbb halványítani kell.',
+      en: 'Illustration: a wide, solid black armband on the forearm. Dense, dark ink like this is the classic case for fading before a lighter, more delicate cover-up.',
+      hu: 'Illusztráció: széles, telt fekete karperec az alkaron. Az ilyen sűrű, sötét tinta a klasszikus eset, amikor egy világosabb, finomabb takarás előtt halványítani érdemes.',
     },
     img3: {
-      en: 'Illustration: thin, faded or small tattoos can often be covered straight away; solid, dark areas usually need fading first.',
-      hu: 'Illusztráció: a vékony, kifakult vagy kis tetoválások gyakran azonnal eltakarhatók; a telt, sötét részekhez általában előbb halványítás kell.',
+      en: 'Illustration: thin, light script covered straight away by a dark floral design. Covering without fading works, but the new tattoo has to be bigger and darker.',
+      hu: 'Illusztráció: vékony, halvány felirat, amelyet közvetlenül eltakart egy sötét virágos minta. Halványítás nélkül is megy a takarás, de az új tetoválásnak nagyobbnak és sötétebbnek kell lennie.',
     },
     img4: {
-      en: 'Illustration: each session lightens the old ink a little more. For a cover-up, around two to five sessions are often enough.',
-      hu: 'Illusztráció: minden alkalom egy kicsit tovább halványítja a régi tintát. Takaráshoz gyakran nagyjából két-öt alkalom elég.',
+      en: 'Illustration: the same rose growing lighter from session to session. For a cover-up it only has to fade enough, often after two to five sessions.',
+      hu: 'Illusztráció: ugyanaz a rózsa alkalomról alkalomra világosabb. Takaráshoz csak eléggé kell halványulnia, ami gyakran két-öt alkalom után megvan.',
     },
     img5: {
-      en: 'Illustration: after the last laser session, the skin needs to heal fully, often at least six weeks, before the new tattoo.',
-      hu: 'Illusztráció: az utolsó lézeres alkalom után a bőrnek teljesen meg kell gyógyulnia, gyakran legalább hat hétig, az új tetoválás előtt.',
+      en: 'Illustration: a rose softened by laser sessions, with calm, healed skin around it. The new tattoo waits until the skin looks like this, often at least six weeks after the last session.',
+      hu: 'Illusztráció: lézerrel halványított rózsa, körülötte nyugodt, gyógyult bőr. Az új tetoválás addig vár, amíg a bőr így nem néz ki, gyakran legalább hat hétig az utolsó alkalom után.',
     },
     img6: {
-      en: 'Illustration: artists plan the new design over a photo of the faded tattoo, placing the darkest parts over what is left.',
-      hu: 'Illusztráció: a tetováló a halványított tetoválás fotójára tervezi az új mintát, a legsötétebb részeket arra téve, ami megmaradt.',
+      en: 'Illustration: an artist and a client planning the new design on a tablet. The artist places the darkest parts of the cover-up over what is left of the old ink.',
+      hu: 'Illusztráció: a tetováló és a vendég tableten tervezi az új mintát. A tetováló a takarás legsötétebb részeit oda teszi, ahol a régi tintából még maradt.',
     },
     img7: {
-      en: 'Illustration: fading usually means far fewer sessions than full removal, so it costs a fraction of the total.',
-      hu: 'Illusztráció: a halványítás általában sokkal kevesebb alkalom, mint a teljes eltávolítás, így a végösszegnek csak a töredéke.',
+      en: 'Illustration: a consultation with a form and skin-tone swatches next to the laser. Fading usually takes far fewer sessions than full removal, so it costs a fraction of the total.',
+      hu: 'Illusztráció: konzultáció űrlappal és bőrtónus-mintákkal a lézer mellett. A halványítás általában sokkal kevesebb alkalom, mint a teljes eltávolítás, így a végösszegnek csak a töredéke.',
     },
   },
 };

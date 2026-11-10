@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Nora found the photo in a shoebox at her grandmother’s flat. Her grandfather, about twenty-two, sleeves rolled up on a harbour wall, and on his forearm a fresh dagger through a rose: hard black outline, a red flower, two green leaves, a yellow hilt. She knew that tattoo. She had seen it every summer of her childhood on the same forearm, by then wrinkled and freckled, the yellow almost gone, the red a little darker, the black lines a touch wider. And yet it was still, unmistakably, a dagger through a rose.',
       'That is what people are really looking for when they search for American traditional tattoo before and after. Not a dramatic transformation, but the opposite: a style that changes surprisingly little in a lifetime. This guide explains why, what the years actually do to it, which colours last, and how to give your own piece the best chance of looking like Nora’s grandfather’s fifty years on.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical changes, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical changes. They are not photos of real people or real tattoos.',
       '## The short answer',
       '**American traditional ages better than almost any other tattoo style, because it was designed to.** Thick black outlines, a limited palette, solid colour fills and bold, simple shapes leave a lot of room for the slow changes every tattoo goes through. After ten years a well-done piece usually looks almost the same. After thirty, the lines are a little softer and the colours more mellow, but the image still reads at a glance.',
       'It is not magic, and it is not immune to time. Sun, poor technique, a design shrunk too small or a spot that rubs and stretches can age a traditional tattoo badly too. But if you start with a solid piece and look after it, this is the style that most reliably still looks like itself decades later.',
@@ -106,7 +106,7 @@ const a: LongArticle = {
     hu: [
       'Nóra egy cipősdobozban találta meg a fényképet a nagymamája lakásában. A nagyapja, nagyjából huszonkét évesen, feltűrt ingujjal egy kikötői falon ül, az alkarján pedig egy friss tőr, ami átszúr egy rózsát: kemény fekete kontúr, piros virág, két zöld levél, sárga markolat. Nóra ismerte ezt a tetoválást. Gyerekkorában minden nyáron látta ugyanazon az alkaron, akkor már ráncos, szeplős bőrön, a sárga szinte eltűnt, a piros kicsit sötétebb lett, a fekete vonalak egy hajszállal szélesebbek. És mégis, összetéveszthetetlenül, egy rózsán átszúrt tőr volt.',
       'Valójában ezt keresik azok, akik rákeresnek az amerikai tradicionális tetoválás előtte-utána képekre. Nem egy látványos átalakulást, hanem az ellenkezőjét: egy stílust, ami meglepően keveset változik egy élet alatt. Ez az útmutató elmagyarázza, miért, mit csinálnak vele valójában az évek, mely színek tartanak ki, és hogyan adhatod meg a saját tetoválásodnak a legnagyobb esélyt arra, hogy ötven év múlva úgy nézzen ki, mint Nóra nagyapjáé.',
-      '> Egy megjegyzés a képekhez: a cikkben szereplő képek egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus változásokat mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Egy megjegyzés a képekhez: a cikkben szereplő képek tipikus változásokat bemutató illusztrációk. Nem valódi emberekről vagy valódi tetoválásokról készült fotók.',
       '## A rövid válasz',
       '**Az amerikai tradicionális szinte minden más tetoválásstílusnál jobban öregszik, mert erre tervezték.** A vastag fekete kontúr, a kevés szín, a tömör színkitöltés és az erős, egyszerű formák sok helyet hagynak azoknak a lassú változásoknak, amelyeken minden tetoválás átmegy. Tíz év után egy jól elkészített darab általában szinte ugyanúgy néz ki. Harminc év után a vonalak kicsit lágyabbak, a színek szelídebbek, de a kép első pillantásra is olvasható.',
       'Ez nem varázslat, és az idő ezt a stílust sem kíméli. A nap, a gyenge technika, a túlságosan lekicsinyített minta vagy egy dörzsölődő, nyúló testrész egy tradicionális tetoválást is rosszul öregíthet. De ha egy jól megcsinált darabbal indulsz és vigyázol rá, ez az a stílus, amelyik a legmegbízhatóbban önmaga marad évtizedekkel később is.',
@@ -228,28 +228,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: classic flash motifs such as a swallow, an anchor, a rose and a dagger, built from heavy outlines, solid colour and plenty of bare skin.',
-      hu: 'Illusztráció: klasszikus flash motívumok, például fecske, horgony, rózsa és tőr, vastag kontúrral, tömör színnel és sok szabad bőrrel.',
+      en: 'Illustration: flash designs spread out on a studio table, with classic motifs drawn in heavy outlines, ready to choose from.',
+      hu: 'Illusztráció: flash minták egy stúdióasztalon kiterítve: vastag kontúrral rajzolt klasszikus motívumok, amelyekből választani lehet.',
     },
     img3: {
-      en: 'Illustration: the same spread over 30 years. A bold outline barely changes, while a fine line blurs and the gaps close.',
-      hu: 'Illusztráció: ugyanannyi szétterülés 30 év alatt. A vastag kontúr alig változik, a finom vonal elmosódik, a rések bezárulnak.',
+      en: 'Illustration: two swallow tattoos side by side, one still sharp and one faded and blurred. A bold outline barely changes over the years, while fine lines blur and the gaps close.',
+      hu: 'Illusztráció: két fecske egymás mellett, az egyik még éles, a másik kifakult és elmosódott. A vastag kontúr alig változik az évek alatt, a vékony vonalak viszont elmosódnak, és a rések bezárulnak.',
     },
     img4: {
-      en: 'Illustration: how the classic palette typically holds up over decades. Black, red and green last; yellow and white fade first.',
-      hu: 'Illusztráció: hogyan bírja tipikusan a klasszikus paletta az évtizedeket. A fekete, a piros és a zöld kitart, a sárga és a fehér halványul el elsőként.',
+      en: 'Illustration: a traditional rose with solid red and green inside a heavy black outline. Black, red and green are the colours that usually hold up best over decades.',
+      hu: 'Illusztráció: tradicionális rózsa telt pirossal és zölddel, vastag fekete kontúron belül. A fekete, a piros és a zöld általában évtizedekig a legjobban tartja magát.',
     },
     img5: {
-      en: 'Illustration: spots that suit American traditional well (green) and spots that age faster (orange).',
-      hu: 'Illusztráció: az amerikai tradicionálishoz jól illő helyek (zöld) és a gyorsabban öregedő helyek (narancs).',
+      en: 'Illustration: a traditional swallow on the upper arm. The outer upper arm is one of the spots where American traditional ages well.',
+      hu: 'Illusztráció: tradicionális fecske a felkaron. A felkar külső oldala az egyik olyan hely, ahol az amerikai tradicionális szépen öregszik.',
     },
     img6: {
-      en: 'Illustration: the same swallow at palm size and shrunk to a few centimetres, fresh and after about 20 years.',
-      hu: 'Illusztráció: ugyanaz a fecske tenyérnyi méretben és néhány centiméteresre kicsinyítve, frissen és nagyjából 20 év után.',
+      en: 'Illustration: a small swallow only a few centimetres wide on a shoulder blade. Shrunk this far, a flash design has little room, and its details blur together much sooner.',
+      hu: 'Illusztráció: egy mindössze néhány centis kis fecske a lapockán. Ennyire lekicsinyítve a flash mintának kevés a helye, és a részletei sokkal hamarabb összefolynak.',
     },
     img7: {
-      en: 'Illustration: an old traditional piece before and after a refresh, with the outline re-lined and the red and yellow re-packed.',
-      hu: 'Illusztráció: egy régi tradicionális darab felfrissítés előtt és után: újrahúzott kontúr, újratöltött piros és sárga.',
+      en: 'Illustration: an older client back in the tattoo chair. Re-lining the outline and re-packing the colour can bring an old traditional piece back to life.',
+      hu: 'Illusztráció: egy idősebb vendég újra a tetoválószékben. A kontúr újrahúzása és a színek újratöltése új életet adhat egy régi tradicionális darabnak.',
     },
   },
 };

@@ -30,7 +30,7 @@ const a: LongArticle = {
       'Lena is sixteen and has had the same design saved on her phone for a year: a small line drawing of a swallow for her forearm. Her mum is not against it. A friend got a tattoo abroad last summer. So one evening Lena typed the question that thousands of teenagers and parents search every month: how old do you have to be to get a tattoo?',
       'The honest answer is that it depends on where you live, and the law is only half of it. Some countries set a firm limit of 18 with no exceptions. Some allow younger teens with a parent’s written consent. Some have no specific tattoo age in law at all, and the studios make the rules. This guide goes through the countries where we could check the rules in official or reliable legal sources, explains how parental consent and ID checks usually work, and covers the part most age-limit lists leave out: why a body that is still growing is a reason to plan, not just to wait.',
       '> This is general information, not legal advice. Laws change and can differ by state, region or city. Before you book, check the current rules where you live and ask the studio directly.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '## The short answer',
       'In most of the places covered here, **18 is the age at which you can get a tattoo on your own decision**, without anyone signing for you. Below 18, the rules fall into three groups.',
       '- **A firm ban under 18.** In the UK and Denmark, for example, tattooing someone under 18 is against the law, and a parent’s permission does not change that.',
@@ -112,7 +112,7 @@ const a: LongArticle = {
       'Léna tizenhat éves, és egy éve ugyanaz a minta van elmentve a telefonján: egy kis vonalas fecske az alkarjára. Az anyukája nem ellenzi. Az egyik barátnője tavaly nyáron külföldön csináltatott tetoválást. Így egy este Léna beírta azt a kérdést, amire tizenévesek és szülők ezrei keresnek rá minden hónapban: hány évesen lehet tetoválást csináltatni?',
       'Az őszinte válasz az, hogy attól függ, hol élsz, és a törvény csak a dolog egyik fele. Van, ahol szigorú, kivétel nélküli 18 éves korhatár van. Van, ahol a fiatalabbak is tetováltathatnak a szülő írásos beleegyezésével. És van, ahol a törvény egyáltalán nem ír elő külön korhatárt, ott a szalonok döntenek. Ez az útmutató azokat az országokat veszi sorra, ahol hivatalos vagy megbízható jogi forrásban ellenőrizni tudtuk a szabályokat, elmagyarázza, hogyan működik általában a szülői beleegyezés és a személyazonosság ellenőrzése, és arról is szól, amit a legtöbb korhatár-lista kihagy: hogy a még növő test miatt érdemes tervezni, nem csak várni.',
       '> Ez általános tájékoztatás, nem jogi tanácsadás. A törvények változnak, és államonként, régiónként vagy városonként eltérhetnek. Foglalás előtt nézd meg a lakóhelyeden érvényes aktuális szabályokat, és kérdezd meg közvetlenül a szalont.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '## A rövid válasz',
       'Az itt tárgyalt helyek többségén **18 éves kortól csináltathatsz tetoválást a saját döntésed alapján**, anélkül, hogy bárki aláírna helyetted. 18 év alatt a szabályok három csoportba sorolhatók.',
       '- **Szigorú tilalom 18 év alatt.** Például az Egyesült Királyságban és Dániában törvénybe ütközik 18 év alatti személyt tetoválni, és ezen a szülő engedélye sem változtat.',
@@ -238,28 +238,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: in most places 18 is the age for a tattoo on your own decision; some countries allow younger teens with consent, others not at all.',
-      hu: 'Illusztráció: a legtöbb helyen 18 évesen csináltathatsz tetoválást a saját döntésed alapján; néhány ország beleegyezéssel a fiatalabbaknak is megengedi, mások egyáltalán nem.',
+      en: 'Illustration: someone marking a date on a wall calendar. For most teenagers, the realistic plan is a tattoo at 18, and the time until then is for planning.',
+      hu: 'Illusztráció: valaki bejelöl egy dátumot a falinaptáron. A legtöbb tinédzser számára a reális terv egy tetoválás 18 évesen, addig pedig tervezni lehet.',
     },
     img3: {
-      en: 'Illustration: where consent is allowed, a parent usually signs a written form at the studio and stays for the tattoo.',
-      hu: 'Illusztráció: ahol a beleegyezés megengedett, a szülő általában a szalonban ír alá egy nyilatkozatot, és a tetoválás alatt is ott marad.',
+      en: 'Illustration: an artist and a client looking through a book together. Where consent is allowed, the questions and the paperwork happen here, before any tattooing.',
+      hu: 'Illusztráció: tetováló és vendég együtt lapoz egy könyvet. Ahol beleegyezéssel szabad, a kérdések és a papírmunka itt történnek, még a tetoválás előtt.',
     },
     img4: {
-      en: 'Illustration: skin grows with the body, so a tattoo done at 15 stretches with the arm and its proportions can shift by adulthood.',
-      hu: 'Illusztráció: a bőr együtt nő a testtel, így egy 15 évesen készült tetoválás a karral együtt nyúlik, és az arányai felnőttkorra elcsúszhatnak.',
+      en: 'Illustration: an upper arm with a tattoo being measured with a tape. Teenage bodies still change, and growing muscle or shoulders can stretch a design.',
+      hu: 'Illusztráció: tetovált felkart mérnek mérőszalaggal. A kamaszok teste még változik, a növő izom vagy váll megnyújthat egy mintát.',
     },
     img5: {
-      en: 'Illustration: a design centred along the forearm, sized with enough space between the lines, is a stable choice for a first tattoo at 18.',
-      hu: 'Illusztráció: az alkar hossztengelye mentén, középre helyezett, a vonalak között elég helyet hagyó minta stabil választás egy első, 18 évesen készülő tetoválásnak.',
+      en: 'Illustration: someone at a desk at night, looking at a design drawing. Living with a design for months is the best test of whether you still want it at 18.',
+      hu: 'Illusztráció: valaki éjjel az íróasztalnál ül, és egy mintarajzot néz. Ha hónapokig együtt élsz egy mintával, az a legjobb próba, hogy 18 évesen is akarod-e még.',
     },
     img6: {
-      en: 'Illustration: an ordinary temporary tattoo is a low-risk way to test size and placement; home tattoos and black henna are not.',
-      hu: 'Illusztráció: egy hagyományos, lemosható matrica kis kockázatú módja a méret és a hely kipróbálásának, az otthoni tetoválás és a fekete henna nem az.',
+      en: 'Illustration: a sterile tattoo station with single-use needles, black gloves and wrapped surfaces. Home and unlicensed tattoos skip exactly this.',
+      hu: 'Illusztráció: steril tetoválóhely egyszer használatos tűkkel, fekete kesztyűvel és fóliázott felületekkel. Az otthoni és engedély nélküli tetoválásból pont ez marad ki.',
     },
     img7: {
-      en: 'Illustration: many families agree on the 18th birthday and use the time before it to choose the design and the artist together.',
-      hu: 'Illusztráció: sok család a 18. születésnapban állapodik meg, és az addigi időt arra használja, hogy együtt válasszák ki a mintát és a tetoválót.',
+      en: 'Illustration: a grandmother and her granddaughter comparing their tattoos on a sofa. Talking it through together often works better than a flat no.',
+      hu: 'Illusztráció: nagymama és unokája a kanapén hasonlítják össze a tetoválásaikat. Ha együtt átbeszélitek, az gyakran többet ér egy határozott nemnél.',
     },
   },
 };

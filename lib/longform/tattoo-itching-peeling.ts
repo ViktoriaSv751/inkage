@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'It was two o’clock in the morning, nine days after her first tattoo, and Nora was lying in bed with her right hand clamped around her left wrist. Not scratching. Just holding on. The fine-line peony on her forearm, which had looked so crisp in the studio, now felt as if tiny ants were marching along every petal, and the skin over it was flaking like an old sunburn.',
       'She had read enough to know she shouldn’t scratch. What she didn’t know was whether any of this was normal, how long it would last, or what she was actually allowed to do about it. If you are reading this with a tattoo that itches, you are probably asking the same three questions. Here are the answers, stage by stage.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real clients or real skin.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real clients or real skin.',
       '## The short answer',
       '**Yes, an itchy, peeling tattoo is almost always a healing tattoo.** For most people the itch starts somewhere around day five to seven, peaks in the second week while the skin peels, and fades by the end of week three or four. Larger pieces, heavily shaded areas and spots with a lot of movement, such as joints, can take a little longer.',
       'What is not normal is an itch that comes with spreading redness, increasing pain, heat or pus, or a bumpy rash that stays on one colour and doesn’t go away. Those are covered further down. Everything else in this article is about getting through the ordinary kind without damaging your tattoo.',
@@ -107,7 +107,7 @@ const a: LongArticle = {
     hu: [
       'Hajnali két óra volt, kilenc nappal az első tetoválása után, és Nóra az ágyban feküdt, jobb kezével a bal csuklóját szorítva. Nem vakarta. Csak kapaszkodott. Az alkarján lévő finom vonalas bazsarózsa, ami a szalonban olyan élesnek tűnt, most olyan érzés volt, mintha apró hangyák masíroznának végig minden szirmon, a bőr pedig úgy hámlott rajta, mint egy régi leégés után.',
       'Eleget olvasott ahhoz, hogy tudja: nem szabad vakarni. Azt viszont nem tudta, hogy mindez normális-e, meddig tart, és mit tehet ellene egyáltalán. Ha most egy viszkető tetoválással olvasod ezt, valószínűleg te is ezt a három kérdést teszed fel. Itt vannak a válaszok, szakaszról szakaszra.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű illusztrációk, ehhez az útmutatóhoz készültek. Tipikus helyzeteket mutatnak, nem valódi vendégeket vagy valódi bőrt.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi vendégekről vagy valódi bőrről készült fotók.',
       '## A rövid válasz',
       '**Igen, a viszkető, hámló tetoválás szinte mindig gyógyuló tetoválás.** A legtöbb embernél a viszketés valahol az ötödik-hetedik nap körül kezdődik, a második héten a hámlással együtt tetőzik, és a harmadik-negyedik hét végére elmúlik. A nagyobb munkák, az erősen árnyékolt részek és a sokat mozgó területek, például az ízületek, kicsit tovább tarthatnak.',
       'Nem normális viszont az a viszketés, ami terjedő pirossággal, erősödő fájdalommal, melegséggel vagy gennyel jár, vagy az a dudoros kiütés, ami egy színen marad és nem múlik el. Ezekről lejjebb lesz szó. A cikk többi része arról szól, hogyan vészeld át a hétköznapi fajtát úgy, hogy ne károsítsd a tetoválásodat.',
@@ -230,28 +230,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: a rough timeline of healing. The itch usually peaks in the second week, while the skin peels.',
-      hu: 'Illusztráció: a gyógyulás nagyjábóli idővonala. A viszketés általában a második héten tetőzik, amíg a bőr hámlik.',
+      en: 'Illustration: a fresh moth tattoo with red, slightly swollen-looking skin around it. In the first days the skin feels more sore than itchy.',
+      hu: 'Illusztráció: friss lepketetoválás vörös, kissé duzzadtnak látszó bőrrel körülötte. Az első napokban inkább sajog, mint viszket.',
     },
     img3: {
-      en: 'Illustration: the shedding top layer carries a little ink with it. The ink that stays sits deeper in the skin.',
-      hu: 'Illusztráció: a leváló felső réteg egy kis tintát is visz magával. A megmaradó tinta mélyebben ül a bőrben.',
+      en: 'Illustration: thin flakes of skin lifting over a shoulder tattoo. Let them come off on their own; a flake pulled too early can take ink with it.',
+      hu: 'Illusztráció: vékony bőrpikkelyek válnak le egy vállon lévő tetoválásról. Hagyd, hogy maguktól leváljanak; a túl korán letépett pikkely tintát vihet magával.',
     },
     img4: {
-      en: 'Illustration: what helps. Tapping instead of scratching, a cool compress wrapped in cloth and a thin layer of fragrance-free moisturiser.',
-      hu: 'Illusztráció: ami segít. Ütögetés vakarás helyett, ruhába tekert hideg borogatás és egy vékony réteg illatmentes testápoló.',
+      en: 'Illustration: a cool compress wrapped in cloth pressed on a floral forearm tattoo. Cooling and tapping calm the itch without breaking the skin.',
+      hu: 'Illusztráció: textilbe csavart hideg borogatás egy virágos alkartetováláson. A hűtés és a paskolás vakarás nélkül csillapítja a viszketést.',
     },
     img5: {
-      en: 'Illustration: the cloudy stage. New skin over the ink still looks milky and clears over the following weeks.',
-      hu: 'Illusztráció: a tejes szakasz. A tinta fölötti új bőr még tejesnek tűnik, és a következő hetekben kitisztul.',
+      en: 'Illustration: a moth tattoo that looks grey and soft, as if behind frosted glass. A fresh tattoo can look this dull for a few weeks before the new skin clears.',
+      hu: 'Illusztráció: szürkés, puha hatású lepketetoválás, mintha tejüveg mögött lenne. Egy friss tetoválás is lehet néhány hétig ilyen fakó, mielőtt az új bőr kitisztul.',
     },
     img6: {
-      en: 'Illustration: in heat and humidity, an old tattoo can rise and itch slightly. It usually settles again within hours or days.',
-      hu: 'Illusztráció: melegben és párában egy régi tetoválás kissé kidomborodhat és viszkethet. Általában órák vagy napok alatt rendeződik.',
+      en: 'Illustration: a small star tattoo on the ankle with a raised bump. An old tattoo can rise like this in heat or humidity and usually settles again.',
+      hu: 'Illusztráció: kis csillagtetoválás a bokán, kidomborodó bőrrel. Egy régi tetoválás melegben vagy párás időben így megemelkedhet, aztán általában lelapul.',
     },
     img7: {
-      en: 'Illustration: a reaction that stays on one colour, most often red, or redness that spreads beyond the tattoo needs a doctor.',
-      hu: 'Illusztráció: az egy színen maradó reakció, leggyakrabban a pirosan, vagy a tetováláson túl terjedő pirosság orvost igényel.',
+      en: 'Illustration: a fresh flower tattoo with red, irritated skin around it. Some redness in the first days is normal; redness that spreads or gets worse needs a doctor.',
+      hu: 'Illusztráció: friss virágtetoválás vörös, irritált bőrrel körülötte. Az első napokban némi pirosság normális; ha terjed vagy rosszabbodik, orvoshoz kell fordulni.',
     },
   },
 };

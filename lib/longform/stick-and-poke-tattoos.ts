@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Mia was sixteen when a friend gave her a tiny star on the ankle at a sleepover. A sewing needle, a bottle of drawing ink and a lot of giggling. Ten years later the star is still there, sort of: two points are crisp, one has almost vanished and the bottom edge has a soft blue haze. Now she wants a proper hand-poked piece from a studio, a small dotted moon on her forearm, and she keeps wondering two things. Is a studio hand-poke really different from what her friend did? And what should she do with the old star?',
       'Both are good questions, and the answers are more interesting than “stick and poke is bad” or “stick and poke is fine”. The method is centuries old and professional hand-poke artists work as safely as any machine tattooist. The trouble starts when the same idea moves to a bedroom floor. This guide explains the difference, the real health risks of DIY tattoos, how hand-poked work heals and ages, and what removal looks like for an amateur tattoo.',
-      '> A note on the pictures: the images in this article are simple illustrations made for this guide. They show typical situations, not real people or real tattoos.',
+      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
       '> This article does not explain how to tattoo yourself, on purpose. If you want a hand-poked tattoo, the safe route is a licensed artist.',
       '## What stick and poke actually is',
       'In a machine tattoo, a motor moves a group of needles up and down very quickly. In a stick and poke, also called hand-poke or hand-poked tattooing, there is no motor: the artist places the ink one dot at a time by hand. Lines are built from rows of dots, and shading comes from how close the dots sit to each other.',
@@ -109,7 +109,7 @@ const a: LongArticle = {
     hu: [
       'Mia tizenhat éves volt, amikor egy pizsamapartin a barátnője egy apró csillagot szúrt a bokájára. Egy varrótű, egy üveg rajztus és sok vihogás. Tíz évvel később a csillag még megvan, valahogy: két ága éles, egy majdnem eltűnt, az alsó szélén pedig halvány kék pára ül. Most egy rendes, stúdióban készült kézi tetoválást szeretne, egy kis pontozott holdat az alkarjára, és két dolgon gondolkodik. Tényleg más egy stúdióban készült kézi tetoválás, mint amit a barátnője csinált? És mit kezdjen a régi csillaggal?',
       'Mindkét kérdés jó, és a válasz érdekesebb annál, hogy „a stick and poke rossz” vagy „a stick and poke rendben van”. A módszer évszázados, és a profi kézi tetoválók ugyanolyan biztonságosan dolgoznak, mint bármelyik géppel dolgozó tetováló. A baj akkor kezdődik, amikor ugyanez a hálószoba padlójára költözik. Ez az útmutató elmagyarázza a különbséget, az otthoni tetoválás valódi egészségügyi kockázatait, hogy hogyan gyógyul és öregszik a kézi munka, és milyen egy amatőr tetoválás eltávolítása.',
-      '> Megjegyzés a képekhez: a cikk képei egyszerű, ehhez az útmutatóhoz készült illusztrációk. Tipikus helyzeteket mutatnak, nem valódi embereket vagy valódi tetoválásokat.',
+      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
       '> Ez a cikk szándékosan nem írja le, hogyan tetováld magad. Ha kézi tetoválást szeretnél, a biztonságos út egy engedéllyel dolgozó tetováló.',
       '## Mi is valójában a stick and poke',
       'A gépi tetoválásnál egy motor nagyon gyorsan mozgat fel-le egy tűcsoportot. A stick and poke, más néven kézi tetoválás vagy hand-poke esetén nincs motor: a tetováló kézzel, pontról pontra viszi be a tintát. A vonalak pontsorokból épülnek fel, az árnyékolás pedig attól függ, milyen sűrűn ülnek egymás mellett a pontok.',
@@ -233,28 +233,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: a professional hand-poke setup uses sealed single-use needles, gloves and ink in single-use caps; a homemade one often uses a sewing needle and drawing ink.',
-      hu: 'Illusztráció: a profi kézi tetováláshoz lezárt, egyszer használatos tű, kesztyű és egyszer használatos kupakba töltött tinta kell, az otthonihoz gyakran varrótű és rajztus.',
+      en: 'Illustration: a professional setup: sealed needles, black gloves and ink caps on a wrapped table. A homemade tattoo usually has none of these.',
+      hu: 'Illusztráció: profi előkészület: lezárt tűk, fekete kesztyű és tintakupakok egy letakart asztalon. Egy otthoni tetoválásnál általában ezek közül egyik sincs meg.',
     },
     img3: {
-      en: 'Illustration: ink that sits too shallow flakes off, ink at the right depth stays, and ink pushed too deep spreads into a blurry halo.',
-      hu: 'Illusztráció: a túl sekélyen ülő tinta lehámlik, a megfelelő mélységben lévő megmarad, a túl mélyre nyomott pedig elmosódott udvarrá terül szét.',
+      en: 'Illustration: script on a wrist with slightly blurred lines. Ink pushed too deep spreads under the skin and gives lines a soft, blurry edge.',
+      hu: 'Illusztráció: felirat a csuklón, kissé elmosódott vonalakkal. A túl mélyre juttatott tinta szétterül a bőr alatt, és elmosódottá teszi a vonalak szélét.',
     },
     img4: {
-      en: 'Illustration: in a studio, a gloved artist places a small dotted design along the forearm one dot at a time, following a stencil.',
-      hu: 'Illusztráció: a stúdióban a kesztyűs tetováló sablon alapján, pontról pontra viszi fel a kis pontozott mintát az alkar hossztengelye mentén.',
+      en: 'Illustration: a gloved artist working on a small rose on a forearm. A professional session uses sterile needles, gloves and a clean, wrapped workspace.',
+      hu: 'Illusztráció: kesztyűs tetováló egy kis rózsán dolgozik egy alkaron. A profi alkalomhoz steril tű, kesztyű és tiszta, letakart munkafelület tartozik.',
     },
     img5: {
-      en: 'Illustration: over the years, professional hand-poke softens evenly, while a homemade tattoo fades in patches and some dots spread.',
-      hu: 'Illusztráció: az évek alatt a profi kézi tetoválás egyenletesen puhul, az otthoni foltosan halványul, és egyes pontjai szétterülnek.',
+      en: 'Illustration: a small star on an ankle with uneven, raised skin next to it. Dots placed at different depths age unevenly, some fading and some spreading.',
+      hu: 'Illusztráció: kis csillag a bokán, mellette egyenetlen, kiemelkedő bőrrel. A különböző mélységbe szúrt pontok egyenetlenül öregszenek: némelyik kifakul, némelyik szétterül.',
     },
     img6: {
-      en: 'Illustration: a hand-poked tattoo usually calms down day by day and the surface closes in about two to four weeks.',
-      hu: 'Illusztráció: a kézi tetoválás általában napról napra nyugszik meg, és a felszín nagyjából két-négy hét alatt bezárul.',
+      en: 'Illustration: washing hands with soap at the sink. Clean hands come first every time you wash or touch a healing tattoo.',
+      hu: 'Illusztráció: kézmosás szappannal a mosdónál. Minden alkalommal tiszta kézzel kezdd, amikor a gyógyuló tetoválást megmosod vagy hozzáérsz.',
     },
     img7: {
-      en: 'Illustration: amateur tattoos usually hold less ink close to the surface, so they often clear in fewer laser sessions than professional work.',
-      hu: 'Illusztráció: az amatőr tetoválásban általában kevesebb tinta van a felszín közelében, ezért gyakran kevesebb lézeres alkalom alatt tűnik el, mint a profi munka.',
+      en: 'Illustration: a laser session on an arm, with both the practitioner and the patient in safety goggles. Amateur tattoos often clear in fewer sessions than professional work.',
+      hu: 'Illusztráció: lézeres kezelés egy karon, a kezelő és a páciens is védőszemüvegben. Az amatőr tetoválások gyakran kevesebb kezeléssel tűnnek el, mint a profi munkák.',
     },
   },
 };
