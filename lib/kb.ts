@@ -776,6 +776,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-12-30',
     faq: [],
   },
+  'regret-new-tattoo': {
+    img: 'kb_20261110_regret-0',
+    img2: 'kb_20261110_regret-2',
+    img3: 'kb_20261110_regret-3',
+    img4: 'kb_20261110_regret-4',
+    img5: 'kb_20261110_regret-5',
+    img6: 'kb_20261110_regret-6',
+    img7: 'kb_20261110_regret-7',
+    cap2: { en: 'Illustration: how a new tattoo changes while it heals. Swollen and dark at first, then flaking and cloudy, settled after about four to six weeks.', hu: 'Illusztráció: így változik egy új tetoválás gyógyulás közben. Eleinte duzzadt és sötét, aztán hámlik és párás, körülbelül négy-hat hét után áll be.' },
+    date: '2026-11-10',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];

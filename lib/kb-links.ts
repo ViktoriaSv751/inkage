@@ -22,6 +22,7 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'tattoo-ink-safety-eu': ['color-vs-black-ink-aging', 'first-tattoo-checklist', 'tattoo-healing-stages', 'laser-tattoo-removal-what-to-expect', 'tattoos-on-darker-skin'],
   'laser-tattoo-removal-pain': ['laser-tattoo-removal-what-to-expect', 'laser-removal-healing', 'tattoo-pain-chart', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-cost', 'color-vs-black-ink-aging'],
   'colour-tattoo-removal': ['laser-tattoo-removal-what-to-expect', 'color-vs-black-ink-aging', 'laser-removal-how-many-sessions', 'cover-up-tattoos', 'tattoos-on-darker-skin', 'laser-tattoo-removal-cost'],
+  'regret-new-tattoo': ['tattoo-healing-stages', 'tattoo-touch-ups', 'cover-up-tattoos', 'laser-tattoo-removal-what-to-expect', 'tattoo-removal-creams-diy', 'tattoo-itching-peeling'],
   'tattoo-removal-creams-diy': ['laser-tattoo-removal-what-to-expect', 'laser-tattoo-removal-cost', 'cover-up-tattoos', 'laser-removal-how-many-sessions', 'laser-removal-healing', 'laser-removal-before-after'],
   'neck-tattoos': ['best-placement-for-tattoo-longevity', 'blackwork-tattoos-placement', 'tattoo-pain-chart', 'tattoo-healing-stages', 'tattoo-aftercare-sun-protection', 'laser-tattoo-removal-cost'],
   'rib-tattoos': ['first-tattoo-checklist', 'tattoo-pain-chart', 'best-placement-for-tattoo-longevity', 'tattoos-weight-change-pregnancy', 'fine-line-tattoos-aging', 'tattoo-healing-stages'],

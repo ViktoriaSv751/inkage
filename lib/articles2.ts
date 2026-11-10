@@ -1308,4 +1308,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'regret-new-tattoo',
+    tag: { en: 'Removal', hu: 'Eltávolítás' },
+    title: { en: 'Regret a new tattoo? What you can do in the first weeks and months', hu: 'Megbántad a friss tetoválásod? Mit tehetsz az első hetekben és hónapokban' },
+    desc: { en: 'Wait for healing before you judge it; most problems can be touched up, reworked, covered or lasered.', hu: 'A gyógyulás előtt ne ítélj; a legtöbb hiba javítható, átdolgozható, eltakarható vagy lézerezhető.' },
+    body: {
+      en: [
+        'A fresh tattoo looks its worst in the first weeks: swollen, darker, then flaky and cloudy. Judge it only once it has fully healed, after about four to six weeks.',
+        '## Your options',
+        'A touch-up or rework for lines and details, a cover-up for a design you no longer want, and laser for fading or removal once the skin has fully healed, often after at least six to eight weeks.',
+        '## What not to do',
+        'Do not scrub, pick or use removal creams, salt or lemon. Heal it well: a well-healed tattoo is much easier to fix.',
+      ],
+      hu: [
+        'A friss tetoválás az első hetekben néz ki a legrosszabbul: duzzadt, sötétebb, aztán hámlik és párás. Csak akkor ítéld meg, ha teljesen begyógyult, körülbelül négy-hat hét után.',
+        '## A lehetőségeid',
+        'Javítás vagy átdolgozás a vonalakra és a részletekre, takarás a már nem kívánt mintára, és lézer a halványításra vagy az eltávolításra, ha a bőr teljesen begyógyult, gyakran legalább hat-nyolc hét után.',
+        '## Amit ne csinálj',
+        'Ne dörzsöld, ne kapard, és ne használj eltávolító krémet, sót vagy citromot. Gyógyítsd meg rendesen: egy jól begyógyult tetoválást sokkal könnyebb javítani.',
+      ],
+    },
+  },
 ];
