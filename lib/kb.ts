@@ -788,6 +788,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-11-10',
     faq: [],
   },
+  'spine-tattoos': {
+    img: 'hf_20261023_115946_88ed5da8-82fe-44d8-932c-2f425e3a4fa9',
+    img2: 'hf_20261020_115959_f93a1786-77c5-4f85-94ac-2e6723a1e9f6',
+    img3: 'hf_20261013_090724_86d5fdc4-909f-468d-af52-bf30295690da',
+    img4: 'hf_20261013_094416_db31d0f2-88ed-4311-aef7-3745cabd5626',
+    img5: 'hf_20261013_200918_3120c2be-e153-4881-a8f8-04c1cf79fcb4',
+    img6: 'hf_20261104_085816_d64bb4ea-303d-4bca-aefc-363a65740ed7',
+    img7: 'hf_20261023_115927_b0f24c29-c8be-49bd-b3f6-51ac8cd1a0af',
+    cap2: { en: 'Illustration: a long session can be tough. Breathing slowly into your stomach keeps the back from tensing up.', hu: 'Illusztráció: egy hosszú ülés megterhelő lehet. Ha lassan a hasadba lélegzel, a hátad nem feszül meg.' },
+    date: '2026-11-12',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];

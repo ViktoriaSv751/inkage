@@ -1330,4 +1330,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'spine-tattoos',
+    tag: { en: 'Placement', hu: 'Elhelyezés' },
+    title: { en: 'Spine tattoos: how much they hurt, how they heal, and whether fine lines stay beautiful', hu: 'Gerincre tetoválás: mennyire fáj, hogyan gyógyul, és szép marad-e a vékony vonal' },
+    desc: { en: 'More painful than the rest of the back, placed standing up, healed with help, and best with slightly bolder lines.', hu: 'Jobban fáj, mint a hát többi része, állva kerül fel, segítséggel gyógyul, és a kicsit vastagabb vonal tart a legtovább.' },
+    body: {
+      en: [
+        'The skin over the vertebrae is thin and close to bone, so the spine hurts more than most of the back. The muscles beside it are easier.',
+        '## Getting it straight',
+        'No spine is perfectly straight. The stencil goes on while you stand naturally and is moved until the design looks straight on your body.',
+        '## Healing and aging',
+        'Get help with washing and cream, sleep on your front or side, avoid straps over the ink. The back ages well; very thin lines and tiny letters soften first.',
+      ],
+      hu: [
+        'A csigolyák fölött vékony a bőr, és közel van a csonthoz, ezért a gerinc jobban fáj, mint a hát nagy része. A mellette futó izmokon könnyebb.',
+        '## Egyenesre csinálni',
+        'Egyetlen gerinc sem tökéletesen egyenes. A sablon természetes állásban kerül fel, és addig igazítják, amíg a minta a testeden egyenesnek látszik.',
+        '## Gyógyulás és öregedés',
+        'Kérj segítséget a mosáshoz és a krémezéshez, aludj hason vagy oldalt, kerüld a pántot a tinta fölött. A hát szépen öregszik; a nagyon vékony vonal és az apró betű puhul el először.',
+      ],
+    },
+  },
 ];
