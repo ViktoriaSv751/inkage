@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { InfoPage, type InfoSec } from '../_info/InfoPage';
 import { IMG } from '@/lib/kb';
-import { B2BForm } from './B2BForm';
+import { B2BPanel } from './B2BPanel';
 import './b2b.css';
 
 export const dynamic = 'force-dynamic';
@@ -57,7 +57,7 @@ export default function Page({ searchParams }: { searchParams: { ref?: string } 
           </figure>
         ))}
       </div>
-      <B2BForm refCode={String(searchParams.ref || '').slice(0, 60)} />
+      <B2BPanel refCode={String(searchParams.ref || '').slice(0, 60)} />
     </InfoPage>
   );
 }

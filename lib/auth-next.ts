@@ -9,7 +9,7 @@ const KEY = 'ink_next';
 export function nextFromUrl(): string | null {
   try {
     const n = new URLSearchParams(location.search).get('next');
-    return n && /^\/app(\/|\?|$)/.test(n) ? n : null;
+    return n && /^\/(app(\/|\?|$)|szalonoknak(\?|$))/.test(n) ? n : null; // + the B2B page (2026-11-12)
   } catch {
     return null;
   }
@@ -26,7 +26,7 @@ export function takeNext(): string | null {
   try {
     const v = JSON.parse(localStorage.getItem(KEY) || 'null');
     localStorage.removeItem(KEY);
-    if (v?.to && /^\/app(\/|\?|$)/.test(v.to) && Date.now() - v.at < 30 * 60e3) return v.to;
+    if (v?.to && /^\/(app(\/|\?|$)|szalonoknak(\?|$))/.test(v.to) && Date.now() - v.at < 30 * 60e3) return v.to;
   } catch {}
   return null;
 }

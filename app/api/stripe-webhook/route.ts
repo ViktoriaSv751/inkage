@@ -3,6 +3,8 @@ import { isPlan, PLAN, type PlanId } from '@/lib/pricing';
 import { grantPurchase, planTitle, recordPayEvent, recordRefund, stripeSessionOf, stripeSignatureOk } from '@/lib/pay';
 import { addressOk, invoicingOn, recordSale, refundSale } from '@/lib/billingo';
 import { sendMail } from '@/lib/mail';
+import { appSecret, userClient } from '@/lib/server';
+import { B2B, isB2BPlan, type B2BPlan } from '@/lib/b2b';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,8 +22,13 @@ export async function POST(req: Request) {
   const o = ev.data?.object ?? {};
   if (ev.type === 'charge.refunded') return refunded(o);
   if (ev.type.startsWith('charge.dispute.')) return noted(ev);
+  /* B2B monthly plans (2026-11-12): every paid invoice adds that month's previews; subscription changes keep b2b_subs current */
+  if (ev.type === 'invoice.paid') return b2bInvoice(ev, o);
+  if (ev.type.startsWith('customer.subscription.')) return b2bSubscription(ev, o);
   /* a Calligra sale */
   if (o.metadata?.app !== 'inkage') return json({ ok: true, ignored: 'other_app' });
+  /* the first month of a B2B plan is paid through its invoice (invoice.paid), not here */
+  if (o.mode === 'subscription') return json({ ok: true, ignored: 'subscription_checkout' });
   if (ev.type === 'checkout.session.expired' || ev.type === 'payment_intent.payment_failed') return noted(ev);
   if (ev.type !== 'checkout.session.completed' && ev.type !== 'checkout.session.async_payment_succeeded') return json({ ok: true, ignored: ev.type });
   const s = o;
@@ -156,4 +163,59 @@ async function saleMail(session: string, item: string, amount: number, currency:
   if (!to) return;
   const text = `Új InkAge-vásárlás!\n\n${item}\n${amount} ${currency.toUpperCase()}${country ? ` · ${country}` : ''}\nVevő: ${email || 'nincs e-mail'}\nStripe: ${session}`;
   await sendMail(to, `🎉 Új InkAge-vásárlás: ${item.split(':')[0]} ${amount} ${currency.toUpperCase()}`, `<pre style="font:14px/1.5 sans-serif;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`, text, email || undefined, 'inkage-sale-' + session).catch(() => false);
+}
+
+
+/* ---------- B2B monthly plans ---------- */
+const subMeta = (inv: any) => inv.parent?.subscription_details?.metadata || inv.subscription_details?.metadata || inv.lines?.data?.[0]?.metadata || {};
+const subId = (inv: any) => inv.parent?.subscription_details?.subscription || inv.subscription || null;
+const b2bSet = (a: { user: string; plan: string | null; status: string; customer: string | null; sub: string | null; periodEnd: number | null; cancelAtEnd: boolean }) =>
+  userClient().rpc('b2b_sub_set', { p_key: appSecret('db'), p_user: a.user, p_plan: a.plan, p_status: a.status, p_customer: a.customer, p_sub: a.sub, p_period_end: a.periodEnd ? new Date(a.periodEnd * 1000).toISOString() : null, p_cancel_at_end: a.cancelAtEnd });
+
+async function b2bInvoice(ev: any, inv: any) {
+  const m = subMeta(inv);
+  if (m.app !== 'inkage' || m.kind !== 'b2b') return json({ ok: true, ignored: 'other_invoice' });
+  if (!m.user || !isB2BPlan(m.plan)) return json({ error: 'bad_metadata' }, 400);
+  const plan = m.plan as B2BPlan;
+  const amount = (inv.amount_paid ?? 0) / 100;
+  const title = `InkAge ${B2B[plan].name} havidíj (${B2B[plan].n} előnézet)`;
+  try {
+    await grantPurchase({ user: m.user, store: 'stripe', tx: String(inv.id), plan: plan as any, amount, currency: inv.currency, meta: { country: inv.customer_address?.country, note: 'b2b' } });
+    const line = inv.lines?.data?.[0];
+    await b2bSet({ user: m.user, plan, status: 'active', customer: inv.customer ? String(inv.customer) : null, sub: subId(inv), periodEnd: line?.period?.end ?? null, cancelAtEnd: false });
+  } catch (e) {
+    console.error('b2b_grant_failed', inv.id, String(e));
+    return json({ error: 'grant_failed' }, 500);
+  }
+  await saleMail(String(inv.id), title, amount, inv.currency || 'huf', inv.customer_email || '', inv.customer_address?.country || '');
+  if (!invoicingOn() || amount <= 0) return json({ ok: true });
+  try {
+    const ad = inv.customer_address ?? {};
+    const buyer = {
+      name: inv.customer_name || '', email: inv.customer_email || '', country: String(ad.country || 'HU').toUpperCase(),
+      postCode: ad.postal_code || '', city: ad.city || '', address: [ad.line1, ad.line2, ad.state].filter(Boolean).join(', '),
+      taxId: (inv.customer_tax_ids ?? [])[0]?.value || undefined,
+    };
+    const note = (inv.tax ?? 0) > 0 ? 'tax' : !addressOk(buyer) ? 'address' : undefined;
+    if (note === 'address') await missingAddressMail(String(inv.id), buyer.email, title, amount, inv.currency || 'huf');
+    await recordSale({ session: String(inv.id), paymentIntent: inv.payment_intent ? String(inv.payment_intent) : null, note, sale: { buyer, item: title, plan: plan as any, comment: '', amount, currency: inv.currency || 'huf', paidAt: new Date((inv.status_transitions?.paid_at || ev.created || Date.now() / 1000) * 1000).toISOString() } });
+  } catch (e) {
+    console.error('b2b_invoice_record_failed', inv.id, String(e));
+    return json({ error: 'invoice_record_failed' }, 500);
+  }
+  return json({ ok: true, previews: B2B[plan].n });
+}
+
+async function b2bSubscription(ev: any, sub: any) {
+  const m = sub.metadata ?? {};
+  if (m.app !== 'inkage' || m.kind !== 'b2b' || !m.user) return json({ ok: true, ignored: 'other_subscription' });
+  const st = ev.type === 'customer.subscription.deleted' ? 'canceled' : ({ active: 'active', trialing: 'active', past_due: 'past_due', unpaid: 'past_due', canceled: 'canceled', incomplete_expired: 'canceled', incomplete: 'past_due', paused: 'past_due' } as Record<string, string>)[sub.status] || 'active';
+  const periodEnd = sub.current_period_end ?? sub.items?.data?.[0]?.current_period_end ?? null;
+  try {
+    await b2bSet({ user: m.user, plan: isB2BPlan(m.plan) ? m.plan : null, status: st, customer: sub.customer ? String(sub.customer) : null, sub: String(sub.id), periodEnd, cancelAtEnd: !!sub.cancel_at_period_end });
+  } catch (e) {
+    console.error('b2b_sub_failed', sub.id, String(e));
+    return json({ error: 'sub_failed' }, 500);
+  }
+  return json({ ok: true, status: st });
 }
