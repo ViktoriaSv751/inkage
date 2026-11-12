@@ -109,6 +109,12 @@ export function useGenerate({
     if (!photo || (!d && !existing)) return;
     // 2026-11-10: no free preview any more — without a package the packages open here, before anything is sent
     // (the photo and design stay on the page, so after buying the same button makes the preview)
+    // a studio account: its own sheet (remaining 0, next refill), never the consumer packages
+    if (me.user && me.studio && (me.remaining ?? 0) <= 0) {
+      track('paywall_hit', { at: 'start', studio: true });
+      openPaywall('previews');
+      return;
+    }
     if (me.user && me.pay === 'trial' && (me.remaining ?? 0) <= 0 && !me.teaserLeft) {
       track('paywall_hit', { at: 'start' });
       openPaywall('previews');

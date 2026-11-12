@@ -22,6 +22,7 @@ import { CareSheet } from './_result/CareSheet';
 import { VideoSheet } from './_result/VideoSheet';
 import { PublishSheet } from './_result/PublishSheet';
 import { RedoSheet } from './_result/RedoSheet';
+import { isClinic } from './_ui/Studio';
 
 export { REDO_REASONS } from './_result/constants';
 export { VideoSheet } from './_result/VideoSheet';
@@ -57,10 +58,13 @@ export function Result({
   const onLocked = () => (track('locked_tap'), openPaywall(preview.teaser ? 'teaser' : 'locked'));
   const rem = preview.removal || {};
   const report = preview.report;
+  /** a laser clinic's account (b2b_clinic): the 3/6/10-session result is the main view, aging stays one tap away */
+  const clinic = isClinic(me);
+  const hasRemoval = REMOVAL_STAGES.some((k) => rem[k]) || removalPending.length > 0;
   const ready = STAGES.filter((k) => img[k]);
   /** the person's own tattoo (aging or removal), not a new design */
   const own = preview.mode === 'existing' || preview.mode === 'removal';
-  const [view, setView] = useState<'aging' | 'removal'>(startView);
+  const [view, setView] = useState<'aging' | 'removal'>(clinic && hasRemoval ? 'removal' : startView);
   const [remKey, setRemKey] = useState<'fresh' | RemovalKey>('fresh');
   const [mode, setMode] = useState<'view' | 'split'>('view');
   const [split, setSplit] = useState(50);
@@ -99,6 +103,10 @@ export function Result({
   useEffect(() => {
     if (removalOnly && view !== 'removal') setView('removal');
   }, [removalOnly]); // eslint-disable-line react-hooks/exhaustive-deps
+  // a clinic: the laser sessions come up as soon as they exist
+  useEffect(() => {
+    if (clinic && hasRemoval && view !== 'removal') setView('removal');
+  }, [clinic, hasRemoval]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (view === 'removal') {
       const last = [...REMOVAL_STAGES].reverse().find((k) => rem[k]);
@@ -123,12 +131,20 @@ export function Result({
       <div className="col-a">
       {(remCount > 0 || removalPending.length > 0) && (ready.length > 1 || pending.length > 0) && (
         <div className="seg viewseg" role="tablist">
-          <button role="tab" aria-selected={view === 'aging'} className={view === 'aging' ? 'on' : ''} onClick={() => setView('aging')}>
-            {t('Aging', 'Öregedés')}
-          </button>
-          <button role="tab" aria-selected={view === 'removal'} className={view === 'removal' ? 'on' : ''} onClick={() => setView('removal')}>
-            {t('Laser removal', 'Lézeres eltávolítás')}
-          </button>
+          {(() => {
+            const aging = (
+              <button key="a" role="tab" aria-selected={view === 'aging'} className={view === 'aging' ? 'on' : ''} onClick={() => setView('aging')}>
+                {t('Aging', 'Öregedés')}
+              </button>
+            );
+            const laser = (
+              <button key="l" role="tab" aria-selected={view === 'removal'} className={view === 'removal' ? 'on' : ''} onClick={() => setView('removal')}>
+                {clinic ? t('Laser sessions', 'Lézeres kezelések') : t('Laser removal', 'Lézeres eltávolítás')}
+              </button>
+            );
+            // a clinic: the laser sessions first
+            return clinic ? [laser, aging] : [aging, laser];
+          })()}
         </div>
       )}
 
@@ -138,8 +154,14 @@ export function Result({
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3" /><circle cx="12" cy="12" r="2.5" /></svg>
           </span>
           <div>
-            <b>{t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</b>
-            <small>{removalPending.length > 0 ? t('Simulating 3, 6 and 10 sessions – about a minute', '3, 6 és 10 kezelés szimulálása – kb. egy perc') : t('How it would fade after 3, 6 and 10 laser sessions', 'Így halványulna 3, 6 és 10 lézeres kezelés után')}</small>
+            <b>{clinic ? t('Treatment preview for your client', 'Kezelési előnézet a vendégnek') : t('Laser removal preview', 'Lézeres eltávolítás előnézete')}</b>
+            <small>
+              {removalPending.length > 0
+                ? t('Simulating 3, 6 and 10 sessions – about a minute', '3, 6 és 10 kezelés szimulálása – kb. egy perc')
+                : clinic
+                  ? t('How this tattoo could fade after 3, 6 and 10 sessions. A simulation, not a promise of the result.', 'Így halványulhat ez a tetoválás 3, 6 és 10 kezelés után. Szimuláció, nem az eredmény ígérete.')
+                  : t('How it would fade after 3, 6 and 10 laser sessions', 'Így halványulna 3, 6 és 10 lézeres kezelés után')}
+            </small>
           </div>
           {ready.length > 1 && (
             <button className="chipbtn" onClick={() => (setView('aging'), window.scrollTo({ top: 0, behavior: 'smooth' }))}>
@@ -308,7 +330,7 @@ export function Result({
         initial={[preview]}
       />
 
-      {img.y50 && (
+      {img.y50 && !me.studio && (
         <div className="card nextcta">
           <h3>{t('Happy with it?', 'Tetszik?')}</h3>
           <p className="sub">{t('It’s saved in your gallery. Most people ask a few friends before they book.', 'A galériádba mentettük. A legtöbben megkérdeznek pár barátot, mielőtt időpontot foglalnak.')}</p>
