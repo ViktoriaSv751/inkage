@@ -1305,3 +1305,4 @@ a.rail-studio:hover { filter: brightness(1.08); }
 html.native .rail-beta.rail-studio > b { display: block !important; }
 .rail-foot a.rail-studio, .rail-foot .rail-studio { display: block !important; }
 .rail-studio > b, .rail-studio > p { display: block; }
+.rail-foot .rail-studio, .rail-studio > b { text-align: left; }
