@@ -1,5 +1,5 @@
 import { appSecret, getAuthed, json, userClient } from '@/lib/server';
-import { B2B, baseOf, intervalOf, isB2BBase, planId, planName, yearHuf, type B2BInterval } from '@/lib/b2b';
+import { B2B, baseOf, intervalOf, isB2BBase, planId, yearHuf, type B2BInterval } from '@/lib/b2b';
 import { nativeReq } from '@/lib/pay';
 
 export const dynamic = 'force-dynamic';
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   f.set('line_items[0][price_data][currency]', 'huf');
   f.set('line_items[0][price_data][unit_amount]', String(amount * 100)); // Stripe counts forint in fillér
   f.set('line_items[0][price_data][recurring][interval]', interval);
-  f.set('line_items[0][price_data][product_data][name]', `InkAge ${planName(plan)} – ${interval === 'year' ? 'éves díj' : 'havidíj'}`);
+  f.set('line_items[0][price_data][product_data][name]', `InkAge ${p.name} – ${interval === 'year' ? 'éves díj' : 'havidíj'}`);
   f.set(
     'line_items[0][price_data][product_data][description]',
     interval === 'year' ? `${p.n} tetoválás-előnézet havonta 12 hónapig (10 hónap áráért), a fel nem használtak megmaradnak` : `${p.n} tetoválás-előnézet havonta, a fel nem használtak megmaradnak`

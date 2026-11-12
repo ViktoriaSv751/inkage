@@ -187,7 +187,7 @@ async function b2bInvoice(ev: any, inv: any) {
   const year = intervalOf(plan) === 'year';
   const amount = (inv.amount_paid ?? 0) / 100;
   const n = B2B[baseOf(plan)].n;
-  const title = `InkAge ${planName(plan)} ${year ? 'éves díj' : 'havidíj'} (${n} előnézet${year ? ' havonta, 12 hónap' : ''})`;
+  const title = `InkAge ${B2B[baseOf(plan)].name} ${year ? 'éves díj' : 'havidíj'} (${n} előnézet${year ? ' havonta, 12 hónap' : ''})`;
   const pi = inv.payment_intent ? String(inv.payment_intent) : await paymentOfInvoice(String(inv.id));
   try {
     await grantPurchase({ user: m.user, store: 'stripe', tx: String(inv.id), plan: plan as any, amount, currency: inv.currency, meta: { country: inv.customer_address?.country, note: 'b2b' } });

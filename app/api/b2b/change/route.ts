@@ -1,5 +1,5 @@
 import { appSecret, getAuthed, json, userClient } from '@/lib/server';
-import { B2B, baseOf, intervalOf, isB2BBase, isB2BPlan, planId, planName } from '@/lib/b2b';
+import { B2B, baseOf, intervalOf, isB2BBase, isB2BPlan, planId } from '@/lib/b2b';
 import { nativeReq } from '@/lib/pay';
 
 export const dynamic = 'force-dynamic';
@@ -44,6 +44,6 @@ export async function POST(req: Request) {
     return json({ error: 'stripe_error' }, 502);
   }
   // the product name still says the old plan: rename it so the next invoice reads right
-  await stripe(secret, `products/${encodeURIComponent(String(item.price?.product))}`, new URLSearchParams({ name: `InkAge ${planName(next)} – ${intervalOf(next) === 'year' ? 'éves díj' : 'havidíj'}` })).catch(() => null);
+  await stripe(secret, `products/${encodeURIComponent(String(item.price?.product))}`, new URLSearchParams({ name: `InkAge ${B2B[baseOf(next)].name} – ${intervalOf(next) === 'year' ? 'éves díj' : 'havidíj'}` })).catch(() => null);
   return json({ ok: true, plan: next, from: cur.plan, startsAt: u.j?.current_period_end ?? item.current_period_end ?? null });
 }
