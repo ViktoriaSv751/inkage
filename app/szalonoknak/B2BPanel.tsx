@@ -4,7 +4,7 @@ import { api } from '@/lib/sb';
 import { B2B, B2B_PLANS, B2B_TRIAL, huf, type B2BPlan } from '@/lib/b2b';
 
 type Sub = { company: string | null; plan: B2BPlan | null; status: 'trial' | 'trial_ended' | 'active' | 'past_due' | 'canceled'; trial_ends_at: string | null; current_period_end: string | null; cancel_at_period_end: boolean | null } | null;
-const day = (s: string | null) => (s ? new Date(s).toLocaleDateString('hu-HU', { month: 'long', day: 'numeric' }) : '');
+const day = (s: string | null) => (s ? new Date(s).toLocaleDateString('hu-HU', { month: 'long', day: 'numeric' }).replace(/\.$/, '') : '');
 
 /** Monthly plans for studios and clinics: start the 14-day trial (no card), subscribe through Stripe, manage it in
     Stripe's portal. Hungarian only, like the outreach (2026-11-12). */

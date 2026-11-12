@@ -169,8 +169,10 @@ async function saleMail(session: string, item: string, amount: number, currency:
 /* ---------- B2B monthly plans ---------- */
 const subMeta = (inv: any) => inv.parent?.subscription_details?.metadata || inv.subscription_details?.metadata || inv.lines?.data?.[0]?.metadata || {};
 const subId = (inv: any) => inv.parent?.subscription_details?.subscription || inv.subscription || null;
-const b2bSet = (a: { user: string; plan: string | null; status: string; customer: string | null; sub: string | null; periodEnd: number | null; cancelAtEnd: boolean }) =>
-  userClient().rpc('b2b_sub_set', { p_key: appSecret('db'), p_user: a.user, p_plan: a.plan, p_status: a.status, p_customer: a.customer, p_sub: a.sub, p_period_end: a.periodEnd ? new Date(a.periodEnd * 1000).toISOString() : null, p_cancel_at_end: a.cancelAtEnd });
+const b2bSet = async (a: { user: string; plan: string | null; status: string; customer: string | null; sub: string | null; periodEnd: number | null; cancelAtEnd: boolean }) => {
+  const { error } = await userClient().rpc('b2b_sub_set', { p_key: appSecret('db'), p_user: a.user, p_plan: a.plan, p_status: a.status, p_customer: a.customer, p_sub: a.sub, p_period_end: a.periodEnd ? new Date(a.periodEnd * 1000).toISOString() : null, p_cancel_at_end: a.cancelAtEnd });
+  if (error) throw new Error(error.message);
+};
 
 async function b2bInvoice(ev: any, inv: any) {
   const m = subMeta(inv);
@@ -209,7 +211,9 @@ async function b2bInvoice(ev: any, inv: any) {
 async function b2bSubscription(ev: any, sub: any) {
   const m = sub.metadata ?? {};
   if (m.app !== 'inkage' || m.kind !== 'b2b' || !m.user) return json({ ok: true, ignored: 'other_subscription' });
-  const st = ev.type === 'customer.subscription.deleted' ? 'canceled' : ({ active: 'active', trialing: 'active', past_due: 'past_due', unpaid: 'past_due', canceled: 'canceled', incomplete_expired: 'canceled', incomplete: 'past_due', paused: 'past_due' } as Record<string, string>)[sub.status] || 'active';
+  /* "incomplete" is the moment before the first invoice is paid: it may arrive after invoice.paid, so it never overwrites */
+  if (ev.type !== 'customer.subscription.deleted' && sub.status === 'incomplete') return json({ ok: true, ignored: 'incomplete' });
+  const st = ev.type === 'customer.subscription.deleted' ? 'canceled' : ({ active: 'active', trialing: 'active', past_due: 'past_due', unpaid: 'past_due', canceled: 'canceled', incomplete_expired: 'canceled', paused: 'past_due' } as Record<string, string>)[sub.status] || 'active';
   const periodEnd = sub.current_period_end ?? sub.items?.data?.[0]?.current_period_end ?? null;
   try {
     await b2bSet({ user: m.user, plan: isB2BPlan(m.plan) ? m.plan : null, status: st, customer: sub.customer ? String(sub.customer) : null, sub: String(sub.id), periodEnd, cancelAtEnd: !!sub.cancel_at_period_end });

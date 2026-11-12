@@ -34,6 +34,7 @@ export async function POST(req: Request) {
   f.set('billing_address_collection', 'required');
   f.set('tax_id_collection[enabled]', 'true');
   f.set('allow_promotion_codes', 'true');
+  f.set('payment_method_collection', 'if_required'); // a 100% coupon month needs no card; paid months still ask for one
   f.set('custom_text[submit][message]', 'Havidíjas előfizetés, bármikor lemondható az InkAge-ben (Előfizetés kezelése). A számlát e-mailben kapod.');
   f.set('success_url', `${origin}/szalonoknak?elofizetes=ok`);
   f.set('cancel_url', `${origin}/szalonoknak?elofizetes=megszakitva`);
