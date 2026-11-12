@@ -10,6 +10,7 @@ import { haptic, lsGet, Preview, RemovalKey, StageKey, track } from '@/lib/store
 import { composeMockup, mergeLayers, pasteMask, Placement, Skin } from '@/lib/editor';
 import { photoCm } from '@/lib/score';
 import { lsSet } from '@/lib/store';
+import { guestFields } from '@/lib/studio';
 import { AGE_STAGES, PARENT } from './constants';
 import { flattenOnWhite } from './flattenOnWhite';
 import type { Job, JobMeta, Phase } from './types';
@@ -246,6 +247,8 @@ export function useGenerate({
       design: meta.design,
       focus: meta.focus,
       source: 'local',
+      // studio accounts: the guest it is for and the ticked consent (empty for consumers, lib/studio.ts)
+      ...guestFields(),
     };
     // the teaser: watermarked today and the blurred 50 years (or 10 laser sessions); nothing more is made until a package
     if (data.teaser) {

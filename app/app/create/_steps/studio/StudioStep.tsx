@@ -23,6 +23,9 @@ import { CutCompare } from './CutCompare';
 import { ExistingSize } from './ExistingSize';
 import { ModelSheet } from './ModelSheet';
 import { LinkSheet } from './LinkSheet';
+import { GuestBox } from '../../../_b2b/GuestBox';
+import { guestDraft } from '@/lib/studio';
+import { isNative, nativePickPhoto } from '@/lib/native';
 
 // ================================================================ studio: photo + design on one screen
 
@@ -40,6 +43,7 @@ export function StudioStep({
   setDesign,
   onExtras,
   onNext,
+  studio = false,
 }: {
   mode?: 'new' | 'existing' | 'removal';
   setMode?: (m: 'new' | 'existing' | 'removal') => void;
@@ -55,6 +59,9 @@ export function StudioStep({
   onArea?: (a: Area | null, where: string, ph: Photo, skin?: Skin | null) => void;
   existingCm?: number | null;
   setExistingCm?: (n: number | null) => void;
+  /** a studio (B2B) account: guest name + required consent before the photo, no other guests' recent photos,
+      and on a tablet or phone a big camera button (counter mode) */
+  studio?: boolean;
 }) {
   const { ui, toast } = useApp();
   const t = L(ui.lang);
@@ -70,6 +77,17 @@ export function StudioStep({
   const existing = mode === 'existing' || mode === 'removal';
   const removal = mode === 'removal';
   const [ideaOpen, setIdeaOpen] = useState(false);
+  const [consent, setConsent] = useState(() => !!guestDraft.get().consentAt);
+  const locked = studio && !consent;
+  const camRef = useRef<HTMLInputElement>(null);
+  const [coarse] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches);
+  const counter = studio && coarse;
+  const lockedTap = (e: React.SyntheticEvent) => {
+    if (!locked) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toast(t('First tick that the guest agreed.', 'Előbb pipáld ki, hogy a vendég hozzájárult.'));
+  };
 
   const usePhoto = (p: Photo) => {
     setPhoto(p);
@@ -149,7 +167,7 @@ export function StudioStep({
     },
   });
 
-  const ready = !!photo && (existing || !!design) && !busy && check.state !== 'blocked' && check.state !== 'checking';
+  const ready = !locked && !!photo && (existing || !!design) && !busy && check.state !== 'blocked' && check.state !== 'checking';
   const cta = !photo
     ? existing ? t('Add a photo of your tattoo', 'Add hozzá a tetoválásod fotóját') : t('Add your photo', 'Add hozzá a fotódat')
     : !existing && !design
@@ -173,7 +191,30 @@ export function StudioStep({
       </div>
       <div className="col-b">
 
+      {studio && <GuestBox onChange={setConsent} />}
+      {studio && counter && !photo && (
+        <button
+          type="button"
+          className="btn wide dark gb-cam"
+          disabled={locked}
+          onClick={() => {
+            track('b2b_counter_camera');
+            if (isNative()) nativePickPhoto(ui.lang).then((b) => b && takePhoto(b));
+            else camRef.current?.click();
+          }}
+          style={{ marginBottom: 12 }}
+        >
+          📷 {existing ? t('Photo of the tattoo', 'Fotó a tetoválásról') : t('Photo of the guest', 'Fotó a vendégről')}
+        </button>
+      )}
       <h2 className="sec-title">{existing ? t('Photo of your tattoo', 'Fotó a tetoválásodról') : t('Your photo and the design', 'A fotód és a minta')}</h2>
+      <div
+        className={`${counter ? 'counter-mode' : ''} ${locked ? 'studio-locked' : ''}`}
+        data-msg={locked ? t('Tick the guest’s consent above first', 'Előbb pipáld ki fent a vendég hozzájárulását') : undefined}
+        onClickCapture={lockedTap}
+        onDropCapture={lockedTap}
+        onKeyDownCapture={(e) => (e.key === 'Enter' || e.key === ' ') && lockedTap(e)}
+      >
       <div className={`studio-slots ${existing ? 'one' : ''}`}>
         <PhotoSlot
           existing={existing}
@@ -190,8 +231,9 @@ export function StudioStep({
         <DesignSlot design={design} over={over} drop={drop('design')} busy={busy} busyMsg={busyMsg} paste={paste} onLink={() => setLinkOpen(true)} />
         )}
       </div>
+      </div>
 
-      {recent.length > 0 && <RecentPhotos recent={recent} photo={photo} pickRecent={pickRecent} />}
+      {!studio && recent.length > 0 && <RecentPhotos recent={recent} photo={photo} pickRecent={pickRecent} />}
 
       {photo && check.state !== 'idle' && (
         <p className={`check-line ${check.state}`} role="status">
@@ -207,6 +249,7 @@ export function StudioStep({
       </p>
 
       <input key={`p${inputKey}`} ref={photoRef} id="photo-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) takePhoto(f); }} />
+      {studio && <input key={`c${inputKey}`} ref={camRef} className="file-hidden" type="file" accept="image/*" capture="environment" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) takePhoto(f); }} />}
       <input key={`d${inputKey}`} ref={designRef} id="design-input" className="file-hidden" type="file" accept="image/*,.heic,.heif" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; setInputKey((k) => k + 1); if (f) designFromFile(f, 'upload'); }} />
 
       {!existing && design?.original && <CutCompare design={design} busy={busy} pick={pick} setPick={setPick} extract={extract} applyDesign={applyDesign} />}
@@ -235,7 +278,7 @@ export function StudioStep({
       ) : null}
       <p className="fine">{t('Only use designs you have the right to use — respect artists’ work.', 'Csak olyan mintát használj, amihez jogod van – tiszteld a tetoválóművészek munkáját.')}</p>
 
-      <div className="stickycta">
+      <div className={`stickycta ${counter ? 'counter-mode' : ''}`}>
         <button className="btn wide dark" disabled={!ready} onClick={onNext}>
           {check.state === 'warn' && ready ? t('Use this photo anyway', 'Mehet így is') : cta}
         </button>
