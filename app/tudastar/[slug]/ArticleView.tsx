@@ -251,6 +251,15 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
           )}
 
           {!inApp && <ArticleCta slug={a.slug} lang={L} where="end" removal={removal} topic={a.tag.en} />}
+          {/* studios and clinics read the removal and aging guides too (2026-11-12) */}
+          {!inApp && (L === 'hu' || L === 'en') && (removal || /aging|age|fade|longevity|placement|before-and-after/.test(a.slug)) && (
+            <p className="ka-b2b">
+              {removal ? T('Do you run a laser clinic?', 'Lézeres klinikát vezetsz?') : T('Do you run a tattoo studio?', 'Tetoválószalonod van?')}{' '}
+              <Link href={`/szalonoknak${L === 'en' ? '?lang=en' : ''}`}>
+                {removal ? T('Show guests their own tattoo after 3, 6 and 10 sessions', 'Mutasd meg a vendégnek a saját tetoválását 3, 6 és 10 kezelés után') : T('Show guests their tattoo at 10, 30 and 50 years', 'Mutasd meg a vendégnek a tetoválását 10, 30 és 50 év múlva')}
+              </Link>
+            </p>
+          )}
 
           <section className="ka-editorial">
             <LogoMark />

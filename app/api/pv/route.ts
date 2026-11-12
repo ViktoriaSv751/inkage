@@ -26,8 +26,11 @@ export async function POST(req: NextRequest) {
     Object.entries({ us: cut(b.us, 60), um: cut(b.um, 60), uc: cut(b.uc, 60), ux: cut(b.ux, 60), ref: cut(b.ref, 60), from: cut(b.from, 60), land: cut(b.land, 60), ret: b.ret === '1' ? '1' : undefined }).filter(([, v]) => v)
   );
   const isCta = b.ev === 'cta';
+  /* the studio funnel on /szalonoknak (2026-11-12): b2b_view (with the outreach ref), b2b_trial, b2b_checkout, b2b_subscribed, b2b_portal, b2b_change, b2b_topup */
+  const b2b = typeof b.ev === 'string' && /^b2b_(view|trial|checkout|subscribed|portal|change|topup|contact|faq)$/.test(b.ev) ? b.ev : null;
   const props: Record<string, unknown> = { sid, path: cut(b.path, 200) || '/', lang: cut(b.lang, 8), src };
   if (isCta) Object.assign(props, { cta: 'register', btn: cut(b.btn, 30), article: cut(b.article, 80) });
+  else if (b2b) Object.assign(props, { b2bref: cut(b.b2bref, 60), plan: cut(b.plan, 20) });
   else props.pv = 1;
   const ia = cut(b.ia, 20);
   if (ia) props.ia = ia;
@@ -35,6 +38,6 @@ export async function POST(req: NextRequest) {
   const country = req.headers.get('x-vercel-ip-country');
   if (country && /^[A-Z]{2}$/.test(country)) props.cc = country;
   // _sk: sent by our server, so the visitor rate limit for anonymous callers doesn't apply
-  await userClient().rpc('log_event', { p_name: isCta ? 'cta_click' : 'page_view', p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
+  await userClient().rpc('log_event', { p_name: b2b || (isCta ? 'cta_click' : 'page_view'), p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
   return NextResponse.json({ sid });
 }

@@ -32,3 +32,13 @@ export function afterLoad(fn: () => void) {
     window.removeEventListener('load', go);
   };
 }
+
+/** A step of the studio funnel on /szalonoknak, counted like a page view (no cookie needed; see app/api/pv). */
+export function countB2B(ev: 'b2b_view' | 'b2b_trial' | 'b2b_checkout' | 'b2b_subscribed' | 'b2b_portal' | 'b2b_change' | 'b2b_topup' | 'b2b_contact' | 'b2b_faq', extra: { b2bref?: string; plan?: string } = {}) {
+  try {
+    const w = window as any;
+    if (/InkAgeApp/.test(navigator.userAgent) || w.Capacitor?.isNativePlatform?.()) return;
+    if (!/(^|\.)inkage\.app$/.test(location.hostname)) return;
+    fetch('/api/pv', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ev, ...extra, path: location.pathname, lang: document.documentElement.lang, ...w.__inkSrc }) }).catch(() => {});
+  } catch {}
+}

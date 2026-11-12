@@ -117,12 +117,20 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
               <LangPicker lang={lang} onPick={pick} variant="icon" />
             </span>
             <ThemeToggle lang={lang} />
-            <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
-              {T('Sign in', 'Belépés')}
-            </Link>
-            <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => countCta('nav')}>
-              {T('Register', 'Regisztráció')}
-            </Link>
+            {signedIn ? (
+              <Link className="sn-cta" href="/app" onClick={() => track('nav_open_app')}>
+                {T('Open app', 'Megnyitás')}
+              </Link>
+            ) : (
+              <>
+                <Link className="sn-signin" href={`/belepes${q}`} onClick={() => track('nav_signin')}>
+                  {T('Sign in', 'Belépés')}
+                </Link>
+                <Link className="sn-cta" href={`/regisztracio${q}`} onClick={() => countCta('nav')}>
+                  {T('Register', 'Regisztráció')}
+                </Link>
+              </>
+            )}
             <button className="sn-burger" aria-label={T('Menu', 'Menü')} aria-expanded={menu} onClick={() => setMenu(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M10 17h10" />
@@ -215,13 +223,21 @@ export function SiteNav({ lang, path, onLang }: { lang: Lang; path?: string; onL
           </div>
 
           <div className="sn-dr-cta">
-            {/* always Sign in / Register; already signed in, both go straight to your gallery */}
-            <Link className="sn-dr-in" href={`/belepes${q}`} onClick={() => track('drawer_signin')}>
-              {T('Sign in', 'Belépés')}
-            </Link>
-            <Link className="sn-dr-try" href={`/regisztracio${q}`} onClick={() => track('drawer_cta')}>
-              {T('Register', 'Regisztráció')}
-            </Link>
+            {/* signed in: one button into the app (2026-11-12); otherwise Sign in / Register */}
+            {signedIn ? (
+              <Link className="sn-dr-try" href="/app" onClick={() => track('drawer_open_app')}>
+                {T('Open app', 'Megnyitás')}
+              </Link>
+            ) : (
+              <>
+                <Link className="sn-dr-in" href={`/belepes${q}`} onClick={() => track('drawer_signin')}>
+                  {T('Sign in', 'Belépés')}
+                </Link>
+                <Link className="sn-dr-try" href={`/regisztracio${q}`} onClick={() => track('drawer_cta')}>
+                  {T('Register', 'Regisztráció')}
+                </Link>
+              </>
+            )}
           </div>
         </aside>
       </div>

@@ -4,7 +4,7 @@ import { grantPurchase, planTitle, recordPayEvent, recordRefund, stripeSessionOf
 import { addressOk, invoicingOn, recordSale, refundSale } from '@/lib/billingo';
 import { sendMail } from '@/lib/mail';
 import { appSecret, userClient } from '@/lib/server';
-import { B2B, isB2BPlan, type B2BPlan } from '@/lib/b2b';
+import { B2B, B2B_TOPUP, baseOf, intervalOf, isB2BPlan, planName, type B2BPlan } from '@/lib/b2b';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,8 +35,11 @@ export async function POST(req: Request) {
   /* a 100% coupon finishes as "no_payment_required": nothing charged, the package is still bought */
   if (s.payment_status !== 'paid' && s.payment_status !== 'no_payment_required') return json({ ok: true, unpaid: true });
   const m = s.metadata ?? {};
-  if (!isPlan(m.plan) || !m.user) return json({ error: 'bad_metadata' }, 400);
+  /* a studio's +20 top-up (app/api/b2b/topup) goes the same way as a package */
+  const topup = m.plan === B2B_TOPUP.id;
+  if ((!isPlan(m.plan) && !topup) || !m.user) return json({ error: 'bad_metadata' }, 400);
   const plan = m.plan as PlanId;
+  const itemTitle = topup ? `InkAge kiegészítő csomag (${B2B_TOPUP.n} előnézet)` : planTitle(plan);
   const amount = (s.amount_total ?? 0) / 100;
   try {
     await grantPurchase({
@@ -48,41 +51,42 @@ export async function POST(req: Request) {
     console.error('grant_failed', s.id, String(e));
     return json({ error: 'grant_failed' }, 500);
   }
-  await saleMail(String(s.id), planTitle(plan), amount, s.currency || 'usd', s.customer_details?.email || s.customer_email || '', s.customer_details?.address?.country || m.country || '');
+  await saleMail(String(s.id), itemTitle, amount, s.currency || 'usd', s.customer_details?.email || s.customer_email || '', s.customer_details?.address?.country || m.country || '');
   if (!invoicingOn()) return json({ ok: true });
   try {
     const c = s.customer_details ?? {};
     const ad = c.address ?? {};
     const tax = (c.tax_ids ?? [])[0];
     const buyer = {
-      name: c.business_name || c.name || '',
+      name: c.business_name || m.company || c.name || '',
       email: c.email || s.customer_email || '',
       country: String(ad.country || m.country || 'HU').toUpperCase(),
       postCode: ad.postal_code || '', city: ad.city || '',
       address: [ad.line1, ad.line2, ad.state].filter(Boolean).join(', '),
-      taxId: tax?.value || undefined,
+      taxId: tax?.value || m.tax || undefined,
     };
     /* tax on the checkout or no address: the owner invoices it by hand instead of an invalid invoice going out */
     const note = (s.total_details?.amount_tax ?? 0) > 0 ? 'tax' : !addressOk(buyer) ? 'address' : undefined;
-    if (note === 'address') await missingAddressMail(String(s.id), buyer.email, planTitle(plan), amount, s.currency || 'usd');
+    if (note === 'address') await missingAddressMail(String(s.id), buyer.email, itemTitle, amount, s.currency || 'usd');
     await recordSale({
       session: String(s.id),
       paymentIntent: s.payment_intent ? String(s.payment_intent) : null,
       note,
-      sale: { buyer, item: planTitle(plan), plan, comment: '', amount, currency: s.currency || 'usd', paidAt: new Date((ev.created || Date.now() / 1000) * 1000).toISOString() },
+      sale: { buyer, item: itemTitle, plan: topup ? (B2B_TOPUP.id as any) : plan, comment: '', amount, currency: s.currency || 'usd', paidAt: new Date((ev.created || Date.now() / 1000) * 1000).toISOString() },
     });
   } catch (e) {
     console.error('invoice_record_failed', s.id, String(e));
     return json({ error: 'invoice_record_failed' }, 500);
   }
-  return json({ ok: true, previews: PLAN[plan].n });
+  return json({ ok: true, previews: topup ? B2B_TOPUP.n : PLAN[plan].n });
 }
 
 async function refunded(ch: { payment_intent?: string; refunded?: boolean; amount_refunded?: number; amount?: number; metadata?: { app?: string } }) {
   if (!ch.payment_intent) return json({ ok: true });
   /* a charge carries its payment's metadata only sometimes: a Calligra refund simply finds no InkAge row */
   try {
-    const session = await stripeSessionOf(String(ch.payment_intent));
+    /* a package has a checkout session; a studio's monthly/annual invoice has none: find the invoice it paid */
+    const session = (await stripeSessionOf(String(ch.payment_intent))) || (await invoiceOfPayment(String(ch.payment_intent)));
     if (session) {
       const r: any = await recordRefund('stripe', session, (ch.amount_refunded ?? 0) / 100 || undefined);
       if (r && r.ok === false) return json({ ok: true, ignored: 'not_inkage' });
@@ -179,12 +183,17 @@ async function b2bInvoice(ev: any, inv: any) {
   if (m.app !== 'inkage' || m.kind !== 'b2b') return json({ ok: true, ignored: 'other_invoice' });
   if (!m.user || !isB2BPlan(m.plan)) return json({ error: 'bad_metadata' }, 400);
   const plan = m.plan as B2BPlan;
+  const year = intervalOf(plan) === 'year';
   const amount = (inv.amount_paid ?? 0) / 100;
-  const title = `InkAge ${B2B[plan].name} havidíj (${B2B[plan].n} előnézet)`;
+  const n = B2B[baseOf(plan)].n;
+  const title = `InkAge ${planName(plan)} ${year ? 'éves díj' : 'havidíj'} (${n} előnézet${year ? ' havonta, 12 hónap' : ''})`;
+  const pi = inv.payment_intent ? String(inv.payment_intent) : await paymentOfInvoice(String(inv.id));
   try {
     await grantPurchase({ user: m.user, store: 'stripe', tx: String(inv.id), plan: plan as any, amount, currency: inv.currency, meta: { country: inv.customer_address?.country, note: 'b2b' } });
     const line = inv.lines?.data?.[0];
     await b2bSet({ user: m.user, plan, status: 'active', customer: inv.customer ? String(inv.customer) : null, sub: subId(inv), periodEnd: line?.period?.end ?? null, cancelAtEnd: false });
+    /* an annual plan got its first month now; public.b2b_annual_refill adds the next ones monthly */
+    if (year) await userClient().rpc('b2b_mark_refill', { p_key: appSecret('db'), p_user: m.user }).then(() => {}, () => {});
   } catch (e) {
     console.error('b2b_grant_failed', inv.id, String(e));
     return json({ error: 'grant_failed' }, 500);
@@ -194,18 +203,18 @@ async function b2bInvoice(ev: any, inv: any) {
   try {
     const ad = inv.customer_address ?? {};
     const buyer = {
-      name: inv.customer_name || '', email: inv.customer_email || '', country: String(ad.country || 'HU').toUpperCase(),
+      name: m.company || inv.customer_name || '', email: inv.customer_email || '', country: String(ad.country || 'HU').toUpperCase(),
       postCode: ad.postal_code || '', city: ad.city || '', address: [ad.line1, ad.line2, ad.state].filter(Boolean).join(', '),
-      taxId: (inv.customer_tax_ids ?? [])[0]?.value || undefined,
+      taxId: (inv.customer_tax_ids ?? [])[0]?.value || m.tax || undefined,
     };
     const note = (inv.tax ?? 0) > 0 ? 'tax' : !addressOk(buyer) ? 'address' : undefined;
     if (note === 'address') await missingAddressMail(String(inv.id), buyer.email, title, amount, inv.currency || 'huf');
-    await recordSale({ session: String(inv.id), paymentIntent: inv.payment_intent ? String(inv.payment_intent) : null, note, sale: { buyer, item: title, plan: plan as any, comment: '', amount, currency: inv.currency || 'huf', paidAt: new Date((inv.status_transitions?.paid_at || ev.created || Date.now() / 1000) * 1000).toISOString() } });
+    await recordSale({ session: String(inv.id), paymentIntent: pi, note, sale: { buyer, item: title, plan: plan as any, comment: '', amount, currency: inv.currency || 'huf', paidAt: new Date((inv.status_transitions?.paid_at || ev.created || Date.now() / 1000) * 1000).toISOString() } });
   } catch (e) {
     console.error('b2b_invoice_record_failed', inv.id, String(e));
     return json({ error: 'invoice_record_failed' }, 500);
   }
-  return json({ ok: true, previews: B2B[plan].n });
+  return json({ ok: true, previews: n });
 }
 
 async function b2bSubscription(ev: any, sub: any) {
@@ -222,4 +231,21 @@ async function b2bSubscription(ev: any, sub: any) {
     return json({ error: 'sub_failed' }, 500);
   }
   return json({ ok: true, status: st });
+}
+
+/* API 2026-06: an invoice's payment lives in invoice_payments (no invoice.payment_intent, no charge.invoice) */
+async function invoicePayments(q: string): Promise<any[]> {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return [];
+  const r = await fetch(`https://api.stripe.com/v1/invoice_payments?limit=1&${q}`, { headers: { authorization: `Bearer ${key}` }, cache: 'no-store' }).catch(() => null);
+  if (!r?.ok) return [];
+  return ((await r.json().catch(() => ({}))) as { data?: any[] }).data ?? [];
+}
+async function paymentOfInvoice(invoice: string): Promise<string | null> {
+  const p = (await invoicePayments(`invoice=${encodeURIComponent(invoice)}`))[0];
+  return p?.payment?.payment_intent ? String(p.payment.payment_intent) : null;
+}
+async function invoiceOfPayment(pi: string): Promise<string | null> {
+  const p = (await invoicePayments(`payment[type]=payment_intent&payment[payment_intent]=${encodeURIComponent(pi)}`))[0];
+  return p?.invoice ? String(p.invoice) : null;
 }

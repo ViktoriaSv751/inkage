@@ -41,6 +41,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
         { t: T('Styles', 'Stílusok'), href: `/tattoo/fine-line-forearm${qOf(lang)}` },
         { t: T('Beta', 'Béta'), href: `/ingyenes-beta${q}` },
         { t: T('FAQ', 'GYIK'), href: `/gyik${q}` },
+        { t: T('For studios and clinics', 'Szalonoknak'), href: `/szalonoknak${q}` },
       ],
     },
     {

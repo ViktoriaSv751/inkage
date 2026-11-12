@@ -5,6 +5,7 @@ import { webPaymentsOn } from '@/lib/pricing';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { countCta, track } from '@/lib/track';
+import { useSignedIn } from './AuthCta';
 import './consent.css';
 
 
@@ -38,7 +39,10 @@ export function CtaBar({ lang, hidden }: { lang: Lang; hidden?: boolean }) {
       io.disconnect();
     };
   }, []);
-  const visible = show && !closed && !hidden && !cardOn;
+  const signedIn = useSignedIn();
+  const studioPage = typeof window !== 'undefined' && location.pathname.startsWith('/szalonoknak');
+  // signed-in people and studios on /szalonoknak don't need a consumer sign-up bar
+  const visible = show && !closed && !hidden && !cardOn && !signedIn && !studioPage;
   useEffect(() => {
     document.documentElement.classList.toggle('has-ctabar', visible);
     return () => document.documentElement.classList.remove('has-ctabar');

@@ -27,6 +27,7 @@
 - [How it works](https://inkage.app/hogyan-mukodik?lang=en)
 - [Features](https://inkage.app/funkciok?lang=en)
 - [FAQ](https://inkage.app/gyik?lang=en)
+- [For tattoo studios and laser clinics](https://inkage.app/szalonoknak?lang=en): monthly and annual plans (Szalon 9,900 HUF/40 previews, Szalon Pro 19,900 HUF/120 and up to 5 people, Klinika 29,900 HUF/150 with laser-session previews), 14-day trial with 20 previews, no card; Hungary first
 - [Knowledge base](https://inkage.app/tudastar?lang=en): guides on tattoo aging, placement, aftercare and laser removal.
 - [Data security](https://inkage.app/adatbiztonsag?lang=en)
 - [Privacy policy](https://inkage.app/privacy?lang=en)

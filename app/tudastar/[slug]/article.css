@@ -202,3 +202,4 @@
 .pm-code summary { cursor: pointer; color: var(--muted); }
 .pm-code textarea { width: 100%; box-sizing: border-box; margin: 10px 0 8px; font: 13px/1.4 ui-monospace, Menlo, monospace; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: inherit; resize: vertical; }
 .pm-code button { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+.ka-b2b { margin: 18px 0; padding: 12px 14px; border-radius: 12px; border: 1px dashed currentColor; opacity: .9; }

@@ -28,7 +28,7 @@ export const SITEMAP_GROUPS = {
       { url: `${SITE_URL}/tudastar`, changeFrequency: 'weekly', priority: 0.8 },
       // tool and reference pages, only in the languages they are written in (see lib/tool-pages.ts)
       ...(Object.keys(TOOL_TITLE) as (keyof typeof TOOL_TITLE)[]).map((p) => ({ url: `${SITE_URL}${p}`, changeFrequency: 'monthly', priority: 0.8, langs: toolLangs(TOOL_TITLE[p]) })),
-      ...['hogyan-mukodik', 'funkciok', 'gyik', 'rolunk', 'kapcsolat', 'adatbiztonsag', 'fiok-torlese', 'suti', 'mi-az-inkage', 'telepites', 'jog'].map((p) => ({ url: `${SITE_URL}/${p}`, changeFrequency: 'monthly', priority: 0.5 })),
+      ...['hogyan-mukodik', 'funkciok', 'gyik', 'rolunk', 'kapcsolat', 'adatbiztonsag', 'fiok-torlese', 'suti', 'mi-az-inkage', 'telepites', 'jog', 'szalonoknak'].map((p) => ({ url: `${SITE_URL}/${p}`, changeFrequency: 'monthly', priority: 0.5 })),
       { url: `${SITE_URL}/terms`, changeFrequency: 'yearly', priority: 0.2 },
       { url: `${SITE_URL}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
     ]),
