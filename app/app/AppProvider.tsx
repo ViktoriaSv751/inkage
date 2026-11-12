@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { usePathname } from 'next/navigation';
 import { api, sb } from '@/lib/sb';
 import { useLang } from '@/lib/i18n';
-import { lsGet, lsSet, migrateLocal, track, visitSource } from '@/lib/store';
+import { cloud, lsGet, lsSet, migrateLocal, track, visitSource } from '@/lib/store';
 import { AgeGate } from './AgeGate';
 import { AnnouncementBanner } from './_ui/AnnouncementBanner';
 import { AiConsent } from './AiConsent';
@@ -27,6 +27,8 @@ export type Me = {
   pay?: 'free' | 'trial' | 'paid';
   payLive?: boolean;
   credits?: number;
+  /** an account without a package that hasn't made its one teaser yet */
+  teaserLeft?: boolean;
 };
 /** What the person set on their account (name, picture). Kept here, so the top bar, the profile and the edit sheet
     always show the same thing. */
@@ -135,6 +137,35 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setMsg(''), 3200);
   }, []);
+
+  // A package was bought after a teaser: the sharp originals come back, replace the blurred ones in the saved preview, and an
+  // open result page swaps them in (app/app/page.tsx listens to ink:teaser-unlocked). Once per teaser.
+  const unlocking = useRef(false);
+  useEffect(() => {
+    if (!me.user || me.pay !== 'paid' || unlocking.current) return;
+    const tz = lsGet<{ gid: number; id: string; stage: string } | null>('ink_teaser', null);
+    if (!tz?.gid) return;
+    unlocking.current = true;
+    (async () => {
+      const r = await api<any>('/api/teaser/unlock', { gid: tz.gid });
+      if (!r.ok) {
+        if (r.status === 404) lsSet('ink_teaser', null);
+        unlocking.current = false;
+        return;
+      }
+      const d = r.data as { stage: string; fresh: string; aged?: string | null; freshToken?: string | null; agedToken?: string | null };
+      const imgs: Record<string, string> = { fresh: d.fresh };
+      if (d.aged) imgs[d.stage] = d.aged;
+      if (me.user) await cloud.addImages(me.user.id, tz.id, imgs).catch(() => {});
+      (window as any).__inkTeaserShown = false;
+      window.dispatchEvent(new CustomEvent('ink:teaser-unlocked', { detail: { ...d, id: tz.id } }));
+      lsSet('ink_teaser', null);
+      track('teaser_unlocked', { stage: d.stage });
+      toast(tx(ui.lang, 'Unlocked! Here is your preview, sharp.', 'Feloldva! Itt az előnézeted élesen.'));
+      // not on the result page (back from Stripe): the sharp preview waits in the gallery
+      if (!(window as any).__inkTeaserShown && !location.pathname.startsWith('/app/gallery')) setTimeout(() => location.assign('/app/gallery'), 1600);
+    })();
+  }, [me.user, me.pay]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const refreshMeRef = useRef<null | (() => Promise<any>)>(null);
   const meRef = useRef<Me>({ user: null });

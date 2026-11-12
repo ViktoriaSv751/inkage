@@ -109,7 +109,7 @@ export function useGenerate({
     if (!photo || (!d && !existing)) return;
     // 2026-11-10: no free preview any more — without a package the packages open here, before anything is sent
     // (the photo and design stay on the page, so after buying the same button makes the preview)
-    if (me.user && me.pay === 'trial' && (me.remaining ?? 0) <= 0) {
+    if (me.user && me.pay === 'trial' && (me.remaining ?? 0) <= 0 && !me.teaserLeft) {
       track('paywall_hit', { at: 'start' });
       openPaywall('previews');
       return;
@@ -241,10 +241,27 @@ export function useGenerate({
       focus: meta.focus,
       source: 'local',
     };
+    // the teaser: watermarked today and the blurred 50 years (or 10 laser sessions); nothing more is made until a package
+    if (data.teaser) {
+      const st = String(data.teaser.stage || 'y50');
+      if (data.teaser.image) {
+        if (st === 'laser10') p.removal = { laser10: data.teaser.image };
+        else p.images = { ...p.images, [st]: data.teaser.image };
+      }
+      p.teaser = { gid: Number(data.teaser.gid), stage: st };
+      lsSet('ink_teaser', { gid: p.teaser.gid, id: p.id, stage: st, at: Date.now() });
+      track('teaser_shown', { stage: st });
+    }
     setPreview(p);
     setFailed([]);
     setPhase('result');
     refreshMe();
+    if (data.teaser) {
+      job.current = null;
+      setPending([]);
+      lsSet('ink_job', null);
+      return;
+    }
     if (data.canAge && data.token) {
       job.current = { token: data.token, fresh: data.image, id: jobId };
       tokens.current = {};

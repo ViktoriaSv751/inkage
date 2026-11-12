@@ -133,6 +133,30 @@ export default function CreatePage() {
      the preview and went to the gallery without ever pressing "Show it in 50 years", so never saw the point of the app).
      Once per preview; never for laser removal, never when the 50 years are already there, never for paying users
      (their four years stay on request: each costs an image). */
+  // a package bought after a teaser: the sharp images replace the blurred ones on the open result, and the other years
+  // can be made from them (AppProvider fetches them, lib/teaser.ts)
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent).detail as { id: string; stage: string; fresh: string; aged?: string | null; freshToken?: string | null; agedToken?: string | null };
+      const cur = previewRef.current;
+      if (!cur || cur.id !== d.id) return;
+      (window as any).__inkTeaserShown = true;
+      const next: Preview = { ...cur, teaser: undefined, images: { ...cur.images, fresh: d.fresh } };
+      if (d.aged) {
+        if (d.stage === 'laser10') next.removal = { ...(cur.removal || {}), laser10: d.aged };
+        else next.images = { ...next.images, [d.stage]: d.aged };
+      }
+      if (d.freshToken) job.current = { token: d.freshToken, fresh: d.fresh, id: crypto.randomUUID() };
+      if (d.agedToken && d.aged && d.stage !== 'laser10') {
+        tokens.current = { ...tokens.current, [d.stage]: { token: d.agedToken, image: d.aged } };
+        started.current = new Set([...started.current, d.stage as StageKey]);
+      }
+      setPreview(next);
+    };
+    window.addEventListener('ink:teaser-unlocked', on);
+    return () => window.removeEventListener('ink:teaser-unlocked', on);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const autoAged = useRef<string | null>(null);
   useEffect(() => {
     const p = preview;

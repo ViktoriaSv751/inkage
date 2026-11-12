@@ -1,7 +1,8 @@
 import { tx, isLang } from '@/lib/tr';
 import { logServerError } from '@/lib/errlog';
 import { dataUrlToBuffer, getAuthed, json, serverConfig, sha, signToken } from '@/lib/server';
-import { aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, inputSafety, placedPrompt, QC, qualityCheck, REDO } from '@/lib/ai';
+import { agePrompt, aiConfigured, analyse, dataUrlToImg, editImage, freshPrompt, friendlyAiError, inputSafety, placedPrompt, QC, qualityCheck, REDO, removalPrompt, secondaryImageModels } from '@/lib/ai';
+import { blur, teaserSave, watermark } from '@/lib/teaser';
 import { pasteBack } from '@/lib/composite';
 import { jobPut, jobsTidy } from '@/lib/jobs';
 import { sendMail } from '@/lib/mail';
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
   let canAge: boolean;
   let remaining: number | null = null;
   let owner: string;
+  let teaser = false;
 
   if (a) {
     const { data: start, error } = await a.db.rpc('start_generation', { p_placement: placement, ...payArgs(req) });
@@ -70,7 +72,8 @@ export async function POST(req: Request) {
     }
     gid = start.gid;
     canAge = start.canAge;
-    remaining = start.remaining - 1;
+    teaser = !!start.teaser;
+    remaining = teaser ? 0 : start.remaining - 1;
     owner = a.user.id;
     // if this function gets killed before it can answer, the job row is how the preview finds its way back to the allowance
     await jobPut(body.job, owner, 'gid', gid);
@@ -189,8 +192,32 @@ export async function POST(req: Request) {
     };
     // the inputs travel with the report, so the app can show the same design's score on other body areas
     const report = { ...longevity(input, lang), input };
-    const token = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an: { ...analysis, sunExposure: sun }, y: 0, exp: Date.now() + 48 * 3600e3 });
-    const out = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining };
+    const an = { ...analysis, sunExposure: sun };
+    let token: string | null = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an, y: 0, exp: Date.now() + 48 * 3600e3 });
+    let out: Record<string, unknown> = { image, token, age: analysis.apparentAge, analysis, report, qc: qc.match, qcNote: qc.ok ? '' : qc.note, canAge, remaining };
+    if (teaser && a) {
+      // the teaser: the 50-year image (or 10 laser sessions) is made now; the visitor gets a watermarked today and a blurred
+      // aged image, the sharp ones wait in public.teasers until a package is bought (lib/teaser.ts)
+      const removal = body.jobMeta?.mode === 'removal' || body.mode === 'removal';
+      const stage = removal ? 'laser10' : 'y50';
+      const long = Date.now() + 60 * 24 * 3600e3; // the originals stay usable for 60 days after a later purchase
+      const freshToken = signToken({ uid: owner, gid, h: sha(image), w, hh: h, an, y: 0, exp: long });
+      let aged: string | null = null;
+      let agedToken: string | null = null;
+      try {
+        const { data: st } = await a.db.rpc('age_step', { p_gid: gid, p_stage: stage, ...payArgs(req) });
+        if (st?.ok) {
+          aged = await editImage([{ ...dataUrlToBuffer(image), name: 'fresh.jpg' }], removal ? removalPrompt('laser10', an) : agePrompt('y50', an, 0), w, h, secondaryImageModels());
+          agedToken = removal ? null : signToken({ uid: owner, gid, h: sha(aged), w, hh: h, an, y: 50, exp: long });
+        }
+      } catch (e) {
+        console.warn('teaser aging failed', e);
+      }
+      await teaserSave({ user: owner, gid, stage, fresh: image, aged, freshToken, agedToken });
+      const [shownFresh, shownAged] = await Promise.all([existing ? image : watermark(image), aged ? blur(aged) : null]);
+      token = null;
+      out = { ...out, image: shownFresh, token, canAge: false, remaining: 0, teaser: { gid, stage, image: shownAged } };
+    }
     // keep it for a while, in case the app was closed while we were working
     await jobPut(body.job, owner, 'fresh', out, a?.db);
     // one nudge a day later, for people who turned on notifications (at most once a month)

@@ -1,0 +1,6 @@
+-- 2026-11-12 teaser. APPLIED live (migration inkage_teaser_20261112 + grants to anon + teaser_on()).
+-- public.teasers (RLS on, no policies) keeps the sharp originals; start_generation lets a trial account with teaserLeft make
+-- one preview tagged '#teaser'; my_quota returns teaserLeft (only while public.teaser_on() is true); teaser_save /
+-- teaser_take (db secret) store and hand out the originals, take only when pay_credits > 0 and it renames the tag to
+-- '#teaser-paid'. The live definitions are the source of truth: pg_get_functiondef('public.start_generation(text,boolean,text)').
+-- Switch: create or replace function public.teaser_on() returns boolean language sql immutable as $$ select true $$;

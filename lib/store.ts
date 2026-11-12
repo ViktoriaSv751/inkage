@@ -41,6 +41,8 @@ export type Preview = {
   /** when the user actually got this tattoo ("I got it done") */
   doneAt?: string | null;
   source: 'local' | 'cloud';
+  /** a teaser (no package yet): watermarked today, blurred 50 years; unlocked after a purchase (lib/teaser.ts) */
+  teaser?: { gid: number; stage: string };
   share_id?: string | null;
   /** photos of the real tattoo over the years, to compare with the preview */
   real?: { at: string; src: string; key?: string }[];

@@ -11,7 +11,7 @@ import { IMG } from '@/lib/img';
 import { useScrollLock } from '@/lib/scrolllock';
 import { BEST, fmtUsd, PLAN, PLANS, type PlanId } from '@/lib/pricing';
 
-export type PaywallWhy = 'previews' | 'locked' | 'helper' | 'menu';
+export type PaywallWhy = 'previews' | 'locked' | 'helper' | 'menu' | 'teaser';
 
 /* real InkAge results: today and the same tattoo 50 years later (the home page and Explore use them too) */
 const PAIRS: [string, string][] = [
@@ -213,7 +213,9 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
           <p className="pz-sub">
             {why === 'helper'
               ? L('More AI drawings and cut-outs come with any package, together with every year of your previews.', 'Bármelyik csomaggal jönnek a további MI-rajzok és kivágások, és az előnézeteid minden éve.')
-              : why === 'locked'
+              : why === 'teaser'
+                ? L('Your own preview is ready. A package shows it sharp, with every year and laser removal.', 'Elkészült a saját előnézeted. Egy csomaggal élesen látod, minden évvel és a lézeres eltávolítással.')
+                : why === 'locked'
                 ? L('Your trial showed 50 years. A package shows the whole way there, and laser removal too.', 'A próba megmutatta az 50 évet. A csomag az odavezető utat is, és a lézeres eltávolítást is.')
                 : L('A preview shows your own photo at 1, 10, 30 and 50 years, and laser removal after 3, 6 and 10 sessions.', 'Egy előnézet a saját fotódon mutatja az 1, 10, 30 és 50 évet, és a lézeres eltávolítást 3, 6 és 10 kezelés után.')}
           </p>

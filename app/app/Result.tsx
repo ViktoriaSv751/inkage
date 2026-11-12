@@ -54,7 +54,7 @@ export function Result({
   /** the trial: the years other than 50 (and the laser sessions other than 10) come with a package */
   const trial = me.pay === 'trial' && canBuy;
   const locked: (StageKey | RemovalKey)[] = trial ? ['healed', 'y10', 'y30', 'laser3', 'laser6'] : [];
-  const onLocked = () => (track('locked_tap'), openPaywall('locked'));
+  const onLocked = () => (track('locked_tap'), openPaywall(preview.teaser ? 'teaser' : 'locked'));
   const rem = preview.removal || {};
   const report = preview.report;
   const ready = STAGES.filter((k) => img[k]);
@@ -209,7 +209,19 @@ export function Result({
         <p className="why" aria-live="polite">{t(...WHY[active])}</p>
       )}
       {img.fresh && <AiReport previewId={preview.id} image={img[ready[Math.round(pos)] as StageKey] || img.fresh} />}
-      {!removalOnly && onAging && view === 'aging' && (gallery ? ready.length < STAGES.length : ready.length <= 1) && pending.length === 0 && failed.length === 0 && img.fresh && (
+      {preview.teaser && (
+        <div className="age-offer unlock-offer teaser-offer">
+          <p>
+            <b>{t('Your preview is ready', 'Elkészült az előnézeted')}</b>
+            <br />
+            {t('Choose a package to see it sharp, with every year.', 'Válassz csomagot, és élesen látod, minden évvel.')}
+          </p>
+          <button className="btn wide" onClick={() => (track('teaser_unlock_tap'), openPaywall('teaser'))}>
+            {t('Unlock it', 'Feloldom')}
+          </button>
+        </div>
+      )}
+      {!preview.teaser && !removalOnly && onAging && view === 'aging' && (gallery ? ready.length < STAGES.length : ready.length <= 1) && pending.length === 0 && failed.length === 0 && img.fresh && (
         <div className="age-offer">
           <p>
             {gallery
@@ -229,7 +241,7 @@ export function Result({
           </button>
         </div>
       )}
-      {trial && !gallery && view === 'aging' && img.y50 && pending.length === 0 && (
+      {!preview.teaser && trial && !gallery && view === 'aging' && img.y50 && pending.length === 0 && (
         <div className="age-offer unlock-offer">
           <p>{t('This was 50 years. Want to see 1, 10 and 30 years too, and more designs?', 'Ez volt az 50 év. Megnéznéd az 1, 10 és 30 évet is, és további terveket?')}</p>
           <button className="btn wide" onClick={onLocked}>
