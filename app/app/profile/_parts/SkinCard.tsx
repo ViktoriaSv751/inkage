@@ -5,7 +5,7 @@ import type { OnboardingAnswers } from '../../create/Onboarding';
 
 /** The Skin & lifestyle tab: sun and age, used for every new preview. */
 export function SkinCard({ ob, saveOb }: { ob: OnboardingAnswers | null; saveOb: (patch: Partial<OnboardingAnswers>) => void }) {
-  const { ui } = useApp();
+  const { ui, me } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
   return (
     <div className="card" style={{ marginTop: 12 }}>
@@ -33,7 +33,7 @@ export function SkinCard({ ob, saveOb }: { ob: OnboardingAnswers | null; saveOb:
           </button>
         ))}
       </div>
-      <button
+      {!me.studio && <button
         className="list-row"
         style={{ marginTop: 8 }}
         onClick={() => {
@@ -45,7 +45,7 @@ export function SkinCard({ ob, saveOb }: { ob: OnboardingAnswers | null; saveOb:
           <small>{t('Body area, size, style and goals', 'Testrész, méret, stílus és célok')}</small>
         </span>
         <span aria-hidden="true">›</span>
-      </button>
+      </button>}
     </div>
   );
 }

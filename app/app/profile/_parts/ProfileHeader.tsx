@@ -6,6 +6,7 @@ import { useApp } from '../../AppProvider';
 import { tx } from '@/lib/i18n';
 import type { Preview } from '@/lib/store';
 import type { Tab } from './ProfileTabs';
+import { StudioLinks, StudioMeter } from '../../_ui/Studio';
 
 /** Top of the profile: share and settings buttons, picture, name, account actions and your numbers. */
 export function ProfileHeader({
@@ -113,7 +114,13 @@ export function ProfileHeader({
             <span>{t('bonus', 'bónusz')}</span>
           </div>
         </div>
-        {counted && (
+        {me.studio && (
+          <>
+            <StudioMeter where="profile" />
+            <StudioLinks />
+          </>
+        )}
+        {counted && !me.studio && (
           <div className="pf-credits">
             <div className="pf-credits-n">
               <b>{Math.max(0, me.remaining ?? 0)}</b>

@@ -14,6 +14,7 @@ import { AiConsent } from './AiConsent';
 import { Packages, type PaywallWhy } from './_ui/Packages';
 import { billingReady } from '@/lib/store-billing';
 import { webPaymentsOn } from '@/lib/pricing';
+import { StudioSheet, type StudioMe } from './_ui/Studio';
 
 export type Me = {
   user: { id: string; email?: string } | null;
@@ -29,6 +30,11 @@ export type Me = {
   credits?: number;
   /** an account without a package that hasn't made its one teaser yet */
   teaserLeft?: boolean;
+  /** a studio / clinic account (own b2b_subs row or a team member, 2026-11-12): no consumer packages, no teaser */
+  studio?: boolean;
+  team?: 'owner' | 'member' | null;
+  /** b2b_me(), loaded with the account for studio accounts only (app/app/_ui/Studio.tsx) */
+  b2b?: StudioMe | null;
 };
 /** What the person set on their account (name, picture). Kept here, so the top bar, the profile and the edit sheet
     always show the same thing. */
@@ -80,9 +86,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [authOpen, setAuthOpen] = useState(false);
   const [authReason, setAuthReason] = useState('');
   const [paywall, setPaywall] = useState<PaywallWhy | null>(null);
+  // a studio account never sees the consumer packages: its own sheet (remaining, refill, plan links on the web only)
+  const [studioSheet, setStudioSheet] = useState(false);
+  const studioRef = useRef(false);
   // the website, and store builds that carry in-app purchases (lib/store-billing.ts); older store builds never sell
   const canBuy = webPaymentsOn && (!(typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.()) || billingReady());
   const openPaywall = useCallback((why: PaywallWhy = 'previews') => {
+    if (studioRef.current) {
+      track('studio_sheet_open', { why });
+      setStudioSheet(true);
+      return;
+    }
     if (!canBuy) return;
     track('paywall_open', { why });
     setPaywall(why);
@@ -172,6 +186,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const refreshMe = useCallback(async () => {
     const r = await api<Me>('/api/me');
     let data: Me = r.ok ? r.data : { user: null };
+    if (data.user && data.studio) {
+      const b = await sb()?.rpc('b2b_me').then((x) => x, () => null);
+      data = { ...data, b2b: (b?.data as StudioMe) || meRef.current.b2b || null };
+    }
+    studioRef.current = !!data.studio;
     if (!data.user) {
       // there are no guest accounts: while this device holds a session, it is that account –
       // a slow or failed /api/me never shows a signed-out screen
@@ -348,7 +367,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       {gate === 'in' && <AgeGate lang={ui.lang} userId={me.user?.id || null} />}
       {gate === 'in' && <AnnouncementBanner lang={ui.lang} closeLabel={ui.t('common.close')} />}
       <AiConsent lang={ui.lang} />
-      {(canBuy || pwPreview) && <Packages open={!!paywall} why={paywall || 'menu'} onClose={() => setPaywall(null)} />}
+      <StudioSheet open={studioSheet} onClose={() => setStudioSheet(false)} me={me} lang={ui.lang} />
+      {(canBuy || pwPreview) && !me.studio && <Packages open={!!paywall} why={paywall || 'menu'} onClose={() => setPaywall(null)} />}
       <div className={`toast ${msg ? 'show' : ''}`} role="status" aria-live="polite">
         {msg}
       </div>

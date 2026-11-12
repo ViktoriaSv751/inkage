@@ -19,6 +19,7 @@ import { SelectionBars } from './_parts/SelectionBars';
 import { PreviewGrid } from './_parts/PreviewGrid';
 import { FoldersSheet, MoveSheet } from './_parts/FolderSheets';
 import { CompareSheet } from './_parts/CompareSheet';
+import { StudioMeter } from '../_ui/Studio';
 
 export default function GalleryPage() {
   const { ui, me, openAuth, toast } = useApp();
@@ -246,6 +247,7 @@ export default function GalleryPage() {
 
   return (
     <>
+      <StudioMeter where="home" />
       <div className="gal-head">
         <div>
           <p className="kicker">{items ? `${items.length}${more ? '+' : ''} ${t('saved', 'mentve')}` : '…'}</p>

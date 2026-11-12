@@ -1274,3 +1274,28 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 
 /* the teaser's unlock card (2026-11-12) */
 .teaser-offer b { font-size: 16px; }
+
+/* ---------- studio / clinic accounts (2026-11-12): the usage meter, profile links, team page */
+.studio-meter { margin: 6px 0 14px; padding: 12px 14px; border-radius: 16px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.studio-meter.profile { margin: 14px 0 0; text-align: left; }
+.studio-meter-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.studio-meter-top b { font-size: 14px; font-weight: 800; }
+.studio-meter-top span { font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.studio-meter-bar { height: 6px; margin: 8px 0; border-radius: 999px; background: var(--line); overflow: hidden; }
+.studio-meter-bar i { display: block; height: 100%; border-radius: inherit; background: var(--ink); }
+.studio-meter.low .studio-meter-bar i { background: var(--stencil-2, #7c66ff); }
+.studio-meter p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.studio-meter p.studio-meter-note { margin-top: 4px; color: var(--ink); font-weight: 600; }
+.studio-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; }
+.studio-links .pf-edit { text-decoration: none; cursor: pointer; }
+.team-list { display: grid; gap: 8px; margin: 12px 0; }
+.team-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.team-row div { min-width: 0; }
+.team-row b { display: block; font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team-row small { display: block; color: var(--ink-2); font-size: 12.5px; }
+.team-row .chipbtn { flex: none; }
+.team-invite { display: grid; gap: 8px; margin-top: 8px; }
+.team-invite input { width: 100%; height: 46px; padding: 0 14px; border-radius: 12px; border: 0; box-shadow: 0 0 0 1px var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 16px; }
+.team-link { display: grid; gap: 8px; margin-top: 8px; padding: 12px; border-radius: 14px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.team-link code { font-size: 12.5px; word-break: break-all; color: var(--ink-2); }
+.team-link .row { display: flex; gap: 8px; flex-wrap: wrap; }

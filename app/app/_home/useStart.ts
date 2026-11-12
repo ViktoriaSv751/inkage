@@ -13,6 +13,7 @@ import { ALL_DESIGNS as DESIGNS } from '@/lib/designs';
 import { PLACEMENTS } from '@/lib/placements';
 import { processDesign } from '@/lib/editor';
 import type { Phase } from './types';
+import { isClinic } from '../_ui/Studio';
 
 /** Set once the first /app screen of this visit has been decided: only that one can be the app's opening. */
 let coldChecked = false;
@@ -96,7 +97,7 @@ export function useStart({
       applyOnboarding(ans);
       setPhase(first.current);
     } else if (sp.has('job')) setPhase('studio'); // opened from an e-mail: straight to the result
-    else if (again) setPhase('onboarding'); // asked again from the profile
+    else if (again && !me.studio) setPhase('onboarding'); // asked again from the profile (never for a studio account)
     else {
       // no questions first (half the people left there): "Your designs" asks what they want, the form asks where
       const def = { adult: true, has: '', goal: 'new', placement: '', style: 'other', size: '8', sun: 'medium', age: '', fear: '' } as OnboardingAnswers;
@@ -104,6 +105,11 @@ export function useStart({
       applyOnboarding(def);
       track('onboarding_auto');
       setPhase(handover ? 'studio' : 'pick');
+    }
+    // a laser clinic (b2b_clinic) starts on the removal form; aging stays one tap back (the step's back arrow → "Your designs")
+    if (isClinic(me) && !explicitMode.current && !handover) {
+      setMode('removal');
+      setPhase((p) => (p === 'pick' || p === 'onboarding' ? 'studio' : p));
     }
     // the guide page's body area wins over the onboarding answer
     if (placeV) setPlacement(placeV);

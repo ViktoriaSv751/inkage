@@ -8,6 +8,7 @@ import { qOf } from '@/lib/tr';
 import { cloud, haptic, local, track } from '@/lib/store';
 import { uploads } from '@/lib/uploads';
 import { ALL_DESIGNS } from '@/lib/designs';
+import { StudioMeter } from '../_ui/Studio';
 import { StageSlider } from '@/app/_landing/StageSlider';
 
 export type Picked = { src: string; colorMode?: 'black' | 'color'; libId?: string; from: 'idea' | 'design' | 'preview' | 'library' };
@@ -91,6 +92,7 @@ export function PickView({ onPick, onNew, onMode }: { onPick: (p: Picked) => Pro
 
   return (
     <div className="pick">
+      <StudioMeter where="home" />
       <p className="kicker">{t('New tattoo', 'Új tetoválás')}</p>
       <h1 style={{ margin: 0 }}>{ui.t('gallery.title')}</h1>
       <p className="sub">{t('Pick a saved design to try on, or add a new one.', 'Válassz egy mentett mintát a felpróbáláshoz, vagy adj hozzá újat.')}</p>
