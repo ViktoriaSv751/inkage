@@ -52,9 +52,10 @@ import { Customers } from "./views/customers";
 import { Finance } from "./views/finance";
 import { PayFail } from "./views/payfail";
 import { Pricing } from "./views/pricing";
+import { B2B } from "./views/b2b";
 
 /* a few words under each menu item */
-const NAVSUB: Partial<Record<Tab, string>> = { payments: "cél, ma eddig, források", customers: "érték, út, elégedettség", finance: "díjak, kifizetés, zárás", payfail: "elakadt, vitatott, hiányzó", pricing: "termékek, kódok, teszt", announce: "üzenet az appban", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", accounts: "minden fiók egymás mellett", feedback: "csillagok, vélemények", search: "keresések, cikkek",
+const NAVSUB: Partial<Record<Tab, string>> = { payments: "cél, ma eddig, források", customers: "érték, út, elégedettség", finance: "díjak, kifizetés, zárás", payfail: "elakadt, vitatott, hiányzó", pricing: "termékek, kódok, teszt", b2b: "szalonok, próbák, érdeklődők", announce: "üzenet az appban", audit: "ki, mikor, mit", platforms: "melyik mennyit ér", seo: "bejárás, kulcsszavak", brand: "említések, MI, versenytársak", monitor: "elérhetőség, futások, hibák", impressions: "hol láttak, mi kapcsán", youtube: "Shorts, nézőmegtartás", inbox: "kommentek, vélemények", ask: "MI a számaidról", planner: "naptár, ötletek", audience: "követők, demográfia", report: "a hét egy oldalon", home: "a nap számai", live: "most az oldalon", alerts: "teendők, jelzések", traffic: "csatornák", social: "posztok, videók", accounts: "minden fiók egymás mellett", feedback: "csillagok, vélemények", search: "keresések, cikkek",
   links: "rövid linkek", markets: "nyelvek, országok", stores: "letöltések", users: "fiókok", funnel: "lépésről lépésre", weekly: "hétről hétre, cikkek, hibák", retention: "visszatérők", product: "mit használnak", inkage: "moderálás, MI, korlát",
   viral: "megosztások", connect: "bekötések", goals: "célok, jegyzetek", system: "beállítások, biztonság" };
 
@@ -63,7 +64,7 @@ const NAVSUB: Partial<Record<Tab, string>> = { payments: "cél, ma eddig, forrá
    the rest has no period at all. The controls show only where they act, so nothing looks filtered that is not. */
 const FILTER_TABS: Tab[] = ["home", "alerts", "live", "ask", "traffic", "funnel", "users", "retention", "viral", "product"];
 const NO_PERIOD: Tab[] = ["inkage", "finance", "feedback", "todo", "goals", "announce", "audit", "live", "links", "connect", "more", "inbox", "planner", "audience", "report", "seo", "brand", "monitor", "retention", "weekly"];
-const DAYS_ONLY: Tab[] = ["payments", "customers", "payfail", "pricing", "stores", "social", "accounts", "platforms", "search", "youtube", "impressions", "markets"];
+const DAYS_ONLY: Tab[] = ["payments", "b2b", "customers", "payfail", "pricing", "stores", "social", "accounts", "platforms", "search", "youtube", "impressions", "markets"];
 /* Google, YouTube Analytics and the stores report whole days, 1–3 days late: these pages say which days they show */
 const LATE_GOOGLE: Tab[] = ["search", "impressions", "markets", "youtube", "stores"];
 
@@ -500,6 +501,7 @@ export function Dashboard({ signOut }: { signOut: (note?: string) => void }) {
               {tab === "finance" && <Finance />}
               {tab === "payfail" && <PayFail days={period.eff} />}
               {tab === "pricing" && <Pricing days={period.eff} />}
+              {tab === "b2b" && <B2B days={period.eff} />}
               </Boundary></div>
             </PrevPartialCtx.Provider></FltCtx.Provider></FreshCtx.Provider></PeriodCtx.Provider></RefreshCtx.Provider>
           )}
