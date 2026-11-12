@@ -284,10 +284,13 @@ export function Result({
           {Icon.video}
           {t('Video', 'Videó')}
         </button>
-        <button className="act" onClick={() => setPollOpen(true)} disabled={!img.fresh}>
-          {Icon.share}
-          {t('Ask friends', 'Kérdezd meg')}
-        </button>
+        {/* a friends' vote is for consumers; studios send the guest link from the gallery instead */}
+        {!me.studio && (
+          <button className="act" onClick={() => setPollOpen(true)} disabled={!img.fresh}>
+            {Icon.share}
+            {t('Ask friends', 'Kérdezd meg')}
+          </button>
+        )}
         <button className="act" onClick={() => (ready.length < 2 ? needAging() : setMode(mode === 'split' ? 'view' : 'split'))} disabled={(ready.length < 2 && !agingHere) || view === 'removal'} aria-pressed={mode === 'split'}>
           <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M12 3v18" /></svg>
           {mode === 'split' ? t('Single', 'Egy kép') : t('Compare', 'Összevet')}

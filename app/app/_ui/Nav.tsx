@@ -139,10 +139,38 @@ export function BottomNav() {
         );
       })}
       <div className="rail-foot">
-        <div className="rail-beta">
-          <b>{tx(ui.lang, 'Beta', 'Béta')}</b>
-          <p>{me.pay === 'trial' || me.pay === 'paid' ? tx(ui.lang, `Previews left: ${me.remaining ?? 0}`, `Hátralévő előnézetek: ${me.remaining ?? 0}`) : tx(ui.lang, 'You get 30 previews a month with your account.', 'A fiókoddal havonta 30 előnézet jár.')}</p>
-        </div>
+        {me.studio ? (
+          /* studios and clinics (2026-11-12): their own box instead of the consumer "Beta" one */
+          (() => {
+            const b = me.b2b;
+            const left = b?.remaining ?? me.remaining ?? 0;
+            const day = (s?: string | null) => (s ? new Date(s).toLocaleDateString(ui.lang === 'hu' ? 'hu-HU' : 'en-GB', { month: 'short', day: 'numeric' }).replace(/\.$/, '') : '');
+            const line = b?.trial
+              ? tx(ui.lang, `Trial: ${b.trialDaysLeft ?? 0} days · ${left} previews left`, `Próba: még ${b.trialDaysLeft ?? 0} nap · ${left} előnézet maradt`)
+              : b?.nextRefill
+                ? tx(ui.lang, `${left} previews left · refill ${day(b.nextRefill)}`, `${left} előnézet maradt · feltöltés: ${day(b.nextRefill)}`)
+                : tx(ui.lang, `${left} previews left`, `${left} előnézet maradt`);
+            const body = (
+              <>
+                <b>{b?.company || tx(ui.lang, 'Studio', 'Szalon')}</b>
+                <p>{line}</p>
+              </>
+            );
+            const native = typeof window !== 'undefined' && !!(window as any).Capacitor?.isNativePlatform?.();
+            return b?.role === 'owner' && !native ? (
+              <Link href={`/szalonoknak${q}#csomagok`} className="rail-beta rail-studio">
+                {body}
+              </Link>
+            ) : (
+              <div className="rail-beta rail-studio">{body}</div>
+            );
+          })()
+        ) : (
+          <div className="rail-beta">
+            <b>{tx(ui.lang, 'Beta', 'Béta')}</b>
+            <p>{me.pay === 'trial' || me.pay === 'paid' ? tx(ui.lang, `Previews left: ${me.remaining ?? 0}`, `Hátralévő előnézetek: ${me.remaining ?? 0}`) : tx(ui.lang, 'You get 30 previews a month with your account.', 'A fiókoddal havonta 30 előnézet jár.')}</p>
+          </div>
+        )}
         <Link href={`/tudastar${q}`}>{tx(ui.lang, 'Guides', 'Tudástár')}</Link>
         <Link href={`/gyik${q}`}>{tx(ui.lang, 'FAQ', 'GYIK')}</Link>
         <Link className="web-only" href={`/${q}`}>{tx(ui.lang, 'Back to website', 'Vissza a weboldalra')}</Link>

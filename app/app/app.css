@@ -1299,3 +1299,7 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .team-link { display: grid; gap: 8px; margin-top: 8px; padding: 12px; border-radius: 14px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
 .team-link code { font-size: 12.5px; word-break: break-all; color: var(--ink-2); }
 .team-link .row { display: flex; gap: 8px; flex-wrap: wrap; }
+/* the studio box in the left rail (2026-11-12): company name + previews left, links to the plans for the owner */
+.rail-studio { display: block; text-decoration: none; color: inherit; }
+a.rail-studio:hover { filter: brightness(1.08); }
+html.native .rail-beta.rail-studio > b { display: block !important; }
