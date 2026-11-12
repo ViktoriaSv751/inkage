@@ -5,7 +5,7 @@ import { useApp, type Me } from '../AppProvider';
 import { tx, type Lang } from '@/lib/i18n';
 import { api } from '@/lib/sb';
 import { track } from '@/lib/store';
-import { B2B, isB2BPlan } from '@/lib/b2b';
+import { B2B, isB2BPlan, planName as libPlanName } from '@/lib/b2b';
 import { Sheet } from './Sheet';
 
 /* Studio and clinic accounts inside the app (2026-11-12). A "studio account" has its own b2b_subs row (any status) or
@@ -52,7 +52,7 @@ export const fmtDay = (lang: string, iso?: string | null) => {
   }
 };
 
-export const planName = (plan?: string | null) => (isB2BPlan(plan) ? B2B[plan].name : null);
+export const planName = (plan?: string | null) => (isB2BPlan(plan) ? libPlanName(plan) : null);
 
 /** "Számláim és előfizetés": the Stripe customer portal (web only, the subscription's owner only) */
 export async function openPortal(lang: Lang, toast: (m: string) => void) {

@@ -64,8 +64,8 @@ create or replace function public.b2b_seats(p_owner uuid)
  returns integer language sql stable security definer set search_path to ''
 as $$
   select coalesce((select case
-      when s.plan in ('b2b_pro', 'b2b_clinic') then 5
-      when s.plan = 'b2b_studio' then 1
+      when s.plan in ('b2b_pro', 'b2b_clinic', 'b2b_pro_y', 'b2b_clinic_y') then 5
+      when s.plan in ('b2b_studio', 'b2b_studio_y') then 1
       when s.status in ('trial', 'trial_ended') then 2
       else 1 end
     from public.b2b_subs s where s.user_id = p_owner), 1)
@@ -208,12 +208,12 @@ begin
   rem := coalesce((q->>'remaining')::int, 0);
   -- this period = since the latest monthly refill (or the trial start)
   select p.created_at, p.credits into ps, grant_n from public.purchases p
-   where p.user_id = acct and p.plan in ('b2b_trial', 'b2b_studio', 'b2b_pro', 'b2b_clinic')
+   where p.user_id = acct and p.plan in ('b2b_trial', 'b2b_studio', 'b2b_pro', 'b2b_clinic', 'b2b_studio_y', 'b2b_pro_y', 'b2b_clinic_y')
      and (p.refunded_at is null or coalesce(p.refund_amount, 0) < coalesce(p.amount, 0))
    order by p.created_at desc limit 1;
   if ps is not null then
     select coalesce(sum(p.credits), 0) into extra_n from public.purchases p
-     where p.user_id = acct and p.created_at > ps and p.plan not in ('b2b_trial', 'b2b_studio', 'b2b_pro', 'b2b_clinic')
+     where p.user_id = acct and p.created_at > ps and p.plan not in ('b2b_trial', 'b2b_studio', 'b2b_pro', 'b2b_clinic', 'b2b_studio_y', 'b2b_pro_y', 'b2b_clinic_y')
        and (p.refunded_at is null or coalesce(p.refund_amount, 0) < coalesce(p.amount, 0));
     used_p := public.pay_used(acct, ps);
   end if;
@@ -320,7 +320,7 @@ begin
   if uid is null then raise exception 'not_authenticated'; end if;
   select * into s from public.b2b_subs where user_id = uid;
   if found then
-    select max(p.created_at) into ps from public.purchases p where p.user_id = uid and p.plan in ('b2b_trial', 'b2b_studio', 'b2b_pro', 'b2b_clinic');
+    select max(p.created_at) into ps from public.purchases p where p.user_id = uid and p.plan in ('b2b_trial', 'b2b_studio', 'b2b_pro', 'b2b_clinic', 'b2b_studio_y', 'b2b_pro_y', 'b2b_clinic_y');
     ps := coalesce(ps, s.created_at);
     return json_build_object('role', 'owner', 'company', s.company, 'status', s.status, 'plan', s.plan,
       'seats', public.b2b_seats(uid), 'periodStart', ps,
