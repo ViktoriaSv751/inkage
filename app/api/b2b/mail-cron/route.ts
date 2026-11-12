@@ -62,7 +62,7 @@ async function test() {
   const kinds: B2BMailKind[] = ['trial_welcome', 'trial_day7', 'trial_day12', 'trial_ended', 'sub_confirmed', 'renewal_soon', 'payment_failed', 'sub_canceled', 'monthly_summary'];
   let sent = 0;
   for (const k of kinds) {
-    const i = { ...sample, ...(k === 'renewal_soon' ? { annual: true } : {}), ...(k === 'trial_ended' ? { status: 'trial_ended' as const } : {}) };
+    const i = { ...sample, ...(k === 'renewal_soon' ? { annual: true, plan: 'b2b_pro_y' } : {}), ...(k === 'trial_ended' ? { status: 'trial_ended' as const } : {}) };
     const m = b2bMailRender(k, i, { summary: k === 'monthly_summary' ? { ref: 'test', from: new Date(Date.now() - 30 * 864e5).toISOString(), to: new Date().toISOString(), previews: 23, added: 40 } : null, off: k.startsWith('trial_day') || k === 'monthly_summary' ? 'https://inkage.app/api/mail-off?t=TESZT' : undefined });
     if (await sendMail(to, `[TESZT] ${m.subject}`, m.html, m.text, undefined, `b2b-test-${k}-${Date.now()}`)) sent += 1;
   }

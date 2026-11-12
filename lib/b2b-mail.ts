@@ -1,6 +1,6 @@
 import { appSecret, signToken, userClient } from './server';
 import { layout, mailReady, sendMail, SITE } from './mail';
-import { B2B, B2B_TRIAL, isB2BPlan } from './b2b';
+import { B2B, B2B_TRIAL } from './b2b';
 import { tx, type Lang } from './tr';
 import { logServerError } from './errlog';
 
@@ -19,7 +19,7 @@ export type B2BMailKind =
   | 'sub_confirmed' | 'renewal_soon' | 'payment_failed' | 'sub_canceled' | 'monthly_summary';
 
 export type B2BInfo = {
-  email: string | null; company: string | null; plan: string | null; status: 'trial' | 'trial_ended' | 'active' | 'past_due' | 'canceled';
+  email: string | null; company: string | null; plan: string | null; status: 'none' | 'trial' | 'trial_ended' | 'active' | 'past_due' | 'canceled';
   trial_ends_at: string | null; current_period_end: string | null; cancel_at_period_end: boolean; stripe_sub: string | null;
   created_at: string; updated_at: string; lang: string | null; mail_off: boolean; remaining: number;
   trial_used: number; trial_n: number; trial_left: number; last_invoice_at: string | null; annual: boolean;
@@ -42,8 +42,19 @@ const until = (iso: string | null | undefined, lang: Lang) => {
   const f = new Intl.DateTimeFormat(lang === 'hu' ? 'hu-HU' : 'en-GB', { timeZone: 'Europe/Budapest', ...(y ? { year: 'numeric' } : {}), month: 'long', day: 'numeric' }).format(d);
   return lang === 'hu' ? `${f.replace(/\.$/, '')}-ig` : `until ${f}`;
 };
-const planName = (p: string | null) => (isB2BPlan(p) ? B2B[p].name : 'InkAge');
-const planN = (p: string | null) => (isB2BPlan(p) ? B2B[p].n : 0);
+/* plan ids: b2b_studio / b2b_pro / b2b_clinic, and their annual twins b2b_*_y (same monthly previews; lib/b2b.ts on the lead's branch) */
+const baseOf = (p: string | null) => {
+  const b = p && p.endsWith('_y') ? p.slice(0, -2) : p;
+  return b && b in B2B ? (b as keyof typeof B2B) : null;
+};
+const planName = (p: string | null, lang: Lang = 'hu') => {
+  const b = baseOf(p);
+  return b ? `${B2B[b].name}${p!.endsWith('_y') ? (lang === 'hu' ? ' (éves)' : ' (annual)') : ''}` : 'InkAge';
+};
+const planN = (p: string | null) => {
+  const b = baseOf(p);
+  return b ? B2B[b].n : 0;
+};
 
 export async function b2bInfo(userId: string): Promise<B2BInfo | null> {
   const { data, error } = await db().rpc('b2b_mail_info', { p_key: key(), p_user: userId });
@@ -73,7 +84,7 @@ export function b2bMailRender(kind: B2BMailKind, i: B2BInfo, o: { summary?: B2BS
   const sign = T('The InkAge team', 'Az InkAge csapata');
   const reply = T('If you get stuck anywhere, just reply to this e-mail and we’ll help.', 'Ha bárhol elakadsz, válaszolj erre a levélre, és segítünk.');
   const company = (i.company || '').trim();
-  const name = planName(i.plan), n = planN(i.plan);
+  const name = planName(i.plan, lang), n = planN(i.plan);
   const foot = (extra = '') =>
     (extra ? extra + ' ' : '') +
     T(`You’re getting this because ${company || 'your studio'} uses InkAge’s plan for studios. AI previews are a simulation, not a guarantee.`,
@@ -119,7 +130,7 @@ export function b2bMailRender(kind: B2BMailKind, i: B2BInfo, o: { summary?: B2BS
         hello,
         T(`Your trial runs ${until(i.trial_ends_at, lang)}. You have ${i.trial_left} previews left.`, `A próbád ${until(i.trial_ends_at, lang)} tart, ${i.trial_left} előnézeted maradt.`),
         T('If you subscribe, the trial previews you have left stay with you too.', 'Ha előfizetsz, a megmaradt próba-előnézetek is megmaradnak.'),
-        T('Plans are monthly and can be cancelled any time.', 'A csomagok havidíjasak, bármikor lemondhatók.'),
+        T('Plans come with monthly or yearly billing and can be cancelled any time.', 'A csomagok havi vagy éves díjjal is elérhetők, és bármikor lemondhatók.'),
         reply, sign,
       ];
       button = { href: plans, label: T('Choose a plan', 'Csomagot választok') };
@@ -166,7 +177,7 @@ export function b2bMailRender(kind: B2BMailKind, i: B2BInfo, o: { summary?: B2BS
       button = { href: page, label: T('Manage subscription', 'Előfizetés kezelése') };
       break;
     case 'payment_failed':
-      subject = T('Your InkAge payment didn’t go through', 'Nem ment át az InkAge-havidíj');
+      subject = T('Your InkAge payment didn’t go through', 'Nem ment át az InkAge-előfizetés díja');
       title = T('The last payment didn’t go through.', 'A legutóbbi díj nem ment át.');
       lines = [
         hello,
@@ -224,7 +235,7 @@ export function b2bMailRender(kind: B2BMailKind, i: B2BInfo, o: { summary?: B2BS
 export async function b2bMail(kind: B2BMailKind, userId: string, ref = '', pre?: B2BInfo | null): Promise<'sent' | 'skipped' | 'failed'> {
   if (!mailReady()) return 'failed';
   const i = pre || (await b2bInfo(userId));
-  if (!i?.email || i.email.endsWith('@inkage.invalid')) return 'skipped';
+  if (!i?.email || i.email.endsWith('@inkage.invalid') || i.status === 'none') return 'skipped'; // 'none': billing data only, not a studio yet
   if (OPTIONAL.includes(kind) && i.mail_off) return 'skipped';
   let summary: B2BSummary | null = null;
   if (kind === 'monthly_summary') {
@@ -234,7 +245,7 @@ export async function b2bMail(kind: B2BMailKind, userId: string, ref = '', pre?:
     ref = summary.ref;
   }
   if (kind === 'renewal_soon') {
-    if (!i.annual || !i.current_period_end) return 'skipped'; // monthly plans don't need it
+    if (!i.annual || !i.current_period_end) return 'skipped'; // only b2b_*_y: monthly plans don't need it
     ref = i.current_period_end.slice(0, 10);
   }
   if (!(await claim(userId, kind, ref))) return 'skipped';
@@ -274,7 +285,7 @@ export async function b2bOwnerNotice(kind: B2BOwnerKind, a: { userId?: string; i
     idem = `b2b-owner-trial-${d}-${list.map((i) => i.email).join(',')}`.slice(0, 250);
   } else {
     const i = a.info || (a.userId ? await b2bInfo(a.userId) : null);
-    if (!i || !a.userId) return false;
+    if (!i || !a.userId || i.status === 'none') return false;
     if (!(await claim(a.userId, `owner_${kind}`, a.ref || ''))) return false;
     if (kind === 'canceled') {
       subject = `Szalon lemondta: ${i.company || i.email}`;
@@ -300,7 +311,7 @@ export async function b2bMailSync(userId: string) {
   const out: string[] = [];
   try {
     const i = await b2bInfo(userId);
-    if (!i) return out;
+    if (!i || i.status === 'none') return out;
     const sub = i.stripe_sub || '';
     if (i.status === 'active' && sub && !i.cancel_at_period_end) {
       if ((await b2bMail('sub_confirmed', userId, sub, i)) === 'sent') out.push('sub_confirmed');
