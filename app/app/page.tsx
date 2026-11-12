@@ -25,6 +25,7 @@ import { StepHead } from './_home/StepHead';
 import { GenView } from './_home/GenView';
 import { CompareCard } from './_home/CompareCard';
 import { PickView } from './_home/PickView';
+import { guestDraft, purgeQueuedFiles, useStudio } from '@/lib/studio';
 
 export default function CreatePage() {
   const { ui, me, toast } = useApp();
@@ -66,6 +67,15 @@ export default function CreatePage() {
   const savingRef = useRef(false);
   const previewRef = useRef<Preview | null>(null);
   previewRef.current = preview;
+  // studio (B2B) accounts: guest name + consent before the photo; null for everyone else
+  const studio = useStudio(me.user?.id);
+  useEffect(() => {
+    if (studio) purgeQueuedFiles().catch(() => {});
+  }, [studio]);
+  // a new flow from the start is a new guest: the consent is ticked again
+  useEffect(() => {
+    if (phase === 'pick' || phase === 'onboarding') guestDraft.clear();
+  }, [phase]);
 
   useStart({ phase, setPhase, setMode, setPlacement, setPhoto, setDesign, setPl, applyOnboarding, explicitMode, againRef });
 
@@ -308,6 +318,7 @@ export default function CreatePage() {
           }
           existingCm={existingCm}
           setExistingCm={setExistingCm}
+          studio={!!studio}
           onArea={(a, where, ph, sk) => {
             setArea(a ? { ...a, for: where, photo: ph.dataUrl.slice(-64) } : null);
             keepSkin(ph, sk);

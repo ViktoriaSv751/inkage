@@ -1,4 +1,5 @@
 import { loadImage } from '@/lib/client';
+import { studioMarkText } from '@/lib/studio';
 
 export const toBlob = async (src: string) => (await fetch(src)).blob();
 
@@ -18,7 +19,9 @@ export async function withMark(src: string): Promise<Blob> {
     x.shadowColor = 'rgba(0,0,0,.55)';
     x.shadowBlur = fs * 0.4;
     x.fillStyle = 'rgba(255,255,255,.82)';
-    x.fillText('inkage.app', c.width - fs * 0.9, c.height - fs * 0.7);
+    // a studio that turned it on: its name in the corner too (Profile → Studio)
+    const studio = studioMarkText();
+    x.fillText(studio ? `${studio} · inkage.app` : 'inkage.app', c.width - fs * 0.9, c.height - fs * 0.7);
     return await new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('blob'))), 'image/jpeg', 0.92));
   } catch {
     return toBlob(src); // a cross-origin or broken image is saved as it is

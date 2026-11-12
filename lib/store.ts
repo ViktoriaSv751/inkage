@@ -46,6 +46,10 @@ export type Preview = {
   share_id?: string | null;
   /** photos of the real tattoo over the years, to compare with the preview */
   real?: { at: string; src: string; key?: string }[];
+  /** studio (B2B) accounts: the guest this preview was made for, a short note, and when the guest's consent was ticked */
+  guestName?: string | null;
+  guestNote?: string | null;
+  guestConsentAt?: string | null;
 };
 
 // ---------------------------------------------------------------- tiny helpers
@@ -304,6 +308,9 @@ type Row = {
   paths: Partial<Record<string, string>>;
   share_id: string | null;
   done_at?: string | null;
+  guest_name?: string | null;
+  guest_note?: string | null;
+  guest_consent_at?: string | null;
 };
 
 async function signed(paths: Partial<Record<string, string>>) {
@@ -401,6 +408,7 @@ const fromRow = async (r: Row): Promise<Preview> => {
   real: real.length ? real : undefined,
   source: 'cloud',
   share_id: r.share_id,
+  ...(r.guest_consent_at || r.guest_name ? { guestName: r.guest_name ?? null, guestNote: r.guest_note ?? null, guestConsentAt: r.guest_consent_at ?? null } : {}),
   };
 };
 
@@ -446,6 +454,8 @@ export const cloud = {
       collection: p.collection,
       done_at: p.doneAt ?? null,
       paths,
+      // studio previews only (consumers send exactly the same row as before)
+      ...(p.guestConsentAt ? { guest_name: p.guestName || null, guest_note: p.guestNote || null, guest_consent_at: p.guestConsentAt } : {}),
     });
     if (error) throw error;
     for (const [k, src] of list) {
@@ -470,7 +480,7 @@ export const cloud = {
     if (error) throw error;
   },
   /** Save edits (favorite, notes, folder, done). Throws if the database refused it. */
-  async update(id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection' | 'done_at'>>) {
+  async update(id: string, patch: Partial<Pick<Row, 'notes' | 'favorite' | 'collection' | 'done_at' | 'guest_name' | 'guest_note'>>) {
     const { error } = await sb()!.from('previews').update(patch).eq('id', id);
     if (error) throw error;
   },

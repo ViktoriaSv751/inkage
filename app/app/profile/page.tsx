@@ -23,6 +23,8 @@ import { InviteCard } from './_parts/InviteCard';
 import { FeedbackCard } from './_parts/FeedbackCard';
 import { SettingsCard } from './_parts/SettingsCard';
 import { EditProfileSheet, EraseSheet, InstallSheet, SignOutConfirm } from './_parts/ProfileSheets';
+import { StudioCard } from '../_b2b/StudioCard';
+import { useStudio } from '@/lib/studio';
 
 export default function ProfilePage() {
   const { ui, me, toast, profile } = useApp();
@@ -34,6 +36,8 @@ export default function ProfilePage() {
   const [mine, setMine] = useState<Preview[] | null>(null);
   const [joined, setJoined] = useState<number | null>(null);
   const fb = useFeedback();
+  // studio (B2B) accounts: logo, name for guests, auto-delete (null for everyone else)
+  const studio = useStudio(me.user?.id);
   // account: name and picture (they live in the app state, so the top bar updates too); e-mail and password belong
   // to the Google / Apple account the person signs in with
   const meta = profile;
@@ -171,6 +175,7 @@ export default function ProfilePage() {
       {tab === 'invite' && <InviteCard link={link} invite={invite} joined={joined} />}
       {tab === 'settings' && (
         <>
+          {studio && <StudioCard studio={studio} />}
           <FeedbackCard fb={fb} />
           <SettingsCard notifyOn={notifyOn} setNotifyOn={setNotifyOn} installed={installed} install={install} busy={busy} exportData={exportData} signOut={signOut} setErase={setErase} />
         </>

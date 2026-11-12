@@ -10,6 +10,8 @@ import { haptic, Preview } from '@/lib/store';
 import { placeName } from '../../create/steps';
 import { isRemoval } from './shared';
 import type { useSavedAging } from './useSavedAging';
+import type { Studio } from '@/lib/studio';
+import { GuestCard } from '../../_b2b/GuestCard';
 
 /** One saved preview, opened from the grid. */
 export function PreviewDetail({
@@ -26,6 +28,8 @@ export function PreviewDetail({
   newOpen,
   setNewOpen,
   aging,
+  studio,
+  items,
 }: {
   open: Preview;
   setOpen: Dispatch<SetStateAction<Preview | null>>;
@@ -40,6 +44,9 @@ export function PreviewDetail({
   newOpen: boolean;
   setNewOpen: (v: boolean) => void;
   aging: ReturnType<typeof useSavedAging>;
+  /** studio (B2B) accounts: the guest card and "Send to the guest" */
+  studio?: Studio | null;
+  items?: Preview[] | null;
 }) {
   const { ui, me, toast } = useApp();
   const t = (en: string, hu: string) => tx(ui.lang, en, hu);
@@ -58,6 +65,7 @@ export function PreviewDetail({
         {new Date(open.created_at).toLocaleDateString(localeOf(ui.lang), { year: 'numeric', month: 'short', day: 'numeric' })} · {open.size}
         {open.source === 'local' && ` · ${t('on this device only', 'csak ezen az eszközön')}`}
       </p>
+      {studio && <GuestCard preview={open} items={items || []} studio={studio} update={update} />}
       <div className="card detail-meta">
         <div className="row" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
           <b>{open.doneAt ? t(`Got it done · ${new Date(open.doneAt).toLocaleDateString('en-GB')}`, `Megcsináltattam · ${new Date(open.doneAt).toLocaleDateString('hu-HU')}`) : t('Did you get this one?', 'Ezt csináltattad meg?')}</b>

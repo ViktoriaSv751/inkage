@@ -19,6 +19,7 @@ import { SelectionBars } from './_parts/SelectionBars';
 import { PreviewGrid } from './_parts/PreviewGrid';
 import { FoldersSheet, MoveSheet } from './_parts/FolderSheets';
 import { CompareSheet } from './_parts/CompareSheet';
+import { listGuestLinks, revokeGuestLink, useStudio } from '@/lib/studio';
 
 export default function GalleryPage() {
   const { ui, me, openAuth, toast } = useApp();
@@ -60,6 +61,10 @@ export default function GalleryPage() {
   const [rename, setRename] = useState<{ from: string; to: string } | null>(null);
   const folders = Array.from(new Set([...(items || []).map((p) => p.collection).filter(Boolean), ...extraFolders] as string[])).sort((a, b) => a.localeCompare(b));
   const reloading = useRef(false);
+  // studio (B2B) accounts: filter / group by guest ('' = all, '~none' = no name, '~group' = grouped)
+  const studio = useStudio(me.user?.id);
+  const [guest, setGuest] = useState('');
+  const guests = Array.from(new Set((items || []).map((p) => (p.guestName || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, ui.lang));
 
   const load = useCallback(async () => {
     const [c, l] = await Promise.all([me.user ? cloud.all(0, PAGE).catch(() => []) : Promise.resolve([]), local.all().catch(() => [])]);
@@ -113,7 +118,14 @@ export default function GalleryPage() {
     };
     put(next);
     try {
-      if (p.source === 'cloud') await cloud.update(p.id, { notes: next.notes, favorite: next.favorite, collection: next.collection, done_at: next.doneAt ?? null });
+      if (p.source === 'cloud')
+        await cloud.update(p.id, {
+          notes: next.notes,
+          favorite: next.favorite,
+          collection: next.collection,
+          done_at: next.doneAt ?? null,
+          ...('guestName' in x || 'guestNote' in x ? { guest_name: next.guestName ?? null, guest_note: next.guestNote ?? null } : {}),
+        });
       else await local.put(next);
     } catch {
       put(p);
@@ -132,6 +144,8 @@ export default function GalleryPage() {
     } else await local.remove(p.id);
     for (const s of shares.forPreview(p.id)) if (s.kind !== 'preview') await revokeGuestShare(s.id).catch(() => false);
     shares.all().filter((s) => s.previewId === p.id).forEach((s) => shares.drop(s.id));
+    // a studio's guest links showing it close too
+    if (studio && p.source === 'cloud') for (const l of await listGuestLinks(p.id).catch(() => [])) await revokeGuestLink(l).catch(() => {});
   };
   // deleting asks first, in a clear confirm sheet with the pictures that will go
   const [delAsk, setDelAsk] = useState<Preview[] | null>(null);
@@ -221,6 +235,8 @@ export default function GalleryPage() {
           newOpen={newOpen}
           setNewOpen={setNewOpen}
           aging={aging}
+          studio={studio}
+          items={items}
         />
         {delSheet}
       </>
@@ -231,7 +247,8 @@ export default function GalleryPage() {
     .filter((p) => filter === 'all' || p.favorite)
     .filter((p) => !folder || p.collection === folder)
     .filter((p) => kind === 'any' || (kind === 'removal' ? isRemoval(p) : kind === 'existing' ? p.mode === 'existing' && !isRemoval(p) : p.mode !== 'existing' && !isRemoval(p)))
-    .filter((p) => !q.trim() || norm(`${placeName(p.placement, ui.lang)} ${p.placement} ${p.notes || ''} ${p.size || ''} ${p.collection || ''}`).includes(norm(q.trim())))
+    .filter((p) => !studio || !guest || guest === '~group' || (guest === '~none' ? !p.guestName : (p.guestName || '').trim() === guest))
+    .filter((p) => !q.trim() || norm(`${placeName(p.placement, ui.lang)} ${p.placement} ${p.notes || ''} ${p.size || ''} ${p.collection || ''} ${p.guestName || ''} ${p.guestNote || ''}`).includes(norm(q.trim())))
     .sort((a, b) =>
       sort === 'score'
         ? (b.score ?? -1) - (a.score ?? -1)
@@ -328,7 +345,38 @@ export default function GalleryPage() {
         onDelete={removePicked}
       />
 
-      <PreviewGrid items={items} shown={shown} mode={mode} picked={picked} setPicked={setPicked} setOpen={setOpen} update={update} onImgError={onImgError} />
+      {studio && (guests.length > 0 || guest) && (
+        <div className="guestfilter">
+          <select value={guest} onChange={(e) => setGuest(e.target.value)} aria-label={t('Guest', 'Vendég')}>
+            <option value="">{t('All guests', 'Minden vendég')}</option>
+            <option value="~group">{t('Grouped by guest', 'Vendégenként csoportosítva')}</option>
+            {guests.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+            <option value="~none">{t('No guest name', 'Név nélkül')}</option>
+          </select>
+        </div>
+      )}
+
+      {studio && guest === '~group' && shown.length > 0 ? (
+        [...guests, ''].map((g) => {
+          const part = shown.filter((p) => (p.guestName || '').trim() === g);
+          if (!part.length) return null;
+          return (
+            <div key={g || '-'}>
+              <p className="guestgroup">
+                <span>{g || t('No guest name', 'Név nélkül')}</span>
+                <span>{part.length}</span>
+              </p>
+              <PreviewGrid items={items} shown={part} mode={mode} picked={picked} setPicked={setPicked} setOpen={setOpen} update={update} onImgError={onImgError} />
+            </div>
+          );
+        })
+      ) : (
+        <PreviewGrid items={items} shown={shown} mode={mode} picked={picked} setPicked={setPicked} setOpen={setOpen} update={update} onImgError={onImgError} />
+      )}
       {more && (
         <button className="btn ghost wide" style={{ marginTop: 16 }} onClick={loadMore}>
           {t('Load more', 'Továbbiak betöltése')}
