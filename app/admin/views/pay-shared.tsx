@@ -17,9 +17,14 @@ export const STORE_S: Record<string, string> = { stripe: "Web", apple: "App Stor
 export const STORE_C: Record<string, string> = { stripe: "var(--ser-1)", apple: "var(--ser-3)", google: "var(--ser-5)", manual: "var(--ser-4)" };
 /* product names: none are written in here (InkAge has no fixed packages); a name stands in this map only if one is ever
    worth a nicer label than the data's own */
-export const PLAN_L: Record<string, string> = {};
+export const PLAN_L: Record<string, string> = {
+  /* B2B (2026-11-12): the studio and clinic plans; the trial, the bonus and a 0 Ft month are never revenue */
+  b2b_trial: "Szalon próba (14 nap)", b2b_studio: "Szalon (havi)", b2b_pro: "Szalon Pro (havi)", b2b_clinic: "Klinika (havi)",
+  b2b_studio_y: "Szalon (éves)", b2b_pro_y: "Szalon Pro (éves)", b2b_clinic_y: "Klinika (éves)", b2b_topup: "Szalon: extra előnézetek", b2b_bonus: "Szalon: ajándék előnézetek",
+};
+export const isB2B = (plan?: string | null) => String(plan || "").startsWith("b2b_");
 /* the product of one row as the data names it */
-export const planOf = (r: D | null | undefined) => String(r?.plan_name || (r?.plan ? PLAN_L[r.plan] || r.plan : "") || "–");
+export const planOf = (r: D | null | undefined) => String((r?.plan && PLAN_L[r.plan]) || r?.plan_name || r?.plan || "–");
 export const planKey = (k?: string | null) => (k ? PLAN_L[k] || k : "–");
 export const CHX: Record<string, string> = { iphoneapp: "iPhone-app", androidapp: "Android-app", ismeretlen: "Nem tudjuk" };
 export const chName = (k?: string | null) => CHX[k || ""] || ch(k || "ismeretlen");

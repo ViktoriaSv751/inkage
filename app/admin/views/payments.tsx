@@ -12,6 +12,7 @@ import { Hero, Trio } from "../ink";
 import { haptic, toast, usePhone } from "../phone";
 import { countryName } from "../visuals";
 import { Top } from "./traffic";
+import { B2BLine } from "./b2b";
 import { PageErr } from "./people";
 import { BuyerDrawer, CurPick, Dot, GrantSheet, M, Mail, PayActions, STORE_C, STORE_L, chName, conv, money, planOf, useCur } from "./pay-shared";
 
@@ -116,6 +117,8 @@ export function Payments({ days }: { days: number }) {
         { l: "Új fizető", v: n(t.new_payers) },
         { l: "Visszatérő vevő", v: Math.max(0, n(t.payers) - n(t.new_payers)) },
       ]} />
+
+      <B2BLine rows={(d.by_plan || []) as D[]} fmtMoney={$} />
 
       <div className="s12 pay-filters">
         {FKEYS.map((x) => <label key={x.k} className={f[x.k] ? "on" : ""}><span>{x.l}</span><select value={f[x.k] || ""} onChange={(e) => setFilter(x.k, e.target.value || undefined)}><option value="">Mind</option>{opt(x.k).map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></label>)}
