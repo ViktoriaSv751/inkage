@@ -58,6 +58,7 @@ export default function Page({ searchParams }: { searchParams: { ref?: string } 
         ))}
       </div>
       <B2BPanel refCode={String(searchParams.ref || '').slice(0, 60)} />
+      <p className="b2b-note b2b-legal">Jogi tudnivalók: <a href="/terms#szalonoknak">ÁSZF (szalonoknak és klinikáknak szóló rész)</a> · <a href="/szalonoknak/adatfeldolgozas">Adatfeldolgozói feltételek</a> · <a href="/szalonoknak/hozzajarulas">Vendég-hozzájárulás minta (nyomtatható)</a></p>
     </InfoPage>
   );
 }
