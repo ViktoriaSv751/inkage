@@ -1303,3 +1303,5 @@ label.sslot, label.chipbtn { cursor: pointer; user-select: none; -webkit-user-se
 .rail-studio { display: block; text-decoration: none; color: inherit; }
 a.rail-studio:hover { filter: brightness(1.08); }
 html.native .rail-beta.rail-studio > b { display: block !important; }
+.rail-foot a.rail-studio, .rail-foot .rail-studio { display: block !important; }
+.rail-studio > b, .rail-studio > p { display: block; }
