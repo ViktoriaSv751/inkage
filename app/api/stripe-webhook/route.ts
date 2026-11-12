@@ -216,7 +216,7 @@ async function b2bSubscription(ev: any, sub: any) {
   const st = ev.type === 'customer.subscription.deleted' ? 'canceled' : ({ active: 'active', trialing: 'active', past_due: 'past_due', unpaid: 'past_due', canceled: 'canceled', incomplete_expired: 'canceled', paused: 'past_due' } as Record<string, string>)[sub.status] || 'active';
   const periodEnd = sub.current_period_end ?? sub.items?.data?.[0]?.current_period_end ?? null;
   try {
-    await b2bSet({ user: m.user, plan: isB2BPlan(m.plan) ? m.plan : null, status: st, customer: sub.customer ? String(sub.customer) : null, sub: String(sub.id), periodEnd, cancelAtEnd: !!sub.cancel_at_period_end });
+    await b2bSet({ user: m.user, plan: isB2BPlan(m.plan) ? m.plan : null, status: st, customer: sub.customer ? String(sub.customer) : null, sub: String(sub.id), periodEnd, cancelAtEnd: !!sub.cancel_at_period_end || (!!sub.cancel_at && st !== 'canceled') }); /* newer API versions mark a portal cancellation with cancel_at, not cancel_at_period_end */
   } catch (e) {
     console.error('b2b_sub_failed', sub.id, String(e));
     return json({ error: 'sub_failed' }, 500);
