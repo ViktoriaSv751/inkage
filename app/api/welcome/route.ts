@@ -31,6 +31,10 @@ export async function POST(req: Request) {
     const told = await sendMail(notify, n.subject, n.html, n.text, email as string, `signup-${a.user.id}`);
     if (!told) await logServerError('signup_notice', new Error('new sign-up notice could not be sent'));
   }
+  // a studio (came from /szalonoknak, or already has a B2B row): the welcome_once mark above keeps the consumer mail
+  // from the cron too; the studio welcome goes when the trial starts (lib/b2b-mail.ts)
+  const studio = b.b2b === true || !!(await a.db.from('b2b_subs').select('user_id').eq('user_id', a.user.id).maybeSingle().then((r) => r.data, () => null));
+  if (studio) return json({ ok: true, sent: false, studio: true });
   const w = welcomeEmail(name, lang);
   const sent = await sendMail(email as string, w.subject, w.html, w.text, process.env.CONTACT_EMAIL || undefined, `welcome-${a.user.id}`);
   if (!sent) {

@@ -226,7 +226,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } catch {}
       sb()?.rpc('save_signup', { p_src: statsOk ? visitSource() : null, p_lang: ui.lang })?.then(() => {}, () => {});
       // once per account: a welcome e-mail
-      api('/api/welcome', { lang: ui.lang, src: statsOk ? visitSource() : null }).catch(() => {});
+      // a studio signing up from /szalonoknak gets the studio welcome when its trial starts, not the consumer one
+      api('/api/welcome', { lang: ui.lang, src: statsOk ? visitSource() : null, b2b: !!next && next.startsWith('/szalonoknak') }).catch(() => {});
       // vote links made on this device → account (so they can be listed and closed anywhere)
       api('/api/guest-share?claim=1', {}).catch(() => {});
       // onboarding answers → profile
