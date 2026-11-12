@@ -236,7 +236,7 @@ export function B2BPanel({ refCode, lang }: { refCode: string; lang: Lang }) {
         {msg && <p className="b2b-err">{msg}</p>}
         <small className="b2b-note">
           {T('Card payment through Stripe. Invoice by e-mail. Cancel any time (it runs until the end of the paid period).', 'Fizetés bankkártyával a Stripe-on. Számla e-mailben. Bármikor lemondható (a kifizetett időszak végéig tart).')}{' '}
-          <a href="/terms">{T('Terms', 'ÁSZF')}</a> · <a href="/szalonoknak/adatfeldolgozas">{T('Data processing', 'Adatfeldolgozás')}</a> · <a href="/privacy">{T('Privacy', 'Adatkezelés')}</a>
+          <a href="/terms#szalonoknak">{T('Terms', 'ÁSZF')}</a> · <a href="/szalonoknak/adatfeldolgozas">{T('Data processing', 'Adatfeldolgozás')}</a> · <a href="/privacy">{T('Privacy', 'Adatkezelés')}</a>
         </small>
       </div>
 

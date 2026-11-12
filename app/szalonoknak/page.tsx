@@ -106,7 +106,7 @@ export default function Page({ searchParams }: { searchParams: { ref?: string; l
       <B2BFaq lang={L} />
       <p className="b2b-legal">
         <a href="/szalonoknak/hozzajarulas">{T('Printable guest consent form', 'Nyomtatható vendég-hozzájárulás')}</a> ·{' '}
-        <a href="/szalonoknak/adatfeldolgozas">{T('Data processing terms', 'Adatfeldolgozói feltételek')}</a> · <a href="/terms">{T('Terms', 'ÁSZF')}</a>
+        <a href="/szalonoknak/adatfeldolgozas">{T('Data processing terms', 'Adatfeldolgozói feltételek')}</a> · <a href="/terms#szalonoknak">{T('Terms', 'ÁSZF')}</a>
       </p>
     </InfoPage>
   );
