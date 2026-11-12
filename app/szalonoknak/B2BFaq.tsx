@@ -8,8 +8,8 @@ export function faqItems(L: Lang) {
     {
       q: T('How many artists can use one plan?', 'Hány tetováló használhatja egy csomagot?'),
       a: T(
-        `Szalon is one login. Szalon Pro and Klinika: up to ${B2B.b2b_pro.seats} people, each with their own sign-in, sharing the plan's previews; the owner sees who used how many.`,
-        `A Szalon egy belépés. A Szalon Pro és a Klinika: akár ${B2B.b2b_pro.seats} munkatárs, mindenki a saját belépésével, közös előnézet-kerettel; a tulajdonos látja, ki mennyit használt.`
+        `Szalon is one login. Szalon Pro and Klinika: up to ${B2B.b2b_pro.seats} people (you and ${B2B.b2b_pro.seats - 1} colleagues), each with their own sign-in, sharing the plan's previews; the owner sees who used how many.`,
+        `A Szalon egy belépés. A Szalon Pro és a Klinika: akár ${B2B.b2b_pro.seats} fő (te és ${B2B.b2b_pro.seats - 1} munkatárs), mindenki a saját belépésével, közös előnézet-kerettel; a tulajdonos látja, ki mennyit használt.`
       ),
     },
     {

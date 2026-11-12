@@ -9,8 +9,8 @@ export type B2BInterval = 'month' | 'year';
 export const B2B_PLANS: B2BBase[] = ['b2b_studio', 'b2b_pro', 'b2b_clinic'];
 export const B2B: Record<B2BBase, { name: string; huf: number; n: number; seats: number; who: string; whoEn: string }> = {
   b2b_studio: { name: 'Szalon', huf: 9900, n: 40, seats: 1, who: '1 tetováló, 1 belépés', whoEn: '1 artist, 1 login' },
-  b2b_pro: { name: 'Szalon Pro', huf: 19900, n: 120, seats: 5, who: 'nagyobb szalon, akár 5 munkatárs', whoEn: 'bigger studio, up to 5 people' },
-  b2b_clinic: { name: 'Klinika', huf: 29900, n: 150, seats: 5, who: 'lézeres eltávolítás 3, 6, 10 kezelés, akár 5 munkatárs', whoEn: 'laser removal after 3, 6, 10 sessions, up to 5 people' },
+  b2b_pro: { name: 'Szalon Pro', huf: 19900, n: 120, seats: 5, who: 'nagyobb szalon, akár 5 fő (te és 4 munkatárs)', whoEn: 'bigger studio, up to 5 people (you and 4 colleagues)' },
+  b2b_clinic: { name: 'Klinika', huf: 29900, n: 150, seats: 5, who: 'lézeres eltávolítás 3, 6, 10 kezelés, akár 5 fő', whoEn: 'laser removal after 3, 6, 10 sessions, up to 5 people' },
 };
 /** an annual plan costs 10 months' price and refills monthly */
 export const YEAR_MONTHS_PAID = 10;
