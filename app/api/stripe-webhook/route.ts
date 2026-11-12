@@ -4,6 +4,7 @@ import { grantPurchase, planTitle, recordPayEvent, recordRefund, stripeSessionOf
 import { addressOk, invoicingOn, recordSale, refundSale } from '@/lib/billingo';
 import { sendMail } from '@/lib/mail';
 import { appSecret, userClient } from '@/lib/server';
+import { b2bMailSync } from '@/lib/b2b-mail';
 import { B2B, B2B_TOPUP, baseOf, intervalOf, isB2BPlan, planName, type B2BPlan } from '@/lib/b2b';
 
 export const dynamic = 'force-dynamic';
@@ -196,8 +197,12 @@ async function b2bInvoice(ev: any, inv: any) {
     if (year) await userClient().rpc('b2b_mark_refill', { p_key: appSecret('db'), p_user: m.user }).then(() => {}, () => {});
   } catch (e) {
     console.error('b2b_grant_failed', inv.id, String(e));
+    await b2bLog(ev.type, String(inv.id), false, 'grant_failed: ' + String(e));
     return json({ error: 'grant_failed' }, 500);
   }
+  await b2bMailSync(m.user);
+  await b2bLog(ev.type, String(inv.id), true);
+  if (amount > 0) await userClient().rpc('b2b_lead_progress', { p_key: appSecret('db'), p_email: inv.customer_email || '', p_status: 'elofizeto' }).then(() => {}, () => {});
   await saleMail(String(inv.id), title, amount, inv.currency || 'huf', inv.customer_email || '', inv.customer_address?.country || '');
   if (!invoicingOn() || amount <= 0) return json({ ok: true });
   try {
@@ -212,6 +217,7 @@ async function b2bInvoice(ev: any, inv: any) {
     await recordSale({ session: String(inv.id), paymentIntent: pi, note, sale: { buyer, item: title, plan: plan as any, comment: '', amount, currency: inv.currency || 'huf', paidAt: new Date((inv.status_transitions?.paid_at || ev.created || Date.now() / 1000) * 1000).toISOString() } });
   } catch (e) {
     console.error('b2b_invoice_record_failed', inv.id, String(e));
+    await b2bLog(ev.type, String(inv.id), false, 'invoice_record_failed: ' + String(e));
     return json({ error: 'invoice_record_failed' }, 500);
   }
   return json({ ok: true, previews: n });
@@ -228,8 +234,11 @@ async function b2bSubscription(ev: any, sub: any) {
     await b2bSet({ user: m.user, plan: isB2BPlan(m.plan) ? m.plan : null, status: st, customer: sub.customer ? String(sub.customer) : null, sub: String(sub.id), periodEnd, cancelAtEnd: !!sub.cancel_at_period_end || (!!sub.cancel_at && st !== 'canceled') }); /* newer API versions mark a portal cancellation with cancel_at, not cancel_at_period_end */
   } catch (e) {
     console.error('b2b_sub_failed', sub.id, String(e));
+    await b2bLog(ev.type, String(sub.id), false, 'sub_failed: ' + String(e));
     return json({ error: 'sub_failed' }, 500);
   }
+  await b2bMailSync(m.user);
+  await b2bLog(ev.type, String(sub.id), true, st);
   return json({ ok: true, status: st });
 }
 
@@ -248,4 +257,9 @@ async function paymentOfInvoice(invoice: string): Promise<string | null> {
 async function invoiceOfPayment(pi: string): Promise<string | null> {
   const p = (await invoicePayments(`payment[type]=payment_intent&payment[payment_intent]=${encodeURIComponent(pi)}`))[0];
   return p?.invoice ? String(p.invoice) : null;
+}
+
+/* the admin's Szalonok page shows the last B2B webhook events (b2b_webhook_log, 180 days) */
+async function b2bLog(type: string, ref: string | null, ok: boolean, error?: string) {
+  await userClient().rpc('b2b_webhook_log_add', { p_key: appSecret('db'), p_event_type: type, p_ref: ref, p_ok: ok, p_error: error ? error.slice(0, 300) : null }).then(() => {}, () => {});
 }

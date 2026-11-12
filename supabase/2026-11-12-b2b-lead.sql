@@ -93,3 +93,7 @@ begin
   on conflict (store, transaction_id) do nothing;
   return json_build_object('ok', true, 'trial_ends_at', now() + interval '14 days');
 end $function$;
+
+-- APPLIED 2026-11-12 (inkage_b2b_lead_annual_in_meter_seats_20261112): b2b_me and b2b_seats also know b2b_*_y (patched in place).
+-- APPLIED 2026-11-12 (inkage_b2b_lead_progress_20261112): b2b_lead_progress(p_key, p_email, p_status) moves a lead forward
+-- (trial → proba from /api/b2b/trial, paid invoice → elofizeto from the webhook), never backwards.

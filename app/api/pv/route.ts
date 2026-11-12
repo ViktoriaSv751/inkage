@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const b2b = typeof b.ev === 'string' && /^b2b_(view|trial|checkout|subscribed|portal|change|topup|contact|faq)$/.test(b.ev) ? b.ev : null;
   const props: Record<string, unknown> = { sid, path: cut(b.path, 200) || '/', lang: cut(b.lang, 8), src };
   if (isCta) Object.assign(props, { cta: 'register', btn: cut(b.btn, 30), article: cut(b.article, 80) });
-  else if (b2b) Object.assign(props, { b2bref: cut(b.b2bref, 60), plan: cut(b.plan, 20) });
+  else if (b2b) Object.assign(props, { ref: cut(b.b2bref, 60), plan: cut(b.plan, 20) });
   else props.pv = 1;
   const ia = cut(b.ia, 20);
   if (ia) props.ia = ia;
