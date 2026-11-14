@@ -15,6 +15,7 @@ import { SiteFooter } from '../../SiteFooter';
 import { Blocks, rich, type Fig } from './Blocks';
 import { PainMap } from './PainMap';
 import { EmbedCode } from './EmbedCode';
+import { toolLangs, TOOL_TITLE } from '@/lib/tool-pages';
 import { painMapText } from '@/lib/pain-map';
 import { ReadProgress, TocNav } from './Reader';
 import '../kb.css';
@@ -81,6 +82,14 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
   const style = SEO_STYLES.find((x) => x.k === styleK);
   const tip = T('Tip', 'Tipp');
   const removal = a.tag.en === 'Removal';
+  /* the calculator that answers this article's question, shown once inside the article (2026-11-14): removal guides
+     get the removal calculator, size-sensitive styles the size calculator; only where the tool page is translated */
+  const SIZE_TOOL = ['tattoo-size-guide', 'fine-line-tattoos-aging', 'fine-line-script-tattoos', 'minimalist-tattoos', 'first-tattoo-ideas', 'couple-and-name-tattoos', 'hand-and-finger-tattoos', 'dotwork-geometric-tattoos'];
+  const toolPath = removal && a.slug !== 'eyebrow-pmu-removal' ? '/tattoo-removal-calculator' : SIZE_TOOL.includes(a.slug) ? '/tattoo-size-calculator' : null;
+  const tool =
+    toolPath && toolLangs(TOOL_TITLE[toolPath]).includes(L)
+      ? { href: `${toolPath}${sfx}`, label: toolPath === '/tattoo-size-calculator' ? T('Size calculator', 'Méretkalkulátor') : T('Removal calculator', 'Eltávolítás kalkulátor'), title: toolPath === '/tattoo-size-calculator' ? T(TOOL_TITLE[toolPath], 'Tetoválás méretkalkulátor: mekkora legyen, hogy 20 év múlva is olvasható maradjon') : T(TOOL_TITLE[toolPath], 'Lézeres tetoválás-eltávolítás kalkulátor: hány alkalom és mennyibe kerül') }
+      : null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -184,6 +193,12 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
                 {s.h}
               </h2>
               <Blocks ps={s.ps} figs={figs} tip={tip} />
+              {i === 0 && tool && !inApp && (
+                <Link href={tool.href} className="ka-also ka-tool">
+                  <span>{tool.label}</span>
+                  <b>{tool.title}</b>
+                </Link>
+              )}
               {alsoAt.includes(i) && readAlso[alsoAt.indexOf(i)] && (
                 <Link href={`${base}/${readAlso[alsoAt.indexOf(i)].slug}${sfx}`} className="ka-also">
                   <span>{T('Read also', 'Olvasd el ezt is')}</span>

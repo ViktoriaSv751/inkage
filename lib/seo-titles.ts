@@ -69,6 +69,21 @@ export const SEO_TITLES: Record<string, Partial<Record<Lang, string>>> = {
   '/tattoo/blackwork-forearm': {
     pt: 'Tatuagem blackwork no antebraço: como fica com o tempo',
   },
+  // 2026-11-14: pages already at position 8–25 with many impressions and no clicks
+  '/tudastar/tattoo-ink-safety-eu': {
+    nl: 'Inktpaspoort (inkpaspoort): wat staat erin en hoe werkt het?',
+  },
+  '/tudastar/laser-removal-before-after': {
+    en: 'Tattoo removal before and after: real results session by session',
+    cs: 'Laserové odstranění tetování před a po: výsledky a jak vypadá kůže',
+  },
+  '/tudastar/laser-tattoo-removal-cost': {
+    cs: 'Laserové odstranění tetování: cena, ceník a kolik stojí celkem',
+  },
+  '/tudastar/colour-tattoo-removal': {
+    sv: 'Kan man lasra bort färgade tatueringar? Rött, grönt, blått och gult',
+    da: 'Kan man fjerne farvede tatoveringer med laser? Rød, grøn, blå og gul',
+  },
 };
 
 export const seoTitle = (path: string, L: Lang) => SEO_TITLES[path]?.[L];
@@ -105,6 +120,20 @@ export const SEO_DESCS: Record<string, Partial<Record<Lang, string>>> = {
   },
   '/tudastar/laser-removal-healing': {
     cs: 'Zarudnutí a otok první den, puchýře v prvních dnech a strupy 1–2 týdny jsou normální. Povrch se hojí 2–4 týdny. Jak se vyhnout jizvám a kdy jít k lékaři.',
+  },
+  '/tudastar/tattoo-ink-safety-eu': {
+    nl: 'Een inktpaspoort is een schriftelijk overzicht van de inkten in je tattoo: datum, merk, kleur, fabrikant en batchnummer. Wat erin staat, waarom je het bewaart en de EU-regels sinds 2022.',
+  },
+  '/tudastar/laser-removal-before-after': {
+    en: 'Black usually fades clearly in the first sessions, then comes a patchy middle stage and a slow final stretch. What results look like by colour, body part and laser type – and how to spot a flattering photo.',
+    cs: 'Černá obvykle zřetelně bledne už po prvních sezeních, pak přichází skvrnitá fáze a pomalý konec. Jak vypadají výsledky podle barvy, části těla a laseru – a jak poznat přikrášlenou fotku.',
+  },
+  '/tudastar/laser-tattoo-removal-cost': {
+    cs: 'Klinika účtuje za sezení podle velikosti: v Evropě zhruba 50–150 € za malé tetování a 100–250 € za velikost dlaně. Kolik sezení zaplatíte celkem a proč nejlevnější nabídka málokdy vyjde nejlevněji.',
+  },
+  '/tudastar/colour-tattoo-removal': {
+    sv: 'Ja, men färger behöver rätt våglängd: 532 nm för rött, orange och gult, 694–785 nm för grönt och blått. Därför tar färg fler behandlingar än svart, och vissa nyanser försvinner aldrig helt.',
+    da: 'Ja, men farver kræver den rigtige bølgelængde: 532 nm til rød, orange og gul, 694–785 nm til grøn og blå. Derfor kræver farve flere behandlinger end sort, og nogle nuancer forsvinder aldrig helt.',
   },
 };
 
