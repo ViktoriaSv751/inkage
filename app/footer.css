@@ -56,10 +56,10 @@
 @media (min-width: 1000px) { .sf-in { max-width: 1200px; padding-left: 40px; padding-right: 40px; } }
 
 /* "Featured on" directory badges (required by the listings, see FEATURED in SiteFooter.tsx) */
-.sf-featured { display: grid; gap: 12px; margin-top: 40px; }
-.sf-featured b { font-size: 13px; font-weight: 700; color: var(--ink-3); }
-.sf-badges { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
-.sf-badges a { display: inline-flex; opacity: .85; transition: opacity .15s; }
-.sf-badges a:hover { opacity: 1; }
-.sf-badges .sf-textlink { font-size: 13px; font-weight: 600; color: var(--ink-3); text-decoration: none; padding: 0 4px; }
-.sf-badges img { height: 40px; width: auto; display: block; background: #fff; border-radius: 8px; } /* Kick Product's badge is black on transparent */
+.sf-featured { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 24px; }
+.sf-featured b { font-size: 11px; font-weight: 600; color: var(--ink-3); opacity: .7; }
+.sf-badges { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.sf-badges a { display: inline-flex; opacity: .45; filter: grayscale(1); transition: opacity .15s, filter .15s; }
+.sf-badges a:hover, .sf-badges a:focus-visible { opacity: 1; filter: none; }
+.sf-badges .sf-textlink { font-size: 11px; font-weight: 600; color: var(--ink-3); text-decoration: none; padding: 0 2px; }
+.sf-badges img { height: 20px; width: auto; display: block; background: #fff; border-radius: 4px; } /* Kick Product's badge is black on transparent */
