@@ -72,7 +72,7 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'tattoos-weight-change-pregnancy': ['how-tattoos-age', 'tattoos-when-you-get-old', 'best-placement-for-tattoo-longevity', 'tattoo-touch-ups', 'tattoo-before-and-after'],
   'tattoos-on-darker-skin': ['how-tattoos-age', 'color-vs-black-ink-aging', 'laser-removal-before-after', 'tattoos-weight-change-pregnancy', 'tattoo-healing-stages'],
   // planning a first tattoo
-  'first-tattoo-checklist': ['tattoo-pain-chart', 'tattoo-size-guide', 'best-placement-for-tattoo-longevity', 'tattoo-healing-stages', 'tattoos-that-age-well', 'tattoo-aftercare-sun-protection'],
+  'first-tattoo-checklist': ['tattoo-pain-chart', 'tattoo-ink-safety-eu', 'tattoo-size-guide', 'best-placement-for-tattoo-longevity', 'tattoo-healing-stages', 'tattoos-that-age-well', 'tattoo-aftercare-sun-protection'],
   'tattoo-pain-chart': ['first-tattoo-checklist', 'best-placement-for-tattoo-longevity', 'hand-and-finger-tattoos', 'tattoo-healing-stages', 'tattoo-size-guide'],
   'tattoo-size-guide': ['first-tattoo-checklist', 'fine-line-tattoos-aging', 'best-placement-for-tattoo-longevity', 'how-tattoos-age', 'tattoos-that-age-well'],
   'best-placement-for-tattoo-longevity': ['first-tattoo-checklist', 'tattoo-pain-chart', 'hand-and-finger-tattoos', 'tattoos-weight-change-pregnancy', 'blackwork-tattoos-placement', 'tattoo-size-guide'],

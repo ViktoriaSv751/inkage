@@ -38,6 +38,7 @@ export const SEO_TITLES: Record<string, Partial<Record<Lang, string>>> = {
     en: 'How many laser tattoo removal sessions will you need?',
   },
   '/tudastar/laser-removal-healing': {
+    no: 'Etter laserfjerning av tatovering: sårheling og etterpleie dag for dag',
     cs: 'Hojení po laserovém odstranění tetování: péče, jizvy a co je normální',
     sv: 'Läkning efter laserborttagning av tatuering: eftervård dag för dag',
   },
@@ -73,7 +74,11 @@ export const SEO_TITLES: Record<string, Partial<Record<Lang, string>>> = {
   '/tudastar/tattoo-ink-safety-eu': {
     nl: 'Inktpaspoort (inkpaspoort): wat staat erin en hoe werkt het?',
   },
+  '/tudastar/laser-tattoo-removal-pain': {
+    no: 'Gjør laserfjerning av tatovering vondt? Slik føles det og hva som hjelper',
+  },
   '/tudastar/laser-removal-before-after': {
+    no: 'Fjerne tatovering før og etter: resultater behandling for behandling',
     en: 'Tattoo removal before and after: real results session by session',
     cs: 'Laserové odstranění tetování před a po: výsledky a jak vypadá kůže',
   },
@@ -119,12 +124,17 @@ export const SEO_DESCS: Record<string, Partial<Record<Lang, string>>> = {
     no: 'Mest vondt gjør ribbeina, brystbeinet, ryggraden, føttene, hendene og knærne; minst ytre overarm, lår, legg og øvre rygg. Smertekart for tatovering.',
   },
   '/tudastar/laser-removal-healing': {
+    no: 'Rødhet og hevelse første dag, blemmer de første dagene og skorper i 1–2 uker er normalt. Overflaten gror på 2–4 uker. Slik unngår du arr, og når du bør oppsøke lege.',
     cs: 'Zarudnutí a otok první den, puchýře v prvních dnech a strupy 1–2 týdny jsou normální. Povrch se hojí 2–4 týdny. Jak se vyhnout jizvám a kdy jít k lékaři.',
   },
   '/tudastar/tattoo-ink-safety-eu': {
     nl: 'Een inktpaspoort is een schriftelijk overzicht van de inkten in je tattoo: datum, merk, kleur, fabrikant en batchnummer. Wat erin staat, waarom je het bewaart en de EU-regels sinds 2022.',
   },
+  '/tudastar/laser-tattoo-removal-pain': {
+    no: 'Hver laserpuls føles som en strikk som smeller mot huden. Kald luft, bedøvelseskrem og ispakninger hjelper. Hvilke steder som gjør mest vondt, og hvordan dagene etterpå er.',
+  },
   '/tudastar/laser-removal-before-after': {
+    no: 'Svart blekner som regel tydelig etter de første behandlingene, så kommer en flekkete mellomfase og en langsom slutt. Slik ser resultatene ut etter farge, kroppsdel og lasertype.',
     en: 'Black usually fades clearly in the first sessions, then comes a patchy middle stage and a slow final stretch. What results look like by colour, body part and laser type – and how to spot a flattering photo.',
     cs: 'Černá obvykle zřetelně bledne už po prvních sezeních, pak přichází skvrnitá fáze a pomalý konec. Jak vypadají výsledky podle barvy, části těla a laseru – a jak poznat přikrášlenou fotku.',
   },

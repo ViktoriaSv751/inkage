@@ -7,7 +7,10 @@ import { TOOL_LANGS, TOOL_TITLE } from './tool-langs';
 export { TOOL_LANGS, TOOL_TITLE };
 
 /** The tool-page languages whose dictionary really has this page's English title. */
-export const toolLangs = (titleEn: string): Lang[] => TOOL_LANGS.filter((l) => hasExact(l, titleEn));
+/* Norwegian, Danish and Filipino have only the calculators translated (2026-11-14); for every other tool page their
+   dictionary lacks the title, so hasExact keeps those pages out of the index in these languages */
+const CANDIDATES: readonly Lang[] = [...TOOL_LANGS, 'no', 'da', 'fil'];
+export const toolLangs = (titleEn: string): Lang[] => CANDIDATES.filter((l) => hasExact(l, titleEn));
 
 /** Canonical + hreflang for a tool page; an untranslated language points to the English page and is noindex. */
 export function toolAlternates(path: string, L: Lang, titleEn: string): Metadata {
