@@ -29,7 +29,7 @@ const a: LongArticle = {
     en: [
       'Lena had wanted the ornament for years: a symmetrical, lace-like design sitting right on her sternum, between and just below her breasts. Her friend with the same placement had said it was “fine, a bit spicy”. Twenty minutes in, Lena understood what “spicy” meant. Every pass over the bone sent a deep buzz up into her teeth, and every time she breathed in, the skin under the needle rose. Her artist stopped, put a hand flat on the table and said: “Breathe out slowly, and I’ll do the line while you’re empty. Then rest. We’ll do it in rhythm.” The rest of the session went by in slow breaths and short lines.',
       'Chest tattoos are one of the classic placements: a bold chest piece across the pecs, a pair of swallows under the collarbones, a script line just below the collarbone, or a sternum ornament. Search for chest tattoos and you will see two questions again and again: how much does it hurt, and what will it look like later? This guide answers both, plus the practical part people forget: how to heal a tattoo that moves with every breath and sits right where your clothes rub.',
-      '> A note on the pictures: the images in this article are illustrations made to show typical situations. They are not photos of real people or real results.',
+      '> A note on the pictures: the photos in this article are free stock photos from Unsplash, chosen to show typical situations. They are not photos of the people in the story.',
       '## How much does a chest tattoo hurt?',
       'It depends a lot on where exactly. The chest is not one area but several, and they feel very different:',
       '- **The sternum (breastbone):** one of the more painful spots on the body. The skin is thin, there is almost no padding, and the needle’s vibration travels through the bone. Many people describe it as a deep, rattling buzz.',
@@ -80,7 +80,7 @@ const a: LongArticle = {
     hu: [
       'Lena évek óta szerette volna azt az ornamentet: egy szimmetrikus, csipkeszerű mintát pontosan a szegycsontjára, a mellei közé és kicsit alájuk. A barátnője, akinek ugyanott volt tetoválása, azt mondta, „nem vészes, csak egy kicsit csíp”. Húsz perc után Lena megértette, mit jelent a „csíp”. Minden alkalommal, amikor a tű a csont fölött járt, mély zümmögés futott fel egészen a fogáig, és minden belégzésnél megemelkedett a bőr a tű alatt. A tetoválója megállt, letette a kezét az asztalra, és azt mondta: „Fújd ki lassan a levegőt, és akkor húzom meg a vonalat, amikor üres vagy. Aztán pihenj. Ritmusra csináljuk.” Az ülés többi része lassú lélegzetekben és rövid vonalakban telt.',
       'A mellkastetoválás az egyik klasszikus hely: egy markáns, a mellizmokon átívelő minta, egy pár fecske a kulcscsontok alatt, egy felirat közvetlenül a kulcscsont alatt vagy egy ornament a szegycsonton. Ha rákeresel a mellkastetoválásra, két kérdést látsz újra és újra: mennyire fáj, és hogyan fog kinézni később? Ez az útmutató mindkettőre válaszol, és arra a gyakorlati részre is, amiről sokan megfeledkeznek: hogyan gyógyíts egy tetoválást, ami minden lélegzettel mozog, és pont ott van, ahol a ruha dörzsöl.',
-      '> Megjegyzés a képekhez: a cikk képei tipikus helyzeteket bemutató illusztrációk. Nem valódi emberekről vagy valódi eredményekről készült fotók.',
+      '> Megjegyzés a képekhez: a cikk fotói az Unsplash ingyenes fotótárából származnak, és tipikus helyzeteket mutatnak. Nem a történetben szereplő emberekről készültek.',
       '## Mennyire fáj a mellkastetoválás?',
       'Nagyon függ attól, hogy pontosan hol. A mellkas nem egy terület, hanem több, és nagyon különbözően érződnek:',
       '- **A szegycsont:** a test egyik fájdalmasabb része. Vékony a bőr, szinte nincs párnázás, és a tű rezgése végigfut a csonton. Sokan mély, zörgő zümmögésnek írják le.',
@@ -167,6 +167,7 @@ const a: LongArticle = {
     },
   ],
   sources: [
+    { t: 'Photos: Unsplash (free to use under the Unsplash licence)', u: 'https://unsplash.com/license' },
     { t: 'Cleveland Clinic: Tattoo aftercare tips from a dermatologist', u: 'https://health.clevelandclinic.org/tattoo-aftercare' },
     { t: 'Healthline: How long does a tattoo take to heal?', u: 'https://www.healthline.com/health/how-long-does-a-tattoo-take-to-heal' },
     { t: 'Tattoos: Understand risks and precautions (Mayo Clinic)', u: 'https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/tattoos-and-piercings/art-20045067' },
@@ -175,28 +176,28 @@ const a: LongArticle = {
   ],
   captions: {
     img2: {
-      en: 'Illustration: tattooing close to the side of the chest. Near the armpit and over bone the skin is thin and sensitive.',
-      hu: 'Illusztráció: tetoválás a mellkas oldala közelében. A hónalj közelében és a csont fölött vékony és érzékeny a bőr.',
+      en: 'Photo: fine lines near the breastbone and collarbone. Here the skin is thin and close to bone, which is why it stings more.',
+      hu: 'Fotó: finom vonalak a szegycsont és a kulcscsont közelében. Itt vékony a bőr és közel van a csont, ezért csíp jobban.',
     },
     img3: {
-      en: 'Illustration: a long session can be tiring. On the chest, slow breathing and short breaks keep both you and the lines steady.',
-      hu: 'Illusztráció: egy hosszú ülés kimerítő lehet. A mellkason a lassú légzés és a rövid szünetek téged és a vonalakat is nyugodtan tartanak.',
+      en: 'Photo: a tattoo session in the studio. On the chest, slow breathing and short breaks keep both you and the lines steady.',
+      hu: 'Fotó: tetoválás a stúdióban. A mellkason a lassú légzés és a rövid szünetek téged és a vonalakat is nyugodtan tartanak.',
     },
     img4: {
-      en: 'Illustration: covering a fresh tattoo at home. On the chest, soft loose clothes and no straps over the ink matter most in the first two weeks.',
-      hu: 'Illusztráció: friss tetoválás letakarása otthon. A mellkason az első két hétben a puha, laza ruha számít a legtöbbet, és hogy ne legyen pánt a tintán.',
+      en: 'Photo: a fresh tattoo being wiped clean with gloved hands. Afterwards, gentle washing and a thin layer of cream are enough; on the chest, avoid anything that rubs.',
+      hu: 'Fotó: friss tetoválás letörlése kesztyűs kézzel. Utána elég a kíméletes mosás és egy vékony réteg krém; a mellkason kerülj mindent, ami dörzsöl.',
     },
     img5: {
-      en: 'Illustration: muscle growth and weight changes stretch the skin. Large or fast changes are the ones that show in a tattoo.',
-      hu: 'Illusztráció: az izomnövekedés és a súlyváltozás megnyújtja a bőrt. A nagy vagy gyors változások azok, amelyek látszanak a tetováláson.',
+      en: 'Photo: a bench press at the gym. Heavy chest training stretches healing skin, and over the years muscle growth changes how a chest tattoo sits.',
+      hu: 'Fotó: fekvenyomás az edzőteremben. Az erős mellizomedzés nyújtja a gyógyuló bőrt, és az évek során az izomnövekedés is megváltoztatja, hogyan áll a mellkasi minta.',
     },
     img6: {
-      en: 'Illustration: bold ornamental blackwork. Strong shapes and solid black tolerate a changing body better than very fine details.',
-      hu: 'Illusztráció: markáns ornamentális blackwork. Az erős formák és a telt fekete jobban tűrik a változó testet, mint a nagyon finom részletek.',
+      en: 'Photo: a bold black chest piece. Strong shapes and solid black tolerate a changing body better than very fine details.',
+      hu: 'Fotó: markáns fekete mellkasi minta. Az erős formák és a telt fekete jobban tűrik a változó testet, mint a nagyon finom részletek.',
     },
     img7: {
-      en: 'Illustration: sunscreen on an uncovered tattoo at the beach. Open shirts and swimsuits are when chest tattoos fade fastest.',
-      hu: 'Illusztráció: naptej a szabadon lévő tetoválásra a strandon. A nyitott ing és a fürdőruha idején fakul a leggyorsabban a mellkastetoválás.',
+      en: 'Photo: sunscreen, ready for a day outside. Open shirts and swimsuits are when chest tattoos fade fastest.',
+      hu: 'Fotó: naptej egy szabadban töltött naphoz. A nyitott ing és a fürdőruha idején fakul a leggyorsabban a mellkastetoválás.',
     },
   },
 };

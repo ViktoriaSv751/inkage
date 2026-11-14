@@ -38,7 +38,8 @@ async function one(id) {
   if (ready(id)) return done++;
   try {
     let buf;
-    const local = path.join(LOCAL, id + '.png');
+    // own illustrations or free stock photos (Unsplash licence) stored in the repo: <id>.jpg or <id>.png
+    const local = ['.jpg', '.png'].map((e) => path.join(LOCAL, id + e)).find((f) => fs.existsSync(f));
     if (id.startsWith('kb_')) buf = fs.readFileSync(local);
     else {
       const ctl = AbortSignal.timeout(30000);
