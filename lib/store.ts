@@ -172,14 +172,30 @@ function inApp(): string | undefined {
   return undefined;
 }
 
+/* The buying path (2026-11-14): these steps are also counted for people who didn't press "Accept all", anonymously,
+   so the funnel shows everyone and not only the half that accepted. Only the step name and a few plain details. */
+const FUNNEL = new Set(['photo_added', 'design_added', 'generate_start', 'generate_done', 'teaser_shown', 'teaser_unlock_tap', 'paywall_open', 'paywall_hit', 'paywall_close', 'plan_pick', 'checkout_start', 'why_not', 'store_purchase']);
+const FUNNEL_KEYS = ['why', 'plan', 'secs', 'at', 'reason', 'store'];
+function countFunnel(name: string, props: Record<string, unknown>) {
+  try {
+    const keep = Object.fromEntries(FUNNEL_KEYS.filter((k) => props[k] !== undefined).map((k) => [k, String(props[k]).slice(0, 40)]));
+    const ia = inApp();
+    fetch('/api/pv', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ev: 'fn', name, d: keep, path: location.pathname, lang: document.documentElement.lang, ia: ia || undefined }) }).catch(() => {});
+  } catch {}
+}
+
 /** First-party analytics: one row per event, no third parties. */
 export function track(name: string, props: Record<string, unknown> = {}) {
   const s = sb();
   if (!s) return;
   // usage stats only after "Accept" in the cookie banner
   try {
-    if (localStorage.getItem('ink_consent') !== 'all') return;
     if (isOwnDevice() || isRobot()) return;
+    if (localStorage.getItem('ink_consent') !== 'all') {
+      // without that choice only the few buying-path steps are counted, like a page view: no cookie, no id (app/api/pv)
+      if (FUNNEL.has(name)) countFunnel(name, props);
+      return;
+    }
   } catch {
     return;
   }

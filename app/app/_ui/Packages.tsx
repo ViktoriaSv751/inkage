@@ -45,8 +45,23 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   useScrollLock(open);
   useEffect(() => setMounted(true), []);
   /* closing the page (X, Escape) is counted, with how long it was open and the package last tapped */
+  const [asking, setAsking] = useState(false);
   const close = () => {
-    track('paywall_close', { why, plan: picked.current || '', secs: Math.round((Date.now() - opened.current) / 1000) });
+    const secs = Math.round((Date.now() - opened.current) / 1000);
+    track('paywall_close', { why, plan: picked.current || '', secs });
+    /* the first close of a visit asks one question: why not now (2026-11-14); one tap or skip, never twice */
+    let asked = true;
+    try {
+      asked = sessionStorage.getItem('ink_why_not') === '1';
+      sessionStorage.setItem('ink_why_not', '1');
+    } catch {}
+    if (!asked && !asking) return setAsking(true);
+    setAsking(false);
+    onClose();
+  };
+  const answer = (reason: string) => {
+    track('why_not', { reason, why, plan: picked.current || '', secs: Math.round((Date.now() - opened.current) / 1000) });
+    setAsking(false);
     onClose();
   };
   const closeRef = useRef(close);
@@ -170,6 +185,31 @@ export function Packages({ open, why, onClose }: { open: boolean; why: PaywallWh
   return createPortal(
     <div className="pz" role="dialog" aria-modal="true" aria-label={L('Packages', 'Csomagok')}>
       <div className="pz-glow" aria-hidden="true" />
+      {asking && (
+        <div className="pz-why" role="dialog" aria-label={L('Why not now?', 'Miért nem most?')}>
+          <div className="pz-why-card">
+            <b>{L('One quick question: why not now?', 'Egy gyors kérdés: miért nem most?')}</b>
+            <p>{L('One tap, it helps us a lot.', 'Egy koppintás, sokat segít nekünk.')}</p>
+            {(
+              [
+                ['price', L('Too expensive', 'Túl drága')],
+                ['see_first', L('I want to see my result first', 'Előbb látni szeretném az eredményt')],
+                ['browsing', L('Just looking around', 'Csak nézelődöm')],
+                ['trust', L('Not sure it works', 'Nem vagyok biztos benne, hogy működik')],
+                ['payment', L('Problem with paying', 'Gond van a fizetéssel')],
+                ['other', L('Something else', 'Más ok')],
+              ] as [string, string][]
+            ).map(([k, t]) => (
+              <button key={k} className="pz-why-opt" onClick={() => answer(k)}>
+                {t}
+              </button>
+            ))}
+            <button className="pz-why-skip" onClick={() => answer('skip')}>
+              {L('Skip', 'Kihagyom')}
+            </button>
+          </div>
+        </div>
+      )}
       <button className="pz-x" onClick={close} aria-label={L('Close', 'Bezárás')}>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
       </button>

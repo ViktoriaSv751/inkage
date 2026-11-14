@@ -1306,3 +1306,11 @@ html.native .rail-beta.rail-studio > b { display: block !important; }
 .rail-foot a.rail-studio, .rail-foot .rail-studio { display: block !important; }
 .rail-studio > b, .rail-studio > p { display: block; }
 .rail-foot .rail-studio, .rail-studio > b { text-align: left; }
+/* "Miért nem most?" on the first paywall close of a visit (2026-11-14) */
+.pz-why { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.55); }
+.pz-why-card { width: min(420px, 100%); background: #14141b; color: #fff; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 18px; display: grid; gap: 8px; }
+.pz-why-card b { font-size: 17px; }
+.pz-why-card p { margin: 0 0 4px; opacity: .7; font-size: 14px; }
+.pz-why-opt { text-align: left; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: inherit; font: inherit; cursor: pointer; }
+.pz-why-opt:hover { background: rgba(255,255,255,.1); }
+.pz-why-skip { margin-top: 2px; background: none; border: 0; color: inherit; opacity: .6; font: inherit; cursor: pointer; padding: 8px; }

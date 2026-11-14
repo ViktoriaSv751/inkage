@@ -1,4 +1,4 @@
-import { getAuthed, json } from '@/lib/server';
+import { appSecret, getAuthed, json, userClient } from '@/lib/server';
 import { isPlan, PLAN, webPaymentsOn } from '@/lib/pricing';
 import { deviceOf, nativeReq, planTitle, priceCents } from '@/lib/pay';
 import { invoicingOn } from '@/lib/billingo';
@@ -77,5 +77,8 @@ export async function POST(req: Request) {
     console.error('stripe checkout failed', r.status, JSON.stringify(j).slice(0, 300));
     return json({ error: 'stripe_error' }, 502);
   }
+  /* the Stripe page opened (2026-11-14): counted on the server, so the funnel shows it for everyone; an unpaid
+     page arrives later as checkout.session.expired (pay_noted) */
+  await userClient().rpc('log_event', { p_name: 'checkout_open', p_anon: null, p_props: { plan, sess: j.id, _sk: appSecret('db') } }).then(() => {}, () => {});
   return json({ url: j.url });
 }

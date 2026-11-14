@@ -27,10 +27,17 @@ export async function POST(req: NextRequest) {
   );
   const isCta = b.ev === 'cta';
   /* the studio funnel on /szalonoknak (2026-11-12): b2b_view (with the outreach ref), b2b_trial, b2b_checkout, b2b_subscribed, b2b_portal, b2b_change, b2b_topup */
+  /* a buying-path step of someone who didn't accept statistics cookies (lib/store.ts FUNNEL): name + plain details, nc=1 */
+  const FN = /^(photo_added|design_added|generate_start|generate_done|teaser_shown|teaser_unlock_tap|paywall_open|paywall_hit|paywall_close|plan_pick|checkout_start|why_not|store_purchase)$/;
+  const fn = b.ev === 'fn' && typeof b.name === 'string' && FN.test(b.name) ? b.name : null;
   const b2b = typeof b.ev === 'string' && /^b2b_(view|trial|checkout|subscribed|portal|change|topup|contact|faq)$/.test(b.ev) ? b.ev : null;
   const props: Record<string, unknown> = { sid, path: cut(b.path, 200) || '/', lang: cut(b.lang, 8), src };
   if (isCta) Object.assign(props, { cta: 'register', btn: cut(b.btn, 30), article: cut(b.article, 80) });
-  else if (b2b) Object.assign(props, { ref: cut(b.b2bref, 60), plan: cut(b.plan, 20) });
+  else if (fn) {
+    const d = (b.d && typeof b.d === 'object' ? b.d : {}) as Record<string, unknown>;
+    for (const k of ['why', 'plan', 'secs', 'at', 'reason', 'store']) if (d[k] !== undefined) props[k] = k === 'secs' ? Number(d[k]) || 0 : cut(d[k], 40);
+    props.nc = 1;
+  } else if (b2b) Object.assign(props, { ref: cut(b.b2bref, 60), plan: cut(b.plan, 20) });
   else props.pv = 1;
   const ia = cut(b.ia, 20);
   if (ia) props.ia = ia;
@@ -38,6 +45,6 @@ export async function POST(req: NextRequest) {
   const country = req.headers.get('x-vercel-ip-country');
   if (country && /^[A-Z]{2}$/.test(country)) props.cc = country;
   // _sk: sent by our server, so the visitor rate limit for anonymous callers doesn't apply
-  await userClient().rpc('log_event', { p_name: b2b || (isCta ? 'cta_click' : 'page_view'), p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
+  await userClient().rpc('log_event', { p_name: fn || b2b || (isCta ? 'cta_click' : 'page_view'), p_anon: null, p_props: { ...props, _sk: appSecret('db') } }).then(() => {}, () => {});
   return NextResponse.json({ sid });
 }
