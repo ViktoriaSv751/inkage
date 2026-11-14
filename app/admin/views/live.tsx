@@ -13,6 +13,7 @@ import { Card, ERRS, FILES, HIDDEN, I, MOCK, P, PF, QSTEP, QVAL, ago, api, big, 
 import { PhMore, useSigUrls } from "./people";
 import { viewWord } from "./social";
 import { InboxItem } from "./inbox";
+import { BotNote } from "./measure";
 
 /* the windows the page counts in, said once (they were four, and none was written down) */
 const W = { now: 5, langs: 15, curve: 30 };
@@ -211,6 +212,7 @@ export function Live({ d: d0 }: { d: D }) {
     <div className="g io">
       <div className="s12 io-hero-wide" ref={heroRef}><Hero flip max={120} label={<><i className="adm-dot" />Most bent · {new Date().toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" })}{filtered ? " · szűrve" : ""}<Info>„Most”: az elmúlt {W.now} percben. Egy ember két lapon két látogatás, és az iPhone-app nincs benne, mert nem küld adatot. {lv?.today_engaged != null ? <>Ma eddig {fmt(lv.today_engaged)} aktív látogatás (legalább két esemény, vagy ismert forrás). </> : null}{lv?.unconfirmed != null ? <>Megerősítetlen: az elmúlt 30 percben egyetlen megnyitás forrás nélkül, ami gép is lehet; addig nem számoljuk, amíg nem tesz valamit, vagy le nem telik a 30 perc.</> : null}</Info></>} v={n(liveNow)}
         sub={`az elmúlt órában ${fmt(liveHour)} · ma eddig ${fmt(todayN)} látogatás`} side={<Trio items={[{ l: "előnézet ma", v: made == null ? "–" : fmt(n(made)) }, { l: "rövidlink-kattintás ma", v: fmt(n(lv?.clicks_today)) }, { l: "előnézetig jutott ma", v: fmt(n(d.today?.scored)) }, ...(lv?.unconfirmed != null ? [{ l: "megerősítetlen", v: fmt(unconf) }] : [])]} />} /></div>
+      <BotNote d={d0} today />
       {phone && <LiveNow eager poll={lv} />}
       {full && <FullMap clicks={mappable} top={mapTop} bubbles={bubbles} close={() => setFull(false)} />}
       <section className="s12 io-sec">

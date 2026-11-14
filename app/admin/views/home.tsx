@@ -14,6 +14,7 @@ import { AIC, AiNote, COUNTRY, Card, DOW, FUNNEL, FreshRow, GOAL, I, NOTE_KIND, 
 import { PfTabs, PostCard, PostDrawer, likeWord, viewWord, vsMedian } from "./social";
 import { IOS_NOTE, huTill, noEmoji, signals, useActiveVisits, useSigState } from "./alerts";
 import { useTodoItems, type TodoItem, type TodoState } from "./todo";
+import { BotNote } from "./measure";
 
 /* visits without a known source: the direct ones, and the Android app's opens (they carry none either) */
 export const NOSRC = new Set(["közvetlen", "androidapp", "visszatérő"]);
@@ -214,6 +215,7 @@ export function Home({ d, days, go, phone }: { d: D; days: number; go: (t: Tab) 
       </section>
       {/* which numbers see which device: the iPhone app sends nothing on purpose, the machines are filtered by an estimate */}
       <p className="note s12" style={{ margin: "-4px 0 0" }}>Az elkészült előnézet és a regisztráció minden eszközről számol, az iPhone-t is beleértve. A látogatás, a megosztás és a mentés csak a weboldalt és az Android-appot látja: az iPhone-app szándékosan nem küld használati adatot, ezért a két fajta szám aránya nem pontos. A gépi látogatásokat becsléssel szűrjük ki. A saját fiókjaid az előnézetekből és a regisztrációból kimaradnak, a látogatásokból pedig az általad megjelölt eszközök és látogatások.</p>
+      <BotNote d={d} />
 
       {/* the chart gets the whole width: the road to the million stands at the top now */}
       <section className="c s12 ih-chart hk-chart">

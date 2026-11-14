@@ -11,6 +11,7 @@ import { CloseX, usePhone, type TblCol } from "../phone";
 import { PhMore, aiNote } from "./people";
 import { Chg, Giant, Hero } from "../ink";
 import { More } from "../extra";
+import { BotNote } from "./measure";
 
 /* visits without a known source: the direct ones, the Android app's opens (a device, not a source), and someone coming back on their own */
 const NOSRC = new Set(["közvetlen", "androidapp", "visszatérő"]);
@@ -141,6 +142,7 @@ export function Traffic({ d }: { d: D }) {
     <div className="g ix">
       <Top><Hero flip label={<>Látogatás {periodName(d)}<Info>A forrás a látogatás első oldaláé (utm-jelölés, hivatkozó oldal), és a látogatás végéig megmarad. Látogatásokon átívelő követés nincs: a mérés névtelen, két látogatást nem kötünk össze, így egy ember több látogatás is lehet. {T.engaged != null ? <><b>{fmt(engaged)}</b> aktív látogatás (legalább két esemény, vagy ismert forrás), és <b>{fmt(doors)}</b> egyetlen megnyitás forrás nélkül (főoldal, /app, belépés): ez lehet ember és gép is. </> : null}Az aktív látogatások <b>{pct(identified, total)}</b>-ánál tudjuk, honnan jöttek{topK ? <>; a legerősebb azonosított csatorna: <b>{ch(topK.k)}</b> ({fmt(topK.sessions)} látogatás, {pct(n(topK.scored), n(topK.sessions))} előnézetig)</> : ""}. A cikkoldalak egy megnyitásos, forrás nélküli látogatásait gépi forgalomnak vesszük, ezek nincsenek a számokban. {brk}</Info></>} v={n(N.sessions)}
         chg={d.prev_partial ? undefined : <Chg a={n(N.sessions)} b={n(PV.sessions)} tail="az előző időszakhoz" />} side={<SplitBar chans={chans.filter((c) => c.k !== "visszatérő")} total={n(N.sessions)} onPick={setOpen} />} /></Top>
+      <BotNote d={d} />
       <section className="s12 ix-swipe-s"><ChCards chans={chans} trend={d.channel_trend || []} onPick={(k) => setOpen(k)} notMeasured={notMeasured} only={f.ch ? f.ch.split(",") : null} /></section>
       <FreshRow srcs={["events", ...SOC]} />
       {phone && <SourceRank d={d} chans={chans} onPick={setOpen} />}

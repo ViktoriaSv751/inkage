@@ -397,6 +397,8 @@ export function mock(fn: string, args: Record<string, unknown>): any {
       err_reasons: [{ k: "paused", n: 31, last: iso(Date.now() - 15 * DAY), wk: { [weeks[Math.min(2, W - 1)].w]: 31 }, msgs: [{ msg: "AI is paused (billing)", st: "503", n: 31 }] }, { k: "busy", n: 9, last: iso(Date.now() - DAY), wk: { [weeks[0].w]: 4 }, msgs: [{ msg: "Lots of people right now", st: "503", n: 9 }] }, { k: "offline", n: 5, last: iso(Date.now() - 3 * DAY), wk: { [weeks[0].w]: 2 }, msgs: [{ msg: "HTTP 0", st: "0", n: 5 }] }],
       credit_days: [{ t: iso(Date.now() - 19 * DAY).slice(0, 10), n: 23 }], retry_why: [{ k: "no_image", n: 6 }],
       pick_from: [{ k: "library", n: 7, visits: 6 }, { k: "preview", n: 4, visits: 4 }, { k: "idea", n: 2, visits: 2 }, { k: "design", n: 1, visits: 1 }], pick_since: iso(Date.now() - 6 * 3600e3) }; }
+  if (fn === "admin_bots_removed") return { n: 3502, hits: 3846, prev: 1, today: 7, hour: 0 };
+  if (fn === "admin_cohorts_weekly") { seed = 44; return { weeks: 8, anon: { plan: 6, checkout: 0, paywall: 3 }, rows: Array.from({ length: 8 }, (_, i) => { const a = int(0, 25); return { wk: iso(midnight(Date.now() - i * 7 * DAY)).slice(0, 10), accounts: a, photo: Math.round(a * 0.8), paywall: Math.round(a * 0.6), got: Math.round(a * 0.35), plan: Math.round(a * 0.05), checkout: 0, bought: 0 }; }) }; }
   return null;
 }
 export function mockApi(path: string) {

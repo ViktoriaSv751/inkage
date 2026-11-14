@@ -11,6 +11,7 @@ import { Hero, Trio } from "../ink";
 import { CloseX, usePhone } from "../phone";
 import { LoadErr, PageErr, PhMore, authWhy } from "./people";
 import { stepName } from "./users";
+import { BotNote, WeeklyCohorts } from "./measure";
 /* InkAge takes no payments yet: the payment slider below always says so */
 const paymentsOn = (_native: boolean) => false;
 
@@ -62,6 +63,7 @@ export function FunnelTab({ d }: { d: D }) {
       <Top pc><Hero flip label={<>Látogatásból előnézet {periodName(d)}<Info><b>{fmt(val("scored"))}</b> látogatás jutott el az előnézetig <b>{fmt(val("engaged"))}</b> aktív látogatásból (előtte {fmt(rate(PV), 1)}%). {doors ? <>Nincs benne <b>{fmt(doors)}</b> egyetlen megnyitás forrás nélkül (főoldal, /start, belépés), ezek lehetnek emberek és gépek is; velük együtt {fmt(val("sessions"))} látogatás. </> : null}Minden lépés csak azokat számolja, akik az összes előzőn is átmentek, ezért egyik sem lehet 100% fölött. {worstK ? <>A legnagyobb kiesés: <b>{STEP[worstK][0].toLowerCase()}</b> előtt ({fmt((1 - worstR) * 100)}% esik ki).</> : null} Az iPhone-app nincs benne, mert nem küld adatot. {brk}</Info></>} v={rate(N)} d={1} unit="%"
         chg={d.prev_partial ? undefined : <ChgP a={rate(N)} b={rate(PV)} tail={`előtte ${fmt(rate(PV), 1)}%`} />}
         side={<Trio items={[{ l: "aktív látogatás", v: fmt(val("engaged")) }, { l: "előnézet", v: fmt(val("scored")) }, { l: "50 év múlva", v: fmt(val("any_revealed")) }]} />} /></Top>
+      <BotNote d={d} />
       <BandFunnel d={d} val={val} fb={fb} />
       {worstK && <WorstCard d={d} k={worstK} lost={val(ORDER[ORDER.indexOf(worstK) - 1]) - val(worstK)} base={val(ORDER[ORDER.indexOf(worstK) - 1])} gain={<>Ha itt 10 ponttal többen maradnak, {periodName(d)} kb. <b>{fmt(gain)}</b> {UNIT[end] || "lépéssel"} több lett volna.</>} />}
       <RegisterStuck d={d} />
@@ -97,6 +99,7 @@ export function FunnelTab({ d }: { d: D }) {
       <Kpi kind="own" to="@next" tone="pink" className="s3" icon={P.eye} l="Látogatás hossza" v={secs(dur.median ?? d.session_len?.median_sec)} sub={<span>{dur.n != null ? <>{fmt(dur.n)} látogatásra a {fmt(dur.all)}-ból, az 5 percnél hosszabb szünet nélkül · </> : null}75%-uk {secs(dur.p75 ?? d.session_len?.p75_sec)} alatt</span>} />
       <Kpi kind="own" to="@next" tone="sky" className="s3" icon={P.target} l="Végig a bevezető kérdéseken" v={pct(val("revealed"), val("quiz"))} now={val("quiz") ? val("revealed") / val("quiz") : 0} prev={n(PV.quiz) ? n(PV.revealed) / n(PV.quiz) : 0} sub="a bevezető kérdéseket elkezdők közül" />
 
+      <WeeklyCohorts />
       <PhMore label="Hétről hétre, két csoport összevetése"><FunnelWeeks d={d} /></PhMore>
       <Card className="s12" icon={P.arrow} title="Hová lettek, akik kiestek" sub={`Akik egy lépésnél megálltak: mi volt az utolsó dolog, amit csináltak, és mennyi ideig voltak ott (${periodName(d)}, legfeljebb 365 nap; a csatorna- és nyelvszűrő itt is hat). Kattints egy sorra: a mögötte lévő látogatások.`}><Dropouts days={d.days} /></Card>
       <Card className="s6" icon={P.arrow} title="Hol lépnek vissza" sub="Visszalépések lépésenként: itt bizonytalanok."><BarList items={(d.backs || []).map((r: D) => ({ k: r.k, n: n(r.n) }))} fmtK={(k) => QSTEP[k] || k} empty="Senki nem lépett vissza." /></Card>

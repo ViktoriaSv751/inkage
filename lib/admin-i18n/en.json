@@ -7184,5 +7184,21 @@
  "Szalon (havi)": "Studio (monthly)",
  "Szalon Pro (havi)": "Studio Pro (monthly)",
  "Klinika (havi)": "Clinic (monthly)",
- "Minta ment": "Sample sent"
+ "Minta ment": "Sample sent",
+ "Heti kohorsz": "Weekly cohorts",
+ "Stripe-ot nyitott": "Opened Stripe",
+ "A fiókok a regisztráció hete szerint (az elmúlt 8 hét, budapesti idő, hétfőtől), a saját és tesztfiókok nélkül. Minden oszlop: a hét fiókjai közül hányan jutottak el idáig valaha, és a fiókok hány %-a.": "Accounts by sign-up week (the last 8 weeks, Budapest time, weeks start on Monday), without your own and test accounts. Each column: how many of the week’s accounts ever got this far, and what % of the accounts that is.",
+ "A fotó (photo_added), a fizetőfal (paywall_open, paywall_hit), a csomag (plan_pick) és a Stripe (checkout_open, checkout_start) eseményekből jön, ezek csak akkor köthetők fiókhoz, ha a látogató elfogadta a statisztikai sütiket és be volt lépve. A süti nélküli (névtelen) események senkihez nem köthetők, ezért itt nem számítanak. Az előnézet, a teaser és a vásárlás adatbázis-tény, minden fióknál látszik (a fotót az is jelzi, ha kapott teasert vagy előnézetet). Vásárlás: valódi fizetés, kézi jóváírás nélkül.": "Photo (photo_added), paywall (paywall_open, paywall_hit), package (plan_pick) and Stripe (checkout_open, checkout_start) come from events, which can only be tied to an account when the visitor accepted statistics cookies and was signed in. Cookieless (anonymous) events cannot be tied to anyone, so they do not count here. Previews, teasers and purchases are database facts and show for every account (a teaser or preview also counts as a photo). Bought: a real payment, manual grants excluded.",
+ "Az elmúlt órában {0}.": "In the last hour: {0}.",
+ "Az előző időszakban {0}.": "In the previous period: {0}.",
+ "Csomagra bökött": "Tapped a package",
+ "Fotót töltött fel": "Uploaded a photo",
+ "Látta a fizetőfalat": "Saw the paywall",
+ "Még nincs fiók ebben a 8 hétben.": "No accounts in these 8 weeks yet.",
+ "Névtelenül ugyanebben a 8 hétben: {0} csomagválasztás, {1} Stripe-megnyitás, {2} fizetőfal.": "Anonymously in the same 8 weeks: {0} package taps, {1} Stripe openings, {2} paywalls.",
+ "Robotnak számít a látogatás, ha Kínából jött, nincs forrása (se hivatkozó oldal, se utm-jelölés), és csak oldalmegnyitás van benne, egyetlen oldalon (az ugyanannak az oldalnak az újratöltése is ide tartozik). Ezek egyik látogatásszámban sincsenek benne; ha a látogatás később mást is csinál, azonnal visszakerül.": "A visit counts as a robot when it came from China, has no source (no referring page, no utm tag) and holds only page views of one single page (reloading the same page included). None of the visit numbers include them; if the visit later does anything else, it is counted again at once.",
+ "Teasert vagy előnézetet kapott": "Got a teaser or preview",
+ "Vásárolt": "Bought",
+ "ma robotok kiszűrve: {0}": "robots filtered out today: {0}",
+ "robotok kiszűrve: {0} látogatás": "robots filtered out: {0} visits"
 }
