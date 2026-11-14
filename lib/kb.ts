@@ -800,6 +800,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-11-12',
     faq: [],
   },
+  'chest-tattoos': {
+    img: 'hf_20261023_115945_05be4267-c30f-4021-bd8c-0560c221b0d7',
+    img2: 'hf_20261020_115959_eaa4057c-5251-4cc5-9c16-06ac1ee4702d',
+    img3: 'hf_20261020_115959_f93a1786-77c5-4f85-94ac-2e6723a1e9f6',
+    img4: 'hf_20261031_154730_a3e4350e-ccbf-439d-bb08-6306cc410e30',
+    img5: 'hf_20261013_090712_192db2fe-a457-4c2b-bd78-b1f219184113',
+    img6: 'hf_20261104_085816_d64bb4ea-303d-4bca-aefc-363a65740ed7',
+    img7: 'hf_20261023_115927_b0f24c29-c8be-49bd-b3f6-51ac8cd1a0af',
+    cap2: { en: 'Illustration: tattooing close to the side of the chest. Near the armpit and over bone the skin is thin and sensitive.', hu: 'Illusztráció: tetoválás a mellkas oldala közelében. A hónalj közelében és a csont fölött vékony és érzékeny a bőr.' },
+    date: '2026-11-14',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];

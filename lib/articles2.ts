@@ -1352,4 +1352,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'chest-tattoos',
+    tag: { en: 'Placement', hu: 'Elhelyezés' },
+    title: { en: 'Chest tattoos: how much they hurt, how they heal, and how they age', hu: 'Mellkastetoválás: mennyire fáj, hogyan gyógyul, és hogyan öregszik' },
+    desc: { en: 'Sternum hurts more than muscle, friction is the healing enemy, and bold flexible designs age best.', hu: 'A szegycsont jobban fáj, mint az izom, a gyógyulás ellensége a súrlódás, és a markáns, rugalmas minta öregszik a legjobban.' },
+    body: {
+      en: [
+        'The sternum and collarbones are among the more painful spots; the chest muscle is easier. The artist works with your breathing.',
+        '## Healing',
+        'Soft loose clothes, no bra band or straps over the ink, sleep on your back, and about two weeks without heavy chest training.',
+        '## Aging',
+        'Muscle, weight and breast changes move chest designs. Bold, balanced designs and sun protection keep them looking good.',
+      ],
+      hu: [
+        'A szegycsont és a kulcscsontok a fájdalmasabb helyek közé tartoznak, a mellizmon könnyebb. A tetováló a légzésedhez igazodik.',
+        '## Gyógyulás',
+        'Puha, laza ruha, ne legyen melltartópánt a tintán, aludj a hátadon, és körülbelül két hétig ne edzd erősen a mellizmot.',
+        '## Öregedés',
+        'Az izom, a súly és a mell változása elmozdítja a mellkasi mintát. A markáns, kiegyensúlyozott minta és a napvédelem tartja szépen.',
+      ],
+    },
+  },
 ];
