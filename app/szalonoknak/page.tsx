@@ -16,7 +16,7 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
       'Show the guest on their own skin how the tattoo will look after 1, 10, 30 and 50 years, or after 3, 6 and 10 laser sessions. Monthly and annual plans, 2-week trial without card.',
       'Mutasd meg a vendégnek a saját bőrén, milyen lesz a tetoválás 1, 10, 30 és 50 év múlva, vagy 3, 6 és 10 lézeres kezelés után. Havi és éves csomagok, 2 hét próba kártya nélkül.'
     ),
-    alternates: { canonical: '/szalonoknak' },
+    alternates: { canonical: L === 'hu' ? '/szalonoknak' : '/szalonoknak?lang=en', languages: { hu: '/szalonoknak', en: '/szalonoknak?lang=en', 'x-default': '/szalonoknak' } },
   };
 }
 
