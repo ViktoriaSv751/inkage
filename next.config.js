@@ -7,6 +7,14 @@ module.exports = {
   experimental: { inlineCss: false },
   // metadata (title, description, canonical) always in <head>, not streamed later for non-bot visitors (Next 15.2+)
   htmlLimitedBots: /.*/,
+  // Next's own polyfills (Array.at/flat/flatMap, Object.fromEntries/hasOwn, trimStart/End) are built into every browser
+  // since 2022 (Safari 15.4, Chrome 93); PageSpeed counts them as legacy JavaScript (11 KB). Left out of the browser bundle.
+  webpack(config, { isServer }) {
+    if (!isServer) {
+      config.resolve.alias = { ...config.resolve.alias, [require.resolve('next/dist/build/polyfills/polyfill-module')]: false };
+    }
+    return config;
+  },
   async rewrites() {
     return {
       // pre-rendered photos live in public/img; if one is missing, resize it on demand
