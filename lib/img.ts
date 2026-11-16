@@ -1,5 +1,5 @@
 /** Pre-rendered photo widths (see scripts/prebuild-images.mjs). */
-export const IMG_W = [240, 480, 640, 900, 1400, 1800] as const;
+export const IMG_W = [240, 480, 640, 900, 1200, 1400, 1800] as const;
 const snap = (w: number) => IMG_W.find((x) => x >= w) ?? 1800;
 /** A static, CDN-cached WebP copy of a photo at (at least) width w. */
 // the store apps carry no photos: they load them from the website

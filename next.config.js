@@ -27,6 +27,22 @@ module.exports = {
   async headers() {
     const forever = [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }];
     // e-mail pictures: mail apps fetch them through their own proxies, so they must be cacheable (a changed picture gets a new name)
-    return [{ source: '/img/:path*', headers: forever }, { source: '/email/:path*', headers: forever }, { source: '/brand/:path*', headers: forever }];
+    // security headers (Lighthouse best practices): HTTPS only incl. subdomains, own browsing-context group but sign-in /
+    // payment popups keep working, nobody may frame the site except /embed/* (the pain map other sites embed)
+    const safe = [
+      { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+    ];
+    const noFrame = [
+      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+      { key: 'Content-Security-Policy', value: "object-src 'none'; base-uri 'self'; frame-ancestors 'self'" },
+    ];
+    return [
+      { source: '/:path*', headers: safe },
+      { source: '/((?!embed/).*)', headers: noFrame },
+      { source: '/embed/:path*', headers: [{ key: 'Content-Security-Policy', value: "object-src 'none'; base-uri 'self'" }] },
+      { source: '/img/:path*', headers: forever }, { source: '/email/:path*', headers: forever }, { source: '/brand/:path*', headers: forever }];
   },
 };

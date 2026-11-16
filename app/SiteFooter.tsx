@@ -7,18 +7,19 @@ import { TOOL_LANGS } from '@/lib/tool-langs';
 
 /* Directory listings that require their badge (with a followed link) on the home page or footer
    to keep InkAge listed. Remove a badge only together with its listing. Added 2026-11-09. */
-const FEATURED: { href: string; src: string; alt: string }[] = [
-  { href: 'https://aitechviral.com/ai/inkage', src: 'https://aitechviral.com/assets/images/badge.png', alt: 'AI Tech Viral' },
-  { href: 'https://goodaitools.com/ai/inkage', src: 'https://goodaitools.com/assets/images/badge.png', alt: 'Good AI Tools' },
-  { href: 'https://acidtools.com/ai/inkage', src: 'https://acidtools.com/assets/images/badge.png', alt: 'Acid Tools' },
-  { href: 'https://kickproduct.com/products/inkage', src: 'https://www.kickproduct.com/listedbadge.png', alt: 'Listed on Kick Product' },
-  { href: 'https://showmebest.ai', src: 'https://showmebest.ai/badge/feature-badge-white.webp', alt: 'Featured on ShowMeBestAI' },
-  { href: 'https://twelve.tools/', src: 'https://twelve.tools/badge0-white.svg', alt: 'Featured on Twelve Tools' },
-  { href: 'https://startupfa.me/s/inkage?utm_source=inkage.app', src: 'https://startupfa.me/badge?t=classic&theme=default', alt: 'InkAge - Featured on Startup Fame' },
-  { href: 'https://fazier.com', src: 'https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=neutral', alt: 'Fazier badge' },
-  { href: 'https://thankjohn.com', src: 'https://thankjohn.com/badge-dark.svg', alt: 'Featured on Thank John' },
-  { href: 'https://bowora.com', src: 'https://bowora.com/api/badge?startup=inkage.app&theme=light', alt: 'Featured on Bowora' },
-  { href: 'https://www.toolpilot.ai', src: 'https://www.toolpilot.ai/cdn/shop/files/f-w_690x151_crop_center.png', alt: 'Featured on ToolPilot' },
+/** w = badge width at 20px height (from each image's own size), so the browser reserves the space */
+const FEATURED: { href: string; src: string; alt: string; w: number }[] = [
+  { href: 'https://aitechviral.com/ai/inkage', src: 'https://aitechviral.com/assets/images/badge.png', alt: 'AI Tech Viral', w: 71 },
+  { href: 'https://goodaitools.com/ai/inkage', src: 'https://goodaitools.com/assets/images/badge.png', alt: 'Good AI Tools', w: 77 },
+  { href: 'https://acidtools.com/ai/inkage', src: 'https://acidtools.com/assets/images/badge.png', alt: 'Acid Tools', w: 65 },
+  { href: 'https://kickproduct.com/products/inkage', src: 'https://www.kickproduct.com/listedbadge.png', alt: 'Listed on Kick Product', w: 75 },
+  { href: 'https://showmebest.ai', src: 'https://showmebest.ai/badge/feature-badge-white.webp', alt: 'Featured on ShowMeBestAI', w: 80 },
+  { href: 'https://twelve.tools/', src: 'https://twelve.tools/badge0-white.svg', alt: 'Featured on Twelve Tools', w: 74 },
+  { href: 'https://startupfa.me/s/inkage?utm_source=inkage.app', src: 'https://startupfa.me/badge?t=classic&theme=default', alt: 'InkAge - Featured on Startup Fame', w: 63 },
+  { href: 'https://fazier.com', src: 'https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=neutral', alt: 'Fazier badge', w: 47 },
+  { href: 'https://thankjohn.com', src: 'https://thankjohn.com/badge-dark.svg', alt: 'Featured on Thank John', w: 65 },
+  { href: 'https://bowora.com', src: 'https://bowora.com/api/badge?startup=inkage.app&theme=light', alt: 'Featured on Bowora', w: 84 },
+  { href: 'https://www.toolpilot.ai', src: 'https://www.toolpilot.ai/cdn/shop/files/f-w_690x151_crop_center.png', alt: 'Featured on ToolPilot', w: 91 },
 ];
 
 /** The site-wide footer: brand + sign-up, five link columns, copyright and language. */
@@ -133,7 +134,7 @@ export function SiteFooter({ lang, hideLang = false }: { lang: Lang; hideLang?: 
             {FEATURED.map((f) => (
               <a key={f.href} href={f.href} target="_blank" rel="noopener">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={f.src} alt={f.alt} height={20} loading="lazy" decoding="async" />
+                <img src={f.src} alt={f.alt} width={f.w} height={20} loading="lazy" decoding="async" />
               </a>
             ))}
             <a className="sf-textlink" href="https://www.aitoolzdir.com" target="_blank" rel="noopener">AI Toolz Dir</a>

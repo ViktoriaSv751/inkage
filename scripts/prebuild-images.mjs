@@ -8,7 +8,7 @@ import sharp from 'sharp';
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, 'public', 'img');
 const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3134IoHE3NDDMNENjF96sXtstXg/';
-const WIDTHS = [240, 480, 640, 900, 1400, 1800];
+const WIDTHS = [240, 480, 640, 900, 1200, 1400, 1800]; // 1200: a ~1130px desktop picture otherwise downloads 1400 (Lighthouse image delivery)
 const AVIF_W = [480, 720, 900];
 const RX = /hf_[0-9]{8}_[0-9]{6}_[a-f0-9-]{36}|kb_[0-9]{8}_[a-z0-9-]+/g;
 // our own drawn illustrations (no image credits): source PNGs live in scripts/kb-images/<id>.png
