@@ -82,7 +82,7 @@ export function HeroAging({ frames = EXAMPLE, alt, lang: langProp }: { frames?: 
       <div className="photo-stack">
         {EX.map((e, k) => (k > 0 && !more ? null : (
           <picture key={e.years}>
-          {e.avif && <source type="image/avif" srcSet={[480, 720, 900].map((w) => `${e.src.replace('-900.webp', `-${w}.avif`)} ${w}w`).join(', ')} sizes={HERO_SIZES} />}
+          {e.avif && <source type="image/avif" srcSet={[480, 600, 720, 900].map((w) => `${e.src.replace('-900.webp', `-${w}.avif`)} ${w}w`).join(', ')} sizes={HERO_SIZES} />}
           <img
             src={e.src}
             srcSet={e.src.endsWith('-900.webp') ? [480, 640, 900].map((w) => `${e.src.replace('-900.webp', `-${w}.webp`)} ${w}w`).join(', ') : undefined}
