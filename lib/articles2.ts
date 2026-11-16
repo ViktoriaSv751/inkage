@@ -1374,4 +1374,26 @@ export const MORE_ARTICLES: Article[] = [
       ],
     },
   },
+  {
+    slug: 'first-tattoo-later-in-life',
+    tag: { en: 'Skin', hu: 'Bőr' },
+    title: { en: 'A first tattoo at 50, 60 or 70: what to know about older skin', hu: 'Első tetoválás 50, 60 vagy 70 évesen: mire figyelj idősebb bőrön' },
+    desc: { en: 'No upper age limit: talk to your doctor, pick firm skin and a clear design, and allow a little more healing time.', hu: 'Nincs felső korhatár: beszélj az orvosoddal, válassz feszes bőrt és tiszta mintát, és adj több időt a gyógyulásra.' },
+    body: {
+      en: [
+        'Older skin is thinner, drier and slower to heal, but it can be tattooed beautifully by an artist who works gently and knows mature skin.',
+        '## Health first',
+        'Blood thinners, diabetes and a weaker immune system all matter. Ask your doctor, and never stop a prescribed medicine on your own.',
+        '## Place and design',
+        'The outer upper arm, shoulder, upper back and outer thigh usually work best. Keep moles free, and choose slightly bolder lines and a medium size.',
+      ],
+      hu: [
+        'Az idősebb bőr vékonyabb, szárazabb, és lassabban gyógyul, de gyönyörű tetoválás készülhet rá, ha a tetováló kíméletesen dolgozik, és ismeri az érett bőrt.',
+        '## Előbb az egészség',
+        'A vérhígítók, a cukorbetegség és a gyengébb immunrendszer mind számít. Kérdezd meg az orvosodat, és soha ne hagyj abba magadtól egy felírt gyógyszert.',
+        '## Hely és minta',
+        'A felkar külső oldala, a váll, a hát felső része és a comb külső oldala általában a legjobb. Hagyd szabadon az anyajegyeket, és válassz kicsit markánsabb vonalat és közepes méretet.',
+      ],
+    },
+  },
 ];

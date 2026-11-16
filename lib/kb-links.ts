@@ -22,6 +22,7 @@ export const ARTICLE_LINKS: Record<string, string[]> = {
   'tattoo-ink-safety-eu': ['color-vs-black-ink-aging', 'first-tattoo-checklist', 'tattoo-healing-stages', 'laser-tattoo-removal-what-to-expect', 'tattoos-on-darker-skin'],
   'laser-tattoo-removal-pain': ['laser-tattoo-removal-what-to-expect', 'laser-removal-healing', 'tattoo-pain-chart', 'laser-removal-how-many-sessions', 'laser-tattoo-removal-cost', 'color-vs-black-ink-aging'],
   'colour-tattoo-removal': ['laser-tattoo-removal-what-to-expect', 'color-vs-black-ink-aging', 'laser-removal-how-many-sessions', 'cover-up-tattoos', 'tattoos-on-darker-skin', 'laser-tattoo-removal-cost'],
+  'first-tattoo-later-in-life': ['tattoos-when-you-get-old', 'first-tattoo-checklist', 'tattoo-healing-stages', 'tattoos-blood-donation-mri', 'best-placement-for-tattoo-longevity', 'tattoo-age-limit'],
   'chest-tattoos': ['rib-tattoos', 'spine-tattoos', 'neck-tattoos', 'tattoo-pain-chart', 'tattoos-weight-change-pregnancy', 'tattoo-healing-stages'],
   'spine-tattoos': ['rib-tattoos', 'neck-tattoos', 'fine-line-tattoos-aging', 'fine-line-script-tattoos', 'tattoo-pain-chart', 'tattoo-healing-stages'],
   'regret-new-tattoo': ['tattoo-healing-stages', 'tattoo-touch-ups', 'cover-up-tattoos', 'laser-tattoo-removal-what-to-expect', 'tattoo-removal-creams-diy', 'tattoo-itching-peeling'],

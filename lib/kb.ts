@@ -812,6 +812,18 @@ export const KB: Record<string, KbMeta> = {
     date: '2026-11-14',
     faq: [],
   },
+  'first-tattoo-later-in-life': {
+    img: 'kb_20261116_older-0',
+    img2: 'kb_20261116_older-2',
+    img3: 'kb_20261116_older-3',
+    img4: 'kb_20261116_older-4',
+    img5: 'kb_20261116_older-5',
+    img6: 'kb_20261116_older-6',
+    img7: 'kb_20261116_older-7',
+    cap2: { en: 'Photo: tattooed hands on older skin. Thinner, softer skin is not a worse canvas, but the artist has to work with it more gently.', hu: 'Fotó: tetovált kezek idősebb bőrön. A vékonyabb, puhább bőr nem rosszabb vászon, de a tetoválónak kíméletesebben kell dolgoznia vele.' },
+    date: '2026-11-16',
+    faq: [],
+  },
 };
 
 export const kbMeta = (slug: string) => KB[slug];
