@@ -33,7 +33,7 @@ export function StageSlider({ t, where, compact }: { t: T; where: string; compac
     <div className={`stg ${compact ? 'compact' : ''}`}>
       <div className="stg-pic">
         {STOPS.map((s, k) => (
-          <img key={s} {...PIC(s, compact ? '(min-width: 700px) 420px, 92vw' : '(min-width: 700px) 640px, 100vw', 900)} alt={k === i ? labels[k] : ''} aria-hidden={k !== i} loading={k === 0 ? 'eager' : 'lazy'} style={{ opacity: k === i ? 1 : 0 }} draggable={false} />
+          <img key={s} {...PIC(s, compact ? '(min-width: 700px) 420px, calc(100vw - 88px)' : '(min-width: 700px) 640px, 100vw', 900)} alt={k === i ? labels[k] : ''} aria-hidden={k !== i} loading={k === 0 ? 'eager' : 'lazy'} style={{ opacity: k === i ? 1 : 0 }} draggable={false} />
         ))}
         <span className="stg-badge">{labels[i]}</span>
       </div>

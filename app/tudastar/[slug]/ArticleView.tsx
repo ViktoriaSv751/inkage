@@ -8,6 +8,7 @@ import '@fontsource/newsreader/400-italic.css';
 import '@fontsource/newsreader/600.css';
 import { liveLong, longArticle, words, type LongArticle } from '@/lib/longform';
 import { fmtDate, IMG, IMGSET, KB, KB_STILL } from '@/lib/kb';
+import { PIC } from '@/lib/img';
 import { readMin } from '@/lib/kb-server';
 import { KbChrome } from '../KbChrome';
 import { Helpful, ShareBtn } from '../ArticleBits';
@@ -300,7 +301,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
 
         <aside className="ka-right">
           <div className="ka-rail">
-            <img src={IMG('hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b', 600)} alt="" loading="lazy" />
+            <img {...PIC('hf_20261013_090637_00bc55f1-c4f6-4bb3-af84-c63dff9cd69b', '250px', 640)} alt="" loading="lazy" />
             <div>
               <b>{T('See it on your skin', 'Nézd meg a bőrödön')}</b>
               <p>{T('Fresh, then at 10, 30 and 50 years. About a minute.', 'Frissen, majd 10, 30 és 50 év múlva. Kb. egy perc.')}</p>
@@ -312,7 +313,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
 
       <section className="ka-next">
         <Link href={`${base}/${next.slug}${sfx}`} className="ka-next-card">
-          <img src={IMG(KB[next.slug]?.img || KB_STILL, 1600)} alt="" loading="lazy" />
+          <img {...PIC(KB[next.slug]?.img || KB_STILL, '(min-width: 1180px) 1100px, 100vw', 1800)} alt="" loading="lazy" />
           <div>
             <span>{T('Next article', 'Következő cikk')}</span>
             <b>{pick(next.title, L)}</b>
@@ -326,7 +327,7 @@ export function ArticleView({ slug, L, inApp = false }: { slug: string; L: Lang;
         <div className="ka-rel3">
           {related.map((r) => (
             <Link key={r.slug} href={`${base}/${r.slug}${sfx}`} className="ka-rel">
-              <img src={IMG(KB[r.slug]?.img || KB_STILL, 700)} alt="" loading="lazy" />
+              <img {...PIC(KB[r.slug]?.img || KB_STILL, '(min-width: 1180px) 380px, (min-width: 700px) 31vw, 100vw', 900)} alt="" loading="lazy" />
               <span className="ka-rel-cat">
                 {pick(r.tag, L)} · {readMin(r, L)} {T('min', 'perc')}
               </span>
