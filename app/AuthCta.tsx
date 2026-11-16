@@ -4,24 +4,37 @@ import { tx, qOf, type Lang, isLang } from '@/lib/tr';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { afterLoad, track } from '@/lib/track';
+import { authReturnInUrl, hasSession, SESSION_KEY } from '@/lib/sb-lite';
 
-/** Signed in? The app is one tap away. */
+/** Signed in? The app is one tap away. Reads the stored session without loading supabase-js (lib/sb-lite). */
 export function useSignedIn() {
   const [on, setOn] = useState(false);
   useEffect(() => {
     let off = false;
     let stop = () => {};
-    const cancel = afterLoad(() => {
-      import('@/lib/sb').then(({ sb }) => {
-        const s = sb();
-        if (!s || off) return;
-        s.auth.getSession().then(({ data }) => setOn(!!data.session)).catch(() => {});
-        const sub = s.auth.onAuthStateChange((_e, session) => setOn(!!session));
-        stop = () => sub.data.subscription.unsubscribe();
-      }).catch(() => {});
-    });
+    const check = () => !off && setOn(hasSession());
+    check();
+    // signed in or out in another tab
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === null || e.key === SESSION_KEY) check();
+    };
+    window.addEventListener('storage', onStorage);
+    // an OAuth / e-mail link came back to this page: let supabase-js store the session
+    const cancel = authReturnInUrl()
+      ? afterLoad(() => {
+          import('@/lib/sb').then(({ sb }) => {
+            const s = sb();
+            if (!s || off) return;
+            const sub = s.auth.onAuthStateChange((_e, session) => {
+              if (!off) setOn(!!session);
+            });
+            stop = () => sub.data.subscription.unsubscribe();
+          }).catch(() => {});
+        })
+      : () => {};
     return () => {
       off = true;
+      window.removeEventListener('storage', onStorage);
       cancel();
       stop();
     };

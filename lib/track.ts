@@ -3,7 +3,7 @@
 
 /** Same as track() in lib/store, which is loaded the first time something is counted. */
 export function track(name: string, props: Record<string, unknown> = {}) {
-  import('./store').then((m) => m.track(name, props)).catch(() => {});
+  import('./analytics').then((m) => m.track(name, props)).catch(() => {});
 }
 
 /** A tap on a sign-up button, counted like a page view: no cookie, nothing stored, no stats choice needed (see app/api/pv). */

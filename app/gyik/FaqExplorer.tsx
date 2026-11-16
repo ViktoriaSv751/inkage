@@ -3,7 +3,7 @@ import { tx, qOf, type Lang } from '@/lib/tr';
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { track } from '@/lib/store';
+import { track } from '@/lib/analytics';
 
 type G = { h: string; i: string; items: [string, string][] };
 

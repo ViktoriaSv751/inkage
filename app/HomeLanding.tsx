@@ -13,6 +13,7 @@ import './landing.css';
 import { HeroAging } from './visuals';
 import { loadDict, tx, type Lang } from '@/lib/i18n';
 import { afterLoad, track } from '@/lib/track';
+import { hasSession, rpcLite } from '@/lib/sb-lite';
 
 /** The home page; `lang` comes from the server (?lang=, set by middleware.ts), so the HTML arrives in that language. */
 export function HomeLanding({ lang, data }: { lang: Lang; data: LandingData }) {
@@ -45,13 +46,10 @@ export function HomeLanding({ lang, data }: { lang: Lang; data: LandingData }) {
       track('ref_visit');
     }
     // page views are counted for everyone by app/PageView.tsx (no cookie needed)
+    // no supabase-js here (PageSpeed: unused JavaScript): stored session + plain-fetch RPC, see lib/sb-lite
+    setSignedIn(hasSession());
     return afterLoad(() => {
-      import('@/lib/sb').then(({ sb }) => {
-        sb()?.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
-        sb()
-          ?.rpc('trends')
-          .then(({ data }) => setMade(Number((data as any)?.previews_total) || 0));
-      }).catch(() => {});
+      rpcLite<any>('trends').then((data) => setMade(Number(data?.previews_total) || 0));
     });
   }, []);
 

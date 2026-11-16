@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/sb';
+import type { api as Api } from '@/lib/sb';
+// supabase-js loads only when the panel talks to the server, not with the page (PageSpeed: unused JavaScript)
+const api: typeof Api = (path, body) => import('@/lib/sb').then((m) => m.api(path, body)) as any;
 import { tx, type Lang } from '@/lib/tr';
 import { countB2B } from '@/lib/track';
 import { B2B, B2B_PLANS, B2B_TOPUP, B2B_TRIAL, YEAR_MONTHS_PAID, baseOf, huf, intervalOf, isB2BPlan, planName, yearHuf, type B2BBase, type B2BInterval, type B2BPlan } from '@/lib/b2b';

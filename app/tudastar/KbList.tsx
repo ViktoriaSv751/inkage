@@ -4,7 +4,7 @@ import { tx, qOf, localeOf, type Lang } from '@/lib/tr';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import type { KbItem } from '@/lib/kb-server';
-import { track } from '@/lib/store';
+import { track } from '@/lib/analytics';
 
 /** base: '/tudastar' on the public site, '/app/tudastar' inside the app */
 export function KbList({ items, lang, base = '/tudastar' }: { items: KbItem[]; lang: Lang; base?: string }) {

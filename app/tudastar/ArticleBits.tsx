@@ -2,7 +2,7 @@
 import { tx, type Lang } from '@/lib/tr';
 
 import { useState } from 'react';
-import { track } from '@/lib/store';
+import { track } from '@/lib/analytics';
 
 export function ShareBtn({ title, lang }: { title: string; lang: Lang }) {
   const [done, setDone] = useState(false);
