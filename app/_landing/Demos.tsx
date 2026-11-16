@@ -144,7 +144,7 @@ export function AgingTimeline({ t }: { t: T }) {
         </div>
         <ol className="lm-tlx-list" role="tablist" aria-orientation="vertical" style={{ ['--p' as any]: i / (stops.length - 1) }}>
           {stops.map((x, k) => (
-            <li key={x.y}>
+            <li key={x.y} role="presentation">
               <button role="tab" aria-selected={k === i} className={k === i ? 'on' : k < i ? 'past' : ''} onMouseEnter={() => setI(k)} onFocus={() => setI(k)} onClick={() => setI(k)}>
                 <span className="lm-dot" aria-hidden="true" />
                 <span className="lm-tlx-y">{x.y}</span>

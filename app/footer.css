@@ -57,9 +57,9 @@
 
 /* "Featured on" directory badges (required by the listings, see FEATURED in SiteFooter.tsx) */
 .sf-featured { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 24px; }
-.sf-featured b { font-size: 11px; font-weight: 600; color: var(--ink-3); opacity: .7; }
+.sf-featured b { font-size: 11px; font-weight: 600; color: var(--ink-2); } /* no opacity: text must keep 4.5:1 contrast (Lighthouse) */
 .sf-badges { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
 .sf-badges a { display: inline-flex; opacity: .45; filter: grayscale(1); transition: opacity .15s, filter .15s; }
 .sf-badges a:hover, .sf-badges a:focus-visible { opacity: 1; filter: none; }
-.sf-badges .sf-textlink { font-size: 11px; font-weight: 600; color: var(--ink-3); text-decoration: none; padding: 0 2px; }
+.sf-badges .sf-textlink { font-size: 11px; font-weight: 600; color: var(--ink-2); text-decoration: none; padding: 0 2px; opacity: 1; filter: none; }
 .sf-badges img { height: 20px; width: auto; display: block; background: #fff; border-radius: 4px; } /* Kick Product's badge is black on transparent */
