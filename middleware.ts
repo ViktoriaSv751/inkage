@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { LANGS, fromBrowser, isLang } from './lib/tr';
+import { cspFor, makeNonce } from './lib/csp';
 
 /**
  * Website pages are rendered on the server in the language of ?lang= (Hungarian without it).
@@ -56,7 +57,14 @@ export function middleware(req: NextRequest) {
   const headers = new Headers(req.headers);
   headers.set('x-ink-lang', lang);
   headers.set('x-ink-path', url.pathname);
-  return NextResponse.next({ request: { headers } });
+  // per-request script nonce: Next puts it on its own scripts when it sees the policy in the request (lib/csp.ts)
+  const nonce = makeNonce();
+  const csp = cspFor(url.pathname, nonce);
+  headers.set('x-nonce', nonce);
+  headers.set('content-security-policy', csp);
+  const res = NextResponse.next({ request: { headers } });
+  res.headers.set('Content-Security-Policy', csp);
+  return res;
 }
 
 export const config = {

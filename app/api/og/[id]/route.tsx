@@ -5,7 +5,8 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 
 /** Link preview for a vote link: fresh and 50 years side by side (WhatsApp, Messenger, iMessage…). */
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const origin = new URL(req.url).origin;
   if (/^p[a-f0-9]{10}$/.test(params.id)) return pollOg(origin, params.id);
   const r = await fetch(`${PUBLIC.supabaseUrl}/rest/v1/rpc/get_share`, {

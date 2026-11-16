@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
 module.exports = {
+  outputFileTracingRoot: path.join(__dirname),
   reactStrictMode: true,
+  // inlineCss tried 2026-11-16: HTML 30 → 72 KB gzipped (CSS repeated in the RSC payload), PageSpeed flags unused CSS instead, no score gain
+  experimental: { inlineCss: false },
+  // metadata (title, description, canonical) always in <head>, not streamed later for non-bot visitors (Next 15.2+)
+  htmlLimitedBots: /.*/,
   async rewrites() {
     return {
       // pre-rendered photos live in public/img; if one is missing, resize it on demand
@@ -35,14 +41,10 @@ module.exports = {
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
     ];
-    const noFrame = [
-      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-      { key: 'Content-Security-Policy', value: "object-src 'none'; base-uri 'self'; frame-ancestors 'self'" },
-    ];
+    // Content-Security-Policy (with the per-request script nonce and frame-ancestors) is set by middleware.ts, see lib/csp.ts
     return [
       { source: '/:path*', headers: safe },
-      { source: '/((?!embed/).*)', headers: noFrame },
-      { source: '/embed/:path*', headers: [{ key: 'Content-Security-Policy', value: "object-src 'none'; base-uri 'self'" }] },
+      { source: '/((?!embed/).*)', headers: [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }] },
       { source: '/img/:path*', headers: forever }, { source: '/email/:path*', headers: forever }, { source: '/brand/:path*', headers: forever }];
   },
 };

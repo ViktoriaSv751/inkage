@@ -1,6 +1,6 @@
 import './guest.css';
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { fromBrowser, isLang, localeOf, tx, type Lang } from '@/lib/tr';
 import { placeName } from '@/lib/placements';
 import { PUBLIC } from '@/lib/public-config';
@@ -9,9 +9,9 @@ import { PUBLIC } from '@/lib/public-config';
 function reqLang(sp?: { lang?: string | string[] } | null): Lang {
   const v = Array.isArray(sp?.lang) ? sp?.lang[0] : sp?.lang;
   if (isLang(v)) return v;
-  const h = headers().get('x-ink-lang');
+  const h = (headers() as unknown as UnsafeUnwrappedHeaders).get('x-ink-lang');
   if (isLang(h)) return h;
-  return fromBrowser(headers().get('accept-language') || '');
+  return fromBrowser((headers() as unknown as UnsafeUnwrappedHeaders).get('accept-language') || '');
 }
 
 export const dynamic = 'force-dynamic';
@@ -57,7 +57,11 @@ const STAGES: [string, string, string][] = [
 ];
 const safeUrl = (u?: string | null) => (u && /^https:\/\//.test(u) ? u : null);
 
-export default async function GuestPage({ params, searchParams }: { params: { id: string }; searchParams?: { lang?: string } }) {
+export default async function GuestPage(
+  props: { params: Promise<{ id: string }>; searchParams?: Promise<{ lang?: string }> }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang = reqLang(searchParams);
   const t = (en: string, hu: string) => tx(lang, en, hu);
   const d = await getLink(params.id);

@@ -4,7 +4,8 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 
 /** Images of a guest's vote link. */
-export async function GET(_req: Request, { params }: { params: { id: string; k: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string; k: string }> }) {
+  const params = await props.params;
   if (!/^g[a-f0-9]{10}$/.test(params.id) || !['fresh', 'y50', 'freshb', 'y50b'].includes(params.k)) return new Response('Not found', { status: 404 });
   const { data } = await userClient().rpc('get_guest_img', { p_share: params.id, p_k: params.k });
   const m = /^data:(image\/[a-z]+);base64,(.+)$/.exec(String(data || ''));

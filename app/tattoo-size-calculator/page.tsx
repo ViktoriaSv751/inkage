@@ -10,7 +10,8 @@ import '../tattoo-removal-calculator/calc.css';
 export const dynamic = 'force-dynamic';
 const PATH = '/tattoo-size-calculator';
 
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return {
     title: tx(L, TOOL_TITLE[PATH], 'Tetoválás méretkalkulátor: mekkora legyen, hogy 20 év múlva is olvasható maradjon') + ' – InkAge',
@@ -46,7 +47,8 @@ function texts(L: Lang): SizeText {
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const about = [

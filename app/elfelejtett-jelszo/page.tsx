@@ -3,10 +3,12 @@ import type { Metadata } from 'next';
 import { AuthScreen } from '../_auth/AuthScreen';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   return { title: tx(langOf(searchParams), 'Reset password – InkAge', 'Elfelejtett jelszó – InkAge'), robots: { index: false } };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   return <AuthScreen mode="forgot" lang={langOf(searchParams)} img="hf_20261014_072014_0bc43c3a-08b9-46d1-85a0-73f61f1b5028" />;
 }

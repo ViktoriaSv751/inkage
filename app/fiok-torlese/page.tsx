@@ -4,11 +4,13 @@ import { InfoPage, langOf, type InfoSec } from '../_info/InfoPage';
 import { PUBLIC } from '@/lib/public-config';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   return { title: tx(langOf(searchParams), 'Delete your account – InkAge', 'Fiók törlése – InkAge') };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const mail = PUBLIC.contactEmail;

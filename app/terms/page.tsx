@@ -5,11 +5,13 @@ import { webPaymentsOn, PLAN } from '@/lib/pricing';
 import { B2B, B2B_PLANS, B2B_TRIAL, huf } from '@/lib/b2b';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   return { title: tx(langOf(searchParams), 'Terms of use – InkAge', 'Felhasználási feltételek (ÁSZF) – InkAge') };
 }
 
-export default function Terms({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Terms(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [

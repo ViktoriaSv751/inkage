@@ -7,14 +7,16 @@ import { PUBLIC } from '@/lib/public-config';
    The studio is the controller of its guests' data, InkAge the processor. Sub-processors match /privacy and lib/ai/providers.ts
    (Gemini, OpenAI fallback). Not reviewed by a lawyer. */
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   return {
     title: tx(langOf(searchParams), 'Data processing terms for studios and clinics – InkAge', 'Adatfeldolgozói feltételek szalonoknak és klinikáknak – InkAge'),
     description: tx(langOf(searchParams), 'How InkAge processes the photos and previews of studio and clinic guests as a processor under GDPR Article 28.', 'Hogyan kezeli az InkAge adatfeldolgozóként (GDPR 28. cikk) a szalonok és klinikák vendégeinek fotóit és előnézeteit.'),
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const mail = PUBLIC.contactEmail;

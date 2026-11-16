@@ -6,7 +6,8 @@ import { InfoPage, type InfoSec } from '../_info/InfoPage';
 export const dynamic = 'force-dynamic';
 const PATH = '/szerkesztoseg';
 
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return {
     title: tx(L, TOOL_TITLE[PATH], 'Szerkesztési irányelvek: így készülnek az InkAge cikkei') + ' – InkAge',
@@ -19,7 +20,8 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [

@@ -1,5 +1,5 @@
 import { fromBrowser, isLang, qOf, tx, type Lang } from '@/lib/tr';
-import { headers } from 'next/headers';
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import Link from 'next/link';
 import { PUBLIC } from '@/lib/public-config';
 import { Vote } from './Vote';
@@ -10,9 +10,9 @@ import type { PollData } from '@/lib/share';
 export function reqLang(sp?: { lang?: string | string[] } | null): Lang {
   const v = Array.isArray(sp?.lang) ? sp?.lang[0] : sp?.lang;
   if (isLang(v)) return v;
-  const h = headers().get('x-ink-lang');
+  const h = (headers() as unknown as UnsafeUnwrappedHeaders).get('x-ink-lang');
   if (isLang(h)) return h;
-  return fromBrowser(headers().get('accept-language') || '');
+  return fromBrowser((headers() as unknown as UnsafeUnwrappedHeaders).get('accept-language') || '');
 }
 
 export type Share = {

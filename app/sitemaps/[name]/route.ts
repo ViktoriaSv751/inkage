@@ -7,7 +7,8 @@ export function generateStaticParams() {
   return Object.keys(SITEMAP_GROUPS).map((g) => ({ name: `${g}.xml` }));
 }
 
-export function GET(_: Request, { params }: { params: { name: string } }) {
+export async function GET(_: Request, props: { params: Promise<{ name: string }> }) {
+  const params = await props.params;
   const g = params.name.replace(/\.xml$/, '') as SitemapGroup;
   const make = SITEMAP_GROUPS[g];
   if (!make) return new Response('Not found', { status: 404 });

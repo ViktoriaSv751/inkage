@@ -79,7 +79,8 @@ function content(L: Lang): ToolContent & { meta: string } {
   };
 }
 
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const c = content(L);
   return {
@@ -90,7 +91,8 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return <ToolPage lang={L} c={content(L)} />;
 }

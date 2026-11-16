@@ -7,9 +7,9 @@ import { isConfigured } from './config';
 
 export async function supabaseServer() {
   if (!isConfigured()) return null;
-  const h = headers();
+  const h = await headers();
   const bearer = h.get('authorization')?.match(/^Bearer (.+)$/)?.[1];
-  const tok = bearer || cookies().get('ink_adm')?.value;
+  const tok = bearer || (await cookies()).get('ink_adm')?.value;
   if (!tok || tok.split('.').length !== 3) return null;
   return userClient(tok);
 }

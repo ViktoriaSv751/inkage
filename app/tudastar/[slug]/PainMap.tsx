@@ -1,11 +1,12 @@
 'use client';
 import { useState } from 'react';
+import type React from 'react';
 
 export type PainZone = { id: string; name: string; note: string; lvl: 0 | 1 | 2 };
 export type PainText = { title: string; hint: string; front: string; back: string; levels: [string, string, string]; zones: PainZone[] };
 
 /* shapes per zone id (front figure at x 0–200, back figure at x 220–420; both 0–440 tall) */
-const S: Record<string, JSX.Element[]> = {
+const S: Record<string, React.JSX.Element[]> = {
   'outer-upper-arm': [<ellipse key="a" cx="38" cy="125" rx="13" ry="30" />, <ellipse key="b" cx="162" cy="125" rx="13" ry="30" />],
   'inner-upper-arm': [<ellipse key="a" cx="52" cy="128" rx="6" ry="24" />, <ellipse key="b" cx="148" cy="128" rx="6" ry="24" />],
   armpit: [<ellipse key="a" cx="58" cy="98" rx="7" ry="9" />, <ellipse key="b" cx="142" cy="98" rx="7" ry="9" />],

@@ -115,7 +115,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('ink:paywall', on);
     return () => window.removeEventListener('ink:paywall', on);
   }, [openPaywall]);
-  const timer = useRef<any>();
+  const timer = useRef<any>(undefined);
   const migrated = useRef(false);
   // an account is needed to use the app: no session → the sign-in page
   const [gate, setGate] = useState<'checking' | 'in' | 'out'>('checking');

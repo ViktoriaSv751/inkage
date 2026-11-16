@@ -1,9 +1,17 @@
 import { langOf, qOf, tx } from '@/lib/tr';
 import Link from 'next/link';
 
-export const generateMetadata = ({ searchParams }: { searchParams: { lang?: string } }) => ({ title: `${tx(langOf(searchParams), 'Newsletter', 'Hírlevél')} – InkAge`, robots: { index: false } });
+export const generateMetadata = async (props: { searchParams: Promise<{ lang?: string }> }) => {
+  const searchParams = await props.searchParams;
 
-export default function Newsletter({ searchParams }: { searchParams: { status?: string; lang?: string } }) {
+  return ({
+    title: `${tx(langOf(searchParams), 'Newsletter', 'Hírlevél')} – InkAge`,
+    robots: { index: false }
+  });
+};
+
+export default async function Newsletter(props: { searchParams: Promise<{ status?: string; lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const st = searchParams.status;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);

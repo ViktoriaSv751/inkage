@@ -3,7 +3,7 @@
    the signed-in admin (her own session) or the morning run, which pg_cron starts with a token the database keeps
    for itself (admin_secrets). Platform secrets still come only from Vercel environment variables. */
 import { AsyncLocalStorage } from "node:async_hooks";
-import { headers } from "next/headers";
+import { headers, type UnsafeUnwrappedHeaders } from "next/headers";
 import { supabaseServer } from "@/lib/supabase/server";
 import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
@@ -36,7 +36,7 @@ async function cronCred(req: Request): Promise<Cred | null> {
    A request another site's page started (its Origin is not this site) never runs: the browser sends the admin's cookie
    with it, but not her intent. A POST always carries Origin; the platforms' sign-in redirects back (GET) carry none. */
 export async function asAdmin(fn: () => Promise<Response>) {
-  const h = await Promise.resolve().then(() => headers()).catch(() => null);
+  const h = await Promise.resolve().then(() => (headers() as unknown as UnsafeUnwrappedHeaders)).catch(() => null);
   const o = h?.get("origin");
   if (o && o !== "null") { try { if (new URL(o).host !== h?.get("host")) return new Response("Forbidden", { status: 403 }); } catch { return new Response("Forbidden", { status: 403 }); } }
   else if (o === "null") return new Response("Forbidden", { status: 403 });

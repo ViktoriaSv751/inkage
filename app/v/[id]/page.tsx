@@ -5,8 +5,12 @@ import { getPoll, getShare, reqLang, SharedView } from './SharedView';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params, searchParams }: { params: { id: string }; searchParams?: { lang?: string } }): Promise<Metadata> {
-  const host = headers().get('x-forwarded-host') || headers().get('host') || 'inkage.app';
+export async function generateMetadata(
+  props: { params: Promise<{ id: string }>; searchParams?: Promise<{ lang?: string }> }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const host = (await headers()).get('x-forwarded-host') || (await headers()).get('host') || 'inkage.app';
   if (params.id.startsWith('p')) {
     const p = await getPoll(params.id);
     const lang = reqLang(searchParams);
@@ -31,6 +35,10 @@ export async function generateMetadata({ params, searchParams }: { params: { id:
   };
 }
 
-export default async function SharePage({ params, searchParams }: { params: { id: string }; searchParams?: { lang?: string } }) {
+export default async function SharePage(
+  props: { params: Promise<{ id: string }>; searchParams?: Promise<{ lang?: string }> }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   return <SharedView id={params.id} searchParams={searchParams} />;
 }

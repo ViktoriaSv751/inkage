@@ -32,10 +32,10 @@
     "fflate": "^0.8.2",
     "heic2any": "^0.0.4",
     "jspdf": "^2.5.2",
-    "next": "14.2.28",
+    "next": "15.5.29",
     "openai": "4.67.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "sharp": "^0.33.5",
     "web-push": "^3.6.7"
   },
@@ -43,8 +43,8 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.3",
     "@types/node": "20.14.0",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "typescript": "5.4.5"
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.4.5"
   }
 }

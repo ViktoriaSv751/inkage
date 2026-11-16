@@ -15,7 +15,7 @@ export function useInkGestures({
   setSel,
   remember,
 }: {
-  stage: React.RefObject<HTMLDivElement>;
+  stage: React.RefObject<HTMLDivElement | null>;
   layers: Layer[];
   pl: Placement;
   setPl: (p: Placement) => void;

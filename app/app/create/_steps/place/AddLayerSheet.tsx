@@ -23,7 +23,7 @@ export function AddLayerSheet({
   addOpen: boolean;
   setAddOpen: (o: boolean) => void;
   addBusy: boolean;
-  addRef: React.RefObject<HTMLInputElement>;
+  addRef: React.RefObject<HTMLInputElement | null>;
   design0: Design;
   addLayer: (raw: string, fromPhoto: boolean) => Promise<void>;
   layers: Layer[];

@@ -5,11 +5,13 @@ import { PUBLIC } from '@/lib/public-config';
 import { webPaymentsOn } from '@/lib/pricing';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   return { title: tx(langOf(searchParams), 'Privacy policy – InkAge', 'Adatvédelmi tájékoztató – InkAge') };
 }
 
-export default function Privacy({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Privacy(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const op = PUBLIC.operatorName;

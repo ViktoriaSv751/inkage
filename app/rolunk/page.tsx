@@ -8,7 +8,8 @@ import { Ico, InfoPage, langOf, type IconKey } from '../_info/InfoPage';
 import './about.css';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return {
     title: tx(L, 'About – InkAge', 'Rólunk – InkAge'),
@@ -17,7 +18,8 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const q = qOf(L);

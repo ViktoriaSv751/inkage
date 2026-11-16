@@ -7,7 +7,8 @@ import { B2BFaq, faqItems } from './B2BFaq';
 import './b2b.css';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return {
     title: tx(L, 'InkAge for tattoo studios and laser clinics – plans', 'InkAge tetoválószalonoknak és lézerklinikáknak – csomagok'),
@@ -29,7 +30,8 @@ const STRIP: [string, string, string][] = [
   ['hf_20261013_200918_3120c2be-e153-4881-a8f8-04c1cf79fcb4', '50 years', '50 év'],
 ];
 
-export default function Page({ searchParams }: { searchParams: { ref?: string; lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ ref?: string; lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const sections: InfoSec[] = [

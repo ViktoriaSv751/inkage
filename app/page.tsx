@@ -22,7 +22,8 @@ const ORG_LD = {
   ],
 };
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const lang = langOf(searchParams);
   return (
     <>

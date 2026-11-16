@@ -4,7 +4,8 @@ import { TudastarView } from './TudastarView';
 import { seoTitle } from '@/lib/seo-titles';
 
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return {
     title: seoTitle('/tudastar', L) || `${tx(L, 'Knowledge base', 'Tudástár')} – InkAge`,
@@ -16,6 +17,7 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
   };
 }
 
-export default function Tudastar({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Tudastar(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   return <TudastarView lang={langOf(searchParams)} />;
 }

@@ -6,14 +6,16 @@ import './hozzajarulas.css';
 
 /* Sample guest consent form for studios and clinics (2026-11-12): print it or show it on screen. A template, not reviewed by a lawyer. */
 export const dynamic = 'force-dynamic';
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   return {
     title: tx(langOf(searchParams), 'Guest consent form (sample) – InkAge for studios', 'Vendég-hozzájárulás (minta) – InkAge szalonoknak'),
     description: tx(langOf(searchParams), 'A short consent form a tattoo studio or laser clinic can print before making an AI preview of a guest’s tattoo.', 'Rövid hozzájárulási nyilatkozat, amelyet a szalon vagy klinika kinyomtathat, mielőtt MI-előnézetet készít a vendég tetoválásáról.'),
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   const T = (en: string, hu: string) => tx(L, en, hu);
   const Field = ({ label }: { label: string }) => (

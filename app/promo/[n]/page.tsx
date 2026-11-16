@@ -278,7 +278,7 @@ function Float({ n, t }: { n: number; t: (typeof T)['en'] }) {
   return null;
 }
 
-export default async function Promo({ params, searchParams }: { params: Promise<{ n: string }> | { n: string }; searchParams: Promise<Record<string, string>> | Record<string, string> }) {
+export default async function Promo({ params, searchParams }: { params: Promise<{ n: string }>; searchParams: Promise<Record<string, string>> }) {
   const { n } = await params;
   const sp = await searchParams;
   const lang: L = sp.lang === 'hu' ? 'hu' : 'en';

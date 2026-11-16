@@ -9,7 +9,8 @@ import './embed.css';
 export const dynamic = 'force-dynamic';
 
 /** The pain map alone, for other sites to embed in an iframe; the article is the page search engines should show. */
-export function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return {
     title: tx(L, 'Interactive tattoo pain map', 'Interaktív tetoválás fájdalomtérkép') + ' – InkAge',
@@ -18,7 +19,8 @@ export function generateMetadata({ searchParams }: { searchParams: { lang?: stri
   };
 }
 
-export default function Page({ searchParams }: { searchParams: { lang?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ lang?: string }> }) {
+  const searchParams = await props.searchParams;
   const L = langOf(searchParams);
   return (
     <div className="ka2 pm-embed">

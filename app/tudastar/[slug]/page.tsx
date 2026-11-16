@@ -9,7 +9,11 @@ import { seoTitle, seoDesc } from '@/lib/seo-titles';
 
 export const dynamic = 'force-dynamic';
 
-export function generateMetadata({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }): Metadata {
+export async function generateMetadata(
+  props: { params: Promise<{ slug: string }>; searchParams: Promise<{ lang?: string }> }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const a = longArticle(params.slug);
   if (!a) return {};
   const L = langOf(searchParams);
@@ -30,6 +34,10 @@ export function generateMetadata({ params, searchParams }: { params: { slug: str
   };
 }
 
-export default function ArticlePage({ params, searchParams }: { params: { slug: string }; searchParams: { lang?: string } }) {
+export default async function ArticlePage(
+  props: { params: Promise<{ slug: string }>; searchParams: Promise<{ lang?: string }> }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   return <ArticleView slug={params.slug} L={langOf(searchParams)} />;
 }
