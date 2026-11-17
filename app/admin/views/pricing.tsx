@@ -64,7 +64,7 @@ export function Pricing({ days }: { days: number }) {
   const upcoming = SEASONS.map((s) => { let t = new Date(`${thisYear}-${s.d}T12:00:00`); if (t.getTime() < Date.now() - 864e5) t = new Date(`${thisYear + 1}-${s.d}T12:00:00`); return { ...s, t, in: Math.round((t.getTime() - Date.now()) / 864e5) }; }).sort((a, b) => a.t.getTime() - b.t.getTime());
   return (
     <div className="g ix pay">
-      {!sales30 && !mix.length && <Lesson><b>Még nincs eladás.</b> Az InkAge még nem fogad fizetést, ezért itt minden üres. Amint megérkeznek az első vásárlások, a termékek nevei, az arányok és a kalkulátorok az adatokból töltődnek ki.</Lesson>}
+      {!sales30 && !mix.length && <Lesson><b>Még nincs eladás.</b> Ezért itt még minden üres. Amint megérkeznek az első vásárlások, a termékek nevei, az arányok és a kalkulátorok az adatokból töltődnek ki.</Lesson>}
       <Top><Hero flip label="A vásárlási oldal egy megnyitása ennyi pénzt hoz (web)" text={n(pp.shown) ? $(n(pp.usd) / n(pp.shown)) : "–"} sub={<>{fmt(pp.shown)} megnyitás · {fmt(pp.sales)} fizetés · ez dönti el, melyik ár vagy elrendezés a jobb</>} side={<CurPick cur={cur} set={setCur} />} /></Top>
       <Trio items={[
         { l: "Később nagyobb termékre váltott", v: n(up.basic) + n(up.pro) ? pct(n(up.basic_up) + n(up.pro_up), n(up.basic) + n(up.pro)) : "–" },
@@ -167,7 +167,7 @@ function AbSheet({ cfg, plans, close, done, sb }: { cfg: D; plans: string[]; clo
   };
   return (
     <Sheet title="Teszt a vásárlási oldalon" close={close} foot={<button className="adm-ibtn gold" disabled={!can && !cfg.ab?.on} onClick={save}>Mentés</button>}>
-      {!can && <p className="note">A teszthez legalább két termék kell az eladások között. Az InkAge még nem fogad fizetést, ezért most nincs mit kiválasztani.</p>}
+      {!can && <p className="note">A teszthez legalább két termék kell az eladások között. Még nem volt eladás, ezért most nincs mit kiválasztani.</p>}
       <label className="pay-ck"><input type="checkbox" checked={v.on} disabled={!can && !v.on} onChange={(e) => setV({ ...v, on: e.target.checked })} /> A teszt fut</label>
       {can && (["a", "b"] as const).map((k) => <label key={k} className="pfield"><span>{k.toUpperCase()} változat: kiválasztott termék</span><select className="adm-in" value={v[k]} onChange={(e) => setV({ ...v, [k]: e.target.value })}>{plans.map((p) => <option key={p} value={p}>{planKey(p)}</option>)}</select></label>)}
       <p className="note">Egy új teszt új azonosítót kap, így a régi eredmények nem keverednek bele. Az ár sosem változik.</p>

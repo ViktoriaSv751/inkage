@@ -27,7 +27,7 @@ export function Customers({ days }: { days: number }) {
   const rows: D[] = (d.rows || []).filter((r: D) => only === "all" || (only === "repeat" ? n(r.sales) > 1 : only === "multi" ? n(r.names) > 1 : only === "unused" ? !n(r.claims) && n(r.sales) > 0 : only === "unhappy" ? n(r.low_after) > 0 && n(r.low_after) <= 2 : n(r.refunds) > 0));
   return (
     <div className="g ix pay">
-      <Top><Hero flip label="Egy vevő átlagosan ennyit hozott" text={d.ltv == null ? "–" : $(n(d.ltv))} sub={<>{n(d.n) ? <>{fmt(d.n)} vevő ebben az időszakban · {fmt(d.repeat)} vett többször · {fmt(d.multi_name)} több névre</> : "Még nincs vevő: az InkAge még nem fogad fizetést."}</>} side={<CurPick cur={cur} set={setCur} />} /></Top>
+      <Top><Hero flip label="Egy vevő átlagosan ennyit hozott" text={d.ltv == null ? "–" : $(n(d.ltv))} sub={<>{n(d.n) ? <>{fmt(d.n)} vevő ebben az időszakban · {fmt(d.repeat)} vett többször · {fmt(d.multi_name)} több névre</> : "Még nincs vevő."}</>} side={<CurPick cur={cur} set={setCur} />} /></Top>
       <Trio items={[
         { l: "Megvette, de nem használta", v: n(d.unused), run: () => setOnly("unused") },
         { l: "Elégedetlen (1–2 csillag)", v: n(d.unhappy), run: () => setOnly("unhappy") },

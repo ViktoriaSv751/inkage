@@ -34,10 +34,10 @@ export function PayFail({ days }: { days: number }) {
   const sw = d.signup_wall || {}, sp = d.speed || {};
   const checks: [boolean | null, string, string][] = [
     [st ? !!st.stripe : null, "Stripe titkos kulcs (STRIPE_SECRET_KEY)", st?.stripe_live === false && st?.stripe ? "teszt-kulcs van beállítva, élesben az sk_live_ kell" : "Vercel → Settings → Environment Variables"],
-    [st ? !!st.stripe_webhook : null, "Stripe-értesítés (STRIPE_WEBHOOK_SECRET)", `az InkAge-ben még nincs Stripe-értesítést fogadó végpont (a fizetés bevezetésekor készül: https://inkage.app/api/stripe-webhook), ezekkel az eseményekkel: ${WEBHOOK_EVENTS}`],
-    [st ? !!st.pay_service : null, "Adatbázis-írás a fizetéshez (SUPABASE_SERVICE_ROLE_KEY)", "e nélkül a vásárlás nem kerül a fiókba"],
-    [d.last_notice?.apple ? true : null, "App Store-értesítések", "az InkAge-ben még nincs ilyen végpont (a fizetés bevezetésekor készül); utána: App Store Connect → InkAge → App Information → App Store Server Notifications (Version 2)"],
-    [st ? !!st.google_play : null, "Google Play-visszatérítések", "a Play szolgáltatásfiók (PLAY_SERVICE_ACCOUNT_JSON) óránként lekéri a visszavont vásárlásokat; „View financial data” jog kell hozzá"],
+    [st ? !!st.stripe_webhook : null, "Stripe-értesítés (STRIPE_WEBHOOK_SECRET)", `végpont: https://inkage.app/api/stripe-webhook; események: ${WEBHOOK_EVENTS}, a szalon-előfizetésekhez invoice.paid és customer.subscription.*`],
+    [st ? true : null, "Vásárlás jóváírása a fiókban", "egy védett adatbázis-függvény írja be (külön szolgáltatáskulcs nem kell)"],
+    [d.last_notice?.apple ? true : null, "App Store-értesítések", "nincs bekötve: az Apple-visszatérítések nem látszanak itt magától (a vásárlások ettől működnek). Ha kell: App Store Connect → InkAge → App Information → App Store Server Notifications (Version 2)"],
+    [st ? !!st.google_play : null, "Google Play-visszatérítések", "a Google Play-vásárlások ellenőrzése működik (Supabase-ben); a visszavont vásárlások óránkénti lekéréséhez a Vercelben is kell a PLAY_SERVICE_ACCOUNT_JSON"],
     [d.last_notice?.stripe_sync ? true : null, "Stripe-díjak és kifizetések letöltése", d.last_notice?.stripe_sync ? `utolsó mozgás: ${ago(d.last_notice.stripe_sync)}` : "5 percenként, amint a kulcs megvan"],
   ];
   return (
@@ -75,7 +75,7 @@ export function PayFail({ days }: { days: number }) {
       </Card>
 
       <Card className="s6" icon={P.layers} title="Eszközönként" sub="Hányan nyomták meg a fizetés gombot, és hányan fizettek, platformonként. Ha az egyik sokkal rosszabb, ott hiba lehet (például az Instagram vagy a TikTok appon belüli böngészője).">
-        {(d.by_device || []).length ? <Tbl name="eszkozok" rows={d.by_device} csv={false} cols={[{ k: "dev", l: "Eszköz", ph: "name" }, { k: "start", l: "Fizetés gomb", num: true }, { k: "done", l: "Fizetett", num: true, ph: "main", r: (r) => `${fmt(r.done)} (${pct(n(r.done), n(r.start))})` }]} /> : <Empty t="Még nincs adat (az InkAge még nem fogad fizetést)." />}
+        {(d.by_device || []).length ? <Tbl name="eszkozok" rows={d.by_device} csv={false} cols={[{ k: "dev", l: "Eszköz", ph: "name" }, { k: "start", l: "Fizetés gomb", num: true }, { k: "done", l: "Fizetett", num: true, ph: "main", r: (r) => `${fmt(r.done)} (${pct(n(r.done), n(r.start))})` }]} /> : <Empty t="Még senki nem nyomta meg a fizetés gombot." />}
         {(d.by_browser || []).length > 0 && <BarList items={(d.by_browser as D[]).map((x) => ({ k: x.device, n: n(x.n) }))} fmtK={(x) => x} max={6} />}
       </Card>
       <Card className="s6" icon={P.clock} title="Gyorsaság és a regisztrációs fal" sub="Mennyi idő telik el a fizetés gombtól a sikeres fizetésig, és akiket a vásárlási oldal regisztrálni küldött, visszajöttek-e fizetni.">
@@ -94,10 +94,10 @@ export function PayFail({ days }: { days: number }) {
         <Tbl name="kartyavitak" rows={d.disputes} cols={[{ k: "at", l: "Mikor", r: (r) => dt(r.at) }, { k: "kind", l: "Mi", ph: "name", r: (r) => KIND_L[r.kind] }, { k: "reason", l: "Ok / eredmény", r: (r) => DISPUTE_L[r.reason] || ({ won: "Megnyerted", lost: "Elvesztetted" } as D)[r.reason] || r.reason }, { k: "amount", l: "Összeg", num: true, r: (r) => money(n(r.amount), r.currency || "USD") }]} />
       </Card>}
 
-      <Card className="s12" icon={P.check} title="Mi kell, hogy a fizetés működjön" sub="A beállítások állapota (csak igen vagy nem, értéket sosem mutat). A pipásak mennek, a többit még be kell állítani. Az InkAge még nem fogad fizetést, ezért most a legtöbb hiányzik: ez így rendben van."
+      <Card className="s12" icon={P.check} title="Mi kell, hogy a fizetés működjön" sub="A beállítások állapota (csak igen vagy nem, értéket sosem mutat). A pipásak mennek. Az InkAge november 8. óta fogad fizetést (web: Stripe, Android: Google Play; iPhone: az Apple jóváhagyására vár)."
         right={<button className="adm-ibtn" disabled={syncing} onClick={syncNow}>{I(P.refresh)}{syncing ? "…" : "Lehúzás most"}</button>}>
         <ul className="pay-checks">{checks.map(([ok, t, h]) => <li key={t} className={ok ? "ok" : ok === false ? "no" : "wait"}><i>{ok ? "✓" : ok === false ? "✕" : "·"}</i><b>{t}</b><small>{h}</small></li>)}</ul>
-        <Lesson>A fizetés bekapcsolása (payments_live) szándékosan nem gomb: egy lépés az adatbázisban, amikor a fenti kulcsok már megvannak. Ez az oldal csak mutatja, mi hiányzik még hozzá.</Lesson>
+        <Lesson>A fizetés bekapcsolása (payments_live) szándékosan nem gomb: egy lépés az adatbázisban, amikor a fenti kulcsok már megvannak. Élesben be van kapcsolva.</Lesson>
       </Card>
       {u && <BuyerDrawer id={u} close={() => setU(null)} />}
       {grant && <GrantSheet user={grant.user_id} email={grant.email} plans={grant.plan ? [String(grant.plan)] : undefined} close={() => setGrant(null)} done={q.load} />}

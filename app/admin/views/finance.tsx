@@ -47,7 +47,7 @@ export function Finance() {
         { l: "Az App Store és a Google Play tartozik (becslés)", v: $(n(d.store_due?.apple) + n(d.store_due?.google)) },
         { l: "Következő Stripe-kifizetés", v: d.stripe_next ? new Date(d.stripe_next).toLocaleDateString("hu-HU", { month: "short", day: "numeric" }) : "–" },
       ]} />
-      {!d.synced?.n && <Lesson><b>A Stripe-adatok még nem jöttek le.</b> Az InkAge még nem fogad fizetést, ezért itt minden nulla. Amint a STRIPE_SECRET_KEY be van állítva a Vercelben, a rendszer 5 percenként letölti a pontos díjakat és a kifizetéseket; addig a díj becslés (2,9% + 0,30 $).</Lesson>}
+      {!d.synced?.n && <Lesson><b>A Stripe-adatok még nem jöttek le.</b> Ezért itt még minden nulla. Amint a STRIPE_SECRET_KEY be van állítva a Vercelben, a rendszer 5 percenként letölti a pontos díjakat és a kifizetéseket; addig a díj becslés (2,9% + 0,30 $).</Lesson>}
 
       <Card className="s12" icon={P.calendar} title="Hónapról hónapra" sub="Bruttó bevétel, visszatérítés, díj, költség és ami marad, havonta. A „pontos díj” azt mutatja, hány Stripe-fizetés díja jött már meg a Stripe-tól (a többi becslés). A záráshoz a letöltés minden fizetést megad a könyvelőnek: díjjal és az aznapi árfolyammal.">
         <Tbl name="havi-eredmeny" rows={months} cols={[

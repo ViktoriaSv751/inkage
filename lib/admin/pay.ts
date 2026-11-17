@@ -56,6 +56,8 @@ export async function syncStripe() {
   const w = await call<D>("admin_w_stripe", { p_tx: tx, p_payouts: payouts });
   /* the last two days of checkouts: the left ones, and a paid one not recorded here (the webhook did not arrive) */
   const have = new Set<string>(st.sessions || []);
+  /* a studio plan (subscription checkout) is recorded in b2b_subs by its Stripe subscription, not as a purchase */
+  const subs = new Set<string>(st.subs || []);
   const cs = await stripe<{ data: D[] }>(`checkout/sessions?limit=100&created[gte]=${Math.floor(Date.now() / 1000) - 2 * 86400}`).catch(() => ({ data: [] as D[] }));
   const ev: D[] = [];
   for (const s of cs.data) {
@@ -64,7 +66,7 @@ export async function syncStripe() {
     if (m.app !== "inkage") continue;
     const base = { session_id: s.id, payment_intent: s.payment_intent || null, user_id: m.user || null, plan: m.plan || null, amount: major(s.amount_total), currency: s.currency, email: s.customer_details?.email || s.customer_email || null, device: m.device || null, country: s.customer_details?.address?.country || m.country || null, store: "stripe" };
     if (s.status === "expired") ev.push({ ...base, kind: "expired", ref: s.id, at: sec(s.expires_at) });
-    else if (s.payment_status === "paid" && !have.has(s.id) && Date.now() / 1000 - s.created > 600) ev.push({ ...base, kind: "paid_missing", ref: s.id, at: sec(s.created), reason: "A Stripe szerint fizetett, de nálunk nincs meg a vásárlás (nem jött meg a Stripe értesítése)." });
+    else if (s.payment_status === "paid" && !have.has(s.id) && !(s.mode === "subscription" && s.subscription && subs.has(String(s.subscription))) && Date.now() / 1000 - s.created > 600) ev.push({ ...base, kind: "paid_missing", ref: s.id, at: sec(s.created), reason: "A Stripe szerint fizetett, de nálunk nincs meg a vásárlás (nem jött meg a Stripe értesítése)." });
   }
   const dsp = await stripe<{ data: D[] }>(`disputes?limit=20&created[gte]=${Math.floor(Date.now() / 1000) - 120 * 86400}`).catch(() => ({ data: [] as D[] }));
   for (const x of dsp.data) {

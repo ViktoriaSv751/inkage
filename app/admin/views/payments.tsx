@@ -93,7 +93,7 @@ export function Payments({ days }: { days: number }) {
 
   return (
     <div className="g ix pay">
-      {nothing && <section className="s12 c pay-none" aria-label="Még nincs fizetés"><h2 className="ink-h">Még nincs fizetés</h2><p className="note">{d.live ? "A fizetés be van kapcsolva, de még senki nem fizetett." : "Az InkAge még nem fogad fizetést, ezért itt nincs mit mutatni."} Ez nem hiba és nem mérési rés: amint megérkezik az első vásárlás (a weboldalon Stripe-on, az appokban az App Store-on vagy a Google Playen), ez az oldal magától megtelik: bevétel, fizetési helyek, termékek, a fizetésig vezető út és minden egyes fizetés.</p></section>}
+      {nothing && <section className="s12 c pay-none" aria-label="Még nincs fizetés"><h2 className="ink-h">Még nincs fizetés</h2><p className="note">{d.live ? "A fizetés be van kapcsolva, de még senki nem fizetett." : "Még nem volt eladás, ezért itt nincs mit mutatni."} Ez nem hiba és nem mérési rés: amint megérkezik az első vásárlás (a weboldalon Stripe-on, az appokban az App Store-on vagy a Google Playen), ez az oldal magától megtelik: bevétel, fizetési helyek, termékek, a fizetésig vezető út és minden egyes fizetés.</p></section>}
       {ms && <div className="s12 pay-ms" role="status"><b>{ms}</b><button className="lnk" onClick={() => setMs(null)}>Bezár</button></div>}
       {n(d.problems?.open) > 0 && <a className="s12 alert err pay-alert" href="#payfail">{I(P.alert)} {fmt(d.problems.open)} sürgős fizetési ügy vár rád (fizetett, de nem kapta meg, vagy kártyavita). Megnézem →</a>}
 

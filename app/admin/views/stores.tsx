@@ -273,7 +273,7 @@ function Revenue({ days }: { days: number }) {
   return <>
     <Async q={q} h={200}>{(d) => {
       const none = !n(d.all_time), rev: D[] = d.rev || [], dd: D[] = d.days || [], plans: D[] = d.plans || [], list: D[] = d.list || [], src: D[] = (s.d as D)?.by_source || [];
-      if (none) return <div className="s12 ir-money"><Hero flip label={`Bevétel · ${daysLabel(days)}`} text="–" max={110} sub={d.live ? "A fizetés be van kapcsolva, még nem volt eladás." : "Még nincs fizetés: az InkAge most nem fogad fizetést."} /></div>;
+      if (none) return <div className="s12 ir-money"><Hero flip label={`Bevétel · ${daysLabel(days)}`} text="–" max={110} sub={d.live ? "A fizetés be van kapcsolva, még nem volt eladás." : "Még nem volt eladás."} /></div>;
       const cur = Array.from(new Set(dd.map((x) => String(x.currency)))), map = new Map<string, D>();
       dd.forEach((x) => { const o = map.get(x.t) || { t: x.t, v: {} }; o.v[x.currency] = n(x.v); map.set(x.t, o); });
       /* the largest currency is the figure, the others stand beside it: nothing is converted */
